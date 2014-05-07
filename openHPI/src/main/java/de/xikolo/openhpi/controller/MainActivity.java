@@ -16,6 +16,8 @@ import de.xikolo.openhpi.controller.fragments.DownloadsFragment;
 import de.xikolo.openhpi.controller.fragments.SettingsFragment;
 import de.xikolo.openhpi.controller.fragments.WebViewFragment;
 import de.xikolo.openhpi.controller.navigation.NavigationFragment;
+import de.xikolo.openhpi.util.Config;
+import de.xikolo.openhpi.util.FontsOverride;
 
 
 public class MainActivity extends FragmentActivity
@@ -39,6 +41,11 @@ public class MainActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // set global typefaces
+        // use xml attr. android:typeface="sans" for medium/bold font style
+        FontsOverride.setDefaultFont(this, "DEFAULT", Config.FONT_DEFAULT);
+        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_BOLD);
 
         mNavigationFragment = (NavigationFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);

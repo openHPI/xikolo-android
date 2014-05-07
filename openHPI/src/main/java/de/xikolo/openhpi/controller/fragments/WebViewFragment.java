@@ -46,6 +46,8 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private WebView mWebView;
     private ProgressBar mProgressBar;
 
+    private boolean mFirstLoad;
+
 //    private OnFragmentInteractionListener mListener;
 
     /**
@@ -83,18 +85,21 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mProgressBar = (ProgressBar) layout.findViewById(R.id.progress);
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
 
+        mFirstLoad = true;
+
         final Activity activity = getActivity();
 
         mWebView.getSettings().setJavaScriptEnabled(true);
 
         mWebView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
-                if(progress < 100){
+                if(progress < 100 && mFirstLoad){
                     mProgressBar.setVisibility(ProgressBar.VISIBLE);
                 }
                 //progressbar.setProgress(progress);
                 if(progress == 100) {
                     mProgressBar.setVisibility(ProgressBar.GONE);
+                    mFirstLoad = false;
                 }
             }
 
@@ -182,9 +187,9 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onRefresh() {
         mWebView.loadUrl("about:blank");
+        mRefreshLayout.setRefreshing(true);
 
         if (Network.isOnline(getActivity())) {
-            mRefreshLayout.setRefreshing(true);
             Map<String, String> header = new HashMap<String, String>();
             header.put("User-Platform", "Android");
             mWebView.loadUrl(mUrl, header);
