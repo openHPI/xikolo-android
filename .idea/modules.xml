@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/openHPI.iml" filepath="$PROJECT_DIR$/openHPI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/openHPI/openHPI-openHPI.iml" filepath="$PROJECT_DIR$/openHPI/openHPI-openHPI.iml" />
+    </modules>
+  </component>
+</project>
+

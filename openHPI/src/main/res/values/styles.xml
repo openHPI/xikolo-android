@@ -1,0 +1,14 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/DarkGrayActionBar</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="DarkGrayActionBar"
+        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/dark_gray</item>
+    </style>
+
+</resources>

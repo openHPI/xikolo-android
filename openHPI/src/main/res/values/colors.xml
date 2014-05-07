@@ -1,0 +1,8 @@
+<resources>
+    <drawable name="dark_gray">#101010</drawable>
+    <drawable name="medium_gray">#252525</drawable>
+    <drawable name="light_gray">#5a6065</drawable>
+    <drawable name="red">#b42946</drawable>
+    <drawable name="orange">#de6212</drawable>
+    <drawable name="yellow">#f5a704</drawable>
+</resources>
