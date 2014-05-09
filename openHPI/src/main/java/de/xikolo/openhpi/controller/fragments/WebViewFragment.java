@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,16 +25,9 @@ import java.util.Map;
 import de.xikolo.openhpi.R;
 import de.xikolo.openhpi.util.Network;
 
-/**
- * A simple {@link android.support.v4.app.Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link WebViewFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link WebViewFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
-public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class WebViewFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener {
+
+    public static final String TAG = WebViewFragment.class.getSimpleName();
 
     // the fragment initialization parameters
     private static final String ARG_URL = "url";
@@ -48,24 +41,16 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private boolean mFirstLoad;
 
-//    private OnFragmentInteractionListener mListener;
+    public WebViewFragment() {
+        // Required empty public constructor
+    }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param url The url to load.
-     * @return A new instance of fragment WebViewFragment.
-     */
     public static WebViewFragment newInstance(String url) {
         WebViewFragment fragment = new WebViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
         fragment.setArguments(args);
         return fragment;
-    }
-    public WebViewFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -75,6 +60,14 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mUrl = getArguments().getString(ARG_URL);
         }
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mUrl.equals(getString(R.string.url_news))) {
+            mCallback.onFragmentAttached(1);
+        }
     }
 
     @Override
@@ -93,11 +86,10 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         mWebView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
-                if(progress < 100 && mFirstLoad){
+                if (progress < 100 && mFirstLoad) {
                     mProgressBar.setVisibility(ProgressBar.VISIBLE);
                 }
-                //progressbar.setProgress(progress);
-                if(progress == 100) {
+                if (progress == 100) {
                     mProgressBar.setVisibility(ProgressBar.GONE);
                     mFirstLoad = false;
                 }
@@ -123,7 +115,7 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if(url.contains(getString(R.string.url_openhpi_base))) {
+                if (url.contains(getString(R.string.url_openhpi_base))) {
                     view.loadUrl(url);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -144,33 +136,28 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return layout;
     }
 
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//
+//        if (savedInstanceState != null && mWebView != null) {
+//            mWebView.restoreState(savedInstanceState);
+//        } else {
+//            onRefresh();
 //        }
+//    }
+//
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        if (mWebView != null)
+//            mWebView.saveState(outState);
 //    }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-//        mListener = null;
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.webview, menu);
+        if (!mDrawerOpen)
+            inflater.inflate(R.menu.webview, menu);
     }
 
     @Override
@@ -186,6 +173,8 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onRefresh() {
+        Log.d(TAG, "onRefresh");
+
         mWebView.loadUrl("about:blank");
         mRefreshLayout.setRefreshing(true);
 
@@ -194,6 +183,7 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
             header.put("User-Platform", "Android");
             mWebView.loadUrl(mUrl, header);
         } else {
+            // TODO better no network handling
             String html = "" +
                     "<html>" +
                     "<body>" +
@@ -205,20 +195,5 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mWebView.loadData(html, "text/html", "utf-8");
         }
     }
-//
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        public void onFragmentInteraction(Uri uri);
-//    }
 
 }

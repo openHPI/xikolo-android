@@ -151,7 +151,7 @@ public class NavigationFragment extends Fragment {
                 if (!isAdded()) {
                     return;
                 }
-
+                mCallbacks.onNavigationDrawerClosed();
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
@@ -170,7 +170,7 @@ public class NavigationFragment extends Fragment {
                             .getDefaultSharedPreferences(getActivity());
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
-
+                mCallbacks.onNavigationDrawerOpened();
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
         };
@@ -250,12 +250,6 @@ public class NavigationFragment extends Fragment {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
-//        if (item.getItemId() == R.id.action_example) {
-//            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
-//            return true;
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -282,5 +276,10 @@ public class NavigationFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+
+        void onNavigationDrawerOpened();
+
+        void onNavigationDrawerClosed();
+
     }
 }

@@ -2,14 +2,16 @@ package de.xikolo.openhpi.controller;
 
 import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import de.xikolo.openhpi.R;
+import de.xikolo.openhpi.controller.fragments.ContentFragment;
 import de.xikolo.openhpi.controller.fragments.CourseFragment;
 import de.xikolo.openhpi.controller.fragments.CoursesFragment;
 import de.xikolo.openhpi.controller.fragments.DownloadsFragment;
@@ -21,7 +23,11 @@ import de.xikolo.openhpi.util.FontsOverride;
 
 
 public class MainActivity extends FragmentActivity
-        implements NavigationFragment.NavigationDrawerCallbacks {
+        implements NavigationFragment.NavigationDrawerCallbacks, ContentFragment.OnFragmentInteractionListener {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final String STATE_FRAGMENT_ID = "state_fragment_id";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -32,24 +38,32 @@ public class MainActivity extends FragmentActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private int mFragmentId;
 
-    private Fragment mFragment;
+    private ContentFragment mFragment;
 
     private ActionBar mActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         // set global typefaces
         // use xml attr. android:typeface="sans" for medium/bold font style
         FontsOverride.setDefaultFont(this, "DEFAULT", Config.FONT_DEFAULT);
         FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_BOLD);
 
+        if (savedInstanceState != null) {
+            mFragmentId = savedInstanceState.getInt(STATE_FRAGMENT_ID);
+        } else {
+            mTitle = getString(R.string.app_name);
+            mFragmentId = -1;
+        }
+
+        setContentView(R.layout.activity_main);
+
         mNavigationFragment = (NavigationFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getString(R.string.title_section_courses);
 
         // Set up the drawer.
         mNavigationFragment.setUp(
@@ -60,35 +74,70 @@ public class MainActivity extends FragmentActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_FRAGMENT_ID, mFragmentId);
+    }
+
+    @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the webview content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        switch (position) {
+        if (mFragmentId != position) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            mFragmentId = position;
+            switch (position) {
+                case 0:
+                    mFragment = CoursesFragment.newInstance();
+                    break;
+                case 1:
+                    mFragment = WebViewFragment.newInstance(getString(R.string.url_news));
+                    break;
+                case 2:
+                    mFragment = DownloadsFragment.newInstance();
+                    break;
+                case 3:
+                    mFragment = SettingsFragment.newInstance();
+                    break;
+                case 4:
+                    mFragment = CourseFragment.newInstance();
+                    break;
+            }
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.container, mFragment);
+            transaction.addToBackStack(mTitle.toString());
+            transaction.commit();
+        }
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        switch (titleId) {
             case 0:
-                mFragment = CoursesFragment.newInstance();
                 mTitle = getString(R.string.title_section_courses);
                 break;
             case 1:
-                mFragment = WebViewFragment.newInstance(getString(R.string.url_news));
                 mTitle = getString(R.string.title_section_news);
                 break;
             case 2:
-                mFragment = DownloadsFragment.newInstance();
                 mTitle = getString(R.string.title_section_downloads);
                 break;
             case 3:
-                mFragment = SettingsFragment.newInstance();
                 mTitle = getString(R.string.title_section_settings);
                 break;
             case 4:
-                mFragment = CourseFragment.newInstance();
                 mTitle = getString(R.string.title_section_course);
                 break;
+            default:
+                mTitle = getString(R.string.app_name);
         }
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, mFragment)
-                .commit();
         getActionBar().setTitle(mTitle);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStack();
+        else
+            finish();
     }
 
     public void restoreActionBar() {
@@ -98,18 +147,29 @@ public class MainActivity extends FragmentActivity
         actionBar.setTitle(mTitle);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-//            getMenuInflater().inflate(R.menu.webview, menu);
+            getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onNavigationDrawerOpened() {
+        if (mFragment != null)
+            mFragment.onNavigationDrawerOpened();
+    }
+
+    @Override
+    public void onNavigationDrawerClosed() {
+        if (mFragment != null)
+            mFragment.onNavigationDrawerClosed();
     }
 
     @Override
@@ -122,6 +182,12 @@ public class MainActivity extends FragmentActivity
 //            return true;
 //        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentAttached(int id) {
+        setTitle(id);
+        mFragmentId = id;
     }
 
 }

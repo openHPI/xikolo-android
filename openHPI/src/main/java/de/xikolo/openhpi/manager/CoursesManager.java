@@ -1,12 +1,11 @@
 package de.xikolo.openhpi.manager;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import de.xikolo.openhpi.R;
 import de.xikolo.openhpi.dataaccess.JsonRequest;
-import de.xikolo.openhpi.model.Course;
 import de.xikolo.openhpi.model.Courses;
 import de.xikolo.openhpi.util.Config;
 
@@ -29,21 +28,14 @@ public class CoursesManager implements JsonRequest.OnJsonReceivedListener {
             Log.i(TAG, "requestCourses() called");
 
         JsonRequest request = new JsonRequest(mContext.getString(R.string.url_courses), Courses.class, this, mContext);
-        request.execute();
+        request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void onJsonReceived(Object o) {
         if (o != null) {
             Courses courses = (Courses) o;
-
-            if (Config.DEBUG) {
-                Log.i(TAG, "Courses received");
-                for (Course course : courses.getCourses()) {
-                    Log.i(TAG, "Title: " + course.title);
-                }
-            }
-
+            Log.i(TAG, "Courses received (" + courses.getCourses().size() + ")");
             mCallback.onCoursesReceived(courses);
         } else {
             if (Config.DEBUG)
