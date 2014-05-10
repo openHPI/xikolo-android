@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -49,9 +48,9 @@ public class MainActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
 
         // set global typefaces
-        // use xml attr. android:typeface="sans" for medium/bold font style
-        FontsOverride.setDefaultFont(this, "DEFAULT", Config.FONT_DEFAULT);
-        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_BOLD);
+        // use xml attr. android:typeface="serif" for bold font style
+        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
+        FontsOverride.setDefaultFont(this, "SERIF", Config.FONT_SANS_BOLD);
 
         if (savedInstanceState != null) {
             mFragmentId = savedInstanceState.getInt(STATE_FRAGMENT_ID);

@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/DarkGrayActionBar</item>
+        <item name="android:typeface">sans</item>
     </style>
 
     <!-- ActionBar styles -->

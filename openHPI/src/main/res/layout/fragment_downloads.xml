@@ -5,22 +5,32 @@
     tools:context="de.xikolo.openhpi.controller.fragments.DownloadsFragment">
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textSize="20pt"
         android:text="@string/downloads"
-        android:id="@+id/textView" />
+        android:textSize="20pt" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignStart="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:text="@string/downloads"
+        android:textSize="20pt"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20pt"
-        android:typeface="sans"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_below="@+id/textView2"
         android:text="@string/downloads"
-        android:layout_below="@+id/textView"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView"
-        android:id="@+id/textView2" />
+        android:textSize="20pt"
+        android:typeface="serif" />
 
 </RelativeLayout>
