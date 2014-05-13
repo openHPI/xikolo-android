@@ -3,8 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:choiceMode="singleChoice"
-    android:divider="@drawable/light_gray"
+    android:divider="@color/light_gray"
     android:dividerHeight="1dp"
-    android:background="@drawable/medium_gray"
-    android:listSelector="@drawable/list_selector"
-    tools:context="de.xikolo.openhpi.controller.navigation.NavigationFragment" />
+    android:background="@color/medium_gray"
+    android:listSelector="@drawable/slider_list_selector"
+    tools:context="de.xikolo.openhpi.controller.navigation.NavigationFragment"
+    android:drawSelectorOnTop="false"
+    android:clickable="false"
+    android:focusable="true" />

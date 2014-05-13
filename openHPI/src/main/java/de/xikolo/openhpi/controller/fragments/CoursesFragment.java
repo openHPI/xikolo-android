@@ -2,7 +2,6 @@ package de.xikolo.openhpi.controller.fragments;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,10 +68,11 @@ public class CoursesFragment extends ContentFragment implements CoursesManager.O
         View layout = inflater.inflate(R.layout.fragment_courses, container, false);
 
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
-        mRefreshLayout.setColorScheme(R.drawable.orange,
-                R.drawable.red,
-                R.drawable.yellow,
-                R.drawable.red);
+        mRefreshLayout.setColorScheme(
+                R.color.red,
+                R.color.orange,
+                R.color.red,
+                R.color.orange);
         mRefreshLayout.setOnRefreshListener(this);
 
         mCoursesListAdapter = new CoursesListAdapter(getActivity());

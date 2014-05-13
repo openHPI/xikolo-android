@@ -9,7 +9,7 @@
     <!-- ActionBar styles -->
     <style name="DarkGrayActionBar"
         parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/dark_gray</item>
+        <item name="android:background">@color/dark_gray</item>
     </style>
 
 </resources>
