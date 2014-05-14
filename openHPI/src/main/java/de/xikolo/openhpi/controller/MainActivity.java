@@ -88,7 +88,7 @@ public class MainActivity extends FragmentActivity
                     mFragment = CoursesFragment.newInstance();
                     break;
                 case 1:
-                    mFragment = WebViewFragment.newInstance(getString(R.string.url_news));
+                    mFragment = WebViewFragment.newInstance(Config.URI_HPI + Config.PATH_NEWS);
                     break;
                 case 2:
                     mFragment = DownloadsFragment.newInstance();
@@ -139,6 +139,10 @@ public class MainActivity extends FragmentActivity
             finish();
     }
 
+    public NavigationFragment getNavigationDrawer() {
+        return this.mNavigationFragment;
+    }
+
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -160,18 +164,6 @@ public class MainActivity extends FragmentActivity
     }
 
     @Override
-    public void onNavigationDrawerOpened() {
-        if (mFragment != null)
-            mFragment.onNavigationDrawerOpened();
-    }
-
-    @Override
-    public void onNavigationDrawerClosed() {
-        if (mFragment != null)
-            mFragment.onNavigationDrawerClosed();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -187,6 +179,19 @@ public class MainActivity extends FragmentActivity
     public void onFragmentAttached(int id) {
         setTitle(id);
         mFragmentId = id;
+        mNavigationFragment.markItem(id);
+    }
+
+    @Override
+    public boolean isDrawerOpen() {
+        return this.mNavigationFragment.isDrawerOpen();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GlobalApplication app = (GlobalApplication) getApplicationContext();
+        app.flushCache();
     }
 
 }

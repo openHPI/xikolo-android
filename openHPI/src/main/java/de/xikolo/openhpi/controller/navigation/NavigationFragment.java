@@ -151,7 +151,6 @@ public class NavigationFragment extends Fragment {
                 if (!isAdded()) {
                     return;
                 }
-                mCallbacks.onNavigationDrawerClosed();
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
@@ -170,7 +169,6 @@ public class NavigationFragment extends Fragment {
                             .getDefaultSharedPreferences(getActivity());
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
-                mCallbacks.onNavigationDrawerOpened();
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
         };
@@ -203,7 +201,16 @@ public class NavigationFragment extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
+    }
 
+    public void markItem(int position) {
+        mCurrentSelectedPosition = position;
+        if (mDrawerListView != null) {
+            mDrawerListView.setItemChecked(position, true);
+        }
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(mFragmentContainerView);
+        }
     }
 
     @Override
@@ -277,10 +284,5 @@ public class NavigationFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
-
-        void onNavigationDrawerOpened();
-
-        void onNavigationDrawerClosed();
-
     }
 }
