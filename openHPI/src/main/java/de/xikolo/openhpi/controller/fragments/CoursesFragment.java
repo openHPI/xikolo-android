@@ -105,7 +105,7 @@ public class CoursesFragment extends ContentFragment implements CoursesManager.O
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!mDrawerOpen)
+        if (!mCallback.isDrawerOpen())
             inflater.inflate(R.menu.webview, menu);
     }
 
