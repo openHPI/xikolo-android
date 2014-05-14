@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.xikolo.openhpi.R;
+import de.xikolo.openhpi.util.Config;
 import de.xikolo.openhpi.util.Network;
 
 public class WebViewFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -65,7 +66,7 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     @Override
     public void onStart() {
         super.onStart();
-        if (mUrl.equals(getString(R.string.url_news))) {
+        if (mUrl.contains(Config.PATH_NEWS)) {
             mCallback.onFragmentAttached(1);
         }
     }
@@ -115,7 +116,7 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(getString(R.string.url_openhpi_base))) {
+                if (url.contains(Config.URI_HOST_HPI)) {
                     view.loadUrl(url);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -157,7 +158,7 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!mDrawerOpen)
+        if (!mCallback.isDrawerOpen())
             inflater.inflate(R.menu.webview, menu);
     }
 
@@ -176,24 +177,14 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     public void onRefresh() {
         Log.d(TAG, "onRefresh");
 
-        mWebView.loadUrl("about:blank");
-        mRefreshLayout.setRefreshing(true);
-
         if (Network.isOnline(getActivity())) {
+            mWebView.loadUrl("about:blank");
+            mRefreshLayout.setRefreshing(true);
             Map<String, String> header = new HashMap<String, String>();
-            header.put("User-Platform", "Android");
+            header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
             mWebView.loadUrl(mUrl, header);
         } else {
-            // TODO better no network handling
-            String html = "" +
-                    "<html>" +
-                    "<body>" +
-                    "<div align=\"center\"><br>" +
-                    getString(R.string.no_network) +
-                    "<div>" +
-                    "</body>" +
-                    "</html>";
-            mWebView.loadData(html, "text/html", "utf-8");
+            Network.showNoConnectionToast(getActivity());
         }
     }
 
