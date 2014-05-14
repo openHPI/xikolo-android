@@ -1,6 +1,5 @@
 package de.xikolo.openhpi.controller.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -102,25 +101,25 @@ public class CourseFragment extends ContentFragment {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = CoursesFragment.newInstance();
+            Fragment fragment = null;
             switch (position) {
                 case 0:
-                    fragment = WebViewFragment.newInstance(getString(R.string.url_news));
+                    fragment = ModuleFragment.newInstance();
                     break;
                 case 1:
-                    fragment = CoursesFragment.newInstance();
+                    fragment = ModuleFragment.newInstance();
                     break;
                 case 2:
-                    fragment = DownloadsFragment.newInstance();
+                    fragment = ModuleFragment.newInstance();
                     break;
                 case 3:
-                    fragment = WebViewFragment.newInstance(getString(R.string.url_news));
+                    fragment = ModuleFragment.newInstance();
                     break;
                 case 4:
-                    fragment = CoursesFragment.newInstance();
+                    fragment = ModuleFragment.newInstance();
                     break;
                 case 5:
-                    fragment = DownloadsFragment.newInstance();
+                    fragment = ModuleFragment.newInstance();
                     break;
             }
             return fragment;
