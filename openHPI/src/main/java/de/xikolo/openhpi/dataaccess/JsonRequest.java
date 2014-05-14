@@ -5,16 +5,15 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import de.xikolo.openhpi.util.Config;
 
 public class JsonRequest extends NetworkRequest<Void, Void, Object> {
 
@@ -34,30 +33,34 @@ public class JsonRequest extends NetworkRequest<Void, Void, Object> {
 
     @Override
     protected Object doInBackground(Void... args) {
-        DefaultHttpClient client = new DefaultHttpClient();
-        HttpGet getRequest = new HttpGet(mUrl);
-
+        HttpURLConnection urlConnection = null;
         try {
+            URL url = new URL(mUrl);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.addRequestProperty(Config.HEADER_ACCEPT, Config.HEADER_VALUE_ACCEPT_SAP);
+            urlConnection.addRequestProperty(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
 
-            HttpResponse getResponse = client.execute(getRequest);
-            final int statusCode = getResponse.getStatusLine().getStatusCode();
+            final int statusCode = urlConnection.getResponseCode();
 
-            if (statusCode != HttpStatus.SC_OK) {
+            if (statusCode != HttpURLConnection.HTTP_OK) {
                 Log.w(TAG, "Error " + statusCode + " for URL " + mUrl);
                 return null;
             }
 
-            HttpEntity getResponseEntity = getResponse.getEntity();
-            InputStream source = getResponseEntity.getContent() ;
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
             Gson gson = new Gson();
-            Reader reader = new InputStreamReader(source);
+            Reader reader = new InputStreamReader(in);
 
             return gson.fromJson(reader, mClass);
-        }
-        catch (IOException e) {
-            getRequest.abort();
+
+        } catch (IOException e) {
             Log.w(TAG, "Error for URL " + mUrl, e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
         }
+
         return null;
     }
 

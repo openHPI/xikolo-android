@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import de.xikolo.openhpi.R;
 import de.xikolo.openhpi.dataaccess.JsonRequest;
 import de.xikolo.openhpi.model.Courses;
 import de.xikolo.openhpi.util.Config;
@@ -27,7 +26,7 @@ public class CoursesManager implements JsonRequest.OnJsonReceivedListener {
         if (Config.DEBUG)
             Log.i(TAG, "requestCourses() called");
 
-        JsonRequest request = new JsonRequest(mContext.getString(R.string.url_courses), Courses.class, this, mContext);
+        JsonRequest request = new JsonRequest("https://openhpi.de/feeds/courses", Courses.class, this, mContext);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
