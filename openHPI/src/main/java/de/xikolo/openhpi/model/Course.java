@@ -7,37 +7,43 @@ public class Course {
     @SerializedName("id")
     public String id;
 
-    @SerializedName("title")
-    public String title;
-
-    @SerializedName("url")
-    public String url;
-
-    @SerializedName("start_date")
-    public String startDate;
-
-    @SerializedName("end_date")
-    public String endDate;
-
-    @SerializedName("teacher")
-    public String teacher;
-
-    @SerializedName("cade")
-    public String code;
-
-    @SerializedName("abstract")
-    public String shortAbstract;
+    @SerializedName("name")
+    public String name;
 
     @SerializedName("description")
     public String description;
 
-    @SerializedName("image")
-    public String image;
+    @SerializedName("course_code")
+    public String course_code;
+
+    @SerializedName("lecturer")
+    public String lecturer;
 
     @SerializedName("language")
     public String language;
 
-    @SerializedName("status")
-    public String status;
+    @SerializedName("duration")
+    public String duration;
+
+    @SerializedName("url")
+    public String url;
+
+    @SerializedName("visual_url")
+    public String visual_url;
+
+    @SerializedName("available_from")
+    public String available_from;
+
+    @SerializedName("available_to")
+    public String available_to;
+
+    @SerializedName("locked")
+    public boolean locked;
+
+    @SerializedName("exam_available_from")
+    public String exam_available_from;
+
+    @SerializedName("exam_available_to")
+    public String exam_available_to;
 
 }

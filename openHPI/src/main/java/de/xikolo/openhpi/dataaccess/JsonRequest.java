@@ -4,12 +4,14 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -19,15 +21,15 @@ public class JsonRequest extends NetworkRequest<Void, Void, Object> {
 
     public static final String TAG = JsonRequest.class.getSimpleName();
 
-    private Class mClass;
     private String mUrl;
+    private Type mType;
     private OnJsonReceivedListener mCallback;
 
 
-    public <T> JsonRequest(String url, Class<T> c, OnJsonReceivedListener callback, Context context) {
+    public JsonRequest(String url, Type type, OnJsonReceivedListener callback, Context context) {
         super(context);
-        this.mClass = c;
         this.mUrl = url;
+        this.mType = type;
         this.mCallback = callback;
     }
 
@@ -52,10 +54,12 @@ public class JsonRequest extends NetworkRequest<Void, Void, Object> {
             Gson gson = new Gson();
             Reader reader = new InputStreamReader(in);
 
-            return gson.fromJson(reader, mClass);
+            return gson.fromJson(reader, mType);
 
         } catch (IOException e) {
             Log.w(TAG, "Error for URL " + mUrl, e);
+        } catch (JsonSyntaxException e) {
+            Log.w(TAG, "JSON Syntax Error for URL " + mUrl, e);
         } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();

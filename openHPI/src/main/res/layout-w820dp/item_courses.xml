@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:res="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="fill_parent"
+        android:layout_height="280dp"
+        android:layout_gravity="center_horizontal|top"
+        android:scaleType="centerCrop" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@color/white_alpha"
+        android:paddingBottom="4pt"
+        android:paddingLeft="4pt"
+        android:paddingRight="4pt"
+        android:paddingTop="4pt">
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="4dp"
+            android:singleLine="true"
+            android:textSize="18sp"
+            android:typeface="serif" />
+
+        <TextView
+            android:id="@+id/textTeacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textTitle"
+            android:layout_marginBottom="4dp"
+            android:singleLine="true"
+            android:textColor="@color/orange"
+            android:textSize="16sp" />
+
+        <de.xikolo.openhpi.view.CustomTextView
+            android:id="@+id/textDateIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textTeacher"
+            android:layout_marginRight="4dp"
+            android:singleLine="true"
+            android:text="@string/icon_cal"
+            android:textSize="22sp"
+            res:customFont="xikolo.ttf" />
+
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textTeacher"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@+id/textDateIcon"
+            android:singleLine="true"
+            android:textSize="16sp" />
+
+        <de.xikolo.openhpi.view.CustomTextView
+            android:id="@+id/textLangIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textTeacher"
+            android:layout_marginRight="4dp"
+            android:layout_toRightOf="@+id/textDate"
+            android:singleLine="true"
+            android:text="@string/icon_lang"
+            android:textSize="22sp"
+            res:customFont="xikolo.ttf" />
+
+        <TextView
+            android:id="@+id/textLanguage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textTeacher"
+            android:layout_toRightOf="@+id/textLangIcon"
+            android:singleLine="true"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnEnroll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textDateIcon"
+            android:layout_marginTop="4dp"
+            android:includeFontPadding="false"
+            android:minHeight="0dp"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp"
+            android:background="@drawable/button_orange"
+            android:text="@string/btn_enroll_me"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:typeface="serif" />
+
+    </RelativeLayout>
+
+</FrameLayout>

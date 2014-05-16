@@ -2,25 +2,30 @@
 <resources>
 
     <string name="app_name">openHPI</string>
+
     <string name="title_section_courses">Courses</string>
     <string name="title_section_news">News</string>
     <string name="title_section_downloads">Downloads</string>
     <string name="title_section_settings">Settings</string>
     <string name="title_section_course">Course</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="action_refresh">Refresh</string>
-    <string name="courses">Courses</string>
-    <string name="news">News</string>
-    <string name="downloads">Downloads</string>
-    <string name="settings">Settings</string>
-    <string name="course">One Course</string>
-    <string name="learnings">Learnings</string>
-    <string name="discussions">Discussions</string>
-    <string name="progress">Progress</string>
-    <string name="details">Details</string>
-    <string name="announcements">Announcements</string>
-    <string name="rooms">Rooms</string>
-    <string name="no_network">No network connection available. Please enable internet connection.</string>
+
+    <string name="tab_learnings">Learnings</string>
+    <string name="tab_discussions">Discussions</string>
+    <string name="tab_progress">Progress</string>
+    <string name="tab_details">Details</string>
+    <string name="tab_announcements">Announcements</string>
+    <string name="tab_rooms">Rooms</string>
+
+    <string name="btn_enroll_me">Enroll me for this course</string>
+
+    <string name="toast_no_network">No network connection available. Please enable internet connection.</string>
+
+    <string name="icon_cal">&#xe625;</string>
+    <string name="icon_lang">&#xe612;</string>
 
 </resources>

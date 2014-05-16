@@ -4,8 +4,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
 import de.xikolo.openhpi.dataaccess.JsonRequest;
-import de.xikolo.openhpi.model.Courses;
+import de.xikolo.openhpi.model.Course;
 import de.xikolo.openhpi.util.Config;
 
 public class CoursesManager implements JsonRequest.OnJsonReceivedListener {
@@ -26,15 +31,17 @@ public class CoursesManager implements JsonRequest.OnJsonReceivedListener {
         if (Config.DEBUG)
             Log.i(TAG, "requestCourses() called");
 
-        JsonRequest request = new JsonRequest("https://openhpi.de/feeds/courses", Courses.class, this, mContext);
+        Type type = new TypeToken<List<Course>>() {
+        }.getType();
+        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_COURSES, type, this, mContext);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void onJsonReceived(Object o) {
         if (o != null) {
-            Courses courses = (Courses) o;
-            Log.i(TAG, "Courses received (" + courses.getCourses().size() + ")");
+            List<Course> courses = (List<Course>) o;
+            Log.i(TAG, "Courses received (" + courses.size() + ")");
             mCallback.onCoursesReceived(courses);
         } else {
             if (Config.DEBUG)
@@ -54,7 +61,7 @@ public class CoursesManager implements JsonRequest.OnJsonReceivedListener {
 
     public interface OnCoursesReceivedListener {
 
-        public void onCoursesReceived(Courses courses);
+        public void onCoursesReceived(List<Course> courses);
 
         public void onCoursesRequestCancelled();
 

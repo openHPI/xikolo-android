@@ -77,12 +77,12 @@ public class CourseFragment extends ContentFragment {
     public class CoursePagerAdapter extends FragmentPagerAdapter {
 
         private final String[] TITLES = {
-                getString(R.string.learnings),
-                getString(R.string.discussions),
-                getString(R.string.progress),
-                getString(R.string.details),
-                getString(R.string.announcements),
-                getString(R.string.rooms)
+                getString(R.string.tab_learnings),
+                getString(R.string.tab_discussions),
+                getString(R.string.tab_progress),
+                getString(R.string.tab_details),
+                getString(R.string.tab_announcements),
+                getString(R.string.tab_rooms)
         };
 
         public CoursePagerAdapter(FragmentManager fm) {

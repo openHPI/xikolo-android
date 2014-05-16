@@ -8,12 +8,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
+import android.widget.AbsListView;
+
+import java.util.List;
 
 import de.xikolo.openhpi.R;
 import de.xikolo.openhpi.controller.adapter.CoursesListAdapter;
 import de.xikolo.openhpi.manager.CoursesManager;
-import de.xikolo.openhpi.model.Courses;
+import de.xikolo.openhpi.model.Course;
 
 public class CoursesFragment extends ContentFragment implements CoursesManager.OnCoursesReceivedListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -27,7 +29,7 @@ public class CoursesFragment extends ContentFragment implements CoursesManager.O
 //    private String mParam2;
 
     private SwipeRefreshLayout mRefreshLayout;
-    private GridView mGridView;
+    private AbsListView mAbsListView;
     private CoursesListAdapter mCoursesListAdapter;
 
     private CoursesManager mCoursesManager;
@@ -77,8 +79,8 @@ public class CoursesFragment extends ContentFragment implements CoursesManager.O
 
         mCoursesListAdapter = new CoursesListAdapter(getActivity());
 
-        mGridView = (GridView) layout.findViewById(R.id.gridview);
-        mGridView.setAdapter(mCoursesListAdapter);
+        mAbsListView = (AbsListView) layout.findViewById(R.id.listView);
+        mAbsListView.setAdapter(mCoursesListAdapter);
 
         mCoursesManager = new CoursesManager(this, getActivity());
         onRefresh();
@@ -93,7 +95,7 @@ public class CoursesFragment extends ContentFragment implements CoursesManager.O
     }
 
     @Override
-    public void onCoursesReceived(Courses courses) {
+    public void onCoursesReceived(List<Course> courses) {
         mRefreshLayout.setRefreshing(false);
         mCoursesListAdapter.update(courses);
     }

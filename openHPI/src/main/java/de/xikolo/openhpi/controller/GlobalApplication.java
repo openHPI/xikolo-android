@@ -4,6 +4,7 @@ import android.app.Application;
 import android.net.http.HttpResponseCache;
 import android.util.Log;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -19,7 +20,12 @@ public class GlobalApplication extends Application {
         super.onCreate();
 
         // Create global configuration and initialize ImageLoader with this configuration
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
+                .defaultDisplayImageOptions(defaultOptions)
                 .build();
         ImageLoader.getInstance().init(config);
 

@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/downloads"
+        android:text="@string/title_section_downloads"
         android:textSize="20pt" />
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_alignLeft="@+id/textView1"
         android:layout_alignStart="@+id/textView1"
         android:layout_below="@+id/textView1"
-        android:text="@string/downloads"
+        android:text="@string/title_section_downloads"
         android:textSize="20pt"
         android:textStyle="bold" />
 
@@ -29,7 +29,7 @@
         android:layout_alignLeft="@+id/textView2"
         android:layout_alignStart="@+id/textView2"
         android:layout_below="@+id/textView2"
-        android:text="@string/downloads"
+        android:text="@string/title_section_downloads"
         android:textSize="20pt"
         android:typeface="serif" />
 

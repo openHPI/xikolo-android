@@ -9,6 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textSize="20pt"
-        android:text="@string/settings" />
+        android:text="@string/title_section_settings" />
 
 </RelativeLayout>
