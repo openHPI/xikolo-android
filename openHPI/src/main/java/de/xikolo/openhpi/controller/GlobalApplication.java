@@ -11,6 +11,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import java.io.File;
 import java.io.IOException;
 
+import de.xikolo.openhpi.R;
+
 public class GlobalApplication extends Application {
 
     public static final String TAG = GlobalApplication.class.getSimpleName();
@@ -23,9 +25,13 @@ public class GlobalApplication extends Application {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
+                .showImageOnLoading(R.color.gray_light)
+                .showImageForEmptyUri(R.color.gray_light)
+                .showImageOnFail(R.color.gray_light)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)
+                .discCacheSize(30 * 1024 * 1024) // 30 MiB
                 .build();
         ImageLoader.getInstance().init(config);
 
