@@ -17,7 +17,7 @@ import de.xikolo.openhpi.controller.adapter.CoursesListAdapter;
 import de.xikolo.openhpi.manager.CoursesManager;
 import de.xikolo.openhpi.model.Course;
 
-public class CoursesFragment extends ContentFragment implements CoursesManager.OnCoursesReceivedListener, SwipeRefreshLayout.OnRefreshListener {
+public class CoursesFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = CoursesFragment.class.getSimpleName();
 
@@ -82,7 +82,18 @@ public class CoursesFragment extends ContentFragment implements CoursesManager.O
         mAbsListView = (AbsListView) layout.findViewById(R.id.listView);
         mAbsListView.setAdapter(mCoursesListAdapter);
 
-        mCoursesManager = new CoursesManager(this, getActivity());
+        mCoursesManager = new CoursesManager(getActivity()) {
+            @Override
+            public void onCoursesRequestReceived(List<Course> courses) {
+                mRefreshLayout.setRefreshing(false);
+                mCoursesListAdapter.update(courses);
+            }
+
+            @Override
+            public void onCoursesRequestCancelled() {
+                mRefreshLayout.setRefreshing(false);
+            }
+        };
         onRefresh();
 
         return layout;
@@ -92,17 +103,6 @@ public class CoursesFragment extends ContentFragment implements CoursesManager.O
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
         mCoursesManager.requestCourses();
-    }
-
-    @Override
-    public void onCoursesReceived(List<Course> courses) {
-        mRefreshLayout.setRefreshing(false);
-        mCoursesListAdapter.update(courses);
-    }
-
-    @Override
-    public void onCoursesRequestCancelled() {
-        mRefreshLayout.setRefreshing(false);
     }
 
     @Override

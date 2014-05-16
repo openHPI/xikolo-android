@@ -17,20 +17,17 @@ import java.net.URL;
 
 import de.xikolo.openhpi.util.Config;
 
-public class JsonRequest extends NetworkRequest<Void, Void, Object> {
+public abstract class JsonRequest extends NetworkRequest<Void, Void, Object> {
 
     public static final String TAG = JsonRequest.class.getSimpleName();
 
     private String mUrl;
     private Type mType;
-    private OnJsonReceivedListener mCallback;
 
-
-    public JsonRequest(String url, Type type, OnJsonReceivedListener callback, Context context) {
+    public JsonRequest(String url, Type type, Context context) {
         super(context);
         this.mUrl = url;
         this.mType = type;
-        this.mCallback = callback;
     }
 
     @Override
@@ -71,21 +68,17 @@ public class JsonRequest extends NetworkRequest<Void, Void, Object> {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        mCallback.onJsonReceived(o);
+        onJsonRequestReceived(o);
     }
 
     @Override
     protected void onCancelled() {
         super.onCancelled();
-        mCallback.onJsonRequestCancelled();
+        onJsonRequestCancelled();
     }
 
-    public interface OnJsonReceivedListener {
+    public abstract void onJsonRequestReceived(Object o);
 
-        public void onJsonReceived(Object o);
-
-        public void onJsonRequestCancelled();
-
-    }
+    public abstract void onJsonRequestCancelled();
 
 }

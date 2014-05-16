@@ -13,18 +13,15 @@ import de.xikolo.openhpi.dataaccess.JsonRequest;
 import de.xikolo.openhpi.model.Course;
 import de.xikolo.openhpi.util.Config;
 
-public class CoursesManager implements JsonRequest.OnJsonReceivedListener {
+public abstract class CoursesManager {
 
     public static final String TAG = CoursesManager.class.getSimpleName();
 
     private Context mContext;
 
-    private OnCoursesReceivedListener mCallback;
-
-    public CoursesManager(OnCoursesReceivedListener mCallback, Context context) {
+    public CoursesManager(Context context) {
         super();
         this.mContext = context;
-        this.mCallback = mCallback;
     }
 
     public void requestCourses() {
@@ -33,37 +30,34 @@ public class CoursesManager implements JsonRequest.OnJsonReceivedListener {
 
         Type type = new TypeToken<List<Course>>() {
         }.getType();
-        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_COURSES, type, this, mContext);
+        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_COURSES, type, mContext) {
+            @Override
+            public void onJsonRequestReceived(Object o) {
+                if (o != null) {
+                    List<Course> courses = (List<Course>) o;
+                    Log.i(TAG, "Courses received (" + courses.size() + ")");
+                    onCoursesRequestReceived(courses);
+                } else {
+                    if (Config.DEBUG)
+                        Log.w(TAG, "No Courses received");
+
+                    onCoursesRequestCancelled();
+                }
+            }
+
+            @Override
+            public void onJsonRequestCancelled() {
+                if (Config.DEBUG)
+                    Log.w(TAG, "Courses Request cancelled");
+
+                onCoursesRequestCancelled();
+            }
+        };
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    @Override
-    public void onJsonReceived(Object o) {
-        if (o != null) {
-            List<Course> courses = (List<Course>) o;
-            Log.i(TAG, "Courses received (" + courses.size() + ")");
-            mCallback.onCoursesReceived(courses);
-        } else {
-            if (Config.DEBUG)
-                Log.w(TAG, "No Courses received");
+    public abstract void onCoursesRequestReceived(List<Course> courses);
 
-            mCallback.onCoursesRequestCancelled();
-        }
-    }
+    public abstract void onCoursesRequestCancelled();
 
-    @Override
-    public void onJsonRequestCancelled() {
-        if (Config.DEBUG)
-            Log.w(TAG, "Courses Request cancelled");
-
-        mCallback.onCoursesRequestCancelled();
-    }
-
-    public interface OnCoursesReceivedListener {
-
-        public void onCoursesReceived(List<Course> courses);
-
-        public void onCoursesRequestCancelled();
-
-    }
 }
