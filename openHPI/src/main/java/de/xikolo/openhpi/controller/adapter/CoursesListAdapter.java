@@ -74,7 +74,7 @@ public class CoursesListAdapter extends BaseAdapter {
 
         Course course = (Course) getItem(i);
 
-        SimpleDateFormat dateIn = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss");
+        SimpleDateFormat dateIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date dateBegin = new Date();
         Date dateEnd = new Date();
         try {
