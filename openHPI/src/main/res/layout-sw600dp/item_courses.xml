@@ -2,7 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:res="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:paddingBottom="6dp"
+    android:paddingTop="6dp">
 
     <ImageView
         android:id="@+id/imageView"
@@ -52,6 +54,7 @@
             android:layout_marginRight="4dp"
             android:singleLine="true"
             android:text="@string/icon_cal"
+            android:textColor="@color/gray_light"
             android:textSize="22sp"
             res:customFont="xikolo.ttf" />
 
@@ -63,6 +66,7 @@
             android:layout_marginRight="8dp"
             android:layout_toRightOf="@+id/textDateIcon"
             android:singleLine="true"
+            android:textColor="@color/gray_light"
             android:textSize="16sp" />
 
         <de.xikolo.openhpi.view.CustomTextView
@@ -74,6 +78,7 @@
             android:layout_toRightOf="@+id/textDate"
             android:singleLine="true"
             android:text="@string/icon_lang"
+            android:textColor="@color/gray_light"
             android:textSize="22sp"
             res:customFont="xikolo.ttf" />
 
@@ -84,6 +89,7 @@
             android:layout_below="@+id/textTeacher"
             android:layout_toRightOf="@+id/textLangIcon"
             android:singleLine="true"
+            android:textColor="@color/gray_light"
             android:textSize="16sp" />
 
         <Button
@@ -93,11 +99,11 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/textDateIcon"
             android:layout_marginTop="4dp"
+            android:background="@drawable/button_orange"
             android:includeFontPadding="false"
             android:minHeight="0dp"
             android:paddingBottom="6dp"
             android:paddingTop="6dp"
-            android:background="@drawable/button_orange"
             android:text="@string/btn_enroll_me"
             android:textColor="@color/white"
             android:textSize="16sp"

@@ -1,110 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:res="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/gray_very_light"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:paddingBottom="3dp"
+    android:paddingTop="3dp">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_gravity="center"
         android:scaleType="centerCrop" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="4dp">
+        android:background="@color/transparent"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textTitle"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="2dp"
-            android:singleLine="true"
-            android:textSize="16sp"
-            android:typeface="serif" />
+            android:layout_weight="0.3"
+            android:background="@color/transparent" />
 
-        <TextView
-            android:id="@+id/textTeacher"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textTitle"
-            android:singleLine="true"
-            android:textColor="@color/orange"
-            android:textSize="14sp" />
-
-        <de.xikolo.openhpi.view.CustomTextView
-            android:id="@+id/textDateIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/btnEnroll"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="4dp"
-            android:singleLine="true"
-            android:text="@string/icon_cal"
-            android:textSize="18sp"
-            res:customFont="xikolo.ttf" />
-
-        <TextView
-            android:id="@+id/textDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/btnEnroll"
-            android:layout_marginRight="8dp"
-            android:layout_toRightOf="@+id/textDateIcon"
-            android:singleLine="true"
-            android:textSize="14sp" />
-
-        <de.xikolo.openhpi.view.CustomTextView
-            android:id="@+id/textLangIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="4dp"
-            android:paddingBottom="2dp"
-            android:singleLine="true"
-            android:text="@string/icon_lang"
-            android:textSize="18sp"
-            res:customFont="xikolo.ttf" />
-
-        <TextView
-            android:id="@+id/textLanguage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/textLangIcon"
-            android:maxLength="3"
-            android:paddingBottom="2dp"
-            android:singleLine="true"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/btnEnroll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/button_orange"
-            android:includeFontPadding="false"
-            android:minHeight="0dp"
-            android:paddingBottom="2dp"
+            android:layout_weight="0.7"
+            android:background="@color/white_alpha"
+            android:paddingBottom="4dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:paddingTop="2dp"
-            android:text="@string/btn_enroll_me"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:typeface="serif" />
+            android:paddingTop="4dp">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="2dp"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:typeface="serif" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/textTeacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textTitle"
+                android:layout_marginBottom="2dp"
+                android:singleLine="true"
+                android:textColor="@color/orange"
+                android:textSize="14sp" />
+
+            <de.xikolo.openhpi.view.CustomTextView
+                android:id="@+id/textDateIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textTeacher"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="4dp"
+                android:singleLine="true"
+                android:text="@string/icon_cal"
+                android:textColor="@color/gray_light"
+                android:textSize="18sp"
+                res:customFont="xikolo.ttf" />
+
+            <TextView
+                android:id="@+id/textDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textTeacher"
+                android:layout_toRightOf="@+id/textDateIcon"
+                android:singleLine="true"
+                android:textColor="@color/gray_light"
+                android:textSize="14sp" />
+
+            <de.xikolo.openhpi.view.CustomTextView
+                android:id="@+id/textLangIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textDateIcon"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="4dp"
+                android:singleLine="true"
+                android:text="@string/icon_lang"
+                android:textColor="@color/gray_light"
+                android:textSize="18sp"
+                res:customFont="xikolo.ttf" />
+
+            <TextView
+                android:id="@+id/textLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textDateIcon"
+                android:layout_toRightOf="@+id/textLangIcon"
+                android:singleLine="true"
+                android:textColor="@color/gray_light"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnEnroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/textLangIcon"
+                android:background="@drawable/button_orange"
+                android:includeFontPadding="false"
+                android:minHeight="0dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="2dp"
+                android:text="@string/btn_enroll_me"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:typeface="serif" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -88,7 +88,7 @@ public class CoursesListAdapter extends BaseAdapter {
             Log.w(TAG, "Failed parsing " + course.available_to, e);
         }
         DateFormat dateOut;
-        if (DisplayConfig.isTablet(mContext)) {
+        if (DisplayConfig.is7inchTablet(mContext)) {
             dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault());
         } else {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
