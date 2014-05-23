@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.openhpi.R;
-import de.xikolo.openhpi.controller.adapter.CoursesListAdapter;
+import de.xikolo.openhpi.controller.fragments.adapter.CoursesListAdapter;
+import de.xikolo.openhpi.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.openhpi.manager.CoursesManager;
 import de.xikolo.openhpi.model.Course;
 
@@ -65,7 +66,7 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
     @Override
     public void onStart() {
         super.onStart();
-        mCallback.onTopFragmentAttached(0);
+        mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
     }
 
     @Override

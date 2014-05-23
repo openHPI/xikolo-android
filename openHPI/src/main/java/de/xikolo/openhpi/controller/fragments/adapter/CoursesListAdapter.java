@@ -1,4 +1,4 @@
-package de.xikolo.openhpi.controller.adapter;
+package de.xikolo.openhpi.controller.fragments.adapter;
 
 import android.app.Activity;
 import android.util.Log;
@@ -101,7 +101,7 @@ public class CoursesListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 ((ContentFragment.OnFragmentInteractionListener) mContext)
-                        .attachLowerFragment(WebViewFragment.newInstance(course.url, true, course.name));
+                        .attachFragment(WebViewFragment.newInstance(course.url, true, course.name));
             }
         });
 

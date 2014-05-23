@@ -1,16 +1,12 @@
 package de.xikolo.openhpi.controller.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.xikolo.openhpi.R;
-import de.xikolo.openhpi.manager.AccessTokenManager;
-import de.xikolo.openhpi.manager.UserManager;
-import de.xikolo.openhpi.model.AccessToken;
-import de.xikolo.openhpi.model.User;
+import de.xikolo.openhpi.controller.navigation.adapter.NavigationAdapter;
 
 public class SettingsFragment extends ContentFragment {
 
@@ -43,39 +39,12 @@ public class SettingsFragment extends ContentFragment {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
-
-        final UserManager userMgmt = new UserManager(getActivity()) {
-            @Override
-            public void onUserRequestReceived(User user) {
-                Log.e(TAG, user.name);
-                Log.e(TAG, AccessTokenManager.getAccessToken(getActivity()).access_token);
-            }
-
-            @Override
-            public void onUserRequestCancelled() {
-
-            }
-        };
-
-        final AccessTokenManager tokenMgmt = new AccessTokenManager(getActivity()) {
-            @Override
-            public void onAccessTokenRequestReceived(AccessToken token) {
-                userMgmt.requestUser();
-            }
-
-            @Override
-            public void onAccessTokenRequestCancelled() {
-
-            }
-        };
-//        tokenMgmt.login("tobias.rohloff@student.hpi.uni-potsdam.de", "openhpi");
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mCallback.onTopFragmentAttached(3);
+        mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_SETTINGS, getString(R.string.title_section_settings));
     }
 
     @Override

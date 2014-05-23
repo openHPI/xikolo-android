@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 
 import de.xikolo.openhpi.R;
+import de.xikolo.openhpi.controller.navigation.adapter.NavigationAdapter;
 
 public class CourseFragment extends ContentFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,7 +50,7 @@ public class CourseFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        mCallback.onTopFragmentAttached(4);
+        mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
     }
 
     @Override

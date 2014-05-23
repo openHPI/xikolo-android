@@ -19,9 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import de.xikolo.openhpi.R;
+import de.xikolo.openhpi.controller.navigation.adapter.NavigationAdapter;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -55,9 +57,11 @@ public class NavigationFragment extends Fragment {
     private ListView mDrawerListView;
     private View mFragmentContainerView;
 
-    private int mCurrentSelectedPosition = 0;
+    private int mCurrentSelectedPosition;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+
+    private BaseAdapter mAdapter;
 
     public NavigationFragment() {
     }
@@ -75,11 +79,11 @@ public class NavigationFragment extends Fragment {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         } else {
-            mCurrentSelectedPosition = -1;
+            mCurrentSelectedPosition = NavigationAdapter.NAV_ID_LOW_LEVEL_CONTENT;
         }
 
         if (!mFromSavedInstanceState) {
-            selectItem(0);
+            selectItem(NavigationAdapter.NAV_ID_ALL_COURSES);
         }
     }
 
@@ -93,32 +97,28 @@ public class NavigationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mAdapter = new NavigationAdapter(getActivity());
+
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
+                mAdapter.notifyDataSetChanged();
             }
         });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section_courses),
-                        getString(R.string.title_section_news),
-                        getString(R.string.title_section_downloads),
-                        getString(R.string.title_section_settings),
-                        getString(R.string.title_section_course)
-                }
-        ));
+        mDrawerListView.setAdapter(mAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+    }
+
+    public void updateDrawer() {
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

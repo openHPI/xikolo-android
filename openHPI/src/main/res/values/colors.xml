@@ -1,11 +1,15 @@
 <resources>
     <color name="gray_dark">#101010</color>
     <color name="gray_medium">#252525</color>
+    <color name="gray_medium_light">#333333</color>
     <color name="gray_light">#5a6065</color>
     <color name="gray_very_light">#dddddd</color>
     <color name="red">#b42946</color>
     <color name="orange">#de6212</color>
+    <color name="orange_alpha">#33de6212</color>
     <color name="orange_dark">#c05c05</color>
+    <color name="orange_medium_dark">#534138</color>
+    <color name="orange_strong_dark">#46362e</color>
     <color name="yellow">#f5a704</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>

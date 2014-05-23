@@ -15,9 +15,11 @@ import de.xikolo.openhpi.controller.fragments.ContentFragment;
 import de.xikolo.openhpi.controller.fragments.CourseFragment;
 import de.xikolo.openhpi.controller.fragments.CoursesFragment;
 import de.xikolo.openhpi.controller.fragments.DownloadsFragment;
+import de.xikolo.openhpi.controller.fragments.ProfileFragment;
 import de.xikolo.openhpi.controller.fragments.SettingsFragment;
 import de.xikolo.openhpi.controller.fragments.WebViewFragment;
 import de.xikolo.openhpi.controller.navigation.NavigationFragment;
+import de.xikolo.openhpi.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.openhpi.util.Config;
 import de.xikolo.openhpi.util.FontsOverride;
 
@@ -50,7 +52,7 @@ public class MainActivity extends FragmentActivity
         FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
         FontsOverride.setDefaultFont(this, "SERIF", Config.FONT_SANS_BOLD);
 
-            mTitle = getString(R.string.app_name);
+        mTitle = getString(R.string.app_name);
 
         setContentView(R.layout.activity_main);
 
@@ -66,54 +68,48 @@ public class MainActivity extends FragmentActivity
     }
 
     @Override
-    public void attachLowerFragment(Fragment fragment) {
+    public void attachFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
-        mNavigationFragment.setDrawerIndicatorEnabled(false);
     }
 
     @Override
-    public void onTopFragmentAttached(int id) {
-        setTitle(id);
+    public void onTopLevelFragmentAttached(int id, String title) {
+        setTitle(title);
         mNavigationFragment.markItem(id);
         mNavigationFragment.setDrawerIndicatorEnabled(true);
     }
 
     @Override
-    public void onLowerFragmentAttached(int id, String title) {
-        if (getActionBar() != null) {
-            mTitle = title;
-            getActionBar().setTitle(title);
-        }
+    public void onLowLevelFragmentAttached(int id, String title) {
+        setTitle(title);
         mNavigationFragment.markItem(id);
         mNavigationFragment.setDrawerIndicatorEnabled(false);
-    }
-
-    @Override
-    public void onLowerFragmentDetached() {
-        mNavigationFragment.setDrawerIndicatorEnabled(true);
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position) {
-            case 0:
+            case NavigationAdapter.NAV_ID_PROFILE:
+                mFragment = ProfileFragment.newInstance();
+                break;
+            case NavigationAdapter.NAV_ID_ALL_COURSES:
                 mFragment = CoursesFragment.newInstance();
                 break;
-            case 1:
+            case NavigationAdapter.NAV_ID_MY_COURSES:
+                mFragment = CourseFragment.newInstance();
+                break;
+            case NavigationAdapter.NAV_ID_NEWS:
                 mFragment = WebViewFragment.newInstance(Config.URI_HPI + Config.PATH_NEWS, false, null);
                 break;
-            case 2:
+            case NavigationAdapter.NAV_ID_DOWNLOADS:
                 mFragment = DownloadsFragment.newInstance();
                 break;
-            case 3:
+            case NavigationAdapter.NAV_ID_SETTINGS:
                 mFragment = SettingsFragment.newInstance();
-                break;
-            case 4:
-                mFragment = CourseFragment.newInstance();
                 break;
         }
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -122,28 +118,10 @@ public class MainActivity extends FragmentActivity
         transaction.commit();
     }
 
-    @Override
-    public void setTitle(int titleId) {
-        switch (titleId) {
-            case 0:
-                mTitle = getString(R.string.title_section_courses);
-                break;
-            case 1:
-                mTitle = getString(R.string.title_section_news);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section_downloads);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section_settings);
-                break;
-            case 4:
-                mTitle = getString(R.string.title_section_course);
-                break;
-        }
+    private void setTitle(String title) {
+        mTitle = title;
         if (getActionBar() != null) {
             getActionBar().setTitle(mTitle);
-
         }
     }
 
@@ -198,6 +176,11 @@ public class MainActivity extends FragmentActivity
     @Override
     public boolean isDrawerOpen() {
         return this.mNavigationFragment.isDrawerOpen();
+    }
+
+    @Override
+    public void updateDrawer() {
+        this.mNavigationFragment.updateDrawer();
     }
 
     @Override

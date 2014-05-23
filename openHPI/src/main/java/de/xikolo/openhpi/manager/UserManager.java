@@ -27,9 +27,9 @@ public abstract class UserManager {
         this.mUserPref = new UserPreferences(context);
     }
 
-    public User getUser() {
-        requestUser();
-        return this.mUserPref.getUser();
+    public static User getUser(Context context) {
+        UserPreferences prefs = new UserPreferences(context);
+        return prefs.getUser();
     }
 
     public void requestUser() {

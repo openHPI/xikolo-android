@@ -26,15 +26,15 @@ public abstract class ContentFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
 
-        public void onTopFragmentAttached(int id);
+        public void attachFragment(Fragment fragment);
 
-        public void attachLowerFragment(Fragment fragment);
+        public void onTopLevelFragmentAttached(int id, String title);
 
-        public void onLowerFragmentAttached(int id, String title);
-
-        public void onLowerFragmentDetached();
+        public void onLowLevelFragmentAttached(int id, String title);
 
         public boolean isDrawerOpen();
+
+        public void updateDrawer();
 
     }
 

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.xikolo.openhpi.R;
+import de.xikolo.openhpi.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.openhpi.util.Config;
 import de.xikolo.openhpi.util.Network;
 
@@ -76,9 +77,9 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     public void onStart() {
         super.onStart();
         if (mUrl.contains(Config.PATH_NEWS)) {
-            mCallback.onTopFragmentAttached(1);
+            mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_NEWS, getString(R.string.title_section_news));
         } else if (mBack) {
-            mCallback.onLowerFragmentAttached(-1, mTitle);
+            mCallback.onLowLevelFragmentAttached(NavigationAdapter.NAV_ID_LOW_LEVEL_CONTENT, mTitle);
         }
     }
 
@@ -180,7 +181,6 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
         switch (itemId) {
             case android.R.id.home:
                 getActivity().getSupportFragmentManager().popBackStack();
-                mCallback.onLowerFragmentDetached();
                 return true;
             case R.id.action_refresh:
                 onRefresh();

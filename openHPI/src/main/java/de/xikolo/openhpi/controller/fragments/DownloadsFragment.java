@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.xikolo.openhpi.R;
+import de.xikolo.openhpi.controller.navigation.adapter.NavigationAdapter;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -51,7 +52,7 @@ public class DownloadsFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        mCallback.onTopFragmentAttached(2);
+        mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_DOWNLOADS, getString(R.string.title_section_downloads));
     }
 
     @Override

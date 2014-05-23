@@ -31,6 +31,12 @@ public abstract class AccessTokenManager {
         return prefs.getAccessToken();
     }
 
+    public static boolean isLoggedIn(Context context) {
+        UserPreferences prefs = new UserPreferences(context);
+        return !prefs.getAccessToken().access_token
+                .equals(UserPreferences.ACCESS_TOKEN_DEFAULT);
+    }
+
     public void logout() {
         this.mUserPref.deleteUserAndToken();
     }

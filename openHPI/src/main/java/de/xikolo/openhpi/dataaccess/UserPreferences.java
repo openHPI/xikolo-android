@@ -20,6 +20,8 @@ public class UserPreferences {
 
     private static String USER_ACCESS_TOKEN = "access_token";
 
+    public static String ACCESS_TOKEN_DEFAULT = "fail";
+
     private Context mContext;
 
     public UserPreferences(Context context) {
@@ -65,7 +67,7 @@ public class UserPreferences {
     public AccessToken getAccessToken() {
         AccessToken token = new AccessToken();
         SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_USER, Context.MODE_PRIVATE);
-        token.access_token = sharedPref.getString(USER_ACCESS_TOKEN, "-1");
+        token.access_token = sharedPref.getString(USER_ACCESS_TOKEN, ACCESS_TOKEN_DEFAULT);
         return token;
     }
 

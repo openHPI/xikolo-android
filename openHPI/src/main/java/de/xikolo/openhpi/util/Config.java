@@ -29,22 +29,22 @@ public class Config {
 
     public static final String URI_HOST_HPI = "openhpi.de";
     public static final String URI_HPI = URI_SCHEME_HTTPS + "://" + URI_HOST_HPI + "/";
-    public static final String API_HPI = URI_HPI + "/api";
+    public static final String API_HPI = URI_HPI + "api/";
     public static final String URI_HOST_SAP = "open.sap.com";
     public static final String URI_SAP = URI_SCHEME_HTTPS + "://" + URI_HOST_SAP + "/";
-    public static final String API_SAP = URI_SAP + "/api";
+    public static final String API_SAP = URI_SAP + "api/";
 
-    public static final String PATH_NEWS = "/news";
+    public static final String PATH_NEWS = "news/";
 
-    public static final String PATH_AUTHENTICATE = "/authenticate";
+    public static final String PATH_AUTHENTICATE = "authenticate/";
 
-    public static final String PATH_COURSES = "/courses";
-    public static final String PATH_ANNOUNCEMENTS = "/announcements";
-    public static final String PATH_MODULES = "/modules";
-    public static final String PATH_ITEMS = "/items";
+    public static final String PATH_COURSES = "courses/";
+    public static final String PATH_ANNOUNCEMENTS = "announcements/";
+    public static final String PATH_MODULES = "modules/";
+    public static final String PATH_ITEMS = "items/";
 
-    public static final String PATH_USER = "/users/me";
-    public static final String PATH_ENROLLMENTS = "/enrollments";
-    public static final String PATH_PROGRESSIONS = "/progressions";
+    public static final String PATH_USER = "users/me/";
+    public static final String PATH_ENROLLMENTS = "enrollments/";
+    public static final String PATH_PROGRESSIONS = "progressions/";
 
 }
