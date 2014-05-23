@@ -15,6 +15,8 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import de.xikolo.openhpi.util.Config;
 
 public abstract class JsonRequest extends NetworkRequest<Void, Void, Object> {
@@ -22,12 +24,23 @@ public abstract class JsonRequest extends NetworkRequest<Void, Void, Object> {
     public static final String TAG = JsonRequest.class.getSimpleName();
 
     private String mUrl;
+    private String mToken;
+    private String mMethod;
     private Type mType;
+    private boolean mCache;
 
-    public JsonRequest(String url, Type type, Context context) {
+    public JsonRequest(String url, String method, boolean cache, Type type, Context context) {
         super(context);
         this.mUrl = url;
+        this.mMethod = method;
+        this.mCache = cache;
         this.mType = type;
+        this.mToken = null;
+    }
+
+    public JsonRequest(String url, String method, String token, boolean cache, Type type, Context context) {
+        this(url, method, cache, type, context);
+        this.mToken = token;
     }
 
     @Override
@@ -35,9 +48,16 @@ public abstract class JsonRequest extends NetworkRequest<Void, Void, Object> {
         HttpURLConnection urlConnection = null;
         try {
             URL url = new URL(mUrl);
-            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = (HttpsURLConnection) url.openConnection();
+            urlConnection.setRequestMethod(mMethod);
             urlConnection.addRequestProperty(Config.HEADER_ACCEPT, Config.HEADER_VALUE_ACCEPT_SAP);
             urlConnection.addRequestProperty(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
+            if (!mCache) {
+                urlConnection.addRequestProperty(Config.HEADER_ACCEPT, Config.HEADER_VALUE_ACCEPT_SAP);
+            }
+            if (mToken != null) {
+                urlConnection.addRequestProperty(Config.HEADER_AUTHORIZATION, "Token token=\"" + mToken + "\"");
+            }
 
             final int statusCode = urlConnection.getResponseCode();
 
