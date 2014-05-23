@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.openhpi.R;
@@ -20,6 +21,8 @@ import de.xikolo.openhpi.model.Course;
 public class CoursesFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = CoursesFragment.class.getSimpleName();
+
+    private static final String KEY_COURSES = "courses";
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String ARG_PARAM1 = "param1";
@@ -33,6 +36,8 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
     private CoursesListAdapter mCoursesListAdapter;
 
     private CoursesManager mCoursesManager;
+
+    private List<Course> mCourses;
 
     public CoursesFragment() {
         // Required empty public constructor
@@ -64,6 +69,14 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mCourses != null) {
+            outState.putParcelableArrayList(KEY_COURSES, (ArrayList<Course>) mCourses);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -86,6 +99,7 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
             @Override
             public void onCoursesRequestReceived(List<Course> courses) {
                 mRefreshLayout.setRefreshing(false);
+                mCourses = courses;
                 mCoursesListAdapter.update(courses);
             }
 
@@ -94,7 +108,16 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
                 mRefreshLayout.setRefreshing(false);
             }
         };
-        onRefresh();
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_COURSES)) {
+            mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
+            mCoursesListAdapter.update(mCourses);
+        }
+
+        if (mCourses == null) {
+            mRefreshLayout.setRefreshing(true);
+            mCoursesManager.requestCourses(true);
+        }
 
         return layout;
     }
@@ -102,7 +125,7 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
     @Override
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
-        mCoursesManager.requestCourses();
+        mCoursesManager.requestCourses(false);
     }
 
     @Override

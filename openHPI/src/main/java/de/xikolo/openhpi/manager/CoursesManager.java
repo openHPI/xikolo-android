@@ -24,13 +24,14 @@ public abstract class CoursesManager {
         this.mContext = context;
     }
 
-    public void requestCourses() {
+    public void requestCourses(boolean cache) {
         if (Config.DEBUG)
-            Log.i(TAG, "requestCourses() called");
+            Log.i(TAG, "requestCourses() called; cache " + cache);
 
         Type type = new TypeToken<List<Course>>() {
         }.getType();
-        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_COURSES, type, mContext) {
+        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_COURSES, Config.HTTP_GET,
+                cache, type, mContext) {
             @Override
             public void onJsonRequestReceived(Object o) {
                 if (o != null) {
