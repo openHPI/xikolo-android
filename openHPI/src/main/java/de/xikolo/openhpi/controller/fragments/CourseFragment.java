@@ -49,7 +49,7 @@ public class CourseFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        mCallback.onFragmentAttached(4);
+        mCallback.onTopFragmentAttached(4);
     }
 
     @Override

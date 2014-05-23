@@ -65,7 +65,7 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
     @Override
     public void onStart() {
         super.onStart();
-        mCallback.onFragmentAttached(0);
+        mCallback.onTopFragmentAttached(0);
     }
 
     @Override
@@ -111,12 +111,13 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
 
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_COURSES)) {
             mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
-            mCoursesListAdapter.update(mCourses);
         }
 
         if (mCourses == null) {
             mRefreshLayout.setRefreshing(true);
             mCoursesManager.requestCourses(true);
+        } else {
+            mCoursesListAdapter.update(mCourses);
         }
 
         return layout;

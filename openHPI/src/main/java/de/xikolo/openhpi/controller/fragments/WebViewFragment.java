@@ -33,8 +33,12 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
 
     // the fragment initialization parameters
     private static final String ARG_URL = "url";
+    private static final String ARG_BACK = "back";
+    private static final String ARG_TITLE = "title";
 
     private String mUrl;
+    private String mTitle;
+    private boolean mBack;
 
     private SwipeRefreshLayout mRefreshLayout;
 
@@ -47,10 +51,12 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
         // Required empty public constructor
     }
 
-    public static WebViewFragment newInstance(String url) {
+    public static WebViewFragment newInstance(String url, boolean back, String title) {
         WebViewFragment fragment = new WebViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
+        args.putBoolean(ARG_BACK, back);
+        args.putString(ARG_TITLE, title);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,6 +66,8 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mUrl = getArguments().getString(ARG_URL);
+            mBack = getArguments().getBoolean(ARG_BACK);
+            mTitle = getArguments().getString(ARG_TITLE);
         }
         setHasOptionsMenu(true);
     }
@@ -68,7 +76,9 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     public void onStart() {
         super.onStart();
         if (mUrl.contains(Config.PATH_NEWS)) {
-            mCallback.onFragmentAttached(1);
+            mCallback.onTopFragmentAttached(1);
+        } else if (mBack) {
+            mCallback.onLowerFragmentAttached(-1, mTitle);
         }
     }
 
@@ -168,6 +178,10 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
+            case android.R.id.home:
+                getActivity().getSupportFragmentManager().popBackStack();
+                mCallback.onLowerFragmentDetached();
+                return true;
             case R.id.action_refresh:
                 onRefresh();
                 return true;

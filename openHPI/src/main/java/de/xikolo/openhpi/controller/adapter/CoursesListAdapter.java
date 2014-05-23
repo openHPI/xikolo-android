@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Locale;
 
 import de.xikolo.openhpi.R;
+import de.xikolo.openhpi.controller.fragments.ContentFragment;
+import de.xikolo.openhpi.controller.fragments.WebViewFragment;
 import de.xikolo.openhpi.model.Course;
 import de.xikolo.openhpi.util.DisplayConfig;
 
@@ -63,6 +65,7 @@ public class CoursesListAdapter extends BaseAdapter {
             LayoutInflater inflater = mContext.getLayoutInflater();
             rowView = inflater.inflate(R.layout.item_courses, null);
             ViewHolder viewHolder = new ViewHolder();
+            viewHolder.container = (ViewGroup) rowView.findViewById(R.id.container);
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
             viewHolder.teacher = (TextView) rowView.findViewById(R.id.textTeacher);
             viewHolder.date = (TextView) rowView.findViewById(R.id.textDate);
@@ -72,7 +75,7 @@ public class CoursesListAdapter extends BaseAdapter {
         }
         ViewHolder holder = (ViewHolder) rowView.getTag();
 
-        Course course = (Course) getItem(i);
+        final Course course = (Course) getItem(i);
 
         SimpleDateFormat dateIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date dateBegin = new Date();
@@ -94,6 +97,14 @@ public class CoursesListAdapter extends BaseAdapter {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
         }
 
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ContentFragment.OnFragmentInteractionListener) mContext)
+                        .attachLowerFragment(WebViewFragment.newInstance(course.url, true, course.name));
+            }
+        });
+
         holder.title.setText(course.name);
         holder.teacher.setText(course.lecturer);
         holder.date.setText(dateOut.format(dateBegin) + " - " + dateOut.format(dateEnd));
@@ -104,6 +115,7 @@ public class CoursesListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
+        ViewGroup container;
         TextView title;
         TextView teacher;
         TextView date;

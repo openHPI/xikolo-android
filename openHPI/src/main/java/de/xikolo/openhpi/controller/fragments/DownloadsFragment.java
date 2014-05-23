@@ -1,7 +1,6 @@
 package de.xikolo.openhpi.controller.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +51,7 @@ public class DownloadsFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        mCallback.onFragmentAttached(2);
+        mCallback.onTopFragmentAttached(2);
     }
 
     @Override
