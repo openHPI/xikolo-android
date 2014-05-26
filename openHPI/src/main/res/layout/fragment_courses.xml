@@ -10,9 +10,12 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:divider="@color/transparent"
-        android:dividerHeight="0dp"
+        android:dividerHeight="6dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:clipToPadding="false"
         android:scrollbarStyle="outsideOverlay" />
 
 </android.support.v4.widget.SwipeRefreshLayout>

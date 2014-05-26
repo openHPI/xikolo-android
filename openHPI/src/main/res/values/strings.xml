@@ -26,7 +26,8 @@
 
     <string name="btn_enroll_me">Enroll me for this course</string>
 
-    <string name="toast_no_network">No network connection available. Please enable internet connection.</string>
+    <string name="toast_no_courses">No courses received.</string>
+    <string name="toast_no_network">Please enable network connection.</string>
 
     <string name="icon_cal">&#xe625;</string>
     <string name="icon_lang">&#xe612;</string>

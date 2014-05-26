@@ -23,7 +23,7 @@ import de.xikolo.openhpi.R;
 import de.xikolo.openhpi.controller.fragments.ContentFragment;
 import de.xikolo.openhpi.controller.fragments.WebViewFragment;
 import de.xikolo.openhpi.model.Course;
-import de.xikolo.openhpi.util.DisplayConfig;
+import de.xikolo.openhpi.util.Display;
 
 public class CoursesListAdapter extends BaseAdapter {
 
@@ -91,7 +91,7 @@ public class CoursesListAdapter extends BaseAdapter {
             Log.w(TAG, "Failed parsing " + course.available_to, e);
         }
         DateFormat dateOut;
-        if (DisplayConfig.is7inchTablet(mContext)) {
+        if (Display.is7inchTablet(mContext)) {
             dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault());
         } else {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());

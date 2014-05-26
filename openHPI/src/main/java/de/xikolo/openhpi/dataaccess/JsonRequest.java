@@ -1,6 +1,7 @@
 package de.xikolo.openhpi.dataaccess;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -18,29 +19,54 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.xikolo.openhpi.util.Config;
+import de.xikolo.openhpi.util.Network;
 
-public abstract class JsonRequest extends NetworkRequest<Void, Void, Object> {
+public abstract class JsonRequest extends AsyncTask<Void, Void, Object> {
 
     public static final String TAG = JsonRequest.class.getSimpleName();
+
+    private Context mContext;
 
     private String mUrl;
     private String mToken;
     private String mMethod;
     private Type mType;
     private boolean mCache;
+    private boolean mCacheOnly;
 
-    public JsonRequest(String url, String method, boolean cache, Type type, Context context) {
-        super(context);
+    public JsonRequest(String url, Type type, Context context) {
+        super();
         this.mUrl = url;
-        this.mMethod = method;
-        this.mCache = cache;
         this.mType = type;
+        this.mContext = context;
         this.mToken = null;
+        this.mMethod = Config.HTTP_GET;
+        this.mCache = true;
+        this.mCacheOnly = false;
     }
 
-    public JsonRequest(String url, String method, String token, boolean cache, Type type, Context context) {
-        this(url, method, cache, type, context);
+    public void setToken(String token) {
         this.mToken = token;
+    }
+
+    public void setMethod(String method) {
+        this.mMethod = method;
+    }
+
+    public void setCache(boolean cache) {
+        this.mCache = cache;
+    }
+
+    public void setCacheOnly(boolean cacheOnly) {
+        this.mCacheOnly = cacheOnly;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        if (!Network.isOnline(mContext) && !mCacheOnly) {
+            Network.showNoConnectionToast(mContext);
+            cancel(true);
+        }
     }
 
     @Override
@@ -52,8 +78,11 @@ public abstract class JsonRequest extends NetworkRequest<Void, Void, Object> {
             urlConnection.setRequestMethod(mMethod);
             urlConnection.addRequestProperty(Config.HEADER_ACCEPT, Config.HEADER_VALUE_ACCEPT_SAP);
             urlConnection.addRequestProperty(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
-            if (!mCache) {
-                urlConnection.addRequestProperty(Config.HEADER_ACCEPT, Config.HEADER_VALUE_ACCEPT_SAP);
+
+            if (mCacheOnly) {
+                urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_VALUE_ONLY_CACHE);
+            } else if (!mCache) {
+                urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_VALUE_NO_CACHE);
             }
             if (mToken != null) {
                 urlConnection.addRequestProperty(Config.HEADER_AUTHORIZATION, "Token token=\"" + mToken + "\"");

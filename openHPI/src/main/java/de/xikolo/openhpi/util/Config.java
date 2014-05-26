@@ -20,6 +20,7 @@ public class Config {
     public static final String HEADER_VALUE_USER_PLATFORM_ANDROID = "Android";
     public static final String HEADER_VALUE_ACCEPT_SAP = "application/vnd.opensap.v1, application/json";
     public static final String HEADER_VALUE_NO_CACHE = "no-cache";
+    public static final String HEADER_VALUE_ONLY_CACHE = "only-if-cached";
 
     public static final String HTTP_GET = "GET";
     public static final String HTTP_POST = "POST";

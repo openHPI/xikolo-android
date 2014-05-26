@@ -50,8 +50,7 @@ public abstract class AccessTokenManager {
 
         String query = "?email=" + email + "&password=" + password;
 
-        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_AUTHENTICATE + query, Config.HTTP_POST,
-                mUserPref.getAccessToken().access_token, false, type, mContext) {
+        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_AUTHENTICATE + query, type, mContext) {
             @Override
             public void onJsonRequestReceived(Object o) {
                 if (o != null) {
@@ -76,6 +75,9 @@ public abstract class AccessTokenManager {
                 onAccessTokenRequestCancelled();
             }
         };
+        request.setCache(false);
+        request.setToken(mUserPref.getAccessToken().access_token);
+        request.setMethod(Config.HTTP_POST);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

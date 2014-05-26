@@ -38,8 +38,7 @@ public abstract class UserManager {
 
         Type type = new TypeToken<User>() {
         }.getType();
-        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_USER, Config.HTTP_GET,
-                mUserPref.getAccessToken().access_token, false, type, mContext) {
+        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_USER, type, mContext) {
             @Override
             public void onJsonRequestReceived(Object o) {
                 if (o != null) {
@@ -61,6 +60,8 @@ public abstract class UserManager {
                 onUserRequestCancelled();
             }
         };
+        request.setCache(false);
+        request.setToken(mUserPref.getAccessToken().access_token);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

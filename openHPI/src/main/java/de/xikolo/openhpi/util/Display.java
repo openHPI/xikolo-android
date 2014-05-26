@@ -3,7 +3,7 @@ package de.xikolo.openhpi.util;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
-public class DisplayConfig {
+public class Display {
 
     public static boolean is7inchTablet(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();

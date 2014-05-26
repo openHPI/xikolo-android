@@ -9,9 +9,12 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import de.xikolo.openhpi.R;
 import de.xikolo.openhpi.dataaccess.JsonRequest;
 import de.xikolo.openhpi.model.Course;
 import de.xikolo.openhpi.util.Config;
+import de.xikolo.openhpi.util.Network;
+import de.xikolo.openhpi.util.Toaster;
 
 public abstract class CoursesManager {
 
@@ -30,19 +33,20 @@ public abstract class CoursesManager {
 
         Type type = new TypeToken<List<Course>>() {
         }.getType();
-        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_COURSES, Config.HTTP_GET,
-                cache, type, mContext) {
+        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_COURSES, type, mContext) {
             @Override
             public void onJsonRequestReceived(Object o) {
                 if (o != null) {
                     List<Course> courses = (List<Course>) o;
                     Log.i(TAG, "Courses received (" + courses.size() + ")");
-                    onCoursesRequestReceived(courses);
+                    if (Config.DEBUG)
+                        onCoursesRequestReceived(courses);
                 } else {
                     if (Config.DEBUG)
                         Log.w(TAG, "No Courses received");
-
                     onCoursesRequestCancelled();
+                    Toaster.show(mContext, mContext.getString(R.string.toast_no_courses)
+                            + " " + mContext.getString(R.string.toast_no_network));
                 }
             }
 
@@ -50,10 +54,13 @@ public abstract class CoursesManager {
             public void onJsonRequestCancelled() {
                 if (Config.DEBUG)
                     Log.w(TAG, "Courses Request cancelled");
-
                 onCoursesRequestCancelled();
             }
         };
+        request.setCache(cache);
+        if (!Network.isOnline(mContext) && cache) {
+            request.setCacheOnly(true);
+        }
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
