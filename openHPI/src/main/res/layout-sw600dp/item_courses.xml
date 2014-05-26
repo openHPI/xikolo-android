@@ -3,7 +3,8 @@
     xmlns:res="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:foreground="@drawable/bg_item_courses">
 
     <ImageView
         android:id="@+id/imageView"
@@ -11,11 +12,6 @@
         android:layout_height="280dp"
         android:layout_gravity="center_horizontal|top"
         android:scaleType="centerCrop" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/bg_item_courses" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -58,7 +54,7 @@
             android:layout_marginRight="4dp"
             android:singleLine="true"
             android:text="@string/icon_cal"
-            android:textColor="@color/gray_light"
+            android:textColor="@color/gray_text"
             android:textSize="22sp"
             res:customFont="xikolo.ttf" />
 
@@ -70,7 +66,7 @@
             android:layout_marginRight="8dp"
             android:layout_toRightOf="@+id/textDateIcon"
             android:singleLine="true"
-            android:textColor="@color/gray_light"
+            android:textColor="@color/gray_text"
             android:textSize="16sp" />
 
         <de.xikolo.openhpi.view.CustomTextView
@@ -82,7 +78,7 @@
             android:layout_toRightOf="@+id/textDate"
             android:singleLine="true"
             android:text="@string/icon_lang"
-            android:textColor="@color/gray_light"
+            android:textColor="@color/gray_text"
             android:textSize="22sp"
             res:customFont="xikolo.ttf" />
 
@@ -93,7 +89,7 @@
             android:layout_below="@+id/textTeacher"
             android:layout_toRightOf="@+id/textLangIcon"
             android:singleLine="true"
-            android:textColor="@color/gray_light"
+            android:textColor="@color/gray_text"
             android:textSize="16sp" />
 
         <Button

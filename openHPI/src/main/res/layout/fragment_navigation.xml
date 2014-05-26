@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:choiceMode="singleChoice"
     android:dividerHeight="1dp"
-    android:divider="@color/gray_medium"
-    android:background="@color/gray_medium"
+    android:divider="@color/gray_navi_main"
+    android:background="@color/gray_navi_sub"
     tools:context="de.xikolo.openhpi.controller.navigation.NavigationFragment"
     android:drawSelectorOnTop="false" />

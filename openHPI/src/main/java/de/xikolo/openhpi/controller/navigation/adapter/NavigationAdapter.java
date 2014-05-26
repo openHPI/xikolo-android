@@ -12,10 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.openhpi.R;
-import de.xikolo.openhpi.dataaccess.UserPreferences;
 import de.xikolo.openhpi.manager.AccessTokenManager;
 import de.xikolo.openhpi.manager.UserManager;
-import de.xikolo.openhpi.model.AccessToken;
 
 public class NavigationAdapter extends BaseAdapter {
 
@@ -72,9 +70,11 @@ public class NavigationAdapter extends BaseAdapter {
         if (rowView == null) {
             LayoutInflater inflater = mContext.getLayoutInflater();
             if (i == NAV_ID_PROFILE) {
-                rowView = inflater.inflate(R.layout.item_profile, null);
+                rowView = inflater.inflate(R.layout.item_navi_profile, null);
+            } else if (i == NAV_ID_SETTINGS || i == NAV_ID_DOWNLOADS) {
+                rowView = inflater.inflate(R.layout.item_navi_sub, null);
             } else {
-                rowView = inflater.inflate(R.layout.item_navigation, null);
+                rowView = inflater.inflate(R.layout.item_navi_main, null);
             }
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.icon = (TextView) rowView.findViewById(R.id.textIcon);

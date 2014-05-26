@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:res="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
+    android:foreground="@drawable/bg_item_courses"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
@@ -15,7 +16,6 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@drawable/bg_item_courses"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -66,7 +66,7 @@
                 android:layout_marginRight="4dp"
                 android:singleLine="true"
                 android:text="@string/icon_cal"
-                android:textColor="@color/gray_light"
+                android:textColor="@color/gray_text"
                 android:textSize="18sp"
                 res:customFont="xikolo.ttf" />
 
@@ -77,7 +77,7 @@
                 android:layout_below="@+id/textTeacher"
                 android:layout_toRightOf="@+id/textDateIcon"
                 android:singleLine="true"
-                android:textColor="@color/gray_light"
+                android:textColor="@color/gray_text"
                 android:textSize="14sp" />
 
             <de.xikolo.openhpi.view.CustomTextView
@@ -90,7 +90,7 @@
                 android:layout_marginRight="4dp"
                 android:singleLine="true"
                 android:text="@string/icon_lang"
-                android:textColor="@color/gray_light"
+                android:textColor="@color/gray_text"
                 android:textSize="18sp"
                 res:customFont="xikolo.ttf" />
 
@@ -101,7 +101,7 @@
                 android:layout_below="@+id/textDateIcon"
                 android:layout_toRightOf="@+id/textLangIcon"
                 android:singleLine="true"
-                android:textColor="@color/gray_light"
+                android:textColor="@color/gray_text"
                 android:textSize="14sp" />
 
             <Button

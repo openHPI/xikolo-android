@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 
 import de.xikolo.openhpi.R;
+import de.xikolo.openhpi.util.Config;
+import de.xikolo.openhpi.util.FontsOverride;
 
 public class GlobalApplication extends Application {
 
@@ -21,13 +23,18 @@ public class GlobalApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        // set global typefaces
+        // use xml attr. android:typeface="serif" for bold font style
+        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
+        FontsOverride.setDefaultFont(this, "SERIF", Config.FONT_SANS_BOLD);
+
         // Create global configuration and initialize ImageLoader with this configuration
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
-                .showImageOnLoading(R.color.gray_light)
-                .showImageForEmptyUri(R.color.gray_light)
-                .showImageOnFail(R.color.gray_light)
+                .showImageOnLoading(R.color.gray_text)
+                .showImageForEmptyUri(R.color.gray_text)
+                .showImageOnFail(R.color.gray_text)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)

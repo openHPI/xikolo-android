@@ -129,12 +129,12 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Config.URI_HOST_HPI)) {
-                    view.loadUrl(url);
-                } else {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(i);
-                }
+//                if (url.contains(Config.URI_HOST_HPI)) {
+//                    view.loadUrl(url);
+//                } else {
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(i);
+//                }
                 return true;
             }
         });

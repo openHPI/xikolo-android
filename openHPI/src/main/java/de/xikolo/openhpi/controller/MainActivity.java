@@ -46,14 +46,6 @@ public class MainActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // set global typefaces
-        // use xml attr. android:typeface="serif" for bold font style
-        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
-        FontsOverride.setDefaultFont(this, "SERIF", Config.FONT_SANS_BOLD);
-
-        mTitle = getString(R.string.app_name);
-
         setContentView(R.layout.activity_main);
 
         mNavigationFragment = (NavigationFragment)
@@ -114,7 +106,7 @@ public class MainActivity extends FragmentActivity
         }
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.container, mFragment);
-        transaction.addToBackStack(mTitle.toString());
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
