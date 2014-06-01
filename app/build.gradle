@@ -1,0 +1,44 @@
+apply plugin: 'android'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.1"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 19
+        versionName "1.0"
+        versionCode 1
+    }
+    buildTypes {
+        release {
+            runProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.RELEASE"
+        }
+        debug {
+            runProguard false
+            buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.DEBUG"
+        }
+    }
+    productFlavors {
+        openHPI {
+            packageName "de.xikolo.openhpi"
+            buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_HPI"
+        }
+        openSAP {
+            packageName "de.xikolo.opensap"
+            buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_SAP"
+        }
+    }
+
+}
+
+dependencies {
+    compile 'com.google.code.gson:gson:2.2.+'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.+'
+    compile 'com.android.support:support-v4:19.+'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.+'
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}

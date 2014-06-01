@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/openHPI.iml" filepath="$PROJECT_DIR$/openHPI.iml" />
-      <module fileurl="file://$PROJECT_DIR$/openHPI/openHPI-openHPI.iml" filepath="$PROJECT_DIR$/openHPI/openHPI-openHPI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xikolo-android.iml" filepath="$PROJECT_DIR$/xikolo-android.iml" />
     </modules>
   </component>
 </project>

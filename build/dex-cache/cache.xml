@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/app/build/pre-dexed/openSAP/debug/classes-6383e7187eac684864524d4a7bdb585fd2e61419.jar"
+        jar="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/build/exploded-aar/com.astuetz/pagerslidingtabstrip/1.0.1/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="7912610ed96381c25c36d986eba422731b9641b6"/>
+    <item
+        dex="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/app/build/pre-dexed/openSAP/debug/gson-2.2.4-105b14d7a93cea46a27d878410182d486e4fbc11.jar"
+        jar="/Users/tobiasrohloff/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="a60a5e993c98c864010053cb901b7eab25306568"/>
+    <item
+        dex="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/app/build/pre-dexed/openSAP/debug/universal-image-loader-1.9.2-8de5ba2cdad23e86bc1c6a71364487aac172c9df.jar"
+        jar="/Users/tobiasrohloff/.gradle/caches/modules-2/files-2.1/com.nostra13.universalimageloader/universal-image-loader/1.9.2/9e025bc5b84968e7d6ac765e660a70b3e5a87432/universal-image-loader-1.9.2.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="9e025bc5b84968e7d6ac765e660a70b3e5a87432"/>
+    <item
+        dex="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/app/build/pre-dexed/openSAP/debug/support-v4-19.1.0-fe930dc68beb1e566675ce71b270d4091c6c249b.jar"
+        jar="/Applications/Android Studio.app/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+
+</pre-dex-items>
