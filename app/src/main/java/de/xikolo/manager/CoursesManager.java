@@ -37,7 +37,7 @@ public abstract class CoursesManager {
         }.getType();
         JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_COURSES, type, mContext) {
             @Override
-            public void onJsonRequestReceived(Object o) {
+            public void onRequestReceived(Object o) {
                 if (o != null) {
                     List<Course> courses = (List<Course>) o;
                     if (BuildConfig.buildType == BuildType.DEBUG)
@@ -53,7 +53,7 @@ public abstract class CoursesManager {
             }
 
             @Override
-            public void onJsonRequestCancelled() {
+            public void onRequestCancelled() {
                 if (BuildConfig.buildType == BuildType.DEBUG)
                     Log.w(TAG, "Courses Request cancelled");
                 onCoursesRequestCancelled();

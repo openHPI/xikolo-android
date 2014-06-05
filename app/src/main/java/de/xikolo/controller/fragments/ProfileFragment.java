@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import de.xikolo.R;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.manager.AccessTokenManager;
+import de.xikolo.manager.TokenManager;
 import de.xikolo.manager.UserManager;
 import de.xikolo.model.AccessToken;
 import de.xikolo.model.User;
@@ -27,7 +27,7 @@ public class ProfileFragment extends ContentFragment {
 //    private String mParam1;
 //    private String mParam2;
 
-    private AccessTokenManager tokenManager;
+    private TokenManager tokenManager;
     private UserManager userManager;
 
     private ViewGroup mContainerLogin;
@@ -88,7 +88,7 @@ public class ProfileFragment extends ContentFragment {
             }
         };
 
-        tokenManager = new AccessTokenManager(getActivity()) {
+        tokenManager = new TokenManager(getActivity()) {
             @Override
             public void onAccessTokenRequestReceived(AccessToken token) {
                 userManager.requestUser();
@@ -121,7 +121,7 @@ public class ProfileFragment extends ContentFragment {
     }
 
     private void switchView() {
-        if (!AccessTokenManager.isLoggedIn(getActivity())) {
+        if (!TokenManager.isLoggedIn(getActivity())) {
             mContainerLogin.setVisibility(View.VISIBLE);
             mContainerProfile.setVisibility(View.GONE);
         } else {
@@ -133,7 +133,7 @@ public class ProfileFragment extends ContentFragment {
     }
 
     private void switchHeader() {
-        if (!AccessTokenManager.isLoggedIn(getActivity())) {
+        if (!TokenManager.isLoggedIn(getActivity())) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, getString(R.string.title_section_login));
         } else {
             User user = UserManager.getUser(getActivity());

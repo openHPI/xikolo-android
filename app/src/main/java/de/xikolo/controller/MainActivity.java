@@ -180,6 +180,11 @@ public class MainActivity extends FragmentActivity
     }
 
     @Override
+    public void toggleDrawer(int pos) {
+        this.mNavigationFragment.selectItem(pos);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         GlobalApplication app = (GlobalApplication) getApplicationContext();

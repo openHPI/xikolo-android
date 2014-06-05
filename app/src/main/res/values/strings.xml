@@ -23,6 +23,8 @@
     <string name="tab_rooms">Rooms</string>
 
     <string name="btn_enroll_me">Enroll me for this course</string>
+    <string name="btn_enter_course">Enter course</string>
+    <string name="btn_starts_soon">Starts soon</string>
 
     <string name="toast_no_courses">No courses received.</string>
     <string name="toast_no_network">Please enable network connection.</string>

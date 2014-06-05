@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import de.xikolo.R;
 import de.xikolo.controller.fragments.ContentFragment;
 import de.xikolo.controller.fragments.WebViewFragment;
 import de.xikolo.model.Course;
+import de.xikolo.model.Enrollment;
 import de.xikolo.util.Display;
 
 public class CoursesListAdapter extends BaseAdapter {
@@ -30,16 +32,26 @@ public class CoursesListAdapter extends BaseAdapter {
     public static final String TAG = CoursesListAdapter.class.getSimpleName();
 
     private List<Course> mCourses;
+    private List<Enrollment> mEnrollments;
 
     private Activity mContext;
 
-    public CoursesListAdapter(Activity context) {
+    private OnEnrollButtonClickListener mCallback;
+
+    public CoursesListAdapter(Activity context, OnEnrollButtonClickListener callback) {
         this.mContext = context;
         this.mCourses = new ArrayList<Course>();
+        this.mEnrollments = new ArrayList<Enrollment>();
+        this.mCallback = callback;
     }
 
-    public void update(List<Course> courses) {
+    public void updateCourses(List<Course> courses) {
         this.mCourses = courses;
+        this.notifyDataSetChanged();
+    }
+
+    public void updateEnrollments(List<Enrollment> enrolls) {
+        this.mEnrollments = enrolls;
         this.notifyDataSetChanged();
     }
 
@@ -71,9 +83,10 @@ public class CoursesListAdapter extends BaseAdapter {
             viewHolder.date = (TextView) rowView.findViewById(R.id.textDate);
             viewHolder.language = (TextView) rowView.findViewById(R.id.textLanguage);
             viewHolder.img = (ImageView) rowView.findViewById(R.id.imageView);
+            viewHolder.enroll = (Button) rowView.findViewById(R.id.btnEnroll);
             rowView.setTag(viewHolder);
         }
-        ViewHolder holder = (ViewHolder) rowView.getTag();
+        final ViewHolder holder = (ViewHolder) rowView.getTag();
 
         final Course course = (Course) getItem(i);
 
@@ -111,7 +124,50 @@ public class CoursesListAdapter extends BaseAdapter {
         holder.language.setText(course.language);
         ImageLoader.getInstance().displayImage(course.visual_url, holder.img);
 
+        boolean isEnrolled = false;
+        if (mEnrollments != null) {
+            for (Enrollment enroll : mEnrollments) {
+                if (enroll.course_id.equals(course.id)) {
+                    isEnrolled = true;
+                }
+            }
+        }
+        if (isEnrolled) {
+            holder.enroll.setText(mContext.getString(R.string.btn_enter_course));
+            holder.enroll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.enroll.setClickable(false);
+                    holder.enroll.setText("...");
+                    mCallback.onEnterButtonClicked(course.id);
+                }
+            });
+        } else {
+            holder.enroll.setText(mContext.getString(R.string.btn_enroll_me));
+            holder.enroll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.enroll.setClickable(false);
+                    holder.enroll.setText("...");
+                    mCallback.onEnrollButtonClicked(course.id);
+                }
+            });
+        }
+
+        if (course.locked) {
+            holder.enroll.setText(mContext.getString(R.string.btn_starts_soon));
+            holder.enroll.setClickable(false);
+        }
+
         return rowView;
+    }
+
+    public interface OnEnrollButtonClickListener {
+
+        public void onEnrollButtonClicked(String id);
+
+        public void onEnterButtonClicked(String id);
+
     }
 
     static class ViewHolder {
@@ -121,6 +177,7 @@ public class CoursesListAdapter extends BaseAdapter {
         TextView date;
         TextView language;
         ImageView img;
+        Button enroll;
     }
 
 }

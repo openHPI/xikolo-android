@@ -36,6 +36,8 @@ public abstract class ContentFragment extends Fragment {
 
         public void updateDrawer();
 
+        public void toggleDrawer(int pos);
+
     }
 
 }

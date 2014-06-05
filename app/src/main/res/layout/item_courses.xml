@@ -2,9 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:res="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
-    android:foreground="@drawable/bg_item_courses"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:foreground="@drawable/bg_item_courses">
 
     <ImageView
         android:id="@+id/imageView"
@@ -43,7 +43,7 @@
                 android:layout_marginBottom="2dp"
                 android:singleLine="true"
                 android:textSize="16sp"
-                android:typeface="serif" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textTeacher"
@@ -121,7 +121,7 @@
                 android:text="@string/btn_enroll_me"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:typeface="serif" />
+                android:textStyle="bold" />
 
         </RelativeLayout>
 

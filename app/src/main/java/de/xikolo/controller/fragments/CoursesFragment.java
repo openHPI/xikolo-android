@@ -17,28 +17,27 @@ import de.xikolo.R;
 import de.xikolo.controller.fragments.adapter.CoursesListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.manager.CoursesManager;
+import de.xikolo.manager.EnrollmentsManager;
+import de.xikolo.manager.TokenManager;
 import de.xikolo.model.Course;
+import de.xikolo.model.Enrollment;
 
-public class CoursesFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class CoursesFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener, CoursesListAdapter.OnEnrollButtonClickListener {
 
     public static final String TAG = CoursesFragment.class.getSimpleName();
 
     private static final String KEY_COURSES = "courses";
-
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    private String mParam1;
-//    private String mParam2;
+    private static final String KEY_ENROLLMENTS = "enrollments";
 
     private SwipeRefreshLayout mRefreshLayout;
     private AbsListView mAbsListView;
     private CoursesListAdapter mCoursesListAdapter;
 
     private CoursesManager mCoursesManager;
+    private EnrollmentsManager mEnrollmentsManager;
 
     private List<Course> mCourses;
+    private List<Enrollment> mEnrollments;
 
     public CoursesFragment() {
         // Required empty public constructor
@@ -48,7 +47,6 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
         CoursesFragment fragment = new CoursesFragment();
 //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
 //        fragment.setArguments(args);
         return fragment;
     }
@@ -58,7 +56,6 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
         super.onCreate(savedInstanceState);
 //        if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
         setHasOptionsMenu(true);
     }
@@ -73,6 +70,9 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
     public void onSaveInstanceState(Bundle outState) {
         if (mCourses != null) {
             outState.putParcelableArrayList(KEY_COURSES, (ArrayList<Course>) mCourses);
+            if (TokenManager.isLoggedIn(getActivity())) {
+                outState.putParcelableArrayList(KEY_ENROLLMENTS, (ArrayList<Enrollment>) mEnrollments);
+            }
         }
         super.onSaveInstanceState(outState);
     }
@@ -91,7 +91,7 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
                 R.color.orange);
         mRefreshLayout.setOnRefreshListener(this);
 
-        mCoursesListAdapter = new CoursesListAdapter(getActivity());
+        mCoursesListAdapter = new CoursesListAdapter(getActivity(), this);
 
         mAbsListView = (AbsListView) layout.findViewById(R.id.listView);
         mAbsListView.setAdapter(mCoursesListAdapter);
@@ -101,7 +101,7 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
             public void onCoursesRequestReceived(List<Course> courses) {
                 mRefreshLayout.setRefreshing(false);
                 mCourses = courses;
-                mCoursesListAdapter.update(courses);
+                mCoursesListAdapter.updateCourses(courses);
             }
 
             @Override
@@ -110,15 +110,36 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
             }
         };
 
+        mEnrollmentsManager = new EnrollmentsManager(getActivity()) {
+            @Override
+            public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {
+                mEnrollments = enrolls;
+                mCoursesListAdapter.updateEnrollments(enrolls);
+            }
+
+            @Override
+            public void onEnrollmentsRequestCancelled() {
+            }
+        };
+
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_COURSES)) {
             mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
+        }
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ENROLLMENTS) && TokenManager.isLoggedIn(getActivity())) {
+            mEnrollments = savedInstanceState.getParcelableArrayList(KEY_ENROLLMENTS);
+        }
+
+        if (mEnrollments == null && TokenManager.isLoggedIn(getActivity())) {
+            mEnrollmentsManager.requestEnrollments(true);
+        } else {
+            mCoursesListAdapter.updateEnrollments(mEnrollments);
         }
 
         if (mCourses == null) {
             mRefreshLayout.setRefreshing(true);
             mCoursesManager.requestCourses(true);
         } else {
-            mCoursesListAdapter.update(mCourses);
+            mCoursesListAdapter.updateCourses(mCourses);
         }
 
         return layout;
@@ -127,7 +148,26 @@ public class CoursesFragment extends ContentFragment implements SwipeRefreshLayo
     @Override
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
+        if (TokenManager.isLoggedIn(getActivity())) {
+            mEnrollmentsManager.requestEnrollments(false);
+        }
         mCoursesManager.requestCourses(false);
+    }
+
+    @Override
+    public void onEnrollButtonClicked(String id) {
+        if (TokenManager.isLoggedIn(getActivity()))
+            mEnrollmentsManager.createEnrollment(id);
+        else
+            mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+    }
+
+    @Override
+    public void onEnterButtonClicked(String id) {
+        if (TokenManager.isLoggedIn(getActivity()))
+            mEnrollmentsManager.deleteEnrollment(id);
+        else
+            mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
     }
 
     @Override

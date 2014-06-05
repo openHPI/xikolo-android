@@ -41,7 +41,7 @@ public abstract class UserManager {
         }.getType();
         JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_USER, type, mContext) {
             @Override
-            public void onJsonRequestReceived(Object o) {
+            public void onRequestReceived(Object o) {
                 if (o != null) {
                     User user = (User) o;
                     if (BuildConfig.buildType == BuildType.DEBUG)
@@ -56,7 +56,7 @@ public abstract class UserManager {
             }
 
             @Override
-            public void onJsonRequestCancelled() {
+            public void onRequestCancelled() {
                 if (BuildConfig.buildType == BuildType.DEBUG)
                     Log.w(TAG, "User Request cancelled");
                 onUserRequestCancelled();

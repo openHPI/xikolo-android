@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.manager.AccessTokenManager;
+import de.xikolo.manager.TokenManager;
 import de.xikolo.manager.UserManager;
 import de.xikolo.view.CircularImageView;
 
@@ -95,7 +95,7 @@ public class NavigationAdapter extends BaseAdapter {
         Element element = (Element) getItem(i);
         holder.icon.setText(element.icon);
 
-        if (i == NAV_ID_PROFILE && AccessTokenManager.isLoggedIn(mContext)) {
+        if (i == NAV_ID_PROFILE && TokenManager.isLoggedIn(mContext)) {
             holder.containerLogin.setVisibility(View.GONE);
             holder.containerProfile.setVisibility(View.VISIBLE);
             holder.name.setText(UserManager.getUser(mContext).name);
@@ -104,7 +104,7 @@ public class NavigationAdapter extends BaseAdapter {
                 ImageLoader.getInstance().displayImage("https://openhpi.de/assets/defaults/user_user_medium-433a613c12a6fd211b1a3996b7ab8b4b.png",
                         holder.img);
             }
-        } else if (i == NAV_ID_PROFILE && !AccessTokenManager.isLoggedIn(mContext)) {
+        } else if (i == NAV_ID_PROFILE && !TokenManager.isLoggedIn(mContext)) {
             holder.containerLogin.setVisibility(View.VISIBLE);
             holder.containerProfile.setVisibility(View.GONE);
             holder.label.setText(element.label);
@@ -113,7 +113,7 @@ public class NavigationAdapter extends BaseAdapter {
         }
 
         if (i == ((ListView) viewGroup).getCheckedItemPosition()) {
-            if (i == NAV_ID_PROFILE && AccessTokenManager.isLoggedIn(mContext)) {
+            if (i == NAV_ID_PROFILE && TokenManager.isLoggedIn(mContext)) {
                 holder.name.setTextColor(mContext.getResources().getColor(R.color.orange));
                 holder.email.setTextColor(mContext.getResources().getColor(R.color.orange));
             } else {
@@ -121,7 +121,7 @@ public class NavigationAdapter extends BaseAdapter {
                 holder.label.setTextColor(mContext.getResources().getColor(R.color.orange));
             }
         } else {
-            if (i == NAV_ID_PROFILE && AccessTokenManager.isLoggedIn(mContext)) {
+            if (i == NAV_ID_PROFILE && TokenManager.isLoggedIn(mContext)) {
                 holder.name.setTextColor(mContext.getResources().getColor(R.color.white));
                 holder.email.setTextColor(mContext.getResources().getColor(R.color.white));
             } else {

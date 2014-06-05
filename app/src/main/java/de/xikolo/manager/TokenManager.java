@@ -15,22 +15,22 @@ import de.xikolo.model.AccessToken;
 import de.xikolo.util.BuildType;
 import de.xikolo.util.Config;
 
-public abstract class AccessTokenManager {
+public abstract class TokenManager {
 
-    public static final String TAG = AccessTokenManager.class.getSimpleName();
+    public static final String TAG = TokenManager.class.getSimpleName();
 
     private Context mContext;
     private UserPreferences mUserPref;
 
-    public AccessTokenManager(Context context) {
+    public TokenManager(Context context) {
         super();
         this.mContext = context;
         this.mUserPref = new UserPreferences(context);
     }
 
-    public static AccessToken getAccessToken(Context context) {
+    public static String getAccessToken(Context context) {
         UserPreferences prefs = new UserPreferences(context);
-        return prefs.getAccessToken();
+        return prefs.getAccessToken().access_token;
     }
 
     public static boolean isLoggedIn(Context context) {
@@ -54,7 +54,7 @@ public abstract class AccessTokenManager {
 
         JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_AUTHENTICATE + query, type, mContext) {
             @Override
-            public void onJsonRequestReceived(Object o) {
+            public void onRequestReceived(Object o) {
                 if (o != null) {
                     AccessToken token = (AccessToken) o;
                     if (BuildConfig.buildType == BuildType.DEBUG)
@@ -69,14 +69,14 @@ public abstract class AccessTokenManager {
             }
 
             @Override
-            public void onJsonRequestCancelled() {
+            public void onRequestCancelled() {
                 if (BuildConfig.buildType == BuildType.DEBUG)
                     Log.w(TAG, "User Access Token cancelled");
                 onAccessTokenRequestCancelled();
             }
         };
         request.setCache(false);
-        request.setToken(mUserPref.getAccessToken().access_token);
+        request.setToken(getAccessToken(mContext));
         request.setMethod(Config.HTTP_POST);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -11,7 +11,9 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import java.io.File;
 import java.io.IOException;
 
+import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.util.BuildFlavor;
 import de.xikolo.util.Config;
 import de.xikolo.util.FontsOverride;
 
@@ -24,9 +26,9 @@ public class GlobalApplication extends Application {
         super.onCreate();
 
         // set global typefaces
-        // use xml attr. android:typeface="serif" for bold font style
-        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
-        FontsOverride.setDefaultFont(this, "SERIF", Config.FONT_SANS_BOLD);
+        if (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI) {
+            FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
+        }
 
         // Create global configuration and initialize ImageLoader with this configuration
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()

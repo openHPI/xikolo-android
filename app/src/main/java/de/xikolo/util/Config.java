@@ -22,6 +22,8 @@ public class Config {
 
     public static final String HTTP_GET = "GET";
     public static final String HTTP_POST = "POST";
+    public static final String HTTP_DELETE = "DELETE";
+    public static final String HTTP_PUT = "PUT";
 
     public static final String URI_SCHEME_HTTP = "http";
     public static final String URI_SCHEME_HTTPS = "https";
