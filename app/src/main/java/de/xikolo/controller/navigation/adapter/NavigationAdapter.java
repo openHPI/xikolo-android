@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,7 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.manager.AccessTokenManager;
 import de.xikolo.manager.UserManager;
+import de.xikolo.view.CircularImageView;
 
 public class NavigationAdapter extends BaseAdapter {
 
@@ -65,17 +69,25 @@ public class NavigationAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View rowView = view;
         if (rowView == null) {
+            ViewHolder viewHolder = new ViewHolder();
+
             LayoutInflater inflater = mContext.getLayoutInflater();
             if (i == NAV_ID_PROFILE) {
                 rowView = inflater.inflate(R.layout.item_navi_profile, null);
+                viewHolder.containerLogin = (RelativeLayout) rowView.findViewById(R.id.containerLogin);
+                viewHolder.containerProfile = (RelativeLayout) rowView.findViewById(R.id.containerProfile);
+                viewHolder.name = (TextView) rowView.findViewById(R.id.textName);
+                viewHolder.email = (TextView) rowView.findViewById(R.id.textEmail);
+                viewHolder.img = (CircularImageView) rowView.findViewById(R.id.imgProfile);
             } else if (i == NAV_ID_SETTINGS || i == NAV_ID_DOWNLOADS) {
                 rowView = inflater.inflate(R.layout.item_navi_sub, null);
             } else {
                 rowView = inflater.inflate(R.layout.item_navi_main, null);
             }
-            ViewHolder viewHolder = new ViewHolder();
+
             viewHolder.icon = (TextView) rowView.findViewById(R.id.textIcon);
             viewHolder.label = (TextView) rowView.findViewById(R.id.textLabel);
+
             rowView.setTag(viewHolder);
         }
         ViewHolder holder = (ViewHolder) rowView.getTag();
@@ -84,17 +96,38 @@ public class NavigationAdapter extends BaseAdapter {
         holder.icon.setText(element.icon);
 
         if (i == NAV_ID_PROFILE && AccessTokenManager.isLoggedIn(mContext)) {
-            holder.label.setText(UserManager.getUser(mContext).name);
+            holder.containerLogin.setVisibility(View.GONE);
+            holder.containerProfile.setVisibility(View.VISIBLE);
+            holder.name.setText(UserManager.getUser(mContext).name);
+            holder.email.setText(UserManager.getUser(mContext).email);
+            if (holder.img.getDrawable() == null) {
+                ImageLoader.getInstance().displayImage("https://openhpi.de/assets/defaults/user_user_medium-433a613c12a6fd211b1a3996b7ab8b4b.png",
+                        holder.img);
+            }
+        } else if (i == NAV_ID_PROFILE && !AccessTokenManager.isLoggedIn(mContext)) {
+            holder.containerLogin.setVisibility(View.VISIBLE);
+            holder.containerProfile.setVisibility(View.GONE);
+            holder.label.setText(element.label);
         } else {
             holder.label.setText(element.label);
         }
 
         if (i == ((ListView) viewGroup).getCheckedItemPosition()) {
-            holder.icon.setTextColor(mContext.getResources().getColor(R.color.orange));
-            holder.label.setTextColor(mContext.getResources().getColor(R.color.orange));
+            if (i == NAV_ID_PROFILE && AccessTokenManager.isLoggedIn(mContext)) {
+                holder.name.setTextColor(mContext.getResources().getColor(R.color.orange));
+                holder.email.setTextColor(mContext.getResources().getColor(R.color.orange));
+            } else {
+                holder.icon.setTextColor(mContext.getResources().getColor(R.color.orange));
+                holder.label.setTextColor(mContext.getResources().getColor(R.color.orange));
+            }
         } else {
-            holder.icon.setTextColor(mContext.getResources().getColor(R.color.white));
-            holder.label.setTextColor(mContext.getResources().getColor(R.color.white));
+            if (i == NAV_ID_PROFILE && AccessTokenManager.isLoggedIn(mContext)) {
+                holder.name.setTextColor(mContext.getResources().getColor(R.color.white));
+                holder.email.setTextColor(mContext.getResources().getColor(R.color.white));
+            } else {
+                holder.icon.setTextColor(mContext.getResources().getColor(R.color.white));
+                holder.label.setTextColor(mContext.getResources().getColor(R.color.white));
+            }
         }
 
         return rowView;
@@ -113,6 +146,12 @@ public class NavigationAdapter extends BaseAdapter {
     static class ViewHolder {
         TextView icon;
         TextView label;
+
+        CircularImageView img;
+        TextView name;
+        TextView email;
+        RelativeLayout containerLogin;
+        RelativeLayout containerProfile;
     }
 
 }
