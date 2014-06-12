@@ -18,9 +18,9 @@
     <string name="tab_learnings">Learnings</string>
     <string name="tab_discussions">Discussions</string>
     <string name="tab_progress">Progress</string>
-    <string name="tab_details">Details</string>
+    <string name="tab_details">Course details</string>
     <string name="tab_announcements">Announcements</string>
-    <string name="tab_rooms">Rooms</string>
+    <string name="tab_rooms">Learning rooms</string>
 
     <string name="btn_enroll_me">Enroll me for this course</string>
     <string name="btn_enter_course">Enter course</string>
@@ -28,6 +28,7 @@
 
     <string name="toast_no_courses">No courses received.</string>
     <string name="toast_no_network">Please enable network connection.</string>
+    <string name="toast_please_log_in">Please log in.</string>
 
     <string name="icon_cal">&#xe625;</string>
     <string name="icon_lang">&#xe612;</string>

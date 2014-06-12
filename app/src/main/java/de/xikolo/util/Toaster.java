@@ -9,4 +9,8 @@ public class Toaster {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
+    public static void show(Context context, int stringId) {
+        Toast.makeText(context, context.getString(stringId), Toast.LENGTH_SHORT).show();
+    }
+
 }

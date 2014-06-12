@@ -40,7 +40,9 @@ public class Config {
     public static final String PATH_AUTHENTICATE = "authenticate/";
 
     public static final String PATH_COURSES = "courses/";
+    public static final String PATH_DISCUSSIONS = "discussion_topics/";
     public static final String PATH_ANNOUNCEMENTS = "announcements/";
+    public static final String PATH_ROOMS = "groups/";
     public static final String PATH_MODULES = "modules/";
     public static final String PATH_ITEMS = "items/";
 

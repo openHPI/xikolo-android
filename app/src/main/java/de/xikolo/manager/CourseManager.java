@@ -18,13 +18,13 @@ import de.xikolo.util.Config;
 import de.xikolo.util.Network;
 import de.xikolo.util.Toaster;
 
-public abstract class CoursesManager {
+public abstract class CourseManager {
 
-    public static final String TAG = CoursesManager.class.getSimpleName();
+    public static final String TAG = CourseManager.class.getSimpleName();
 
     private Context mContext;
 
-    public CoursesManager(Context context) {
+    public CourseManager(Context context) {
         super();
         this.mContext = context;
     }

@@ -39,7 +39,7 @@ public class Network {
     }
 
     public static void showNoConnectionToast(Context context) {
-        Toaster.show(context, context.getString(R.string.toast_no_network));
+        Toaster.show(context, R.string.toast_no_network);
     }
 
 }

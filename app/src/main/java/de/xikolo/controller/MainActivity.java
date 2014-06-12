@@ -14,8 +14,7 @@ import android.view.MenuItem;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controller.fragments.ContentFragment;
-import de.xikolo.controller.fragments.CourseFragment;
-import de.xikolo.controller.fragments.CoursesFragment;
+import de.xikolo.controller.fragments.CourseListFragment;
 import de.xikolo.controller.fragments.DownloadsFragment;
 import de.xikolo.controller.fragments.ProfileFragment;
 import de.xikolo.controller.fragments.SettingsFragment;
@@ -93,13 +92,13 @@ public class MainActivity extends FragmentActivity
                 mFragment = ProfileFragment.newInstance();
                 break;
             case NavigationAdapter.NAV_ID_ALL_COURSES:
-                mFragment = CoursesFragment.newInstance();
+                mFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_ALL);
                 break;
             case NavigationAdapter.NAV_ID_MY_COURSES:
-                mFragment = CourseFragment.newInstance();
+                mFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_MY);
                 break;
             case NavigationAdapter.NAV_ID_NEWS:
-                mFragment = WebViewFragment.newInstance(Config.URI_HPI + Config.PATH_NEWS, false, null);
+                mFragment = WebViewFragment.newInstance(Config.URI_HPI + Config.PATH_NEWS, true, null);
                 break;
             case NavigationAdapter.NAV_ID_DOWNLOADS:
                 mFragment = DownloadsFragment.newInstance();

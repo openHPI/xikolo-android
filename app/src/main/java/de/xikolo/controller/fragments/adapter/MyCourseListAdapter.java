@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,9 +26,9 @@ import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
 import de.xikolo.util.Display;
 
-public class CoursesListAdapter extends BaseAdapter {
+public class MyCourseListAdapter extends CourseListAdapter {
 
-    public static final String TAG = CoursesListAdapter.class.getSimpleName();
+    public static final String TAG = MyCourseListAdapter.class.getSimpleName();
 
     private List<Course> mCourses;
     private List<Enrollment> mEnrollments;
@@ -38,18 +37,20 @@ public class CoursesListAdapter extends BaseAdapter {
 
     private OnEnrollButtonClickListener mCallback;
 
-    public CoursesListAdapter(Activity context, OnEnrollButtonClickListener callback) {
+    public MyCourseListAdapter(Activity context, OnEnrollButtonClickListener callback) {
         this.mContext = context;
         this.mCourses = new ArrayList<Course>();
         this.mEnrollments = new ArrayList<Enrollment>();
         this.mCallback = callback;
     }
 
+    @Override
     public void updateCourses(List<Course> courses) {
         this.mCourses = courses;
         this.notifyDataSetChanged();
     }
 
+    @Override
     public void updateEnrollments(List<Enrollment> enrolls) {
         this.mEnrollments = enrolls;
         this.notifyDataSetChanged();
@@ -57,12 +58,12 @@ public class CoursesListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mCourses.size();
+        return mEnrollments.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return mCourses.get(i);
+        return mEnrollments.get(i);
     }
 
     @Override
@@ -88,7 +89,14 @@ public class CoursesListAdapter extends BaseAdapter {
         }
         final ViewHolder holder = (ViewHolder) rowView.getTag();
 
-        final Course course = (Course) getItem(i);
+        final Enrollment enrollment = (Enrollment) getItem(i);
+        int c_id = 0;
+        for (Course c : mCourses) {
+            if (enrollment.course_id.equals(c.id)) {
+                c_id = mCourses.indexOf(c);
+            }
+        }
+        final Course course = mCourses.get(c_id);
 
         SimpleDateFormat dateIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date dateBegin = new Date();
@@ -114,7 +122,7 @@ public class CoursesListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 ((ContentFragment.OnFragmentInteractionListener) mContext)
-                        .attachFragment(WebViewFragment.newInstance(course.url, true, course.name));
+                        .attachFragment(WebViewFragment.newInstance(course.url, false, course.name));
             }
         });
 
@@ -139,7 +147,7 @@ public class CoursesListAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     holder.enroll.setClickable(false);
                     holder.enroll.setText("...");
-                    mCallback.onEnterButtonClicked(course.id);
+                    mCallback.onEnterButtonClicked(course);
                 }
             });
         } else {
@@ -149,7 +157,7 @@ public class CoursesListAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     holder.enroll.setClickable(false);
                     holder.enroll.setText("...");
-                    mCallback.onEnrollButtonClicked(course.id);
+                    mCallback.onEnrollButtonClicked(course);
                 }
             });
         }
@@ -160,14 +168,6 @@ public class CoursesListAdapter extends BaseAdapter {
         }
 
         return rowView;
-    }
-
-    public interface OnEnrollButtonClickListener {
-
-        public void onEnrollButtonClicked(String id);
-
-        public void onEnterButtonClicked(String id);
-
     }
 
     static class ViewHolder {

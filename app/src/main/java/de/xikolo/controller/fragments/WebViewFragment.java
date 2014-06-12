@@ -25,6 +25,7 @@ import java.util.Map;
 
 import de.xikolo.R;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
+import de.xikolo.manager.TokenManager;
 import de.xikolo.util.Config;
 import de.xikolo.util.Network;
 
@@ -33,13 +34,13 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     public static final String TAG = WebViewFragment.class.getSimpleName();
 
     // the fragment initialization parameters
-    private static final String ARG_URL = "url";
-    private static final String ARG_BACK = "back";
-    private static final String ARG_TITLE = "title";
+    private static final String ARG_URL = "arg_url";
+    private static final String ARG_TOP_LEVEL_CONTENT = "arg_top_level_content";
+    private static final String ARG_TITLE = "arg_title";
 
     private String mUrl;
     private String mTitle;
-    private boolean mBack;
+    private boolean isTopLevelContent;
 
     private SwipeRefreshLayout mRefreshLayout;
 
@@ -52,11 +53,11 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
         // Required empty public constructor
     }
 
-    public static WebViewFragment newInstance(String url, boolean back, String title) {
+    public static WebViewFragment newInstance(String url, boolean topLevelContent, String title) {
         WebViewFragment fragment = new WebViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
-        args.putBoolean(ARG_BACK, back);
+        args.putBoolean(ARG_TOP_LEVEL_CONTENT, topLevelContent);
         args.putString(ARG_TITLE, title);
         fragment.setArguments(args);
         return fragment;
@@ -67,7 +68,7 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mUrl = getArguments().getString(ARG_URL);
-            mBack = getArguments().getBoolean(ARG_BACK);
+            isTopLevelContent = getArguments().getBoolean(ARG_TOP_LEVEL_CONTENT);
             mTitle = getArguments().getString(ARG_TITLE);
         }
         setHasOptionsMenu(true);
@@ -76,9 +77,9 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     @Override
     public void onStart() {
         super.onStart();
-        if (mUrl.contains(Config.PATH_NEWS)) {
+        if (isTopLevelContent && mUrl.contains(Config.PATH_NEWS)) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_NEWS, getString(R.string.title_section_news));
-        } else if (mBack) {
+        } else if (!isTopLevelContent && mTitle != null) {
             mCallback.onLowLevelFragmentAttached(NavigationAdapter.NAV_ID_LOW_LEVEL_CONTENT, mTitle);
         }
     }
@@ -198,6 +199,9 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
             mRefreshLayout.setRefreshing(true);
             Map<String, String> header = new HashMap<String, String>();
             header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
+            if (TokenManager.isLoggedIn(getActivity())) {
+                header.put(Config.HEADER_AUTHORIZATION, "Token token=\"" + TokenManager.getAccessToken(getActivity()) + "\"");
+            }
             mWebView.loadUrl(mUrl, header);
         } else {
             Network.showNoConnectionToast(getActivity());
