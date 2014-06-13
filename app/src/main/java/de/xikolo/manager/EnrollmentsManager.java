@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import de.xikolo.BuildConfig;
+import de.xikolo.dataaccess.EnrollmentsPreferences;
 import de.xikolo.dataaccess.HttpRequest;
 import de.xikolo.dataaccess.JsonRequest;
 import de.xikolo.model.Enrollment;
@@ -22,10 +23,17 @@ public abstract class EnrollmentsManager {
     public static final String TAG = EnrollmentsManager.class.getSimpleName();
 
     private Context mContext;
+    private EnrollmentsPreferences mEnrollPref;
 
     public EnrollmentsManager(Context context) {
         super();
         this.mContext = context;
+        this.mEnrollPref = new EnrollmentsPreferences(context);
+    }
+
+    public static int getEnrollmentsSize(Context context) {
+        EnrollmentsPreferences prefs = new EnrollmentsPreferences(context);
+        return prefs.getEnrollmentsSize();
     }
 
     public void requestEnrollments(boolean cache) {
@@ -42,6 +50,7 @@ public abstract class EnrollmentsManager {
                     if (BuildConfig.buildType == BuildType.DEBUG)
                         Log.i(TAG, "Enrollments received (" + enrolls.size() + ")");
                     onEnrollmentsRequestReceived(enrolls);
+                    mEnrollPref.saveEnrollmentsSize(enrolls.size());
                 } else {
                     if (BuildConfig.buildType == BuildType.DEBUG)
                         Log.w(TAG, "No Enrollments received");

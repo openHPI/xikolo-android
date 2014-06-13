@@ -5,10 +5,13 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
+public class Item implements Parcelable {
 
-public class Module implements Parcelable {
+    public static final String TYPE_TEXT = "text";
+    public static final String TYPE_VIDEO = "video";
+    public static final String TYPE_SELFTEST = "self test";
+    public static final String TYPE_ASSIGNMENT = "assignment";
+    public static final String TYPE_EXAM = "exam";
 
     @SerializedName("id")
     public String id;
@@ -16,8 +19,8 @@ public class Module implements Parcelable {
     @SerializedName("position")
     public int position;
 
-    @SerializedName("name")
-    public String name;
+    @SerializedName("title")
+    public String title;
 
     @SerializedName("type")
     public String type;
@@ -31,8 +34,6 @@ public class Module implements Parcelable {
     @SerializedName("locked")
     public boolean locked;
 
-    public List<Item> items;
-
     @Override
     public int describeContents() {
         return 0;
@@ -42,37 +43,30 @@ public class Module implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
         parcel.writeInt(position);
-        parcel.writeString(name);
+        parcel.writeString(title);
         parcel.writeString(type);
         parcel.writeString(available_from);
         parcel.writeString(available_to);
         parcel.writeByte((byte) (locked ? 1 : 0 ));
-        parcel.writeList(items);
     }
 
-    public Module() {
-        this.items = new ArrayList<Item>();
-    }
-
-    public Module(Parcel in) {
-        this();
+    public Item(Parcel in) {
         id = in.readString();
         position = in.readInt();
-        name = in.readString();
+        title = in.readString();
         type = in.readString();
         available_from = in.readString();
         available_to = in.readString();
         locked = in.readByte() != 0;
-        in.readTypedList(items, Item.CREATOR);
     }
 
-    public static final Creator<Module> CREATOR = new Creator<Module>() {
-        public Module createFromParcel(Parcel in) {
-            return new Module(in);
+    public static final Creator<Item> CREATOR = new Creator<Item>() {
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
         }
 
-        public Module[] newArray(int size) {
-            return new Module[size];
+        public Item[] newArray(int size) {
+            return new Item[size];
         }
     };
 

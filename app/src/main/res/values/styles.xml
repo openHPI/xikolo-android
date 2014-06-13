@@ -2,14 +2,23 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/DarkGrayActionBar</item>
+        <item name="android:actionBarStyle">@style/AppActionBar</item>
         <item name="android:typeface">sans</item>
+        <item name="sdlDialogStyle">@style/DialogStyleLight.Custom</item>
     </style>
 
     <!-- ActionBar styles -->
-    <style name="DarkGrayActionBar"
+    <style name="AppActionBar"
         parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/gray_actionbar</item>
+    </style>
+
+    <!-- Dialog styles -->
+    <style name="DialogStyleLight.Custom">
+        <item name="titleTextColor">@color/orange</item>
+        <item name="titleSeparatorColor">@color/orange</item>
+        <item name="buttonBackgroundColorPressed">@color/orange_alpha</item>
+        <item name="buttonBackgroundColorFocused">@color/orange_alpha</item>
     </style>
 
 </resources>

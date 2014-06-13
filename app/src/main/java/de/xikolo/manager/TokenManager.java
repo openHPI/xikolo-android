@@ -59,7 +59,7 @@ public abstract class TokenManager {
                     AccessToken token = (AccessToken) o;
                     if (BuildConfig.buildType == BuildType.DEBUG)
                         Log.i(TAG, "Access Token received: " + token.access_token);
-                    mUserPref.saveUser(token);
+                    mUserPref.saveAccessToken(token);
                     onAccessTokenRequestReceived(token);
                 } else {
                     if (BuildConfig.buildType == BuildType.DEBUG)

@@ -6,6 +6,7 @@
     <color name="gray_text">#5a6065</color>
     <color name="red">#b42946</color>
     <color name="orange">#de6212</color>
+    <color name="orange_alpha">#66de6212</color>
     <color name="orange_dark">#c05c05</color>
     <color name="orange_navi_profile">#534138</color>
     <color name="orange_navi_main">#46362e</color>

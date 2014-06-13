@@ -1,5 +1,6 @@
 package de.xikolo.util;
 
+import de.xikolo.dataaccess.EnrollmentsPreferences;
 import de.xikolo.dataaccess.UserPreferences;
 
 public class Config {
@@ -9,6 +10,7 @@ public class Config {
     public static final String FONT_SANS_BOLD = FONT_PATH + "NeoSansStdMedium.ttf";
 
     public static final String PREF_USER = UserPreferences.class.getName();
+    public static final String PREF_ENROLLMENTS = EnrollmentsPreferences.class.getName();
 
     public static final String HEADER_ACCEPT = "ACCEPT";
     public static final String HEADER_AUTHORIZATION = "AUTHORIZATION";

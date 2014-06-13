@@ -14,6 +14,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_refresh">Refresh</string>
+    <string name="action_unenroll">Un-enroll</string>
 
     <string name="tab_learnings">Learnings</string>
     <string name="tab_discussions">Discussions</string>
@@ -26,9 +27,14 @@
     <string name="btn_enter_course">Enter course</string>
     <string name="btn_starts_soon">Starts soon</string>
 
-    <string name="toast_no_courses">No courses received.</string>
-    <string name="toast_no_network">Please enable network connection.</string>
-    <string name="toast_please_log_in">Please log in.</string>
+    <string name="dialog_unenroll_title">Un-enroll this course?</string>
+    <string name="dialog_unenroll_message">You\'ll be un-enrolled from this course.</string>
+    <string name="dialog_unenroll_yes">Un-enroll</string>
+    <string name="dialog_unenroll_no">Cancel</string>
+
+    <string name="toast_no_courses">No courses received</string>
+    <string name="toast_no_network">Please enable network connection</string>
+    <string name="toast_please_log_in">Please log in</string>
 
     <string name="icon_cal">&#xe625;</string>
     <string name="icon_lang">&#xe612;</string>
@@ -38,5 +44,10 @@
     <string name="icon_settings">&#xe600;</string>
     <string name="icon_course">&#xe66f;</string>
     <string name="icon_profile">&#xe602;</string>
+    <string name="icon_text">&#xe615;</string>
+    <string name="icon_video">&#xe618;</string>
+    <string name="icon_selftest">&#xe61d;</string>
+    <string name="icon_assignment">&#xe61c;</string>
+    <string name="icon_bonus">&#xe61c;</string>
 
 </resources>

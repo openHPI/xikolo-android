@@ -10,6 +10,7 @@
         android:layout_height="48dip"
 
         app:pstsIndicatorColor="@color/orange"
+        app:pstsTabBackground="@drawable/bg_tabs"
         app:pstsTabPaddingLeftRight="14dip"
 
         android:layout_alignParentTop="true"

@@ -172,6 +172,7 @@ public class NavigationFragment extends Fragment {
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                updateDrawer();
             }
         };
 

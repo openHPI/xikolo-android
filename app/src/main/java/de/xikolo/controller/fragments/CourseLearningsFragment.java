@@ -1,21 +1,27 @@
 package de.xikolo.controller.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.AbsListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
+import de.xikolo.controller.fragments.adapter.ModuleListAdapter;
+import de.xikolo.manager.ItemManager;
 import de.xikolo.manager.ModuleManager;
 import de.xikolo.model.Course;
+import de.xikolo.model.Item;
 import de.xikolo.model.Module;
 
-public class CourseLearningsFragment extends ContentFragment {
+public class CourseLearningsFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public final static String TAG = CourseLearningsFragment.class.getSimpleName();
 
@@ -23,9 +29,13 @@ public class CourseLearningsFragment extends ContentFragment {
 
     private static final String KEY_MODULES = "key_modules";
 
-    private TextView text;
+    private AbsListView mListView;
+    private SwipeRefreshLayout mRefreshLayout;
+
+    private boolean mCache;
 
     private ModuleManager mModuleManager;
+    private ModuleListAdapter mAdapter;
 
     private Course mCourse;
     private List<Module> mModules;
@@ -59,6 +69,7 @@ public class CourseLearningsFragment extends ContentFragment {
         if (savedInstanceState != null) {
             mModules = savedInstanceState.getParcelableArrayList(KEY_MODULES);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -66,7 +77,17 @@ public class CourseLearningsFragment extends ContentFragment {
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_learnings, container, false);
 
-        text = (TextView) layout.findViewById(R.id.textView1);
+        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
+        mRefreshLayout.setColorScheme(
+                R.color.red,
+                R.color.orange,
+                R.color.red,
+                R.color.orange);
+        mRefreshLayout.setOnRefreshListener(this);
+
+        mListView = (AbsListView) layout.findViewById(R.id.listView);
+        mAdapter = new ModuleListAdapter(getActivity(), mCourse);
+        mListView.setAdapter(mAdapter);
 
         return layout;
     }
@@ -76,26 +97,69 @@ public class CourseLearningsFragment extends ContentFragment {
         super.onStart();
         mModuleManager = new ModuleManager(getActivity()) {
             @Override
-            public void onModulesRequestReceived(List<Module> modules) {
+            public void onModulesRequestReceived(final List<Module> modules) {
+                mRefreshLayout.setRefreshing(false);
                 if (modules != null) {
+                    mAdapter.updateModules(modules);
                     mModules = modules;
-                    for (Module m : modules) {
-                        text.append(m.name + "\n");
+                    for (final Module module : mModules) {
+                        if (module.items == null || module.items.size() == 0) {
+                            ItemManager itemManager = new ItemManager(getActivity()) {
+                                @Override
+                                public void onItemsRequestReceived(List<Item> items) {
+                                    if (items != null) {
+                                        module.items = items;
+                                        mAdapter.updateModules(modules);
+                                    }
+                                }
+
+                                @Override
+                                public void onItemsRequestCancelled() {
+                                }
+                            };
+                            itemManager.requestItems(mCourse, module, mCache);
+                        }
                     }
                 }
             }
 
             @Override
             public void onModulesRequestCancelled() {
+                mRefreshLayout.setRefreshing(true);
             }
         };
 
         if (mModules == null) {
-            mModuleManager.requestModules(mCourse, true);
+            mCache = true;
+            mRefreshLayout.setRefreshing(true);
+            mModuleManager.requestModules(mCourse, mCache);
         } else {
-            for (Module m : mModules) {
-                text.append(m.name + "\n");
-            }
+            mAdapter.updateModules(mModules);
         }
     }
+
+    @Override
+    public void onRefresh() {
+        mCache = false;
+        mRefreshLayout.setRefreshing(true);
+        mModuleManager.requestModules(mCourse, mCache);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (!mCallback.isDrawerOpen())
+            inflater.inflate(R.menu.webview, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_refresh:
+                onRefresh();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

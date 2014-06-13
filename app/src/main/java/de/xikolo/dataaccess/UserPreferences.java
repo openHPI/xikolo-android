@@ -71,7 +71,7 @@ public class UserPreferences {
         return token;
     }
 
-    public void saveUser(AccessToken token) {
+    public void saveAccessToken(AccessToken token) {
         SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(USER_ACCESS_TOKEN, token.access_token);

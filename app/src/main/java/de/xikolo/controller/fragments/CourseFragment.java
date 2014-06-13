@@ -6,19 +6,28 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 
-import de.xikolo.R;
-import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.model.Course;
-import de.xikolo.util.Config;
+import java.util.List;
 
-public class CourseFragment extends ContentFragment {
+import de.xikolo.R;
+import de.xikolo.controller.fragments.dialog.UnenrollDialog;
+import de.xikolo.controller.navigation.adapter.NavigationAdapter;
+import de.xikolo.manager.EnrollmentsManager;
+import de.xikolo.model.Course;
+import de.xikolo.model.Enrollment;
+import de.xikolo.util.Config;
+import eu.inmite.android.lib.dialogs.ISimpleDialogListener;
+
+public class CourseFragment extends ContentFragment implements ISimpleDialogListener {
 
     public final static String TAG = CourseFragment.class.getSimpleName();
 
@@ -78,15 +87,41 @@ public class CourseFragment extends ContentFragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (!mCallback.isDrawerOpen())
+            inflater.inflate(R.menu.course, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
             case android.R.id.home:
                 getActivity().getSupportFragmentManager().popBackStack();
                 return true;
+            case R.id.action_unenroll:
+                UnenrollDialog.show(getActivity(), getChildFragmentManager(), this);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onPositiveButtonClicked(int i) {
+        EnrollmentsManager manager = new EnrollmentsManager(getActivity()) {
+            @Override
+            public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {}
+
+            @Override
+            public void onEnrollmentsRequestCancelled() {}
+        };
+        Log.w(TAG, "ok");
+        manager.deleteEnrollment(mCourse.id);
+        mCallback.toggleDrawer(NavigationAdapter.NAV_ID_MY_COURSES);
+    }
+
+    @Override
+    public void onNegativeButtonClicked(int i) {}
 
     public class CoursePagerAdapter extends FragmentPagerAdapter {
 

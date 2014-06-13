@@ -25,5 +25,11 @@
         jumboMode="false"
         revision="19.1.0"
         sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+    <item
+        dex="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/app/build/pre-dexed/openHPI/debug/classes-9bb72c7e41c74280e1ed3b02cd039becaa387f3a.jar"
+        jar="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/build/exploded-aar/eu.inmite.android.lib/android-styled-dialogs/1.1.2/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="f08d50cb07664faae4a99d74de117b7adef5b82b"/>
 
 </pre-dex-items>

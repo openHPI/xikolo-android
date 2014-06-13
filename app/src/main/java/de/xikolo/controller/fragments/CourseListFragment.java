@@ -14,10 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.controller.fragments.adapter.AllCourseListAdapter;
 import de.xikolo.controller.fragments.adapter.CourseListAdapter;
-import de.xikolo.controller.fragments.adapter.MyCourseListAdapter;
-import de.xikolo.controller.fragments.adapter.OnEnrollButtonClickListener;
+import de.xikolo.controller.fragments.adapter.FilteredCourseListAdapter;
+import de.xikolo.controller.fragments.adapter.OnCourseButtonClickListener;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.manager.CourseManager;
 import de.xikolo.manager.EnrollmentsManager;
@@ -26,7 +25,7 @@ import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
 import de.xikolo.util.Toaster;
 
-public class CourseListFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener, OnEnrollButtonClickListener {
+public class CourseListFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener, OnCourseButtonClickListener {
 
     public static final String TAG = CourseListFragment.class.getSimpleName();
 
@@ -105,11 +104,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 R.color.orange);
         mRefreshLayout.setOnRefreshListener(this);
 
-        if (mFilter.equals(FILTER_ALL)) {
-            mCourseListAdapter = new AllCourseListAdapter(getActivity(), this);
-        } else if (mFilter.equals(FILTER_MY)) {
-            mCourseListAdapter = new MyCourseListAdapter(getActivity(), this);
-        }
+        mCourseListAdapter = new FilteredCourseListAdapter(getActivity(), this, mFilter);
 
         mAbsListView = (AbsListView) layout.findViewById(R.id.listView);
         mAbsListView.setAdapter(mCourseListAdapter);
@@ -199,6 +194,11 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             Toaster.show(getActivity(), R.string.toast_please_log_in);
             mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
         }
+    }
+
+    @Override
+    public void onDetailButtonClicked(Course course) {
+        mCallback.attachFragment(WebViewFragment.newInstance(course.url, false, course.name));
     }
 
     @Override

@@ -39,6 +39,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.+'
     compile 'com.android.support:support-v4:19.+'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.+'
+    compile 'eu.inmite.android.lib:android-styled-dialogs:1.1.2@aar'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

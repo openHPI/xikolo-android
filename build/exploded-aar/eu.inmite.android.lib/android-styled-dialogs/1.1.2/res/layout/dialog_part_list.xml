@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/sdl__listview"
+	style="@style/SDL.ListView"/><!-- From: file:/Users/destil/dev/android-styled-dialogs/library/src/main/res/layout/dialog_part_list.xml -->

@@ -1,16 +1,22 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/refreshlayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="de.xikolo.controller.fragments.CourseLearningsFragment">
+    android:background="@color/background_holo_light"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16pt"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:divider="@color/transparent"
+        android:dividerHeight="6dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay" />
 
-</RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
+    

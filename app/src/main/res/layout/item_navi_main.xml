@@ -28,4 +28,23 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textCounter"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/textLabel"
+        android:background="@drawable/bg_navigation_counter"
+        android:gravity="center"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:layout_marginRight="8dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package de.xikolo.controller.navigation.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
+import de.xikolo.manager.EnrollmentsManager;
 import de.xikolo.manager.TokenManager;
 import de.xikolo.manager.UserManager;
 import de.xikolo.view.CircularImageView;
@@ -83,6 +85,7 @@ public class NavigationAdapter extends BaseAdapter {
                 rowView = inflater.inflate(R.layout.item_navi_sub, null);
             } else {
                 rowView = inflater.inflate(R.layout.item_navi_main, null);
+                viewHolder.counter = (TextView) rowView.findViewById(R.id.textCounter);
             }
 
             viewHolder.icon = (TextView) rowView.findViewById(R.id.textIcon);
@@ -130,6 +133,14 @@ public class NavigationAdapter extends BaseAdapter {
             }
         }
 
+        if (i == NAV_ID_MY_COURSES && TokenManager.isLoggedIn(mContext)) {
+            holder.counter.setVisibility(View.VISIBLE);
+            int size = EnrollmentsManager.getEnrollmentsSize(mContext);
+            if (size > 0) {
+                holder.counter.setText(String.valueOf(size));
+            }
+        }
+
         return rowView;
     }
 
@@ -146,6 +157,7 @@ public class NavigationAdapter extends BaseAdapter {
     static class ViewHolder {
         TextView icon;
         TextView label;
+        TextView counter;
 
         CircularImageView img;
         TextView name;

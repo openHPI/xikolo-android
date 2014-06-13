@@ -20,28 +20,30 @@ import java.util.List;
 import java.util.Locale;
 
 import de.xikolo.R;
-import de.xikolo.controller.fragments.ContentFragment;
-import de.xikolo.controller.fragments.WebViewFragment;
+import de.xikolo.controller.fragments.CourseListFragment;
 import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
 import de.xikolo.util.Display;
 
-public class MyCourseListAdapter extends CourseListAdapter {
+public class FilteredCourseListAdapter extends CourseListAdapter {
 
-    public static final String TAG = MyCourseListAdapter.class.getSimpleName();
+    public static final String TAG = FilteredCourseListAdapter.class.getSimpleName();
 
     private List<Course> mCourses;
     private List<Enrollment> mEnrollments;
 
     private Activity mContext;
 
-    private OnEnrollButtonClickListener mCallback;
+    private String mFilter;
 
-    public MyCourseListAdapter(Activity context, OnEnrollButtonClickListener callback) {
+    private OnCourseButtonClickListener mCallback;
+
+    public FilteredCourseListAdapter(Activity context, OnCourseButtonClickListener callback, String filter) {
         this.mContext = context;
         this.mCourses = new ArrayList<Course>();
         this.mEnrollments = new ArrayList<Enrollment>();
         this.mCallback = callback;
+        this.mFilter = filter;
     }
 
     @Override
@@ -58,12 +60,24 @@ public class MyCourseListAdapter extends CourseListAdapter {
 
     @Override
     public int getCount() {
-        return mEnrollments.size();
+        int size = 0;
+        if (mFilter.equals(CourseListFragment.FILTER_MY)) {
+            size = mEnrollments.size();
+        } else if (mFilter.equals(CourseListFragment.FILTER_ALL)) {
+            size = mCourses.size();
+        }
+        return size;
     }
 
     @Override
     public Object getItem(int i) {
-        return mEnrollments.get(i);
+        Object o = null;
+        if (mFilter.equals(CourseListFragment.FILTER_MY)) {
+            o = mEnrollments.get(i);
+        } else if (mFilter.equals(CourseListFragment.FILTER_ALL)) {
+            o = mCourses.get(i);
+        }
+        return o;
     }
 
     @Override
@@ -89,12 +103,17 @@ public class MyCourseListAdapter extends CourseListAdapter {
         }
         final ViewHolder holder = (ViewHolder) rowView.getTag();
 
-        final Enrollment enrollment = (Enrollment) getItem(i);
         int c_id = 0;
-        for (Course c : mCourses) {
-            if (enrollment.course_id.equals(c.id)) {
-                c_id = mCourses.indexOf(c);
+
+        if (mFilter.equals(CourseListFragment.FILTER_MY)) {
+            final Enrollment enrollment = (Enrollment) getItem(i);
+            for (Course c : mCourses) {
+                if (enrollment.course_id.equals(c.id)) {
+                    c_id = mCourses.indexOf(c);
+                }
             }
+        } else if (mFilter.equals(CourseListFragment.FILTER_ALL)) {
+            c_id = i;
         }
         final Course course = mCourses.get(c_id);
 
@@ -118,14 +137,6 @@ public class MyCourseListAdapter extends CourseListAdapter {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
         }
 
-        holder.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((ContentFragment.OnFragmentInteractionListener) mContext)
-                        .attachFragment(WebViewFragment.newInstance(course.url, false, course.name));
-            }
-        });
-
         holder.title.setText(course.name);
         holder.teacher.setText(course.lecturer);
         holder.date.setText(dateOut.format(dateBegin) + " - " + dateOut.format(dateEnd));
@@ -141,16 +152,27 @@ public class MyCourseListAdapter extends CourseListAdapter {
             }
         }
         if (isEnrolled) {
+            holder.container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCallback.onEnterButtonClicked(course);
+                }
+            });
             holder.enroll.setText(mContext.getString(R.string.btn_enter_course));
             holder.enroll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     holder.enroll.setClickable(false);
-                    holder.enroll.setText("...");
                     mCallback.onEnterButtonClicked(course);
                 }
             });
         } else {
+            holder.container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCallback.onDetailButtonClicked(course);
+                }
+            });
             holder.enroll.setText(mContext.getString(R.string.btn_enroll_me));
             holder.enroll.setOnClickListener(new View.OnClickListener() {
                 @Override

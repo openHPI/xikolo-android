@@ -94,6 +94,7 @@
     <orderEntry type="library" exported="" name="pagerslidingtabstrip-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />
+    <orderEntry type="library" exported="" name="android-styled-dialogs-1.1.2" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.2" level="project" />
   </component>
 </module>
