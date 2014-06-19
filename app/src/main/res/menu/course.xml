@@ -4,5 +4,6 @@
 
     <item android:id="@+id/action_unenroll"
         android:title="@string/action_unenroll"
+        android:orderInCategory="100"
         android:showAsAction="never" />
 </menu>
