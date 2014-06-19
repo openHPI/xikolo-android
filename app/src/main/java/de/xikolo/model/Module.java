@@ -47,7 +47,7 @@ public class Module implements Parcelable {
         parcel.writeString(available_from);
         parcel.writeString(available_to);
         parcel.writeByte((byte) (locked ? 1 : 0 ));
-        parcel.writeList(items);
+        parcel.writeTypedList(items);
     }
 
     public Module() {

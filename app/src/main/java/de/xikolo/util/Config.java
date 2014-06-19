@@ -8,6 +8,7 @@ public class Config {
     public static final String FONT_PATH = "fonts/";
     public static final String FONT_SANS = FONT_PATH + "NeoSansStdRegular.ttf";
     public static final String FONT_SANS_BOLD = FONT_PATH + "NeoSansStdMedium.ttf";
+    public static final String FONT_XIKOLO = FONT_PATH + "xikolo.ttf";
 
     public static final String PREF_USER = UserPreferences.class.getName();
     public static final String PREF_ENROLLMENTS = EnrollmentsPreferences.class.getName();

@@ -173,7 +173,7 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (!mCallback.isDrawerOpen())
-            inflater.inflate(R.menu.webview, menu);
+            inflater.inflate(R.menu.refresh, menu);
     }
 
     @Override

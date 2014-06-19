@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
-    android:background="@color/white"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:foreground="@drawable/fg_container">
 
-    <de.xikolo.view.CustomTextView
-        android:id="@+id/textIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="8dp"
-        android:textSize="24sp"
-        app:customFont="xikolo.ttf" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <TextView
-        android:id="@+id/textTitle"
-        android:layout_width="wrap_content"
-        android:singleLine="true"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/textIcon"
-        android:layout_alignTop="@+id/textIcon"
-        android:paddingRight="8dp"
-        android:textSize="20sp" />
+        <de.xikolo.view.CustomTextView
+            android:id="@+id/textIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="8dp"
+            android:textSize="24sp"
+            app:customFont="xikolo.ttf" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textIcon"
+            android:layout_toRightOf="@+id/textIcon"
+            android:paddingRight="8dp"
+            android:singleLine="true"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+</FrameLayout>

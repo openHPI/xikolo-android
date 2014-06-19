@@ -1,5 +1,6 @@
 package de.xikolo.controller.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
+import de.xikolo.controller.ModuleActivity;
+import de.xikolo.controller.fragments.adapter.ItemListAdapter;
 import de.xikolo.controller.fragments.adapter.ModuleListAdapter;
 import de.xikolo.manager.ItemManager;
 import de.xikolo.manager.ModuleManager;
@@ -21,7 +24,8 @@ import de.xikolo.model.Course;
 import de.xikolo.model.Item;
 import de.xikolo.model.Module;
 
-public class CourseLearningsFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class CourseLearningsFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener,
+        ModuleListAdapter.OnModuleButtonClickListener, ItemListAdapter.OnItemButtonClickListener {
 
     public final static String TAG = CourseLearningsFragment.class.getSimpleName();
 
@@ -86,7 +90,7 @@ public class CourseLearningsFragment extends ContentFragment implements SwipeRef
         mRefreshLayout.setOnRefreshListener(this);
 
         mListView = (AbsListView) layout.findViewById(R.id.listView);
-        mAdapter = new ModuleListAdapter(getActivity(), mCourse);
+        mAdapter = new ModuleListAdapter(getActivity(), mCourse, this, this);
         mListView.setAdapter(mAdapter);
 
         return layout;
@@ -146,9 +150,29 @@ public class CourseLearningsFragment extends ContentFragment implements SwipeRef
     }
 
     @Override
+    public void onModuleButtonClicked(Course course, Module module) {
+        startModuleActivity(course, module, null);
+    }
+
+    @Override
+    public void onItemButtonClicked(Course course, Module module, Item item) {
+        startModuleActivity(course, module, item);
+    }
+
+    private void startModuleActivity(Course course, Module module, Item item) {
+        Intent intent = new Intent(getActivity(), ModuleActivity.class);
+        Bundle b = new Bundle();
+        b.putParcelable(ModuleActivity.ARG_COURSE, course);
+        b.putParcelable(ModuleActivity.ARG_MODULE, module);
+        b.putParcelable(ModuleActivity.ARG_ITEM, item);
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (!mCallback.isDrawerOpen())
-            inflater.inflate(R.menu.webview, menu);
+            inflater.inflate(R.menu.refresh, menu);
     }
 
     @Override

@@ -16,7 +16,6 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.controller.fragments.adapter.CourseListAdapter;
 import de.xikolo.controller.fragments.adapter.FilteredCourseListAdapter;
-import de.xikolo.controller.fragments.adapter.OnCourseButtonClickListener;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.manager.CourseManager;
 import de.xikolo.manager.EnrollmentsManager;
@@ -25,7 +24,8 @@ import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
 import de.xikolo.util.Toaster;
 
-public class CourseListFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener, OnCourseButtonClickListener {
+public class CourseListFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener,
+        CourseListAdapter.OnCourseButtonClickListener {
 
     public static final String TAG = CourseListFragment.class.getSimpleName();
 
@@ -204,7 +204,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (!mCallback.isDrawerOpen())
-            inflater.inflate(R.menu.webview, menu);
+            inflater.inflate(R.menu.refresh, menu);
     }
 
     @Override

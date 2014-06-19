@@ -13,4 +13,14 @@ public abstract class CourseListAdapter extends BaseAdapter {
 
     public abstract void updateEnrollments(List<Enrollment> enrolls);
 
+    public interface OnCourseButtonClickListener {
+
+        public void onEnrollButtonClicked(Course course);
+
+        public void onEnterButtonClicked(Course course);
+
+        public void onDetailButtonClicked(Course course);
+
+    }
+
 }

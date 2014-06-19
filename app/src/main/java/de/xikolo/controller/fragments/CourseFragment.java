@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,8 +32,6 @@ public class CourseFragment extends ContentFragment implements ISimpleDialogList
     private static final String ARG_COURSE = "arg_course";
 
     private Course mCourse;
-
-    private FragmentTabHost mTabHost;
 
     public CourseFragment() {
         // Required empty public constructor
@@ -81,12 +77,6 @@ public class CourseFragment extends ContentFragment implements ISimpleDialogList
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mTabHost = null;
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (!mCallback.isDrawerOpen())
             inflater.inflate(R.menu.course, menu);
@@ -115,7 +105,6 @@ public class CourseFragment extends ContentFragment implements ISimpleDialogList
             @Override
             public void onEnrollmentsRequestCancelled() {}
         };
-        Log.w(TAG, "ok");
         manager.deleteEnrollment(mCourse.id);
         mCallback.toggleDrawer(NavigationAdapter.NAV_ID_MY_COURSES);
     }

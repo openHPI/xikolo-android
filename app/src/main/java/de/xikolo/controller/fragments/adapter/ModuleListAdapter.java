@@ -25,10 +25,16 @@ public class ModuleListAdapter extends BaseAdapter {
     private Activity mContext;
     private Course mCourse;
 
-    public ModuleListAdapter(Activity context, Course course) {
+    private ItemListAdapter.OnItemButtonClickListener mItemCallback;
+    private OnModuleButtonClickListener mModuleCallback;
+
+    public ModuleListAdapter(Activity context, Course course, OnModuleButtonClickListener moduleCallback,
+                             ItemListAdapter.OnItemButtonClickListener itemCallback) {
         this.mContext = context;
         this.mModules = new ArrayList<Module>();
         this.mCourse = course;
+        this.mModuleCallback = moduleCallback;
+        this.mItemCallback = itemCallback;
     }
 
     public void updateModules(List<Module> modules) {
@@ -68,11 +74,17 @@ public class ModuleListAdapter extends BaseAdapter {
         final Module module = (Module) getItem(i);
 
         holder.title.setText(module.name);
-        ItemListAdapter itemAdapter = new ItemListAdapter(mContext, mCourse, module);
+        ItemListAdapter itemAdapter = new ItemListAdapter(mContext, mCourse, module, mItemCallback);
         holder.listView.setAdapter(itemAdapter);
         if (module.items != null && module.items.size() > 0) {
             holder.progress.setVisibility(View.GONE);
             itemAdapter.updateItems(module.items);
+            holder.title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mModuleCallback.onModuleButtonClicked(mCourse, module);
+                }
+            });
         }
 
         return rowView;
@@ -82,6 +94,12 @@ public class ModuleListAdapter extends BaseAdapter {
         TextView title;
         AbsListView listView;
         ProgressBar progress;
+    }
+
+    public interface OnModuleButtonClickListener {
+
+        public void onModuleButtonClicked(Course course, Module module);
+
     }
 
 }
