@@ -14,6 +14,12 @@
         revision="19.1.0"
         sha1="a60a5e993c98c864010053cb901b7eab25306568"/>
     <item
+        dex="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/app/build/pre-dexed/openHPI/debug/classes-9bb72c7e41c74280e1ed3b02cd039becaa387f3a.jar"
+        jar="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/build/exploded-aar/eu.inmite.android.lib/android-styled-dialogs/1.1.2/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="f08d50cb07664faae4a99d74de117b7adef5b82b"/>
+    <item
         dex="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/app/build/pre-dexed/openHPI/debug/universal-image-loader-1.9.2-8de5ba2cdad23e86bc1c6a71364487aac172c9df.jar"
         jar="/Users/tobiasrohloff/.gradle/caches/modules-2/files-2.1/com.nostra13.universalimageloader/universal-image-loader/1.9.2/9e025bc5b84968e7d6ac765e660a70b3e5a87432/universal-image-loader-1.9.2.jar"
         jumboMode="false"
@@ -25,11 +31,5 @@
         jumboMode="false"
         revision="19.1.0"
         sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
-    <item
-        dex="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/app/build/pre-dexed/openHPI/debug/classes-9bb72c7e41c74280e1ed3b02cd039becaa387f3a.jar"
-        jar="/Users/tobiasrohloff/Workspace/android-studio/xikolo-android/build/exploded-aar/eu.inmite.android.lib/android-styled-dialogs/1.1.2/classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="f08d50cb07664faae4a99d74de117b7adef5b82b"/>
 
 </pre-dex-items>

@@ -1,9 +1,12 @@
 package de.xikolo.dataaccess;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -22,15 +25,20 @@ public abstract class JsonRequest extends HttpRequest {
 
     @Override
     protected Object doInBackground(Void... args) {
-        InputStream in = createConnection();
+        try {
+            InputStream in = new BufferedInputStream(createConnection().getInputStream());
 
-        Gson gson = new Gson();
-        Reader reader = new InputStreamReader(in);
+            Gson gson = new Gson();
+            Reader reader = new InputStreamReader(in);
 
-        Object o = gson.fromJson(reader, mType);
-        closeConnection();
+            Object o = gson.fromJson(reader, mType);
+            closeConnection();
 
-        return o;
+            return o;
+        } catch (IOException e) {
+            Log.w(TAG, "Error for URL " + mUrl, e);
+        }
+        return null;
     }
 
 }

@@ -40,7 +40,7 @@ public abstract class TokenManager {
     }
 
     public void logout() {
-        this.mUserPref.deleteUserAndToken();
+        this.mUserPref.deleteUser();
     }
 
     public void login(String email, String password) {

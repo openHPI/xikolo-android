@@ -19,7 +19,6 @@ public class UserPreferences {
     private static String USER_COMPANY = "company";
 
     private static String USER_ACCESS_TOKEN = "access_token";
-
     public static String ACCESS_TOKEN_DEFAULT = "fail";
 
     private Context mContext;
@@ -57,7 +56,7 @@ public class UserPreferences {
         editor.commit();
     }
 
-    public void deleteUserAndToken() {
+    public void deleteUser() {
         SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear();

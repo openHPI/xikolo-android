@@ -169,9 +169,9 @@ public class TextFragment extends Fragment {
     }
 
     public void displayBody() {
-        Log.d(TAG, "displayBody");
+        Log.d(TAG, "request");
 
-        mWebView.loadData(mItem.object.body, "text/html; charset=UTF-8", null);
+        mWebView.loadData(mItem.object.body, "text/html", "charset=UTF-8");
     }
 
 }

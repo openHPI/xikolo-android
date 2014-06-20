@@ -3,6 +3,7 @@ package de.xikolo.controller;
 import android.app.Application;
 import android.net.http.HttpResponseCache;
 import android.util.Log;
+import android.webkit.CookieManager;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -52,6 +53,9 @@ public class GlobalApplication extends Application {
         } catch (IOException e) {
             Log.i(TAG, "HTTP response cache installation failed:" + e);
         }
+
+        // Enable WebView Cookies
+        CookieManager.getInstance().setAcceptCookie(true);
     }
 
     public void flushCache() {

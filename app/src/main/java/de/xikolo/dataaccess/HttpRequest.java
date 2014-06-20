@@ -3,16 +3,17 @@ package de.xikolo.dataaccess;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.webkit.CookieManager;
 
 import com.google.gson.JsonSyntaxException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -69,18 +70,23 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
 
     @Override
     protected Object doInBackground(Void... args) {
-        InputStreamReader in = new InputStreamReader(createConnection());
-        BufferedReader buff = new BufferedReader(in);
-        StringBuffer input = new StringBuffer();
-        String line;
         try {
-            while ((line = buff.readLine()) != null)
-                input.append(line);
+            InputStreamReader in = new InputStreamReader(new BufferedInputStream(createConnection().getInputStream()));
+            BufferedReader buff = new BufferedReader(in);
+            StringBuffer input = new StringBuffer();
+            String line;
+            try {
+                while ((line = buff.readLine()) != null)
+                    input.append(line);
+            } catch (IOException e) {
+                Log.e(TAG, "Error reading input stream for ", e);
+            }
+            closeConnection();
+            return input;
         } catch (IOException e) {
-            Log.e(TAG, "Error reading input stream for ", e);
+            Log.w(TAG, "Error for URL " + mUrl, e);
         }
-        closeConnection();
-        return input;
+        return null;
     }
 
     protected void closeConnection() {
@@ -88,7 +94,7 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
             urlConnection.disconnect();
     }
 
-    protected InputStream createConnection() {
+    protected HttpsURLConnection createConnection() {
         try {
             URL url = new URL(mUrl);
             urlConnection = (HttpsURLConnection) url.openConnection();
@@ -112,12 +118,9 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
                 return null;
             }
 
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            return in;
+            return urlConnection;
         } catch (IOException e) {
             Log.w(TAG, "Error for URL " + mUrl, e);
-        } catch (JsonSyntaxException e) {
-            Log.w(TAG, "JSON Syntax Error for URL " + mUrl, e);
         }
         return null;
     }

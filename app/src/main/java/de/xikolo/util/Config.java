@@ -39,6 +39,7 @@ public class Config {
     public static final String API_SAP = URI_SAP + "api/";
 
     public static final String PATH_NEWS = "news/";
+    public static final String PATH_LOGIN = "login/";
 
     public static final String PATH_AUTHENTICATE = "authenticate/";
 

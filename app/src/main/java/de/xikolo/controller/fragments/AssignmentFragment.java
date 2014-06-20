@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,45 +21,51 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.xikolo.R;
-import de.xikolo.controller.navigation.adapter.NavigationAdapter;
+import de.xikolo.manager.ItemObjectManager;
 import de.xikolo.manager.SessionManager;
+import de.xikolo.model.Assignment;
+import de.xikolo.model.Course;
+import de.xikolo.model.Item;
+import de.xikolo.model.Module;
 import de.xikolo.util.Config;
 import de.xikolo.util.Network;
 
-public class WebViewFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class AssignmentFragment extends Fragment {
 
-    public static final String TAG = WebViewFragment.class.getSimpleName();
+    public static final String TAG = AssignmentFragment.class.getSimpleName();
 
-    // the fragment initialization parameters
-    private static final String ARG_URL = "arg_url";
-    private static final String ARG_TOP_LEVEL_CONTENT = "arg_top_level_content";
-    private static final String ARG_TITLE = "arg_title";
+    public static final String ARG_COURSE = "arg_course";
+    public static final String ARG_MODULE = "arg_module";
+    public static final String ARG_ITEM = "arg_item";
 
-    private String mUrl;
-    private String mTitle;
-    private boolean isTopLevelContent;
-
-    private SwipeRefreshLayout mRefreshLayout;
+    private Course mCourse;
+    private Module mModule;
+    private Item<Assignment> mItem;
 
     private WebView mWebView;
     private ProgressBar mProgressBar;
 
+    private ItemObjectManager mItemManager;
+
     private SessionManager mSessionManager;
 
-    public WebViewFragment() {
+    public AssignmentFragment() {
         // Required empty public constructor
     }
 
-    public static WebViewFragment newInstance(String url, boolean topLevelContent, String title) {
-        WebViewFragment fragment = new WebViewFragment();
+    public static AssignmentFragment newInstance(Course course, Module module, Item item) {
+        AssignmentFragment fragment = new AssignmentFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_URL, url);
-        args.putBoolean(ARG_TOP_LEVEL_CONTENT, topLevelContent);
-        args.putString(ARG_TITLE, title);
+        args.putParcelable(ARG_COURSE, course);
+        args.putParcelable(ARG_MODULE, module);
+        args.putParcelable(ARG_ITEM, item);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,30 +74,19 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mUrl = getArguments().getString(ARG_URL);
-            isTopLevelContent = getArguments().getBoolean(ARG_TOP_LEVEL_CONTENT);
-            mTitle = getArguments().getString(ARG_TITLE);
+            mCourse = getArguments().getParcelable(ARG_COURSE);
+            mModule = getArguments().getParcelable(ARG_MODULE);
+            mItem = getArguments().getParcelable(ARG_ITEM);
         }
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (isTopLevelContent && mUrl.contains(Config.PATH_NEWS)) {
-            mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_NEWS, getString(R.string.title_section_news));
-        } else if (!isTopLevelContent && mTitle != null) {
-            mCallback.onLowLevelFragmentAttached(NavigationAdapter.NAV_ID_LOW_LEVEL_CONTENT, mTitle);
-        }
+//        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_webview, container, false);
+        View layout = inflater.inflate(R.layout.fragment_assignment, container, false);
         mWebView = (WebView) layout.findViewById(R.id.webView);
         mProgressBar = (ProgressBar) layout.findViewById(R.id.progress);
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
 
         final Activity activity = getActivity();
 
@@ -107,17 +102,13 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                mRefreshLayout.setRefreshing(true);
-                mWebView.setVisibility(View.GONE);
                 mProgressBar.setVisibility(ProgressBar.VISIBLE);
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                mRefreshLayout.setRefreshing(false);
                 mProgressBar.setVisibility(ProgressBar.GONE);
-                mWebView.setVisibility(View.VISIBLE);
                 super.onPageFinished(view, url);
             }
 
@@ -133,7 +124,6 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
                 }
                 return true;
             }
-
         });
 
         mWebView.setOnKeyListener(new View.OnKeyListener() {
@@ -147,12 +137,17 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
             }
         });
 
-        mRefreshLayout.setColorScheme(
-                R.color.red,
-                R.color.orange,
-                R.color.red,
-                R.color.orange);
-        mRefreshLayout.setOnRefreshListener(this);
+        mItemManager = new ItemObjectManager(getActivity()) {
+            @Override
+            public void onItemRequestReceived(Item item) {
+                mItem = item;
+                request();
+            }
+
+            @Override
+            public void onItemRequestCancelled() {
+            }
+        };
 
         mSessionManager = new SessionManager(getActivity()) {
             @Override
@@ -165,57 +160,46 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
             }
         };
 
-        onRefresh();
-
         return layout;
     }
 
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//
-//        if (savedInstanceState != null && mWebView != null) {
-//            mWebView.restoreState(savedInstanceState);
-//        } else {
-//            onRefresh();
-//        }
-//    }
-//
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        if (mWebView != null)
-//            mWebView.saveState(outState);
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (Network.isOnline(getActivity())) {
+            Type type = new TypeToken<Item<Assignment>>() {
+            }.getType();
+            mItemManager.requestItemObject(mCourse, mModule, mItem, type, true);
+        } else {
+            Network.showNoConnectionToast(getActivity());
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!mCallback.isDrawerOpen())
-            inflater.inflate(R.menu.refresh, menu);
+//        inflater.inflate(R.menu.refresh, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
-            case android.R.id.home:
-                getActivity().getSupportFragmentManager().popBackStack();
-                return true;
-            case R.id.action_refresh:
-                onRefresh();
-                return true;
+//            case R.id.action_refresh:
+//                onRefresh();
+//                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onRefresh() {
-        Log.d(TAG, "onRefresh");
+    public void request() {
+        Log.d(TAG, "request");
 
         if (Network.isOnline(getActivity())) {
-            mRefreshLayout.setRefreshing(true);
             if (SessionManager.hasSession(getActivity())) {
-                request();
+                Map<String, String> header = new HashMap<String, String>();
+                header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
+                mWebView.loadUrl(mItem.object.url, header);
             } else {
                 mSessionManager.createSession();
             }
@@ -224,11 +208,4 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
         }
     }
 
-    private void request() {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
-        mWebView.loadUrl(mUrl, header);
-    }
-
 }
-

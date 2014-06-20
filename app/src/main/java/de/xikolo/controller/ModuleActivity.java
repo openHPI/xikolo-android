@@ -17,8 +17,10 @@ import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
+import de.xikolo.controller.fragments.AssignmentFragment;
 import de.xikolo.controller.fragments.ItemFragment;
 import de.xikolo.controller.fragments.TextFragment;
+import de.xikolo.model.Assignment;
 import de.xikolo.model.Course;
 import de.xikolo.model.Item;
 import de.xikolo.model.Module;
@@ -127,10 +129,10 @@ public class ModuleActivity extends FragmentActivity {
                 fragment = TextFragment.newInstance(mCourse, mModule, mItems.get(position));
             } else if (item.type.equals(Item.TYPE_VIDEO)) {
                 fragment = ItemFragment.newInstance(mModule, mItems.get(position));
-            } else if (item.type.equals(Item.TYPE_SELFTEST)) {
-                fragment = ItemFragment.newInstance(mModule, mItems.get(position));
-            } else if (item.type.equals(Item.TYPE_ASSIGNMENT) || item.type.equals(Item.TYPE_EXAM)) {
-                fragment = ItemFragment.newInstance(mModule, mItems.get(position));
+            } else if (item.type.equals(Item.TYPE_SELFTEST)
+                    || item.type.equals(Item.TYPE_ASSIGNMENT)
+                    || item.type.equals(Item.TYPE_EXAM)) {
+                fragment = AssignmentFragment.newInstance(mCourse, mModule, mItems.get(position));
             }
             return fragment;
         }
