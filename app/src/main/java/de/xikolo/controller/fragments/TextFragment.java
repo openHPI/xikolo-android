@@ -77,7 +77,7 @@ public class TextFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_webview, container, false);
+        View layout = inflater.inflate(R.layout.fragment_text, container, false);
         mWebView = (WebView) layout.findViewById(R.id.webView);
         mProgressBar = (ProgressBar) layout.findViewById(R.id.progress);
 
