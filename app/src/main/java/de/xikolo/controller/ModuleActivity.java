@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.CookieSyncManager;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -87,6 +88,18 @@ public class ModuleActivity extends FragmentActivity {
 //            return true;
 //        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CookieSyncManager.getInstance().startSync();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        CookieSyncManager.getInstance().sync();
     }
 
     public class ModulePagerAdapter extends FragmentPagerAdapter {

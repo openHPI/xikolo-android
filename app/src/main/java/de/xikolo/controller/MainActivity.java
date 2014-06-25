@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.CookieSyncManager;
 
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
@@ -178,6 +179,18 @@ public class MainActivity extends FragmentActivity
     @Override
     public void toggleDrawer(int pos) {
         this.mNavigationFragment.selectItem(pos);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CookieSyncManager.getInstance().startSync();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        CookieSyncManager.getInstance().sync();
     }
 
     @Override
