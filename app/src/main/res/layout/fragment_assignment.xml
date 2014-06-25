@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.xikolo.controller.fragments.WebViewFragment">
+    tools:context="de.xikolo.controller.fragments.AssignmentFragment">
 
     <WebView
         android:id="@+id/webView"
