@@ -13,6 +13,9 @@ public class Network {
     public static int TYPE_MOBILE = 2;
 
     public static boolean isOnline(Context context) {
+        if (context == null) {
+            return false;
+        }
         ConnectivityManager cm = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
 

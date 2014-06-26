@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -37,17 +36,9 @@ import de.xikolo.model.Module;
 import de.xikolo.util.Config;
 import de.xikolo.util.Network;
 
-public class AssignmentFragment extends Fragment {
+public class AssignmentFragment extends PagerFragment<Assignment> {
 
     public static final String TAG = AssignmentFragment.class.getSimpleName();
-
-    public static final String ARG_COURSE = "arg_course";
-    public static final String ARG_MODULE = "arg_module";
-    public static final String ARG_ITEM = "arg_item";
-
-    private Course mCourse;
-    private Module mModule;
-    private Item<Assignment> mItem;
 
     private WebView mWebView;
     private ProgressBar mProgressBar;
@@ -57,28 +48,11 @@ public class AssignmentFragment extends Fragment {
     private SessionManager mSessionManager;
 
     public AssignmentFragment() {
-        // Required empty public constructor
+
     }
 
-    public static AssignmentFragment newInstance(Course course, Module module, Item item) {
-        AssignmentFragment fragment = new AssignmentFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_COURSE, course);
-        args.putParcelable(ARG_MODULE, module);
-        args.putParcelable(ARG_ITEM, item);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mCourse = getArguments().getParcelable(ARG_COURSE);
-            mModule = getArguments().getParcelable(ARG_MODULE);
-            mItem = getArguments().getParcelable(ARG_ITEM);
-        }
-//        setHasOptionsMenu(true);
+    public static PagerFragment newInstance(Course course, Module module, Item item) {
+        return PagerFragment.newInstance(new AssignmentFragment(), course, module, item);
     }
 
     @Override
@@ -206,6 +180,16 @@ public class AssignmentFragment extends Fragment {
         } else {
             Network.showNoConnectionToast(getActivity());
         }
+    }
+
+    @Override
+    public void pageChanged() {
+
+    }
+
+    @Override
+    public void pageScrolling() {
+
     }
 
 }

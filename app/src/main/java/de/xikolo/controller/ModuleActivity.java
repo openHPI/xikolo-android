@@ -8,17 +8,20 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.CookieSyncManager;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.fragments.AssignmentFragment;
+import de.xikolo.controller.fragments.PagerFragment;
 import de.xikolo.controller.fragments.TextFragment;
 import de.xikolo.controller.fragments.VideoFragment;
 import de.xikolo.model.Course;
@@ -56,13 +59,15 @@ public class ModuleActivity extends FragmentActivity {
 
         // Initialize the ViewPager and set an adapter
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        FragmentPagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), this, mModule.items);
+        ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), this, pager, mModule.items);
         pager.setAdapter(adapter);
 
         // Bind the tabs to the ViewPager
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(pager);
         tabs.setTypeface(Typeface.createFromAsset(getApplication().getAssets(), Config.FONT_XIKOLO), Typeface.NORMAL);
+
+        tabs.setOnPageChangeListener(adapter);
 
         if (mItem != null) {
             pager.setCurrentItem(mModule.items.indexOf(mItem), false);
@@ -101,15 +106,23 @@ public class ModuleActivity extends FragmentActivity {
         CookieSyncManager.getInstance().sync();
     }
 
-    public class ModulePagerAdapter extends FragmentPagerAdapter {
+    public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
 
         private List<Item> mItems;
         private Context mContext;
+        private ViewPager mPager;
 
-        public ModulePagerAdapter(FragmentManager fm, Context context, List<Item> items) {
+        private PagerFragment[] mFragments;
+
+        private int lastPosition = 0;
+
+        public ModulePagerAdapter(FragmentManager fm, Context context, ViewPager pager, List<Item> items) {
             super(fm);
             this.mItems = items;
             this.mContext = context;
+            this.mPager = pager;
+
+            this.mFragments = new PagerFragment[mItems.size()];
         }
 
         @Override
@@ -136,19 +149,44 @@ public class ModuleActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
             Item item = mItems.get(position);
-            Fragment fragment = null;
-            if (item.type.equals(Item.TYPE_TEXT)) {
-                fragment = TextFragment.newInstance(mCourse, mModule, mItems.get(position));
-            } else if (item.type.equals(Item.TYPE_VIDEO)) {
-                fragment = VideoFragment.newInstance(mCourse, mModule, mItems.get(position));
-            } else if (item.type.equals(Item.TYPE_SELFTEST)
-                    || item.type.equals(Item.TYPE_ASSIGNMENT)
-                    || item.type.equals(Item.TYPE_EXAM)) {
-                fragment = AssignmentFragment.newInstance(mCourse, mModule, mItems.get(position));
+
+            PagerFragment fragment = null;
+
+            if (mFragments[position] != null) {
+                fragment = mFragments[position];
+            } else {
+                if (item.type.equals(Item.TYPE_TEXT)) {
+                    fragment = TextFragment.newInstance(mCourse, mModule, mItems.get(position));
+                } else if (item.type.equals(Item.TYPE_VIDEO)) {
+                    fragment = VideoFragment.newInstance(mCourse, mModule, mItems.get(position));
+                } else if (item.type.equals(Item.TYPE_SELFTEST)
+                        || item.type.equals(Item.TYPE_ASSIGNMENT)
+                        || item.type.equals(Item.TYPE_EXAM)) {
+                    fragment = AssignmentFragment.newInstance(mCourse, mModule, mItems.get(position));
+                }
+                mFragments[position] = fragment;
             }
             return fragment;
         }
 
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (lastPosition != position) {
+                PagerFragment fragment = (PagerFragment) getItem(lastPosition);
+                fragment.pageChanged();
+                lastPosition = position;
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            PagerFragment fragment = (PagerFragment) getItem(lastPosition);
+            fragment.pageScrolling();
+        }
     }
 
 }

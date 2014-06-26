@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,17 +30,9 @@ import de.xikolo.model.Module;
 import de.xikolo.model.Text;
 import de.xikolo.util.Network;
 
-public class TextFragment extends Fragment {
+public class TextFragment extends PagerFragment<Text> {
 
     public static final String TAG = TextFragment.class.getSimpleName();
-
-    public static final String ARG_COURSE = "arg_course";
-    public static final String ARG_MODULE = "arg_module";
-    public static final String ARG_ITEM = "arg_item";
-
-    private Course mCourse;
-    private Module mModule;
-    private Item<Text> mItem;
 
     private WebView mWebView;
     private ProgressBar mProgressBar;
@@ -50,28 +40,11 @@ public class TextFragment extends Fragment {
     private ItemObjectManager mItemManager;
 
     public TextFragment() {
-        // Required empty public constructor
+
     }
 
-    public static TextFragment newInstance(Course course, Module module, Item item) {
-        TextFragment fragment = new TextFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_COURSE, course);
-        args.putParcelable(ARG_MODULE, module);
-        args.putParcelable(ARG_ITEM, item);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mCourse = getArguments().getParcelable(ARG_COURSE);
-            mModule = getArguments().getParcelable(ARG_MODULE);
-            mItem = getArguments().getParcelable(ARG_ITEM);
-        }
-//        setHasOptionsMenu(true);
+    public static PagerFragment newInstance(Course course, Module module, Item item) {
+        return PagerFragment.newInstance(new TextFragment(), course, module, item);
     }
 
     @Override
@@ -169,9 +142,17 @@ public class TextFragment extends Fragment {
     }
 
     public void displayBody() {
-        Log.d(TAG, "request");
-
         mWebView.loadData(mItem.object.body, "text/html", "charset=UTF-8");
+    }
+
+    @Override
+    public void pageChanged() {
+
+    }
+
+    @Override
+    public void pageScrolling() {
+
     }
 
 }
