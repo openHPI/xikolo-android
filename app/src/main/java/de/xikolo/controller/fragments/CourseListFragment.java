@@ -22,6 +22,7 @@ import de.xikolo.manager.EnrollmentsManager;
 import de.xikolo.manager.TokenManager;
 import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
+import de.xikolo.util.Network;
 import de.xikolo.util.Toaster;
 
 public class CourseListFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener,
@@ -151,29 +152,38 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             }
         };
 
-        if (TokenManager.isLoggedIn(getActivity())) {
-            if (mEnrollments == null) {
-                mEnrollmentsManager.requestEnrollments(true);
-            } else {
-                mCourseListAdapter.updateEnrollments(mEnrollments);
+        if (Network.isOnline(getActivity())) {
+            if (TokenManager.isLoggedIn(getActivity())) {
+                if (mEnrollments == null) {
+                    mEnrollmentsManager.requestEnrollments(true);
+                } else {
+                    mCourseListAdapter.updateEnrollments(mEnrollments);
+                }
             }
-        }
 
-        if (mCourses == null) {
-            mRefreshLayout.setRefreshing(true);
-            mCourseManager.requestCourses(true);
+            if (mCourses == null) {
+                mRefreshLayout.setRefreshing(true);
+                mCourseManager.requestCourses(true);
+            } else {
+                mCourseListAdapter.updateCourses(mCourses);
+            }
         } else {
-            mCourseListAdapter.updateCourses(mCourses);
+            Network.showNoConnectionToast(getActivity());
         }
     }
 
     @Override
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
-        if (TokenManager.isLoggedIn(getActivity())) {
-            mEnrollmentsManager.requestEnrollments(false);
+        if (Network.isOnline(getActivity())) {
+            if (TokenManager.isLoggedIn(getActivity())) {
+                mEnrollmentsManager.requestEnrollments(false);
+            }
+            mCourseManager.requestCourses(false);
+        } else {
+            mRefreshLayout.setRefreshing(false);
+            Network.showNoConnectionToast(getActivity());
         }
-        mCourseManager.requestCourses(false);
     }
 
     @Override

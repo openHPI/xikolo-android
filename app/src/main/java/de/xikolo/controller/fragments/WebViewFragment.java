@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -210,24 +209,31 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
 
     @Override
     public void onRefresh() {
-        Log.d(TAG, "onRefresh");
+        mRefreshLayout.setRefreshing(true);
 
         if (Network.isOnline(getActivity())) {
-            mRefreshLayout.setRefreshing(true);
             if (SessionManager.hasSession(getActivity())) {
                 request();
             } else {
                 mSessionManager.createSession();
             }
         } else {
+            mRefreshLayout.setRefreshing(false);
+            mProgressBar.setVisibility(ProgressBar.GONE);
             Network.showNoConnectionToast(getActivity());
         }
     }
 
     private void request() {
-        Map<String, String> header = new HashMap<String, String>();
-        header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
-        mWebView.loadUrl(mUrl, header);
+        if (Network.isOnline(getActivity())) {
+            Map<String, String> header = new HashMap<String, String>();
+            header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
+            mWebView.loadUrl(mUrl, header);
+        } else {
+            mRefreshLayout.setRefreshing(false);
+            mProgressBar.setVisibility(ProgressBar.GONE);
+            Network.showNoConnectionToast(getActivity());
+        }
     }
 
 }
