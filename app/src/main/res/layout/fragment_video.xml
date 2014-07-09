@@ -27,8 +27,16 @@
                     android:layout_height="fill_parent" />
 
                 <RelativeLayout
+                    android:id="@+id/videoHeader"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_height="wrap_content"
+                    android:background="@color/actionbar_alpha"
+                    android:gravity="top"
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/btnFullscreen"
@@ -36,8 +44,22 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
-                        android:padding="16dp"
                         android:src="@drawable/ic_action_fullscreen" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/progressVideo"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="@color/black">
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleInverse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="visible" />
 
                 </RelativeLayout>
 

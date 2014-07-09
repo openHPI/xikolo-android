@@ -151,7 +151,7 @@ public class TextFragment extends PagerFragment<Text> {
     }
 
     @Override
-    public void pageScrolling() {
+    public void pageScrolling(int state) {
 
     }
 

@@ -43,6 +43,6 @@ public abstract class PagerFragment<T extends Parcelable> extends Fragment {
 
     public abstract void pageChanged();
 
-    public abstract void pageScrolling();
+    public abstract void pageScrolling(int state);
 
 }

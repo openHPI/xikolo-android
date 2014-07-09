@@ -18,7 +18,11 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="8dp"
+            android:includeFontPadding="false"
+            android:paddingBottom="6dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="6dp"
             android:textSize="24sp"
             app:customFont="xikolo.ttf" />
 
@@ -26,9 +30,11 @@
             android:id="@+id/textTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/textIcon"
+            android:layout_alignBaseline="@+id/textIcon"
             android:layout_toRightOf="@+id/textIcon"
+            android:layout_centerVertical="true"
             android:paddingRight="8dp"
+            android:includeFontPadding="false"
             android:singleLine="true"
             android:textSize="20sp" />
 

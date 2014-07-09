@@ -188,7 +188,7 @@ public class AssignmentFragment extends PagerFragment<Assignment> {
     }
 
     @Override
-    public void pageScrolling() {
+    public void pageScrolling(int state) {
 
     }
 

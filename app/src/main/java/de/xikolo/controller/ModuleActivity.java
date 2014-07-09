@@ -185,7 +185,7 @@ public class ModuleActivity extends FragmentActivity {
         @Override
         public void onPageScrollStateChanged(int state) {
             PagerFragment fragment = (PagerFragment) getItem(lastPosition);
-            fragment.pageScrolling();
+            fragment.pageScrolling(state);
         }
     }
 

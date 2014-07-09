@@ -1,11 +1,12 @@
 package de.xikolo.controller.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,9 +36,13 @@ import de.xikolo.view.CustomVideoView;
 public class VideoFragment extends PagerFragment<Video> {
 
     public static final String TAG = VideoFragment.class.getSimpleName();
-    private static final String KEY_TIME = "key_time";
-    private static final String KEY_ISPLAYING = "key_isplaying";
-    private static final String KEY_ITEM = "key_item";
+
+    public static final int FULL_SCREEN_REQUEST = 1;
+
+    public static final String KEY_TIME = "key_time";
+    public static final String KEY_ISPLAYING = "key_isplaying";
+    public static final String KEY_ITEM = "key_item";
+
     private ImageView mBtnFullscreen;
     private CustomVideoView mVideo;
     private TextView mTitle;
@@ -45,12 +50,16 @@ public class VideoFragment extends PagerFragment<Video> {
     private ViewGroup mVideoContainer;
     private View mContainer;
     private ProgressBar mProgress;
+    private View mProgressVideo;
+    private View mVideoHeader;
     private MediaController mVideoController;
     private ItemObjectManager mItemManager;
+
     private int time = 0;
     private boolean isPlaying = false;
-
     private boolean isLoaded = false;
+
+    private boolean isRunning;
 
     public VideoFragment() {
 
@@ -67,32 +76,29 @@ public class VideoFragment extends PagerFragment<Video> {
 
         mContainer = layout.findViewById(R.id.container);
         mProgress = (ProgressBar) layout.findViewById(R.id.progress);
-        mContainer.setVisibility(View.GONE);
 
         mBtnFullscreen = (ImageView) layout.findViewById(R.id.btnFullscreen);
         mTitle = (TextView) layout.findViewById(R.id.textTitle);
         mTime = (TextView) layout.findViewById(R.id.textTime);
         mVideoContainer = (ViewGroup) layout.findViewById(R.id.videoContainer);
         mVideo = (CustomVideoView) layout.findViewById(R.id.video);
-        mBtnFullscreen.setVisibility(View.GONE);
+
+        mVideoHeader = layout.findViewById(R.id.videoHeader);
+        mProgressVideo = layout.findViewById(R.id.progressVideo);
 
         mVideoController = new MediaController(getActivity()) {
             @Override
             public void show() {
                 super.show();
-                mBtnFullscreen.setVisibility(View.VISIBLE);
+                mVideoHeader.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void hide() {
                 super.hide();
-                mBtnFullscreen.setVisibility(View.GONE);
+                mVideoHeader.setVisibility(View.GONE);
             }
         };
-        mVideoController.setAnchorView(mVideo);
-        mVideoController.setKeepScreenOn(true);
-
-        mVideo.setMediaController(mVideoController);
 
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -119,10 +125,11 @@ public class VideoFragment extends PagerFragment<Video> {
                 }
                 Intent intent = new Intent(getActivity(), VideoActivity.class);
                 Bundle b = new Bundle();
-                b.putParcelable(VideoActivity.ARG_ITEM, mItem);
-                b.putInt(VideoActivity.ARG_TIME, time);
+                b.putParcelable(KEY_ITEM, mItem);
+                b.putInt(KEY_TIME, time);
+                b.putBoolean(KEY_ISPLAYING, mVideo.isPlaying());
                 intent.putExtras(b);
-                startActivity(intent);
+                startActivityForResult(intent, FULL_SCREEN_REQUEST);
                 mVideo.getCurrentPosition();
             }
         });
@@ -140,18 +147,29 @@ public class VideoFragment extends PagerFragment<Video> {
         };
 
         if (savedInstanceState != null) {
-            Log.w(TAG, "return");
+            isLoaded = true;
             time = savedInstanceState.getInt(KEY_TIME);
             isPlaying = savedInstanceState.getBoolean(KEY_ISPLAYING);
             mItem = savedInstanceState.getParcelable(KEY_ITEM);
-            setupVideo();
-            mVideo.seekTo(time);
-            if (isPlaying) {
-                mVideo.start();
-            }
+        } else {
+            mContainer.setVisibility(View.GONE);
+            mVideoController.setVisibility(View.GONE);
         }
 
         return layout;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FULL_SCREEN_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                mProgressVideo.setVisibility(View.VISIBLE);
+                isLoaded = true;
+                time = data.getExtras().getInt(KEY_TIME);
+                isPlaying = data.getExtras().getBoolean(KEY_ISPLAYING);
+                mItem = data.getExtras().getParcelable(KEY_ITEM);
+            }
+        }
     }
 
     private void setupVideo() {
@@ -159,12 +177,26 @@ public class VideoFragment extends PagerFragment<Video> {
 
         mProgress.setVisibility(View.GONE);
         mContainer.setVisibility(View.VISIBLE);
+        mVideoController.setVisibility(View.VISIBLE);
+
+        mVideoController.setAnchorView(mVideo);
+        mVideoController.setMediaPlayer(mVideo);
+        mVideoController.setKeepScreenOn(true);
 
         Uri uri = Uri.parse(mItem.object.url);
         mVideo.setVideoURI(uri);
+        mVideo.setMediaController(mVideoController);
+
         mTitle.setText(mItem.object.title);
         mTime.setText(mItem.object.minutes + ":" + mItem.object.seconds);
-//                mVideoController.show();
+
+        mVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mProgressVideo.setVisibility(View.GONE);
+                mVideoController.show();
+            }
+        });
     }
 
     @Override
@@ -172,7 +204,6 @@ public class VideoFragment extends PagerFragment<Video> {
         super.onStart();
 
         if (!isLoaded) {
-            Log.w(TAG, "new");
             if (Network.isOnline(getActivity())) {
                 Type type = new TypeToken<Item<Video>>() {
                 }.getType();
@@ -180,7 +211,27 @@ public class VideoFragment extends PagerFragment<Video> {
             } else {
                 Network.showNoConnectionToast(getActivity());
             }
+        } else {
+            setupVideo();
+            mVideo.seekTo(time);
+            if (isPlaying) {
+                mVideo.start();
+            }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        isRunning = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        isRunning = false;
     }
 
     @Override
@@ -217,7 +268,7 @@ public class VideoFragment extends PagerFragment<Video> {
     }
 
     @Override
-    public void pageScrolling() {
+    public void pageScrolling(int state) {
         if (mVideoController != null) {
             mVideoController.hide();
         }

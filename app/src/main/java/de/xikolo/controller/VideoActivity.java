@@ -1,9 +1,11 @@
 package de.xikolo.controller;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.VideoView;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
+import de.xikolo.controller.fragments.VideoFragment;
 import de.xikolo.model.Item;
 import de.xikolo.model.Video;
 
@@ -25,13 +28,16 @@ public class VideoActivity extends Activity {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
 
-    public static final String ARG_ITEM = "arg_item";
-    public static final String ARG_TIME = "arg_time";
     int mTime;
+
     private VideoView mVideo;
     private MediaController mVideoController;
 
+    private View mVideoProgress;
+
     private Item<Video> mItem;
+
+    private boolean isRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +46,12 @@ public class VideoActivity extends Activity {
         setContentView(R.layout.activity_video);
 
         Bundle b = getIntent().getExtras();
-        if (b == null || !b.containsKey(ARG_ITEM)) {
+        if (b == null || !b.containsKey(VideoFragment.KEY_ITEM)) {
             throw new WrongParameterException();
         } else {
-            this.mItem = b.getParcelable(ARG_ITEM);
-            if (b.containsKey(ARG_TIME)) {
-                mTime = b.getInt(ARG_TIME);
+            this.mItem = b.getParcelable(VideoFragment.KEY_ITEM);
+            if (b.containsKey(VideoFragment.KEY_TIME)) {
+                mTime = b.getInt(VideoFragment.KEY_TIME);
             }
         }
 
@@ -67,18 +73,27 @@ public class VideoActivity extends Activity {
         hideControls();
 
         mVideo = (VideoView) findViewById(R.id.video);
+        mVideoProgress = findViewById(R.id.progressVideo);
 
         mVideoController = new MediaController(this) {
             @Override
             public void show() {
-                showControls();
-                super.show();
+                if (isRunning) {
+                    showControls();
+                    super.show();
+                }
             }
 
             @Override
             public void hide() {
-                hideControls();
-                super.hide();
+                if (isRunning) {
+                    if (mVideo.isPlaying()) {
+                        super.hide();
+                        hideControls();
+                    } else {
+                        super.show(0);
+                    }
+                }
             }
         };
         mVideoController.setAnchorView(mVideo);
@@ -103,6 +118,14 @@ public class VideoActivity extends Activity {
         if (mTime > 0) {
             mVideo.seekTo(mTime);
         }
+
+        mVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mVideoProgress.setVisibility(View.GONE);
+            }
+        });
+
         mVideo.start();
     }
 
@@ -145,10 +168,11 @@ public class VideoActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-//        if (id == android.R.id.home) {
-//            finish();
-//            return true;
-//        }
+        if (id == android.R.id.home) {
+            setResult();
+            finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -156,12 +180,32 @@ public class VideoActivity extends Activity {
     protected void onResume() {
         super.onResume();
         CookieSyncManager.getInstance().startSync();
+
+        isRunning = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         CookieSyncManager.getInstance().sync();
+
+        isRunning = false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult();
+        finish();
+    }
+
+    private void setResult() {
+        Intent intent = new Intent();
+        Bundle b = new Bundle();
+        b.putParcelable(VideoFragment.KEY_ITEM, mItem);
+        b.putInt(VideoFragment.KEY_TIME, mVideo.getCurrentPosition());
+        b.putBoolean(VideoFragment.KEY_ISPLAYING, mVideo.isPlaying());
+        intent.putExtras(b);
+        setResult(RESULT_OK, intent);
     }
 
 }
