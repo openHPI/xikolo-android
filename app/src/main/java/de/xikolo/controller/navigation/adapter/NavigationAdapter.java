@@ -104,8 +104,7 @@ public class NavigationAdapter extends BaseAdapter {
             holder.name.setText(UserManager.getUser(mContext).name);
             holder.email.setText(UserManager.getUser(mContext).email);
             if (holder.img.getDrawable() == null) {
-                ImageLoader.getInstance().displayImage("https://openhpi.de/assets/defaults/user_user_medium-433a613c12a6fd211b1a3996b7ab8b4b.png",
-                        holder.img);
+                holder.img.setImageDrawable(mContext.getResources().getDrawable(R.drawable.avatar));
             }
         } else if (i == NAV_ID_PROFILE && !TokenManager.isLoggedIn(mContext)) {
             holder.containerLogin.setVisibility(View.VISIBLE);
