@@ -31,7 +31,7 @@ public class Config {
     public static final String URI_SCHEME_HTTP = "http";
     public static final String URI_SCHEME_HTTPS = "https";
 
-    public static final String URI_HOST_HPI = "openhpi.de";
+    public static final String URI_HOST_HPI = "open.hpi.de";
     public static final String URI_HPI = URI_SCHEME_HTTPS + "://" + URI_HOST_HPI + "/";
     public static final String API_HPI = URI_HPI + "api/";
     public static final String URI_HOST_SAP = "open.sap.com";
