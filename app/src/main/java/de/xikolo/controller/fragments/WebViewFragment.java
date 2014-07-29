@@ -146,7 +146,7 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
             }
         });
 
-        mRefreshLayout.setColorScheme(
+        mRefreshLayout.setColorSchemeResources(
                 R.color.red,
                 R.color.orange,
                 R.color.red,

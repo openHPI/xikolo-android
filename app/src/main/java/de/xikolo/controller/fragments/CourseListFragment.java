@@ -98,7 +98,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         View layout = inflater.inflate(R.layout.fragment_courses, container, false);
 
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
-        mRefreshLayout.setColorScheme(
+        mRefreshLayout.setColorSchemeResources(
                 R.color.red,
                 R.color.orange,
                 R.color.red,

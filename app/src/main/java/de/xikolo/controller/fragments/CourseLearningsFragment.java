@@ -82,7 +82,7 @@ public class CourseLearningsFragment extends ContentFragment implements SwipeRef
         View layout = inflater.inflate(R.layout.fragment_learnings, container, false);
 
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
-        mRefreshLayout.setColorScheme(
+        mRefreshLayout.setColorSchemeResources(
                 R.color.red,
                 R.color.orange,
                 R.color.red,
