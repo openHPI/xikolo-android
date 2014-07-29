@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.1"
+    buildToolsVersion "20"
 
     defaultConfig {
         minSdkVersion 15
@@ -37,7 +37,7 @@ android {
 dependencies {
     compile 'com.google.code.gson:gson:2.2.+'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.+'
-    compile 'com.android.support:support-v4:19.+'
+    compile 'com.android.support:support-v4:20.+'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.+'
     compile 'eu.inmite.android.lib:android-styled-dialogs:1.1.2@aar'
 
