@@ -23,6 +23,9 @@ public class CircularImageView extends ImageView {
     private Paint paint;
     private Paint paintBorder;
 
+    private int mForceHeight = 0;
+    private int mForceWidth = 0;
+
     public CircularImageView(final Context context) {
         this(context, null);
     }
@@ -95,11 +98,21 @@ public class CircularImageView extends ImageView {
         }
     }
 
+    public void setDimensions(int w, int h) {
+        this.mForceHeight = h;
+        this.mForceWidth = w;
+
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = measureWidth(widthMeasureSpec);
-        int height = measureHeight(heightMeasureSpec);
-        setMeasuredDimension(width, height);
+        if (mForceHeight > 0 && mForceWidth > 0) {
+            setMeasuredDimension(mForceWidth, mForceHeight);
+        } else {
+            int width = measureWidth(widthMeasureSpec);
+            int height = measureHeight(heightMeasureSpec);
+            setMeasuredDimension(width, height);
+        }
     }
 
     private int measureWidth(int measureSpec) {

@@ -104,7 +104,7 @@ public class NavigationAdapter extends BaseAdapter {
             holder.name.setText(UserManager.getUser(mContext).name);
             holder.email.setText(UserManager.getUser(mContext).email);
             if (holder.img.getDrawable() == null) {
-                holder.img.setImageDrawable(mContext.getResources().getDrawable(R.drawable.avatar));
+                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.avatar, holder.img);
             }
         } else if (i == NAV_ID_PROFILE && !TokenManager.isLoggedIn(mContext)) {
             holder.containerLogin.setVisibility(View.VISIBLE);
@@ -133,11 +133,16 @@ public class NavigationAdapter extends BaseAdapter {
         }
 
         if (i == NAV_ID_MY_COURSES && TokenManager.isLoggedIn(mContext)) {
-            holder.counter.setVisibility(View.VISIBLE);
             int size = EnrollmentsManager.getEnrollmentsSize(mContext);
+            holder.counter.setText(String.valueOf(size));
             if (size > 0) {
-                holder.counter.setText(String.valueOf(size));
+                holder.counter.setVisibility(View.VISIBLE);
+            } else {
+                holder.counter.setVisibility(View.GONE);
             }
+        } else if (i == NAV_ID_MY_COURSES && !TokenManager.isLoggedIn(mContext)) {
+            holder.counter.setText(String.valueOf(0));
+            holder.counter.setVisibility(View.GONE);
         }
 
         return rowView;

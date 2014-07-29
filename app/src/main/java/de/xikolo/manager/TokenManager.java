@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
 import de.xikolo.BuildConfig;
+import de.xikolo.dataaccess.EnrollmentsPreferences;
 import de.xikolo.dataaccess.JsonRequest;
 import de.xikolo.dataaccess.UserPreferences;
 import de.xikolo.model.AccessToken;
@@ -21,11 +22,13 @@ public abstract class TokenManager {
 
     private Context mContext;
     private UserPreferences mUserPref;
+    private EnrollmentsPreferences mEnrollPref;
 
     public TokenManager(Context context) {
         super();
         this.mContext = context;
         this.mUserPref = new UserPreferences(context);
+        this.mEnrollPref = new EnrollmentsPreferences(context);
     }
 
     public static String getAccessToken(Context context) {
@@ -41,6 +44,7 @@ public abstract class TokenManager {
 
     public void logout() {
         this.mUserPref.deleteUser();
+        this.mEnrollPref.deleteEnrollmentsSize();
     }
 
     public void login(String email, String password) {

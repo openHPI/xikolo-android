@@ -145,6 +145,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     mEnrollments = enrolls;
                     mCourseListAdapter.updateEnrollments(enrolls);
                 }
+                mCallback.updateDrawer();
             }
 
             @Override

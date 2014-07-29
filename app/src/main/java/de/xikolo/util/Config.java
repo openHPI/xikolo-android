@@ -40,6 +40,9 @@ public class Config {
 
     public static final String PATH_NEWS = "news/";
     public static final String PATH_LOGIN = "login/";
+    public static final String PATH_ACCOUNT = "account/";
+    public static final String PATH_NEW = "new/";
+    public static final String PATH_RESET = "reset/" + PATH_NEW;
 
     public static final String PATH_AUTHENTICATE = "authenticate/";
 

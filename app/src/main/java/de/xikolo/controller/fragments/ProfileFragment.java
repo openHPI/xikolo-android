@@ -1,13 +1,23 @@
 package de.xikolo.controller.fragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import de.xikolo.R;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
@@ -15,6 +25,10 @@ import de.xikolo.manager.TokenManager;
 import de.xikolo.manager.UserManager;
 import de.xikolo.model.AccessToken;
 import de.xikolo.model.User;
+import de.xikolo.util.Config;
+import de.xikolo.util.Toaster;
+import de.xikolo.view.CircularImageView;
+import de.xikolo.view.CustomImageView;
 
 public class ProfileFragment extends ContentFragment {
 
@@ -30,14 +44,20 @@ public class ProfileFragment extends ContentFragment {
     private TokenManager tokenManager;
     private UserManager userManager;
 
+    private ProgressBar mProgress;
+
     private ViewGroup mContainerLogin;
     private EditText mEditEmail;
     private EditText mEditPassword;
     private Button mBtnLogin;
+    private Button mBtnNew;
+    private TextView mTextReset;
 
     private ViewGroup mContainerProfile;
     private TextView mTextName;
     private Button mBtnLogout;
+    private CustomImageView mImgHeader;
+    private CircularImageView mImgProfile;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -66,25 +86,33 @@ public class ProfileFragment extends ContentFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        mProgress = (ProgressBar) view.findViewById(R.id.progress);
+
         mContainerLogin = (ViewGroup) view.findViewById(R.id.containerLogin);
         mEditEmail = (EditText) view.findViewById(R.id.editEmail);
         mEditPassword = (EditText) view.findViewById(R.id.editPassword);
         mBtnLogin = (Button) view.findViewById(R.id.btnLogin);
+        mBtnNew = (Button) view.findViewById(R.id.btnNew);
+        mTextReset = (TextView) view.findViewById(R.id.textForgotPw);
 
         mContainerProfile = (ViewGroup) view.findViewById(R.id.containerProfile);
         mTextName = (TextView) view.findViewById(R.id.textName);
         mBtnLogout = (Button) view.findViewById(R.id.btnLogout);
+        mImgHeader = (CustomImageView) view.findViewById(R.id.imageHeader);
+        mImgProfile = (CircularImageView) view.findViewById(R.id.imageProfile);
 
         userManager = new UserManager(getActivity()) {
             @Override
             public void onUserRequestReceived(User user) {
                 switchView();
-                mTextName.setText(user.name);
+                showUser(user);
                 mCallback.updateDrawer();
             }
 
             @Override
             public void onUserRequestCancelled() {
+                mContainerLogin.setVisibility(View.VISIBLE);
+                mProgress.setVisibility(View.GONE);
             }
         };
 
@@ -96,19 +124,53 @@ public class ProfileFragment extends ContentFragment {
 
             @Override
             public void onAccessTokenRequestCancelled() {
-                Toast.makeText(getActivity(), "Log in failed", Toast.LENGTH_SHORT).show();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toaster.show(getActivity(), R.string.toast_log_in_failed);
+                        mContainerLogin.setVisibility(View.VISIBLE);
+                        mProgress.setVisibility(View.GONE);
+                    }
+                });
             }
         };
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tokenManager.login(mEditEmail.getText().toString().trim(),
-                        mEditPassword.getText().toString());
+                hideKeyboard(view);
+                String email = mEditEmail.getText().toString().trim();
+                String password = mEditPassword.getText().toString();
+                if (isEmailValid(email)) {
+                    if (password != null && !password.equals("")) {
+                        tokenManager.login(email, password);
+                        mContainerLogin.setVisibility(View.GONE);
+                        mProgress.setVisibility(View.VISIBLE);
+                    } else {
+                        mEditPassword.setError(getString(R.string.error_password));
+                    }
+                } else {
+                    mEditEmail.setError(getString(R.string.error_email));
+                }
+            }
+        });
+        mBtnNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideKeyboard(view);
+                startUrlIntent(Config.URI_HPI + Config.PATH_ACCOUNT + Config.PATH_NEW);
+            }
+        });
+        mTextReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideKeyboard(view);
+                startUrlIntent(Config.URI_HPI + Config.PATH_ACCOUNT + Config.PATH_RESET);
             }
         });
         mBtnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideKeyboard(view);
                 tokenManager.logout();
                 switchView();
                 mCallback.updateDrawer();
@@ -120,16 +182,53 @@ public class ProfileFragment extends ContentFragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        switchHeader();
+    }
+
     private void switchView() {
+        mProgress.setVisibility(View.GONE);
         if (!TokenManager.isLoggedIn(getActivity())) {
             mContainerLogin.setVisibility(View.VISIBLE);
             mContainerProfile.setVisibility(View.GONE);
         } else {
             mContainerLogin.setVisibility(View.GONE);
             mContainerProfile.setVisibility(View.VISIBLE);
-            mTextName.setText(UserManager.getUser(getActivity()).name);
+            showUser(UserManager.getUser(getActivity()));
+            setProfilePicMargin();
         }
         switchHeader();
+    }
+
+    private void showUser(User user) {
+        mTextName.setText(user.name);
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        int heightHeader;
+        int heightProfile;
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            heightHeader = (int) (size.y * 0.2);
+            heightProfile = (int) (size.x * 0.2);
+        } else {
+            heightHeader = (int) (size.y * 0.35);
+            heightProfile = (int) (size.y * 0.2);
+        }
+        mImgHeader.setDimensions(size.x, heightHeader);
+        mImgHeader.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.title, mImgHeader);
+        mImgProfile.setDimensions(heightProfile, heightProfile);
+        mImgProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        mImgProfile.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.avatar));
+    }
+
+    private void setProfilePicMargin() {
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImgProfile.getLayoutParams();
+        layoutParams.setMargins(0, mImgHeader.getMeasuredHeight() - (mImgProfile.getMeasuredHeight() / 2), 0, 0);
+        mImgProfile.setLayoutParams(layoutParams);
     }
 
     private void switchHeader() {
@@ -141,10 +240,20 @@ public class ProfileFragment extends ContentFragment {
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        switchHeader();
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void startUrlIntent(String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 
 }

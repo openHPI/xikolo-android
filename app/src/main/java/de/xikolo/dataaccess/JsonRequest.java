@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 
+import javax.net.ssl.HttpsURLConnection;
+
 public abstract class JsonRequest extends HttpRequest {
 
     public static final String TAG = JsonRequest.class.getSimpleName();
@@ -26,7 +28,8 @@ public abstract class JsonRequest extends HttpRequest {
     @Override
     protected Object doInBackground(Void... args) {
         try {
-            InputStream in = new BufferedInputStream(createConnection().getInputStream());
+            HttpsURLConnection conn = createConnection();
+            InputStream in = new BufferedInputStream(conn.getInputStream());
 
             Gson gson = new Gson();
             Reader reader = new InputStreamReader(in);
@@ -35,8 +38,9 @@ public abstract class JsonRequest extends HttpRequest {
             closeConnection();
 
             return o;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.w(TAG, "Error for URL " + mUrl, e);
+            onRequestCancelled();
         }
         return null;
     }
