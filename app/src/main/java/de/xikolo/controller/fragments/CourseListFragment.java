@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,9 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     private AbsListView mAbsListView;
     private CourseListAdapter mCourseListAdapter;
 
+    private View mNotification;
+    private TextView mTextNotification;
+
     private CourseManager mCourseManager;
     private EnrollmentsManager mEnrollmentsManager;
 
@@ -71,13 +75,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             mEnrollments = savedInstanceState.getParcelableArrayList(KEY_ENROLLMENTS);
         }
         setHasOptionsMenu(true);
-
-        if (mFilter.equals(FILTER_MY)) {
-            if (!TokenManager.isLoggedIn(getActivity())) {
-                Toaster.show(getActivity(), R.string.toast_please_log_in);
-                mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
-            }
-        }
     }
 
     @Override
@@ -110,6 +107,9 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mAbsListView = (AbsListView) layout.findViewById(R.id.listView);
         mAbsListView.setAdapter(mCourseListAdapter);
 
+        mNotification = layout.findViewById(R.id.containerNotification);
+        mTextNotification = (TextView) layout.findViewById(R.id.textNotification);
+
         return layout;
     }
 
@@ -120,15 +120,24 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
         } else if (mFilter.equals(FILTER_MY)) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
+            if (!TokenManager.isLoggedIn(getActivity())) {
+                mNotification.setVisibility(View.VISIBLE);
+                mTextNotification.setText(getString(R.string.notification_please_login));
+                mNotification.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+                    }
+                });
+            }
         }
 
         mCourseManager = new CourseManager(getActivity()) {
             @Override
             public void onCoursesRequestReceived(List<Course> courses) {
-                mRefreshLayout.setRefreshing(false);
                 if (courses != null) {
                     mCourses = courses;
-                    mCourseListAdapter.updateCourses(courses);
+                    updateView();
                 }
             }
 
@@ -143,34 +152,67 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {
                 if (enrolls != null) {
                     mEnrollments = enrolls;
-                    mCourseListAdapter.updateEnrollments(enrolls);
+                    updateView();
                 }
-                mCallback.updateDrawer();
             }
 
             @Override
             public void onEnrollmentsRequestCancelled() {
+                mRefreshLayout.setRefreshing(false);
             }
         };
 
         if (Network.isOnline(getActivity())) {
             if (TokenManager.isLoggedIn(getActivity())) {
                 if (mEnrollments == null) {
-                    mEnrollmentsManager.requestEnrollments(true);
+                    mRefreshLayout.setRefreshing(true);
+                    mEnrollmentsManager.requestEnrollments(false);
                 } else {
                     mCourseListAdapter.updateEnrollments(mEnrollments);
+                    mRefreshLayout.setRefreshing(true);
+                    mEnrollmentsManager.requestEnrollments(false);
                 }
+            } else {
+                mEnrollments = null;
+                mCourseListAdapter.clear();
             }
 
             if (mCourses == null) {
                 mRefreshLayout.setRefreshing(true);
-                mCourseManager.requestCourses(true);
+                mCourseManager.requestCourses(false);
             } else {
                 mCourseListAdapter.updateCourses(mCourses);
+                mRefreshLayout.setRefreshing(true);
+                mCourseManager.requestCourses(false);
             }
         } else {
             Network.showNoConnectionToast(getActivity());
         }
+    }
+
+    private void updateView() {
+        mRefreshLayout.setRefreshing(false);
+        if (mEnrollments != null) {
+            mCourseListAdapter.updateEnrollments(mEnrollments);
+            if (mFilter.equals(FILTER_MY)) {
+                if (mEnrollments.size() == 0) {
+                    mNotification.setVisibility(View.VISIBLE);
+                    mTextNotification.setText(getString(R.string.notification_no_enrollments));
+                    mNotification.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mCallback.toggleDrawer(NavigationAdapter.NAV_ID_ALL_COURSES);
+                        }
+                    });
+                } else {
+                    mNotification.setVisibility(View.GONE);
+                }
+            }
+        }
+        if (mCourses != null) {
+            mCourseListAdapter.updateCourses(mCourses);
+        }
+        mCallback.updateDrawer();
     }
 
     @Override

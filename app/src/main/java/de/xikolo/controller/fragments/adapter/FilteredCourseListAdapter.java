@@ -48,13 +48,24 @@ public class FilteredCourseListAdapter extends CourseListAdapter {
 
     @Override
     public void updateCourses(List<Course> courses) {
+        if (courses == null)
+            throw new NullPointerException("Courses can't be null");
         this.mCourses = courses;
         this.notifyDataSetChanged();
     }
 
     @Override
     public void updateEnrollments(List<Enrollment> enrolls) {
+        if (enrolls == null)
+            throw new NullPointerException("Enrollments can't be null");
         this.mEnrollments = enrolls;
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void clear() {
+        this.mCourses.clear();
+        this.mEnrollments.clear();
         this.notifyDataSetChanged();
     }
 
@@ -62,7 +73,9 @@ public class FilteredCourseListAdapter extends CourseListAdapter {
     public int getCount() {
         int size = 0;
         if (mFilter.equals(CourseListFragment.FILTER_MY)) {
-            size = mEnrollments.size();
+            if (mCourses.size() >= mEnrollments.size()) {
+                size = mEnrollments.size();
+            }
         } else if (mFilter.equals(CourseListFragment.FILTER_ALL)) {
             size = mCourses.size();
         }

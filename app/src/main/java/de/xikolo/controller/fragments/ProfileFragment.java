@@ -221,6 +221,8 @@ public class ProfileFragment extends ContentFragment {
 
     private void switchView() {
         mProgress.setVisibility(View.GONE);
+        mEditEmail.setText(null);
+        mEditPassword.setText(null);
         if (!TokenManager.isLoggedIn(getActivity())) {
             mContainerLogin.setVisibility(View.VISIBLE);
             mContainerProfile.setVisibility(View.GONE);

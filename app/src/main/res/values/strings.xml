@@ -39,9 +39,9 @@
     <string name="dialog_unenroll_no">Cancel</string>
 
     <!-- -->
-    <string name="toast_no_courses">No courses received</string>
-    <string name="toast_no_network">Please enable network connection</string>
-    <string name="toast_please_log_in">Please log in</string>
+    <string name="toast_no_courses">No courses received.</string>
+    <string name="toast_no_network">Please enable network connection.</string>
+    <string name="toast_please_log_in">Please log in.</string>
     <string name="toast_log_in_failed">Login failed. Please check your credentials.</string>
 
     <!-- -->
@@ -58,6 +58,7 @@
     <string name="icon_selftest"></string>
     <string name="icon_assignment"></string>
     <string name="icon_bonus"></string>
+    <string name="icon_info">&#xe666;</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -76,5 +77,9 @@
     <string name="header_new">New here?</string>
     <string name="button_new">Create new account</string>
     <string name="enrollments">enrollments</string>
+
+    <!-- -->
+    <string name="notification_no_enrollments">Please enroll for courses.</string>
+    <string name="notification_please_login">@string/toast_please_log_in</string>
 
 </resources>
