@@ -45,7 +45,7 @@
             android:textColor="@color/orange"
             android:textSize="16sp" />
 
-        <de.xikolo.view.CustomTextView
+        <de.xikolo.view.CustomFontTextView
             android:id="@+id/textDateIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
             android:textColor="@color/gray_text"
             android:textSize="16sp" />
 
-        <de.xikolo.view.CustomTextView
+        <de.xikolo.view.CustomFontTextView
             android:id="@+id/textLangIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

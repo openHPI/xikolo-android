@@ -20,9 +20,9 @@ import android.widget.VideoView;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
-import de.xikolo.controller.fragments.VideoFragment;
+import de.xikolo.controller.module.VideoFragment;
 import de.xikolo.model.Item;
-import de.xikolo.model.Video;
+import de.xikolo.model.ItemVideo;
 
 public class VideoActivity extends Activity {
 
@@ -35,7 +35,7 @@ public class VideoActivity extends Activity {
 
     private View mVideoProgress;
 
-    private Item<Video> mItem;
+    private Item<ItemVideo> mItem;
 
     private boolean isRunning;
 

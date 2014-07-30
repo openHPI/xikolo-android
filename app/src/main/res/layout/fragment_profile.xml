@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_holo_light"
-    tools:context="de.xikolo.controller.fragments.ProfileFragment">
+    tools:context="de.xikolo.controller.main.ProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_horizontal|top">
 
-                <de.xikolo.view.CustomImageView
+                <de.xikolo.view.CustomSizeImageView
                     android:id="@+id/imageHeader"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

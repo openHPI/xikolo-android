@@ -9,7 +9,7 @@
     android:paddingRight="16dp"
     android:paddingTop="14dp">
 
-    <de.xikolo.view.CustomTextView
+    <de.xikolo.view.CustomFontTextView
         android:id="@+id/textIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

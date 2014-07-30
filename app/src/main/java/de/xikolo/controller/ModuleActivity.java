@@ -8,26 +8,24 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.CookieSyncManager;
 
 import com.astuetz.PagerSlidingTabStrip;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
-import de.xikolo.controller.fragments.AssignmentFragment;
-import de.xikolo.controller.fragments.PagerFragment;
-import de.xikolo.controller.fragments.TextFragment;
-import de.xikolo.controller.fragments.VideoFragment;
+import de.xikolo.controller.module.AssignmentFragment;
+import de.xikolo.controller.module.PagerFragment;
+import de.xikolo.controller.module.TextFragment;
+import de.xikolo.controller.module.VideoFragment;
 import de.xikolo.model.Course;
 import de.xikolo.model.Item;
 import de.xikolo.model.Module;
-import de.xikolo.util.Config;
+import de.xikolo.util.Path;
 
 public class ModuleActivity extends FragmentActivity {
 
@@ -65,7 +63,7 @@ public class ModuleActivity extends FragmentActivity {
         // Bind the tabs to the ViewPager
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(pager);
-        tabs.setTypeface(Typeface.createFromAsset(getApplication().getAssets(), Config.FONT_XIKOLO), Typeface.NORMAL);
+        tabs.setTypeface(Typeface.createFromAsset(getApplication().getAssets(), Path.FONT_XIKOLO), Typeface.NORMAL);
 
         tabs.setOnPageChangeListener(adapter);
 

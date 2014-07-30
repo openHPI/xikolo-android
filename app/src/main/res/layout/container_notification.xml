@@ -16,7 +16,7 @@
         android:orientation="horizontal"
         android:padding="24dp">
 
-        <de.xikolo.view.CustomTextView
+        <de.xikolo.view.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"

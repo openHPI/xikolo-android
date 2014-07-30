@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".controller.GlobalApplication"
+        android:name=".GlobalApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
@@ -24,12 +24,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controller.ModuleActivity"
+            android:name=".controller.CourseActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controller.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
+        </activity>
+        <activity
+            android:name=".controller.ModuleActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controller.CourseActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="CourseActivity" />
         </activity>
         <activity
             android:name=".controller.VideoActivity"

@@ -13,16 +13,17 @@ import android.view.MenuItem;
 import android.webkit.CookieSyncManager;
 
 import de.xikolo.BuildConfig;
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controller.fragments.ContentFragment;
-import de.xikolo.controller.fragments.CourseListFragment;
-import de.xikolo.controller.fragments.DownloadsFragment;
-import de.xikolo.controller.fragments.ProfileFragment;
-import de.xikolo.controller.fragments.SettingsFragment;
-import de.xikolo.controller.fragments.WebViewFragment;
+import de.xikolo.controller.main.ContentFragment;
+import de.xikolo.controller.main.CourseListFragment;
+import de.xikolo.controller.main.DownloadsFragment;
+import de.xikolo.controller.main.ProfileFragment;
+import de.xikolo.controller.main.SettingsFragment;
+import de.xikolo.controller.main.WebViewFragment;
 import de.xikolo.controller.navigation.NavigationFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.util.Config;
+import de.xikolo.util.Path;
 
 
 public class MainActivity extends FragmentActivity
@@ -104,7 +105,7 @@ public class MainActivity extends FragmentActivity
                 tag = "my_courses";
                 break;
             case NavigationAdapter.NAV_ID_NEWS:
-                newFragment = WebViewFragment.newInstance(Config.URI_HPI + Config.PATH_NEWS, true, null);
+                newFragment = WebViewFragment.newInstance(Path.URI_HPI + Path.NEWS, true, null);
                 tag = "news";
                 break;
             case NavigationAdapter.NAV_ID_DOWNLOADS:

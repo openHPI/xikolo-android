@@ -10,12 +10,12 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import de.xikolo.BuildConfig;
-import de.xikolo.dataaccess.EnrollmentsPreferences;
-import de.xikolo.dataaccess.HttpRequest;
-import de.xikolo.dataaccess.JsonRequest;
+import de.xikolo.data.preferences.EnrollmentsPreferences;
+import de.xikolo.data.net.HttpRequest;
+import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Enrollment;
 import de.xikolo.util.BuildType;
-import de.xikolo.util.Config;
+import de.xikolo.util.Path;
 import de.xikolo.util.Network;
 
 public abstract class EnrollmentsManager {
@@ -42,7 +42,7 @@ public abstract class EnrollmentsManager {
 
         Type type = new TypeToken<List<Enrollment>>() {
         }.getType();
-        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_USER + Config.PATH_ENROLLMENTS, type, mContext) {
+        JsonRequest request = new JsonRequest(Path.API_SAP + Path.USER + Path.ENROLLMENTS, type, mContext) {
             @Override
             public void onRequestReceived(Object o) {
                 if (o != null) {
@@ -79,7 +79,7 @@ public abstract class EnrollmentsManager {
 
         String query = "?course_id=" + id;
 
-        HttpRequest request = new HttpRequest(Config.API_SAP + Config.PATH_USER + Config.PATH_ENROLLMENTS + query, mContext) {
+        HttpRequest request = new HttpRequest(Path.API_SAP + Path.USER + Path.ENROLLMENTS + query, mContext) {
             @Override
             public void onRequestReceived(Object o) {
                 if (BuildConfig.buildType == BuildType.DEBUG)
@@ -93,7 +93,7 @@ public abstract class EnrollmentsManager {
                     Log.w(TAG, "Enrollment not created");
             }
         };
-        request.setMethod(Config.HTTP_POST);
+        request.setMethod(Path.HTTP_POST);
         request.setToken(TokenManager.getAccessToken(mContext));
         request.setCache(false);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -103,7 +103,7 @@ public abstract class EnrollmentsManager {
         if (BuildConfig.buildType == BuildType.DEBUG)
             Log.i(TAG, "deleteEnrollment() called | id " + id);
 
-        HttpRequest request = new HttpRequest(Config.API_SAP + Config.PATH_USER + Config.PATH_ENROLLMENTS + id, mContext) {
+        HttpRequest request = new HttpRequest(Path.API_SAP + Path.USER + Path.ENROLLMENTS + id, mContext) {
             @Override
             public void onRequestReceived(Object o) {
                 if (BuildConfig.buildType == BuildType.DEBUG)
@@ -117,7 +117,7 @@ public abstract class EnrollmentsManager {
                     Log.w(TAG, "Enrollment not deleted");
             }
         };
-        request.setMethod(Config.HTTP_DELETE);
+        request.setMethod(Path.HTTP_DELETE);
         request.setToken(TokenManager.getAccessToken(mContext));
         request.setCache(false);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

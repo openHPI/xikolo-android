@@ -9,12 +9,12 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
 import de.xikolo.BuildConfig;
-import de.xikolo.dataaccess.EnrollmentsPreferences;
-import de.xikolo.dataaccess.JsonRequest;
-import de.xikolo.dataaccess.UserPreferences;
+import de.xikolo.data.preferences.EnrollmentsPreferences;
+import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.preferences.UserPreferences;
 import de.xikolo.model.AccessToken;
 import de.xikolo.util.BuildType;
-import de.xikolo.util.Config;
+import de.xikolo.util.Path;
 
 public abstract class TokenManager {
 
@@ -56,7 +56,7 @@ public abstract class TokenManager {
 
         String query = "?email=" + email + "&password=" + password;
 
-        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_AUTHENTICATE + query, type, mContext) {
+        JsonRequest request = new JsonRequest(Path.API_SAP + Path.AUTHENTICATE + query, type, mContext) {
             @Override
             public void onRequestReceived(Object o) {
                 if (o != null) {
@@ -81,7 +81,7 @@ public abstract class TokenManager {
         };
         request.setCache(false);
         request.setToken(getAccessToken(mContext));
-        request.setMethod(Config.HTTP_POST);
+        request.setMethod(Path.HTTP_POST);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

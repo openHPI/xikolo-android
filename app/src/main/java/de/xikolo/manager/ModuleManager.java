@@ -10,14 +10,12 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import de.xikolo.BuildConfig;
-import de.xikolo.R;
-import de.xikolo.dataaccess.JsonRequest;
+import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Course;
 import de.xikolo.model.Module;
 import de.xikolo.util.BuildType;
-import de.xikolo.util.Config;
+import de.xikolo.util.Path;
 import de.xikolo.util.Network;
-import de.xikolo.util.Toaster;
 
 public abstract class ModuleManager {
 
@@ -36,8 +34,8 @@ public abstract class ModuleManager {
 
         Type type = new TypeToken<List<Module>>() {
         }.getType();
-        JsonRequest request = new JsonRequest(Config.API_SAP + Config.PATH_COURSES + course.id + "/"
-                + Config.PATH_MODULES, type, mContext) {
+        JsonRequest request = new JsonRequest(Path.API_SAP + Path.COURSES + course.id + "/"
+                + Path.MODULES, type, mContext) {
             @Override
             public void onRequestReceived(Object o) {
                 if (o != null) {
