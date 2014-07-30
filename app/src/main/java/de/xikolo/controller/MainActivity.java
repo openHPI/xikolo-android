@@ -88,29 +88,43 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        String tag = null;
+        ContentFragment newFragment = null;
         switch (position) {
             case NavigationAdapter.NAV_ID_PROFILE:
-                mFragment = ProfileFragment.newInstance();
+                newFragment = ProfileFragment.newInstance();
+                tag = "profile";
                 break;
             case NavigationAdapter.NAV_ID_ALL_COURSES:
-                mFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_ALL);
+                newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_ALL);
+                tag = "all_courses";
                 break;
             case NavigationAdapter.NAV_ID_MY_COURSES:
-                mFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_MY);
+                newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_MY);
+                tag = "my_courses";
                 break;
             case NavigationAdapter.NAV_ID_NEWS:
-                mFragment = WebViewFragment.newInstance(Config.URI_HPI + Config.PATH_NEWS, true, null);
+                newFragment = WebViewFragment.newInstance(Config.URI_HPI + Config.PATH_NEWS, true, null);
+                tag = "news";
                 break;
             case NavigationAdapter.NAV_ID_DOWNLOADS:
-                mFragment = DownloadsFragment.newInstance();
+                newFragment = DownloadsFragment.newInstance();
+                tag = "downloads";
                 break;
             case NavigationAdapter.NAV_ID_SETTINGS:
-                mFragment = SettingsFragment.newInstance();
+                newFragment = SettingsFragment.newInstance();
+                tag = "settings";
                 break;
         }
+        ContentFragment oldFragment = (ContentFragment) fragmentManager.findFragmentByTag(tag);
+        if (oldFragment == null) {
+            mFragment = newFragment;
+        } else {
+            mFragment = oldFragment;
+        }
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.container, mFragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.container, mFragment, tag);
+        transaction.addToBackStack(tag);
         transaction.commit();
     }
 
