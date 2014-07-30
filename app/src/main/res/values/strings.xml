@@ -75,5 +75,6 @@
     <string name="forgot_password">Forgot your password?</string>
     <string name="header_new">New here?</string>
     <string name="button_new">Create new account</string>
+    <string name="enrollments">enrollments</string>
 
 </resources>

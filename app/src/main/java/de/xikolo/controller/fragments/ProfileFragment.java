@@ -19,13 +19,18 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.List;
+
 import de.xikolo.R;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
+import de.xikolo.manager.EnrollmentsManager;
 import de.xikolo.manager.TokenManager;
 import de.xikolo.manager.UserManager;
 import de.xikolo.model.AccessToken;
+import de.xikolo.model.Enrollment;
 import de.xikolo.model.User;
 import de.xikolo.util.Config;
+import de.xikolo.util.Network;
 import de.xikolo.util.Toaster;
 import de.xikolo.view.CircularImageView;
 import de.xikolo.view.CustomImageView;
@@ -43,6 +48,7 @@ public class ProfileFragment extends ContentFragment {
 
     private TokenManager tokenManager;
     private UserManager userManager;
+    private EnrollmentsManager enrollManager;
 
     private ProgressBar mProgress;
 
@@ -58,6 +64,8 @@ public class ProfileFragment extends ContentFragment {
     private Button mBtnLogout;
     private CustomImageView mImgHeader;
     private CircularImageView mImgProfile;
+    private TextView mTextEnrollCounts;
+    private TextView mTextEmail;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -100,7 +108,21 @@ public class ProfileFragment extends ContentFragment {
         mBtnLogout = (Button) view.findViewById(R.id.btnLogout);
         mImgHeader = (CustomImageView) view.findViewById(R.id.imageHeader);
         mImgProfile = (CircularImageView) view.findViewById(R.id.imageProfile);
+        mTextEnrollCounts = (TextView) view.findViewById(R.id.textEnrollCount);
+        mTextEmail = (TextView) view.findViewById(R.id.textEmail);
 
+        enrollManager = new EnrollmentsManager(getActivity()) {
+            @Override
+            public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {
+                mTextEnrollCounts.setText(String.valueOf(enrolls.size()));
+                mCallback.updateDrawer();
+            }
+
+            @Override
+            public void onEnrollmentsRequestCancelled() {
+
+            }
+        };
         userManager = new UserManager(getActivity()) {
             @Override
             public void onUserRequestReceived(User user) {
@@ -120,6 +142,7 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onAccessTokenRequestReceived(AccessToken token) {
                 userManager.requestUser();
+                enrollManager.requestEnrollments(true);
             }
 
             @Override
@@ -138,18 +161,22 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                String email = mEditEmail.getText().toString().trim();
-                String password = mEditPassword.getText().toString();
-                if (isEmailValid(email)) {
-                    if (password != null && !password.equals("")) {
-                        tokenManager.login(email, password);
-                        mContainerLogin.setVisibility(View.GONE);
-                        mProgress.setVisibility(View.VISIBLE);
+                if (Network.isOnline(getActivity())) {
+                    String email = mEditEmail.getText().toString().trim();
+                    String password = mEditPassword.getText().toString();
+                    if (isEmailValid(email)) {
+                        if (password != null && !password.equals("")) {
+                            tokenManager.login(email, password);
+                            mContainerLogin.setVisibility(View.GONE);
+                            mProgress.setVisibility(View.VISIBLE);
+                        } else {
+                            mEditPassword.setError(getString(R.string.error_password));
+                        }
                     } else {
-                        mEditPassword.setError(getString(R.string.error_password));
+                        mEditEmail.setError(getString(R.string.error_email));
                     }
                 } else {
-                    mEditEmail.setError(getString(R.string.error_email));
+                    Network.showNoConnectionToast(getActivity());
                 }
             }
         });
@@ -186,6 +213,10 @@ public class ProfileFragment extends ContentFragment {
     public void onStart() {
         super.onStart();
         switchHeader();
+        if (TokenManager.isLoggedIn(getActivity()) && Network.isOnline(getActivity())) {
+            userManager.requestUser();
+            enrollManager.requestEnrollments(true);
+        }
     }
 
     private void switchView() {
@@ -223,6 +254,10 @@ public class ProfileFragment extends ContentFragment {
         mImgProfile.setDimensions(heightProfile, heightProfile);
         mImgProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         mImgProfile.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.avatar));
+
+        mTextEmail.setText(user.email);
+
+        mTextEnrollCounts.setText(String.valueOf(EnrollmentsManager.getEnrollmentsSize(getActivity())));
     }
 
     private void setProfilePicMargin() {
