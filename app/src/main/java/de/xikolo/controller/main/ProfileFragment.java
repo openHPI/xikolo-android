@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,15 +23,18 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.List;
 
 import de.xikolo.R;
+import de.xikolo.controller.main.adapter.EnrollsProgressListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
+import de.xikolo.manager.CourseManager;
 import de.xikolo.manager.EnrollmentsManager;
 import de.xikolo.manager.TokenManager;
 import de.xikolo.manager.UserManager;
 import de.xikolo.model.AccessToken;
+import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
 import de.xikolo.model.User;
-import de.xikolo.util.Path;
 import de.xikolo.util.Network;
+import de.xikolo.util.Path;
 import de.xikolo.util.Toaster;
 import de.xikolo.view.CircularImageView;
 import de.xikolo.view.CustomSizeImageView;
@@ -49,6 +53,7 @@ public class ProfileFragment extends ContentFragment {
     private TokenManager tokenManager;
     private UserManager userManager;
     private EnrollmentsManager enrollManager;
+    private CourseManager courseManager;
 
     private ProgressBar mProgress;
 
@@ -66,6 +71,13 @@ public class ProfileFragment extends ContentFragment {
     private CircularImageView mImgProfile;
     private TextView mTextEnrollCounts;
     private TextView mTextEmail;
+    private LinearLayout mContainerProgress;
+    private ProgressBar mProgressBar;
+
+    private List<Enrollment> mEnrollments;
+    private List<Course> mCourses;
+
+    private EnrollsProgressListAdapter mAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -110,19 +122,44 @@ public class ProfileFragment extends ContentFragment {
         mImgProfile = (CircularImageView) view.findViewById(R.id.imageProfile);
         mTextEnrollCounts = (TextView) view.findViewById(R.id.textEnrollCount);
         mTextEmail = (TextView) view.findViewById(R.id.textEmail);
+        mContainerProgress = (LinearLayout) view.findViewById(R.id.linearLayoutProgress);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+
+        mAdapter = new EnrollsProgressListAdapter(getActivity());
 
         enrollManager = new EnrollmentsManager(getActivity()) {
             @Override
             public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {
-                mTextEnrollCounts.setText(String.valueOf(enrolls.size()));
-                mCallback.updateDrawer();
+                if (enrolls != null) {
+                    mEnrollments = enrolls;
+                    mAdapter.updateEnrollments(mEnrollments);
+                    mTextEnrollCounts.setText(String.valueOf(enrolls.size()));
+                    mCallback.updateDrawer();
+                    courseManager.requestCourses(true, true);
+                }
             }
 
             @Override
             public void onEnrollmentsRequestCancelled() {
-
             }
         };
+
+        courseManager = new CourseManager(getActivity()) {
+            @Override
+            public void onCoursesRequestReceived(List<Course> courses) {
+                if (courses != null) {
+                    mCourses = courses;
+                    mAdapter.updateCourses(courses);
+                    mProgressBar.setVisibility(View.GONE);
+                    addProgressView();
+                }
+            }
+
+            @Override
+            public void onCoursesRequestCancelled() {
+            }
+        };
+
         userManager = new UserManager(getActivity()) {
             @Override
             public void onUserRequestReceived(User user) {
@@ -133,8 +170,6 @@ public class ProfileFragment extends ContentFragment {
 
             @Override
             public void onUserRequestCancelled() {
-                mContainerLogin.setVisibility(View.VISIBLE);
-                mProgress.setVisibility(View.GONE);
             }
         };
 
@@ -209,6 +244,29 @@ public class ProfileFragment extends ContentFragment {
         return view;
     }
 
+    private void addProgressView() {
+        for (int i = 0; i < mAdapter.getCount(); i++) {
+            View v = mAdapter.getView(i, null, null);
+
+            mContainerProgress.addView(v);
+
+            ProgressBar progress = (ProgressBar) v.findViewById(R.id.progressItems);
+
+            Enrollment enrollment = (Enrollment) mAdapter.getItem(i);
+            Course course = null;
+            for (Course c : mCourses) {
+                if (enrollment.course_id.equals(c.id)) {
+                    course = c;
+                }
+            }
+
+            int percentage = (int) (course.progress.items.count_visited
+                    / (course.progress.items.count_available / 100.));
+
+            mAdapter.animateProgress(getActivity(), progress, percentage);
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -216,6 +274,8 @@ public class ProfileFragment extends ContentFragment {
         if (TokenManager.isLoggedIn(getActivity()) && Network.isOnline(getActivity())) {
             userManager.requestUser();
             enrollManager.requestEnrollments(true);
+            mContainerProgress.removeAllViews();
+            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 

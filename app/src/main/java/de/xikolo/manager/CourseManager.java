@@ -14,8 +14,8 @@ import de.xikolo.R;
 import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Course;
 import de.xikolo.util.BuildType;
-import de.xikolo.util.Path;
 import de.xikolo.util.Network;
+import de.xikolo.util.Path;
 import de.xikolo.util.Toaster;
 
 public abstract class CourseManager {
@@ -29,13 +29,16 @@ public abstract class CourseManager {
         this.mContext = context;
     }
 
-    public void requestCourses(boolean cache) {
+    public void requestCourses(boolean cache, boolean includeProgress) {
         if (BuildConfig.buildType == BuildType.DEBUG)
-            Log.i(TAG, "requestCourses() called | cache " + cache);
+            Log.i(TAG, "requestCourses() called | cache " + cache + " | includeProgress " + includeProgress);
 
         Type type = new TypeToken<List<Course>>() {
         }.getType();
-        JsonRequest request = new JsonRequest(Path.API_SAP + Path.COURSES, type, mContext) {
+
+        String url = Path.API_SAP + Path.COURSES + "?include_progress=" + includeProgress;
+
+        JsonRequest request = new JsonRequest(url, type, mContext) {
             @Override
             public void onRequestReceived(Object o) {
                 if (o != null) {
@@ -62,6 +65,9 @@ public abstract class CourseManager {
         request.setCache(cache);
         if (!Network.isOnline(mContext) && cache) {
             request.setCacheOnly(true);
+        }
+        if (includeProgress) {
+            request.setToken(TokenManager.getAccessToken(mContext));
         }
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

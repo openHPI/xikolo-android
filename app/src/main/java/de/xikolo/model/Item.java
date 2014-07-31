@@ -62,7 +62,7 @@ public class Item<T extends Parcelable> implements Parcelable {
         available_from = in.readString();
         available_to = in.readString();
         locked = in.readByte() != 0;
-        object = in.readParcelable(getClass().getClassLoader());
+        object = in.readParcelable(Item.class.getClassLoader());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class Item<T extends Parcelable> implements Parcelable {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (Item.class.getClass() != obj.getClass())
             return false;
         Item o = (Item) obj;
         if (id == null) {

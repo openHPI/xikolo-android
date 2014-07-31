@@ -181,11 +181,11 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
             if (mCourses == null) {
                 mRefreshLayout.setRefreshing(true);
-                mCourseManager.requestCourses(false);
+                mCourseManager.requestCourses(false, false);
             } else {
                 mCourseListAdapter.updateCourses(mCourses);
                 mRefreshLayout.setRefreshing(true);
-                mCourseManager.requestCourses(false);
+                mCourseManager.requestCourses(false, false);
             }
         } else {
             Network.showNoConnectionToast(getActivity());
@@ -224,7 +224,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             if (TokenManager.isLoggedIn(getActivity())) {
                 mEnrollmentsManager.requestEnrollments(false);
             }
-            mCourseManager.requestCourses(false);
+            mCourseManager.requestCourses(false, false);
         } else {
             mRefreshLayout.setRefreshing(false);
             Network.showNoConnectionToast(getActivity());

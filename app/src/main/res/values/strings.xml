@@ -59,6 +59,7 @@
     <string name="icon_assignment"></string>
     <string name="icon_bonus"></string>
     <string name="icon_info">&#xe666;</string>
+    <string name="icon_progress">&#xe60b;</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -77,6 +78,8 @@
     <string name="header_new">New here?</string>
     <string name="button_new">Create new account</string>
     <string name="enrollments">enrollments</string>
+    <string name="of">of</string>
+    <string name="visited">visited</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Please enroll for courses.</string>

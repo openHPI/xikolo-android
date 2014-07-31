@@ -31,6 +31,9 @@ public class Module implements Parcelable {
     @SerializedName("locked")
     public boolean locked;
 
+    @SerializedName("progress")
+    public Progress progress;
+
     public List<Item> items;
 
     @Override
@@ -48,6 +51,7 @@ public class Module implements Parcelable {
         parcel.writeString(available_to);
         parcel.writeByte((byte) (locked ? 1 : 0 ));
         parcel.writeTypedList(items);
+        parcel.writeParcelable(progress, i);
     }
 
     public Module() {
@@ -64,6 +68,7 @@ public class Module implements Parcelable {
         available_to = in.readString();
         locked = in.readByte() != 0;
         in.readTypedList(items, Item.CREATOR);
+        progress = in.readParcelable(Module.class.getClassLoader());
     }
 
     public static final Creator<Module> CREATOR = new Creator<Module>() {

@@ -49,6 +49,9 @@ public class Course implements Parcelable {
     @SerializedName("exam_available_to")
     public String exam_available_to;
 
+    @SerializedName("progress")
+    public Progress progress;
+
     @Override
     public int describeContents() {
         return 0;
@@ -58,6 +61,7 @@ public class Course implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
         parcel.writeString(name);
+        parcel.writeString(description);
         parcel.writeString(course_code);
         parcel.writeString(lecturer);
         parcel.writeString(language);
@@ -69,11 +73,13 @@ public class Course implements Parcelable {
         parcel.writeByte((byte) (locked ? 1 : 0 ));
         parcel.writeString(exam_available_from);
         parcel.writeString(exam_available_to);
+        parcel.writeParcelable(progress, i);
     }
 
     public Course(Parcel in) {
         id = in.readString();
         name = in.readString();
+        description = in.readString();
         course_code = in.readString();
         lecturer = in.readString();
         language = in.readString();
@@ -85,6 +91,7 @@ public class Course implements Parcelable {
         locked = in.readByte() != 0;
         exam_available_from = in.readString();
         exam_available_to = in.readString();
+        progress = in.readParcelable(Course.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Course> CREATOR = new Parcelable.Creator<Course>() {
