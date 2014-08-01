@@ -71,7 +71,7 @@ public class Item<T extends Parcelable> implements Parcelable {
             return true;
         if (obj == null)
             return false;
-        if (Item.class.getClass() != obj.getClass())
+        if (((Object) this).getClass() != obj.getClass())
             return false;
         Item o = (Item) obj;
         if (id == null) {
