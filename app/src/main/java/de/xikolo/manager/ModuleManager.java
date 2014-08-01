@@ -14,8 +14,8 @@ import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Course;
 import de.xikolo.model.Module;
 import de.xikolo.util.BuildType;
-import de.xikolo.util.Path;
 import de.xikolo.util.Network;
+import de.xikolo.util.Path;
 
 public abstract class ModuleManager {
 
@@ -28,14 +28,17 @@ public abstract class ModuleManager {
         this.mContext = context;
     }
 
-    public void requestModules(Course course, boolean cache) {
+    public void requestModules(Course course, boolean cache, boolean includeProgress) {
         if (BuildConfig.buildType == BuildType.DEBUG)
-            Log.i(TAG, "requestModules() called | cache " + cache);
+            Log.i(TAG, "requestModules() called | cache " + cache + "| includeProgress " + includeProgress);
 
         Type type = new TypeToken<List<Module>>() {
         }.getType();
-        JsonRequest request = new JsonRequest(Path.API_SAP + Path.COURSES + course.id + "/"
-                + Path.MODULES, type, mContext) {
+
+        String url = Path.API_SAP + Path.COURSES + course.id + "/"
+                + Path.MODULES + "?include_progress=" + includeProgress;
+
+        JsonRequest request = new JsonRequest(url, type, mContext) {
             @Override
             public void onRequestReceived(Object o) {
                 if (o != null) {

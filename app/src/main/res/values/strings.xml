@@ -59,7 +59,7 @@
     <string name="icon_assignment"></string>
     <string name="icon_bonus"></string>
     <string name="icon_info">&#xe666;</string>
-    <string name="icon_progress">&#xe60b;</string>
+    <string name="icon_visited">&#xf06e;</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -80,6 +80,10 @@
     <string name="enrollments">enrollments</string>
     <string name="of">of</string>
     <string name="visited">visited</string>
+    <string name="total">Total</string>
+    <string name="self_tests">Self-tests</string>
+    <string name="assignments">Assignments</string>
+    <string name="points">Points</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Please enroll for courses.</string>

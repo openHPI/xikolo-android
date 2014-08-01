@@ -23,7 +23,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.controller.main.adapter.EnrollsProgressListAdapter;
+import de.xikolo.controller.main.adapter.EnrollmentProgressListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.manager.CourseManager;
 import de.xikolo.manager.EnrollmentsManager;
@@ -35,6 +35,7 @@ import de.xikolo.model.Enrollment;
 import de.xikolo.model.User;
 import de.xikolo.util.Network;
 import de.xikolo.util.Path;
+import de.xikolo.util.ProgressBarAnimator;
 import de.xikolo.util.Toaster;
 import de.xikolo.view.CircularImageView;
 import de.xikolo.view.CustomSizeImageView;
@@ -77,7 +78,7 @@ public class ProfileFragment extends ContentFragment {
     private List<Enrollment> mEnrollments;
     private List<Course> mCourses;
 
-    private EnrollsProgressListAdapter mAdapter;
+    private EnrollmentProgressListAdapter mAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -125,7 +126,7 @@ public class ProfileFragment extends ContentFragment {
         mContainerProgress = (LinearLayout) view.findViewById(R.id.linearLayoutProgress);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-        mAdapter = new EnrollsProgressListAdapter(getActivity());
+        mAdapter = new EnrollmentProgressListAdapter(getActivity());
 
         enrollManager = new EnrollmentsManager(getActivity()) {
             @Override
@@ -151,7 +152,7 @@ public class ProfileFragment extends ContentFragment {
                     mCourses = courses;
                     mAdapter.updateCourses(courses);
                     mProgressBar.setVisibility(View.GONE);
-                    addProgressView();
+                    addProgressViews();
                 }
             }
 
@@ -244,13 +245,14 @@ public class ProfileFragment extends ContentFragment {
         return view;
     }
 
-    private void addProgressView() {
+    private void addProgressViews() {
         for (int i = 0; i < mAdapter.getCount(); i++) {
             View v = mAdapter.getView(i, null, null);
 
             mContainerProgress.addView(v);
 
-            ProgressBar progress = (ProgressBar) v.findViewById(R.id.progressItems);
+            ProgressBar progress = (ProgressBar) v.findViewById(R.id.progress);
+            TextView label = (TextView) v.findViewById(R.id.textPercentage);
 
             Enrollment enrollment = (Enrollment) mAdapter.getItem(i);
             Course course = null;
@@ -260,10 +262,8 @@ public class ProfileFragment extends ContentFragment {
                 }
             }
 
-            int percentage = (int) (course.progress.items.count_visited
-                    / (course.progress.items.count_available / 100.));
-
-            mAdapter.animateProgress(getActivity(), progress, percentage);
+            ProgressBarAnimator.start(getActivity(), progress, label,
+                    course.progress.items.count_visited, course.progress.items.count_available);
         }
     }
 

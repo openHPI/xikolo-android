@@ -137,7 +137,7 @@ public class CourseLearningsFragment extends Fragment implements SwipeRefreshLay
         if (mModules == null) {
             mCache = true;
             mRefreshLayout.setRefreshing(true);
-            mModuleManager.requestModules(mCourse, mCache);
+            mModuleManager.requestModules(mCourse, mCache, false);
         } else {
             mAdapter.updateModules(mModules);
         }
@@ -147,7 +147,7 @@ public class CourseLearningsFragment extends Fragment implements SwipeRefreshLay
     public void onRefresh() {
         mCache = false;
         mRefreshLayout.setRefreshing(true);
-        mModuleManager.requestModules(mCourse, mCache);
+        mModuleManager.requestModules(mCourse, mCache, false);
     }
 
     @Override

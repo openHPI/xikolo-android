@@ -15,18 +15,16 @@ import de.xikolo.R;
 import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
 
-public class EnrollsProgressListAdapter extends BaseAdapter {
+public class EnrollmentProgressListAdapter extends BaseAdapter {
 
-    public static final String TAG = EnrollsProgressListAdapter.class.getSimpleName();
+    public static final String TAG = EnrollmentProgressListAdapter.class.getSimpleName();
 
     private List<Course> mCourses;
     private List<Enrollment> mEnrollments;
 
     private Activity mContext;
 
-    private String mFilter;
-
-    public EnrollsProgressListAdapter(Activity context) {
+    public EnrollmentProgressListAdapter(Activity context) {
         this.mContext = context;
         this.mCourses = new ArrayList<Course>();
         this.mEnrollments = new ArrayList<Enrollment>();
@@ -64,10 +62,11 @@ public class EnrollsProgressListAdapter extends BaseAdapter {
         View rowView = view;
         if (rowView == null) {
             LayoutInflater inflater = mContext.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.item_enrolls_progress, null);
+            rowView = inflater.inflate(R.layout.item_enrollment_progress, null);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
-            viewHolder.progressItems = (ProgressBar) rowView.findViewById(R.id.progressItems);
+            viewHolder.percentage = (TextView) rowView.findViewById(R.id.textPercentage);
+            viewHolder.progressItems = (ProgressBar) rowView.findViewById(R.id.progress2);
             viewHolder.count = (TextView) rowView.findViewById(R.id.textCount);
             rowView.setTag(viewHolder);
         }
@@ -83,58 +82,16 @@ public class EnrollsProgressListAdapter extends BaseAdapter {
 
         holder.title.setText(course.name);
 
-        int percentage = (int) (course.progress.items.count_visited
-                / (course.progress.items.count_available / 100.));
-
         holder.count.setText(course.progress.items.count_visited + " " +
-                        mContext.getString(R.string.of) + " " + course.progress.items.count_available + " " +
-                        mContext.getString(R.string.visited) + " (" + percentage + "%)"
-        );
+                mContext.getString(R.string.of) + " " + course.progress.items.count_available + " " +
+                mContext.getString(R.string.visited));
 
         return rowView;
     }
 
-    public void animateProgress(final Activity activity, final ProgressBar progress, final int percentage) {
-        (new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progress.setProgress(percentage);
-                        }
-                    });
-                }
-                final int animTime = (int) (500. / percentage);
-                for (int i = 0; i <= percentage; i++) {
-                    final int p = i;
-                    try {
-                        Thread.sleep(animTime);
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.setProgress(p);
-                            }
-                        });
-                    } catch (InterruptedException e) {
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.setProgress(percentage);
-                            }
-                        });
-                    }
-                }
-
-            }
-        })).start();
-    }
-
     static class ViewHolder {
         TextView title;
+        TextView percentage;
         ProgressBar progressItems;
         TextView count;
     }

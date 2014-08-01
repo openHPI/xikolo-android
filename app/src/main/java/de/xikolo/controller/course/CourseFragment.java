@@ -143,7 +143,7 @@ public class CourseFragment extends Fragment implements ISimpleDialogListener {
                     fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.DISCUSSIONS);
                     break;
                 case 2:
-                    fragment = ModuleFragment.newInstance();
+                    fragment = ProgressFragment.newInstance(mCourse);
                     break;
                 case 3:
                     fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.ANNOUNCEMENTS);
