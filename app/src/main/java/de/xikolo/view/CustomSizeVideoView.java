@@ -24,12 +24,15 @@ public class CustomSizeVideoView extends VideoView {
     public void setDimensions(int w, int h) {
         this.mForceHeight = h;
         this.mForceWidth = w;
-
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(mForceWidth, mForceHeight);
+        if (mForceHeight > 0 && mForceWidth > 0) {
+            setMeasuredDimension(mForceWidth, mForceHeight);
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
     }
 
 }

@@ -5,18 +5,10 @@
     android:background="@color/black"
     tools:context="de.xikolo.controller.VideoActivity">
 
-    <VideoView
-        android:id="@+id/video"
+    <include
+        layout="@layout/container_video"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_centerInParent="true" />
-
-    <ProgressBar
-        android:id="@+id/progressVideo"
-        style="?android:attr/progressBarStyleInverse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="visible" />
 
 </RelativeLayout>

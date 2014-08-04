@@ -10,14 +10,17 @@
 
         <item name="android:textColorHighlight">#99de6212</item>
         <item name="android:textSelectHandleLeft">@drawable/apptheme_text_select_handle_left</item>
-        <item name="android:textSelectHandleRight">@drawable/apptheme_text_select_handle_right</item>
+        <item name="android:textSelectHandleRight">@drawable/apptheme_text_select_handle_right
+        </item>
         <item name="android:textSelectHandle">@drawable/apptheme_text_select_handle_middle</item>
 
         <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewAppTheme</item>
 
-        <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_btn_check_holo_light</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_btn_check_holo_light
+        </item>
 
-        <item name="android:listChoiceIndicatorSingle">@drawable/apptheme_btn_radio_holo_light</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/apptheme_btn_radio_holo_light
+        </item>
 
         <item name="android:buttonStyle">@style/ButtonAppTheme</item>
 
@@ -37,16 +40,19 @@
 
         <item name="android:buttonStyleToggle">@style/ToggleAppTheme</item>
 
-        <item name="android:listChoiceBackgroundIndicator">@drawable/apptheme_list_selector_holo_light</item>
+        <item name="android:listChoiceBackgroundIndicator">
+            @drawable/apptheme_list_selector_holo_light
+        </item>
 
-        <item name="android:activatedBackgroundIndicator">@drawable/apptheme_activated_background_holo_light</item>
+        <item name="android:activatedBackgroundIndicator">
+            @drawable/apptheme_activated_background_holo_light
+        </item>
 
         <item name="android:fastScrollThumbDrawable">@drawable/apptheme_fastscroll_thumb_holo</item>
     </style>
 
     <!-- ActionBar styles -->
-    <style name="AppActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+    <style name="AppActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/gray_actionbar</item>
     </style>
 
@@ -56,6 +62,15 @@
         <item name="titleSeparatorColor">@color/orange</item>
         <item name="buttonBackgroundColorPressed">@color/orange_alpha</item>
         <item name="buttonBackgroundColorFocused">@color/orange_alpha</item>
+    </style>
+
+    <style name="TextDropShadow">
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:shadowColor">@color/actionbar_alpha</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">0</item>
+        <item name="android:shadowRadius">8</item>
     </style>
 
 </resources>

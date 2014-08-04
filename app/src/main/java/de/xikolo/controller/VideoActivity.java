@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,31 +12,26 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.CookieSyncManager;
-import android.widget.MediaController;
-import android.widget.VideoView;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.module.VideoFragment;
 import de.xikolo.model.Item;
 import de.xikolo.model.ItemVideo;
+import de.xikolo.view.VideoController;
 
 public class VideoActivity extends Activity {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
 
-    int mTime;
+    private View mVideoContainer;
 
-    private VideoView mVideo;
-    private MediaController mVideoController;
-
-    private View mVideoProgress;
+    private VideoController mVideoController;
 
     private Item<ItemVideo> mItem;
-
-    private boolean isRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +39,29 @@ public class VideoActivity extends Activity {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_video);
 
+        mVideoContainer = findViewById(R.id.videoContainer);
+
+        mVideoController = new VideoController(this, mVideoContainer) {
+            @Override
+            public void showController() {
+                showSystemBars();
+                super.showController();
+            }
+
+            @Override
+            public void hideController() {
+                hideSystemBars();
+                super.hideController();
+            }
+        };
+        mVideoController.disableHeader();
+
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(VideoFragment.KEY_ITEM)) {
             throw new WrongParameterException();
         } else {
-            this.mItem = b.getParcelable(VideoFragment.KEY_ITEM);
-            if (b.containsKey(VideoFragment.KEY_TIME)) {
-                mTime = b.getInt(VideoFragment.KEY_TIME);
-            }
+            mItem = getIntent().getExtras().getParcelable(VideoFragment.KEY_ITEM);
+            mVideoController.returnFromSavedInstanceState(getIntent().getExtras());
         }
 
         setTitle(mItem.object.title);
@@ -62,7 +71,7 @@ public class VideoActivity extends Activity {
             public void onSystemUiVisibilityChange(int visibility) {
                 if (Build.VERSION.SDK_INT > 15) {
                     if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                        mVideoController.show();
+                        mVideoController.showController();
                     }
                 }
             }
@@ -70,34 +79,7 @@ public class VideoActivity extends Activity {
 
         getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionbar_alpha)));
 
-        hideControls();
-
-        mVideo = (VideoView) findViewById(R.id.video);
-        mVideoProgress = findViewById(R.id.progressVideo);
-
-        mVideoController = new MediaController(this) {
-            @Override
-            public void show() {
-                if (isRunning) {
-                    showControls();
-                    super.show();
-                }
-            }
-
-            @Override
-            public void hide() {
-                if (isRunning) {
-                    if (mVideo.isPlaying()) {
-                        super.hide();
-                        hideControls();
-                    } else {
-                        super.show(0);
-                    }
-                }
-            }
-        };
-        mVideoController.setAnchorView(mVideo);
-        mVideoController.setKeepScreenOn(true);
+        hideSystemBars();
 
         if (Build.VERSION.SDK_INT > 16) {
             Display display = getWindowManager().getDefaultDisplay();
@@ -105,31 +87,17 @@ public class VideoActivity extends Activity {
             display.getRealSize(size);
             Rect usableRect = new Rect();
             getWindow().getDecorView().getWindowVisibleDisplayFrame(usableRect);
-            mVideoController.setPadding(0,
+            mVideoController.getControllerView().setPadding(0,
                     0,
                     size.x - usableRect.right,
                     size.y - usableRect.bottom);
         }
 
-        mVideo.setMediaController(mVideoController);
         Uri uri = Uri.parse(mItem.object.url);
-        mVideo.setVideoURI(uri);
-
-        if (mTime > 0) {
-            mVideo.seekTo(mTime);
-        }
-
-        mVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mVideoProgress.setVisibility(View.GONE);
-            }
-        });
-
-        mVideo.start();
+        mVideoController.setVideoURI(uri);
     }
 
-    private void hideControls() {
+    private void hideSystemBars() {
         View decorView = getWindow().getDecorView();
         int uiOptions;
         if (Build.VERSION.SDK_INT > 16) {
@@ -151,7 +119,7 @@ public class VideoActivity extends Activity {
         getActionBar().hide();
     }
 
-    private void showControls() {
+    private void showSystemBars() {
         getActionBar().show();
     }
 
@@ -180,16 +148,12 @@ public class VideoActivity extends Activity {
     protected void onResume() {
         super.onResume();
         CookieSyncManager.getInstance().startSync();
-
-        isRunning = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         CookieSyncManager.getInstance().sync();
-
-        isRunning = false;
     }
 
     @Override
@@ -202,8 +166,7 @@ public class VideoActivity extends Activity {
         Intent intent = new Intent();
         Bundle b = new Bundle();
         b.putParcelable(VideoFragment.KEY_ITEM, mItem);
-        b.putInt(VideoFragment.KEY_TIME, mVideo.getCurrentPosition());
-        b.putBoolean(VideoFragment.KEY_ISPLAYING, mVideo.isPlaying());
+        mVideoController.onSaveInstanceState(b);
         intent.putExtras(b);
         setResult(RESULT_OK, intent);
     }

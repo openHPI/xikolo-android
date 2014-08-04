@@ -60,6 +60,9 @@
     <string name="icon_bonus"></string>
     <string name="icon_info">&#xe666;</string>
     <string name="icon_visited">&#xf06e;</string>
+    <string name="icon_play">&#xe652;</string>
+    <string name="icon_pause">&#xe651;</string>
+    <string name="icon_fullscreen">&#xe658;</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
