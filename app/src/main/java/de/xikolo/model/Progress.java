@@ -28,7 +28,14 @@ public class Progress implements Parcelable {
         parcel.writeParcelable(assignments, i);
     }
 
+    public Progress() {
+        items = new ItemCount();
+        self_tests = new TestCount();
+        assignments = new TestCount();
+    }
+    
     public Progress(Parcel in) {
+        this();
         items = in.readParcelable(Progress.class.getClassLoader());
         self_tests = in.readParcelable(Progress.class.getClassLoader());
         assignments = in.readParcelable(Progress.class.getClassLoader());
@@ -66,8 +73,13 @@ public class Progress implements Parcelable {
             parcel.writeInt(count_visited);
             parcel.writeInt(count_completed);
         }
+        
+        public ItemCount() {
+            
+        }
 
         public ItemCount(Parcel in) {
+            this();
             count_available = in.readInt();
             count_visited = in.readInt();
             count_completed = in.readInt();
@@ -111,8 +123,13 @@ public class Progress implements Parcelable {
             parcel.writeInt(points_possible);
             parcel.writeInt(points_scored);
         }
+        
+        public TestCount() {
+            
+        }
 
         public TestCount(Parcel in) {
+            this();
             count_available = in.readInt();
             count_taken = in.readInt();
             points_possible = in.readInt();

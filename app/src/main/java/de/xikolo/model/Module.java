@@ -55,7 +55,8 @@ public class Module implements Parcelable {
     }
 
     public Module() {
-        this.items = new ArrayList<Item>();
+        items = new ArrayList<Item>();
+        progress = new Progress();
     }
 
     public Module(Parcel in) {

@@ -40,6 +40,7 @@ public class EnrollmentProgressListAdapter extends BaseAdapter {
         if (courses == null)
             throw new NullPointerException("Courses can't be null");
         this.mCourses = courses;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -66,7 +67,7 @@ public class EnrollmentProgressListAdapter extends BaseAdapter {
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
             viewHolder.percentage = (TextView) rowView.findViewById(R.id.textPercentage);
-            viewHolder.progressItems = (ProgressBar) rowView.findViewById(R.id.progress2);
+            viewHolder.progressItems = (ProgressBar) rowView.findViewById(R.id.progress);
             viewHolder.count = (TextView) rowView.findViewById(R.id.textCount);
             rowView.setTag(viewHolder);
         }
@@ -86,7 +87,24 @@ public class EnrollmentProgressListAdapter extends BaseAdapter {
                 mContext.getString(R.string.of) + " " + course.progress.items.count_available + " " +
                 mContext.getString(R.string.visited));
 
+        int percentage = getPercentage(course.progress.items.count_visited,
+                course.progress.items.count_available);
+
+        holder.percentage.setText(percentage + "%");
+
+        holder.progressItems.setProgress(percentage);
+
         return rowView;
+    }
+
+    private int getPercentage(int state, int max) {
+        int percentage;
+        if (max > 0) {
+            percentage = (int) (state / (max / 100.));
+        } else {
+            percentage = 100;
+        }
+        return percentage;
     }
 
     static class ViewHolder {
