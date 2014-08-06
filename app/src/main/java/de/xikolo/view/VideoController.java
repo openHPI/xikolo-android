@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -24,13 +24,14 @@ public class VideoController {
 
     private static final int MILLISECONDS = 100;
 
+    private static final int sDefaultTimeout = 3000;
+    private static final int FADE_OUT = 1;
+
     private Activity mActivity;
 
     private View mVideoContainer;
 
     private View mVideoProgress;
-
-    private MediaController mMediaController;
 
     private CustomSizeVideoView mVideo;
     private View mVideoController;
@@ -47,7 +48,11 @@ public class VideoController {
 
     private OnFullscreenClickListener mFullscreenListener;
 
+    private ControllerListener mControllerListener;
+
     private Runnable mSeekBarUpdater;
+
+    private Handler mHandler = new MessageHandler(this);
 
     private boolean wasSaved = false;
     private int savedTime = 0;
@@ -72,38 +77,26 @@ public class VideoController {
 
         mPlayButton = (CustomFontTextView) mVideoContainer.findViewById(R.id.btnPlay);
 
+        mVideoContainer.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                show();
+                return false;
+            }
+        });
+
         setup();
     }
 
     private void setup() {
-        mMediaController = new MediaController(mActivity) {
-            @Override
-            public void show() {
-                super.show();
-                showController();
-            }
-
-            @Override
-            public void hide() {
-                super.hide();
-                hideController();
-            }
-
-        };
-
-        mMediaController.setKeepScreenOn(true);
-        mMediaController.setMediaPlayer(mVideo);
-        mVideo.setMediaController(mMediaController);
-
-        mMediaController.setVisibility(View.GONE);
-        mMediaController.removeAllViews();
-
+        mVideo.setKeepScreenOn(true);
         mVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mVideoProgress.setVisibility(View.GONE);
+                seekTo(0);
                 mSeekBar.setMax(mVideo.getDuration());
-                mMediaController.show();
+                show();
 
                 mTotalTime.setText(getTimeString(mVideo.getDuration()));
                 mCurrentTime.setText(getTimeString(0));
@@ -140,6 +133,7 @@ public class VideoController {
         mFullscreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                show();
                 if (mFullscreenListener != null) {
                     mFullscreenListener.onFullscreenClick(mVideo.getCurrentPosition(), mVideo.isPlaying());
                 }
@@ -149,6 +143,7 @@ public class VideoController {
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                show();
                 if (mVideo.isPlaying()) {
                     pause();
                 } else {
@@ -161,7 +156,7 @@ public class VideoController {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    mMediaController.show();
+                    show();
                     seekTo(progress);
                 }
             }
@@ -192,12 +187,31 @@ public class VideoController {
         mVideo.pause();
     }
 
-    public void showController() {
-        this.mVideoController.setVisibility(View.VISIBLE);
+    public void show() {
+        show(sDefaultTimeout);
     }
 
-    public void hideController() {
-        this.mVideoController.setVisibility(View.GONE);
+    public void show(int timeout) {
+        mVideoController.setVisibility(View.VISIBLE);
+        if (mControllerListener != null) {
+            mControllerListener.onControllerShow();
+        }
+        Message msg = mHandler.obtainMessage(FADE_OUT);
+        if (timeout != 0) {
+            mHandler.removeMessages(FADE_OUT);
+            mHandler.sendMessageDelayed(msg, timeout);
+        }
+    }
+
+    public void hide() {
+        if (mVideo.isPlaying()) {
+            mVideoController.setVisibility(View.GONE);
+            if (mControllerListener != null) {
+                mControllerListener.onControllerHide();
+            }
+        } else {
+            show();
+        }
     }
 
     public void setDimensions(int w, int h) {
@@ -214,10 +228,6 @@ public class VideoController {
 
     public void disableHeader() {
         mVideoHeader.setVisibility(View.GONE);
-    }
-
-    public void setOnFullscreenButtonClickedListener(OnFullscreenClickListener listener) {
-        this.mFullscreenListener = listener;
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -247,10 +257,43 @@ public class VideoController {
         );
     }
 
+    public void setOnFullscreenButtonClickedListener(OnFullscreenClickListener listener) {
+        this.mFullscreenListener = listener;
+    }
+
+    public void setControllerListener(ControllerListener listener) {
+        this.mControllerListener = listener;
+    }
+
     public interface OnFullscreenClickListener {
 
         public void onFullscreenClick(int currentPosition, boolean isPlaying);
 
+    }
+
+    public interface ControllerListener {
+
+        public void onControllerShow();
+
+        public void onControllerHide();
+
+    }
+
+    private static class MessageHandler extends Handler {
+        VideoController mController;
+
+        public MessageHandler(VideoController controller) {
+            mController = controller;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case FADE_OUT:
+                    mController.hide();
+                    break;
+            }
+        }
     }
 
 }

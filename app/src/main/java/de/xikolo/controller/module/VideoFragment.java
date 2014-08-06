@@ -193,11 +193,12 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
     @Override
     public void pageChanged() {
         mVideoController.pause();
+        mVideoController.show();
     }
 
     @Override
     public void pageScrolling(int state) {
-        mVideoController.hideController();
+        mVideoController.hide();
     }
 
 }

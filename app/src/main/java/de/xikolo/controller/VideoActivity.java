@@ -12,7 +12,6 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.CookieSyncManager;
 
@@ -41,19 +40,18 @@ public class VideoActivity extends Activity {
 
         mVideoContainer = findViewById(R.id.videoContainer);
 
-        mVideoController = new VideoController(this, mVideoContainer) {
+        mVideoController = new VideoController(this, mVideoContainer);
+        mVideoController.setControllerListener(new VideoController.ControllerListener() {
             @Override
-            public void showController() {
+            public void onControllerShow() {
                 showSystemBars();
-                super.showController();
             }
 
             @Override
-            public void hideController() {
+            public void onControllerHide() {
                 hideSystemBars();
-                super.hideController();
             }
-        };
+        });
         mVideoController.disableHeader();
 
         Bundle b = getIntent().getExtras();
@@ -71,7 +69,7 @@ public class VideoActivity extends Activity {
             public void onSystemUiVisibilityChange(int visibility) {
                 if (Build.VERSION.SDK_INT > 15) {
                     if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                        mVideoController.showController();
+                        mVideoController.show();
                     }
                 }
             }

@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="@string/icon_fullscreen"
-                android:textColor="@color/white"
+                android:textColor="@color/white_alpha"
                 android:textSize="32sp"
                 app:customFont="xikolo.ttf" />
 
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/icon_play"
-            android:textColor="@color/white"
+            android:textColor="@color/white_alpha"
             android:textSize="72sp"
             app:customFont="xikolo.ttf" />
 
