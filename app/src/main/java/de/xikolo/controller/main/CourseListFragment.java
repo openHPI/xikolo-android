@@ -21,7 +21,7 @@ import de.xikolo.controller.main.adapter.CourseListAdapter;
 import de.xikolo.controller.main.adapter.FilteredCourseListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.manager.CourseManager;
-import de.xikolo.manager.EnrollmentsManager;
+import de.xikolo.manager.EnrollmentManager;
 import de.xikolo.manager.TokenManager;
 import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
@@ -49,7 +49,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     private TextView mTextNotification;
 
     private CourseManager mCourseManager;
-    private EnrollmentsManager mEnrollmentsManager;
+    private EnrollmentManager mEnrollmentManager;
 
     private List<Course> mCourses;
     private List<Enrollment> mEnrollments;
@@ -149,7 +149,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             }
         };
 
-        mEnrollmentsManager = new EnrollmentsManager(getActivity()) {
+        mEnrollmentManager = new EnrollmentManager(getActivity()) {
             @Override
             public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {
                 if (enrolls != null) {
@@ -168,11 +168,11 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             if (TokenManager.isLoggedIn(getActivity())) {
                 if (mEnrollments == null) {
                     mRefreshLayout.setRefreshing(true);
-                    mEnrollmentsManager.requestEnrollments(false);
+                    mEnrollmentManager.requestEnrollments(false);
                 } else {
                     mCourseListAdapter.updateEnrollments(mEnrollments);
                     mRefreshLayout.setRefreshing(true);
-                    mEnrollmentsManager.requestEnrollments(false);
+                    mEnrollmentManager.requestEnrollments(false);
                 }
             } else {
                 mEnrollments = null;
@@ -222,7 +222,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mRefreshLayout.setRefreshing(true);
         if (Network.isOnline(getActivity())) {
             if (TokenManager.isLoggedIn(getActivity())) {
-                mEnrollmentsManager.requestEnrollments(false);
+                mEnrollmentManager.requestEnrollments(false);
             }
             mCourseManager.requestCourses(false, false);
         } else {
@@ -234,7 +234,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     @Override
     public void onEnrollButtonClicked(Course course) {
         if (TokenManager.isLoggedIn(getActivity())) {
-            mEnrollmentsManager.createEnrollment(course.id);
+            mEnrollmentManager.createEnrollment(course.id);
         } else {
             Toaster.show(getActivity(), R.string.toast_please_log_in);
             mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);

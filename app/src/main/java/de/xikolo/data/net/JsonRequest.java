@@ -39,7 +39,7 @@ public abstract class JsonRequest extends HttpRequest {
             return o;
         } catch (Exception e) {
             Log.w(TAG, "Error for URL " + mUrl, e);
-            onRequestCancelled();
+            cancel(true);
         }
         return null;
     }

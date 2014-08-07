@@ -81,6 +81,10 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
             return input;
         } catch (IOException e) {
             Log.w(TAG, "Error for URL " + mUrl, e);
+            cancel(true);
+        } catch (NullPointerException e) {
+            Log.w(TAG, "Error for URL " + mUrl, e);
+            cancel(true);
         }
         return null;
     }
@@ -111,12 +115,14 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
 
             if (statusCode != HttpURLConnection.HTTP_OK) {
                 Log.w(TAG, "Error " + statusCode + " for URL " + mUrl);
+                cancel(true);
                 return null;
             }
 
             return urlConnection;
         } catch (IOException e) {
             Log.w(TAG, "Error for URL " + mUrl, e);
+            cancel(true);
         }
         return null;
     }

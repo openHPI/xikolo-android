@@ -18,7 +18,7 @@ import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.course.dialog.UnenrollDialog;
-import de.xikolo.manager.EnrollmentsManager;
+import de.xikolo.manager.EnrollmentManager;
 import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
 import de.xikolo.util.Path;
@@ -56,11 +56,12 @@ public class CourseFragment extends Fragment implements ISimpleDialogListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View layout = inflater.inflate(R.layout.fragment_course, container, false);
 
         // Initialize the ViewPager and set an adapter
-        View layout = inflater.inflate(R.layout.fragment_course, container, false);
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) layout.findViewById(R.id.tabs);
         ViewPager pager = (ViewPager) layout.findViewById(R.id.pager);
+
         pager.setAdapter(new CoursePagerAdapter(getChildFragmentManager()));
 
         // Bind the tabs to the ViewPager
@@ -90,7 +91,7 @@ public class CourseFragment extends Fragment implements ISimpleDialogListener {
 
     @Override
     public void onPositiveButtonClicked(int i) {
-        EnrollmentsManager manager = new EnrollmentsManager(getActivity()) {
+        EnrollmentManager manager = new EnrollmentManager(getActivity()) {
             @Override
             public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {
             }

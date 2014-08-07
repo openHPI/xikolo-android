@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.CookieSyncManager;
@@ -22,9 +23,11 @@ import de.xikolo.controller.module.AssignmentFragment;
 import de.xikolo.controller.module.PagerFragment;
 import de.xikolo.controller.module.TextFragment;
 import de.xikolo.controller.module.VideoFragment;
+import de.xikolo.manager.ProgressionManager;
 import de.xikolo.model.Course;
 import de.xikolo.model.Item;
 import de.xikolo.model.Module;
+import de.xikolo.util.Network;
 import de.xikolo.util.Path;
 
 public class ModuleActivity extends FragmentActivity {
@@ -38,6 +41,8 @@ public class ModuleActivity extends FragmentActivity {
     private Course mCourse;
     private Module mModule;
     private Item mItem;
+
+    private ProgressionManager mProgressionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +58,13 @@ public class ModuleActivity extends FragmentActivity {
             this.mItem = b.getParcelable(ARG_ITEM);
         }
 
+        mProgressionManager = new ProgressionManager(this);
+
         setTitle(mModule.name);
 
         // Initialize the ViewPager and set an adapter
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), this, pager, mModule.items);
+        ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), this, mModule.items);
         pager.setAdapter(adapter);
 
         // Bind the tabs to the ViewPager
@@ -69,8 +76,16 @@ public class ModuleActivity extends FragmentActivity {
 
         if (mItem != null) {
             pager.setCurrentItem(mModule.items.indexOf(mItem), false);
+            if (mModule.items.indexOf(mItem) == 0) {
+                if (Network.isOnline(this)) {
+                    mProgressionManager.updateProgression(mModule.items.get(0).id);
+                }
+            }
+        } else {
+            if (Network.isOnline(this)) {
+                mProgressionManager.updateProgression(mModule.items.get(0).id);
+            }
         }
-
     }
 
     @Override
@@ -85,7 +100,7 @@ public class ModuleActivity extends FragmentActivity {
         // Handle action bar module clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//        int id = item.getItemId();
 //        if (id == R.id.action_settings) {
 //            return true;
 //        }
@@ -114,7 +129,7 @@ public class ModuleActivity extends FragmentActivity {
 
         private int lastPosition = 0;
 
-        public ModulePagerAdapter(FragmentManager fm, Context context, ViewPager pager, List<Item> items) {
+        public ModulePagerAdapter(FragmentManager fm, Context context, List<Item> items) {
             super(fm);
             mItems = items;
             mContext = context;
@@ -174,6 +189,10 @@ public class ModuleActivity extends FragmentActivity {
 
         @Override
         public void onPageSelected(int position) {
+            if (Network.isOnline(mContext)) {
+                mProgressionManager.updateProgression(mItems.get(position).id);
+            }
+
             if (lastPosition != position) {
                 PagerFragment fragment = (PagerFragment) getItem(lastPosition);
                 fragment.pageChanged();

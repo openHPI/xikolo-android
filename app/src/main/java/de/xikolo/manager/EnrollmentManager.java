@@ -18,14 +18,14 @@ import de.xikolo.util.BuildType;
 import de.xikolo.util.Path;
 import de.xikolo.util.Network;
 
-public abstract class EnrollmentsManager {
+public abstract class EnrollmentManager {
 
-    public static final String TAG = EnrollmentsManager.class.getSimpleName();
+    public static final String TAG = EnrollmentManager.class.getSimpleName();
 
     private Context mContext;
     private EnrollmentsPreferences mEnrollPref;
 
-    public EnrollmentsManager(Context context) {
+    public EnrollmentManager(Context context) {
         super();
         this.mContext = context;
         this.mEnrollPref = new EnrollmentsPreferences(context);

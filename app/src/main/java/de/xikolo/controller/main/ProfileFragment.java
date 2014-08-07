@@ -27,13 +27,12 @@ import de.xikolo.R;
 import de.xikolo.controller.main.adapter.EnrollmentProgressListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.manager.CourseManager;
-import de.xikolo.manager.EnrollmentsManager;
+import de.xikolo.manager.EnrollmentManager;
 import de.xikolo.manager.TokenManager;
 import de.xikolo.manager.UserManager;
 import de.xikolo.model.AccessToken;
 import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
-import de.xikolo.model.Module;
 import de.xikolo.model.User;
 import de.xikolo.util.Network;
 import de.xikolo.util.Path;
@@ -54,7 +53,7 @@ public class ProfileFragment extends ContentFragment {
 
     private TokenManager tokenManager;
     private UserManager userManager;
-    private EnrollmentsManager enrollManager;
+    private EnrollmentManager enrollManager;
     private CourseManager courseManager;
 
     private ProgressBar mProgress;
@@ -148,7 +147,7 @@ public class ProfileFragment extends ContentFragment {
         mAdapter = new EnrollmentProgressListAdapter(getActivity());
         mProgressListView.setAdapter(mAdapter);
 
-        enrollManager = new EnrollmentsManager(getActivity()) {
+        enrollManager = new EnrollmentManager(getActivity()) {
             @Override
             public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {
                 if (enrolls != null) {
@@ -325,7 +324,7 @@ public class ProfileFragment extends ContentFragment {
 
         mTextEmail.setText(user.email);
 
-        mTextEnrollCounts.setText(String.valueOf(EnrollmentsManager.getEnrollmentsSize(getActivity())));
+        mTextEnrollCounts.setText(String.valueOf(EnrollmentManager.getEnrollmentsSize(getActivity())));
     }
 
     private void setProfilePicMargin() {
