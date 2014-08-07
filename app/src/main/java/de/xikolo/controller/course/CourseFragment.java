@@ -117,9 +117,11 @@ public class CourseFragment extends Fragment implements ISimpleDialogListener {
                 getString(R.string.tab_rooms),
                 getString(R.string.tab_details)
         };
+        private FragmentManager mFragmentManager;
 
         public CoursePagerAdapter(FragmentManager fm) {
             super(fm);
+            mFragmentManager = fm;
         }
 
         @Override
@@ -134,28 +136,37 @@ public class CourseFragment extends Fragment implements ISimpleDialogListener {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = null;
-            switch (position) {
-                case 0:
-                    fragment = CourseLearningsFragment.newInstance(mCourse);
-                    break;
-                case 1:
-                    fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.DISCUSSIONS);
-                    break;
-                case 2:
-                    fragment = ProgressFragment.newInstance(mCourse);
-                    break;
-                case 3:
-                    fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.ANNOUNCEMENTS);
-                    break;
-                case 4:
-                    fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.ROOMS);
-                    break;
-                case 5:
-                    fragment = EmbeddedWebViewFragment.newInstance(mCourse.url);
-                    break;
+            // Check if this Fragment already exists.
+            // Fragment Name is saved by FragmentPagerAdapter implementation.
+            String name = makeFragmentName(R.id.pager, position);
+            Fragment fragment = mFragmentManager.findFragmentByTag(name);
+            if (fragment == null) {
+                switch (position) {
+                    case 0:
+                        fragment = CourseLearningsFragment.newInstance(mCourse);
+                        break;
+                    case 1:
+                        fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.DISCUSSIONS);
+                        break;
+                    case 2:
+                        fragment = ProgressFragment.newInstance(mCourse);
+                        break;
+                    case 3:
+                        fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.ANNOUNCEMENTS);
+                        break;
+                    case 4:
+                        fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.ROOMS);
+                        break;
+                    case 5:
+                        fragment = EmbeddedWebViewFragment.newInstance(mCourse.url);
+                        break;
+                }
             }
             return fragment;
+        }
+
+        private String makeFragmentName(int viewId, int index) {
+            return "android:switcher:" + viewId + ":" + index;
         }
 
     }

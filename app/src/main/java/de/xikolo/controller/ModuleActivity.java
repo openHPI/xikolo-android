@@ -107,20 +107,18 @@ public class ModuleActivity extends FragmentActivity {
     public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
 
         private List<Item> mItems;
-        private Context mContext;
-        private ViewPager mPager;
 
-        private PagerFragment[] mFragments;
+        private Context mContext;
+
+        private FragmentManager mFragmentManager;
 
         private int lastPosition = 0;
 
         public ModulePagerAdapter(FragmentManager fm, Context context, ViewPager pager, List<Item> items) {
             super(fm);
-            this.mItems = items;
-            this.mContext = context;
-            this.mPager = pager;
-
-            this.mFragments = new PagerFragment[mItems.size()];
+            mItems = items;
+            mContext = context;
+            mFragmentManager = fm;
         }
 
         @Override
@@ -148,11 +146,11 @@ public class ModuleActivity extends FragmentActivity {
         public Fragment getItem(int position) {
             Item item = mItems.get(position);
 
-            PagerFragment fragment = null;
-
-            if (mFragments[position] != null) {
-                fragment = mFragments[position];
-            } else {
+            // Check if this Fragment already exists.
+            // Fragment Name is saved by FragmentPagerAdapter implementation.
+            String name = makeFragmentName(R.id.pager, position);
+            Fragment fragment = mFragmentManager.findFragmentByTag(name);
+            if (fragment == null) {
                 if (item.type.equals(Item.TYPE_TEXT)) {
                     fragment = TextFragment.newInstance(mCourse, mModule, mItems.get(position));
                 } else if (item.type.equals(Item.TYPE_VIDEO)) {
@@ -162,9 +160,12 @@ public class ModuleActivity extends FragmentActivity {
                         || item.type.equals(Item.TYPE_EXAM)) {
                     fragment = AssignmentFragment.newInstance(mCourse, mModule, mItems.get(position));
                 }
-                mFragments[position] = fragment;
             }
             return fragment;
+        }
+
+        private String makeFragmentName(int viewId, int index) {
+            return "android:switcher:" + viewId + ":" + index;
         }
 
         @Override
