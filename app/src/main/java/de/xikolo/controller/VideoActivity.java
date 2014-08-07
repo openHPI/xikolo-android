@@ -1,5 +1,6 @@
 package de.xikolo.controller;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.CookieSyncManager;
 
 import de.xikolo.R;
@@ -31,6 +33,8 @@ public class VideoActivity extends Activity {
     private VideoController mVideoController;
 
     private Item<ItemVideo> mItem;
+
+    private ActionBar mActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +71,7 @@ public class VideoActivity extends Activity {
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
-                if (Build.VERSION.SDK_INT > 15) {
+                if (Build.VERSION.SDK_INT >= 16) {
                     if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
                         mVideoController.show();
                     }
@@ -75,7 +79,8 @@ public class VideoActivity extends Activity {
             }
         });
 
-        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionbar_alpha)));
+        mActionBar = getActionBar();
+        mActionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionbar_alpha)));
 
         hideSystemBars();
 
@@ -98,27 +103,25 @@ public class VideoActivity extends Activity {
     private void hideSystemBars() {
         View decorView = getWindow().getDecorView();
         int uiOptions;
-        if (Build.VERSION.SDK_INT > 16) {
-            uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        } else if (Build.VERSION.SDK_INT > 15) {
-            uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LOW_PROFILE;
+        if (Build.VERSION.SDK_INT >= 16) {
+            uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
+                    | View.SYSTEM_UI_FLAG_LOW_PROFILE // API 14
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE; // API 16
         } else {
-            uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LOW_PROFILE;
+            uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
+                    | View.SYSTEM_UI_FLAG_LOW_PROFILE; // API 14
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         decorView.setSystemUiVisibility(uiOptions);
-        getActionBar().hide();
+        mActionBar.hide();
     }
 
     private void showSystemBars() {
-        getActionBar().show();
+        mActionBar.show();
     }
 
     @Override
