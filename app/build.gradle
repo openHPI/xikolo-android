@@ -23,11 +23,11 @@ android {
     }
     productFlavors {
         openHPI {
-            packageName "de.xikolo.openhpi"
+            applicationId "de.xikolo.openhpi"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_HPI"
         }
         openSAP {
-            packageName "de.xikolo.opensap"
+            applicationId "de.xikolo.opensap"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_SAP"
         }
     }
@@ -38,8 +38,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.+'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.+'
     compile 'com.android.support:support-v4:20.+'
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.+'
     compile 'eu.inmite.android.lib:android-styled-dialogs:1.1.2@aar'
+    compile(name:'PagerSlidingTabStrip-1.0.1', ext:'aar')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
