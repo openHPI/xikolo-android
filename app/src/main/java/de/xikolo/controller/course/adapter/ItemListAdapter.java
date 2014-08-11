@@ -1,6 +1,7 @@
 package de.xikolo.controller.course.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,7 @@ public class ItemListAdapter extends BaseAdapter {
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
             viewHolder.icon = (TextView) rowView.findViewById(R.id.textIcon);
             viewHolder.container = (ViewGroup) rowView.findViewById(R.id.container);
+            viewHolder.unseenIndicator = rowView.findViewById(R.id.unseenIndicator);
             rowView.setTag(viewHolder);
         }
         final ViewHolder holder = (ViewHolder) rowView.getTag();
@@ -83,6 +85,19 @@ public class ItemListAdapter extends BaseAdapter {
         } else if (item.type.equals(Item.TYPE_ASSIGNMENT) || item.type.equals(Item.TYPE_EXAM)) {
             holder.icon.setText(mContext.getString(R.string.icon_assignment));
         }
+
+        // TODO set progression when unseen
+        if (i % 2 == 0) {
+            holder.unseenIndicator.setVisibility(View.VISIBLE);
+        } else {
+            holder.unseenIndicator.setVisibility(View.GONE);
+        }
+
+//        holder.icon.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+//        ViewGroup.LayoutParams params = holder.unseenIndicator.getLayoutParams();
+//        Log.d(TAG, "height: " + holder.icon.getMeasuredHeight());
+//        params.height = holder.icon.getMeasuredHeight();
+//        holder.unseenIndicator.setLayoutParams(params);
 
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +118,8 @@ public class ItemListAdapter extends BaseAdapter {
     static class ViewHolder {
         TextView title;
         TextView icon;
+
+        View unseenIndicator;
 
         ViewGroup container;
     }

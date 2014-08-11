@@ -9,7 +9,8 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:paddingRight="8dp">
 
         <de.xikolo.view.CustomFontTextView
             android:id="@+id/textIcon"
@@ -31,12 +32,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/textIcon"
-            android:layout_toRightOf="@+id/textIcon"
             android:layout_centerVertical="true"
-            android:paddingRight="8dp"
+            android:layout_toLeftOf="@+id/unseenIndicator"
+            android:layout_toRightOf="@+id/textIcon"
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textSize="20sp" />
+
+        <View
+            android:id="@+id/unseenIndicator"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/circle"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

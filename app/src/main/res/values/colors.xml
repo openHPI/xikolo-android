@@ -24,4 +24,6 @@
     <color name="gray">#5a6065</color>
     <color name="gray_dark">#474B4F</color>
 
+    <color name="tab_text">#ff666666</color>
+
 </resources>

@@ -1,17 +1,17 @@
 package de.xikolo.controller;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.CookieSyncManager;
+import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -28,7 +28,6 @@ import de.xikolo.model.Course;
 import de.xikolo.model.Item;
 import de.xikolo.model.Module;
 import de.xikolo.util.Network;
-import de.xikolo.util.Path;
 
 public class ModuleActivity extends FragmentActivity {
 
@@ -70,7 +69,6 @@ public class ModuleActivity extends FragmentActivity {
         // Bind the tabs to the ViewPager
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(pager);
-        tabs.setTypeface(Typeface.createFromAsset(getApplication().getAssets(), Path.FONT_XIKOLO), Typeface.NORMAL);
 
         tabs.setOnPageChangeListener(adapter);
 
@@ -119,7 +117,7 @@ public class ModuleActivity extends FragmentActivity {
         CookieSyncManager.getInstance().sync();
     }
 
-    public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
+    public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.TabViewProvider {
 
         private List<Item> mItems;
 
@@ -134,6 +132,25 @@ public class ModuleActivity extends FragmentActivity {
             mItems = items;
             mContext = context;
             mFragmentManager = fm;
+        }
+
+        @Override
+        public View getTabView(int position) {
+            View layout = getLayoutInflater().inflate(R.layout.tab_item, null);
+
+            TextView label = (TextView) layout.findViewById(R.id.tabLabel);
+            View unseenIndicator = layout.findViewById(R.id.unseenIndicator);
+
+            // TODO set progression when unseen
+            if (position % 2 == 0) {
+                unseenIndicator.setVisibility(View.VISIBLE);
+            } else {
+                unseenIndicator.setVisibility(View.GONE);
+            }
+
+            label.setText(getPageTitle(position));
+
+            return layout;
         }
 
         @Override
