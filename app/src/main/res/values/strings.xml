@@ -62,6 +62,7 @@
     <string name="icon_visited">&#xf06e;</string>
     <string name="icon_play">&#xe652;</string>
     <string name="icon_pause">&#xe651;</string>
+    <string name="icon_reload">&#xe65b;</string>
     <string name="icon_fullscreen">&#xe658;</string>
 
     <!-- -->

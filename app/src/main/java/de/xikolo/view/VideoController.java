@@ -58,6 +58,8 @@ public class VideoController {
     private int savedTime = 0;
     private boolean savedIsPlaying = false;
 
+    private boolean seekBarUpdaterIsRunning = false;
+
     public VideoController(Activity activity, View videoContainer) {
         mActivity = activity;
 
@@ -118,14 +120,30 @@ public class VideoController {
                 new Thread(mSeekBarUpdater).start();
             }
         });
+        mVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                pause();
+                mPlayButton.setText(mActivity.getString(R.string.icon_reload));
+                show();
+            }
+        });
 
         mSeekBarUpdater = new Runnable() {
             @Override
             public void run() {
-                mSeekBar.setProgress(mVideo.getCurrentPosition());
-                mCurrentTime.setText(getTimeString(mVideo.getCurrentPosition()));
+                seekBarUpdaterIsRunning = true;
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSeekBar.setProgress(mVideo.getCurrentPosition());
+                        mCurrentTime.setText(getTimeString(mVideo.getCurrentPosition()));
+                    }
+                });
                 if (mVideo.getCurrentPosition() < mVideo.getDuration()) {
                     mSeekBar.postDelayed(this, MILLISECONDS);
+                } else {
+                    seekBarUpdaterIsRunning = false;
                 }
             }
         };
@@ -175,11 +193,18 @@ public class VideoController {
     public void seekTo(int progress) {
         mVideo.seekTo(progress);
         mCurrentTime.setText(getTimeString(progress));
+        mSeekBar.setProgress(progress);
+        if (!seekBarUpdaterIsRunning) {
+            new Thread(mSeekBarUpdater).start();
+        }
     }
 
     public void start() {
         mPlayButton.setText(mActivity.getString(R.string.icon_pause));
         mVideo.start();
+        if (!seekBarUpdaterIsRunning) {
+            new Thread(mSeekBarUpdater).start();
+        }
     }
 
     public void pause() {

@@ -50,7 +50,7 @@ public class ItemAssignment implements Parcelable {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (((Object) this).getClass() != obj.getClass())
             return false;
         ItemAssignment o = (ItemAssignment) obj;
         if (id == null) {

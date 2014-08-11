@@ -55,7 +55,7 @@ public class ItemVideo implements Parcelable {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (((Object) this).getClass() != obj.getClass())
             return false;
         ItemVideo o = (ItemVideo) obj;
         if (id == null) {

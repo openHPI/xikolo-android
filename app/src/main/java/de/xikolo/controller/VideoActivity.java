@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.CookieSyncManager;
 
 import de.xikolo.R;
@@ -75,6 +74,10 @@ public class VideoActivity extends Activity {
                     if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
                         mVideoController.show();
                     }
+                } else {
+                    if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+                        mVideoController.show();
+                    }
                 }
             }
         });
@@ -84,7 +87,7 @@ public class VideoActivity extends Activity {
 
         hideSystemBars();
 
-        if (Build.VERSION.SDK_INT > 16) {
+        if (Build.VERSION.SDK_INT >= 16) {
             Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getRealSize(size);
@@ -113,8 +116,6 @@ public class VideoActivity extends Activity {
         } else {
             uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
                     | View.SYSTEM_UI_FLAG_LOW_PROFILE; // API 14
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         decorView.setSystemUiVisibility(uiOptions);
         mActionBar.hide();
@@ -122,6 +123,16 @@ public class VideoActivity extends Activity {
 
     private void showSystemBars() {
         mActionBar.show();
+        View decorView = getWindow().getDecorView();
+        int uiOptions;
+        if (Build.VERSION.SDK_INT >= 16) {
+            uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE; // API 16
+        } else {
+            uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+        }
+        decorView.setSystemUiVisibility(uiOptions);
     }
 
     @Override
