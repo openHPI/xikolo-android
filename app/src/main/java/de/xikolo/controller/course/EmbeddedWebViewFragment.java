@@ -26,8 +26,8 @@ import java.util.Map;
 
 import de.xikolo.R;
 import de.xikolo.manager.SessionManager;
-import de.xikolo.util.Path;
-import de.xikolo.util.Network;
+import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -104,9 +104,9 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Path.URI_HOST_HPI) || url.contains(Path.URI_HOST_SAP)) {
+                if (url.contains(Config.URI_HOST_HPI) || url.contains(Config.URI_HOST_SAP)) {
                     Map<String, String> header = new HashMap<String, String>();
-                    header.put(Path.HEADER_USER_PLATFORM, Path.HEADER_VALUE_USER_PLATFORM_ANDROID);
+                    header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
                     view.loadUrl(url, header);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -189,7 +189,7 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
 
-        if (Network.isOnline(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
             if (SessionManager.hasSession(getActivity())) {
                 request();
             } else {
@@ -198,19 +198,19 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
         } else {
             mRefreshLayout.setRefreshing(false);
             mProgressBar.setVisibility(ProgressBar.GONE);
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 
     private void request() {
-        if (Network.isOnline(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
             Map<String, String> header = new HashMap<String, String>();
-            header.put(Path.HEADER_USER_PLATFORM, Path.HEADER_VALUE_USER_PLATFORM_ANDROID);
+            header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
             mWebView.loadUrl(mUrl, header);
         } else {
             mRefreshLayout.setRefreshing(false);
             mProgressBar.setVisibility(ProgressBar.GONE);
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 

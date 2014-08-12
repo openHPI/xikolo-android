@@ -10,7 +10,7 @@ import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.course.CourseFragment;
 import de.xikolo.model.Course;
 
-public class CourseActivity extends FragmentActivity {
+public class CourseActivity extends GlobalActivity {
 
     public static final String TAG = CourseActivity.class.getSimpleName();
 

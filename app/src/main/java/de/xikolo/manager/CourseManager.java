@@ -14,9 +14,9 @@ import de.xikolo.R;
 import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Course;
 import de.xikolo.util.BuildType;
-import de.xikolo.util.Network;
-import de.xikolo.util.Path;
-import de.xikolo.util.Toaster;
+import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.ToastUtil;
 
 public abstract class CourseManager {
 
@@ -36,7 +36,7 @@ public abstract class CourseManager {
         Type type = new TypeToken<List<Course>>() {
         }.getType();
 
-        String url = Path.API_SAP + Path.COURSES + "?include_progress=" + includeProgress;
+        String url = Config.API_SAP + Config.COURSES + "?include_progress=" + includeProgress;
 
         JsonRequest request = new JsonRequest(url, type, mContext) {
             @Override
@@ -50,7 +50,7 @@ public abstract class CourseManager {
                     if (BuildConfig.buildType == BuildType.DEBUG)
                         Log.w(TAG, "No Courses received");
                     onCoursesRequestCancelled();
-                    Toaster.show(mContext, mContext.getString(R.string.toast_no_courses)
+                    ToastUtil.show(mContext, mContext.getString(R.string.toast_no_courses)
                             + " " + mContext.getString(R.string.toast_no_network));
                 }
             }
@@ -63,7 +63,7 @@ public abstract class CourseManager {
             }
         };
         request.setCache(cache);
-        if (!Network.isOnline(mContext) && cache) {
+        if (!NetworkUtil.isOnline(mContext) && cache) {
             request.setCacheOnly(true);
         }
         if (includeProgress) {

@@ -13,7 +13,7 @@ import de.xikolo.data.net.JsonRequest;
 import de.xikolo.data.preferences.UserPreferences;
 import de.xikolo.model.User;
 import de.xikolo.util.BuildType;
-import de.xikolo.util.Path;
+import de.xikolo.util.Config;
 
 public abstract class UserManager {
 
@@ -39,7 +39,7 @@ public abstract class UserManager {
 
         Type type = new TypeToken<User>() {
         }.getType();
-        JsonRequest request = new JsonRequest(Path.API_SAP + Path.USER, type, mContext) {
+        JsonRequest request = new JsonRequest(Config.API_SAP + Config.USER, type, mContext) {
             @Override
             public void onRequestReceived(Object o) {
                 if (o != null) {

@@ -1,9 +1,12 @@
 package de.xikolo.util;
 
+import de.xikolo.BuildConfig;
 import de.xikolo.data.preferences.EnrollmentsPreferences;
 import de.xikolo.data.preferences.UserPreferences;
 
-public class Path {
+public class Config {
+
+    public static final boolean DEBUG = BuildConfig.buildType == BuildType.DEBUG;
 
     public static final String FONT = "fonts/";
     public static final String FONT_SANS = FONT + "NeoSansStdRegular.ttf";

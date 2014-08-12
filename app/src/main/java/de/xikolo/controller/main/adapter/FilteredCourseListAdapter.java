@@ -23,7 +23,7 @@ import de.xikolo.R;
 import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
-import de.xikolo.util.DisplaySize;
+import de.xikolo.util.DisplayUtil;
 
 public class FilteredCourseListAdapter extends CourseListAdapter {
 
@@ -144,7 +144,7 @@ public class FilteredCourseListAdapter extends CourseListAdapter {
             Log.w(TAG, "Failed parsing " + course.available_to, e);
         }
         DateFormat dateOut;
-        if (DisplaySize.is7inchTablet(mContext)) {
+        if (DisplayUtil.is7inchTablet(mContext)) {
             dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault());
         } else {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());

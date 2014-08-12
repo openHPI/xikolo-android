@@ -25,8 +25,8 @@ import de.xikolo.manager.EnrollmentManager;
 import de.xikolo.manager.TokenManager;
 import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
-import de.xikolo.util.Network;
-import de.xikolo.util.Toaster;
+import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.ToastUtil;
 
 public class CourseListFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener,
         CourseListAdapter.OnCourseButtonClickListener {
@@ -164,7 +164,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             }
         };
 
-        if (Network.isOnline(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
             if (TokenManager.isLoggedIn(getActivity())) {
                 if (mEnrollments == null) {
                     mRefreshLayout.setRefreshing(true);
@@ -188,7 +188,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 mCourseManager.requestCourses(false, false);
             }
         } else {
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 
@@ -220,14 +220,14 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     @Override
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
-        if (Network.isOnline(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
             if (TokenManager.isLoggedIn(getActivity())) {
                 mEnrollmentManager.requestEnrollments(false);
             }
             mCourseManager.requestCourses(false, false);
         } else {
             mRefreshLayout.setRefreshing(false);
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 
@@ -236,7 +236,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         if (TokenManager.isLoggedIn(getActivity())) {
             mEnrollmentManager.createEnrollment(course.id);
         } else {
-            Toaster.show(getActivity(), R.string.toast_please_log_in);
+            ToastUtil.show(getActivity(), R.string.toast_please_log_in);
             mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
         }
     }
@@ -250,7 +250,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             intent.putExtras(b);
             startActivity(intent);
         } else {
-            Toaster.show(getActivity(), R.string.toast_please_log_in);
+            ToastUtil.show(getActivity(), R.string.toast_please_log_in);
             mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
         }
     }

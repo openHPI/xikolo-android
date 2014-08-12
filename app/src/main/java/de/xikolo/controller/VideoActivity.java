@@ -1,7 +1,6 @@
 package de.xikolo.controller;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -14,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.webkit.CookieSyncManager;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
@@ -23,11 +21,9 @@ import de.xikolo.model.Item;
 import de.xikolo.model.ItemVideo;
 import de.xikolo.view.VideoController;
 
-public class VideoActivity extends Activity {
+public class VideoActivity extends GlobalActivity {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
-
-    private View mVideoContainer;
 
     private VideoController mVideoController;
 
@@ -41,9 +37,9 @@ public class VideoActivity extends Activity {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_video);
 
-        mVideoContainer = findViewById(R.id.videoContainer);
+        View videoContainer = findViewById(R.id.videoContainer);
 
-        mVideoController = new VideoController(this, mVideoContainer);
+        mVideoController = new VideoController(this, videoContainer);
         mVideoController.setControllerListener(new VideoController.ControllerListener() {
             @Override
             public void onControllerShow() {
@@ -154,18 +150,6 @@ public class VideoActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        CookieSyncManager.getInstance().startSync();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        CookieSyncManager.getInstance().sync();
     }
 
     @Override

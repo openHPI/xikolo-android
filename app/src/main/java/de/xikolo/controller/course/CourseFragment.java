@@ -21,7 +21,7 @@ import de.xikolo.controller.course.dialog.UnenrollDialog;
 import de.xikolo.manager.EnrollmentManager;
 import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
-import de.xikolo.util.Path;
+import de.xikolo.util.Config;
 import eu.inmite.android.lib.dialogs.ISimpleDialogListener;
 
 public class CourseFragment extends Fragment implements ISimpleDialogListener {
@@ -147,16 +147,16 @@ public class CourseFragment extends Fragment implements ISimpleDialogListener {
                         fragment = CourseLearningsFragment.newInstance(mCourse);
                         break;
                     case 1:
-                        fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.DISCUSSIONS);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI_SAP + Config.COURSES + mCourse.id + "/" + Config.DISCUSSIONS);
                         break;
                     case 2:
                         fragment = ProgressFragment.newInstance(mCourse);
                         break;
                     case 3:
-                        fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.ANNOUNCEMENTS);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI_SAP + Config.COURSES + mCourse.id + "/" + Config.ANNOUNCEMENTS);
                         break;
                     case 4:
-                        fragment = EmbeddedWebViewFragment.newInstance(Path.URI_SAP + Path.COURSES + mCourse.id + "/" + Path.ROOMS);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI_SAP + Config.COURSES + mCourse.id + "/" + Config.ROOMS);
                         break;
                     case 5:
                         fragment = EmbeddedWebViewFragment.newInstance(mCourse.url);

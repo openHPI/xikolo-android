@@ -13,7 +13,7 @@ import de.xikolo.BuildConfig;
 import de.xikolo.data.net.HttpConnectionRequest;
 import de.xikolo.data.net.HttpRequest;
 import de.xikolo.util.BuildType;
-import de.xikolo.util.Path;
+import de.xikolo.util.Config;
 
 public abstract class SessionManager {
 
@@ -36,7 +36,7 @@ public abstract class SessionManager {
         if (BuildConfig.buildType == BuildType.DEBUG)
             Log.i(TAG, "createSession() called");
 
-        HttpRequest request = new HttpConnectionRequest(Path.URI_SAP + Path.LOGIN, mContext) {
+        HttpRequest request = new HttpConnectionRequest(Config.URI_SAP + Config.LOGIN, mContext) {
             @Override
             public void onRequestReceived(Object o) {
                 HttpsURLConnection conn = (HttpsURLConnection) o;
@@ -58,7 +58,7 @@ public abstract class SessionManager {
         };
         request.setCache(false);
         request.setToken(TokenManager.getAccessToken(mContext));
-        request.setMethod(Path.HTTP_POST);
+        request.setMethod(Config.HTTP_POST);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

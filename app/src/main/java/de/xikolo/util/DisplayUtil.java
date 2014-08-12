@@ -3,7 +3,7 @@ package de.xikolo.util;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
-public class DisplaySize {
+public class DisplayUtil {
 
     public static boolean is7inchTablet(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();

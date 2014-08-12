@@ -3,14 +3,12 @@ package de.xikolo.controller;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.CookieSyncManager;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -27,9 +25,9 @@ import de.xikolo.manager.ProgressionManager;
 import de.xikolo.model.Course;
 import de.xikolo.model.Item;
 import de.xikolo.model.Module;
-import de.xikolo.util.Network;
+import de.xikolo.util.NetworkUtil;
 
-public class ModuleActivity extends FragmentActivity {
+public class ModuleActivity extends GlobalActivity {
 
     public static final String TAG = ModuleActivity.class.getSimpleName();
 
@@ -75,12 +73,12 @@ public class ModuleActivity extends FragmentActivity {
         if (mItem != null) {
             pager.setCurrentItem(mModule.items.indexOf(mItem), false);
             if (mModule.items.indexOf(mItem) == 0) {
-                if (Network.isOnline(this)) {
+                if (NetworkUtil.isOnline(this)) {
                     mProgressionManager.updateProgression(mModule.items.get(0).id);
                 }
             }
         } else {
-            if (Network.isOnline(this)) {
+            if (NetworkUtil.isOnline(this)) {
                 mProgressionManager.updateProgression(mModule.items.get(0).id);
             }
         }
@@ -103,18 +101,6 @@ public class ModuleActivity extends FragmentActivity {
 //            return true;
 //        }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        CookieSyncManager.getInstance().startSync();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        CookieSyncManager.getInstance().sync();
     }
 
     public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.TabViewProvider {
@@ -206,7 +192,7 @@ public class ModuleActivity extends FragmentActivity {
 
         @Override
         public void onPageSelected(int position) {
-            if (Network.isOnline(mContext)) {
+            if (NetworkUtil.isOnline(mContext)) {
                 mProgressionManager.updateProgression(mItems.get(position).id);
             }
 
@@ -222,6 +208,7 @@ public class ModuleActivity extends FragmentActivity {
             PagerFragment fragment = (PagerFragment) getItem(lastPosition);
             fragment.pageScrolling(state);
         }
+
     }
 
 }

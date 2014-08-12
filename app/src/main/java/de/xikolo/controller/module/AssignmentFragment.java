@@ -33,8 +33,8 @@ import de.xikolo.model.ItemAssignment;
 import de.xikolo.model.Course;
 import de.xikolo.model.Item;
 import de.xikolo.model.Module;
-import de.xikolo.util.Path;
-import de.xikolo.util.Network;
+import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public class AssignmentFragment extends PagerFragment<ItemAssignment> {
 
@@ -88,9 +88,9 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Path.URI_HOST_HPI) || url.contains(Path.URI_HOST_SAP)) {
+                if (url.contains(Config.URI_HOST_HPI) || url.contains(Config.URI_HOST_SAP)) {
                     Map<String, String> header = new HashMap<String, String>();
-                    header.put(Path.HEADER_USER_PLATFORM, Path.HEADER_VALUE_USER_PLATFORM_ANDROID);
+                    header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
                     view.loadUrl(url, header);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -141,12 +141,12 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
     public void onStart() {
         super.onStart();
 
-        if (Network.isOnline(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
             Type type = new TypeToken<Item<ItemAssignment>>() {
             }.getType();
             mItemManager.requestItemDetail(mCourse, mModule, mItem, type, true);
         } else {
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 
@@ -169,16 +169,16 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
     public void request() {
         Log.d(TAG, "request");
 
-        if (Network.isOnline(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
             if (SessionManager.hasSession(getActivity())) {
                 Map<String, String> header = new HashMap<String, String>();
-                header.put(Path.HEADER_USER_PLATFORM, Path.HEADER_VALUE_USER_PLATFORM_ANDROID);
+                header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
                 mWebView.loadUrl(mItem.object.url, header);
             } else {
                 mSessionManager.createSession();
             }
         } else {
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 

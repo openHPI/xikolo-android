@@ -28,7 +28,7 @@ import de.xikolo.model.Course;
 import de.xikolo.model.Item;
 import de.xikolo.model.ItemText;
 import de.xikolo.model.Module;
-import de.xikolo.util.Network;
+import de.xikolo.util.NetworkUtil;
 
 public class TextFragment extends PagerFragment<ItemText> {
 
@@ -116,12 +116,12 @@ public class TextFragment extends PagerFragment<ItemText> {
     public void onStart() {
         super.onStart();
 
-        if (Network.isOnline(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
             Type type = new TypeToken<Item<ItemText>>() {
             }.getType();
             mItemManager.requestItemDetail(mCourse, mModule, mItem, type, true);
         } else {
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 

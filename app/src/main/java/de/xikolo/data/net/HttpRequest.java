@@ -13,8 +13,8 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import de.xikolo.util.Path;
-import de.xikolo.util.Network;
+import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
 
@@ -35,7 +35,7 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
         this.mUrl = url;
         this.mContext = context;
         this.mToken = null;
-        this.mMethod = Path.HTTP_GET;
+        this.mMethod = Config.HTTP_GET;
         this.mCache = true;
         this.mCacheOnly = false;
     }
@@ -58,8 +58,8 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
 
     @Override
     protected void onPreExecute() {
-        if (!Network.isOnline(mContext) && !mCacheOnly) {
-            Network.showNoConnectionToast(mContext);
+        if (!NetworkUtil.isOnline(mContext) && !mCacheOnly) {
+            NetworkUtil.showNoConnectionToast(mContext);
             cancel(true);
         }
     }
@@ -99,16 +99,16 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
             URL url = new URL(mUrl);
             urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setRequestMethod(mMethod);
-            urlConnection.addRequestProperty(Path.HEADER_ACCEPT, Path.HEADER_VALUE_ACCEPT_SAP);
-            urlConnection.addRequestProperty(Path.HEADER_USER_PLATFORM, Path.HEADER_VALUE_USER_PLATFORM_ANDROID);
+            urlConnection.addRequestProperty(Config.HEADER_ACCEPT, Config.HEADER_VALUE_ACCEPT_SAP);
+            urlConnection.addRequestProperty(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
 
             if (mCacheOnly) {
-                urlConnection.addRequestProperty(Path.HEADER_CACHE_CONTROL, Path.HEADER_VALUE_ONLY_CACHE);
+                urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_VALUE_ONLY_CACHE);
             } else if (!mCache) {
-                urlConnection.addRequestProperty(Path.HEADER_CACHE_CONTROL, Path.HEADER_VALUE_NO_CACHE);
+                urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_VALUE_NO_CACHE);
             }
             if (mToken != null) {
-                urlConnection.addRequestProperty(Path.HEADER_AUTHORIZATION, "Token token=\"" + mToken + "\"");
+                urlConnection.addRequestProperty(Config.HEADER_AUTHORIZATION, "Token token=\"" + mToken + "\"");
             }
 
             final int statusCode = urlConnection.getResponseCode();

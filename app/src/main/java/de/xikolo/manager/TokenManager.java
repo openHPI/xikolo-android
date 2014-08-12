@@ -14,7 +14,7 @@ import de.xikolo.data.net.JsonRequest;
 import de.xikolo.data.preferences.UserPreferences;
 import de.xikolo.model.AccessToken;
 import de.xikolo.util.BuildType;
-import de.xikolo.util.Path;
+import de.xikolo.util.Config;
 
 public abstract class TokenManager {
 
@@ -56,7 +56,7 @@ public abstract class TokenManager {
 
         String query = "?email=" + email + "&password=" + password;
 
-        JsonRequest request = new JsonRequest(Path.API_SAP + Path.AUTHENTICATE + query, type, mContext) {
+        JsonRequest request = new JsonRequest(Config.API_SAP + Config.AUTHENTICATE + query, type, mContext) {
             @Override
             public void onRequestReceived(Object o) {
                 if (o != null) {
@@ -81,7 +81,7 @@ public abstract class TokenManager {
         };
         request.setCache(false);
         request.setToken(getAccessToken(mContext));
-        request.setMethod(Path.HTTP_POST);
+        request.setMethod(Config.HTTP_POST);
         request.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

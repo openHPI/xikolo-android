@@ -34,9 +34,9 @@ import de.xikolo.model.AccessToken;
 import de.xikolo.model.Course;
 import de.xikolo.model.Enrollment;
 import de.xikolo.model.User;
-import de.xikolo.util.Network;
-import de.xikolo.util.Path;
-import de.xikolo.util.Toaster;
+import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.ToastUtil;
 import de.xikolo.view.CircularImageView;
 import de.xikolo.view.CustomSizeImageView;
 
@@ -204,7 +204,7 @@ public class ProfileFragment extends ContentFragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toaster.show(getActivity(), R.string.toast_log_in_failed);
+                        ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
                         mContainerLogin.setVisibility(View.VISIBLE);
                         mProgress.setVisibility(View.GONE);
                     }
@@ -215,7 +215,7 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                if (Network.isOnline(getActivity())) {
+                if (NetworkUtil.isOnline(getActivity())) {
                     String email = mEditEmail.getText().toString().trim();
                     String password = mEditPassword.getText().toString();
                     if (isEmailValid(email)) {
@@ -230,7 +230,7 @@ public class ProfileFragment extends ContentFragment {
                         mEditEmail.setError(getString(R.string.error_email));
                     }
                 } else {
-                    Network.showNoConnectionToast(getActivity());
+                    NetworkUtil.showNoConnectionToast(getActivity());
                 }
             }
         });
@@ -238,14 +238,14 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                startUrlIntent(Path.URI_HPI + Path.ACCOUNT + Path.NEW);
+                startUrlIntent(Config.URI_HPI + Config.ACCOUNT + Config.NEW);
             }
         });
         mTextReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                startUrlIntent(Path.URI_HPI + Path.ACCOUNT + Path.RESET);
+                startUrlIntent(Config.URI_HPI + Config.ACCOUNT + Config.RESET);
             }
         });
         mBtnLogout.setOnClickListener(new View.OnClickListener() {
@@ -269,7 +269,7 @@ public class ProfileFragment extends ContentFragment {
     public void onStart() {
         super.onStart();
         switchHeader();
-        if (TokenManager.isLoggedIn(getActivity()) && Network.isOnline(getActivity())) {
+        if (TokenManager.isLoggedIn(getActivity()) && NetworkUtil.isOnline(getActivity())) {
             userManager.requestUser();
             if (mEnrollments != null && mCourses != null) {
                 mAdapter.updateEnrollments(mEnrollments);

@@ -27,7 +27,7 @@ import de.xikolo.model.Course;
 import de.xikolo.model.Item;
 import de.xikolo.model.ItemVideo;
 import de.xikolo.model.Module;
-import de.xikolo.util.Network;
+import de.xikolo.util.NetworkUtil;
 import de.xikolo.view.VideoController;
 
 public class VideoFragment extends PagerFragment<ItemVideo> {
@@ -155,12 +155,12 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
         super.onStart();
 
         if (!wasSaved) {
-            if (Network.isOnline(getActivity())) {
+            if (NetworkUtil.isOnline(getActivity())) {
                 Type type = new TypeToken<Item<ItemVideo>>() {
                 }.getType();
                 mItemManager.requestItemDetail(mCourse, mModule, mItem, type, true);
             } else {
-                Network.showNoConnectionToast(getActivity());
+                NetworkUtil.showNoConnectionToast(getActivity());
             }
         } else {
             setupVideo();

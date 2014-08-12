@@ -6,7 +6,7 @@ import android.net.NetworkInfo;
 
 import de.xikolo.R;
 
-public class Network {
+public class NetworkUtil {
 
     public static int TYPE_NOT_CONNECTED = 0;
     public static int TYPE_WIFI = 1;
@@ -42,7 +42,7 @@ public class Network {
     }
 
     public static void showNoConnectionToast(Context context) {
-        Toaster.show(context, R.string.toast_no_network);
+        ToastUtil.show(context, R.string.toast_no_network);
     }
 
 }

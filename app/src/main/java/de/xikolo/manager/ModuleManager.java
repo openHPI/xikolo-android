@@ -14,8 +14,8 @@ import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Course;
 import de.xikolo.model.Module;
 import de.xikolo.util.BuildType;
-import de.xikolo.util.Network;
-import de.xikolo.util.Path;
+import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public abstract class ModuleManager {
 
@@ -35,8 +35,8 @@ public abstract class ModuleManager {
         Type type = new TypeToken<List<Module>>() {
         }.getType();
 
-        String url = Path.API_SAP + Path.COURSES + course.id + "/"
-                + Path.MODULES + "?include_progress=" + includeProgress;
+        String url = Config.API_SAP + Config.COURSES + course.id + "/"
+                + Config.MODULES + "?include_progress=" + includeProgress;
 
         JsonRequest request = new JsonRequest(url, type, mContext) {
             @Override
@@ -61,7 +61,7 @@ public abstract class ModuleManager {
             }
         };
         request.setCache(cache);
-        if (!Network.isOnline(mContext) && cache) {
+        if (!NetworkUtil.isOnline(mContext) && cache) {
             request.setCacheOnly(true);
         }
         request.setToken(TokenManager.getAccessToken(mContext));
