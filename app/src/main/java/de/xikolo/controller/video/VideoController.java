@@ -1,4 +1,4 @@
-package de.xikolo.view;
+package de.xikolo.controller.video;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 import java.util.concurrent.TimeUnit;
 
 import de.xikolo.R;
+import de.xikolo.view.CustomFontTextView;
+import de.xikolo.view.CustomSizeVideoView;
 
 public class VideoController {
 

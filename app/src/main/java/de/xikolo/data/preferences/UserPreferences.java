@@ -3,8 +3,8 @@ package de.xikolo.data.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import de.xikolo.model.AccessToken;
-import de.xikolo.model.User;
+import de.xikolo.entities.AccessToken;
+import de.xikolo.entities.User;
 import de.xikolo.util.Config;
 
 public class UserPreferences {

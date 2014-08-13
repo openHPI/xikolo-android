@@ -14,17 +14,15 @@ import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 
-import java.util.List;
-
 import de.xikolo.R;
+import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.course.dialog.UnenrollDialog;
-import de.xikolo.manager.EnrollmentManager;
-import de.xikolo.model.Course;
-import de.xikolo.model.Enrollment;
+import de.xikolo.model.EnrollmentModel;
+import de.xikolo.entities.Course;
 import de.xikolo.util.Config;
 import eu.inmite.android.lib.dialogs.ISimpleDialogListener;
 
-public class CourseFragment extends Fragment implements ISimpleDialogListener {
+public class CourseFragment extends BaseFragment implements ISimpleDialogListener {
 
     public final static String TAG = CourseFragment.class.getSimpleName();
 
@@ -91,15 +89,7 @@ public class CourseFragment extends Fragment implements ISimpleDialogListener {
 
     @Override
     public void onPositiveButtonClicked(int i) {
-        EnrollmentManager manager = new EnrollmentManager(getActivity()) {
-            @Override
-            public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {
-            }
-
-            @Override
-            public void onEnrollmentsRequestCancelled() {
-            }
-        };
+        EnrollmentModel manager = new EnrollmentModel(getActivity(), jobManager);
         manager.deleteEnrollment(mCourse.id);
         getActivity().finish();
     }

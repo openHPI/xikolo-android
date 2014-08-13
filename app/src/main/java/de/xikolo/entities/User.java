@@ -1,4 +1,4 @@
-package de.xikolo.model;
+package de.xikolo.entities;
 
 import com.google.gson.annotations.SerializedName;
 

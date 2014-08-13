@@ -20,19 +20,17 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.xikolo.R;
-import de.xikolo.manager.ItemDetailManager;
-import de.xikolo.manager.SessionManager;
-import de.xikolo.model.ItemAssignment;
-import de.xikolo.model.Course;
-import de.xikolo.model.Item;
-import de.xikolo.model.Module;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Item;
+import de.xikolo.entities.ItemAssignment;
+import de.xikolo.entities.Module;
+import de.xikolo.model.ItemModel;
+import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 
@@ -43,9 +41,9 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
     private WebView mWebView;
     private ProgressBar mProgressBar;
 
-    private ItemDetailManager mItemManager;
+    private ItemModel mItemModel;
 
-    private SessionManager mSessionManager;
+    private UserModel mUserModel;
 
     public AssignmentFragment() {
 
@@ -53,6 +51,44 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
 
     public static PagerFragment newInstance(Course course, Module module, Item item) {
         return PagerFragment.newInstance(new AssignmentFragment(), course, module, item);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mItemModel = new ItemModel(getActivity(), jobManager);
+        mItemModel.setRetrieveItemDetailListener(new OnModelResponseListener<Item>() {
+            @Override
+            public void onResponse(final Item response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response != null) {
+                            mItem = response;
+                            request();
+                        }
+                    }
+                });
+            }
+        });
+
+        mUserModel = new UserModel(getActivity(), jobManager);
+        mUserModel.setCreateSessionListener(new OnModelResponseListener<Void>() {
+            @Override
+            public void onResponse(Void response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (UserModel.hasSession()) {
+                            request();
+                        } else {
+                            mUserModel.createSession();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -111,29 +147,6 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
             }
         });
 
-        mItemManager = new ItemDetailManager(getActivity()) {
-            @Override
-            public void onItemDetailRequestReceived(Item item) {
-                mItem = item;
-                request();
-            }
-
-            @Override
-            public void onItemDetailRequestCancelled() {
-            }
-        };
-
-        mSessionManager = new SessionManager(getActivity()) {
-            @Override
-            public void onSessionRequestReceived() {
-                request();
-            }
-
-            @Override
-            public void onSessionRequestCancelled() {
-            }
-        };
-
         return layout;
     }
 
@@ -142,9 +155,7 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
         super.onStart();
 
         if (NetworkUtil.isOnline(getActivity())) {
-            Type type = new TypeToken<Item<ItemAssignment>>() {
-            }.getType();
-            mItemManager.requestItemDetail(mCourse, mModule, mItem, type, true);
+            mItemModel.retrieveItemDetail(mCourse.id, mModule.id, mItem.id, Item.TYPE_ASSIGNMENT, true);
         } else {
             NetworkUtil.showNoConnectionToast(getActivity());
         }
@@ -170,12 +181,12 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
         Log.d(TAG, "request");
 
         if (NetworkUtil.isOnline(getActivity())) {
-            if (SessionManager.hasSession(getActivity())) {
+            if (UserModel.hasSession()) {
                 Map<String, String> header = new HashMap<String, String>();
                 header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
                 mWebView.loadUrl(mItem.object.url, header);
             } else {
-                mSessionManager.createSession();
+                mUserModel.createSession();
             }
         } else {
             NetworkUtil.showNoConnectionToast(getActivity());

@@ -25,7 +25,8 @@ import java.util.Map;
 
 import de.xikolo.R;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.manager.SessionManager;
+import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 
@@ -47,7 +48,7 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     private WebView mWebView;
     private ProgressBar mProgressBar;
 
-    private SessionManager mSessionManager;
+    private UserModel mUserModel;
 
     public WebViewFragment() {
         // Required empty public constructor
@@ -72,6 +73,23 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
             mTitle = getArguments().getString(ARG_TITLE);
         }
         setHasOptionsMenu(true);
+
+        mUserModel = new UserModel(getActivity(), jobManager);
+        mUserModel.setCreateSessionListener(new OnModelResponseListener<Void>() {
+            @Override
+            public void onResponse(Void response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (UserModel.hasSession()) {
+                            request();
+                        } else {
+                            mUserModel.createSession();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -153,17 +171,6 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
                 R.color.orange);
         mRefreshLayout.setOnRefreshListener(this);
 
-        mSessionManager = new SessionManager(getActivity()) {
-            @Override
-            public void onSessionRequestReceived() {
-                request();
-            }
-
-            @Override
-            public void onSessionRequestCancelled() {
-            }
-        };
-
         onRefresh();
 
         return layout;
@@ -212,10 +219,10 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
         mRefreshLayout.setRefreshing(true);
 
         if (NetworkUtil.isOnline(getActivity())) {
-            if (SessionManager.hasSession(getActivity())) {
+            if (UserModel.hasSession()) {
                 request();
             } else {
-                mSessionManager.createSession();
+                mUserModel.createSession();
             }
         } else {
             mRefreshLayout.setRefreshing(false);

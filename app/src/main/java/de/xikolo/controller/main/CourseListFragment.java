@@ -20,11 +20,12 @@ import de.xikolo.controller.CourseActivity;
 import de.xikolo.controller.main.adapter.CourseListAdapter;
 import de.xikolo.controller.main.adapter.FilteredCourseListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.manager.CourseManager;
-import de.xikolo.manager.EnrollmentManager;
-import de.xikolo.manager.TokenManager;
-import de.xikolo.model.Course;
-import de.xikolo.model.Enrollment;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Enrollment;
+import de.xikolo.model.CourseModel;
+import de.xikolo.model.EnrollmentModel;
+import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
@@ -48,11 +49,11 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     private View mNotification;
     private TextView mTextNotification;
 
-    private CourseManager mCourseManager;
-    private EnrollmentManager mEnrollmentManager;
-
     private List<Course> mCourses;
     private List<Enrollment> mEnrollments;
+
+    private CourseModel mCourseModel;
+    private EnrollmentModel mEnrollmentModel;
 
     public CourseListFragment() {
         // Required empty public constructor
@@ -77,6 +78,44 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             mEnrollments = savedInstanceState.getParcelableArrayList(KEY_ENROLLMENTS);
         }
         setHasOptionsMenu(true);
+
+        mCourseModel = new CourseModel(getActivity(), jobManager);
+        mCourseModel.setRetrieveCoursesListener(new OnModelResponseListener<List<Course>>() {
+            @Override
+            public void onResponse(final List<Course> response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response != null) {
+                            mCourses = response;
+                            updateView();
+                        } else {
+                            mRefreshLayout.setRefreshing(false);
+                            ToastUtil.show(getActivity(), getActivity().getString(R.string.toast_no_courses)
+                                    + " " + getActivity().getString(R.string.toast_no_network));
+                        }
+                    }
+                });
+            }
+        });
+
+        mEnrollmentModel = new EnrollmentModel(getActivity(), jobManager);
+        mEnrollmentModel.setRetrieveEnrollmentsListener(new OnModelResponseListener<List<Enrollment>>() {
+            @Override
+            public void onResponse(final List<Enrollment> response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response != null) {
+                            mEnrollments = response;
+                            updateView();
+                        } else {
+                            mRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -122,7 +161,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
         } else if (mFilter.equals(FILTER_MY)) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
-            if (!TokenManager.isLoggedIn(getActivity())) {
+            if (!UserModel.isLoggedIn(getActivity())) {
                 mNotification.setVisibility(View.VISIBLE);
                 mTextNotification.setText(getString(R.string.notification_please_login));
                 mNotification.setOnClickListener(new View.OnClickListener() {
@@ -134,45 +173,15 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             }
         }
 
-        mCourseManager = new CourseManager(getActivity()) {
-            @Override
-            public void onCoursesRequestReceived(List<Course> courses) {
-                if (courses != null) {
-                    mCourses = courses;
-                    updateView();
-                }
-            }
-
-            @Override
-            public void onCoursesRequestCancelled() {
-                mRefreshLayout.setRefreshing(false);
-            }
-        };
-
-        mEnrollmentManager = new EnrollmentManager(getActivity()) {
-            @Override
-            public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {
-                if (enrolls != null) {
-                    mEnrollments = enrolls;
-                    updateView();
-                }
-            }
-
-            @Override
-            public void onEnrollmentsRequestCancelled() {
-                mRefreshLayout.setRefreshing(false);
-            }
-        };
-
         if (NetworkUtil.isOnline(getActivity())) {
-            if (TokenManager.isLoggedIn(getActivity())) {
+            if (UserModel.isLoggedIn(getActivity())) {
                 if (mEnrollments == null) {
                     mRefreshLayout.setRefreshing(true);
-                    mEnrollmentManager.requestEnrollments(false);
+                    mEnrollmentModel.retrieveEnrollments(true);
                 } else {
                     mCourseListAdapter.updateEnrollments(mEnrollments);
                     mRefreshLayout.setRefreshing(true);
-                    mEnrollmentManager.requestEnrollments(false);
+                    mEnrollmentModel.retrieveEnrollments(true);
                 }
             } else {
                 mEnrollments = null;
@@ -181,11 +190,11 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
             if (mCourses == null) {
                 mRefreshLayout.setRefreshing(true);
-                mCourseManager.requestCourses(false, false);
+                mCourseModel.retrieveCourses(true, false);
             } else {
                 mCourseListAdapter.updateCourses(mCourses);
                 mRefreshLayout.setRefreshing(true);
-                mCourseManager.requestCourses(false, false);
+                mCourseModel.retrieveCourses(true, false);
             }
         } else {
             NetworkUtil.showNoConnectionToast(getActivity());
@@ -221,10 +230,10 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
         if (NetworkUtil.isOnline(getActivity())) {
-            if (TokenManager.isLoggedIn(getActivity())) {
-                mEnrollmentManager.requestEnrollments(false);
+            if (UserModel.isLoggedIn(getActivity())) {
+                mEnrollmentModel.retrieveEnrollments(false);
             }
-            mCourseManager.requestCourses(false, false);
+            mCourseModel.retrieveCourses(false, false);
         } else {
             mRefreshLayout.setRefreshing(false);
             NetworkUtil.showNoConnectionToast(getActivity());
@@ -233,8 +242,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     @Override
     public void onEnrollButtonClicked(Course course) {
-        if (TokenManager.isLoggedIn(getActivity())) {
-            mEnrollmentManager.createEnrollment(course.id);
+        if (UserModel.isLoggedIn(getActivity())) {
+            mEnrollmentModel.createEnrollment(course.id);
         } else {
             ToastUtil.show(getActivity(), R.string.toast_please_log_in);
             mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
@@ -243,7 +252,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     @Override
     public void onEnterButtonClicked(Course course) {
-        if (TokenManager.isLoggedIn(getActivity())) {
+        if (UserModel.isLoggedIn(getActivity())) {
             Intent intent = new Intent(getActivity(), CourseActivity.class);
             Bundle b = new Bundle();
             b.putParcelable(CourseActivity.ARG_COURSE, course);

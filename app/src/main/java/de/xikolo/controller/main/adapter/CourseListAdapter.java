@@ -4,8 +4,8 @@ import android.widget.BaseAdapter;
 
 import java.util.List;
 
-import de.xikolo.model.Course;
-import de.xikolo.model.Enrollment;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Enrollment;
 
 public abstract class CourseListAdapter extends BaseAdapter {
 

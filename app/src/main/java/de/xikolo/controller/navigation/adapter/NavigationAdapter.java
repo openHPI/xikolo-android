@@ -15,9 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.manager.EnrollmentManager;
-import de.xikolo.manager.TokenManager;
-import de.xikolo.manager.UserManager;
+import de.xikolo.model.EnrollmentModel;
+import de.xikolo.model.UserModel;
 import de.xikolo.view.CircularImageView;
 
 public class NavigationAdapter extends BaseAdapter {
@@ -97,15 +96,15 @@ public class NavigationAdapter extends BaseAdapter {
         Element element = (Element) getItem(i);
         holder.icon.setText(element.icon);
 
-        if (i == NAV_ID_PROFILE && TokenManager.isLoggedIn(mContext)) {
+        if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mContext)) {
             holder.containerLogin.setVisibility(View.GONE);
             holder.containerProfile.setVisibility(View.VISIBLE);
-            holder.name.setText(UserManager.getUser(mContext).name);
-            holder.email.setText(UserManager.getUser(mContext).email);
+            holder.name.setText(UserModel.readUser(mContext).name);
+            holder.email.setText(UserModel.readUser(mContext).email);
             if (holder.img.getDrawable() == null) {
                 ImageLoader.getInstance().displayImage("drawable://" + R.drawable.avatar, holder.img);
             }
-        } else if (i == NAV_ID_PROFILE && !TokenManager.isLoggedIn(mContext)) {
+        } else if (i == NAV_ID_PROFILE && !UserModel.isLoggedIn(mContext)) {
             holder.containerLogin.setVisibility(View.VISIBLE);
             holder.containerProfile.setVisibility(View.GONE);
             holder.label.setText(element.label);
@@ -114,7 +113,7 @@ public class NavigationAdapter extends BaseAdapter {
         }
 
         if (i == ((ListView) viewGroup).getCheckedItemPosition()) {
-            if (i == NAV_ID_PROFILE && TokenManager.isLoggedIn(mContext)) {
+            if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mContext)) {
                 holder.name.setTextColor(mContext.getResources().getColor(R.color.orange));
                 holder.email.setTextColor(mContext.getResources().getColor(R.color.orange));
             } else {
@@ -122,7 +121,7 @@ public class NavigationAdapter extends BaseAdapter {
                 holder.label.setTextColor(mContext.getResources().getColor(R.color.orange));
             }
         } else {
-            if (i == NAV_ID_PROFILE && TokenManager.isLoggedIn(mContext)) {
+            if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mContext)) {
                 holder.name.setTextColor(mContext.getResources().getColor(R.color.white));
                 holder.email.setTextColor(mContext.getResources().getColor(R.color.white));
             } else {
@@ -131,15 +130,15 @@ public class NavigationAdapter extends BaseAdapter {
             }
         }
 
-        if (i == NAV_ID_MY_COURSES && TokenManager.isLoggedIn(mContext)) {
-            int size = EnrollmentManager.getEnrollmentsSize(mContext);
+        if (i == NAV_ID_MY_COURSES && UserModel.isLoggedIn(mContext)) {
+            int size = EnrollmentModel.readEnrollmentsSize(mContext);
             holder.counter.setText(String.valueOf(size));
             if (size > 0) {
                 holder.counter.setVisibility(View.VISIBLE);
             } else {
                 holder.counter.setVisibility(View.GONE);
             }
-        } else if (i == NAV_ID_MY_COURSES && !TokenManager.isLoggedIn(mContext)) {
+        } else if (i == NAV_ID_MY_COURSES && !UserModel.isLoggedIn(mContext)) {
             holder.counter.setText(String.valueOf(0));
             holder.counter.setVisibility(View.GONE);
         }

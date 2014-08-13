@@ -1,11 +1,11 @@
-package de.xikolo.model;
+package de.xikolo.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ItemVideo implements Parcelable {
+public class ItemAssignment implements Parcelable {
 
     @SerializedName("id")
     public String id;
@@ -13,14 +13,11 @@ public class ItemVideo implements Parcelable {
     @SerializedName("title")
     public String title;
 
-    @SerializedName("description")
-    public String description;
+    @SerializedName("question_count")
+    public int question_count;
 
-    @SerializedName("minutes")
-    public String minutes;
-
-    @SerializedName("seconds")
-    public String seconds;
+    @SerializedName("points_possible")
+    public int points_possible;
 
     @SerializedName("url")
     public String url;
@@ -34,18 +31,16 @@ public class ItemVideo implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
         parcel.writeString(title);
-        parcel.writeString(description);
-        parcel.writeString(minutes);
-        parcel.writeString(seconds);
+        parcel.writeInt(question_count);
+        parcel.writeInt(points_possible);
         parcel.writeString(url);
     }
 
-    public ItemVideo(Parcel in) {
+    public ItemAssignment(Parcel in) {
         id = in.readString();
         title = in.readString();
-        description = in.readString();
-        minutes = in.readString();
-        seconds = in.readString();
+        question_count = in.readInt();
+        points_possible = in.readInt();
         url = in.readString();
     }
 
@@ -57,7 +52,7 @@ public class ItemVideo implements Parcelable {
             return false;
         if (((Object) this).getClass() != obj.getClass())
             return false;
-        ItemVideo o = (ItemVideo) obj;
+        ItemAssignment o = (ItemAssignment) obj;
         if (id == null) {
             if (o.id != null)
                 return false;
@@ -74,13 +69,13 @@ public class ItemVideo implements Parcelable {
         return result;
     }
 
-    public static final Creator<ItemVideo> CREATOR = new Creator<ItemVideo>() {
-        public ItemVideo createFromParcel(Parcel in) {
-            return new ItemVideo(in);
+    public static final Creator<ItemAssignment> CREATOR = new Creator<ItemAssignment>() {
+        public ItemAssignment createFromParcel(Parcel in) {
+            return new ItemAssignment(in);
         }
 
-        public ItemVideo[] newArray(int size) {
-            return new ItemVideo[size];
+        public ItemAssignment[] newArray(int size) {
+            return new ItemAssignment[size];
         }
     };
 

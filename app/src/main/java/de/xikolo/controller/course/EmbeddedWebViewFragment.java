@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,11 +24,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.xikolo.R;
-import de.xikolo.manager.SessionManager;
+import de.xikolo.controller.BaseFragment;
+import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 
-public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class EmbeddedWebViewFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = EmbeddedWebViewFragment.class.getSimpleName();
 
@@ -43,7 +44,7 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
     private WebView mWebView;
     private ProgressBar mProgressBar;
 
-    private SessionManager mSessionManager;
+    private UserModel mUserModel;
 
     public EmbeddedWebViewFragment() {
         // Required empty public constructor
@@ -64,6 +65,23 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
             mUrl = getArguments().getString(ARG_URL);
         }
         setHasOptionsMenu(true);
+
+        mUserModel = new UserModel(getActivity(), jobManager);
+        mUserModel.setCreateSessionListener(new OnModelResponseListener<Void>() {
+            @Override
+            public void onResponse(Void response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (UserModel.hasSession()) {
+                            request();
+                        } else {
+                            mUserModel.createSession();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -135,17 +153,6 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
                 R.color.orange);
         mRefreshLayout.setOnRefreshListener(this);
 
-        mSessionManager = new SessionManager(getActivity()) {
-            @Override
-            public void onSessionRequestReceived() {
-                request();
-            }
-
-            @Override
-            public void onSessionRequestCancelled() {
-            }
-        };
-
         onRefresh();
 
         return layout;
@@ -190,10 +197,10 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
         mRefreshLayout.setRefreshing(true);
 
         if (NetworkUtil.isOnline(getActivity())) {
-            if (SessionManager.hasSession(getActivity())) {
+            if (UserModel.hasSession()) {
                 request();
             } else {
-                mSessionManager.createSession();
+                mUserModel.createSession();
             }
         } else {
             mRefreshLayout.setRefreshing(false);

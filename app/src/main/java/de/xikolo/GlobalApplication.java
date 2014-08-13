@@ -143,7 +143,6 @@ public class GlobalApplication extends Application {
 
     public void stopCookieSyncManager() {
         if (cookieSyncManager != null) {
-            syncCookieSyncManager();
             cookieSyncManager.stopSync();
         }
     }

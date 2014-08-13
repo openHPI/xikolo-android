@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.model.Course;
-import de.xikolo.model.Enrollment;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Enrollment;
 
 public class EnrollmentProgressListAdapter extends BaseAdapter {
 

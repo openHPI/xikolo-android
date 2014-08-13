@@ -1,7 +1,5 @@
 package de.xikolo.data.net;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -14,13 +12,10 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.xikolo.util.Config;
-import de.xikolo.util.NetworkUtil;
 
-public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
+public class HttpRequest {
 
     public static final String TAG = HttpRequest.class.getSimpleName();
-
-    protected Context mContext;
 
     protected String mUrl;
     protected String mToken;
@@ -30,10 +25,9 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
 
     protected HttpsURLConnection urlConnection;
 
-    public HttpRequest(String url, Context context) {
+    public HttpRequest(String url) {
         super();
         this.mUrl = url;
-        this.mContext = context;
         this.mToken = null;
         this.mMethod = Config.HTTP_GET;
         this.mCache = true;
@@ -56,45 +50,12 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
         this.mCacheOnly = cacheOnly;
     }
 
-    @Override
-    protected void onPreExecute() {
-        if (!NetworkUtil.isOnline(mContext) && !mCacheOnly) {
-            NetworkUtil.showNoConnectionToast(mContext);
-            cancel(true);
-        }
-    }
-
-    @Override
-    protected Object doInBackground(Void... args) {
-        try {
-            InputStreamReader in = new InputStreamReader(new BufferedInputStream(createConnection().getInputStream()));
-            BufferedReader buff = new BufferedReader(in);
-            StringBuffer input = new StringBuffer();
-            String line;
-            try {
-                while ((line = buff.readLine()) != null)
-                    input.append(line);
-            } catch (IOException e) {
-                Log.e(TAG, "Error reading input stream for ", e);
-            }
-            closeConnection();
-            return input;
-        } catch (IOException e) {
-            Log.w(TAG, "Error for URL " + mUrl, e);
-            cancel(true);
-        } catch (NullPointerException e) {
-            Log.w(TAG, "Error for URL " + mUrl, e);
-            cancel(true);
-        }
-        return null;
-    }
-
     protected void closeConnection() {
         if (urlConnection != null)
             urlConnection.disconnect();
     }
 
-    protected HttpsURLConnection createConnection() {
+    public HttpsURLConnection createConnection() {
         try {
             URL url = new URL(mUrl);
             urlConnection = (HttpsURLConnection) url.openConnection();
@@ -115,32 +76,34 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
 
             if (statusCode != HttpURLConnection.HTTP_OK) {
                 Log.w(TAG, "Error " + statusCode + " for URL " + mUrl);
-                cancel(true);
                 return null;
             }
 
             return urlConnection;
         } catch (IOException e) {
             Log.w(TAG, "Error for URL " + mUrl, e);
-            cancel(true);
         }
         return null;
     }
 
-    @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
-        onRequestReceived(o);
+    public Object getResponse() {
+        try {
+            InputStreamReader in = new InputStreamReader(new BufferedInputStream(createConnection().getInputStream()));
+            BufferedReader buff = new BufferedReader(in);
+            StringBuffer input = new StringBuffer();
+            String line;
+            try {
+                while ((line = buff.readLine()) != null)
+                    input.append(line);
+            } catch (IOException e) {
+                Log.e(TAG, "Error reading input stream for ", e);
+            }
+            closeConnection();
+            return input;
+        } catch (Exception e) {
+            Log.w(TAG, "Error for URL " + mUrl, e);
+        }
+        return null;
     }
-
-    @Override
-    protected void onCancelled() {
-        super.onCancelled();
-        onRequestCancelled();
-    }
-
-    public abstract void onRequestReceived(Object o);
-
-    public abstract void onRequestCancelled();
 
 }

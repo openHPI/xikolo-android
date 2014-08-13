@@ -3,7 +3,9 @@ package de.xikolo.controller.main;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 
-public abstract class ContentFragment extends Fragment {
+import de.xikolo.controller.BaseFragment;
+
+public abstract class ContentFragment extends BaseFragment {
 
     protected OnFragmentInteractionListener mCallback;
 

@@ -21,13 +21,13 @@ import de.xikolo.controller.module.AssignmentFragment;
 import de.xikolo.controller.module.PagerFragment;
 import de.xikolo.controller.module.TextFragment;
 import de.xikolo.controller.module.VideoFragment;
-import de.xikolo.manager.ProgressionManager;
-import de.xikolo.model.Course;
-import de.xikolo.model.Item;
-import de.xikolo.model.Module;
+import de.xikolo.model.ProgressionModel;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Item;
+import de.xikolo.entities.Module;
 import de.xikolo.util.NetworkUtil;
 
-public class ModuleActivity extends GlobalActivity {
+public class ModuleActivity extends BaseActivity {
 
     public static final String TAG = ModuleActivity.class.getSimpleName();
 
@@ -39,7 +39,7 @@ public class ModuleActivity extends GlobalActivity {
     private Module mModule;
     private Item mItem;
 
-    private ProgressionManager mProgressionManager;
+    private ProgressionModel mProgressionModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class ModuleActivity extends GlobalActivity {
             this.mItem = b.getParcelable(ARG_ITEM);
         }
 
-        mProgressionManager = new ProgressionManager(this);
+        mProgressionModel = new ProgressionModel(this, jobManager);
 
         setTitle(mModule.name);
 
@@ -74,12 +74,12 @@ public class ModuleActivity extends GlobalActivity {
             pager.setCurrentItem(mModule.items.indexOf(mItem), false);
             if (mModule.items.indexOf(mItem) == 0) {
                 if (NetworkUtil.isOnline(this)) {
-                    mProgressionManager.updateProgression(mModule.items.get(0).id);
+                    mProgressionModel.updateProgression(mModule.items.get(0).id);
                 }
             }
         } else {
             if (NetworkUtil.isOnline(this)) {
-                mProgressionManager.updateProgression(mModule.items.get(0).id);
+                mProgressionModel.updateProgression(mModule.items.get(0).id);
             }
         }
     }
@@ -193,7 +193,7 @@ public class ModuleActivity extends GlobalActivity {
         @Override
         public void onPageSelected(int position) {
             if (NetworkUtil.isOnline(mContext)) {
-                mProgressionManager.updateProgression(mItems.get(position).id);
+                mProgressionModel.updateProgression(mItems.get(position).id);
             }
 
             if (lastPosition != position) {

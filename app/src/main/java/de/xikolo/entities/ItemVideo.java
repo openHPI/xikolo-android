@@ -1,11 +1,11 @@
-package de.xikolo.model;
+package de.xikolo.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ItemText implements Parcelable {
+public class ItemVideo implements Parcelable {
 
     @SerializedName("id")
     public String id;
@@ -13,8 +13,17 @@ public class ItemText implements Parcelable {
     @SerializedName("title")
     public String title;
 
-    @SerializedName("body")
-    public String body;
+    @SerializedName("description")
+    public String description;
+
+    @SerializedName("minutes")
+    public String minutes;
+
+    @SerializedName("seconds")
+    public String seconds;
+
+    @SerializedName("url")
+    public String url;
 
     @Override
     public int describeContents() {
@@ -25,13 +34,19 @@ public class ItemText implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
         parcel.writeString(title);
-        parcel.writeString(body);
+        parcel.writeString(description);
+        parcel.writeString(minutes);
+        parcel.writeString(seconds);
+        parcel.writeString(url);
     }
 
-    public ItemText(Parcel in) {
+    public ItemVideo(Parcel in) {
         id = in.readString();
         title = in.readString();
-        body = in.readString();
+        description = in.readString();
+        minutes = in.readString();
+        seconds = in.readString();
+        url = in.readString();
     }
 
     @Override
@@ -42,7 +57,7 @@ public class ItemText implements Parcelable {
             return false;
         if (((Object) this).getClass() != obj.getClass())
             return false;
-        ItemText o = (ItemText) obj;
+        ItemVideo o = (ItemVideo) obj;
         if (id == null) {
             if (o.id != null)
                 return false;
@@ -59,13 +74,13 @@ public class ItemText implements Parcelable {
         return result;
     }
 
-    public static final Creator<ItemText> CREATOR = new Creator<ItemText>() {
-        public ItemText createFromParcel(Parcel in) {
-            return new ItemText(in);
+    public static final Creator<ItemVideo> CREATOR = new Creator<ItemVideo>() {
+        public ItemVideo createFromParcel(Parcel in) {
+            return new ItemVideo(in);
         }
 
-        public ItemText[] newArray(int size) {
-            return new ItemText[size];
+        public ItemVideo[] newArray(int size) {
+            return new ItemVideo[size];
         }
     };
 

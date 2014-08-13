@@ -21,8 +21,8 @@ import java.util.Locale;
 
 import de.xikolo.R;
 import de.xikolo.controller.main.CourseListFragment;
-import de.xikolo.model.Course;
-import de.xikolo.model.Enrollment;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Enrollment;
 import de.xikolo.util.DisplayUtil;
 
 public class FilteredCourseListAdapter extends CourseListAdapter {

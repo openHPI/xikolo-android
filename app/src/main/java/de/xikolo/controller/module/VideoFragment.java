@@ -16,19 +16,16 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
-import de.xikolo.manager.ItemDetailManager;
-import de.xikolo.model.Course;
-import de.xikolo.model.Item;
-import de.xikolo.model.ItemVideo;
-import de.xikolo.model.Module;
+import de.xikolo.controller.video.VideoController;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Item;
+import de.xikolo.entities.ItemVideo;
+import de.xikolo.entities.Module;
+import de.xikolo.model.ItemModel;
+import de.xikolo.model.OnModelResponseListener;
 import de.xikolo.util.NetworkUtil;
-import de.xikolo.view.VideoController;
 
 public class VideoFragment extends PagerFragment<ItemVideo> {
 
@@ -47,7 +44,7 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
 
     private VideoController mVideoController;
 
-    private ItemDetailManager mItemManager;
+    private ItemModel mItemModel;
 
     private boolean wasSaved = false;
 
@@ -57,6 +54,27 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
 
     public static PagerFragment newInstance(Course course, Module module, Item item) {
         return PagerFragment.newInstance(new VideoFragment(), course, module, item);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mItemModel = new ItemModel(getActivity(), jobManager);
+        mItemModel.setRetrieveItemDetailListener(new OnModelResponseListener<Item>() {
+            @Override
+            public void onResponse(final Item response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response != null) {
+                            mItem = response;
+                            setupVideo();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -104,18 +122,6 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
             }
         });
 
-        mItemManager = new ItemDetailManager(getActivity()) {
-            @Override
-            public void onItemDetailRequestReceived(Item item) {
-                mItem = item;
-                setupVideo();
-            }
-
-            @Override
-            public void onItemDetailRequestCancelled() {
-            }
-        };
-
         if (savedInstanceState != null) {
             wasSaved = true;
             mVideoController.returnFromSavedInstanceState(savedInstanceState);
@@ -156,9 +162,7 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
 
         if (!wasSaved) {
             if (NetworkUtil.isOnline(getActivity())) {
-                Type type = new TypeToken<Item<ItemVideo>>() {
-                }.getType();
-                mItemManager.requestItemDetail(mCourse, mModule, mItem, type, true);
+                mItemModel.retrieveItemDetail(mCourse.id, mModule.id, mItem.id, Item.TYPE_VIDEO, true);
             } else {
                 NetworkUtil.showNoConnectionToast(getActivity());
             }

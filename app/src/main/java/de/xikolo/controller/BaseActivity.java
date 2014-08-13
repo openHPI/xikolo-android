@@ -7,7 +7,7 @@ import com.path.android.jobqueue.JobManager;
 
 import de.xikolo.GlobalApplication;
 
-public abstract class GlobalActivity extends FragmentActivity {
+public abstract class BaseActivity extends FragmentActivity {
 
     protected GlobalApplication globalApplication;
 
@@ -32,6 +32,7 @@ public abstract class GlobalActivity extends FragmentActivity {
     protected void onPause() {
         super.onPause();
 
+        globalApplication.syncCookieSyncManager();
         globalApplication.stopCookieSyncManager();
     }
 

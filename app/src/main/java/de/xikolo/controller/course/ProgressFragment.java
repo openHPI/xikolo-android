@@ -1,7 +1,6 @@
 package de.xikolo.controller.course;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
+import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.course.adapter.ModuleProgressListAdapter;
-import de.xikolo.manager.ModuleManager;
-import de.xikolo.model.Course;
-import de.xikolo.model.Module;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Module;
+import de.xikolo.model.ModuleModel;
+import de.xikolo.model.OnModelResponseListener;
 
-public class ProgressFragment extends Fragment {
+public class ProgressFragment extends BaseFragment {
 
     public static final String TAG = ProgressFragment.class.getSimpleName();
 
@@ -28,7 +29,7 @@ public class ProgressFragment extends Fragment {
     private Course mCourse;
     private List<Module> mModules;
 
-    private ModuleManager mModuleManager;
+    private ModuleModel mModuleModel;
 
     private ModuleProgressListAdapter mAdapter;
 
@@ -65,6 +66,23 @@ public class ProgressFragment extends Fragment {
             mModules = savedInstanceState.getParcelableArrayList(KEY_MODULES);
         }
         setHasOptionsMenu(true);
+
+        mModuleModel = new ModuleModel(getActivity(), jobManager);
+        mModuleModel.setRetrieveModulesListener(new OnModelResponseListener<List<Module>>() {
+            @Override
+            public void onResponse(final List<Module> response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgress.setVisibility(View.GONE);
+                        if (response != null) {
+                            mModules = response;
+                            mAdapter.updateModules(response);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -78,22 +96,6 @@ public class ProgressFragment extends Fragment {
         mAdapter = new ModuleProgressListAdapter(getActivity());
         mProgressScrollView.setAdapter(mAdapter);
 
-        mModuleManager = new ModuleManager(getActivity()) {
-            @Override
-            public void onModulesRequestReceived(List<Module> modules) {
-                if (modules != null) {
-                    mProgress.setVisibility(View.GONE);
-                    mModules = modules;
-                    mAdapter.updateModules(modules);
-                }
-            }
-
-            @Override
-            public void onModulesRequestCancelled() {
-
-            }
-        };
-
         return layout;
     }
 
@@ -103,7 +105,7 @@ public class ProgressFragment extends Fragment {
 
         if (mModules == null) {
             mProgress.setVisibility(View.VISIBLE);
-            mModuleManager.requestModules(mCourse, false, true);
+            mModuleModel.retrieveModules(mCourse.id, false, true);
         } else {
             mProgress.setVisibility(View.GONE);
             mAdapter.updateModules(mModules);

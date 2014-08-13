@@ -1,16 +1,15 @@
 package de.xikolo.controller;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.course.CourseFragment;
-import de.xikolo.model.Course;
+import de.xikolo.entities.Course;
 
-public class CourseActivity extends GlobalActivity {
+public class CourseActivity extends BaseActivity {
 
     public static final String TAG = CourseActivity.class.getSimpleName();
 

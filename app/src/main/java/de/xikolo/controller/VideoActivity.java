@@ -17,11 +17,11 @@ import android.view.Window;
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.module.VideoFragment;
-import de.xikolo.model.Item;
-import de.xikolo.model.ItemVideo;
-import de.xikolo.view.VideoController;
+import de.xikolo.entities.Item;
+import de.xikolo.entities.ItemVideo;
+import de.xikolo.controller.video.VideoController;
 
-public class VideoActivity extends GlobalActivity {
+public class VideoActivity extends BaseActivity {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
 

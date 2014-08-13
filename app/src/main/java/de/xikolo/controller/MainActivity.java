@@ -23,7 +23,7 @@ import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.util.Config;
 
 
-public class MainActivity extends GlobalActivity
+public class MainActivity extends BaseActivity
         implements NavigationFragment.NavigationDrawerCallbacks, ContentFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();

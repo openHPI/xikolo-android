@@ -1,11 +1,11 @@
-package de.xikolo.model;
+package de.xikolo.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ItemAssignment implements Parcelable {
+public class ItemText implements Parcelable {
 
     @SerializedName("id")
     public String id;
@@ -13,14 +13,8 @@ public class ItemAssignment implements Parcelable {
     @SerializedName("title")
     public String title;
 
-    @SerializedName("question_count")
-    public int question_count;
-
-    @SerializedName("points_possible")
-    public int points_possible;
-
-    @SerializedName("url")
-    public String url;
+    @SerializedName("body")
+    public String body;
 
     @Override
     public int describeContents() {
@@ -31,17 +25,13 @@ public class ItemAssignment implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
         parcel.writeString(title);
-        parcel.writeInt(question_count);
-        parcel.writeInt(points_possible);
-        parcel.writeString(url);
+        parcel.writeString(body);
     }
 
-    public ItemAssignment(Parcel in) {
+    public ItemText(Parcel in) {
         id = in.readString();
         title = in.readString();
-        question_count = in.readInt();
-        points_possible = in.readInt();
-        url = in.readString();
+        body = in.readString();
     }
 
     @Override
@@ -52,7 +42,7 @@ public class ItemAssignment implements Parcelable {
             return false;
         if (((Object) this).getClass() != obj.getClass())
             return false;
-        ItemAssignment o = (ItemAssignment) obj;
+        ItemText o = (ItemText) obj;
         if (id == null) {
             if (o.id != null)
                 return false;
@@ -69,13 +59,13 @@ public class ItemAssignment implements Parcelable {
         return result;
     }
 
-    public static final Creator<ItemAssignment> CREATOR = new Creator<ItemAssignment>() {
-        public ItemAssignment createFromParcel(Parcel in) {
-            return new ItemAssignment(in);
+    public static final Creator<ItemText> CREATOR = new Creator<ItemText>() {
+        public ItemText createFromParcel(Parcel in) {
+            return new ItemText(in);
         }
 
-        public ItemAssignment[] newArray(int size) {
-            return new ItemAssignment[size];
+        public ItemText[] newArray(int size) {
+            return new ItemText[size];
         }
     };
 
