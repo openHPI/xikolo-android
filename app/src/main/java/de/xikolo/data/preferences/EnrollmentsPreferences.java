@@ -3,7 +3,7 @@ package de.xikolo.data.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import de.xikolo.util.Path;
+import de.xikolo.util.Config;
 
 public class EnrollmentsPreferences {
 
@@ -17,19 +17,19 @@ public class EnrollmentsPreferences {
     }
 
     public int getEnrollmentsSize() {
-        SharedPreferences sharedPref = mContext.getSharedPreferences(Path.PREF_ENROLLMENTS, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_ENROLLMENTS, Context.MODE_PRIVATE);
         return sharedPref.getInt(ENROLLMENTS_SIZE, ENROLLMENTS_SIZE_DEFAULT);
     }
 
     public void saveEnrollmentsSize(int size) {
-        SharedPreferences sharedPref = mContext.getSharedPreferences(Path.PREF_ENROLLMENTS, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_ENROLLMENTS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(ENROLLMENTS_SIZE, size);
         editor.commit();
     }
 
     public void deleteEnrollmentsSize() {
-        SharedPreferences sharedPref = mContext.getSharedPreferences(Path.PREF_ENROLLMENTS, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_ENROLLMENTS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear();
         editor.commit();

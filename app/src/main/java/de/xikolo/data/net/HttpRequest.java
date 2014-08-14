@@ -1,7 +1,5 @@
 package de.xikolo.data.net;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -13,14 +11,11 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import de.xikolo.util.Path;
-import de.xikolo.util.Network;
+import de.xikolo.util.Config;
 
-public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
+public class HttpRequest {
 
     public static final String TAG = HttpRequest.class.getSimpleName();
-
-    protected Context mContext;
 
     protected String mUrl;
     protected String mToken;
@@ -30,12 +25,11 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
 
     protected HttpsURLConnection urlConnection;
 
-    public HttpRequest(String url, Context context) {
+    public HttpRequest(String url) {
         super();
         this.mUrl = url;
-        this.mContext = context;
         this.mToken = null;
-        this.mMethod = Path.HTTP_GET;
+        this.mMethod = Config.HTTP_GET;
         this.mCache = true;
         this.mCacheOnly = false;
     }
@@ -56,16 +50,43 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
         this.mCacheOnly = cacheOnly;
     }
 
-    @Override
-    protected void onPreExecute() {
-        if (!Network.isOnline(mContext) && !mCacheOnly) {
-            Network.showNoConnectionToast(mContext);
-            cancel(true);
-        }
+    protected void closeConnection() {
+        if (urlConnection != null)
+            urlConnection.disconnect();
     }
 
-    @Override
-    protected Object doInBackground(Void... args) {
+    public HttpsURLConnection createConnection() {
+        try {
+            URL url = new URL(mUrl);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+            urlConnection.setRequestMethod(mMethod);
+            urlConnection.addRequestProperty(Config.HEADER_ACCEPT, Config.HEADER_VALUE_ACCEPT_SAP);
+            urlConnection.addRequestProperty(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
+
+            if (mCacheOnly) {
+                urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_VALUE_ONLY_CACHE);
+            } else if (!mCache) {
+                urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_VALUE_NO_CACHE);
+            }
+            if (mToken != null) {
+                urlConnection.addRequestProperty(Config.HEADER_AUTHORIZATION, "Token token=\"" + mToken + "\"");
+            }
+
+            final int statusCode = urlConnection.getResponseCode();
+
+            if (statusCode != HttpURLConnection.HTTP_OK) {
+                Log.w(TAG, "Error " + statusCode + " for URL " + mUrl);
+                return null;
+            }
+
+            return urlConnection;
+        } catch (IOException e) {
+            Log.w(TAG, "Error for URL " + mUrl, e);
+        }
+        return null;
+    }
+
+    public Object getResponse() {
         try {
             InputStreamReader in = new InputStreamReader(new BufferedInputStream(createConnection().getInputStream()));
             BufferedReader buff = new BufferedReader(in);
@@ -79,68 +100,10 @@ public abstract class HttpRequest extends AsyncTask<Void, Void, Object> {
             }
             closeConnection();
             return input;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.w(TAG, "Error for URL " + mUrl, e);
-            cancel(true);
-        } catch (NullPointerException e) {
-            Log.w(TAG, "Error for URL " + mUrl, e);
-            cancel(true);
         }
         return null;
     }
-
-    protected void closeConnection() {
-        if (urlConnection != null)
-            urlConnection.disconnect();
-    }
-
-    protected HttpsURLConnection createConnection() {
-        try {
-            URL url = new URL(mUrl);
-            urlConnection = (HttpsURLConnection) url.openConnection();
-            urlConnection.setRequestMethod(mMethod);
-            urlConnection.addRequestProperty(Path.HEADER_ACCEPT, Path.HEADER_VALUE_ACCEPT_SAP);
-            urlConnection.addRequestProperty(Path.HEADER_USER_PLATFORM, Path.HEADER_VALUE_USER_PLATFORM_ANDROID);
-
-            if (mCacheOnly) {
-                urlConnection.addRequestProperty(Path.HEADER_CACHE_CONTROL, Path.HEADER_VALUE_ONLY_CACHE);
-            } else if (!mCache) {
-                urlConnection.addRequestProperty(Path.HEADER_CACHE_CONTROL, Path.HEADER_VALUE_NO_CACHE);
-            }
-            if (mToken != null) {
-                urlConnection.addRequestProperty(Path.HEADER_AUTHORIZATION, "Token token=\"" + mToken + "\"");
-            }
-
-            final int statusCode = urlConnection.getResponseCode();
-
-            if (statusCode != HttpURLConnection.HTTP_OK) {
-                Log.w(TAG, "Error " + statusCode + " for URL " + mUrl);
-                cancel(true);
-                return null;
-            }
-
-            return urlConnection;
-        } catch (IOException e) {
-            Log.w(TAG, "Error for URL " + mUrl, e);
-            cancel(true);
-        }
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
-        onRequestReceived(o);
-    }
-
-    @Override
-    protected void onCancelled() {
-        super.onCancelled();
-        onRequestCancelled();
-    }
-
-    public abstract void onRequestReceived(Object o);
-
-    public abstract void onRequestCancelled();
 
 }

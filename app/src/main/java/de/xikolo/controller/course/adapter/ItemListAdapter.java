@@ -1,7 +1,6 @@
 package de.xikolo.controller.course.adapter;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.model.Course;
-import de.xikolo.model.Item;
-import de.xikolo.model.Module;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Item;
+import de.xikolo.entities.Module;
 import de.xikolo.util.ItemTitle;
 
 public class ItemListAdapter extends BaseAdapter {

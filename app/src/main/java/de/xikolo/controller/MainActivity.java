@@ -3,17 +3,14 @@ package de.xikolo.controller;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.CookieSyncManager;
 
 import de.xikolo.BuildConfig;
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.main.ContentFragment;
 import de.xikolo.controller.main.CourseListFragment;
@@ -23,10 +20,10 @@ import de.xikolo.controller.main.SettingsFragment;
 import de.xikolo.controller.main.WebViewFragment;
 import de.xikolo.controller.navigation.NavigationFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.util.Path;
+import de.xikolo.util.Config;
 
 
-public class MainActivity extends FragmentActivity
+public class MainActivity extends BaseActivity
         implements NavigationFragment.NavigationDrawerCallbacks, ContentFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -60,8 +57,10 @@ public class MainActivity extends FragmentActivity
 
         mActionBar = getActionBar();
 
-        Log.d(TAG, "Build Type: " + BuildConfig.buildType);
-        Log.d(TAG, "Build Flavor: " + BuildConfig.buildFlavor);
+        if (Config.DEBUG) {
+            Log.i(TAG, "Build Type: " + BuildConfig.buildType);
+            Log.i(TAG, "Build Flavor: " + BuildConfig.buildFlavor);
+        }
     }
 
     @Override
@@ -105,7 +104,7 @@ public class MainActivity extends FragmentActivity
                 tag = "my_courses";
                 break;
             case NavigationAdapter.NAV_ID_NEWS:
-                newFragment = WebViewFragment.newInstance(Path.URI_HPI + Path.NEWS, true, null);
+                newFragment = WebViewFragment.newInstance(Config.URI_HPI + Config.NEWS, true, null);
                 tag = "news";
                 break;
             case NavigationAdapter.NAV_ID_DOWNLOADS:
@@ -131,8 +130,8 @@ public class MainActivity extends FragmentActivity
 
     private void setTitle(String title) {
         mTitle = title;
-        if (getActionBar() != null) {
-            getActionBar().setTitle(mTitle);
+        if (mActionBar != null) {
+            mActionBar.setTitle(mTitle);
         }
     }
 
@@ -153,10 +152,11 @@ public class MainActivity extends FragmentActivity
     }
 
     public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        if (mActionBar != null) {
+            mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            mActionBar.setDisplayShowTitleEnabled(true);
+            mActionBar.setTitle(mTitle);
+        }
     }
 
     @Override
@@ -194,25 +194,6 @@ public class MainActivity extends FragmentActivity
     @Override
     public void toggleDrawer(int pos) {
         this.mNavigationFragment.selectItem(pos);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        CookieSyncManager.getInstance().startSync();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        CookieSyncManager.getInstance().sync();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GlobalApplication app = (GlobalApplication) getApplicationContext();
-        app.flushCache();
     }
 
 }

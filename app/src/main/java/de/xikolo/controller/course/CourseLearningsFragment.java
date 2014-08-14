@@ -2,7 +2,6 @@ package de.xikolo.controller.course;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,16 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
+import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.ModuleActivity;
 import de.xikolo.controller.course.adapter.ItemListAdapter;
 import de.xikolo.controller.course.adapter.ModuleListAdapter;
-import de.xikolo.manager.ItemManager;
-import de.xikolo.manager.ModuleManager;
-import de.xikolo.model.Course;
-import de.xikolo.model.Item;
-import de.xikolo.model.Module;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Item;
+import de.xikolo.entities.Module;
+import de.xikolo.model.ItemModel;
+import de.xikolo.model.ModuleModel;
+import de.xikolo.model.OnModelResponseListener;
 
-public class CourseLearningsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
+public class CourseLearningsFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
         ModuleListAdapter.OnModuleButtonClickListener, ItemListAdapter.OnItemButtonClickListener {
 
     public final static String TAG = CourseLearningsFragment.class.getSimpleName();
@@ -39,7 +40,7 @@ public class CourseLearningsFragment extends Fragment implements SwipeRefreshLay
 
     private boolean mCache;
 
-    private ModuleManager mModuleManager;
+    private ModuleModel mModuleModel;
     private ModuleListAdapter mAdapter;
 
     private Course mCourse;
@@ -75,6 +76,45 @@ public class CourseLearningsFragment extends Fragment implements SwipeRefreshLay
             mModules = savedInstanceState.getParcelableArrayList(KEY_MODULES);
         }
         setHasOptionsMenu(true);
+
+        mModuleModel = new ModuleModel(getActivity(), jobManager);
+        mModuleModel.setRetrieveModulesListener(new OnModelResponseListener<List<Module>>() {
+            @Override
+            public void onResponse(final List<Module> response) {
+                mRefreshLayout.setRefreshing(false);
+                if (response != null) {
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.updateModules(response);
+                        }
+                    });
+                    mModules = response;
+
+                    for (final Module module : mModules) {
+                        if (module.items == null || module.items.size() == 0) {
+                            ItemModel itemModel = new ItemModel(getActivity(), jobManager);
+                            itemModel.setRetrieveItemsListener(new OnModelResponseListener<List<Item>>() {
+                                @Override
+                                public void onResponse(final List<Item> response) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (response != null) {
+                                                module.items = response;
+                                                mAdapter.updateModules(mModules);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                            itemModel.retrieveItems(mCourse.id, module.id, mCache);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -100,44 +140,11 @@ public class CourseLearningsFragment extends Fragment implements SwipeRefreshLay
     @Override
     public void onStart() {
         super.onStart();
-        mModuleManager = new ModuleManager(getActivity()) {
-            @Override
-            public void onModulesRequestReceived(final List<Module> modules) {
-                mRefreshLayout.setRefreshing(false);
-                if (modules != null) {
-                    mAdapter.updateModules(modules);
-                    mModules = modules;
-                    for (final Module module : mModules) {
-                        if (module.items == null || module.items.size() == 0) {
-                            ItemManager itemManager = new ItemManager(getActivity()) {
-                                @Override
-                                public void onItemsRequestReceived(List<Item> items) {
-                                    if (items != null) {
-                                        module.items = items;
-                                        mAdapter.updateModules(modules);
-                                    }
-                                }
-
-                                @Override
-                                public void onItemsRequestCancelled() {
-                                }
-                            };
-                            itemManager.requestItems(mCourse, module, mCache);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onModulesRequestCancelled() {
-                mRefreshLayout.setRefreshing(true);
-            }
-        };
 
         if (mModules == null) {
             mCache = true;
             mRefreshLayout.setRefreshing(true);
-            mModuleManager.requestModules(mCourse, mCache, false);
+            mModuleModel.retrieveModules(mCourse.id, mCache, false);
         } else {
             mAdapter.updateModules(mModules);
         }
@@ -147,7 +154,7 @@ public class CourseLearningsFragment extends Fragment implements SwipeRefreshLay
     public void onRefresh() {
         mCache = false;
         mRefreshLayout.setRefreshing(true);
-        mModuleManager.requestModules(mCourse, mCache, false);
+        mModuleModel.retrieveModules(mCourse.id, mCache, false);
     }
 
     @Override

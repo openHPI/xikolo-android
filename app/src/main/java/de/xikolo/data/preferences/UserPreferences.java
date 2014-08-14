@@ -3,9 +3,9 @@ package de.xikolo.data.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import de.xikolo.model.AccessToken;
-import de.xikolo.model.User;
-import de.xikolo.util.Path;
+import de.xikolo.entities.AccessToken;
+import de.xikolo.entities.User;
+import de.xikolo.util.Config;
 
 public class UserPreferences {
 
@@ -28,7 +28,7 @@ public class UserPreferences {
 
     public User getUser() {
         User user = new User();
-        SharedPreferences sharedPref = mContext.getSharedPreferences(Path.PREF_USER, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_USER, Context.MODE_PRIVATE);
         user.id = sharedPref.getInt(USER_ID, -1);
         user.name = sharedPref.getString(USER_NAME, null);
         user.short_name = sharedPref.getString(USER_SHORT_NAME, null);
@@ -41,7 +41,7 @@ public class UserPreferences {
     }
 
     public void saveUser(User user) {
-        SharedPreferences sharedPref = mContext.getSharedPreferences(Path.PREF_USER, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(USER_ID, user.id);
         editor.putString(USER_NAME, user.name);
@@ -55,7 +55,7 @@ public class UserPreferences {
     }
 
     public void deleteUser() {
-        SharedPreferences sharedPref = mContext.getSharedPreferences(Path.PREF_USER, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear();
         editor.commit();
@@ -65,14 +65,14 @@ public class UserPreferences {
         AccessToken token = new AccessToken();
         token.access_token = ACCESS_TOKEN_DEFAULT;
         if (mContext != null) {
-            SharedPreferences sharedPref = mContext.getSharedPreferences(Path.PREF_USER, Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_USER, Context.MODE_PRIVATE);
             token.access_token = sharedPref.getString(USER_ACCESS_TOKEN, ACCESS_TOKEN_DEFAULT);
         }
         return token;
     }
 
     public void saveAccessToken(AccessToken token) {
-        SharedPreferences sharedPref = mContext.getSharedPreferences(Path.PREF_USER, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mContext.getSharedPreferences(Config.PREF_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(USER_ACCESS_TOKEN, token.access_token);
         editor.commit();

@@ -18,17 +18,14 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-
 import de.xikolo.R;
-import de.xikolo.manager.ItemDetailManager;
-import de.xikolo.model.Course;
-import de.xikolo.model.Item;
-import de.xikolo.model.ItemText;
-import de.xikolo.model.Module;
-import de.xikolo.util.Network;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Item;
+import de.xikolo.entities.ItemText;
+import de.xikolo.entities.Module;
+import de.xikolo.model.ItemModel;
+import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.util.NetworkUtil;
 
 public class TextFragment extends PagerFragment<ItemText> {
 
@@ -37,7 +34,7 @@ public class TextFragment extends PagerFragment<ItemText> {
     private WebView mWebView;
     private ProgressBar mProgressBar;
 
-    private ItemDetailManager mItemManager;
+    private ItemModel mItemModel;
 
     public TextFragment() {
 
@@ -45,6 +42,27 @@ public class TextFragment extends PagerFragment<ItemText> {
 
     public static PagerFragment newInstance(Course course, Module module, Item item) {
         return PagerFragment.newInstance(new TextFragment(), course, module, item);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mItemModel = new ItemModel(getActivity(), jobManager);
+        mItemModel.setRetrieveItemDetailListener(new OnModelResponseListener<Item>() {
+            @Override
+            public void onResponse(final Item response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response != null) {
+                            mItem = response;
+                            displayBody();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -97,18 +115,6 @@ public class TextFragment extends PagerFragment<ItemText> {
             }
         });
 
-        mItemManager = new ItemDetailManager(getActivity()) {
-            @Override
-            public void onItemDetailRequestReceived(Item item) {
-                mItem = item;
-                displayBody();
-            }
-
-            @Override
-            public void onItemDetailRequestCancelled() {
-            }
-        };
-
         return layout;
     }
 
@@ -116,12 +122,10 @@ public class TextFragment extends PagerFragment<ItemText> {
     public void onStart() {
         super.onStart();
 
-        if (Network.isOnline(getActivity())) {
-            Type type = new TypeToken<Item<ItemText>>() {
-            }.getType();
-            mItemManager.requestItemDetail(mCourse, mModule, mItem, type, true);
+        if (NetworkUtil.isOnline(getActivity())) {
+            mItemModel.retrieveItemDetail(mCourse.id, mModule.id, mItem.id, Item.TYPE_TEXT, true);
         } else {
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 

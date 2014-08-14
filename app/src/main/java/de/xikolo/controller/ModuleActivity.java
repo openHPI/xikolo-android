@@ -3,14 +3,12 @@ package de.xikolo.controller;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.CookieSyncManager;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -23,13 +21,13 @@ import de.xikolo.controller.module.AssignmentFragment;
 import de.xikolo.controller.module.PagerFragment;
 import de.xikolo.controller.module.TextFragment;
 import de.xikolo.controller.module.VideoFragment;
-import de.xikolo.manager.ProgressionManager;
-import de.xikolo.model.Course;
-import de.xikolo.model.Item;
-import de.xikolo.model.Module;
-import de.xikolo.util.Network;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Item;
+import de.xikolo.entities.Module;
+import de.xikolo.model.ItemModel;
+import de.xikolo.util.NetworkUtil;
 
-public class ModuleActivity extends FragmentActivity {
+public class ModuleActivity extends BaseActivity {
 
     public static final String TAG = ModuleActivity.class.getSimpleName();
 
@@ -41,7 +39,7 @@ public class ModuleActivity extends FragmentActivity {
     private Module mModule;
     private Item mItem;
 
-    private ProgressionManager mProgressionManager;
+    private ItemModel mItemModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +55,7 @@ public class ModuleActivity extends FragmentActivity {
             this.mItem = b.getParcelable(ARG_ITEM);
         }
 
-        mProgressionManager = new ProgressionManager(this);
+        mItemModel = new ItemModel(this, jobManager);
 
         setTitle(mModule.name);
 
@@ -75,13 +73,13 @@ public class ModuleActivity extends FragmentActivity {
         if (mItem != null) {
             pager.setCurrentItem(mModule.items.indexOf(mItem), false);
             if (mModule.items.indexOf(mItem) == 0) {
-                if (Network.isOnline(this)) {
-                    mProgressionManager.updateProgression(mModule.items.get(0).id);
+                if (NetworkUtil.isOnline(this)) {
+                    mItemModel.updateProgression(mModule.items.get(0).id);
                 }
             }
         } else {
-            if (Network.isOnline(this)) {
-                mProgressionManager.updateProgression(mModule.items.get(0).id);
+            if (NetworkUtil.isOnline(this)) {
+                mItemModel.updateProgression(mModule.items.get(0).id);
             }
         }
     }
@@ -103,18 +101,6 @@ public class ModuleActivity extends FragmentActivity {
 //            return true;
 //        }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        CookieSyncManager.getInstance().startSync();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        CookieSyncManager.getInstance().sync();
     }
 
     public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.TabViewProvider {
@@ -206,8 +192,8 @@ public class ModuleActivity extends FragmentActivity {
 
         @Override
         public void onPageSelected(int position) {
-            if (Network.isOnline(mContext)) {
-                mProgressionManager.updateProgression(mItems.get(position).id);
+            if (NetworkUtil.isOnline(mContext)) {
+                mItemModel.updateProgression(mItems.get(position).id);
             }
 
             if (lastPosition != position) {
@@ -222,6 +208,7 @@ public class ModuleActivity extends FragmentActivity {
             PagerFragment fragment = (PagerFragment) getItem(lastPosition);
             fragment.pageScrolling(state);
         }
+
     }
 
 }

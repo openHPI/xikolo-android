@@ -1,6 +1,5 @@
 package de.xikolo.data.net;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -13,19 +12,19 @@ import java.lang.reflect.Type;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public abstract class JsonRequest extends HttpRequest {
+public class JsonRequest extends HttpRequest {
 
     public static final String TAG = JsonRequest.class.getSimpleName();
 
     private Type mType;
 
-    public JsonRequest(String url, Type type, Context context) {
-        super(url, context);
+    public JsonRequest(String url, Type type) {
+        super(url);
         this.mType = type;
     }
 
     @Override
-    protected Object doInBackground(Void... args) {
+    public Object getResponse() {
         try {
             HttpsURLConnection conn = createConnection();
             InputStream in = new BufferedInputStream(conn.getInputStream());
@@ -39,7 +38,6 @@ public abstract class JsonRequest extends HttpRequest {
             return o;
         } catch (Exception e) {
             Log.w(TAG, "Error for URL " + mUrl, e);
-            cancel(true);
         }
         return null;
     }

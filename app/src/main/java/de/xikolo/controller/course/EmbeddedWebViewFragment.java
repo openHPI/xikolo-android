@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,11 +24,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.xikolo.R;
-import de.xikolo.manager.SessionManager;
-import de.xikolo.util.Path;
-import de.xikolo.util.Network;
+import de.xikolo.controller.BaseFragment;
+import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.UserModel;
+import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
-public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class EmbeddedWebViewFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = EmbeddedWebViewFragment.class.getSimpleName();
 
@@ -43,7 +44,7 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
     private WebView mWebView;
     private ProgressBar mProgressBar;
 
-    private SessionManager mSessionManager;
+    private UserModel mUserModel;
 
     public EmbeddedWebViewFragment() {
         // Required empty public constructor
@@ -64,6 +65,23 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
             mUrl = getArguments().getString(ARG_URL);
         }
         setHasOptionsMenu(true);
+
+        mUserModel = new UserModel(getActivity(), jobManager);
+        mUserModel.setCreateSessionListener(new OnModelResponseListener<Void>() {
+            @Override
+            public void onResponse(Void response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (UserModel.hasSession()) {
+                            request();
+                        } else {
+                            mUserModel.createSession();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -104,9 +122,9 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Path.URI_HOST_HPI) || url.contains(Path.URI_HOST_SAP)) {
+                if (url.contains(Config.URI_HOST_HPI) || url.contains(Config.URI_HOST_SAP)) {
                     Map<String, String> header = new HashMap<String, String>();
-                    header.put(Path.HEADER_USER_PLATFORM, Path.HEADER_VALUE_USER_PLATFORM_ANDROID);
+                    header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
                     view.loadUrl(url, header);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -134,17 +152,6 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
                 R.color.red,
                 R.color.orange);
         mRefreshLayout.setOnRefreshListener(this);
-
-        mSessionManager = new SessionManager(getActivity()) {
-            @Override
-            public void onSessionRequestReceived() {
-                request();
-            }
-
-            @Override
-            public void onSessionRequestCancelled() {
-            }
-        };
 
         onRefresh();
 
@@ -189,28 +196,28 @@ public class EmbeddedWebViewFragment extends Fragment implements SwipeRefreshLay
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
 
-        if (Network.isOnline(getActivity())) {
-            if (SessionManager.hasSession(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
+            if (UserModel.hasSession()) {
                 request();
             } else {
-                mSessionManager.createSession();
+                mUserModel.createSession();
             }
         } else {
             mRefreshLayout.setRefreshing(false);
             mProgressBar.setVisibility(ProgressBar.GONE);
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 
     private void request() {
-        if (Network.isOnline(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
             Map<String, String> header = new HashMap<String, String>();
-            header.put(Path.HEADER_USER_PLATFORM, Path.HEADER_VALUE_USER_PLATFORM_ANDROID);
+            header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
             mWebView.loadUrl(mUrl, header);
         } else {
             mRefreshLayout.setRefreshing(false);
             mProgressBar.setVisibility(ProgressBar.GONE);
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 

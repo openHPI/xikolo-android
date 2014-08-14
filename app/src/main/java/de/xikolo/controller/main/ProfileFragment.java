@@ -26,17 +26,17 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.controller.main.adapter.EnrollmentProgressListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.manager.CourseManager;
-import de.xikolo.manager.EnrollmentManager;
-import de.xikolo.manager.TokenManager;
-import de.xikolo.manager.UserManager;
-import de.xikolo.model.AccessToken;
-import de.xikolo.model.Course;
-import de.xikolo.model.Enrollment;
-import de.xikolo.model.User;
-import de.xikolo.util.Network;
-import de.xikolo.util.Path;
-import de.xikolo.util.Toaster;
+import de.xikolo.entities.AccessToken;
+import de.xikolo.entities.Course;
+import de.xikolo.entities.Enrollment;
+import de.xikolo.entities.User;
+import de.xikolo.model.CourseModel;
+import de.xikolo.model.EnrollmentModel;
+import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.UserModel;
+import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.ToastUtil;
 import de.xikolo.view.CircularImageView;
 import de.xikolo.view.CustomSizeImageView;
 
@@ -50,14 +50,14 @@ public class ProfileFragment extends ContentFragment {
 //
 //    private String mParam1;
 //    private String mParam2;
+    private static final String KEY_ENROLLMENTS = "key_enrollments";
+    private static final String KEY_COURSES = "key_courses";
 
-    private TokenManager tokenManager;
-    private UserManager userManager;
-    private EnrollmentManager enrollManager;
-    private CourseManager courseManager;
+    private UserModel mUserModel;
+    private EnrollmentModel mEnrollmentModel;
+    private CourseModel mCourseModel;
 
     private ProgressBar mProgress;
-
     private ViewGroup mContainerLogin;
     private EditText mEditEmail;
     private EditText mEditPassword;
@@ -77,9 +77,6 @@ public class ProfileFragment extends ContentFragment {
 
     private List<Enrollment> mEnrollments;
     private List<Course> mCourses;
-
-    private static final String KEY_ENROLLMENTS = "key_enrollments";
-    private static final String KEY_COURSES = "key_courses";
 
     private EnrollmentProgressListAdapter mAdapter;
 
@@ -118,6 +115,77 @@ public class ProfileFragment extends ContentFragment {
             mEnrollments = savedInstanceState.getParcelableArrayList(KEY_ENROLLMENTS);
             mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
         }
+
+        mCourseModel = new CourseModel(getActivity(), jobManager);
+        mCourseModel.setRetrieveCoursesListener(new OnModelResponseListener<List<Course>>() {
+            @Override
+            public void onResponse(final List<Course> response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response != null) {
+                            mCourses = response;
+                            mAdapter.updateCourses(response);
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
+
+        mEnrollmentModel = new EnrollmentModel(getActivity(), jobManager);
+        mEnrollmentModel.setRetrieveEnrollmentsListener(new OnModelResponseListener<List<Enrollment>>() {
+            @Override
+            public void onResponse(final List<Enrollment> response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response != null) {
+                            mEnrollments = response;
+                            mAdapter.updateEnrollments(mEnrollments);
+                            mTextEnrollCounts.setText(String.valueOf(response.size()));
+                            mCallback.updateDrawer();
+                            mCourseModel.retrieveCourses(false, true);
+                        }
+                    }
+                });
+            }
+        });
+
+        mUserModel = new UserModel(getActivity(), jobManager);
+        mUserModel.setRetrieveUserListener(new OnModelResponseListener<User>() {
+            @Override
+            public void onResponse(final User response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response != null) {
+                            switchView();
+                            showUser(response);
+                            mCallback.updateDrawer();
+                        }
+                    }
+                });
+            }
+        });
+        mUserModel.setLoginListener(new OnModelResponseListener<AccessToken>() {
+            @Override
+            public void onResponse(final AccessToken response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response != null) {
+                            mUserModel.retrieveUser(false);
+                            mEnrollmentModel.retrieveEnrollments(false);
+                        } else {
+                            ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
+                            mContainerLogin.setVisibility(View.VISIBLE);
+                            mProgress.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -147,80 +215,16 @@ public class ProfileFragment extends ContentFragment {
         mAdapter = new EnrollmentProgressListAdapter(getActivity());
         mProgressListView.setAdapter(mAdapter);
 
-        enrollManager = new EnrollmentManager(getActivity()) {
-            @Override
-            public void onEnrollmentsRequestReceived(List<Enrollment> enrolls) {
-                if (enrolls != null) {
-                    mEnrollments = enrolls;
-                    mAdapter.updateEnrollments(mEnrollments);
-                    mTextEnrollCounts.setText(String.valueOf(enrolls.size()));
-                    mCallback.updateDrawer();
-                    courseManager.requestCourses(false, true);
-                }
-            }
-
-            @Override
-            public void onEnrollmentsRequestCancelled() {
-            }
-        };
-
-        courseManager = new CourseManager(getActivity()) {
-            @Override
-            public void onCoursesRequestReceived(List<Course> courses) {
-                if (courses != null) {
-                    mCourses = courses;
-                    mAdapter.updateCourses(courses);
-                    mProgressBar.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCoursesRequestCancelled() {
-            }
-        };
-
-        userManager = new UserManager(getActivity()) {
-            @Override
-            public void onUserRequestReceived(User user) {
-                switchView();
-                showUser(user);
-                mCallback.updateDrawer();
-            }
-
-            @Override
-            public void onUserRequestCancelled() {
-            }
-        };
-
-        tokenManager = new TokenManager(getActivity()) {
-            @Override
-            public void onAccessTokenRequestReceived(AccessToken token) {
-                userManager.requestUser();
-                enrollManager.requestEnrollments(false);
-            }
-
-            @Override
-            public void onAccessTokenRequestCancelled() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toaster.show(getActivity(), R.string.toast_log_in_failed);
-                        mContainerLogin.setVisibility(View.VISIBLE);
-                        mProgress.setVisibility(View.GONE);
-                    }
-                });
-            }
-        };
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                if (Network.isOnline(getActivity())) {
+                if (NetworkUtil.isOnline(getActivity())) {
                     String email = mEditEmail.getText().toString().trim();
                     String password = mEditPassword.getText().toString();
                     if (isEmailValid(email)) {
                         if (password != null && !password.equals("")) {
-                            tokenManager.login(email, password);
+                            mUserModel.login(email, password);
                             mContainerLogin.setVisibility(View.GONE);
                             mProgress.setVisibility(View.VISIBLE);
                         } else {
@@ -230,7 +234,7 @@ public class ProfileFragment extends ContentFragment {
                         mEditEmail.setError(getString(R.string.error_email));
                     }
                 } else {
-                    Network.showNoConnectionToast(getActivity());
+                    NetworkUtil.showNoConnectionToast(getActivity());
                 }
             }
         });
@@ -238,21 +242,21 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                startUrlIntent(Path.URI_HPI + Path.ACCOUNT + Path.NEW);
+                startUrlIntent(Config.URI_HPI + Config.ACCOUNT + Config.NEW);
             }
         });
         mTextReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                startUrlIntent(Path.URI_HPI + Path.ACCOUNT + Path.RESET);
+                startUrlIntent(Config.URI_HPI + Config.ACCOUNT + Config.RESET);
             }
         });
         mBtnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                tokenManager.logout();
+                UserModel.logout(getActivity());
                 mEnrollments = null;
                 mCourses = null;
                 switchView();
@@ -269,8 +273,8 @@ public class ProfileFragment extends ContentFragment {
     public void onStart() {
         super.onStart();
         switchHeader();
-        if (TokenManager.isLoggedIn(getActivity()) && Network.isOnline(getActivity())) {
-            userManager.requestUser();
+        if (UserModel.isLoggedIn(getActivity()) && NetworkUtil.isOnline(getActivity())) {
+            mUserModel.retrieveUser(false);
             if (mEnrollments != null && mCourses != null) {
                 mAdapter.updateEnrollments(mEnrollments);
                 mTextEnrollCounts.setText(String.valueOf(mEnrollments.size()));
@@ -278,7 +282,7 @@ public class ProfileFragment extends ContentFragment {
                 mAdapter.updateCourses(mCourses);
                 mProgressBar.setVisibility(View.GONE);
             } else {
-                enrollManager.requestEnrollments(true);
+                mEnrollmentModel.retrieveEnrollments(false);
                 mProgressBar.setVisibility(View.VISIBLE);
             }
         }
@@ -288,13 +292,13 @@ public class ProfileFragment extends ContentFragment {
         mProgress.setVisibility(View.GONE);
         mEditEmail.setText(null);
         mEditPassword.setText(null);
-        if (!TokenManager.isLoggedIn(getActivity())) {
+        if (!UserModel.isLoggedIn(getActivity())) {
             mContainerLogin.setVisibility(View.VISIBLE);
             mContainerProfile.setVisibility(View.GONE);
         } else {
             mContainerLogin.setVisibility(View.GONE);
             mContainerProfile.setVisibility(View.VISIBLE);
-            showUser(UserManager.getUser(getActivity()));
+            showUser(UserModel.readUser(getActivity()));
             setProfilePicMargin();
         }
         switchHeader();
@@ -324,7 +328,7 @@ public class ProfileFragment extends ContentFragment {
 
         mTextEmail.setText(user.email);
 
-        mTextEnrollCounts.setText(String.valueOf(EnrollmentManager.getEnrollmentsSize(getActivity())));
+        mTextEnrollCounts.setText(String.valueOf(EnrollmentModel.readEnrollmentsSize(getActivity())));
     }
 
     private void setProfilePicMargin() {
@@ -334,10 +338,10 @@ public class ProfileFragment extends ContentFragment {
     }
 
     private void switchHeader() {
-        if (!TokenManager.isLoggedIn(getActivity())) {
+        if (!UserModel.isLoggedIn(getActivity())) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, getString(R.string.title_section_login));
         } else {
-            User user = UserManager.getUser(getActivity());
+            User user = UserModel.readUser(getActivity());
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.name);
         }
     }

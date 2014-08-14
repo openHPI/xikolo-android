@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.Hashtable;
 
 import de.xikolo.R;
-import de.xikolo.util.Path;
+import de.xikolo.util.Config;
 
 public class CustomFontTextView extends TextView {
 
@@ -44,7 +44,7 @@ public class CustomFontTextView extends TextView {
         synchronized (cache) {
             try {
                 if (!cache.containsKey(asset)) {
-                    tf = Typeface.createFromAsset(ctx.getAssets(), Path.FONT + asset);
+                    tf = Typeface.createFromAsset(ctx.getAssets(), Config.FONT + asset);
                     cache.put(asset, tf);
                 }
                 tf = cache.get(asset);

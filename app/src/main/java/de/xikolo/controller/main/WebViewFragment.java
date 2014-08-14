@@ -25,9 +25,10 @@ import java.util.Map;
 
 import de.xikolo.R;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.manager.SessionManager;
-import de.xikolo.util.Path;
-import de.xikolo.util.Network;
+import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.UserModel;
+import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public class WebViewFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -47,7 +48,7 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     private WebView mWebView;
     private ProgressBar mProgressBar;
 
-    private SessionManager mSessionManager;
+    private UserModel mUserModel;
 
     public WebViewFragment() {
         // Required empty public constructor
@@ -72,12 +73,29 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
             mTitle = getArguments().getString(ARG_TITLE);
         }
         setHasOptionsMenu(true);
+
+        mUserModel = new UserModel(getActivity(), jobManager);
+        mUserModel.setCreateSessionListener(new OnModelResponseListener<Void>() {
+            @Override
+            public void onResponse(Void response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (UserModel.hasSession()) {
+                            request();
+                        } else {
+                            mUserModel.createSession();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (isTopLevelContent && mUrl.contains(Path.NEWS)) {
+        if (isTopLevelContent && mUrl.contains(Config.NEWS)) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_NEWS, getString(R.string.title_section_news));
         } else if (!isTopLevelContent && mTitle != null) {
             mCallback.onLowLevelFragmentAttached(NavigationAdapter.NAV_ID_LOW_LEVEL_CONTENT, mTitle);
@@ -122,9 +140,9 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Path.URI_HOST_HPI) || url.contains(Path.URI_HOST_SAP)) {
+                if (url.contains(Config.URI_HOST_HPI) || url.contains(Config.URI_HOST_SAP)) {
                     Map<String, String> header = new HashMap<String, String>();
-                    header.put(Path.HEADER_USER_PLATFORM, Path.HEADER_VALUE_USER_PLATFORM_ANDROID);
+                    header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
                     view.loadUrl(url, header);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -152,17 +170,6 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
                 R.color.red,
                 R.color.orange);
         mRefreshLayout.setOnRefreshListener(this);
-
-        mSessionManager = new SessionManager(getActivity()) {
-            @Override
-            public void onSessionRequestReceived() {
-                request();
-            }
-
-            @Override
-            public void onSessionRequestCancelled() {
-            }
-        };
 
         onRefresh();
 
@@ -211,28 +218,28 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
 
-        if (Network.isOnline(getActivity())) {
-            if (SessionManager.hasSession(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
+            if (UserModel.hasSession()) {
                 request();
             } else {
-                mSessionManager.createSession();
+                mUserModel.createSession();
             }
         } else {
             mRefreshLayout.setRefreshing(false);
             mProgressBar.setVisibility(ProgressBar.GONE);
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 
     private void request() {
-        if (Network.isOnline(getActivity())) {
+        if (NetworkUtil.isOnline(getActivity())) {
             Map<String, String> header = new HashMap<String, String>();
-            header.put(Path.HEADER_USER_PLATFORM, Path.HEADER_VALUE_USER_PLATFORM_ANDROID);
+            header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
             mWebView.loadUrl(mUrl, header);
         } else {
             mRefreshLayout.setRefreshing(false);
             mProgressBar.setVisibility(ProgressBar.GONE);
-            Network.showNoConnectionToast(getActivity());
+            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 
