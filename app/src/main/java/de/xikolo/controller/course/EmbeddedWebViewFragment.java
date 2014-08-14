@@ -70,16 +70,11 @@ public class EmbeddedWebViewFragment extends BaseFragment implements SwipeRefres
         mUserModel.setCreateSessionListener(new OnModelResponseListener<Void>() {
             @Override
             public void onResponse(Void response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (UserModel.hasSession()) {
-                            request();
-                        } else {
-                            mUserModel.createSession();
-                        }
-                    }
-                });
+                if (UserModel.hasSession()) {
+                    request();
+                } else {
+                    mUserModel.createSession();
+                }
             }
         });
     }

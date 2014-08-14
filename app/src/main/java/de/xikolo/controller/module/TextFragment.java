@@ -52,15 +52,10 @@ public class TextFragment extends PagerFragment<ItemText> {
         mItemModel.setRetrieveItemDetailListener(new OnModelResponseListener<Item>() {
             @Override
             public void onResponse(final Item response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response != null) {
-                            mItem = response;
-                            displayBody();
-                        }
-                    }
-                });
+                if (response != null) {
+                    mItem = response;
+                    displayBody();
+                }
             }
         });
     }

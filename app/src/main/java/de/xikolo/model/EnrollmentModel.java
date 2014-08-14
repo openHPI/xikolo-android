@@ -1,6 +1,8 @@
 package de.xikolo.model;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.path.android.jobqueue.JobManager;
 
@@ -10,8 +12,8 @@ import de.xikolo.data.preferences.EnrollmentsPreferences;
 import de.xikolo.entities.Enrollment;
 import de.xikolo.jobs.CreateEnrollmentJob;
 import de.xikolo.jobs.DeleteEnrollmentJob;
-import de.xikolo.jobs.RetrieveEnrollmentsJob;
 import de.xikolo.jobs.OnJobResponseListener;
+import de.xikolo.jobs.RetrieveEnrollmentsJob;
 
 public class EnrollmentModel extends BaseModel {
 
@@ -40,17 +42,29 @@ public class EnrollmentModel extends BaseModel {
     public void retrieveEnrollments(boolean cache) {
         OnJobResponseListener<List<Enrollment>> callback = new OnJobResponseListener<List<Enrollment>>() {
             @Override
-            public void onResponse(List<Enrollment> response) {
-                if (mListener != null)
-                    mListener.onResponse(response);
+            public void onResponse(final List<Enrollment> response) {
+                if (mListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mListener.onResponse(response);
+                        }
+                    });
+                }
                 if (response != null)
                     mEnrollmentPref.saveEnrollmentsSize(response.size());
             }
 
             @Override
             public void onCancel() {
-                if (mListener != null)
-                    mListener.onResponse(null);
+                if (mListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mListener.onResponse(null);
+                        }
+                    });
+                }
             }
         };
         mJobManager.addJobInBackground(new RetrieveEnrollmentsJob(callback, cache, UserModel.readAccessToken(mContext)));

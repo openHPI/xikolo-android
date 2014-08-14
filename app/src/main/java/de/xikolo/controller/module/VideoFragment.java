@@ -64,15 +64,10 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
         mItemModel.setRetrieveItemDetailListener(new OnModelResponseListener<Item>() {
             @Override
             public void onResponse(final Item response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response != null) {
-                            mItem = response;
-                            setupVideo();
-                        }
-                    }
-                });
+                if (response != null) {
+                    mItem = response;
+                    setupVideo();
+                }
             }
         });
     }

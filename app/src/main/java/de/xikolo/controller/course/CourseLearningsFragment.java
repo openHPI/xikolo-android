@@ -83,13 +83,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
             public void onResponse(final List<Module> response) {
                 mRefreshLayout.setRefreshing(false);
                 if (response != null) {
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.updateModules(response);
-                        }
-                    });
+                    mAdapter.updateModules(response);
                     mModules = response;
 
                     for (final Module module : mModules) {
@@ -98,20 +92,16 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
                             itemModel.setRetrieveItemsListener(new OnModelResponseListener<List<Item>>() {
                                 @Override
                                 public void onResponse(final List<Item> response) {
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (response != null) {
-                                                module.items = response;
-                                                mAdapter.updateModules(mModules);
-                                            }
-                                        }
-                                    });
+                                    if (response != null) {
+                                        module.items = response;
+                                        mAdapter.updateModules(mModules);
+                                    }
                                 }
                             });
                             itemModel.retrieveItems(mCourse.id, module.id, mCache);
                         }
                     }
+
                 }
             }
         });

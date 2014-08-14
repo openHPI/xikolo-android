@@ -120,16 +120,11 @@ public class ProfileFragment extends ContentFragment {
         mCourseModel.setRetrieveCoursesListener(new OnModelResponseListener<List<Course>>() {
             @Override
             public void onResponse(final List<Course> response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response != null) {
-                            mCourses = response;
-                            mAdapter.updateCourses(response);
-                            mProgressBar.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                if (response != null) {
+                    mCourses = response;
+                    mAdapter.updateCourses(response);
+                    mProgressBar.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -137,18 +132,13 @@ public class ProfileFragment extends ContentFragment {
         mEnrollmentModel.setRetrieveEnrollmentsListener(new OnModelResponseListener<List<Enrollment>>() {
             @Override
             public void onResponse(final List<Enrollment> response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response != null) {
-                            mEnrollments = response;
-                            mAdapter.updateEnrollments(mEnrollments);
-                            mTextEnrollCounts.setText(String.valueOf(response.size()));
-                            mCallback.updateDrawer();
-                            mCourseModel.retrieveCourses(false, true);
-                        }
-                    }
-                });
+                if (response != null) {
+                    mEnrollments = response;
+                    mAdapter.updateEnrollments(mEnrollments);
+                    mTextEnrollCounts.setText(String.valueOf(response.size()));
+                    mCallback.updateDrawer();
+                    mCourseModel.retrieveCourses(false, true);
+                }
             }
         });
 
@@ -156,34 +146,24 @@ public class ProfileFragment extends ContentFragment {
         mUserModel.setRetrieveUserListener(new OnModelResponseListener<User>() {
             @Override
             public void onResponse(final User response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response != null) {
-                            switchView();
-                            showUser(response);
-                            mCallback.updateDrawer();
-                        }
-                    }
-                });
+                if (response != null) {
+                    switchView();
+                    showUser(response);
+                    mCallback.updateDrawer();
+                }
             }
         });
         mUserModel.setLoginListener(new OnModelResponseListener<AccessToken>() {
             @Override
             public void onResponse(final AccessToken response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response != null) {
-                            mUserModel.retrieveUser(false);
-                            mEnrollmentModel.retrieveEnrollments(false);
-                        } else {
-                            ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
-                            mContainerLogin.setVisibility(View.VISIBLE);
-                            mProgress.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                if (response != null) {
+                    mUserModel.retrieveUser(false);
+                    mEnrollmentModel.retrieveEnrollments(false);
+                } else {
+                    ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
+                    mContainerLogin.setVisibility(View.VISIBLE);
+                    mProgress.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -285,6 +265,9 @@ public class ProfileFragment extends ContentFragment {
                 mEnrollmentModel.retrieveEnrollments(false);
                 mProgressBar.setVisibility(View.VISIBLE);
             }
+        } else {
+            NetworkUtil.showNoConnectionToast(getActivity());
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 

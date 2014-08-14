@@ -1,6 +1,8 @@
 package de.xikolo.model;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.path.android.jobqueue.JobManager;
 
@@ -59,17 +61,29 @@ public class UserModel extends BaseModel {
     public void login(String email, String password) {
         OnJobResponseListener<AccessToken> callback = new OnJobResponseListener<AccessToken>() {
             @Override
-            public void onResponse(AccessToken response) {
-                if (mTokenListener != null)
-                    mTokenListener.onResponse(response);
+            public void onResponse(final AccessToken response) {
+                if (mTokenListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTokenListener.onResponse(response);
+                        }
+                    });
+                }
                 if (response != null)
                     mUserPref.saveAccessToken(response);
             }
 
             @Override
             public void onCancel() {
-                if (mTokenListener != null)
-                    mTokenListener.onResponse(null);
+                if (mTokenListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTokenListener.onResponse(null);
+                        }
+                    });
+                }
             }
         };
         mJobManager.addJobInBackground(new CreateAccessTokenJob(callback, email, password));
@@ -82,17 +96,29 @@ public class UserModel extends BaseModel {
     public void retrieveUser(boolean cache) {
         OnJobResponseListener<User> callback = new OnJobResponseListener<User>() {
             @Override
-            public void onResponse(User response) {
-                if (mUserListener != null)
-                    mUserListener.onResponse(response);
+            public void onResponse(final User response) {
+                if (mUserListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mUserListener.onResponse(response);
+                        }
+                    });
+                }
                 if (response != null)
                     mUserPref.saveUser(response);
             }
 
             @Override
             public void onCancel() {
-                if (mUserListener != null)
-                    mUserListener.onResponse(null);
+                if (mUserListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mUserListener.onResponse(null);
+                        }
+                    });
+                }
             }
         };
         mJobManager.addJobInBackground(new RetrieveUserJob(callback, cache, readAccessToken(mContext)));
@@ -105,16 +131,28 @@ public class UserModel extends BaseModel {
     public void createSession() {
         OnJobResponseListener<Void> callback = new OnJobResponseListener<Void>() {
             @Override
-            public void onResponse(Void response) {
-                if (mSessionListener != null)
-                    mSessionListener.onResponse(response);
+            public void onResponse(final Void response) {
+                if (mSessionListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mSessionListener.onResponse(response);
+                        }
+                    });
+                }
                 hasSession = true;
             }
 
             @Override
             public void onCancel() {
-                if (mUserListener != null)
-                    mSessionListener.onResponse(null);
+                if (mUserListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mSessionListener.onResponse(null);
+                        }
+                    });
+                }
             }
         };
         mJobManager.addJobInBackground(new CreateSessionJob(callback, readAccessToken(mContext)));

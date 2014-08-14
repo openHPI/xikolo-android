@@ -27,7 +27,6 @@ public class CreateAccessTokenJob extends Job {
     private OnJobResponseListener<AccessToken> mCallback;
 
     public CreateAccessTokenJob(OnJobResponseListener<AccessToken> callback, String email, String password) {
-        // TODO make persistent
         super(new Params(Priority.MID).requireNetwork().groupBy(TAG));
         id = jobCounter.incrementAndGet();
 
