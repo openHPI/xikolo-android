@@ -7,7 +7,7 @@ import com.path.android.jobqueue.JobManager;
 
 import de.xikolo.GlobalApplication;
 
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     protected JobManager jobManager;
 

@@ -24,7 +24,6 @@ public class CreateEnrollmentJob extends Job {
     private OnJobResponseListener<Void> mCallback;
 
     public CreateEnrollmentJob(OnJobResponseListener<Void> callback, String enrollmentId, String token) {
-        // TODO make persistent
         super(new Params(Priority.MID).requireNetwork().groupBy(TAG));
         id = jobCounter.incrementAndGet();
 

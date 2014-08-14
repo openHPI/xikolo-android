@@ -27,7 +27,6 @@ public class CreateSessionJob extends Job {
     private OnJobResponseListener<Void> mCallback;
 
     public CreateSessionJob(OnJobResponseListener<Void> callback, String token) {
-        // TODO make persistent
         super(new Params(Priority.MID).requireNetwork().groupBy(TAG));
         id = jobCounter.incrementAndGet();
 

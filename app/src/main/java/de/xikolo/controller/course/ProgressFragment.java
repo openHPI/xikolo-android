@@ -71,16 +71,11 @@ public class ProgressFragment extends BaseFragment {
         mModuleModel.setRetrieveModulesListener(new OnModelResponseListener<List<Module>>() {
             @Override
             public void onResponse(final List<Module> response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mProgress.setVisibility(View.GONE);
-                        if (response != null) {
-                            mModules = response;
-                            mAdapter.updateModules(response);
-                        }
-                    }
-                });
+                mProgress.setVisibility(View.GONE);
+                if (response != null) {
+                    mModules = response;
+                    mAdapter.updateModules(response);
+                }
             }
         });
     }

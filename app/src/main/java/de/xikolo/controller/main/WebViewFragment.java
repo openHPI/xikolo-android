@@ -78,16 +78,11 @@ public class WebViewFragment extends ContentFragment implements SwipeRefreshLayo
         mUserModel.setCreateSessionListener(new OnModelResponseListener<Void>() {
             @Override
             public void onResponse(Void response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (UserModel.hasSession()) {
-                            request();
-                        } else {
-                            mUserModel.createSession();
-                        }
-                    }
-                });
+                if (UserModel.hasSession()) {
+                    request();
+                } else {
+                    mUserModel.createSession();
+                }
             }
         });
     }

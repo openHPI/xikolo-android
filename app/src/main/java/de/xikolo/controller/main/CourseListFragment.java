@@ -83,19 +83,14 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mCourseModel.setRetrieveCoursesListener(new OnModelResponseListener<List<Course>>() {
             @Override
             public void onResponse(final List<Course> response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response != null) {
-                            mCourses = response;
-                            updateView();
-                        } else {
-                            mRefreshLayout.setRefreshing(false);
-                            ToastUtil.show(getActivity(), getActivity().getString(R.string.toast_no_courses)
-                                    + " " + getActivity().getString(R.string.toast_no_network));
-                        }
-                    }
-                });
+                if (response != null) {
+                    mCourses = response;
+                    updateView();
+                } else {
+                    mRefreshLayout.setRefreshing(false);
+                    ToastUtil.show(getActivity(), getActivity().getString(R.string.toast_no_courses)
+                            + " " + getActivity().getString(R.string.toast_no_network));
+                }
             }
         });
 
@@ -103,17 +98,12 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mEnrollmentModel.setRetrieveEnrollmentsListener(new OnModelResponseListener<List<Enrollment>>() {
             @Override
             public void onResponse(final List<Enrollment> response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response != null) {
-                            mEnrollments = response;
-                            updateView();
-                        } else {
-                            mRefreshLayout.setRefreshing(false);
-                        }
-                    }
-                });
+                if (response != null) {
+                    mEnrollments = response;
+                    updateView();
+                } else {
+                    mRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }

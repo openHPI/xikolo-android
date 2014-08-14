@@ -21,14 +21,9 @@ public class UpdateProgressionJob extends Job {
     private String itemId;
     private String token;
 
-    private OnJobResponseListener<Void> mCallback;
-
-    public UpdateProgressionJob(OnJobResponseListener<Void> callback, String itemId, String token) {
-        // TODO make persistent
-        super(new Params(Priority.LOW).requireNetwork().groupBy(TAG));
+    public UpdateProgressionJob(String itemId, String token) {
+        super(new Params(Priority.LOW).persist().requireNetwork().groupBy(TAG));
         id = jobCounter.incrementAndGet();
-
-        mCallback = callback;
 
         this.itemId = itemId;
         this.token = token;
@@ -53,17 +48,14 @@ public class UpdateProgressionJob extends Job {
         if (o != null) {
             if (Config.DEBUG)
                 Log.i(TAG, "Progression updated");
-            mCallback.onResponse(null);
         } else {
             if (Config.DEBUG)
                 Log.w(TAG, "Progression not updated");
-            mCallback.onCancel();
         }
     }
 
     @Override
     protected void onCancel() {
-        mCallback.onCancel();
     }
 
     @Override

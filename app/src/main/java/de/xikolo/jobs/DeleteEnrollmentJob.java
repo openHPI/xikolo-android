@@ -24,7 +24,6 @@ public class DeleteEnrollmentJob extends Job {
     private String token;
 
     public DeleteEnrollmentJob(OnJobResponseListener<Void> callback, String enrollmentId, String token) {
-        // TODO make persistent
         super(new Params(Priority.MID).requireNetwork().groupBy(TAG));
         id = jobCounter.incrementAndGet();
 

@@ -9,12 +9,19 @@ public class Config {
     public static final boolean DEBUG = BuildConfig.buildType == BuildType.DEBUG;
 
     public static final String FONT = "fonts/";
-    public static final String FONT_SANS = FONT + "NeoSansStdRegular.ttf";
-    public static final String FONT_SANS_BOLD = FONT + "NeoSansStdMedium.ttf";
+    public static final String FONT_SANS;
     public static final String FONT_XIKOLO = FONT + "xikolo.ttf";
 
     public static final String PREF_USER = UserPreferences.class.getName();
     public static final String PREF_ENROLLMENTS = EnrollmentsPreferences.class.getName();
+
+    static {
+        if (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI) {
+            FONT_SANS = FONT + "NeoSansStdRegular.ttf";
+        } else {
+            FONT_SANS = FONT + "BentonSansRegular.ttf";
+        }
+    }
 
     public static final String HEADER_ACCEPT = "ACCEPT";
     public static final String HEADER_AUTHORIZATION = "AUTHORIZATION";

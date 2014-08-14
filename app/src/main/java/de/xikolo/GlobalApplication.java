@@ -16,10 +16,9 @@ import com.path.android.jobqueue.log.CustomLogger;
 import java.io.File;
 import java.io.IOException;
 
-import de.xikolo.util.BuildFlavor;
-import de.xikolo.util.BuildType;
 import de.xikolo.util.Config;
 import de.xikolo.util.FontsOverride;
+import de.xikolo.util.SslCertificateUtil;
 
 public class GlobalApplication extends Application {
 
@@ -54,13 +53,14 @@ public class GlobalApplication extends Application {
         configureHttpResponseCache();
         configureWebViewCookies();
         configureJobManager();
+
+        if (Config.DEBUG)
+            SslCertificateUtil.disableSslCertificateChecking();
     }
 
     private void configureFontTypefaces() {
         // Set global Typefaces
-        if (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI) {
-            FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
-        }
+        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
     }
 
     private void configureImageLoader() {

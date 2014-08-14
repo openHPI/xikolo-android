@@ -1,6 +1,8 @@
 package de.xikolo.model;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.path.android.jobqueue.JobManager;
 
@@ -27,15 +29,27 @@ public class ItemModel extends BaseModel {
     public void retrieveItems(String courseId, String moduleId, boolean cache) {
         OnJobResponseListener<List<Item>> callback = new OnJobResponseListener<List<Item>>() {
             @Override
-            public void onResponse(List<Item> response) {
-                if (mRetrieveItemsListener != null)
-                    mRetrieveItemsListener.onResponse(response);
+            public void onResponse(final List<Item> response) {
+                if (mRetrieveItemsListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mRetrieveItemsListener.onResponse(response);
+                        }
+                    });
+                }
             }
 
             @Override
             public void onCancel() {
-                if (mRetrieveItemsListener != null)
-                    mRetrieveItemsListener.onResponse(null);
+                if (mRetrieveItemsListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mRetrieveItemsListener.onResponse(null);
+                        }
+                    });
+                }
             }
         };
         mJobManager.addJobInBackground(new RetrieveItemsJob(callback, courseId, moduleId, cache, UserModel.readAccessToken(mContext)));
@@ -48,15 +62,27 @@ public class ItemModel extends BaseModel {
     public void retrieveItemDetail(String courseId, String moduleId, String itemId, String itemType, boolean cache) {
         OnJobResponseListener<Item> callback = new OnJobResponseListener<Item>() {
             @Override
-            public void onResponse(Item response) {
-                if (mRetrieveItemDetailListener != null)
-                    mRetrieveItemDetailListener.onResponse(response);
+            public void onResponse(final Item response) {
+                if (mRetrieveItemDetailListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mRetrieveItemDetailListener.onResponse(response);
+                        }
+                    });
+                }
             }
 
             @Override
             public void onCancel() {
-                if (mRetrieveItemDetailListener != null)
-                    mRetrieveItemDetailListener.onResponse(null);
+                if (mRetrieveItemDetailListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mRetrieveItemDetailListener.onResponse(null);
+                        }
+                    });
+                }
             }
         };
         mJobManager.addJobInBackground(new RetrieveItemDetailJob(callback, courseId, moduleId, itemId, itemType, cache, UserModel.readAccessToken(mContext)));
@@ -67,16 +93,7 @@ public class ItemModel extends BaseModel {
     }
 
     public void updateProgression(String itemId) {
-        OnJobResponseListener<Void> callback = new OnJobResponseListener<Void>() {
-            @Override
-            public void onResponse(Void response) {
-            }
-
-            @Override
-            public void onCancel() {
-            }
-        };
-        mJobManager.addJobInBackground(new UpdateProgressionJob(callback, itemId, UserModel.readAccessToken(mContext)));
+        mJobManager.addJobInBackground(new UpdateProgressionJob(itemId, UserModel.readAccessToken(mContext)));
     }
 
 }

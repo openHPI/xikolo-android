@@ -61,15 +61,10 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
         mItemModel.setRetrieveItemDetailListener(new OnModelResponseListener<Item>() {
             @Override
             public void onResponse(final Item response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response != null) {
-                            mItem = response;
-                            request();
-                        }
-                    }
-                });
+                if (response != null) {
+                    mItem = response;
+                    request();
+                }
             }
         });
 
@@ -77,16 +72,11 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
         mUserModel.setCreateSessionListener(new OnModelResponseListener<Void>() {
             @Override
             public void onResponse(Void response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (UserModel.hasSession()) {
-                            request();
-                        } else {
-                            mUserModel.createSession();
-                        }
-                    }
-                });
+                if (UserModel.hasSession()) {
+                    request();
+                } else {
+                    mUserModel.createSession();
+                }
             }
         });
     }

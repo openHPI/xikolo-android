@@ -1,14 +1,16 @@
 package de.xikolo.model;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.path.android.jobqueue.JobManager;
 
 import java.util.List;
 
 import de.xikolo.entities.Module;
-import de.xikolo.jobs.RetrieveModulesJob;
 import de.xikolo.jobs.OnJobResponseListener;
+import de.xikolo.jobs.RetrieveModulesJob;
 
 public class ModuleModel extends BaseModel {
 
@@ -23,15 +25,27 @@ public class ModuleModel extends BaseModel {
     public void retrieveModules(String courseId, boolean cache, boolean includeProgress) {
         OnJobResponseListener<List<Module>> callback = new OnJobResponseListener<List<Module>>() {
             @Override
-            public void onResponse(List<Module> response) {
-                if (mListener != null)
-                    mListener.onResponse(response);
+            public void onResponse(final List<Module> response) {
+                if (mListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mListener.onResponse(response);
+                        }
+                    });
+                }
             }
 
             @Override
             public void onCancel() {
-                if (mListener != null)
-                    mListener.onResponse(null);
+                if (mListener != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mListener.onResponse(null);
+                        }
+                    });
+                }
             }
         };
         mJobManager.addJobInBackground(new RetrieveModulesJob(callback, courseId, cache, includeProgress, UserModel.readAccessToken(mContext)));
