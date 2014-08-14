@@ -233,7 +233,11 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     @Override
     public void onEnrollButtonClicked(Course course) {
         if (UserModel.isLoggedIn(getActivity())) {
-            mEnrollmentModel.createEnrollment(course.id);
+            if (NetworkUtil.isOnline(getActivity())) {
+                mEnrollmentModel.createEnrollment(course.id);
+            } else {
+                NetworkUtil.showNoConnectionToast(getActivity());
+            }
         } else {
             ToastUtil.show(getActivity(), R.string.toast_please_log_in);
             mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);

@@ -265,6 +265,9 @@ public class ProfileFragment extends ContentFragment {
                 mEnrollmentModel.retrieveEnrollments(false);
                 mProgressBar.setVisibility(View.VISIBLE);
             }
+        } else {
+            NetworkUtil.showNoConnectionToast(getActivity());
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 
