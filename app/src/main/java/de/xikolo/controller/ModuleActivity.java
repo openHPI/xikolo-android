@@ -21,10 +21,10 @@ import de.xikolo.controller.module.AssignmentFragment;
 import de.xikolo.controller.module.PagerFragment;
 import de.xikolo.controller.module.TextFragment;
 import de.xikolo.controller.module.VideoFragment;
-import de.xikolo.model.ProgressionModel;
 import de.xikolo.entities.Course;
 import de.xikolo.entities.Item;
 import de.xikolo.entities.Module;
+import de.xikolo.model.ItemModel;
 import de.xikolo.util.NetworkUtil;
 
 public class ModuleActivity extends BaseActivity {
@@ -39,7 +39,7 @@ public class ModuleActivity extends BaseActivity {
     private Module mModule;
     private Item mItem;
 
-    private ProgressionModel mProgressionModel;
+    private ItemModel mItemModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class ModuleActivity extends BaseActivity {
             this.mItem = b.getParcelable(ARG_ITEM);
         }
 
-        mProgressionModel = new ProgressionModel(this, jobManager);
+        mItemModel = new ItemModel(this, jobManager);
 
         setTitle(mModule.name);
 
@@ -74,12 +74,12 @@ public class ModuleActivity extends BaseActivity {
             pager.setCurrentItem(mModule.items.indexOf(mItem), false);
             if (mModule.items.indexOf(mItem) == 0) {
                 if (NetworkUtil.isOnline(this)) {
-                    mProgressionModel.updateProgression(mModule.items.get(0).id);
+                    mItemModel.updateProgression(mModule.items.get(0).id);
                 }
             }
         } else {
             if (NetworkUtil.isOnline(this)) {
-                mProgressionModel.updateProgression(mModule.items.get(0).id);
+                mItemModel.updateProgression(mModule.items.get(0).id);
             }
         }
     }
@@ -193,7 +193,7 @@ public class ModuleActivity extends BaseActivity {
         @Override
         public void onPageSelected(int position) {
             if (NetworkUtil.isOnline(mContext)) {
-                mProgressionModel.updateProgression(mItems.get(position).id);
+                mItemModel.updateProgression(mItems.get(position).id);
             }
 
             if (lastPosition != position) {

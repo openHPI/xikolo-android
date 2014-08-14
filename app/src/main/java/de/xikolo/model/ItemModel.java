@@ -7,9 +7,10 @@ import com.path.android.jobqueue.JobManager;
 import java.util.List;
 
 import de.xikolo.entities.Item;
+import de.xikolo.jobs.OnJobResponseListener;
 import de.xikolo.jobs.RetrieveItemDetailJob;
 import de.xikolo.jobs.RetrieveItemsJob;
-import de.xikolo.jobs.OnJobResponseListener;
+import de.xikolo.jobs.UpdateProgressionJob;
 
 public class ItemModel extends BaseModel {
 
@@ -63,6 +64,19 @@ public class ItemModel extends BaseModel {
 
     public void setRetrieveItemDetailListener(OnModelResponseListener<Item> listener) {
         mRetrieveItemDetailListener = listener;
+    }
+
+    public void updateProgression(String itemId) {
+        OnJobResponseListener<Void> callback = new OnJobResponseListener<Void>() {
+            @Override
+            public void onResponse(Void response) {
+            }
+
+            @Override
+            public void onCancel() {
+            }
+        };
+        mJobManager.addJobInBackground(new UpdateProgressionJob(callback, itemId, UserModel.readAccessToken(mContext)));
     }
 
 }
