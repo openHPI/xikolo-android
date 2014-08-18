@@ -221,7 +221,7 @@
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="2dp"
                     android:text="@string/forgot_password"
-                    android:textColor="@color/orange"
+                    android:textColor="@color/apptheme_main"
                     android:textSize="14sp" />
 
                 <Button
@@ -232,7 +232,7 @@
                     android:layout_below="@+id/textForgotPw"
                     android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/button_orange"
+                    android:background="@drawable/button_main"
                     android:text="@string/login"
                     android:textColor="@color/white"
                     android:textSize="20sp"

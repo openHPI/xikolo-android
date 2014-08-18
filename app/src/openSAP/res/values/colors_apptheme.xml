@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="apptheme_color">#de6212</color>
+
+    <color name="apptheme_main">#f0ab00</color>
+    <!-- 10% darker -->
+    <color name="apptheme_main_dark">#d89a00</color>
+
+    <color name="apptheme_main_alpha">#1af0ab00</color>
+
+    <!-- navi colors + 5% apptheme_main -->
+    <color name="navi_main_light">#2f2c23</color>
+    <color name="navi_sub_light">#201d14</color>
+    <color name="navi_profile_light">#3d3930</color>
+
+    <color name="apptheme_sap_gold_l">#FCB913</color>
+    <color name="apptheme_sap_gold_l_dark">#e2a611</color>
+    <color name="apptheme_sap_gold_d">#FC8613</color>
+    <color name="apptheme_sap_gold_d_dark">#e27811</color>
+
+    <color name="apptheme_sap_gray_m">#999999</color>
+    <color name="apptheme_sap_gray_m_dark">#898989</color>
+    <color name="apptheme_sap_gray_d">#666666</color>
+    <color name="apptheme_sap_gray_d_dark">#5c5c5c</color>
+
+    <color name="apptheme_second">#226CA9</color>
+    <color name="apptheme_third">#8AB54E</color>
+
 </resources>

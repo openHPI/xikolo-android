@@ -53,15 +53,15 @@
 
     <!-- ActionBar styles -->
     <style name="AppActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/gray_actionbar</item>
+        <item name="android:background">@color/actionbar</item>
     </style>
 
     <!-- Dialog styles -->
     <style name="DialogStyleLight.Custom">
-        <item name="titleTextColor">@color/orange</item>
-        <item name="titleSeparatorColor">@color/orange</item>
-        <item name="buttonBackgroundColorPressed">@color/orange_alpha</item>
-        <item name="buttonBackgroundColorFocused">@color/orange_alpha</item>
+        <item name="titleTextColor">@color/apptheme_main</item>
+        <item name="titleSeparatorColor">@color/apptheme_main</item>
+        <item name="buttonBackgroundColorPressed">@color/apptheme_main_alpha</item>
+        <item name="buttonBackgroundColorFocused">@color/apptheme_main_alpha</item>
     </style>
 
     <style name="TextDropShadow">

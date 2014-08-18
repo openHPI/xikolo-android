@@ -114,11 +114,11 @@ public class NavigationAdapter extends BaseAdapter {
 
         if (i == ((ListView) viewGroup).getCheckedItemPosition()) {
             if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mContext)) {
-                holder.name.setTextColor(mContext.getResources().getColor(R.color.orange));
-                holder.email.setTextColor(mContext.getResources().getColor(R.color.orange));
+                holder.name.setTextColor(mContext.getResources().getColor(R.color.apptheme_main));
+                holder.email.setTextColor(mContext.getResources().getColor(R.color.apptheme_main));
             } else {
-                holder.icon.setTextColor(mContext.getResources().getColor(R.color.orange));
-                holder.label.setTextColor(mContext.getResources().getColor(R.color.orange));
+                holder.icon.setTextColor(mContext.getResources().getColor(R.color.apptheme_main));
+                holder.label.setTextColor(mContext.getResources().getColor(R.color.apptheme_main));
             }
         } else {
             if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mContext)) {

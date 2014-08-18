@@ -53,7 +53,7 @@
                 android:layout_below="@+id/textTitle"
                 android:layout_marginBottom="2dp"
                 android:singleLine="true"
-                android:textColor="@color/orange"
+                android:textColor="@color/apptheme_main"
                 android:textSize="14sp" />
 
             <de.xikolo.view.CustomFontTextView
@@ -111,7 +111,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/textLangIcon"
-                android:background="@drawable/button_orange"
+                android:background="@drawable/button_main"
                 android:includeFontPadding="false"
                 android:minHeight="0dp"
                 android:paddingBottom="4dp"

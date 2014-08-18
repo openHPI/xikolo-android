@@ -127,10 +127,10 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
         mRefreshLayout.setColorSchemeResources(
-                R.color.red,
-                R.color.orange,
-                R.color.red,
-                R.color.orange);
+                R.color.apptheme_second,
+                R.color.apptheme_main,
+                R.color.apptheme_second,
+                R.color.apptheme_main);
         mRefreshLayout.setOnRefreshListener(this);
 
         mCourseListAdapter = new FilteredCourseListAdapter(getActivity(), this, mFilter);

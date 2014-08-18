@@ -1,29 +1,20 @@
 <resources>
-    <color name="gray_actionbar">#101010</color>
-    <color name="gray_navi_main">#252525</color>
-    <color name="gray_navi_sub">#151515</color>
-    <color name="gray_navi_profile">#333333</color>
+    <color name="actionbar">#101010</color>
+    <color name="actionbar_alpha">#99000000</color>
+
+    <color name="navi_main">#252525</color>
+    <color name="navi_sub">#151515</color>
+    <color name="navi_profile">#333333</color>
+
     <color name="gray_text">#5a6065</color>
-    <color name="red">#b42946</color>
-    <color name="orange">#de6212</color>
-    <color name="orange_alpha">#66de6212</color>
-    <color name="orange_dark">#c05c05</color>
-    <color name="orange_navi_profile">#534138</color>
-    <color name="orange_navi_main">#46362e</color>
-    <color name="orange_navi_sub">#2e2013</color>
-    <color name="yellow">#f5a704</color>
+    <color name="gray_light">#cccccc</color>
+    <color name="tab_text">#ff666666</color>
+
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="white_alpha">#ccffffff</color>
     <color name="black_alpha">#33000000</color>
-    <color name="actionbar_alpha">#99000000</color>
     <color name="transparent">#00000000</color>
     <color name="background_holo_light">#fff3f3f3</color>
-
-    <color name="gray_light">#cccccc</color>
-    <color name="gray">#5a6065</color>
-    <color name="gray_dark">#474B4F</color>
-
-    <color name="tab_text">#ff666666</color>
 
 </resources>

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dip"
 
-        app:pstsIndicatorColor="@color/orange"
+        app:pstsIndicatorColor="@color/apptheme_main"
         app:pstsTabBackground="@drawable/bg_tabs"
         app:pstsTabPaddingLeftRight="14dip"
 

@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="apptheme_color">#de6212</color>
+
+    <color name="apptheme_main">#de6212</color>
+    <!-- 10% darker -->
+    <color name="apptheme_main_dark">#c75810</color>
+
+    <color name="apptheme_main_alpha">#1ade6212</color>
+
+    <!-- navi colors + 5% apptheme_main -->
+    <color name="navi_main_light">#2e2824</color>
+    <color name="navi_sub_light">#1f1915</color>
+    <color name="navi_profile_light">#3c3531</color>
+
+    <color name="apptheme_gray">#5a6065</color>
+    <color name="apptheme_gray_dark">#474B4F</color>
+
+    <color name="apptheme_second">#b42946</color>
+    <color name="apptheme_third">#f5a704</color>
+
 </resources>

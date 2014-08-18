@@ -24,7 +24,7 @@
         android:layout_height="2dp"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textTitle"
-        android:background="@color/orange" />
+        android:background="@color/apptheme_main" />
 
     <FrameLayout
         android:layout_width="fill_parent"

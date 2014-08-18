@@ -114,10 +114,10 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
         mRefreshLayout.setColorSchemeResources(
-                R.color.red,
-                R.color.orange,
-                R.color.red,
-                R.color.orange);
+                R.color.apptheme_second,
+                R.color.apptheme_main,
+                R.color.apptheme_second,
+                R.color.apptheme_main);
         mRefreshLayout.setOnRefreshListener(this);
 
         mListView = (AbsListView) layout.findViewById(R.id.listView);

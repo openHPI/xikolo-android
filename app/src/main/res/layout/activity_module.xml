@@ -16,7 +16,7 @@
         android:layout_alignParentTop="true"
         android:textSize="24sp"
 
-        app:pstsIndicatorColor="@color/orange"
+        app:pstsIndicatorColor="@color/apptheme_main"
         app:pstsTabBackground="@drawable/bg_tabs"
         app:pstsTabPaddingLeftRight="14dip" />
 

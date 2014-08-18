@@ -142,10 +142,10 @@ public class EmbeddedWebViewFragment extends BaseFragment implements SwipeRefres
         });
 
         mRefreshLayout.setColorSchemeResources(
-                R.color.red,
-                R.color.orange,
-                R.color.red,
-                R.color.orange);
+                R.color.apptheme_second,
+                R.color.apptheme_main,
+                R.color.apptheme_second,
+                R.color.apptheme_main);
         mRefreshLayout.setOnRefreshListener(this);
 
         onRefresh();

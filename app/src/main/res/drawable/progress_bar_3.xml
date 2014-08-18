@@ -8,7 +8,7 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape>
-                <solid android:color="@color/orange" />
+                <solid android:color="@color/apptheme_main" />
             </shape>
         </clip>
     </item>
