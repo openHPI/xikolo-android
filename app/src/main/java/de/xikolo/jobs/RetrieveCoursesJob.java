@@ -55,11 +55,11 @@ public class RetrieveCoursesJob extends Job {
         Type type = new TypeToken<List<Course>>() {
         }.getType();
 
-        String url = Config.API_SAP + Config.COURSES + "?include_progress=" + includeProgress;
+        String url = Config.API + Config.COURSES + "?include_progress=" + includeProgress;
 
         JsonRequest request = new JsonRequest(url, type);
         request.setCache(cache);
-        if (includeProgress) {
+        if (token != null) {
             request.setToken(token);
         }
 

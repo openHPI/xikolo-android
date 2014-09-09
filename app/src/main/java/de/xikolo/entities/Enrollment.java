@@ -7,17 +7,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Enrollment implements Parcelable {
 
-    public static final Creator<Enrollment> CREATOR = new Creator<Enrollment>() {
-        public Enrollment createFromParcel(Parcel in) {
-            return new Enrollment(in);
-        }
-
-        public Enrollment[] newArray(int size) {
-            return new Enrollment[size];
-        }
-    };
     @SerializedName("id")
     public String id;
+
     @SerializedName("course_id")
     public String course_id;
 
@@ -30,6 +22,16 @@ public class Enrollment implements Parcelable {
     public int describeContents() {
         return 0;
     }
+
+    public static final Creator<Enrollment> CREATOR = new Creator<Enrollment>() {
+        public Enrollment createFromParcel(Parcel in) {
+            return new Enrollment(in);
+        }
+
+        public Enrollment[] newArray(int size) {
+            return new Enrollment[size];
+        }
+    };
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {

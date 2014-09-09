@@ -21,7 +21,6 @@ public class HttpRequest {
     protected String mToken;
     protected String mMethod;
     protected boolean mCache;
-    protected boolean mCacheOnly;
 
     protected HttpsURLConnection urlConnection;
 
@@ -31,7 +30,6 @@ public class HttpRequest {
         this.mToken = null;
         this.mMethod = Config.HTTP_GET;
         this.mCache = true;
-        this.mCacheOnly = false;
     }
 
     public void setToken(String token) {
@@ -44,10 +42,6 @@ public class HttpRequest {
 
     public void setCache(boolean cache) {
         this.mCache = cache;
-    }
-
-    public void setCacheOnly(boolean cacheOnly) {
-        this.mCacheOnly = cacheOnly;
     }
 
     protected void closeConnection() {
@@ -63,13 +57,11 @@ public class HttpRequest {
             urlConnection.addRequestProperty(Config.HEADER_ACCEPT, Config.HEADER_VALUE_ACCEPT_SAP);
             urlConnection.addRequestProperty(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
 
-            if (mCacheOnly) {
-                urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_VALUE_ONLY_CACHE);
-            } else if (!mCache) {
+            if (!mCache) {
                 urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_VALUE_NO_CACHE);
             }
             if (mToken != null) {
-                urlConnection.addRequestProperty(Config.HEADER_AUTHORIZATION, "Token token=\"" + mToken + "\"");
+                urlConnection.addRequestProperty(Config.HEADER_AUTHORIZATION, "Token " + mToken);
             }
 
             final int statusCode = urlConnection.getResponseCode();

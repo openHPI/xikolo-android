@@ -17,8 +17,8 @@ import com.astuetz.PagerSlidingTabStrip;
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.course.dialog.UnenrollDialog;
-import de.xikolo.model.EnrollmentModel;
 import de.xikolo.entities.Course;
+import de.xikolo.model.CourseModel;
 import de.xikolo.util.Config;
 import eu.inmite.android.lib.dialogs.ISimpleDialogListener;
 
@@ -89,8 +89,8 @@ public class CourseFragment extends BaseFragment implements ISimpleDialogListene
 
     @Override
     public void onPositiveButtonClicked(int i) {
-        EnrollmentModel manager = new EnrollmentModel(getActivity(), jobManager);
-        manager.deleteEnrollment(mCourse.id);
+        CourseModel model = new CourseModel(getActivity(), jobManager);
+        model.deleteEnrollment(mCourse.id);
         getActivity().finish();
     }
 
@@ -137,16 +137,16 @@ public class CourseFragment extends BaseFragment implements ISimpleDialogListene
                         fragment = CourseLearningsFragment.newInstance(mCourse);
                         break;
                     case 1:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI_SAP + Config.COURSES + mCourse.id + "/" + Config.DISCUSSIONS);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.DISCUSSIONS);
                         break;
                     case 2:
                         fragment = ProgressFragment.newInstance(mCourse);
                         break;
                     case 3:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI_SAP + Config.COURSES + mCourse.id + "/" + Config.ANNOUNCEMENTS);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ANNOUNCEMENTS);
                         break;
                     case 4:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI_SAP + Config.COURSES + mCourse.id + "/" + Config.ROOMS);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ROOMS);
                         break;
                     case 5:
                         fragment = EmbeddedWebViewFragment.newInstance(mCourse.url);

@@ -18,14 +18,12 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.controller.CourseActivity;
 import de.xikolo.controller.main.adapter.CourseListAdapter;
-import de.xikolo.controller.main.adapter.FilteredCourseListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.entities.Course;
-import de.xikolo.entities.Enrollment;
 import de.xikolo.model.CourseModel;
-import de.xikolo.model.EnrollmentModel;
 import de.xikolo.model.OnModelResponseListener;
 import de.xikolo.model.UserModel;
+import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
@@ -35,11 +33,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public static final String TAG = CourseListFragment.class.getSimpleName();
 
     public static final String ARG_FILTER = "arg_filter";
-    public static final String FILTER_ALL = "filter_all";
-    public static final String FILTER_MY = "filter_my";
 
     private static final String KEY_COURSES = "courses";
-    private static final String KEY_ENROLLMENTS = "enrollments";
 
     private String mFilter;
     private SwipeRefreshLayout mRefreshLayout;
@@ -50,10 +45,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     private TextView mTextNotification;
 
     private List<Course> mCourses;
-    private List<Enrollment> mEnrollments;
 
     private CourseModel mCourseModel;
-    private EnrollmentModel mEnrollmentModel;
 
     public CourseListFragment() {
         // Required empty public constructor
@@ -75,7 +68,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         }
         if (savedInstanceState != null) {
             mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
-            mEnrollments = savedInstanceState.getParcelableArrayList(KEY_ENROLLMENTS);
         }
         setHasOptionsMenu(true);
 
@@ -93,28 +85,12 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 }
             }
         });
-
-        mEnrollmentModel = new EnrollmentModel(getActivity(), jobManager);
-        mEnrollmentModel.setRetrieveEnrollmentsListener(new OnModelResponseListener<List<Enrollment>>() {
-            @Override
-            public void onResponse(final List<Enrollment> response) {
-                if (response != null) {
-                    mEnrollments = response;
-                    updateView();
-                } else {
-                    mRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mCourses != null) {
             outState.putParcelableArrayList(KEY_COURSES, (ArrayList<Course>) mCourses);
-        }
-        if (mEnrollments != null) {
-            outState.putParcelableArrayList(KEY_ENROLLMENTS, (ArrayList<Enrollment>) mEnrollments);
         }
         super.onSaveInstanceState(outState);
     }
@@ -133,7 +109,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 R.color.apptheme_main);
         mRefreshLayout.setOnRefreshListener(this);
 
-        mCourseListAdapter = new FilteredCourseListAdapter(getActivity(), this, mFilter);
+        mCourseListAdapter = new CourseListAdapter(getActivity(), this);
 
         mAbsListView = (AbsListView) layout.findViewById(R.id.listView);
         mAbsListView.setAdapter(mCourseListAdapter);
@@ -147,9 +123,9 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     @Override
     public void onStart() {
         super.onStart();
-        if (mFilter.equals(FILTER_ALL)) {
+        if (mFilter.equals(CourseModel.FILTER_ALL)) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
-        } else if (mFilter.equals(FILTER_MY)) {
+        } else if (mFilter.equals(CourseModel.FILTER_MY)) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
             if (!UserModel.isLoggedIn(getActivity())) {
                 mNotification.setVisibility(View.VISIBLE);
@@ -164,27 +140,14 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         }
 
         if (NetworkUtil.isOnline(getActivity())) {
-            if (UserModel.isLoggedIn(getActivity())) {
-                if (mEnrollments == null) {
-                    mRefreshLayout.setRefreshing(true);
-                    mEnrollmentModel.retrieveEnrollments(true);
-                } else {
-                    mCourseListAdapter.updateEnrollments(mEnrollments);
-                    mRefreshLayout.setRefreshing(true);
-                    mEnrollmentModel.retrieveEnrollments(true);
-                }
-            } else {
-                mEnrollments = null;
-                mCourseListAdapter.clear();
-            }
-
+            mCourseListAdapter.clear();
             if (mCourses == null) {
                 mRefreshLayout.setRefreshing(true);
-                mCourseModel.retrieveCourses(true, false);
+                mCourseModel.retrieveCourses(mFilter, true, false);
             } else {
                 mCourseListAdapter.updateCourses(mCourses);
                 mRefreshLayout.setRefreshing(true);
-                mCourseModel.retrieveCourses(true, false);
+                mCourseModel.retrieveCourses(mFilter, true, false);
             }
         } else {
             NetworkUtil.showNoConnectionToast(getActivity());
@@ -193,21 +156,18 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     private void updateView() {
         mRefreshLayout.setRefreshing(false);
-        if (mEnrollments != null) {
-            mCourseListAdapter.updateEnrollments(mEnrollments);
-            if (mFilter.equals(FILTER_MY)) {
-                if (mEnrollments.size() == 0) {
-                    mNotification.setVisibility(View.VISIBLE);
-                    mTextNotification.setText(getString(R.string.notification_no_enrollments));
-                    mNotification.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mCallback.toggleDrawer(NavigationAdapter.NAV_ID_ALL_COURSES);
-                        }
-                    });
-                } else {
-                    mNotification.setVisibility(View.GONE);
-                }
+        if (mFilter.equals(CourseModel.FILTER_MY)) {
+            if (mCourses.size() == 0) {
+                mNotification.setVisibility(View.VISIBLE);
+                mTextNotification.setText(getString(R.string.notification_no_enrollments));
+                mNotification.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.toggleDrawer(NavigationAdapter.NAV_ID_ALL_COURSES);
+                    }
+                });
+            } else {
+                mNotification.setVisibility(View.GONE);
             }
         }
         if (mCourses != null) {
@@ -220,10 +180,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
         if (NetworkUtil.isOnline(getActivity())) {
-            if (UserModel.isLoggedIn(getActivity())) {
-                mEnrollmentModel.retrieveEnrollments(false);
-            }
-            mCourseModel.retrieveCourses(false, false);
+            mCourseModel.retrieveCourses(mFilter, false, false);
         } else {
             mRefreshLayout.setRefreshing(false);
             NetworkUtil.showNoConnectionToast(getActivity());
@@ -234,7 +191,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public void onEnrollButtonClicked(Course course) {
         if (UserModel.isLoggedIn(getActivity())) {
             if (NetworkUtil.isOnline(getActivity())) {
-                mEnrollmentModel.createEnrollment(course.id);
+                mCourseModel.createEnrollment(course.id);
             } else {
                 NetworkUtil.showNoConnectionToast(getActivity());
             }
@@ -260,7 +217,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     @Override
     public void onDetailButtonClicked(Course course) {
-        mCallback.attachFragment(WebViewFragment.newInstance(course.url, false, course.name));
+        mCallback.attachFragment(WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code, false, course.name));
     }
 
     @Override

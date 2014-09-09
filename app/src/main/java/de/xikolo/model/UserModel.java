@@ -43,19 +43,18 @@ public class UserModel extends BaseModel {
 
     public static String readAccessToken(Context context) {
         UserPreferences prefs = new UserPreferences(context);
-        return prefs.getAccessToken().access_token;
+        return prefs.getAccessToken().token;
     }
 
     public static boolean isLoggedIn(Context context) {
         UserPreferences prefs = new UserPreferences(context);
-        return !prefs.getAccessToken().access_token
-                .equals(UserPreferences.ACCESS_TOKEN_DEFAULT);
+        return prefs.getAccessToken().token != null;
     }
 
     public static void logout(Context context) {
         UserPreferences prefs = new UserPreferences(context);
         prefs.deleteUser();
-        EnrollmentModel.deleteEnrollmentsSize(context);
+        CourseModel.deleteEnrollmentsSize(context);
     }
 
     public void login(String email, String password) {

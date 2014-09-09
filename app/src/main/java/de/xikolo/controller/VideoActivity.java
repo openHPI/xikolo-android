@@ -19,7 +19,7 @@ import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.module.VideoFragment;
 import de.xikolo.entities.Item;
 import de.xikolo.entities.ItemVideo;
-import de.xikolo.controller.video.VideoController;
+import de.xikolo.controller.helper.VideoController;
 
 public class VideoActivity extends BaseActivity {
 

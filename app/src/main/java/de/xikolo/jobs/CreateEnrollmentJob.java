@@ -41,7 +41,7 @@ public class CreateEnrollmentJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        String url = Config.API_SAP + Config.USER + Config.ENROLLMENTS + "?course_id=" + enrollmentId;
+        String url = Config.API + Config.USER + Config.ENROLLMENTS + "?course_id=" + enrollmentId;
 
         HttpRequest request = new HttpRequest(url);
         request.setMethod(Config.HTTP_POST);

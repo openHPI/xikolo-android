@@ -24,14 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.controller.main.adapter.EnrollmentProgressListAdapter;
+import de.xikolo.controller.main.adapter.CourseProgressListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.entities.AccessToken;
 import de.xikolo.entities.Course;
-import de.xikolo.entities.Enrollment;
 import de.xikolo.entities.User;
 import de.xikolo.model.CourseModel;
-import de.xikolo.model.EnrollmentModel;
 import de.xikolo.model.OnModelResponseListener;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
@@ -44,20 +42,12 @@ public class ProfileFragment extends ContentFragment {
 
     public static final String TAG = ProfileFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    private String mParam1;
-//    private String mParam2;
-    private static final String KEY_ENROLLMENTS = "key_enrollments";
     private static final String KEY_COURSES = "key_courses";
 
     private UserModel mUserModel;
-    private EnrollmentModel mEnrollmentModel;
     private CourseModel mCourseModel;
 
-    private ProgressBar mProgress;
+    private ProgressBar mFragmentProgress;
     private ViewGroup mContainerLogin;
     private EditText mEditEmail;
     private EditText mEditPassword;
@@ -73,12 +63,11 @@ public class ProfileFragment extends ContentFragment {
     private TextView mTextEnrollCounts;
     private TextView mTextEmail;
     private ListView mProgressListView;
-    private ProgressBar mProgressBar;
+    private ProgressBar mCoursesProgress;
 
-    private List<Enrollment> mEnrollments;
     private List<Course> mCourses;
 
-    private EnrollmentProgressListAdapter mAdapter;
+    private CourseProgressListAdapter mAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -86,18 +75,11 @@ public class ProfileFragment extends ContentFragment {
 
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mEnrollments != null) {
-            outState.putParcelableArrayList(KEY_ENROLLMENTS, (ArrayList<Enrollment>) mEnrollments);
-        }
         if (mCourses != null) {
             outState.putParcelableArrayList(KEY_COURSES, (ArrayList<Course>) mCourses);
         }
@@ -107,12 +89,7 @@ public class ProfileFragment extends ContentFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
         if (savedInstanceState != null) {
-            mEnrollments = savedInstanceState.getParcelableArrayList(KEY_ENROLLMENTS);
             mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
         }
 
@@ -123,21 +100,9 @@ public class ProfileFragment extends ContentFragment {
                 if (response != null) {
                     mCourses = response;
                     mAdapter.updateCourses(response);
-                    mProgressBar.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        mEnrollmentModel = new EnrollmentModel(getActivity(), jobManager);
-        mEnrollmentModel.setRetrieveEnrollmentsListener(new OnModelResponseListener<List<Enrollment>>() {
-            @Override
-            public void onResponse(final List<Enrollment> response) {
-                if (response != null) {
-                    mEnrollments = response;
-                    mAdapter.updateEnrollments(mEnrollments);
-                    mTextEnrollCounts.setText(String.valueOf(response.size()));
+                    mTextEnrollCounts.setText(String.valueOf(CourseModel.readEnrollmentsSize(getActivity())));
+                    mCoursesProgress.setVisibility(View.GONE);
                     mCallback.updateDrawer();
-                    mCourseModel.retrieveCourses(false, true);
                 }
             }
         });
@@ -147,8 +112,7 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onResponse(final User response) {
                 if (response != null) {
-                    switchView();
-                    showUser(response);
+                    showLayout();
                     mCallback.updateDrawer();
                 }
             }
@@ -158,11 +122,11 @@ public class ProfileFragment extends ContentFragment {
             public void onResponse(final AccessToken response) {
                 if (response != null) {
                     mUserModel.retrieveUser(false);
-                    mEnrollmentModel.retrieveEnrollments(false);
+                    mCourseModel.retrieveCourses(CourseModel.FILTER_MY, false, true);
                 } else {
                     ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
                     mContainerLogin.setVisibility(View.VISIBLE);
-                    mProgress.setVisibility(View.GONE);
+                    mFragmentProgress.setVisibility(View.GONE);
                 }
             }
         });
@@ -173,7 +137,7 @@ public class ProfileFragment extends ContentFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        mProgress = (ProgressBar) view.findViewById(R.id.progress);
+        mFragmentProgress = (ProgressBar) view.findViewById(R.id.progress);
 
         mContainerLogin = (ViewGroup) view.findViewById(R.id.containerLogin);
         mEditEmail = (EditText) view.findViewById(R.id.editEmail);
@@ -190,9 +154,9 @@ public class ProfileFragment extends ContentFragment {
         mTextEnrollCounts = (TextView) view.findViewById(R.id.textEnrollCount);
         mTextEmail = (TextView) view.findViewById(R.id.textEmail);
         mProgressListView = (ListView) view.findViewById(R.id.listView);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mCoursesProgress = (ProgressBar) view.findViewById(R.id.progressBar);
 
-        mAdapter = new EnrollmentProgressListAdapter(getActivity());
+        mAdapter = new CourseProgressListAdapter(getActivity());
         mProgressListView.setAdapter(mAdapter);
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +170,7 @@ public class ProfileFragment extends ContentFragment {
                         if (password != null && !password.equals("")) {
                             mUserModel.login(email, password);
                             mContainerLogin.setVisibility(View.GONE);
-                            mProgress.setVisibility(View.VISIBLE);
+                            mFragmentProgress.setVisibility(View.VISIBLE);
                         } else {
                             mEditPassword.setError(getString(R.string.error_password));
                         }
@@ -222,14 +186,14 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                startUrlIntent(Config.URI_HPI + Config.ACCOUNT + Config.NEW);
+                startUrlIntent(Config.URI + Config.ACCOUNT + Config.NEW);
             }
         });
         mTextReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                startUrlIntent(Config.URI_HPI + Config.ACCOUNT + Config.RESET);
+                startUrlIntent(Config.URI + Config.ACCOUNT + Config.RESET);
             }
         });
         mBtnLogout.setOnClickListener(new View.OnClickListener() {
@@ -237,14 +201,13 @@ public class ProfileFragment extends ContentFragment {
             public void onClick(View view) {
                 hideKeyboard(view);
                 UserModel.logout(getActivity());
-                mEnrollments = null;
                 mCourses = null;
-                switchView();
+                showLayout();
                 mCallback.updateDrawer();
             }
         });
 
-        switchView();
+        showLayout();
 
         return view;
     }
@@ -252,27 +215,19 @@ public class ProfileFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        switchHeader();
+        showHeader();
         if (UserModel.isLoggedIn(getActivity()) && NetworkUtil.isOnline(getActivity())) {
-            mUserModel.retrieveUser(false);
-            if (mEnrollments != null && mCourses != null) {
-                mAdapter.updateEnrollments(mEnrollments);
-                mTextEnrollCounts.setText(String.valueOf(mEnrollments.size()));
-                mCallback.updateDrawer();
-                mAdapter.updateCourses(mCourses);
-                mProgressBar.setVisibility(View.GONE);
-            } else {
-                mEnrollmentModel.retrieveEnrollments(false);
-                mProgressBar.setVisibility(View.VISIBLE);
-            }
-        } else {
+            mUserModel.retrieveUser(true);
+            mCourseModel.retrieveCourses(CourseModel.FILTER_MY, true, true);
+            mCoursesProgress.setVisibility(View.VISIBLE);
+        } else if (UserModel.isLoggedIn(getActivity()) && !NetworkUtil.isOnline(getActivity())) {
             NetworkUtil.showNoConnectionToast(getActivity());
-            mProgressBar.setVisibility(View.GONE);
+            mCoursesProgress.setVisibility(View.GONE);
         }
     }
 
-    private void switchView() {
-        mProgress.setVisibility(View.GONE);
+    private void showLayout() {
+        mFragmentProgress.setVisibility(View.GONE);
         mEditEmail.setText(null);
         mEditPassword.setText(null);
         if (!UserModel.isLoggedIn(getActivity())) {
@@ -284,11 +239,11 @@ public class ProfileFragment extends ContentFragment {
             showUser(UserModel.readUser(getActivity()));
             setProfilePicMargin();
         }
-        switchHeader();
+        showHeader();
     }
 
     private void showUser(User user) {
-        mTextName.setText(user.name);
+        mTextName.setText(user.first_name + " " + user.last_name);
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -311,7 +266,7 @@ public class ProfileFragment extends ContentFragment {
 
         mTextEmail.setText(user.email);
 
-        mTextEnrollCounts.setText(String.valueOf(EnrollmentModel.readEnrollmentsSize(getActivity())));
+        mTextEnrollCounts.setText(String.valueOf(CourseModel.readEnrollmentsSize(getActivity())));
     }
 
     private void setProfilePicMargin() {
@@ -320,12 +275,12 @@ public class ProfileFragment extends ContentFragment {
         mImgProfile.setLayoutParams(layoutParams);
     }
 
-    private void switchHeader() {
+    private void showHeader() {
         if (!UserModel.isLoggedIn(getActivity())) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, getString(R.string.title_section_login));
         } else {
             User user = UserModel.readUser(getActivity());
-            mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.name);
+            mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
         }
     }
 

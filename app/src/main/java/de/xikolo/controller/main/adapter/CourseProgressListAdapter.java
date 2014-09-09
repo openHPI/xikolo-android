@@ -13,27 +13,18 @@ import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.entities.Course;
-import de.xikolo.entities.Enrollment;
 
-public class EnrollmentProgressListAdapter extends BaseAdapter {
+public class CourseProgressListAdapter extends BaseAdapter {
 
-    public static final String TAG = EnrollmentProgressListAdapter.class.getSimpleName();
+    public static final String TAG = CourseProgressListAdapter.class.getSimpleName();
 
     private List<Course> mCourses;
-    private List<Enrollment> mEnrollments;
 
     private Activity mContext;
 
-    public EnrollmentProgressListAdapter(Activity context) {
+    public CourseProgressListAdapter(Activity context) {
         this.mContext = context;
         this.mCourses = new ArrayList<Course>();
-        this.mEnrollments = new ArrayList<Enrollment>();
-    }
-
-    public void updateEnrollments(List<Enrollment> enrolls) {
-        if (enrolls == null)
-            throw new NullPointerException("Enrollments can't be null");
-        this.mEnrollments = enrolls;
     }
 
     public void updateCourses(List<Course> courses) {
@@ -45,12 +36,12 @@ public class EnrollmentProgressListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mEnrollments.size();
+        return mCourses.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return mEnrollments.get(i);
+        return mCourses.get(i);
     }
 
     @Override
@@ -73,13 +64,7 @@ public class EnrollmentProgressListAdapter extends BaseAdapter {
         }
         final ViewHolder holder = (ViewHolder) rowView.getTag();
 
-        Enrollment enrollment = (Enrollment) getItem(i);
-        Course course = null;
-        for (Course c : mCourses) {
-            if (enrollment.course_id.equals(c.id)) {
-                course = c;
-            }
-        }
+        Course course = (Course) getItem(i);
 
         holder.title.setText(course.name);
 

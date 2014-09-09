@@ -43,7 +43,7 @@ public class CreateSessionJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        String url = Config.URI_SAP + Config.LOGIN;
+        String url = Config.URI + Config.LOGIN;
 
         HttpRequest request = new HttpRequest(url);
         request.setToken(token);

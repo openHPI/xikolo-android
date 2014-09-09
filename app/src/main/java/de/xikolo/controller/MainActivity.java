@@ -20,8 +20,8 @@ import de.xikolo.controller.main.SettingsFragment;
 import de.xikolo.controller.main.WebViewFragment;
 import de.xikolo.controller.navigation.NavigationFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
+import de.xikolo.model.CourseModel;
 import de.xikolo.util.Config;
-
 
 public class MainActivity extends BaseActivity
         implements NavigationFragment.NavigationDrawerCallbacks, ContentFragment.OnFragmentInteractionListener {
@@ -96,15 +96,15 @@ public class MainActivity extends BaseActivity
                 tag = "profile";
                 break;
             case NavigationAdapter.NAV_ID_ALL_COURSES:
-                newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_ALL);
+                newFragment = CourseListFragment.newInstance(CourseModel.FILTER_ALL);
                 tag = "all_courses";
                 break;
             case NavigationAdapter.NAV_ID_MY_COURSES:
-                newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_MY);
+                newFragment = CourseListFragment.newInstance(CourseModel.FILTER_MY);
                 tag = "my_courses";
                 break;
             case NavigationAdapter.NAV_ID_NEWS:
-                newFragment = WebViewFragment.newInstance(Config.URI_HPI + Config.NEWS, true, null);
+                newFragment = WebViewFragment.newInstance(Config.URI + Config.NEWS, true, null);
                 tag = "news";
                 break;
             case NavigationAdapter.NAV_ID_DOWNLOADS:

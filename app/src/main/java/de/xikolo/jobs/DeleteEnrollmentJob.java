@@ -42,7 +42,7 @@ public class DeleteEnrollmentJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        String url = Config.API_SAP + Config.USER + Config.ENROLLMENTS + enrollmentId;
+        String url = Config.API + Config.USER + Config.ENROLLMENTS + enrollmentId;
 
         HttpRequest request = new HttpRequest(url);
         request.setMethod(Config.HTTP_DELETE);

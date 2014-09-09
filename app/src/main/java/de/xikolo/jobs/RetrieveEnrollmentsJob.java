@@ -49,7 +49,7 @@ public class RetrieveEnrollmentsJob extends Job {
         Type type = new TypeToken<List<Enrollment>>() {
         }.getType();
 
-        String url = Config.API_SAP + Config.USER + Config.ENROLLMENTS;
+        String url = Config.API + Config.USER + Config.ENROLLMENTS;
 
         JsonRequest request = new JsonRequest(url, type);
         request.setCache(cache);

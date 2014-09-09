@@ -37,7 +37,7 @@ public class UpdateProgressionJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        String url = Config.API_SAP + Config.USER + Config.PROGRESSIONS + itemId;
+        String url = Config.API + Config.USER + Config.PROGRESSIONS + itemId;
 
         HttpRequest request = new HttpRequest(url);
         request.setMethod(Config.HTTP_PUT);

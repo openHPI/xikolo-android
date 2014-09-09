@@ -25,9 +25,6 @@ public class Course implements Parcelable {
     @SerializedName("language")
     public String language;
 
-    @SerializedName("duration")
-    public String duration;
-
     @SerializedName("url")
     public String url;
 
@@ -43,11 +40,8 @@ public class Course implements Parcelable {
     @SerializedName("locked")
     public boolean locked;
 
-    @SerializedName("exam_available_from")
-    public String exam_available_from;
-
-    @SerializedName("exam_available_to")
-    public String exam_available_to;
+    @SerializedName("is_enrolled")
+    public boolean is_enrolled;
 
     @SerializedName("progress")
     public Progress progress;
@@ -65,14 +59,12 @@ public class Course implements Parcelable {
         parcel.writeString(course_code);
         parcel.writeString(lecturer);
         parcel.writeString(language);
-        parcel.writeString(duration);
         parcel.writeString(url);
         parcel.writeString(visual_url);
         parcel.writeString(available_from);
         parcel.writeString(available_to);
-        parcel.writeByte((byte) (locked ? 1 : 0 ));
-        parcel.writeString(exam_available_from);
-        parcel.writeString(exam_available_to);
+        parcel.writeByte((byte) (locked ? 1 : 0));
+        parcel.writeByte((byte) (is_enrolled ? 1 : 0 ));
         parcel.writeParcelable(progress, i);
     }
 
@@ -83,14 +75,12 @@ public class Course implements Parcelable {
         course_code = in.readString();
         lecturer = in.readString();
         language = in.readString();
-        duration = in.readString();
         url = in.readString();
         visual_url = in.readString();
         available_from = in.readString();
         available_to = in.readString();
         locked = in.readByte() != 0;
-        exam_available_from = in.readString();
-        exam_available_to = in.readString();
+        is_enrolled = in.readByte() != 0;
         progress = in.readParcelable(Course.class.getClassLoader());
     }
 

@@ -57,7 +57,7 @@ public class RetrieveModulesJob extends Job {
         Type type = new TypeToken<List<Module>>() {
         }.getType();
 
-        String url = Config.API_SAP + Config.COURSES + courseId + "/"
+        String url = Config.API + Config.COURSES + courseId + "/"
                 + Config.MODULES + "?include_progress=" + includeProgress;
 
         JsonRequest request = new JsonRequest(url, type);

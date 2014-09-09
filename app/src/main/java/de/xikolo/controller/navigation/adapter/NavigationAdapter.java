@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.model.EnrollmentModel;
+import de.xikolo.entities.User;
+import de.xikolo.model.CourseModel;
 import de.xikolo.model.UserModel;
 import de.xikolo.view.CircularImageView;
 
@@ -74,8 +76,8 @@ public class NavigationAdapter extends BaseAdapter {
             LayoutInflater inflater = mContext.getLayoutInflater();
             if (i == NAV_ID_PROFILE) {
                 rowView = inflater.inflate(R.layout.item_navi_profile, null);
-                viewHolder.containerLogin = (RelativeLayout) rowView.findViewById(R.id.containerLogin);
-                viewHolder.containerProfile = (RelativeLayout) rowView.findViewById(R.id.containerProfile);
+                viewHolder.containerLogin = rowView.findViewById(R.id.containerLogin);
+                viewHolder.containerProfile = rowView.findViewById(R.id.containerProfile);
                 viewHolder.name = (TextView) rowView.findViewById(R.id.textName);
                 viewHolder.email = (TextView) rowView.findViewById(R.id.textEmail);
                 viewHolder.img = (CircularImageView) rowView.findViewById(R.id.imgProfile);
@@ -99,8 +101,10 @@ public class NavigationAdapter extends BaseAdapter {
         if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mContext)) {
             holder.containerLogin.setVisibility(View.GONE);
             holder.containerProfile.setVisibility(View.VISIBLE);
-            holder.name.setText(UserModel.readUser(mContext).name);
-            holder.email.setText(UserModel.readUser(mContext).email);
+
+            User user = UserModel.readUser(mContext);
+            holder.name.setText(user.first_name + " " + user.last_name);
+            holder.email.setText(user.email);
             if (holder.img.getDrawable() == null) {
                 ImageLoader.getInstance().displayImage("drawable://" + R.drawable.avatar, holder.img);
             }
@@ -131,7 +135,7 @@ public class NavigationAdapter extends BaseAdapter {
         }
 
         if (i == NAV_ID_MY_COURSES && UserModel.isLoggedIn(mContext)) {
-            int size = EnrollmentModel.readEnrollmentsSize(mContext);
+            int size = CourseModel.readEnrollmentsSize(mContext);
             holder.counter.setText(String.valueOf(size));
             if (size > 0) {
                 holder.counter.setVisibility(View.VISIBLE);
@@ -164,8 +168,8 @@ public class NavigationAdapter extends BaseAdapter {
         CircularImageView img;
         TextView name;
         TextView email;
-        RelativeLayout containerLogin;
-        RelativeLayout containerProfile;
+        View containerLogin;
+        View containerProfile;
     }
 
 }

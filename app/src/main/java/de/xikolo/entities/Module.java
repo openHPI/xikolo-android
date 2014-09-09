@@ -19,9 +19,6 @@ public class Module implements Parcelable {
     @SerializedName("name")
     public String name;
 
-    @SerializedName("type")
-    public String type;
-
     @SerializedName("available_from")
     public String available_from;
 
@@ -46,7 +43,6 @@ public class Module implements Parcelable {
         parcel.writeString(id);
         parcel.writeInt(position);
         parcel.writeString(name);
-        parcel.writeString(type);
         parcel.writeString(available_from);
         parcel.writeString(available_to);
         parcel.writeByte((byte) (locked ? 1 : 0 ));
@@ -64,7 +60,6 @@ public class Module implements Parcelable {
         id = in.readString();
         position = in.readInt();
         name = in.readString();
-        type = in.readString();
         available_from = in.readString();
         available_to = in.readString();
         locked = in.readByte() != 0;

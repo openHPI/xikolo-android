@@ -13,9 +13,6 @@ public class ItemVideo implements Parcelable {
     @SerializedName("title")
     public String title;
 
-    @SerializedName("description")
-    public String description;
-
     @SerializedName("minutes")
     public String minutes;
 
@@ -34,7 +31,6 @@ public class ItemVideo implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
         parcel.writeString(title);
-        parcel.writeString(description);
         parcel.writeString(minutes);
         parcel.writeString(seconds);
         parcel.writeString(url);
@@ -43,7 +39,6 @@ public class ItemVideo implements Parcelable {
     public ItemVideo(Parcel in) {
         id = in.readString();
         title = in.readString();
-        description = in.readString();
         minutes = in.readString();
         seconds = in.readString();
         url = in.readString();

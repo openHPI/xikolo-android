@@ -47,7 +47,7 @@ public class CreateAccessTokenJob extends Job {
         Type type = new TypeToken<AccessToken>() {
         }.getType();
 
-        String url = Config.API_SAP + Config.AUTHENTICATE + "?email=" + email + "&password=" + password;
+        String url = Config.API + Config.AUTHENTICATE + "?email=" + email + "&password=" + password;
 
         JsonRequest request = new JsonRequest(url, type);
         request.setMethod(Config.HTTP_POST);

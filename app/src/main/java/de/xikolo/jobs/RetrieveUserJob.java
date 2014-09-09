@@ -47,7 +47,7 @@ public class RetrieveUserJob extends Job {
         Type type = new TypeToken<User>() {
         }.getType();
 
-        String url = Config.API_SAP + Config.USER;
+        String url = Config.API + Config.USER;
 
         JsonRequest request = new JsonRequest(url, type);
         request.setCache(cache);
@@ -57,7 +57,7 @@ public class RetrieveUserJob extends Job {
         if (o != null) {
             User user = (User) o;
             if (Config.DEBUG)
-                Log.i(TAG, "User received: " + user.name);
+                Log.i(TAG, "User received: " + user.first_name);
             mCallback.onResponse(user);
         } else {
             if (Config.DEBUG)

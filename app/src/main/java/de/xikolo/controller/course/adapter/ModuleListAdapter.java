@@ -85,6 +85,8 @@ public class ModuleListAdapter extends BaseAdapter {
                     mModuleCallback.onModuleButtonClicked(mCourse, module);
                 }
             });
+        } else {
+            holder.progress.setVisibility(View.VISIBLE);
         }
 
         return rowView;

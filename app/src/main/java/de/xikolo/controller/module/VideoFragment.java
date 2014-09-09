@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
-import de.xikolo.controller.video.VideoController;
+import de.xikolo.controller.helper.VideoController;
 import de.xikolo.entities.Course;
 import de.xikolo.entities.Item;
 import de.xikolo.entities.ItemVideo;

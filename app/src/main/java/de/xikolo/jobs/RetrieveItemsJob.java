@@ -53,7 +53,7 @@ public class RetrieveItemsJob extends Job {
         Type type = new TypeToken<List<Item>>() {
         }.getType();
 
-        String url = Config.API_SAP + Config.COURSES + courseId + "/"
+        String url = Config.API + Config.COURSES + courseId + "/"
                 + Config.MODULES + moduleId + "/" + Config.ITEMS;
 
         JsonRequest request = new JsonRequest(url, type);
