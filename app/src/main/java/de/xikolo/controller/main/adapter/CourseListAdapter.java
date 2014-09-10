@@ -47,11 +47,6 @@ public class CourseListAdapter extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
-    public void clear() {
-        this.mCourses.clear();
-        this.notifyDataSetChanged();
-    }
-
     @Override
     public int getCount() {
         return mCourses.size();

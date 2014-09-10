@@ -67,13 +67,15 @@ public class HttpRequest {
             final int statusCode = urlConnection.getResponseCode();
 
             if (statusCode != HttpURLConnection.HTTP_OK) {
-                Log.w(TAG, "Error " + statusCode + " for URL " + mUrl);
+                if (Config.DEBUG)
+                    Log.w(TAG, "Error " + statusCode + " for URL " + mUrl);
                 return null;
             }
 
             return urlConnection;
         } catch (IOException e) {
-            Log.w(TAG, "Error for URL " + mUrl, e);
+            if (Config.DEBUG)
+                Log.w(TAG, "Error for URL " + mUrl, e);
         }
         return null;
     }
@@ -88,12 +90,14 @@ public class HttpRequest {
                 while ((line = buff.readLine()) != null)
                     input.append(line);
             } catch (IOException e) {
-                Log.e(TAG, "Error reading input stream for ", e);
+                if (Config.DEBUG)
+                    Log.e(TAG, "Error reading input stream for ", e);
             }
             closeConnection();
             return input;
         } catch (Exception e) {
-            Log.w(TAG, "Error for URL " + mUrl, e);
+            if (Config.DEBUG)
+                Log.w(TAG, "Error for URL " + mUrl, e);
         }
         return null;
     }

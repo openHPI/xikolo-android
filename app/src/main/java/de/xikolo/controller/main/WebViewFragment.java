@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
 
 import de.xikolo.R;
 import de.xikolo.controller.helper.WebViewController;
@@ -56,7 +55,34 @@ public class WebViewFragment extends ContentFragment {
             isTopLevelContent = getArguments().getBoolean(ARG_TOP_LEVEL_CONTENT);
             mTitle = getArguments().getString(ARG_TITLE);
         }
+
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View layout = inflater.inflate(R.layout.fragment_webview, container, false);
+        mWebView = (WebView) layout.findViewById(R.id.webView);
+        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
+
+        mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout);
+        mWebViewController.setInAppLinksEnabled(false);
+
+        mRefreshLayout.setColorSchemeResources(
+                R.color.apptheme_second,
+                R.color.apptheme_main,
+                R.color.apptheme_second,
+                R.color.apptheme_main);
+        mRefreshLayout.setOnRefreshListener(mWebViewController);
+
+        if (savedInstanceState != null) {
+            mWebView.restoreState(savedInstanceState);
+        } else {
+            mWebViewController.request(mUrl);
+        }
+
+        return layout;
     }
 
     @Override
@@ -70,24 +96,11 @@ public class WebViewFragment extends ContentFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_webview, container, false);
-        mWebView = (WebView) layout.findViewById(R.id.webView);
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
-
-        mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout);
-
-        mRefreshLayout.setColorSchemeResources(
-                R.color.apptheme_second,
-                R.color.apptheme_main,
-                R.color.apptheme_second,
-                R.color.apptheme_main);
-        mRefreshLayout.setOnRefreshListener(mWebViewController);
-
-        mWebViewController.request(mUrl);
-
-        return layout;
+    public void onSaveInstanceState(Bundle outState) {
+        if (mWebView != null) {
+            mWebView.saveState(outState);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override

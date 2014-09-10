@@ -82,9 +82,21 @@ public class EmbeddedWebViewFragment extends BaseFragment {
                 R.color.apptheme_main);
         mRefreshLayout.setOnRefreshListener(mWebViewController);
 
-        mWebViewController.request(mUrl);
+        if (savedInstanceState != null) {
+            mWebView.restoreState(savedInstanceState);
+        } else {
+            mWebViewController.request(mUrl);
+        }
 
         return layout;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mWebView != null) {
+            mWebView.saveState(outState);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override

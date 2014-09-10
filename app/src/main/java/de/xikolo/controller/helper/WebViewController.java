@@ -30,12 +30,20 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
     private String mUrl;
 
+    private boolean mInAppLinksEnabled;
+
     public WebViewController(Activity activity, WebView webView, SwipeRefreshLayout refreshLayout) {
         mActivity = activity;
         mWebView = webView;
         mRefreshLayout = refreshLayout;
 
+        mInAppLinksEnabled = true;
+
         setup();
+    }
+
+    public void setInAppLinksEnabled(boolean enabled) {
+        mInAppLinksEnabled = enabled;
     }
 
     private void setup() {
@@ -65,7 +73,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Config.HOST)) {
+                if (url.contains(Config.HOST) && mInAppLinksEnabled) {
                     request(url);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

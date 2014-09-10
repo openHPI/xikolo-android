@@ -89,6 +89,7 @@ public class ProfileFragment extends ContentFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (savedInstanceState != null) {
             mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
         }
@@ -98,11 +99,7 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onResponse(final List<Course> response) {
                 if (response != null) {
-                    mCourses = response;
-                    mAdapter.updateCourses(response);
-                    mTextEnrollCounts.setText(String.valueOf(CourseModel.readEnrollmentsSize(getActivity())));
-                    mCoursesProgress.setVisibility(View.GONE);
-                    mCallback.updateDrawer();
+                    showCoursesProgress(response);
                 }
             }
         });
@@ -112,7 +109,7 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onResponse(final User response) {
                 if (response != null) {
-                    showLayout();
+                    updateLayout();
                     mCallback.updateDrawer();
                 }
             }
@@ -202,12 +199,12 @@ public class ProfileFragment extends ContentFragment {
                 hideKeyboard(view);
                 UserModel.logout(getActivity());
                 mCourses = null;
-                showLayout();
+                updateLayout();
                 mCallback.updateDrawer();
             }
         });
 
-        showLayout();
+        updateLayout();
 
         return view;
     }
@@ -216,17 +213,21 @@ public class ProfileFragment extends ContentFragment {
     public void onStart() {
         super.onStart();
         showHeader();
-        if (UserModel.isLoggedIn(getActivity()) && NetworkUtil.isOnline(getActivity())) {
-            mUserModel.retrieveUser(true);
-            mCourseModel.retrieveCourses(CourseModel.FILTER_MY, true, true);
-            mCoursesProgress.setVisibility(View.VISIBLE);
-        } else if (UserModel.isLoggedIn(getActivity()) && !NetworkUtil.isOnline(getActivity())) {
-            NetworkUtil.showNoConnectionToast(getActivity());
-            mCoursesProgress.setVisibility(View.GONE);
+        if (UserModel.isLoggedIn(getActivity()) && mCourses == null) {
+            if (NetworkUtil.isOnline(getActivity())) {
+                mUserModel.retrieveUser(true);
+                mCourseModel.retrieveCourses(CourseModel.FILTER_MY, true, true);
+                mCoursesProgress.setVisibility(View.VISIBLE);
+            } else {
+                NetworkUtil.showNoConnectionToast(getActivity());
+                mCoursesProgress.setVisibility(View.GONE);
+            }
+        } else if (UserModel.isLoggedIn(getActivity()) && mCourses != null) {
+            showCoursesProgress(mCourses);
         }
     }
 
-    private void showLayout() {
+    private void updateLayout() {
         mFragmentProgress.setVisibility(View.GONE);
         mEditEmail.setText(null);
         mEditPassword.setText(null);
@@ -282,6 +283,14 @@ public class ProfileFragment extends ContentFragment {
             User user = UserModel.readUser(getActivity());
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
         }
+    }
+
+    private void showCoursesProgress(List<Course> courses) {
+        mCourses = courses;
+        mAdapter.updateCourses(courses);
+        mTextEnrollCounts.setText(String.valueOf(CourseModel.readEnrollmentsSize(getActivity())));
+        mCoursesProgress.setVisibility(View.GONE);
+        mCallback.updateDrawer();
     }
 
     private void hideKeyboard(View view) {

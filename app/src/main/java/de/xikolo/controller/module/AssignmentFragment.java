@@ -71,20 +71,27 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
                 R.color.apptheme_main);
         mRefreshLayout.setOnRefreshListener(mWebViewController);
 
+        if (savedInstanceState != null) {
+            mWebView.restoreState(savedInstanceState);
+        } else {
+            if (NetworkUtil.isOnline(getActivity())) {
+                mRefreshLayout.setRefreshing(true);
+                mItemModel.retrieveItemDetail(mCourse.id, mModule.id, mItem.id, Item.TYPE_ASSIGNMENT, true);
+            } else {
+                mRefreshLayout.setRefreshing(false);
+                NetworkUtil.showNoConnectionToast(getActivity());
+            }
+        }
+
         return layout;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        if (NetworkUtil.isOnline(getActivity())) {
-            mRefreshLayout.setRefreshing(true);
-            mItemModel.retrieveItemDetail(mCourse.id, mModule.id, mItem.id, Item.TYPE_ASSIGNMENT, true);
-        } else {
-            mRefreshLayout.setRefreshing(false);
-            NetworkUtil.showNoConnectionToast(getActivity());
+    public void onSaveInstanceState(Bundle outState) {
+        if (mWebView != null) {
+            mWebView.saveState(outState);
         }
+        super.onSaveInstanceState(outState);
     }
 
     @Override

@@ -63,6 +63,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mFilter = getArguments().getString(ARG_FILTER);
         }
@@ -98,7 +99,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View layout = inflater.inflate(R.layout.fragment_courses, container, false);
 
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
@@ -139,18 +139,16 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             }
         }
 
-        if (NetworkUtil.isOnline(getActivity())) {
-            mCourseListAdapter.clear();
-            if (mCourses == null) {
+        if (mCourses != null) {
+            mCourseListAdapter.updateCourses(mCourses);
+            mRefreshLayout.setRefreshing(false);
+        } else {
+            if (NetworkUtil.isOnline(getActivity())) {
                 mRefreshLayout.setRefreshing(true);
                 mCourseModel.retrieveCourses(mFilter, true, false);
             } else {
-                mCourseListAdapter.updateCourses(mCourses);
-                mRefreshLayout.setRefreshing(true);
-                mCourseModel.retrieveCourses(mFilter, true, false);
+                NetworkUtil.showNoConnectionToast(getActivity());
             }
-        } else {
-            NetworkUtil.showNoConnectionToast(getActivity());
         }
     }
 

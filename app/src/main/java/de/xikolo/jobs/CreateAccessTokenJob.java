@@ -7,6 +7,7 @@ import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.data.net.JsonRequest;
@@ -47,7 +48,7 @@ public class CreateAccessTokenJob extends Job {
         Type type = new TypeToken<AccessToken>() {
         }.getType();
 
-        String url = Config.API + Config.AUTHENTICATE + "?email=" + email + "&password=" + password;
+        String url = Config.API + Config.AUTHENTICATE + "?email=" + email + "&password=" + URLEncoder.encode(password, "UTF-8");
 
         JsonRequest request = new JsonRequest(url, type);
         request.setMethod(Config.HTTP_POST);
