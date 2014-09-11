@@ -129,7 +129,8 @@ public class ModuleActivity extends BaseActivity {
 
             // TODO set progression when unseen
             if (position % 2 == 0) {
-                unseenIndicator.setVisibility(View.VISIBLE);
+//                unseenIndicator.setVisibility(View.VISIBLE);
+                unseenIndicator.setVisibility(View.GONE);
             } else {
                 unseenIndicator.setVisibility(View.GONE);
             }

@@ -87,7 +87,8 @@ public class ItemListAdapter extends BaseAdapter {
 
         // TODO set progression when unseen
         if (i % 2 == 0) {
-            holder.unseenIndicator.setVisibility(View.VISIBLE);
+//            holder.unseenIndicator.setVisibility(View.VISIBLE);
+            holder.unseenIndicator.setVisibility(View.GONE);
         } else {
             holder.unseenIndicator.setVisibility(View.GONE);
         }

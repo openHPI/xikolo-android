@@ -149,7 +149,7 @@ public class CourseFragment extends BaseFragment implements ISimpleDialogListene
                         fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ROOMS);
                         break;
                     case 5:
-                        fragment = EmbeddedWebViewFragment.newInstance(mCourse.url);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code);
                         break;
                 }
             }

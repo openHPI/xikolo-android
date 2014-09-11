@@ -22,6 +22,18 @@ public class ItemVideo implements Parcelable {
     @SerializedName("url")
     public String url;
 
+    @SerializedName("download_url")
+    public String download_url;
+
+    @SerializedName("slides_url")
+    public String slides_url;
+
+    @SerializedName("transcript_url")
+    public String transcript_url;
+
+    @SerializedName("pip_stream")
+    public Stream stream;
+
     @Override
     public int describeContents() {
         return 0;
@@ -34,6 +46,10 @@ public class ItemVideo implements Parcelable {
         parcel.writeString(minutes);
         parcel.writeString(seconds);
         parcel.writeString(url);
+        parcel.writeString(download_url);
+        parcel.writeString(slides_url);
+        parcel.writeString(transcript_url);
+        parcel.writeParcelable(stream, i);
     }
 
     public ItemVideo(Parcel in) {
@@ -42,6 +58,10 @@ public class ItemVideo implements Parcelable {
         minutes = in.readString();
         seconds = in.readString();
         url = in.readString();
+        download_url = in.readString();
+        slides_url = in.readString();
+        transcript_url = in.readString();
+        stream =  in.readParcelable(ItemVideo.class.getClassLoader());
     }
 
     @Override
@@ -78,5 +98,51 @@ public class ItemVideo implements Parcelable {
             return new ItemVideo[size];
         }
     };
+
+    static class Stream implements Parcelable {
+
+        @SerializedName("hd_url")
+        public String hd_url;
+
+        @SerializedName("sd_url")
+        public String sd_url;
+
+        @SerializedName("vimeo_id")
+        public String vimeo_id;
+
+        @SerializedName("poster")
+        public String poster;
+
+        public Stream(Parcel in) {
+            hd_url = in.readString();
+            sd_url = in.readString();
+            vimeo_id = in.readString();
+            poster = in.readString();
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(hd_url);
+            parcel.writeString(sd_url);
+            parcel.writeString(vimeo_id);
+            parcel.writeString(poster);
+        }
+
+        public static final Creator<Stream> CREATOR = new Creator<Stream>() {
+            public Stream createFromParcel(Parcel in) {
+                return new Stream(in);
+            }
+
+            public Stream[] newArray(int size) {
+                return new Stream[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+    }
 
 }
