@@ -1,25 +1,52 @@
 package de.xikolo.controller.course.dialog;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 
 import de.xikolo.R;
-import eu.inmite.android.lib.dialogs.SimpleDialogFragment;
 
-public class UnenrollDialog {
+public class UnenrollDialog extends DialogFragment {
 
-    public static void show(Context context, FragmentManager fragmentManager, Fragment targetFragment) {
-        SimpleDialogFragment.SimpleDialogBuilder builder = SimpleDialogFragment.createBuilder(context, fragmentManager);
-        builder.setTitle(R.string.dialog_unenroll_title);
-        builder.setMessage(R.string.dialog_unenroll_message);
-        builder.setPositiveButtonText(R.string.dialog_unenroll_yes);
-        builder.setNegativeButtonText(R.string.dialog_unenroll_no);
-        builder.setCancelable(true);
-        builder.setCancelableOnTouchOutside(true);
-        builder.setTargetFragment(targetFragment, 0);
+    public static final String TAG = UnenrollDialog.class.getSimpleName();
 
-        builder.show();
+    private UnenrollDialogListener mListener;
+
+    public void setUnenrollDialogListener(UnenrollDialogListener listener) {
+        mListener = listener;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.dialog_unenroll_message)
+                .setTitle(R.string.dialog_unenroll_title)
+                .setPositiveButton(R.string.dialog_unenroll_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mListener != null) {
+                            mListener.onDialogPositiveClick(UnenrollDialog.this);
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.dialog_unenroll_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        UnenrollDialog.this.getDialog().cancel();
+                    }
+                })
+                .setCancelable(true);
+
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+
+        return dialog;
+    }
+
+    public interface UnenrollDialogListener {
+        public void onDialogPositiveClick(DialogFragment dialog);
     }
 
 }

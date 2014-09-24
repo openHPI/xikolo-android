@@ -2,6 +2,7 @@ package de.xikolo;
 
 import android.app.Application;
 import android.net.http.HttpResponseCache;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -48,6 +49,7 @@ public class GlobalApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        configureDefaultSettings();
         configureFontTypefaces();
         configureImageLoader();
         configureHttpResponseCache();
@@ -56,6 +58,10 @@ public class GlobalApplication extends Application {
 
         if (Config.DEBUG)
             SslCertificateUtil.disableSslCertificateChecking();
+    }
+
+    private void configureDefaultSettings() {
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
     }
 
     private void configureFontTypefaces() {

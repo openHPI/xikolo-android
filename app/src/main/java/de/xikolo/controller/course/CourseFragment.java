@@ -1,6 +1,7 @@
 package de.xikolo.controller.course;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -20,9 +21,8 @@ import de.xikolo.controller.course.dialog.UnenrollDialog;
 import de.xikolo.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.util.Config;
-import eu.inmite.android.lib.dialogs.ISimpleDialogListener;
 
-public class CourseFragment extends BaseFragment implements ISimpleDialogListener {
+public class CourseFragment extends BaseFragment implements UnenrollDialog.UnenrollDialogListener {
 
     public final static String TAG = CourseFragment.class.getSimpleName();
 
@@ -81,21 +81,19 @@ public class CourseFragment extends BaseFragment implements ISimpleDialogListene
                 getActivity().finish();
                 return true;
             case R.id.action_unenroll:
-                UnenrollDialog.show(getActivity(), getChildFragmentManager(), this);
+                UnenrollDialog dialog = new UnenrollDialog();
+                dialog.setUnenrollDialogListener(this);
+                dialog.show(getFragmentManager(), UnenrollDialog.TAG);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onPositiveButtonClicked(int i) {
+    public void onDialogPositiveClick(DialogFragment dialog) {
         CourseModel model = new CourseModel(getActivity(), jobManager);
         model.deleteEnrollment(mCourse.id);
         getActivity().finish();
-    }
-
-    @Override
-    public void onNegativeButtonClicked(int i) {
     }
 
     public class CoursePagerAdapter extends FragmentPagerAdapter {

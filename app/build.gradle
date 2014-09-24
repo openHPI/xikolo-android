@@ -37,7 +37,6 @@ android {
 dependencies {
     compile 'com.google.code.gson:gson:2.2.+'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.+'
-    compile 'eu.inmite.android.lib:android-styled-dialogs:1.1.2@aar'
     compile 'com.path:android-priority-jobqueue:1.1.+'
     compile 'com.android.support:support-v4:20.+'
     compile(name:'PagerSlidingTabStrip-1.0.1', ext:'aar')

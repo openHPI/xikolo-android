@@ -48,6 +48,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ModuleActivity" />
         </activity>
+        <activity
+            android:name=".controller.SettingsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controller.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MainActivity" />
+        </activity>
     </application>
 
 </manifest>

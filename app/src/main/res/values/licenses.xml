@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="settings_licenses_content">
+  Gson
+\nCopyright &#169; 2008-2011 Google, Inc.
+\n
+\nUniversal Image Loader
+\nCopyright &#169; 2011-2014 Sergey Tarasevich
+\n
+\nPriority Job Queue
+\nCopyright &#169; 2013 Path, Inc.
+\n
+\nThe Android Open Source Project
+\nCopyright &#169; 2006-2013 The Android Open Source Project
+\n
+\n
+\nAll licensed under the Apache License, Version 2.0 (the \"License\"):
+\nhttp://www.apache.org/licenses/LICENSE-2.0
+    </string>
+
+</resources>

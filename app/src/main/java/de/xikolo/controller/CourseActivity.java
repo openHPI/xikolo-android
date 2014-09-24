@@ -20,7 +20,6 @@ public class CourseActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course);
 
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(ARG_COURSE)) {
@@ -36,7 +35,7 @@ public class CourseActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.container, CourseFragment.newInstance(mCourse), tag);
+            transaction.replace(android.R.id.content, CourseFragment.newInstance(mCourse), tag);
             transaction.commit();
         }
     }

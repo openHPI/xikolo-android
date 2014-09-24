@@ -5,9 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -29,8 +27,10 @@ public class NavigationAdapter extends BaseAdapter {
     public static final int NAV_ID_ALL_COURSES = 1;
     public static final int NAV_ID_MY_COURSES = 2;
     public static final int NAV_ID_NEWS = 3;
-    public static final int NAV_ID_DOWNLOADS = 4;
-    public static final int NAV_ID_SETTINGS = 5;
+    //    public static final int NAV_ID_DOWNLOADS = 4;
+    //    public static final int NAV_ID_SETTINGS = 5;
+    public static final int NAV_ID_DOWNLOADS = 5;
+    public static final int NAV_ID_SETTINGS = 4;
     private List<Element> elements;
     private Activity mContext;
 
@@ -45,8 +45,8 @@ public class NavigationAdapter extends BaseAdapter {
                     mContext.getString(R.string.title_section_my_courses)));
             add(new Element(mContext.getString(R.string.icon_news),
                     mContext.getString(R.string.title_section_news)));
-            add(new Element(mContext.getString(R.string.icon_downloads),
-                    mContext.getString(R.string.title_section_downloads)));
+//            add(new Element(mContext.getString(R.string.icon_downloads),
+//                    mContext.getString(R.string.title_section_downloads)));
             add(new Element(mContext.getString(R.string.icon_settings),
                     mContext.getString(R.string.title_section_settings)));
         }};

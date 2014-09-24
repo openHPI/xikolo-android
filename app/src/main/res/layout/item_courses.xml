@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="fill_parent"
-        android:layout_height="200dp"
+        android:layout_height="210dp"
         android:layout_gravity="center_horizontal|top"
         android:scaleType="centerCrop" />
 
@@ -31,7 +31,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="4dp"
             android:singleLine="true"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -43,7 +43,7 @@
             android:layout_marginBottom="4dp"
             android:singleLine="true"
             android:textColor="@color/apptheme_main"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <de.xikolo.view.CustomFontTextView
             android:id="@+id/textDateIcon"
@@ -55,7 +55,7 @@
             android:singleLine="true"
             android:text="@string/icon_cal"
             android:textColor="@color/gray_text"
-            android:textSize="18sp"
+            android:textSize="20sp"
             res:customFont="xikolo.ttf" />
 
         <TextView
@@ -67,7 +67,7 @@
             android:layout_toRightOf="@+id/textDateIcon"
             android:singleLine="true"
             android:textColor="@color/gray_text"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <de.xikolo.view.CustomFontTextView
             android:id="@+id/textLangIcon"
@@ -79,7 +79,7 @@
             android:singleLine="true"
             android:text="@string/icon_lang"
             android:textColor="@color/gray_text"
-            android:textSize="18sp"
+            android:textSize="20sp"
             res:customFont="xikolo.ttf" />
 
         <TextView
@@ -90,7 +90,7 @@
             android:layout_toRightOf="@+id/textLangIcon"
             android:singleLine="true"
             android:textColor="@color/gray_text"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/btnEnroll"
@@ -106,7 +106,7 @@
             android:paddingTop="6dp"
             android:text="@string/btn_enroll_me"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
     </RelativeLayout>

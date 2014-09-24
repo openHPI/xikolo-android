@@ -1,0 +1,27 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_category_general">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="video_quality"
+            android:summary="@string/settings_summary_video_quality"
+            android:title="@string/settings_title_video_quality" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_category_about">
+
+        <Preference
+            android:key="open_source_licenses"
+            android:summary="@string/settings_summary_licenses"
+            android:title="@string/settings_title_licenses" />
+
+        <Preference
+            android:key="build_version"
+            android:summary="@string/settings_summary_build"
+            android:title="@string/settings_title_build" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

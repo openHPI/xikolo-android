@@ -1,6 +1,7 @@
 package de.xikolo.controller;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,7 +17,6 @@ import de.xikolo.controller.main.ContentFragment;
 import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.controller.main.DownloadsFragment;
 import de.xikolo.controller.main.ProfileFragment;
-import de.xikolo.controller.main.SettingsFragment;
 import de.xikolo.controller.main.WebViewFragment;
 import de.xikolo.controller.navigation.NavigationFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
@@ -89,6 +89,7 @@ public class MainActivity extends BaseActivity
     public void onNavigationDrawerItemSelected(int position) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         String tag = null;
+        Intent intent = null;
         ContentFragment newFragment = null;
         switch (position) {
             case NavigationAdapter.NAV_ID_PROFILE:
@@ -112,20 +113,23 @@ public class MainActivity extends BaseActivity
                 tag = "downloads";
                 break;
             case NavigationAdapter.NAV_ID_SETTINGS:
-                newFragment = SettingsFragment.newInstance();
-                tag = "settings";
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
                 break;
         }
-        ContentFragment oldFragment = (ContentFragment) fragmentManager.findFragmentByTag(tag);
-        if (oldFragment == null) {
-            mFragment = newFragment;
-        } else {
-            mFragment = oldFragment;
+        if (tag != null) {
+            ContentFragment oldFragment = (ContentFragment) fragmentManager.findFragmentByTag(tag);
+            if (oldFragment == null) {
+                mFragment = newFragment;
+            } else {
+                mFragment = oldFragment;
+            }
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.container, mFragment, tag);
+            transaction.addToBackStack(tag);
+            transaction.commit();
+        } else if (intent != null) {
+            startActivity(intent);
         }
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.container, mFragment, tag);
-        transaction.addToBackStack(tag);
-        transaction.commit();
     }
 
     private void setTitle(String title) {
