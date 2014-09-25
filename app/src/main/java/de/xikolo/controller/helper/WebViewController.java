@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -21,6 +22,8 @@ import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
 public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
+
+    public static final String TAG = WebViewController.class.getSimpleName();
 
     private Activity mActivity;
 
@@ -50,6 +53,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
+        mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mWebView.setWebChromeClient(new WebChromeClient());
 
         mWebView.setWebViewClient(new WebViewClient() {
@@ -97,6 +101,9 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
     }
 
     public void request(String url) {
+        if (Config.DEBUG) {
+            Log.i(TAG, "Request URL: " + url);
+        }
         mUrl = url;
         if (NetworkUtil.isOnline(mActivity)) {
             mRefreshLayout.setRefreshing(true);

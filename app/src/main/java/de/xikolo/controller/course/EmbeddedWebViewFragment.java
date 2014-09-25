@@ -37,8 +37,10 @@ public class EmbeddedWebViewFragment extends BaseFragment {
 
     // the fragment initialization parameters
     private static final String ARG_URL = "arg_url";
+    private static final String ARG_INAPPLINKS = "arg_inapplinks";
 
     private String mUrl;
+    private boolean mInAppLinksEnabled;
 
     private WebView mWebView;
     private SwipeRefreshLayout mRefreshLayout;
@@ -49,10 +51,11 @@ public class EmbeddedWebViewFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static EmbeddedWebViewFragment newInstance(String url) {
+    public static EmbeddedWebViewFragment newInstance(String url, boolean inAppLinksEnabled) {
         EmbeddedWebViewFragment fragment = new EmbeddedWebViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
+        args.putBoolean(ARG_INAPPLINKS, inAppLinksEnabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +65,7 @@ public class EmbeddedWebViewFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mUrl = getArguments().getString(ARG_URL);
+            mInAppLinksEnabled = getArguments().getBoolean(ARG_INAPPLINKS);
         }
         setHasOptionsMenu(true);
     }
@@ -74,6 +78,7 @@ public class EmbeddedWebViewFragment extends BaseFragment {
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
 
         mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout);
+        mWebViewController.setInAppLinksEnabled(mInAppLinksEnabled);
 
         mRefreshLayout.setColorSchemeResources(
                 R.color.apptheme_second,

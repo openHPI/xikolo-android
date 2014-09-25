@@ -3,4 +3,8 @@
 
     <string name="app_name">openHPI</string>
 
+    <string name="settings_copyright">&#169; 2012 &#8211; 2014 Hasso Plattner Institute</string>
+    <string name="settings_imprint">Imprint</string>
+    <string name="settings_privacy">Data Protection</string>
+
 </resources>

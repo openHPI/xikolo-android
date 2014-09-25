@@ -13,6 +13,18 @@
     <PreferenceCategory android:title="@string/settings_category_about">
 
         <Preference
+            android:key="copyright"
+            android:title="@string/settings_copyright" />
+
+        <Preference
+            android:key="imprint"
+            android:title="@string/settings_imprint" />
+
+        <Preference
+            android:key="privacy"
+            android:title="@string/settings_privacy" />
+
+        <Preference
             android:key="open_source_licenses"
             android:summary="@string/settings_summary_licenses"
             android:title="@string/settings_title_licenses" />

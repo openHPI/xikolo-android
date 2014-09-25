@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,12 +20,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import de.xikolo.R;
+import de.xikolo.controller.helper.WebViewController;
 import de.xikolo.entities.Course;
 import de.xikolo.entities.Item;
 import de.xikolo.entities.ItemText;
 import de.xikolo.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 
 public class TextFragment extends PagerFragment<ItemText> {
@@ -32,7 +35,9 @@ public class TextFragment extends PagerFragment<ItemText> {
     public static final String TAG = TextFragment.class.getSimpleName();
 
     private WebView mWebView;
-    private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mRefreshLayout;
+
+    private WebViewController mWebViewController;
 
     private ItemModel mItemModel;
 
@@ -54,7 +59,7 @@ public class TextFragment extends PagerFragment<ItemText> {
             public void onResponse(final Item response) {
                 if (response != null) {
                     mItem = response;
-                    displayBody();
+                    mWebViewController.request(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ITEMS + mItem.id);
                 }
             }
         });
@@ -63,85 +68,57 @@ public class TextFragment extends PagerFragment<ItemText> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_text, container, false);
+        View layout = inflater.inflate(R.layout.fragment_webview, container, false);
         mWebView = (WebView) layout.findViewById(R.id.webView);
-        mProgressBar = (ProgressBar) layout.findViewById(R.id.progress);
+        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
 
-        final Activity activity = getActivity();
+        mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout);
+        mWebViewController.setInAppLinksEnabled(true);
 
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        mRefreshLayout.setColorSchemeResources(
+                R.color.apptheme_second,
+                R.color.apptheme_main,
+                R.color.apptheme_second,
+                R.color.apptheme_main);
+        mRefreshLayout.setOnRefreshListener(mWebViewController);
 
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int progress) {
-                if (progress < 100) {
-                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
-                }
-                if (progress == 100) {
-                    mProgressBar.setVisibility(ProgressBar.GONE);
-                }
+        if (savedInstanceState != null) {
+            mWebView.restoreState(savedInstanceState);
+        } else {
+            if (NetworkUtil.isOnline(getActivity())) {
+                mRefreshLayout.setRefreshing(true);
+                mItemModel.retrieveItemDetail(mCourse.id, mModule.id, mItem.id, Item.TYPE_TEXT, true);
+            } else {
+                mRefreshLayout.setRefreshing(false);
+                NetworkUtil.showNoConnectionToast(getActivity());
             }
-
-        });
-        mWebView.setWebViewClient(new WebViewClient() {
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                Toast.makeText(activity, "An error occurred" + description, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                if (url.contains(Config.URI_HOST_HPI)) {
-//                    view.loadUrl(url);
-//                } else {
-                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(i);
-//                }
-                return true;
-            }
-        });
+        }
 
         return layout;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        if (NetworkUtil.isOnline(getActivity())) {
-            mItemModel.retrieveItemDetail(mCourse.id, mModule.id, mItem.id, Item.TYPE_TEXT, true);
-        } else {
-            NetworkUtil.showNoConnectionToast(getActivity());
+    public void onSaveInstanceState(Bundle outState) {
+        if (mWebView != null) {
+            mWebView.saveState(outState);
         }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.refresh, menu);
+        inflater.inflate(R.menu.refresh, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
-//            case R.id.action_refresh:
-//                onRefresh();
-//                return true;
+            case R.id.action_refresh:
+                mWebViewController.onRefresh();
+                return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void displayBody() {
-        mWebView.loadData(mItem.object.body, "text/html", "charset=UTF-8");
     }
 
     @Override

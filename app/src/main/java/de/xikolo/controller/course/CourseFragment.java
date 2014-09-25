@@ -135,19 +135,19 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
                         fragment = CourseLearningsFragment.newInstance(mCourse);
                         break;
                     case 1:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.DISCUSSIONS);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.DISCUSSIONS, true);
                         break;
                     case 2:
                         fragment = ProgressFragment.newInstance(mCourse);
                         break;
                     case 3:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ANNOUNCEMENTS);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ANNOUNCEMENTS, false);
                         break;
                     case 4:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ROOMS);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ROOMS, true);
                         break;
                     case 5:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code);
+                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false);
                         break;
                 }
             }

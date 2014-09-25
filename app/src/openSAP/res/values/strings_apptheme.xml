@@ -3,4 +3,8 @@
 
     <string name="app_name">openSAP</string>
 
+    <string name="settings_copyright">&#169; 2012 &#8211; 2014 Copyright SAP</string>
+    <string name="settings_imprint">Legal Disclosure</string>
+    <string name="settings_privacy">Privacy</string>
+
 </resources>
