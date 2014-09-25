@@ -12,6 +12,7 @@ public class Item<T extends Parcelable> implements Parcelable {
     public static final String TYPE_SELFTEST = "self test";
     public static final String TYPE_ASSIGNMENT = "assignment";
     public static final String TYPE_EXAM = "exam";
+    public static final String TYPE_LTI = "lti_exercise";
 
     @SerializedName("id")
     public String id;

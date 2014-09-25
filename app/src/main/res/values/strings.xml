@@ -57,6 +57,7 @@
     <string name="icon_video"></string>
     <string name="icon_selftest"></string>
     <string name="icon_assignment"></string>
+    <string name="icon_lti"></string>
     <string name="icon_bonus"></string>
     <string name="icon_info">&#xe666;</string>
     <string name="icon_visited">&#xf06e;</string>

@@ -19,7 +19,7 @@
         android:textSize="24sp" />
 
     <View
-        android:id="@+id/seperator"
+        android:id="@+id/separator"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_alignParentLeft="true"
@@ -30,7 +30,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/seperator"
+        android:layout_below="@+id/separator"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 

@@ -83,6 +83,8 @@ public class ItemListAdapter extends BaseAdapter {
             holder.icon.setText(mContext.getString(R.string.icon_selftest));
         } else if (item.type.equals(Item.TYPE_ASSIGNMENT) || item.type.equals(Item.TYPE_EXAM)) {
             holder.icon.setText(mContext.getString(R.string.icon_assignment));
+        } else if (item.type.equals(Item.TYPE_LTI)) {
+            holder.icon.setText(mContext.getString(R.string.icon_lti));
         }
 
         // TODO set progression when unseen
@@ -99,12 +101,21 @@ public class ItemListAdapter extends BaseAdapter {
 //        params.height = holder.icon.getMeasuredHeight();
 //        holder.unseenIndicator.setLayoutParams(params);
 
-        holder.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCallback.onItemButtonClicked(mCourse, mModule, item);
-            }
-        });
+        // TODO enable when API is working correct
+//        if (item.locked) {
+        if (false) {
+            holder.container.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+            holder.title.setTextColor(mContext.getResources().getColor(R.color.gray_light));
+            holder.icon.setTextColor(mContext.getResources().getColor(R.color.gray_light));
+            holder.container.setClickable(false);
+        } else {
+            holder.container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCallback.onItemButtonClicked(mCourse, mModule, item);
+                }
+            });
+        }
 
         return rowView;
     }

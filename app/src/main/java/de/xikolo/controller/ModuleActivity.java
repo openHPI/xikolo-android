@@ -13,11 +13,13 @@ import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.module.AssignmentFragment;
+import de.xikolo.controller.module.LtiFragment;
 import de.xikolo.controller.module.PagerFragment;
 import de.xikolo.controller.module.TextFragment;
 import de.xikolo.controller.module.VideoFragment;
@@ -116,6 +118,16 @@ public class ModuleActivity extends BaseActivity {
         public ModulePagerAdapter(FragmentManager fm, Context context, List<Item> items) {
             super(fm);
             mItems = items;
+
+            // TODO enable when API is working correct
+//            List<Item> toRemove = new ArrayList<Item>();
+//            for(Item item : items){
+//                if(item.locked) {
+//                    toRemove.add(item);
+//                }
+//            }
+//            mItems.removeAll(toRemove);
+
             mContext = context;
             mFragmentManager = fm;
         }
@@ -152,6 +164,8 @@ public class ModuleActivity extends BaseActivity {
                 title = mContext.getString(R.string.icon_selftest);
             } else if (item.type.equals(Item.TYPE_ASSIGNMENT) || item.type.equals(Item.TYPE_EXAM)) {
                 title = mContext.getString(R.string.icon_assignment);
+            } else if (item.type.equals(Item.TYPE_LTI)) {
+                title = mContext.getString(R.string.icon_lti);
             }
             return title;
         }
@@ -178,6 +192,8 @@ public class ModuleActivity extends BaseActivity {
                         || item.type.equals(Item.TYPE_ASSIGNMENT)
                         || item.type.equals(Item.TYPE_EXAM)) {
                     fragment = AssignmentFragment.newInstance(mCourse, mModule, mItems.get(position));
+                } else if (item.type.equals(Item.TYPE_LTI)) {
+                    fragment = LtiFragment.newInstance(mCourse, mModule, mItems.get(position));
                 }
             }
             return fragment;

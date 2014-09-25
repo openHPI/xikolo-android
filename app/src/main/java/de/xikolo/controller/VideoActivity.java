@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
@@ -16,10 +15,10 @@ import android.view.Window;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
+import de.xikolo.controller.helper.VideoController;
 import de.xikolo.controller.module.VideoFragment;
 import de.xikolo.entities.Item;
 import de.xikolo.entities.ItemVideo;
-import de.xikolo.controller.helper.VideoController;
 
 public class VideoActivity extends BaseActivity {
 
@@ -95,8 +94,7 @@ public class VideoActivity extends BaseActivity {
                     size.y - usableRect.bottom);
         }
 
-        Uri uri = Uri.parse(mItem.object.url);
-        mVideoController.setVideoURI(uri);
+        mVideoController.setVideo(mItem);
     }
 
     private void hideSystemBars() {

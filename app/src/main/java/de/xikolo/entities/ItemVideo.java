@@ -99,7 +99,7 @@ public class ItemVideo implements Parcelable {
         }
     };
 
-    static class Stream implements Parcelable {
+    public static class Stream implements Parcelable {
 
         @SerializedName("hd_url")
         public String hd_url;

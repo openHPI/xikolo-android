@@ -67,6 +67,7 @@ public class ModuleListAdapter extends BaseAdapter {
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
             viewHolder.listView = (AbsListView) rowView.findViewById(R.id.listView);
             viewHolder.progress = (ProgressBar) rowView.findViewById(R.id.progress);
+            viewHolder.separator = rowView.findViewById(R.id.separator);
             rowView.setTag(viewHolder);
         }
         final ViewHolder holder = (ViewHolder) rowView.getTag();
@@ -74,17 +75,26 @@ public class ModuleListAdapter extends BaseAdapter {
         final Module module = (Module) getItem(i);
 
         holder.title.setText(module.name);
+
         ItemListAdapter itemAdapter = new ItemListAdapter(mContext, mCourse, module, mItemCallback);
         holder.listView.setAdapter(itemAdapter);
         if (module.items != null && module.items.size() > 0) {
             holder.progress.setVisibility(View.GONE);
             itemAdapter.updateItems(module.items);
-            holder.title.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mModuleCallback.onModuleButtonClicked(mCourse, module);
-                }
-            });
+            // TODO enable when API is working correct
+//            if (module.locked) {
+            if (false) {
+                holder.title.setTextColor(mContext.getResources().getColor(R.color.gray_light));
+                holder.separator.setBackgroundColor(mContext.getResources().getColor(R.color.gray_light));
+                holder.title.setClickable(false);
+            } else {
+                holder.title.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mModuleCallback.onModuleButtonClicked(mCourse, module);
+                    }
+                });
+            }
         } else {
             holder.progress.setVisibility(View.VISIBLE);
         }
@@ -92,16 +102,17 @@ public class ModuleListAdapter extends BaseAdapter {
         return rowView;
     }
 
-    static class ViewHolder {
-        TextView title;
-        AbsListView listView;
-        ProgressBar progress;
-    }
-
     public interface OnModuleButtonClickListener {
 
         public void onModuleButtonClicked(Course course, Module module);
 
+    }
+
+    static class ViewHolder {
+        TextView title;
+        AbsListView listView;
+        ProgressBar progress;
+        View separator;
     }
 
 }

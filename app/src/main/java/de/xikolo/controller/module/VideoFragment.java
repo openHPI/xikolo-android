@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -144,8 +143,7 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
         mProgress.setVisibility(View.GONE);
         mContainer.setVisibility(View.VISIBLE);
 
-        Uri uri = Uri.parse(mItem.object.url);
-        mVideoController.setVideoURI(uri);
+        mVideoController.setVideo(mItem);
 
         mTitle.setText(mItem.object.title);
         mTime.setText(mItem.object.minutes + ":" + mItem.object.seconds);

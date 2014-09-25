@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
@@ -14,6 +15,11 @@ import android.widget.TextView;
 import java.util.concurrent.TimeUnit;
 
 import de.xikolo.R;
+import de.xikolo.data.preferences.Settings;
+import de.xikolo.entities.Item;
+import de.xikolo.entities.ItemVideo;
+import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 import de.xikolo.view.CustomFontTextView;
 import de.xikolo.view.CustomSizeVideoView;
 
@@ -245,8 +251,22 @@ public class VideoController {
         mVideo.setDimensions(w, h);
     }
 
-    public void setVideoURI(Uri uri) {
-        mVideo.setVideoURI(uri);
+    public void setVideoURI(String uri) {
+        if (Config.DEBUG) {
+            Log.i(TAG, "Video URI: " + uri);
+        }
+        mVideo.setVideoURI(Uri.parse(uri));
+    }
+
+    public void setVideo(Item<ItemVideo> video) {
+        int connectivityStatus = NetworkUtil.getConnectivityStatus(mActivity);
+
+        if (connectivityStatus == NetworkUtil.TYPE_WIFI
+                || (connectivityStatus == NetworkUtil.TYPE_MOBILE && !Settings.isLowVideoQualityEnabledOnMobile(mActivity))) {
+            setVideoURI(video.object.stream.hd_url);
+        } else {
+            setVideoURI(video.object.url);
+        }
     }
 
     public void enableHeader() {
