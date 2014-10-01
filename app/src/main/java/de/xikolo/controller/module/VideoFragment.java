@@ -168,7 +168,9 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(KEY_ITEM, mItem);
-        mVideoController.onSaveInstanceState(outState);
+        if (mVideoController != null) {
+            mVideoController.onSaveInstanceState(outState);
+        }
     }
 
     @Override

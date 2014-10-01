@@ -74,9 +74,9 @@ public class GlobalApplication extends Application {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
-                .showImageOnLoading(R.color.gray_text)
-                .showImageForEmptyUri(R.color.gray_text)
-                .showImageOnFail(R.color.gray_text)
+                .showImageOnLoading(R.drawable.gradient_default_image)
+                .showImageForEmptyUri(R.drawable.gradient_default_image)
+                .showImageOnFail(R.drawable.gradient_default_image)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)
@@ -103,6 +103,8 @@ public class GlobalApplication extends Application {
     }
 
     private void configureJobManager() {
+        int numThreads = Runtime.getRuntime().availableProcessors() + 1;
+
         Configuration configuration = new Configuration.Builder(this)
                 .customLogger(new CustomLogger() {
                     private static final String TAG = "JOBS";
@@ -128,11 +130,15 @@ public class GlobalApplication extends Application {
                     }
                 })
                 .minConsumerCount(1) // always keep at least one consumer alive
-                .maxConsumerCount(3) // up to 3 consumers at a time
-                .loadFactor(3) // 3 jobs per consumer
+                .maxConsumerCount(numThreads) // consumers at a time
+                .loadFactor(2) // jobs per consumer
                 .consumerKeepAlive(120) // wait 2 minute
                 .build();
         jobManager = new JobManager(this, configuration);
+
+        if (Config.DEBUG) {
+            Log.i(TAG, "CPU Cores: " + Runtime.getRuntime().availableProcessors());
+        }
     }
 
     public void flushHttpResponseCache() {

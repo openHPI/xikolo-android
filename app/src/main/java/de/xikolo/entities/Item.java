@@ -38,6 +38,9 @@ public class Item<T extends Parcelable> implements Parcelable {
     @SerializedName("object")
     public T object;
 
+    @SerializedName("progress")
+    public Progress progress;
+
     @Override
     public int describeContents() {
         return 0;
@@ -53,6 +56,7 @@ public class Item<T extends Parcelable> implements Parcelable {
         parcel.writeString(available_to);
         parcel.writeByte((byte) (locked ? 1 : 0 ));
         parcel.writeParcelable(object, i);
+        parcel.writeParcelable(progress, i);
     }
 
     public Item(Parcel in) {
@@ -64,6 +68,7 @@ public class Item<T extends Parcelable> implements Parcelable {
         available_to = in.readString();
         locked = in.readByte() != 0;
         object = in.readParcelable(Item.class.getClassLoader());
+        progress = in.readParcelable(Item.class.getClassLoader());
     }
 
     @Override
@@ -100,5 +105,41 @@ public class Item<T extends Parcelable> implements Parcelable {
             return new Item[size];
         }
     };
+
+    public static class Progress implements Parcelable {
+
+        @SerializedName("visited")
+        public boolean visited;
+
+        @SerializedName("completed")
+        public boolean completed;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeByte((byte) (visited ? 1 : 0 ));
+            parcel.writeByte((byte) (completed ? 1 : 0 ));
+        }
+
+        public Progress(Parcel in) {
+            visited = in.readByte() != 0;
+            completed = in.readByte() != 0;
+        }
+
+        public static final Creator<Progress> CREATOR = new Creator<Progress>() {
+            public Progress createFromParcel(Parcel in) {
+                return new Progress(in);
+            }
+
+            public Progress[] newArray(int size) {
+                return new Progress[size];
+            }
+        };
+
+    }
 
 }

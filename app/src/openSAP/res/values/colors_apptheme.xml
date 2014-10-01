@@ -25,4 +25,7 @@
     <color name="apptheme_second">#226CA9</color>
     <color name="apptheme_third">#8AB54E</color>
 
+    <color name="apptheme_second_transparent">#99226CA9</color>
+    <color name="apptheme_third_transparent">#998AB54E</color>
+
 </resources>

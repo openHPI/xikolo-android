@@ -5,7 +5,10 @@ import android.support.v4.app.FragmentActivity;
 
 import com.path.android.jobqueue.JobManager;
 
+import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
+import de.xikolo.R;
+import de.xikolo.util.BuildFlavor;
 
 public abstract class BaseActivity extends FragmentActivity {
 
@@ -16,6 +19,10 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getActionBar() != null && BuildConfig.buildFlavor == BuildFlavor.OPEN_SAP) {
+            getActionBar().setLogo(R.drawable.ic_logo);
+        }
 
         globalApplication = GlobalApplication.getInstance();
         jobManager = globalApplication.getJobManager();

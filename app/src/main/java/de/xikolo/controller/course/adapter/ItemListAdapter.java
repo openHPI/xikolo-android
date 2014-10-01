@@ -87,19 +87,11 @@ public class ItemListAdapter extends BaseAdapter {
             holder.icon.setText(mContext.getString(R.string.icon_lti));
         }
 
-        // TODO set progression when unseen
-        if (i % 2 == 0) {
-//            holder.unseenIndicator.setVisibility(View.VISIBLE);
-            holder.unseenIndicator.setVisibility(View.GONE);
+        if (!item.progress.visited) {
+            holder.unseenIndicator.setVisibility(View.VISIBLE);
         } else {
             holder.unseenIndicator.setVisibility(View.GONE);
         }
-
-//        holder.icon.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-//        ViewGroup.LayoutParams params = holder.unseenIndicator.getLayoutParams();
-//        Log.d(TAG, "height: " + holder.icon.getMeasuredHeight());
-//        params.height = holder.icon.getMeasuredHeight();
-//        holder.unseenIndicator.setLayoutParams(params);
 
         // TODO enable when API is working correct
 //        if (item.locked) {

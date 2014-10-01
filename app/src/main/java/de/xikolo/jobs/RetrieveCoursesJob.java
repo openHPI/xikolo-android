@@ -34,7 +34,7 @@ public class RetrieveCoursesJob extends Job {
     }
 
     public RetrieveCoursesJob(OnJobResponseListener<List<Course>> callback, boolean cache, boolean includeProgress, String token) {
-        super(new Params(Priority.HIGH).requireNetwork().groupBy(TAG));
+        super(new Params(includeProgress ? Priority.MID : Priority.HIGH).requireNetwork());
         id = jobCounter.incrementAndGet();
 
         mCallback = callback;

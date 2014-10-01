@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import de.xikolo.R;
 
 public class CircularImageView extends ImageView {
+
+    public static final String TAG = CircularImageView.class.getSimpleName();
+
     private int borderWidth;
     private int canvasSize;
     private Bitmap image;
@@ -160,12 +163,17 @@ public class CircularImageView extends ImageView {
             return ((BitmapDrawable) drawable).getBitmap();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
+        try {
+            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                    drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
 
-        return bitmap;
+            return bitmap;
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return null;
     }
 }

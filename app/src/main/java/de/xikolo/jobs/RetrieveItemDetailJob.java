@@ -35,7 +35,7 @@ public class RetrieveItemDetailJob extends Job {
     private OnJobResponseListener<Item> mCallback;
 
     public RetrieveItemDetailJob(OnJobResponseListener<Item> callback, String courseId, String moduleId, String itemId, String itemType, boolean cache, String token) {
-        super(new Params(Priority.HIGH).requireNetwork().groupBy(TAG));
+        super(new Params(Priority.HIGH).requireNetwork());
         id = jobCounter.incrementAndGet();
 
         mCallback = callback;

@@ -1,6 +1,7 @@
 package de.xikolo.controller.navigation.adapter;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -105,9 +107,24 @@ public class NavigationAdapter extends BaseAdapter {
             User user = UserModel.readUser(mContext);
             holder.name.setText(user.first_name + " " + user.last_name);
             holder.email.setText(user.email);
-            if (holder.img.getDrawable() == null) {
+
+            if (user.user_visual != null) {
+                Drawable lastImage;
+                if (holder.img.getDrawable() != null) {
+                    lastImage = holder.img.getDrawable();
+                } else {
+                    lastImage = mContext.getResources().getDrawable(R.drawable.avatar);
+                }
+                DisplayImageOptions options = new DisplayImageOptions.Builder()
+                        .showImageOnLoading(lastImage)
+                        .showImageForEmptyUri(R.drawable.avatar)
+                        .showImageOnFail(R.drawable.avatar)
+                        .build();
+                ImageLoader.getInstance().displayImage(user.user_visual, holder.img, options);
+            } else {
                 ImageLoader.getInstance().displayImage("drawable://" + R.drawable.avatar, holder.img);
             }
+
         } else if (i == NAV_ID_PROFILE && !UserModel.isLoggedIn(mContext)) {
             holder.containerLogin.setVisibility(View.VISIBLE);
             holder.containerProfile.setVisibility(View.GONE);

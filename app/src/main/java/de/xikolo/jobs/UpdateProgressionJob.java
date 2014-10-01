@@ -22,7 +22,7 @@ public class UpdateProgressionJob extends Job {
     private String token;
 
     public UpdateProgressionJob(String itemId, String token) {
-        super(new Params(Priority.LOW).persist().requireNetwork().groupBy(TAG));
+        super(new Params(Priority.LOW).persist().requireNetwork());
         id = jobCounter.incrementAndGet();
 
         this.itemId = itemId;

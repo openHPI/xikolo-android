@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
@@ -139,10 +138,9 @@ public class ModuleActivity extends BaseActivity {
             TextView label = (TextView) layout.findViewById(R.id.tabLabel);
             View unseenIndicator = layout.findViewById(R.id.unseenIndicator);
 
-            // TODO set progression when unseen
-            if (position % 2 == 0) {
-//                unseenIndicator.setVisibility(View.VISIBLE);
-                unseenIndicator.setVisibility(View.GONE);
+            Item item = mItems.get(position);
+            if (!item.progress.visited) {
+                unseenIndicator.setVisibility(View.VISIBLE);
             } else {
                 unseenIndicator.setVisibility(View.GONE);
             }

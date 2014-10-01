@@ -28,7 +28,7 @@ public class RetrieveEnrollmentsJob extends Job {
     private OnJobResponseListener<List<Enrollment>> mCallback;
 
     public RetrieveEnrollmentsJob(OnJobResponseListener<List<Enrollment>> callback, boolean cache, String token) {
-        super(new Params(Priority.HIGH).requireNetwork().groupBy(TAG));
+        super(new Params(Priority.HIGH).requireNetwork());
         id = jobCounter.incrementAndGet();
 
         mCallback = callback;

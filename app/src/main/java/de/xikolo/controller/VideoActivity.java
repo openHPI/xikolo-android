@@ -32,8 +32,8 @@ public class VideoActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
         View videoContainer = findViewById(R.id.videoContainer);

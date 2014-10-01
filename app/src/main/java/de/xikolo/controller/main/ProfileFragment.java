@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
@@ -18,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -215,7 +217,7 @@ public class ProfileFragment extends ContentFragment {
         showHeader();
         if (UserModel.isLoggedIn(getActivity()) && mCourses == null) {
             if (NetworkUtil.isOnline(getActivity())) {
-                mUserModel.retrieveUser(true);
+                mUserModel.retrieveUser(false);
                 mCourseModel.retrieveCourses(CourseModel.FILTER_MY, true, true);
                 mCoursesProgress.setVisibility(View.VISIBLE);
             } else {
@@ -263,7 +265,23 @@ public class ProfileFragment extends ContentFragment {
         ImageLoader.getInstance().displayImage("drawable://" + R.drawable.title, mImgHeader);
         mImgProfile.setDimensions(heightProfile, heightProfile);
         mImgProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        mImgProfile.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.avatar));
+
+        if (user.user_visual != null) {
+            Drawable lastImage;
+            if (mImgProfile.getDrawable() != null) {
+                lastImage = mImgProfile.getDrawable();
+            } else {
+                lastImage = getActivity().getResources().getDrawable(R.drawable.avatar);
+            }
+            DisplayImageOptions options = new DisplayImageOptions.Builder()
+                    .showImageOnLoading(lastImage)
+                    .showImageForEmptyUri(R.drawable.avatar)
+                    .showImageOnFail(R.drawable.avatar)
+                    .build();
+            ImageLoader.getInstance().displayImage(user.user_visual, mImgProfile, options);
+        } else {
+            ImageLoader.getInstance().displayImage("drawable://" + R.drawable.avatar, mImgProfile);
+        }
 
         mTextEmail.setText(user.email);
 

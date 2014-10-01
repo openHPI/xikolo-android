@@ -16,4 +16,7 @@ public class User {
     @SerializedName("email")
     public String email;
 
+    @SerializedName("user_visual")
+    public String user_visual;
+
 }

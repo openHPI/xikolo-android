@@ -27,7 +27,7 @@ public class RetrieveUserJob extends Job {
     private OnJobResponseListener<User> mCallback;
 
     public RetrieveUserJob(OnJobResponseListener<User> callback, boolean cache, String token) {
-        super(new Params(Priority.HIGH).requireNetwork().groupBy(TAG));
+        super(new Params(Priority.HIGH).requireNetwork());
         id = jobCounter.incrementAndGet();
 
         mCallback = callback;

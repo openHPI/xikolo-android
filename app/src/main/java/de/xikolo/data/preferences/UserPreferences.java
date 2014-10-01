@@ -15,6 +15,7 @@ public class UserPreferences {
     private static String USER_LAST_NAME = "last_name";
     private static String USER_EMAIL = "email";
     private static String USER_ACCESS_TOKEN = "token";
+    private static String USER_VISUAL_URL = "visual_url";
     private Context mContext;
 
     public UserPreferences(Context context) {
@@ -29,6 +30,7 @@ public class UserPreferences {
         user.first_name = sharedPref.getString(USER_FIRST_NAME, null);
         user.last_name = sharedPref.getString(USER_LAST_NAME, null);
         user.email = sharedPref.getString(USER_EMAIL, null);
+        user.user_visual = sharedPref.getString(USER_VISUAL_URL, null);
         return user;
     }
 
@@ -39,6 +41,7 @@ public class UserPreferences {
         editor.putString(USER_FIRST_NAME, user.first_name);
         editor.putString(USER_LAST_NAME, user.last_name);
         editor.putString(USER_EMAIL, user.email);
+        editor.putString(USER_VISUAL_URL, user.user_visual);
         editor.commit();
     }
 
