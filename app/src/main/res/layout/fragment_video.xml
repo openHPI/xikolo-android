@@ -41,14 +41,6 @@
                     android:layout_alignParentTop="true"
                     android:textSize="24sp" />
 
-                <TextView
-                    android:id="@+id/textTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/textTitle"
-                    android:textSize="18sp" />
-
             </RelativeLayout>
 
         </RelativeLayout>

@@ -15,6 +15,7 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.entities.Course;
 import de.xikolo.entities.Module;
+import de.xikolo.util.DateComparator;
 
 public class ModuleListAdapter extends BaseAdapter {
 
@@ -81,9 +82,8 @@ public class ModuleListAdapter extends BaseAdapter {
         if (module.items != null && module.items.size() > 0) {
             holder.progress.setVisibility(View.GONE);
             itemAdapter.updateItems(module.items);
-            // TODO enable when API is working correct
-//            if (module.locked) {
-            if (false) {
+
+            if (!DateComparator.nowIsBetween(module.available_from, module.available_to)) {
                 holder.title.setTextColor(mContext.getResources().getColor(R.color.gray_light));
                 holder.separator.setBackgroundColor(mContext.getResources().getColor(R.color.gray_light));
                 holder.title.setClickable(false);

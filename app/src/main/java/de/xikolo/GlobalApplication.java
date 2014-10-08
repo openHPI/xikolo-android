@@ -73,14 +73,14 @@ public class GlobalApplication extends Application {
         // Create ImageLoader configuration
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
-                .cacheOnDisc(true)
+                .cacheOnDisk(true)
                 .showImageOnLoading(R.drawable.gradient_default_image)
                 .showImageForEmptyUri(R.drawable.gradient_default_image)
                 .showImageOnFail(R.drawable.gradient_default_image)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)
-                .discCacheSize(30 * 1024 * 1024) // 30 MiB
+                .diskCacheSize(30 * 1024 * 1024) // 30 MiB
                 .build();
         ImageLoader.getInstance().init(config);
     }
@@ -103,7 +103,7 @@ public class GlobalApplication extends Application {
     }
 
     private void configureJobManager() {
-        int numThreads = Runtime.getRuntime().availableProcessors() + 1;
+        int numThreads = Runtime.getRuntime().availableProcessors();
 
         Configuration configuration = new Configuration.Builder(this)
                 .customLogger(new CustomLogger() {

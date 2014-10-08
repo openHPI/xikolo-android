@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import de.xikolo.R;
 import de.xikolo.entities.Course;
+import de.xikolo.util.DateComparator;
 import de.xikolo.util.DisplayUtil;
 
 public class CourseListAdapter extends BaseAdapter {
@@ -108,7 +109,7 @@ public class CourseListAdapter extends BaseAdapter {
         holder.language.setText(course.language);
         ImageLoader.getInstance().displayImage(course.visual_url, holder.img);
 
-        if (course.is_enrolled) {
+        if (course.is_enrolled && DateComparator.nowIsAfter(course.available_from)) {
             holder.container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -119,7 +120,6 @@ public class CourseListAdapter extends BaseAdapter {
             holder.enroll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    holder.enroll.setClickable(false);
                     mCallback.onEnterButtonClicked(course);
                 }
             });
@@ -141,9 +141,14 @@ public class CourseListAdapter extends BaseAdapter {
             });
         }
 
-        if (course.locked) {
+        if (course.is_enrolled && !DateComparator.nowIsAfter(course.available_from)) {
             holder.enroll.setText(mContext.getString(R.string.btn_starts_soon));
-            holder.enroll.setClickable(false);
+            holder.enroll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCallback.onDetailButtonClicked(course);
+                }
+            });
         }
 
         return rowView;

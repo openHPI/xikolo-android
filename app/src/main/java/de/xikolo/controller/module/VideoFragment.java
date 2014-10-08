@@ -35,7 +35,6 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
     public static final String KEY_ITEM = "key_item";
 
     private TextView mTitle;
-    private TextView mTime;
     private View mContainer;
     private ProgressBar mProgress;
 
@@ -81,7 +80,6 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
 
         mTitle = (TextView) layout.findViewById(R.id.textTitle);
 
-        mTime = (TextView) layout.findViewById(R.id.textTime);
         mVideoContainer = (ViewGroup) layout.findViewById(R.id.videoContainer);
 
         mContainer.setVisibility(View.GONE);
@@ -146,7 +144,6 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
         mVideoController.setVideo(mItem);
 
         mTitle.setText(mItem.object.title);
-        mTime.setText(mItem.object.minutes + ":" + mItem.object.seconds);
     }
 
     @Override

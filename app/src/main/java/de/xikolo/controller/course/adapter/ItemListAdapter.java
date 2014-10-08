@@ -1,10 +1,12 @@
 package de.xikolo.controller.course.adapter;
 
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import de.xikolo.R;
 import de.xikolo.entities.Course;
 import de.xikolo.entities.Item;
 import de.xikolo.entities.Module;
+import de.xikolo.util.DateComparator;
 import de.xikolo.util.ItemTitle;
 
 public class ItemListAdapter extends BaseAdapter {
@@ -65,7 +68,7 @@ public class ItemListAdapter extends BaseAdapter {
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
             viewHolder.icon = (TextView) rowView.findViewById(R.id.textIcon);
-            viewHolder.container = (ViewGroup) rowView.findViewById(R.id.container);
+            viewHolder.container = (FrameLayout) rowView.findViewById(R.id.container);
             viewHolder.unseenIndicator = rowView.findViewById(R.id.unseenIndicator);
             rowView.setTag(viewHolder);
         }
@@ -93,13 +96,14 @@ public class ItemListAdapter extends BaseAdapter {
             holder.unseenIndicator.setVisibility(View.GONE);
         }
 
-        // TODO enable when API is working correct
-//        if (item.locked) {
-        if (false) {
+        if (!DateComparator.nowIsBetween(mModule.available_from, mModule.available_to)
+                || !DateComparator.nowIsBetween(item.available_from, item.available_to)) {
             holder.container.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+            holder.container.setForeground(null);
             holder.title.setTextColor(mContext.getResources().getColor(R.color.gray_light));
             holder.icon.setTextColor(mContext.getResources().getColor(R.color.gray_light));
-            holder.container.setClickable(false);
+            holder.unseenIndicator.setVisibility(View.GONE);
+            holder.container.setEnabled(false);
         } else {
             holder.container.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -124,7 +128,7 @@ public class ItemListAdapter extends BaseAdapter {
 
         View unseenIndicator;
 
-        ViewGroup container;
+        FrameLayout container;
     }
 
 }

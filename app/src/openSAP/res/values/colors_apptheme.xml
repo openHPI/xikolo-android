@@ -4,6 +4,7 @@
     <color name="apptheme_main">#f0ab00</color>
     <!-- 10% darker -->
     <color name="apptheme_main_dark">#d89a00</color>
+    <color name="apptheme_main_light">#f5c859</color>
 
     <color name="apptheme_main_alpha">#1af0ab00</color>
 

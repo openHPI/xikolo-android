@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
@@ -26,6 +27,7 @@ import de.xikolo.entities.Course;
 import de.xikolo.entities.Item;
 import de.xikolo.entities.Module;
 import de.xikolo.model.ItemModel;
+import de.xikolo.util.DateComparator;
 import de.xikolo.util.NetworkUtil;
 
 public class ModuleActivity extends BaseActivity {
@@ -119,13 +121,13 @@ public class ModuleActivity extends BaseActivity {
             mItems = items;
 
             // TODO enable when API is working correct
-//            List<Item> toRemove = new ArrayList<Item>();
-//            for(Item item : items){
-//                if(item.locked) {
-//                    toRemove.add(item);
-//                }
-//            }
-//            mItems.removeAll(toRemove);
+            List<Item> toRemove = new ArrayList<Item>();
+            for(Item item : items){
+                if(!DateComparator.nowIsBetween(item.available_from, item.available_to)) {
+                    toRemove.add(item);
+                }
+            }
+            mItems.removeAll(toRemove);
 
             mContext = context;
             mFragmentManager = fm;

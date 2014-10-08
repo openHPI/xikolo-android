@@ -30,7 +30,7 @@
     <!-- -->
     <string name="btn_enroll_me">Enroll me for this course</string>
     <string name="btn_enter_course">Enter course</string>
-    <string name="btn_starts_soon">Starts soon</string>
+    <string name="btn_starts_soon">Course has not yet started</string>
 
     <!-- -->
     <string name="dialog_unenroll_title">Un-enroll this course?</string>

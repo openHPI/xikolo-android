@@ -41,6 +41,7 @@
             android:columnWidth="300dp"
             android:gravity="center_horizontal|top"
             android:horizontalSpacing="@dimen/activity_horizontal_margin"
+            android:listSelector="@color/transparent"
             android:numColumns="auto_fit"
             android:scrollbarStyle="outsideOverlay"
             android:stretchMode="columnWidth"

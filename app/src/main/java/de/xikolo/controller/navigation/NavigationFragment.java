@@ -21,8 +21,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.R;
+import de.xikolo.controller.navigation.adapter.NavigationAdapter;
+import de.xikolo.model.UserModel;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -82,7 +83,11 @@ public class NavigationFragment extends Fragment {
         }
 
         if (!mFromSavedInstanceState) {
-            selectItem(NavigationAdapter.NAV_ID_ALL_COURSES);
+            if (UserModel.isLoggedIn(getActivity())) {
+                selectItem(NavigationAdapter.NAV_ID_MY_COURSES);
+            } else {
+                selectItem(NavigationAdapter.NAV_ID_ALL_COURSES);
+            }
         }
     }
 

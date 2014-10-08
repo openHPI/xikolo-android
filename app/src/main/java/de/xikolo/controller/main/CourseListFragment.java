@@ -17,6 +17,7 @@ import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.CourseActivity;
+import de.xikolo.controller.CourseDetailsActivity;
 import de.xikolo.controller.main.adapter.CourseListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.entities.Course;
@@ -215,7 +216,11 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     @Override
     public void onDetailButtonClicked(Course course) {
-        mCallback.attachFragment(WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code, false, course.name));
+        Intent intent = new Intent(getActivity(), CourseDetailsActivity.class);
+        Bundle b = new Bundle();
+        b.putParcelable(CourseActivity.ARG_COURSE, course);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 
     @Override

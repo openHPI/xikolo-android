@@ -13,7 +13,7 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="white_alpha">#ccffffff</color>
-    <color name="black_alpha">#33000000</color>
+    <color name="black_alpha">#1a000000</color>
     <color name="transparent">#00000000</color>
     <color name="background_holo_light">#fff3f3f3</color>
 
