@@ -14,6 +14,9 @@ public class SettingsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+        setupActionBar();
+
         setTitle(getString(R.string.title_section_settings));
 
         String tag = "settings";
@@ -21,7 +24,7 @@ public class SettingsActivity extends BaseActivity {
         FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(android.R.id.content, SettingsFragment.newInstance(), tag);
+            transaction.replace(R.id.content, SettingsFragment.newInstance(), tag);
             transaction.commit();
         }
     }

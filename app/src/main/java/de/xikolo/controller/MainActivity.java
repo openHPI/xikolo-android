@@ -1,12 +1,12 @@
 package de.xikolo.controller;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,22 +40,20 @@ public class MainActivity extends BaseActivity
 
     private ContentFragment mFragment;
 
-    private ActionBar mActionBar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupActionBar();
 
         mNavigationFragment = (NavigationFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         // Set up the drawer.
         mNavigationFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-
-        mActionBar = getActionBar();
+                (DrawerLayout) findViewById(R.id.drawer_layout),
+                toolbar);
 
         if (Config.DEBUG) {
             Log.i(TAG, "Build Type: " + BuildConfig.buildType);
@@ -134,8 +132,8 @@ public class MainActivity extends BaseActivity
 
     private void setTitle(String title) {
         mTitle = title;
-        if (mActionBar != null) {
-            mActionBar.setTitle(mTitle);
+        if (actionBar != null) {
+            actionBar.setTitle(mTitle);
         }
     }
 
@@ -156,10 +154,10 @@ public class MainActivity extends BaseActivity
     }
 
     public void restoreActionBar() {
-        if (mActionBar != null) {
-            mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-            mActionBar.setDisplayShowTitleEnabled(true);
-            mActionBar.setTitle(mTitle);
+        if (actionBar != null) {
+            actionBar.setNavigationMode(actionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(mTitle);
         }
     }
 

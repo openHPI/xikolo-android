@@ -6,14 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".controller.ItemActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="48dip"
 
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/toolbar"
         android:textSize="24sp"
 
         app:pstsIndicatorColor="@color/apptheme_main"

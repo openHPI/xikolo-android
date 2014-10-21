@@ -27,7 +27,7 @@ import de.xikolo.entities.Course;
 import de.xikolo.entities.Item;
 import de.xikolo.entities.Module;
 import de.xikolo.model.ItemModel;
-import de.xikolo.util.DateComparator;
+import de.xikolo.util.DateUtil;
 import de.xikolo.util.NetworkUtil;
 
 public class ModuleActivity extends BaseActivity {
@@ -48,6 +48,7 @@ public class ModuleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module);
+        setupActionBar();
 
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(ARG_COURSE) || !b.containsKey(ARG_MODULE)) {
@@ -123,7 +124,7 @@ public class ModuleActivity extends BaseActivity {
             // TODO enable when API is working correct
             List<Item> toRemove = new ArrayList<Item>();
             for(Item item : items){
-                if(!DateComparator.nowIsBetween(item.available_from, item.available_to)) {
+                if(!DateUtil.nowIsBetween(item.available_from, item.available_to)) {
                     toRemove.add(item);
                 }
             }

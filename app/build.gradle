@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "20"
+    compileSdkVersion 21
+    buildToolsVersion "21.0.1"
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 19
+        minSdkVersion 14
+        targetSdkVersion 21
         versionName "1.0"
         versionCode 1
     }
@@ -35,11 +35,11 @@ android {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.2.+'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.+'
-    compile 'com.path:android-priority-jobqueue:1.1.+'
-    compile 'com.android.support:support-v4:20.+'
-    compile(name:'PagerSlidingTabStrip-1.0.1', ext:'aar')
-
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+    compile 'com.path:android-priority-jobqueue:1.1.2'
+    compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile(name: 'PagerSlidingTabStrip-1.0.1', ext: 'aar')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

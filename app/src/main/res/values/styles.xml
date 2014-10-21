@@ -1,58 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/AppActionBar</item>
+    <style name="AppTheme" parent="AppTheme.Base"/>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
+
+        <item name="colorPrimary">@color/apptheme_main</item>
+        <item name="colorPrimaryDark">@color/apptheme_main_dark</item>
+        <item name="colorAccent">@color/apptheme_second</item
+            >
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
         <item name="android:typeface">sans</item>
-
-        <item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_light</item>
-
-        <item name="android:textColorHighlight">#99de6212</item>
-        <item name="android:textSelectHandleLeft">@drawable/apptheme_text_select_handle_left</item>
-        <item name="android:textSelectHandleRight">@drawable/apptheme_text_select_handle_right
-        </item>
-        <item name="android:textSelectHandle">@drawable/apptheme_text_select_handle_middle</item>
-
-        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewAppTheme</item>
-
-        <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_btn_check_holo_light
-        </item>
-
-        <item name="android:listChoiceIndicatorSingle">@drawable/apptheme_btn_radio_holo_light
-        </item>
-
-        <item name="android:buttonStyle">@style/ButtonAppTheme</item>
-
-        <item name="android:imageButtonStyle">@style/ImageButtonAppTheme</item>
-
-        <item name="android:dropDownSpinnerStyle">@style/SpinnerAppTheme</item>
-
-        <item name="android:progressBarStyleHorizontal">@style/ProgressBarAppTheme</item>
-
-        <item name="android:seekBarStyle">@style/SeekBarAppTheme</item>
-
-        <item name="android:ratingBarStyle">@style/RatingBarAppTheme</item>
-
-        <item name="android:ratingBarStyleIndicator">@style/RatingBarBigAppTheme</item>
-
-        <item name="android:ratingBarStyleSmall">@style/RatingBarSmallAppTheme</item>
-
-        <item name="android:buttonStyleToggle">@style/ToggleAppTheme</item>
-
-        <item name="android:listChoiceBackgroundIndicator">
-            @drawable/apptheme_list_selector_holo_light
-        </item>
-
-        <item name="android:activatedBackgroundIndicator">
-            @drawable/apptheme_activated_background_holo_light
-        </item>
-
-        <item name="android:fastScrollThumbDrawable">@drawable/apptheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <!-- ActionBar styles -->
-    <style name="AppActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/actionbar</item>
     </style>
 
     <style name="TextDropShadow">

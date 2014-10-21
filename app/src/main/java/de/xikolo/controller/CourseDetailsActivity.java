@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import de.xikolo.controller.course.CourseFragment;
+import de.xikolo.R;
 import de.xikolo.controller.course.EmbeddedWebViewFragment;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.entities.Course;
@@ -21,6 +21,8 @@ public class CourseDetailsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_coursedetails);
+        setupActionBar();
 
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(ARG_COURSE)) {
@@ -36,7 +38,7 @@ public class CourseDetailsActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(android.R.id.content, EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false), tag);
+            transaction.replace(R.id.content, EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false), tag);
             transaction.commit();
         }
     }

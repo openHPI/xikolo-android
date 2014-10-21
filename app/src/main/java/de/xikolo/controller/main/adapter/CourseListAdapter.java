@@ -1,7 +1,6 @@
 package de.xikolo.controller.main.adapter;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,6 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +19,7 @@ import java.util.Locale;
 
 import de.xikolo.R;
 import de.xikolo.entities.Course;
-import de.xikolo.util.DateComparator;
+import de.xikolo.util.DateUtil;
 import de.xikolo.util.DisplayUtil;
 
 public class CourseListAdapter extends BaseAdapter {
@@ -83,19 +80,9 @@ public class CourseListAdapter extends BaseAdapter {
 
         final Course course = mCourses.get(i);
 
-        SimpleDateFormat dateIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        Date dateBegin = new Date();
-        Date dateEnd = new Date();
-        try {
-            dateBegin = dateIn.parse(course.available_from);
-        } catch (ParseException e) {
-            Log.w(TAG, "Failed parsing " + course.available_from, e);
-        }
-        try {
-            dateEnd = dateIn.parse(course.available_to);
-        } catch (ParseException e) {
-            Log.w(TAG, "Failed parsing " + course.available_to, e);
-        }
+        Date dateBegin = DateUtil.parse(course.available_from);
+        Date dateEnd = DateUtil.parse(course.available_to);
+
         DateFormat dateOut;
         if (DisplayUtil.is7inchTablet(mContext)) {
             dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault());
@@ -103,13 +90,20 @@ public class CourseListAdapter extends BaseAdapter {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
         }
 
+        if (dateBegin != null && dateEnd != null) {
+            holder.date.setText(dateOut.format(dateBegin) + " - " + dateOut.format(dateEnd));
+        } else if (dateBegin != null) {
+            holder.date.setText(dateOut.format(dateBegin));
+        } else {
+            holder.date.setText("");
+        }
+
         holder.title.setText(course.name);
         holder.teacher.setText(course.lecturer);
-        holder.date.setText(dateOut.format(dateBegin) + " - " + dateOut.format(dateEnd));
         holder.language.setText(course.language);
         ImageLoader.getInstance().displayImage(course.visual_url, holder.img);
 
-        if (course.is_enrolled && DateComparator.nowIsAfter(course.available_from)) {
+        if (course.is_enrolled && DateUtil.nowIsAfter(course.available_from)) {
             holder.container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -141,7 +135,7 @@ public class CourseListAdapter extends BaseAdapter {
             });
         }
 
-        if (course.is_enrolled && !DateComparator.nowIsAfter(course.available_from)) {
+        if (course.is_enrolled && !DateUtil.nowIsAfter(course.available_from)) {
             holder.enroll.setText(mContext.getString(R.string.btn_starts_soon));
             holder.enroll.setOnClickListener(new View.OnClickListener() {
                 @Override

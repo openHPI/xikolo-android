@@ -11,11 +11,7 @@
 
         app:pstsIndicatorColor="@color/apptheme_main"
         app:pstsTabBackground="@drawable/bg_tabs"
-        app:pstsTabPaddingLeftRight="14dip"
-
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        app:pstsTabPaddingLeftRight="14dip" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

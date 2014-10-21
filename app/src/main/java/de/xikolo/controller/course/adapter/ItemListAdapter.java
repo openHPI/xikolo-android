@@ -1,7 +1,6 @@
 package de.xikolo.controller.course.adapter;
 
 import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import de.xikolo.R;
 import de.xikolo.entities.Course;
 import de.xikolo.entities.Item;
 import de.xikolo.entities.Module;
-import de.xikolo.util.DateComparator;
+import de.xikolo.util.DateUtil;
 import de.xikolo.util.ItemTitle;
 
 public class ItemListAdapter extends BaseAdapter {
@@ -96,8 +95,8 @@ public class ItemListAdapter extends BaseAdapter {
             holder.unseenIndicator.setVisibility(View.GONE);
         }
 
-        if (!DateComparator.nowIsBetween(mModule.available_from, mModule.available_to)
-                || !DateComparator.nowIsBetween(item.available_from, item.available_to)) {
+        if (!DateUtil.nowIsBetween(mModule.available_from, mModule.available_to)
+                || !DateUtil.nowIsBetween(item.available_from, item.available_to)) {
             holder.container.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
             holder.container.setForeground(null);
             holder.title.setTextColor(mContext.getResources().getColor(R.color.gray_light));

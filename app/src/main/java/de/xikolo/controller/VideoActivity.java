@@ -28,13 +28,12 @@ public class VideoActivity extends BaseActivity {
 
     private Item<ItemVideo> mItem;
 
-    private ActionBar mActionBar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
+        setupActionBar();
 
         View videoContainer = findViewById(R.id.videoContainer);
 
@@ -77,8 +76,7 @@ public class VideoActivity extends BaseActivity {
             }
         });
 
-        mActionBar = getActionBar();
-        mActionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionbar_alpha)));
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionbar_alpha)));
 
         hideSystemBars();
 
@@ -112,11 +110,11 @@ public class VideoActivity extends BaseActivity {
                     | View.SYSTEM_UI_FLAG_LOW_PROFILE; // API 14
         }
         decorView.setSystemUiVisibility(uiOptions);
-        mActionBar.hide();
+        actionBar.hide();
     }
 
     private void showSystemBars() {
-        mActionBar.show();
+        actionBar.show();
         View decorView = getWindow().getDecorView();
         int uiOptions;
         if (Build.VERSION.SDK_INT >= 16) {
