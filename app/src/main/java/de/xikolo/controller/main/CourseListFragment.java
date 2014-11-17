@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.controller.CourseActivity;
 import de.xikolo.controller.CourseDetailsActivity;
+import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.controller.main.adapter.CourseListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.entities.Course;
@@ -39,6 +41,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     private String mFilter;
     private SwipeRefreshLayout mRefreshLayout;
+    private ProgressBar mProgress;
+
     private AbsListView mAbsListView;
     private CourseListAdapter mCourseListAdapter;
 
@@ -82,6 +86,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     updateView();
                 } else {
                     mRefreshLayout.setRefreshing(false);
+                    mProgress.setVisibility(View.GONE);
                     ToastUtil.show(getActivity(), getActivity().getString(R.string.toast_no_courses)
                             + " " + getActivity().getString(R.string.toast_no_network));
                 }
@@ -102,13 +107,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_courses, container, false);
 
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
-        mRefreshLayout.setColorSchemeResources(
-                R.color.apptheme_second,
-                R.color.apptheme_main,
-                R.color.apptheme_second,
-                R.color.apptheme_main);
-        mRefreshLayout.setOnRefreshListener(this);
+        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        RefeshLayoutController.setup(mRefreshLayout, this);
 
         mCourseListAdapter = new CourseListAdapter(getActivity(), this);
 
@@ -118,17 +118,24 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mNotification = layout.findViewById(R.id.containerNotification);
         mTextNotification = (TextView) layout.findViewById(R.id.textNotification);
 
+        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
+
         return layout;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        mProgress.setVisibility(View.VISIBLE);
+        mTextNotification.setVisibility(View.GONE);
+
         if (mFilter.equals(CourseModel.FILTER_ALL)) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
         } else if (mFilter.equals(CourseModel.FILTER_MY)) {
             mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
             if (!UserModel.isLoggedIn(getActivity())) {
+                mProgress.setVisibility(View.GONE);
                 mNotification.setVisibility(View.VISIBLE);
                 mTextNotification.setText(getString(R.string.notification_please_login));
                 mNotification.setOnClickListener(new View.OnClickListener() {
@@ -143,11 +150,13 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         if (mCourses != null) {
             mCourseListAdapter.updateCourses(mCourses);
             mRefreshLayout.setRefreshing(false);
+            mProgress.setVisibility(View.GONE);
         } else {
             if (NetworkUtil.isOnline(getActivity())) {
                 mRefreshLayout.setRefreshing(true);
                 mCourseModel.retrieveCourses(mFilter, true, false);
             } else {
+                mProgress.setVisibility(View.GONE);
                 NetworkUtil.showNoConnectionToast(getActivity());
             }
         }
@@ -155,8 +164,18 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     private void updateView() {
         mRefreshLayout.setRefreshing(false);
+        mProgress.setVisibility(View.GONE);
         if (mFilter.equals(CourseModel.FILTER_MY)) {
-            if (mCourses.size() == 0) {
+            if (!UserModel.isLoggedIn(getActivity())) {
+                mNotification.setVisibility(View.VISIBLE);
+                mTextNotification.setText(getString(R.string.notification_please_login));
+                mNotification.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+                    }
+                });
+            } else if (mCourses.size() == 0) {
                 mNotification.setVisibility(View.VISIBLE);
                 mTextNotification.setText(getString(R.string.notification_no_enrollments));
                 mNotification.setOnClickListener(new View.OnClickListener() {

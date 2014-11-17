@@ -276,12 +276,6 @@
 
     </ScrollView>
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyleLargeInverse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+    <include layout="@layout/container_progress" />
 
 </FrameLayout>

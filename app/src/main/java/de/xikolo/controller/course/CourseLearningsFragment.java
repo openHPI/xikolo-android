@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.ModuleActivity;
 import de.xikolo.controller.course.adapter.ItemListAdapter;
 import de.xikolo.controller.course.adapter.ModuleListAdapter;
+import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.entities.Course;
 import de.xikolo.entities.Item;
 import de.xikolo.entities.Module;
@@ -37,6 +39,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
     private AbsListView mListView;
     private SwipeRefreshLayout mRefreshLayout;
+    private ProgressBar mProgress;
 
     private boolean mCache;
 
@@ -82,6 +85,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
             @Override
             public void onResponse(final List<Module> response) {
                 mRefreshLayout.setRefreshing(false);
+                mProgress.setVisibility(View.GONE);
                 if (response != null) {
                     mAdapter.updateModules(response);
                     mModules = response;
@@ -112,13 +116,10 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_learnings, container, false);
 
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
-        mRefreshLayout.setColorSchemeResources(
-                R.color.apptheme_second,
-                R.color.apptheme_main,
-                R.color.apptheme_second,
-                R.color.apptheme_main);
-        mRefreshLayout.setOnRefreshListener(this);
+        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        RefeshLayoutController.setup(mRefreshLayout, this);
+
+        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
         mListView = (AbsListView) layout.findViewById(R.id.listView);
         mAdapter = new ModuleListAdapter(getActivity(), mCourse, this, this);
@@ -134,8 +135,10 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         if (mModules == null) {
             mCache = true;
             mRefreshLayout.setRefreshing(true);
+            mProgress.setVisibility(View.VISIBLE);
             mModuleModel.retrieveModules(mCourse.id, mCache, false);
         } else {
+            mProgress.setVisibility(View.GONE);
             mAdapter.updateModules(mModules);
         }
     }

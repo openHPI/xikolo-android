@@ -7,8 +7,8 @@
 
         <item name="colorPrimary">@color/apptheme_main</item>
         <item name="colorPrimaryDark">@color/apptheme_main_dark</item>
-        <item name="colorAccent">@color/apptheme_second</item
-            >
+        <item name="colorAccent">@color/apptheme_second</item>
+
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 

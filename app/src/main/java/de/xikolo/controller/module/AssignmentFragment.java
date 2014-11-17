@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 
 import de.xikolo.R;
 import de.xikolo.controller.helper.WebViewController;
@@ -26,6 +27,7 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
 
     private WebView mWebView;
     private SwipeRefreshLayout mRefreshLayout;
+    private ProgressBar mProgress;
 
     private WebViewController mWebViewController;
 
@@ -60,16 +62,10 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_webview, container, false);
         mWebView = (WebView) layout.findViewById(R.id.webView);
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
+        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
-        mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout);
-
-        mRefreshLayout.setColorSchemeResources(
-                R.color.apptheme_second,
-                R.color.apptheme_main,
-                R.color.apptheme_second,
-                R.color.apptheme_main);
-        mRefreshLayout.setOnRefreshListener(mWebViewController);
+        mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
 
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);

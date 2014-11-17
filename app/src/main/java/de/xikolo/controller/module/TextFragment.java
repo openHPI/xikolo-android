@@ -36,6 +36,7 @@ public class TextFragment extends PagerFragment<ItemText> {
 
     private WebView mWebView;
     private SwipeRefreshLayout mRefreshLayout;
+    private ProgressBar mProgress;
 
     private WebViewController mWebViewController;
 
@@ -70,17 +71,11 @@ public class TextFragment extends PagerFragment<ItemText> {
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_webview, container, false);
         mWebView = (WebView) layout.findViewById(R.id.webView);
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshlayout);
+        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
-        mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout);
+        mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
         mWebViewController.setInAppLinksEnabled(true);
-
-        mRefreshLayout.setColorSchemeResources(
-                R.color.apptheme_second,
-                R.color.apptheme_main,
-                R.color.apptheme_second,
-                R.color.apptheme_main);
-        mRefreshLayout.setOnRefreshListener(mWebViewController);
 
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);

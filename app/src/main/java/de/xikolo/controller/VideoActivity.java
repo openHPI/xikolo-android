@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +34,6 @@ public class VideoActivity extends BaseActivity {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-        setupActionBar();
 
         View videoContainer = findViewById(R.id.videoContainer);
 
@@ -76,7 +76,9 @@ public class VideoActivity extends BaseActivity {
             }
         });
 
-        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionbar_alpha)));
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(R.color.actionbar_alpha);
+        }
 
         hideSystemBars();
 
@@ -110,11 +112,9 @@ public class VideoActivity extends BaseActivity {
                     | View.SYSTEM_UI_FLAG_LOW_PROFILE; // API 14
         }
         decorView.setSystemUiVisibility(uiOptions);
-        actionBar.hide();
     }
 
     private void showSystemBars() {
-        actionBar.show();
         View decorView = getWindow().getDecorView();
         int uiOptions;
         if (Build.VERSION.SDK_INT >= 16) {

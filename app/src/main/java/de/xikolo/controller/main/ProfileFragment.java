@@ -113,6 +113,12 @@ public class ProfileFragment extends ContentFragment {
                 if (response != null) {
                     updateLayout();
                     mCallback.updateDrawer();
+                } else {
+                    ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
+                    UserModel.logout(getActivity());
+                    mCourses = null;
+                    updateLayout();
+                    mCallback.updateDrawer();
                 }
             }
         });

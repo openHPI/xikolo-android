@@ -5,7 +5,7 @@
     android:background="@color/background_holo_light">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refreshlayout"
+        android:id="@+id/refreshLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
@@ -27,6 +27,8 @@
             android:verticalSpacing="@dimen/activity_vertical_margin" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <include layout="@layout/container_progress" />
 
     <include layout="@layout/container_notification" />
 

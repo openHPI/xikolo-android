@@ -25,7 +25,7 @@
     <string name="tab_progress">Progress</string>
     <string name="tab_details">Course details</string>
     <string name="tab_announcements">Announcements</string>
-    <string name="tab_rooms">Learning rooms</string>
+    <string name="tab_rooms">Collab Space</string>
 
     <!-- -->
     <string name="btn_enroll_me">Enroll me for this course</string>

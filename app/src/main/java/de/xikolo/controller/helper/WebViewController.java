@@ -12,6 +12,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +27,8 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = WebViewController.class.getSimpleName();
 
     private Activity mActivity;
-
     private WebView mWebView;
+    private ProgressBar mProgress;
 
     private SwipeRefreshLayout mRefreshLayout;
 
@@ -35,14 +36,17 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
     private boolean mInAppLinksEnabled;
 
-    public WebViewController(Activity activity, WebView webView, SwipeRefreshLayout refreshLayout) {
+    public WebViewController(Activity activity, WebView webView, SwipeRefreshLayout refreshLayout, ProgressBar progress) {
         mActivity = activity;
         mWebView = webView;
         mRefreshLayout = refreshLayout;
+        mProgress = progress;
 
         mInAppLinksEnabled = true;
 
         setup();
+
+        RefeshLayoutController.setup(refreshLayout, this);
     }
 
     public void setInAppLinksEnabled(boolean enabled) {
@@ -55,6 +59,8 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
         mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mWebView.setWebChromeClient(new WebChromeClient());
+
+        mProgress.setVisibility(View.VISIBLE);
 
         mWebView.setWebViewClient(new WebViewClient() {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
@@ -70,6 +76,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                mProgress.setVisibility(View.GONE);
                 mRefreshLayout.setRefreshing(false);
                 mWebView.setVisibility(View.VISIBLE);
                 super.onPageFinished(view, url);
