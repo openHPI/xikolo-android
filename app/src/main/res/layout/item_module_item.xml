@@ -46,7 +46,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
-            android:background="@drawable/circle"
+            android:background="@drawable/circle_main"
             android:visibility="invisible" />
 
     </RelativeLayout>

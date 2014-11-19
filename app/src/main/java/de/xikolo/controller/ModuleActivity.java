@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -65,7 +67,7 @@ public class ModuleActivity extends BaseActivity {
 
         // Initialize the ViewPager and set an adapter
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), this, mModule.items);
+        ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), this, pager, mModule.items);
         pager.setAdapter(adapter);
 
         // Bind the tabs to the ViewPager
@@ -107,7 +109,7 @@ public class ModuleActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.TabViewProvider {
+    public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.CustomTabProvider {
 
         private List<Item> mItems;
 
@@ -115,11 +117,20 @@ public class ModuleActivity extends BaseActivity {
 
         private FragmentManager mFragmentManager;
 
+        private ViewPager mPager;
+
         private int lastPosition = 0;
 
-        public ModulePagerAdapter(FragmentManager fm, Context context, List<Item> items) {
+        private static final float OPAQUE = 1.0f;
+        private static final float HALF_TRANSP = 0.5f;
+
+        private float tabTextAlpha = HALF_TRANSP;
+        private float tabTextSelectedAlpha = OPAQUE;
+
+        public ModulePagerAdapter(FragmentManager fm, Context context, ViewPager pager, List<Item> items) {
             super(fm);
             mItems = items;
+            mPager = pager;
 
             // TODO enable when API is working correct
             List<Item> toRemove = new ArrayList<Item>();
@@ -135,11 +146,15 @@ public class ModuleActivity extends BaseActivity {
         }
 
         @Override
-        public View getTabView(int position) {
+        public View getCustomTabView(ViewGroup viewGroup, int position) {
             View layout = getLayoutInflater().inflate(R.layout.tab_item, null);
 
             TextView label = (TextView) layout.findViewById(R.id.tabLabel);
             View unseenIndicator = layout.findViewById(R.id.unseenIndicator);
+
+            float alpha = mPager.getCurrentItem() == position ? tabTextSelectedAlpha : tabTextAlpha;
+            ViewCompat.setAlpha(label, alpha);
+            ViewCompat.setAlpha(unseenIndicator, alpha);
 
             Item item = mItems.get(position);
             if (!item.progress.visited) {
@@ -210,6 +225,8 @@ public class ModuleActivity extends BaseActivity {
 
         @Override
         public void onPageSelected(int position) {
+            notifyDataSetChanged();
+
             if (NetworkUtil.isOnline(mContext)) {
                 mItemModel.updateProgression(mItems.get(position).id);
             }
