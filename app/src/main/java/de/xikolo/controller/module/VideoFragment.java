@@ -39,6 +39,7 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
     private ProgressBar mProgress;
 
     private ViewGroup mVideoContainer;
+    private ViewGroup mVideoMetadata;
 
     private VideoController mVideoController;
 
@@ -81,6 +82,7 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
         mTitle = (TextView) layout.findViewById(R.id.textTitle);
 
         mVideoContainer = (ViewGroup) layout.findViewById(R.id.videoContainer);
+        mVideoMetadata = (ViewGroup) layout.findViewById(R.id.videoMetadata);
 
         mContainer.setVisibility(View.GONE);
 
@@ -99,6 +101,10 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
             ViewGroup.LayoutParams params = mVideoContainer.getLayoutParams();
             params.width = (int) (size.x * 0.6);
             mVideoContainer.setLayoutParams(params);
+
+            ViewGroup.LayoutParams params_meta = mVideoMetadata.getLayoutParams();
+            params_meta.width = (int) (size.x * 0.6);
+            mVideoMetadata.setLayoutParams(params_meta);
         }
 
         mVideoController.setOnFullscreenButtonClickedListener(new VideoController.OnFullscreenClickListener() {

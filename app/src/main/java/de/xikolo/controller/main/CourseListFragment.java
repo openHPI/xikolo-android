@@ -26,7 +26,6 @@ import de.xikolo.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.OnModelResponseListener;
 import de.xikolo.model.UserModel;
-import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
@@ -163,35 +162,37 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     }
 
     private void updateView() {
-        mRefreshLayout.setRefreshing(false);
-        mProgress.setVisibility(View.GONE);
-        if (mFilter.equals(CourseModel.FILTER_MY)) {
-            if (!UserModel.isLoggedIn(getActivity())) {
-                mNotification.setVisibility(View.VISIBLE);
-                mTextNotification.setText(getString(R.string.notification_please_login));
-                mNotification.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
-                    }
-                });
-            } else if (mCourses.size() == 0) {
-                mNotification.setVisibility(View.VISIBLE);
-                mTextNotification.setText(getString(R.string.notification_no_enrollments));
-                mNotification.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.toggleDrawer(NavigationAdapter.NAV_ID_ALL_COURSES);
-                    }
-                });
-            } else {
-                mNotification.setVisibility(View.GONE);
+        if (isAdded()) {
+            mRefreshLayout.setRefreshing(false);
+            mProgress.setVisibility(View.GONE);
+            if (mFilter.equals(CourseModel.FILTER_MY)) {
+                if (!UserModel.isLoggedIn(getActivity())) {
+                    mNotification.setVisibility(View.VISIBLE);
+                    mTextNotification.setText(getString(R.string.notification_please_login));
+                    mNotification.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+                        }
+                    });
+                } else if (mCourses.size() == 0) {
+                    mNotification.setVisibility(View.VISIBLE);
+                    mTextNotification.setText(getString(R.string.notification_no_enrollments));
+                    mNotification.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mCallback.toggleDrawer(NavigationAdapter.NAV_ID_ALL_COURSES);
+                        }
+                    });
+                } else {
+                    mNotification.setVisibility(View.GONE);
+                }
             }
+            if (mCourses != null) {
+                mCourseListAdapter.updateCourses(mCourses);
+            }
+            mCallback.updateDrawer();
         }
-        if (mCourses != null) {
-            mCourseListAdapter.updateCourses(mCourses);
-        }
-        mCallback.updateDrawer();
     }
 
     @Override

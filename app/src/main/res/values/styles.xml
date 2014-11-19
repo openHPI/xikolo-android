@@ -1,18 +1,16 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="AppTheme.Base"/>
+    <style name="AppTheme" parent="AppTheme.Base">
+        <item name="android:typeface">sans</item>
+    </style>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
-
         <item name="colorPrimary">@color/apptheme_main</item>
         <item name="colorPrimaryDark">@color/apptheme_main_dark</item>
         <item name="colorAccent">@color/apptheme_second</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-
-        <item name="android:typeface">sans</item>
     </style>
 
     <style name="TextDropShadow">

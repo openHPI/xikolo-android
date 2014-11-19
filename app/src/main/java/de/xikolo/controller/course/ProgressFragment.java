@@ -1,7 +1,11 @@
 package de.xikolo.controller.course;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -13,12 +17,13 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.course.adapter.ModuleProgressListAdapter;
+import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.entities.Course;
 import de.xikolo.entities.Module;
 import de.xikolo.model.ModuleModel;
 import de.xikolo.model.OnModelResponseListener;
 
-public class ProgressFragment extends BaseFragment {
+public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = ProgressFragment.class.getSimpleName();
 
@@ -33,6 +38,7 @@ public class ProgressFragment extends BaseFragment {
 
     private ModuleProgressListAdapter mAdapter;
 
+    private SwipeRefreshLayout mRefreshLayout;
     private ListView mProgressScrollView;
     private ProgressBar mProgress;
 
@@ -72,6 +78,7 @@ public class ProgressFragment extends BaseFragment {
             @Override
             public void onResponse(final List<Module> response) {
                 mProgress.setVisibility(View.GONE);
+                mRefreshLayout.setRefreshing(false);
                 if (response != null) {
                     mModules = response;
                     mAdapter.updateModules(response);
@@ -91,6 +98,9 @@ public class ProgressFragment extends BaseFragment {
         mAdapter = new ModuleProgressListAdapter(getActivity());
         mProgressScrollView.setAdapter(mAdapter);
 
+        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        RefeshLayoutController.setup(mRefreshLayout, this);
+
         return layout;
     }
 
@@ -100,11 +110,32 @@ public class ProgressFragment extends BaseFragment {
 
         if (mModules == null) {
             mProgress.setVisibility(View.VISIBLE);
-            mModuleModel.retrieveModules(mCourse.id, false, true);
+            mModuleModel.retrieveModules(mCourse.id, true, true);
         } else {
             mProgress.setVisibility(View.GONE);
             mAdapter.updateModules(mModules);
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.refresh, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_refresh:
+                onRefresh();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        mRefreshLayout.setRefreshing(true);
+        mModuleModel.retrieveModules(mCourse.id, false, true);
+    }
 }

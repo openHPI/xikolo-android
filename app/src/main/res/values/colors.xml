@@ -2,6 +2,8 @@
     <color name="actionbar">#101010</color>
     <color name="actionbar_alpha">#99000000</color>
 
+    <color name="video_bg">#CC000000</color>
+
     <color name="navi_main">#252525</color>
     <color name="navi_sub">#151515</color>
     <color name="navi_profile">#333333</color>
