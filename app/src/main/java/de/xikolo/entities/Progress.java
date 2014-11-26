@@ -100,16 +100,16 @@ public class Progress implements Parcelable {
     public static class TestCount implements Parcelable {
 
         @SerializedName("count_available")
-        public int count_available;
+        public float count_available;
 
         @SerializedName("count_taken")
-        public int count_taken;
+        public float count_taken;
 
         @SerializedName("points_possible")
-        public int points_possible;
+        public float points_possible;
 
         @SerializedName("points_scored")
-        public int points_scored;
+        public float points_scored;
 
         @Override
         public int describeContents() {
@@ -118,10 +118,10 @@ public class Progress implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeInt(count_available);
-            parcel.writeInt(count_taken);
-            parcel.writeInt(points_possible);
-            parcel.writeInt(points_scored);
+            parcel.writeFloat(count_available);
+            parcel.writeFloat(count_taken);
+            parcel.writeFloat(points_possible);
+            parcel.writeFloat(points_scored);
         }
         
         public TestCount() {
@@ -130,10 +130,10 @@ public class Progress implements Parcelable {
 
         public TestCount(Parcel in) {
             this();
-            count_available = in.readInt();
-            count_taken = in.readInt();
-            points_possible = in.readInt();
-            points_scored = in.readInt();
+            count_available = in.readFloat();
+            count_taken = in.readFloat();
+            points_possible = in.readFloat();
+            points_scored = in.readFloat();
         }
 
         public static final Parcelable.Creator<TestCount> CREATOR = new Parcelable.Creator<TestCount>() {

@@ -41,11 +41,11 @@ public class ModuleProgressListAdapter extends BaseAdapter {
         int count_visited = 0;
         int count_available = 0;
 
-        int self_tests_points_scored = 0;
-        int self_tests_points_possible = 0;
+        float self_tests_points_scored = 0;
+        float self_tests_points_possible = 0;
 
-        int assignments_points_scored = 0;
-        int assignments_points_possible = 0;
+        float assignments_points_scored = 0;
+        float assignments_points_possible = 0;
 
         for (Module module : mModules) {
             count_visited += module.progress.items.count_visited;
@@ -150,6 +150,16 @@ public class ModuleProgressListAdapter extends BaseAdapter {
     }
 
     private int getPercentage(int state, int max) {
+        int percentage;
+        if (max > 0) {
+            percentage = (int) (state / (max / 100.));
+        } else {
+            percentage = 100;
+        }
+        return percentage;
+    }
+
+    private int getPercentage(float state, float max) {
         int percentage;
         if (max > 0) {
             percentage = (int) (state / (max / 100.));
