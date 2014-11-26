@@ -1,5 +1,6 @@
 package de.xikolo.controller;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -43,6 +44,12 @@ public abstract class BaseActivity extends ActionBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
 //            actionBar.setLogo(R.drawable.ic_logo);
+        }
+    }
+
+    protected void setActionBarElevation(float elevation) {
+        if (actionBar != null && Build.VERSION.SDK_INT >= 21) {
+            actionBar.setElevation(elevation);
         }
     }
 

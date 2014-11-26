@@ -22,6 +22,7 @@ public class CourseActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
         setupActionBar();
+        setActionBarElevation(0);
 
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(ARG_COURSE)) {
