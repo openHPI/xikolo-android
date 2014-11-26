@@ -88,6 +88,8 @@ public class ModuleListAdapter extends BaseAdapter {
                 holder.separator.setBackgroundColor(mContext.getResources().getColor(R.color.gray_light));
                 holder.title.setClickable(false);
             } else {
+                holder.title.setTextColor(mContext.getResources().getColor(R.color.text_color));
+                holder.separator.setBackgroundColor(mContext.getResources().getColor(R.color.apptheme_main));
                 holder.title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
