@@ -1,8 +1,11 @@
 package de.xikolo.controller.course;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +39,8 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     private static final String ARG_COURSE = "arg_course";
 
     private static final String KEY_MODULES = "key_modules";
+
+    private static final int REQUEST_CODE_MODULES = 1;
 
     private AbsListView mListView;
     private SwipeRefreshLayout mRefreshLayout;
@@ -167,7 +172,24 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         b.putParcelable(ModuleActivity.ARG_MODULE, module);
         b.putParcelable(ModuleActivity.ARG_ITEM, item);
         intent.putExtras(b);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_MODULES);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.w(TAG, "onActivityResult");
+
+        if (requestCode == REQUEST_CODE_MODULES && resultCode == Activity.RESULT_OK) {
+            Module newModule = data.getExtras().getParcelable(ModuleActivity.ARG_MODULE);
+
+            Log.w(TAG, newModule.id);
+
+            if (mModules != null && mAdapter != null) {
+                mModules.set(mModules.indexOf(newModule), newModule);
+                mAdapter.updateModules(mModules);
+            }
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package de.xikolo.controller.course;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,9 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
 
     private Course mCourse;
 
+    private ViewPager mPager;
+    private CoursePagerAdapter mAdapter;
+
     public CourseFragment() {
         // Required empty public constructor
     }
@@ -58,12 +62,13 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
 
         // Initialize the ViewPager and set an adapter
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) layout.findViewById(R.id.tabs);
-        ViewPager pager = (ViewPager) layout.findViewById(R.id.pager);
+        mPager = (ViewPager) layout.findViewById(R.id.pager);
 
-        pager.setAdapter(new CoursePagerAdapter(getChildFragmentManager()));
+        mAdapter = new CoursePagerAdapter(getChildFragmentManager());
+        mPager.setAdapter(mAdapter);
 
         // Bind the tabs to the ViewPager
-        tabs.setViewPager(pager);
+        tabs.setViewPager(mPager);
 
         return layout;
     }
@@ -94,6 +99,11 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
         CourseModel model = new CourseModel(getActivity(), jobManager);
         model.deleteEnrollment(mCourse.id);
         getActivity().finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mAdapter.getItem(mPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
     }
 
     public class CoursePagerAdapter extends FragmentPagerAdapter {

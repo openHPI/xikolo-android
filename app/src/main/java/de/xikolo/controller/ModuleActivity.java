@@ -1,12 +1,14 @@
 package de.xikolo.controller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +32,6 @@ import de.xikolo.entities.Item;
 import de.xikolo.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.util.DateUtil;
-import de.xikolo.util.NetworkUtil;
 
 public class ModuleActivity extends BaseActivity {
 
@@ -77,17 +78,19 @@ public class ModuleActivity extends BaseActivity {
         tabs.setOnPageChangeListener(adapter);
 
         if (mItem != null) {
-            pager.setCurrentItem(mModule.items.indexOf(mItem), false);
-            if (mModule.items.indexOf(mItem) == 0) {
-                if (NetworkUtil.isOnline(this)) {
-                    mItemModel.updateProgression(mModule.items.get(0).id);
-                }
+            int index = mModule.items.indexOf(mItem);
+
+            pager.setCurrentItem(index, false);
+            mModule.items.get(index).progress.visited = true;
+
+            if (index == 0) {
+                mItemModel.updateProgression(mModule.items.get(index).id);
             }
         } else {
-            if (NetworkUtil.isOnline(this)) {
-                mItemModel.updateProgression(mModule.items.get(0).id);
-            }
+            mItemModel.updateProgression(mModule.items.get(0).id);
+            mModule.items.get(0).progress.visited = true;
         }
+        pager.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -102,28 +105,40 @@ public class ModuleActivity extends BaseActivity {
         // Handle action bar module clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            setResult();
+            finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult();
+        finish();
+    }
+
+    private void setResult() {
+        Intent intent = new Intent();
+        Bundle b = new Bundle();
+        b.putParcelable(ARG_MODULE, mModule);
+        intent.putExtras(b);
+        setResult(RESULT_OK, intent);
+
+        Log.w(TAG, "setResult");
     }
 
     public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.CustomTabProvider {
 
-        private List<Item> mItems;
-
-        private Context mContext;
-
-        private FragmentManager mFragmentManager;
-
-        private ViewPager mPager;
-
-        private int lastPosition = 0;
-
         private static final float OPAQUE = 1.0f;
         private static final float HALF_TRANSP = 0.5f;
-
+        private List<Item> mItems;
+        private Context mContext;
+        private FragmentManager mFragmentManager;
+        private ViewPager mPager;
+        private int lastPosition = 0;
         private float tabTextAlpha = HALF_TRANSP;
         private float tabTextSelectedAlpha = OPAQUE;
 
@@ -132,10 +147,9 @@ public class ModuleActivity extends BaseActivity {
             mItems = items;
             mPager = pager;
 
-            // TODO enable when API is working correct
             List<Item> toRemove = new ArrayList<Item>();
-            for(Item item : items){
-                if(!DateUtil.nowIsBetween(item.available_from, item.available_to)) {
+            for (Item item : items) {
+                if (!DateUtil.nowIsBetween(item.available_from, item.available_to)) {
                     toRemove.add(item);
                 }
             }
@@ -225,11 +239,11 @@ public class ModuleActivity extends BaseActivity {
 
         @Override
         public void onPageSelected(int position) {
+            mItems.get(position).progress.visited = true;
+
             notifyDataSetChanged();
 
-            if (NetworkUtil.isOnline(mContext)) {
-                mItemModel.updateProgression(mItems.get(position).id);
-            }
+            mItemModel.updateProgression(mItems.get(position).id);
 
             if (lastPosition != position) {
                 PagerFragment fragment = (PagerFragment) getItem(lastPosition);
