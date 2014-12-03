@@ -1,9 +1,5 @@
 package de.xikolo.controller.module;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -12,19 +8,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import de.xikolo.R;
 import de.xikolo.controller.helper.WebViewController;
-import de.xikolo.entities.Course;
-import de.xikolo.entities.Item;
-import de.xikolo.entities.ItemText;
-import de.xikolo.entities.Module;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.ItemText;
+import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.OnModelResponseListener;
 import de.xikolo.util.Config;

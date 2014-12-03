@@ -1,4 +1,4 @@
-package de.xikolo.jobs;
+package de.xikolo.model.jobs;
 
 import android.util.Log;
 
@@ -11,50 +11,45 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.data.net.JsonRequest;
-import de.xikolo.entities.Item;
+import de.xikolo.data.entities.Enrollment;
 import de.xikolo.util.Config;
 
-public class RetrieveItemsJob extends Job {
+public class RetrieveEnrollmentsJob extends Job {
 
-    public static final String TAG = RetrieveItemsJob.class.getSimpleName();
+    public static final String TAG = RetrieveEnrollmentsJob.class.getSimpleName();
 
     private static final AtomicInteger jobCounter = new AtomicInteger(0);
 
     private final int id;
 
-    private String courseId;
-    private String moduleId;
     private boolean cache;
-
     private String token;
 
-    private OnJobResponseListener<List<Item>> mCallback;
+    private OnJobResponseListener<List<Enrollment>> mCallback;
 
-    public RetrieveItemsJob(OnJobResponseListener<List<Item>> callback, String courseId, String moduleId, boolean cache, String token) {
+    public RetrieveEnrollmentsJob(OnJobResponseListener<List<Enrollment>> callback, boolean cache, String token) {
         super(new Params(Priority.HIGH).requireNetwork());
         id = jobCounter.incrementAndGet();
 
         mCallback = callback;
 
-        this.courseId = courseId;
-        this.moduleId = moduleId;
         this.cache = cache;
         this.token = token;
     }
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG)
-            Log.i(TAG, TAG + " added | cache " + cache + " | courseId " + courseId + " | moduleId " + moduleId);
+        if (Config.DEBUG) {
+            Log.i(TAG, TAG + " added | cache " + cache);
+        }
     }
 
     @Override
     public void onRun() throws Throwable {
-        Type type = new TypeToken<List<Item>>() {
+        Type type = new TypeToken<List<Enrollment>>() {
         }.getType();
 
-        String url = Config.API + Config.COURSES + courseId + "/"
-                + Config.MODULES + moduleId + "/" + Config.ITEMS;
+        String url = Config.API + Config.USER + Config.ENROLLMENTS;
 
         JsonRequest request = new JsonRequest(url, type);
         request.setCache(cache);
@@ -62,13 +57,13 @@ public class RetrieveItemsJob extends Job {
 
         Object o = request.getResponse();
         if (o != null) {
-            List<Item> items = (List<Item>) o;
+            List<Enrollment> enrollments = (List<Enrollment>) o;
             if (Config.DEBUG)
-                Log.i(TAG, "Items received (" + items.size() + ")");
-            mCallback.onResponse(items);
+                Log.i(TAG, "Enrollments received (" + enrollments.size() + ")");
+            mCallback.onResponse(enrollments);
         } else {
             if (Config.DEBUG)
-                Log.w(TAG, "No Item received");
+                Log.w(TAG, "No Enrollments received");
             mCallback.onCancel();
         }
     }

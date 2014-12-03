@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.entities.Module;
+import de.xikolo.data.entities.Module;
 
 public class ModuleProgressListAdapter extends BaseAdapter {
 

@@ -27,9 +27,9 @@ import de.xikolo.controller.module.LtiFragment;
 import de.xikolo.controller.module.PagerFragment;
 import de.xikolo.controller.module.TextFragment;
 import de.xikolo.controller.module.VideoFragment;
-import de.xikolo.entities.Course;
-import de.xikolo.entities.Item;
-import de.xikolo.entities.Module;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.util.DateUtil;
 

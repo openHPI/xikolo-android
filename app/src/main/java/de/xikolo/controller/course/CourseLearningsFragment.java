@@ -1,7 +1,6 @@
 package de.xikolo.controller.course;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,9 +23,9 @@ import de.xikolo.controller.ModuleActivity;
 import de.xikolo.controller.course.adapter.ItemListAdapter;
 import de.xikolo.controller.course.adapter.ModuleListAdapter;
 import de.xikolo.controller.helper.RefeshLayoutController;
-import de.xikolo.entities.Course;
-import de.xikolo.entities.Item;
-import de.xikolo.entities.Module;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.ModuleModel;
 import de.xikolo.model.OnModelResponseListener;

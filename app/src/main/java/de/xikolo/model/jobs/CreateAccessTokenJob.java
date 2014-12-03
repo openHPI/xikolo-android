@@ -1,4 +1,4 @@
-package de.xikolo.jobs;
+package de.xikolo.model.jobs;
 
 import android.util.Log;
 
@@ -11,7 +11,7 @@ import java.net.URLEncoder;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.data.net.JsonRequest;
-import de.xikolo.entities.AccessToken;
+import de.xikolo.data.entities.AccessToken;
 import de.xikolo.util.Config;
 
 public class CreateAccessTokenJob extends Job {

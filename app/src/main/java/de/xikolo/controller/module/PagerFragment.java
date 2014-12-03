@@ -2,12 +2,11 @@ package de.xikolo.controller.module;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 
 import de.xikolo.controller.BaseFragment;
-import de.xikolo.entities.Course;
-import de.xikolo.entities.Item;
-import de.xikolo.entities.Module;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.Module;
 
 public abstract class PagerFragment<T extends Parcelable> extends BaseFragment {
 

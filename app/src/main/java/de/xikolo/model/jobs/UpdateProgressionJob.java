@@ -1,4 +1,4 @@
-package de.xikolo.jobs;
+package de.xikolo.model.jobs;
 
 import android.util.Log;
 
@@ -10,59 +10,52 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.xikolo.data.net.HttpRequest;
 import de.xikolo.util.Config;
 
-public class CreateEnrollmentJob extends Job {
+public class UpdateProgressionJob extends Job {
 
-    public static final String TAG = CreateEnrollmentJob.class.getSimpleName();
+    public static final String TAG = UpdateProgressionJob.class.getSimpleName();
 
     private static final AtomicInteger jobCounter = new AtomicInteger(0);
 
     private final int id;
 
-    private String enrollmentId;
+    private String itemId;
     private String token;
 
-    private OnJobResponseListener<Void> mCallback;
-
-    public CreateEnrollmentJob(OnJobResponseListener<Void> callback, String enrollmentId, String token) {
-        super(new Params(Priority.MID).requireNetwork());
+    public UpdateProgressionJob(String itemId, String token) {
+        super(new Params(Priority.LOW).persist().requireNetwork());
         id = jobCounter.incrementAndGet();
 
-        mCallback = callback;
-
-        this.enrollmentId = enrollmentId;
+        this.itemId = itemId;
         this.token = token;
     }
 
     @Override
     public void onAdded() {
         if (Config.DEBUG)
-            Log.i(TAG, TAG + " added | enrollmentId " + enrollmentId);
+            Log.i(TAG, TAG + " added | itemId " + itemId);
     }
 
     @Override
     public void onRun() throws Throwable {
-        String url = Config.API + Config.USER + Config.ENROLLMENTS + "?course_id=" + enrollmentId;
+        String url = Config.API + Config.USER + Config.PROGRESSIONS + itemId;
 
         HttpRequest request = new HttpRequest(url);
-        request.setMethod(Config.HTTP_POST);
+        request.setMethod(Config.HTTP_PUT);
         request.setToken(token);
         request.setCache(false);
 
         Object o = request.getResponse();
         if (o != null) {
             if (Config.DEBUG)
-                Log.i(TAG, "Enrollment created");
-            mCallback.onResponse(null);
+                Log.i(TAG, "Progression updated");
         } else {
             if (Config.DEBUG)
-                Log.w(TAG, "Enrollment not created");
-            mCallback.onCancel();
+                Log.w(TAG, "Progression not updated");
         }
     }
 
     @Override
     protected void onCancel() {
-        mCallback.onCancel();
     }
 
     @Override

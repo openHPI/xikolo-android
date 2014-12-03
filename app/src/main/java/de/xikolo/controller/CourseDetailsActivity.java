@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import de.xikolo.R;
 import de.xikolo.controller.course.EmbeddedWebViewFragment;
 import de.xikolo.controller.exceptions.WrongParameterException;
-import de.xikolo.entities.Course;
+import de.xikolo.data.entities.Course;
 import de.xikolo.util.Config;
 
 public class CourseDetailsActivity extends BaseActivity {

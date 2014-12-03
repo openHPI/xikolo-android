@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.data.preferences.EnrollmentsPreferences;
-import de.xikolo.entities.Course;
-import de.xikolo.jobs.CreateEnrollmentJob;
-import de.xikolo.jobs.DeleteEnrollmentJob;
-import de.xikolo.jobs.OnJobResponseListener;
-import de.xikolo.jobs.RetrieveCoursesJob;
+import de.xikolo.data.entities.Course;
+import de.xikolo.model.jobs.CreateEnrollmentJob;
+import de.xikolo.model.jobs.DeleteEnrollmentJob;
+import de.xikolo.model.jobs.OnJobResponseListener;
+import de.xikolo.model.jobs.RetrieveCoursesJob;
 
 public class CourseModel extends BaseModel {
 

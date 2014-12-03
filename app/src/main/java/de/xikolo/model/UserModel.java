@@ -7,12 +7,12 @@ import android.os.Looper;
 import com.path.android.jobqueue.JobManager;
 
 import de.xikolo.data.preferences.UserPreferences;
-import de.xikolo.entities.AccessToken;
-import de.xikolo.entities.User;
-import de.xikolo.jobs.CreateAccessTokenJob;
-import de.xikolo.jobs.CreateSessionJob;
-import de.xikolo.jobs.OnJobResponseListener;
-import de.xikolo.jobs.RetrieveUserJob;
+import de.xikolo.data.entities.AccessToken;
+import de.xikolo.data.entities.User;
+import de.xikolo.model.jobs.CreateAccessTokenJob;
+import de.xikolo.model.jobs.CreateSessionJob;
+import de.xikolo.model.jobs.OnJobResponseListener;
+import de.xikolo.model.jobs.RetrieveUserJob;
 
 public class UserModel extends BaseModel {
 

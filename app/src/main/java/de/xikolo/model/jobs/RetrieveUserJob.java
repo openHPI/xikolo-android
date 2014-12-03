@@ -1,4 +1,4 @@
-package de.xikolo.jobs;
+package de.xikolo.model.jobs;
 
 import android.util.Log;
 
@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.data.net.JsonRequest;
-import de.xikolo.entities.User;
+import de.xikolo.data.entities.User;
 import de.xikolo.util.Config;
 
 public class RetrieveUserJob extends Job {

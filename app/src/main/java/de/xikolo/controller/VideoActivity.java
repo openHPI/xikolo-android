@@ -1,13 +1,10 @@
 package de.xikolo.controller;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +15,8 @@ import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.helper.VideoController;
 import de.xikolo.controller.module.VideoFragment;
-import de.xikolo.entities.Item;
-import de.xikolo.entities.ItemVideo;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.ItemVideo;
 
 public class VideoActivity extends BaseActivity {
 

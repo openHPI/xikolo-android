@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 import de.xikolo.R;
 import de.xikolo.data.preferences.Settings;
-import de.xikolo.entities.Item;
-import de.xikolo.entities.ItemVideo;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.ItemVideo;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.view.CustomFontTextView;

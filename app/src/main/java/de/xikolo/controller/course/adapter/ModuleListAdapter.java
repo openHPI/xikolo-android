@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.entities.Course;
-import de.xikolo.entities.Module;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Module;
 import de.xikolo.util.DateUtil;
 
 public class ModuleListAdapter extends BaseAdapter {

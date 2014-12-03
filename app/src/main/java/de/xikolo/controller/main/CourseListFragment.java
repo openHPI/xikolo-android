@@ -22,7 +22,7 @@ import de.xikolo.controller.CourseDetailsActivity;
 import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.controller.main.adapter.CourseListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.entities.Course;
+import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.OnModelResponseListener;
 import de.xikolo.model.UserModel;

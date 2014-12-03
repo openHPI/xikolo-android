@@ -18,8 +18,8 @@ import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.course.adapter.ModuleProgressListAdapter;
 import de.xikolo.controller.helper.RefeshLayoutController;
-import de.xikolo.entities.Course;
-import de.xikolo.entities.Module;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Module;
 import de.xikolo.model.ModuleModel;
 import de.xikolo.model.OnModelResponseListener;
 

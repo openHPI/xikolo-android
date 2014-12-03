@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.entities.Course;
+import de.xikolo.data.entities.Course;
 
 public class CourseProgressListAdapter extends BaseAdapter {
 

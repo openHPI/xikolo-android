@@ -8,9 +8,9 @@ import com.path.android.jobqueue.JobManager;
 
 import java.util.List;
 
-import de.xikolo.entities.Module;
-import de.xikolo.jobs.OnJobResponseListener;
-import de.xikolo.jobs.RetrieveModulesJob;
+import de.xikolo.data.entities.Module;
+import de.xikolo.model.jobs.OnJobResponseListener;
+import de.xikolo.model.jobs.RetrieveModulesJob;
 
 public class ModuleModel extends BaseModel {
 

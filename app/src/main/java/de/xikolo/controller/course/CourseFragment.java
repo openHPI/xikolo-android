@@ -19,7 +19,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.course.dialog.UnenrollDialog;
-import de.xikolo.entities.Course;
+import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.util.Config;
 

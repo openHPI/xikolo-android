@@ -8,11 +8,11 @@ import com.path.android.jobqueue.JobManager;
 
 import java.util.List;
 
-import de.xikolo.entities.Item;
-import de.xikolo.jobs.OnJobResponseListener;
-import de.xikolo.jobs.RetrieveItemDetailJob;
-import de.xikolo.jobs.RetrieveItemsJob;
-import de.xikolo.jobs.UpdateProgressionJob;
+import de.xikolo.data.entities.Item;
+import de.xikolo.model.jobs.OnJobResponseListener;
+import de.xikolo.model.jobs.RetrieveItemDetailJob;
+import de.xikolo.model.jobs.RetrieveItemsJob;
+import de.xikolo.model.jobs.UpdateProgressionJob;
 
 public class ItemModel extends BaseModel {
 

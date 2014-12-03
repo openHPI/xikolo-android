@@ -1,4 +1,4 @@
-package de.xikolo.jobs;
+package de.xikolo.model.jobs;
 
 import android.util.Log;
 
@@ -10,10 +10,10 @@ import java.lang.reflect.Type;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.data.net.JsonRequest;
-import de.xikolo.entities.Item;
-import de.xikolo.entities.ItemAssignment;
-import de.xikolo.entities.ItemText;
-import de.xikolo.entities.ItemVideo;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.ItemAssignment;
+import de.xikolo.data.entities.ItemText;
+import de.xikolo.data.entities.ItemVideo;
 import de.xikolo.util.Config;
 
 public class RetrieveItemDetailJob extends Job {

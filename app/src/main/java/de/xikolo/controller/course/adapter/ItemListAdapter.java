@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.entities.Course;
-import de.xikolo.entities.Item;
-import de.xikolo.entities.Module;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.Module;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.ItemTitle;
 

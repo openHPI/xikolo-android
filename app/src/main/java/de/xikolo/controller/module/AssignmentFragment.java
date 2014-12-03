@@ -13,10 +13,10 @@ import android.widget.ProgressBar;
 
 import de.xikolo.R;
 import de.xikolo.controller.helper.WebViewController;
-import de.xikolo.entities.Course;
-import de.xikolo.entities.Item;
-import de.xikolo.entities.ItemAssignment;
-import de.xikolo.entities.Module;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.ItemAssignment;
+import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.OnModelResponseListener;
 import de.xikolo.util.NetworkUtil;

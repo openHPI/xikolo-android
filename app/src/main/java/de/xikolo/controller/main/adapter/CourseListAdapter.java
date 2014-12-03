@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.xikolo.R;
-import de.xikolo.entities.Course;
+import de.xikolo.data.entities.Course;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.DisplayUtil;
 
