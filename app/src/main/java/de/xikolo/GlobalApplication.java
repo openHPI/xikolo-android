@@ -1,6 +1,7 @@
 package de.xikolo;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.http.HttpResponseCache;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.path.android.jobqueue.log.CustomLogger;
 import java.io.File;
 import java.io.IOException;
 
+import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.util.Config;
 import de.xikolo.util.FontsOverride;
 import de.xikolo.util.SslCertificateUtil;
@@ -30,6 +32,8 @@ public class GlobalApplication extends Application {
     private JobManager jobManager;
 
     private HttpResponseCache httpResponseCache;
+
+    private DatabaseHelper databaseHelper;
 
     private CookieSyncManager cookieSyncManager;
 
@@ -45,12 +49,17 @@ public class GlobalApplication extends Application {
         return jobManager;
     }
 
+    public DatabaseHelper getDatabaseHelper() {
+        return databaseHelper;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         configureDefaultSettings();
         configureFontTypefaces();
+        configureDatabase();
         configureImageLoader();
         configureHttpResponseCache();
         configureWebViewCookies();
@@ -67,6 +76,10 @@ public class GlobalApplication extends Application {
     private void configureFontTypefaces() {
         // Set global Typefaces
         FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
+    }
+
+    private void configureDatabase() {
+        databaseHelper = new DatabaseHelper(this);
     }
 
     private void configureImageLoader() {

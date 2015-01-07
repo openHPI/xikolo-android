@@ -10,12 +10,15 @@ import com.path.android.jobqueue.JobManager;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.data.database.DatabaseHelper;
 
 public abstract class BaseActivity extends ActionBarActivity {
 
     protected GlobalApplication globalApplication;
 
     protected JobManager jobManager;
+
+    protected DatabaseHelper databaseHelper;
 
     protected ActionBar actionBar;
 
@@ -27,7 +30,9 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         globalApplication = GlobalApplication.getInstance();
         jobManager = globalApplication.getJobManager();
+        databaseHelper = globalApplication.getDatabaseHelper();
 
+        databaseHelper.open();
     }
 
     protected void setupActionBar() {
@@ -58,6 +63,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onResume();
 
         globalApplication.startCookieSyncManager();
+        databaseHelper.open();
     }
 
     @Override
@@ -66,6 +72,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         globalApplication.syncCookieSyncManager();
         globalApplication.stopCookieSyncManager();
+        databaseHelper.close();
     }
 
     @Override
