@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         minSdkVersion 14
@@ -12,13 +12,15 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.RELEASE"
+            shrinkResources false
         }
         debug {
-            runProguard false
+            minifyEnabled false
             buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.DEBUG"
+            shrinkResources false
         }
     }
     productFlavors {
@@ -39,7 +41,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.path:android-priority-jobqueue:1.1.2'
     compile 'com.jpardogo.materialtabstrip:library:1.0.4'
-    compile 'com.android.support:support-v4:21.0.2'
-    compile 'com.android.support:appcompat-v7:21.0.2'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:appcompat-v7:21.0.3'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
