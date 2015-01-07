@@ -44,7 +44,7 @@ public class Course implements Parcelable {
     public boolean is_enrolled;
 
     @SerializedName("progress")
-    public Progress progress;
+    public OverallProgress progress;
 
     @Override
     public int describeContents() {
@@ -66,6 +66,10 @@ public class Course implements Parcelable {
         parcel.writeByte((byte) (locked ? 1 : 0));
         parcel.writeByte((byte) (is_enrolled ? 1 : 0 ));
         parcel.writeParcelable(progress, i);
+    }
+
+    public Course() {
+
     }
 
     public Course(Parcel in) {

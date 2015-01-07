@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Progress implements Parcelable {
+public class OverallProgress implements Parcelable {
 
     @SerializedName("items")
     public ItemCount items;
@@ -28,26 +28,26 @@ public class Progress implements Parcelable {
         parcel.writeParcelable(assignments, i);
     }
 
-    public Progress() {
+    public OverallProgress() {
         items = new ItemCount();
         self_tests = new TestCount();
         assignments = new TestCount();
     }
     
-    public Progress(Parcel in) {
+    public OverallProgress(Parcel in) {
         this();
-        items = in.readParcelable(Progress.class.getClassLoader());
-        self_tests = in.readParcelable(Progress.class.getClassLoader());
-        assignments = in.readParcelable(Progress.class.getClassLoader());
+        items = in.readParcelable(OverallProgress.class.getClassLoader());
+        self_tests = in.readParcelable(OverallProgress.class.getClassLoader());
+        assignments = in.readParcelable(OverallProgress.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Progress> CREATOR = new Parcelable.Creator<Progress>() {
-        public Progress createFromParcel(Parcel in) {
-            return new Progress(in);
+    public static final Parcelable.Creator<OverallProgress> CREATOR = new Parcelable.Creator<OverallProgress>() {
+        public OverallProgress createFromParcel(Parcel in) {
+            return new OverallProgress(in);
         }
 
-        public Progress[] newArray(int size) {
-            return new Progress[size];
+        public OverallProgress[] newArray(int size) {
+            return new OverallProgress[size];
         }
     };
 

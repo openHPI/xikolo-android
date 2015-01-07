@@ -71,6 +71,10 @@ public class Item<T extends Parcelable> implements Parcelable {
         progress = in.readParcelable(Item.class.getClassLoader());
     }
 
+    public Item() {
+        progress = new Progress();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -128,6 +132,10 @@ public class Item<T extends Parcelable> implements Parcelable {
         public Progress(Parcel in) {
             visited = in.readByte() != 0;
             completed = in.readByte() != 0;
+        }
+
+        public Progress() {
+            
         }
 
         public static final Creator<Progress> CREATOR = new Creator<Progress>() {

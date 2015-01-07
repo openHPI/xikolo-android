@@ -29,7 +29,7 @@ public class Module implements Parcelable {
     public boolean locked;
 
     @SerializedName("progress")
-    public Progress progress;
+    public OverallProgress progress;
 
     public List<Item> items;
 
@@ -52,7 +52,7 @@ public class Module implements Parcelable {
 
     public Module() {
         items = new ArrayList<Item>();
-        progress = new Progress();
+        progress = new OverallProgress();
     }
 
     public Module(Parcel in) {
