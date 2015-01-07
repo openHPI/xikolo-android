@@ -11,4 +11,6 @@ public interface Table {
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
 
+    public void deleteTable(SQLiteDatabase db);
+
 }
