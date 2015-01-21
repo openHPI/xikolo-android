@@ -7,8 +7,16 @@ import com.path.android.jobqueue.Params;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import de.xikolo.GlobalApplication;
+import de.xikolo.data.database.CourseDataAccess;
+import de.xikolo.data.database.ModuleDataAccess;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Module;
 import de.xikolo.data.net.HttpRequest;
+import de.xikolo.model.Result;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public class DeleteEnrollmentJob extends Job {
 
@@ -18,52 +26,61 @@ public class DeleteEnrollmentJob extends Job {
 
     private final int id;
 
-    private OnJobResponseListener<Void> mCallback;
+    private Result<Void> result;
+    private Course course;
+    private CourseDataAccess courseDataAccess;
+    private ModuleDataAccess moduleDataAccess;
 
-    private String enrollmentId;
-    private String token;
-
-    public DeleteEnrollmentJob(OnJobResponseListener<Void> callback, String enrollmentId, String token) {
-        super(new Params(Priority.MID).requireNetwork());
+    public DeleteEnrollmentJob(Result<Void> result, Course course, CourseDataAccess courseDataAccess, ModuleDataAccess moduleDataAccess) {
+        super(new Params(Priority.MID));
         id = jobCounter.incrementAndGet();
 
-        mCallback = callback;
-
-        this.enrollmentId = enrollmentId;
-        this.token = token;
+        this.result = result;
+        this.course = course;
+        this.courseDataAccess = courseDataAccess;
+        this.moduleDataAccess = moduleDataAccess;
     }
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG) {
-            Log.i(TAG, TAG + " added | enrollmentId " + enrollmentId);
-        }
+        if (Config.DEBUG) Log.i(TAG, TAG + " added | course.id " + course.id);
     }
 
     @Override
     public void onRun() throws Throwable {
-        String url = Config.API + Config.USER + Config.ENROLLMENTS + enrollmentId;
-
-        HttpRequest request = new HttpRequest(url);
-        request.setMethod(Config.HTTP_DELETE);
-        request.setToken(token);
-        request.setCache(false);
-
-        Object o = request.getResponse();
-        if (o != null) {
-            if (Config.DEBUG)
-                Log.i(TAG, "Enrollment deleted");
-            mCallback.onResponse(null);
+        if (!UserModel.isLoggedIn(GlobalApplication.getInstance())) {
+            result.error(Result.ErrorCode.NO_AUTH);
+        } else if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+            result.error(Result.ErrorCode.NO_NETWORK);
         } else {
-            if (Config.DEBUG)
-                Log.w(TAG, "Enrollment not deleted");
-            mCallback.onCancel();
+            String url = Config.API + Config.USER + Config.ENROLLMENTS + course.id;
+
+            HttpRequest request = new HttpRequest(url);
+            request.setMethod(Config.HTTP_DELETE);
+            request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
+            request.setCache(false);
+
+            Object o = request.getResponse();
+            if (o != null) {
+                if (Config.DEBUG) Log.i(TAG, "Enrollment deleted");
+
+                course.is_enrolled = false;
+                courseDataAccess.updateCourse(course);
+                for (Module module : moduleDataAccess.getAllModulesForCourse(course)) {
+                    moduleDataAccess.deleteModule(module);
+                }
+
+                result.success(null, Result.DataSource.NETWORK);
+            } else {
+                if (Config.DEBUG) Log.w(TAG, "Enrollment not deleted");
+                result.error(Result.ErrorCode.NO_RESULT);
+            }
         }
     }
 
     @Override
     protected void onCancel() {
-        mCallback.onCancel();
+        result.error(Result.ErrorCode.ERROR);
     }
 
     @Override

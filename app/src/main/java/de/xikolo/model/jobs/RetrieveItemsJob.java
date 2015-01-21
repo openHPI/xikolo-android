@@ -10,9 +10,16 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.GlobalApplication;
+import de.xikolo.data.database.ItemDataAccess;
+import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.Module;
+import de.xikolo.data.net.JsonRequest;
+import de.xikolo.model.Result;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public class RetrieveItemsJob extends Job {
 
@@ -22,60 +29,66 @@ public class RetrieveItemsJob extends Job {
 
     private final int id;
 
-    private String courseId;
-    private String moduleId;
-    private boolean cache;
+    private Result<List<Item>> result;
+    private Course course;
+    private Module module;
+    private ItemDataAccess itemDataAccess;
 
-    private String token;
-
-    private OnJobResponseListener<List<Item>> mCallback;
-
-    public RetrieveItemsJob(OnJobResponseListener<List<Item>> callback, String courseId, String moduleId, boolean cache, String token) {
-        super(new Params(Priority.HIGH).requireNetwork());
+    public RetrieveItemsJob(Result<List<Item>> result, Course course, Module module, ItemDataAccess itemDataAccess) {
+        super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
-        mCallback = callback;
-
-        this.courseId = courseId;
-        this.moduleId = moduleId;
-        this.cache = cache;
-        this.token = token;
+        this.result = result;
+        this.course = course;
+        this.module = module;
+        this.itemDataAccess = itemDataAccess;
     }
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG)
-            Log.i(TAG, TAG + " added | cache " + cache + " | courseId " + courseId + " | moduleId " + moduleId);
+        if (Config.DEBUG) Log.i(TAG, TAG + " added | course.id " + course.id + " | module.id " + module.id);
     }
 
     @Override
     public void onRun() throws Throwable {
-        Type type = new TypeToken<List<Item>>() {
-        }.getType();
-
-        String url = Config.API + Config.COURSES + courseId + "/"
-                + Config.MODULES + moduleId + "/" + Config.ITEMS;
-
-        JsonRequest request = new JsonRequest(url, type);
-        request.setCache(cache);
-        request.setToken(token);
-
-        Object o = request.getResponse();
-        if (o != null) {
-            List<Item> items = (List<Item>) o;
-            if (Config.DEBUG)
-                Log.i(TAG, "Items received (" + items.size() + ")");
-            mCallback.onResponse(items);
+        if (!UserModel.isLoggedIn(GlobalApplication.getInstance()) || !course.is_enrolled) {
+            result.error(Result.ErrorCode.NO_AUTH);
         } else {
-            if (Config.DEBUG)
-                Log.w(TAG, "No Item received");
-            mCallback.onCancel();
+            result.success(itemDataAccess.getAllItemsForModule(module), Result.DataSource.LOCAL);
+
+            if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+                Type type = new TypeToken<List<Item>>(){}.getType();
+
+                String url = Config.API + Config.COURSES + course.id + "/"
+                        + Config.MODULES + module.id + "/" + Config.ITEMS;
+
+                JsonRequest request = new JsonRequest(url, type);
+                request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
+
+                Object o = request.getResponse();
+                if (o != null) {
+                    List<Item> items = (List<Item>) o;
+                    if (Config.DEBUG) Log.i(TAG, "Items received (" + items.size() + ")");
+
+                    for (Item item : items) {
+                        itemDataAccess.addOrUpdateItem(module, item);
+                    }
+
+                    result.success(items, Result.DataSource.NETWORK);
+                } else {
+                    if (Config.DEBUG) Log.w(TAG, "No Item received");
+                    result.error(Result.ErrorCode.NO_RESULT);
+                }
+            } else {
+                result.warn(Result.WarnCode.NO_NETWORK);
+            }
         }
+
     }
 
     @Override
     protected void onCancel() {
-        mCallback.onCancel();
+        result.error(Result.ErrorCode.ERROR);
     }
 
     @Override

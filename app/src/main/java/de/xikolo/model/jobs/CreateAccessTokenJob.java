@@ -10,9 +10,14 @@ import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.AccessToken;
+import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.preferences.UserPreferences;
+import de.xikolo.model.Result;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public class CreateAccessTokenJob extends Job {
 
@@ -25,13 +30,15 @@ public class CreateAccessTokenJob extends Job {
     private String email;
     private String password;
 
-    private OnJobResponseListener<AccessToken> mCallback;
+    private Result<Void> result;
+    private UserPreferences userPreferences;
 
-    public CreateAccessTokenJob(OnJobResponseListener<AccessToken> callback, String email, String password) {
-        super(new Params(Priority.MID).requireNetwork());
+    public CreateAccessTokenJob(Result<Void> result, String email, String password, UserPreferences userPreferences) {
+        super(new Params(Priority.MID));
         id = jobCounter.incrementAndGet();
 
-        mCallback = callback;
+        this.result = result;
+        this.userPreferences = userPreferences;
 
         this.email = email;
         this.password = password;
@@ -39,37 +46,38 @@ public class CreateAccessTokenJob extends Job {
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG)
-            Log.i(TAG, TAG + " added | email " + email);
+        if (Config.DEBUG) Log.i(TAG, TAG + " added | email " + email);
     }
 
     @Override
     public void onRun() throws Throwable {
-        Type type = new TypeToken<AccessToken>() {
-        }.getType();
-
-        String url = Config.API + Config.AUTHENTICATE + "?email=" + email + "&password=" + URLEncoder.encode(password, "UTF-8");
-
-        JsonRequest request = new JsonRequest(url, type);
-        request.setMethod(Config.HTTP_POST);
-        request.setCache(false);
-
-        Object o = request.getResponse();
-        if (o != null) {
-            AccessToken token = (AccessToken) o;
-            if (Config.DEBUG)
-                Log.i(TAG, "AccessToken created");
-            mCallback.onResponse(token);
+        if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+            result.error(Result.ErrorCode.NO_NETWORK);
         } else {
-            if (Config.DEBUG)
-                Log.w(TAG, "AccessToken not created");
-            mCallback.onCancel();
+            Type type = new TypeToken<AccessToken>(){}.getType();
+
+            String url = Config.API + Config.AUTHENTICATE + "?email=" + email + "&password=" + URLEncoder.encode(password, "UTF-8");
+
+            JsonRequest request = new JsonRequest(url, type);
+            request.setMethod(Config.HTTP_POST);
+            request.setCache(false);
+
+            Object o = request.getResponse();
+            if (o != null) {
+                AccessToken token = (AccessToken) o;
+                if (Config.DEBUG) Log.i(TAG, "AccessToken created");
+                userPreferences.saveAccessToken(token);
+                result.success(null, Result.DataSource.NETWORK);
+            } else {
+                if (Config.DEBUG) Log.w(TAG, "AccessToken not created");
+                result.error(Result.ErrorCode.NO_RESULT);
+            }
         }
     }
 
     @Override
     protected void onCancel() {
-        mCallback.onCancel();
+        result.error(Result.ErrorCode.ERROR);
     }
 
     @Override

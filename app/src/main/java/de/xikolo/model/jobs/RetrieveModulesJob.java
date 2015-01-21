@@ -10,9 +10,15 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import de.xikolo.GlobalApplication;
+import de.xikolo.data.database.ModuleDataAccess;
+import de.xikolo.data.entities.Course;
 import de.xikolo.data.net.JsonRequest;
 import de.xikolo.data.entities.Module;
+import de.xikolo.model.Result;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public class RetrieveModulesJob extends Job {
 
@@ -22,64 +28,66 @@ public class RetrieveModulesJob extends Job {
 
     private final int id;
 
-    private String courseId;
-    private boolean cache;
+    private Result<List<Module>> result;
+    private Course course;
     private boolean includeProgress;
+    private ModuleDataAccess moduleDataAccess;
 
-    private String token;
-
-    private OnJobResponseListener<List<Module>> mCallback;
-
-    public RetrieveModulesJob(OnJobResponseListener<List<Module>> callback, String courseId, boolean cache, String token) {
-        this(callback, courseId, cache, false, token);
-    }
-
-    public RetrieveModulesJob(OnJobResponseListener<List<Module>> callback, String courseId, boolean cache, boolean includeProgress, String token) {
-        super(new Params(Priority.HIGH).requireNetwork());
+    public RetrieveModulesJob(Result<List<Module>> result, Course course, boolean includeProgress, ModuleDataAccess moduleDataAccess) {
+        super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
-        mCallback = callback;
-
-        this.courseId = courseId;
-        this.cache = cache;
+        this.result = result;
+        this.course = course;
         this.includeProgress = includeProgress;
-        this.token = token;
+        this.moduleDataAccess = moduleDataAccess;
     }
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG)
-            Log.i(TAG, TAG + " added | cache " + cache + " | includeProgress " + includeProgress + " | courseId " + courseId);
+        if (Config.DEBUG) Log.i(TAG, TAG + " added | includeProgress " + includeProgress + " | course.id " + course.id);
     }
 
     @Override
     public void onRun() throws Throwable {
-        Type type = new TypeToken<List<Module>>() {
-        }.getType();
-
-        String url = Config.API + Config.COURSES + courseId + "/"
-                + Config.MODULES + "?include_progress=" + includeProgress;
-
-        JsonRequest request = new JsonRequest(url, type);
-        request.setCache(cache);
-        request.setToken(token);
-
-        Object o = request.getResponse();
-        if (o != null) {
-            List<Module> modules = (List<Module>) o;
-            if (Config.DEBUG)
-                Log.i(TAG, "Modules received (" + modules.size() + ")");
-            mCallback.onResponse(modules);
+        if (!UserModel.isLoggedIn(GlobalApplication.getInstance()) || !course.is_enrolled) {
+            result.error(Result.ErrorCode.NO_AUTH);
         } else {
-            if (Config.DEBUG)
-                Log.w(TAG, "No Modules received");
-            mCallback.onCancel();
+            result.success(moduleDataAccess.getAllModulesForCourse(course), Result.DataSource.LOCAL);
+
+            if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+                Type type = new TypeToken<List<Module>>(){}.getType();
+
+                String url = Config.API + Config.COURSES + course.id + "/"
+                        + Config.MODULES + "?include_progress=" + includeProgress;
+
+                JsonRequest request = new JsonRequest(url, type);
+                request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
+
+                Object o = request.getResponse();
+                if (o != null) {
+                    List<Module> modules = (List<Module>) o;
+                    if (Config.DEBUG) Log.i(TAG, "Modules received (" + modules.size() + ")");
+
+                    for (Module module : modules) {
+                        moduleDataAccess.addOrUpdateModule(course, module);
+                    }
+
+                    result.success(modules, Result.DataSource.NETWORK);
+                } else {
+                    if (Config.DEBUG) Log.w(TAG, "No Modules received");
+                   result.error(Result.ErrorCode.NO_NETWORK);
+                }
+            } else {
+                result.warn(Result.WarnCode.NO_NETWORK);
+            }
         }
+
     }
 
     @Override
     protected void onCancel() {
-        mCallback.onCancel();
+        result.error(Result.ErrorCode.ERROR);
     }
 
     @Override

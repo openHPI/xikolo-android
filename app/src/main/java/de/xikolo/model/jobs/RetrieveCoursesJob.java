@@ -10,9 +10,14 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.GlobalApplication;
+import de.xikolo.data.database.CourseDataAccess;
 import de.xikolo.data.entities.Course;
+import de.xikolo.data.net.JsonRequest;
+import de.xikolo.model.Result;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public class RetrieveCoursesJob extends Job {
 
@@ -22,63 +27,67 @@ public class RetrieveCoursesJob extends Job {
 
     private final int id;
 
-    private boolean cache;
+    private Result<List<Course>> result;
+    private CourseDataAccess courseDataAccess;
+
     private boolean includeProgress;
 
-    private String token;
+    public RetrieveCoursesJob(Result<List<Course>> result, boolean includeProgress, CourseDataAccess courseDataAccess) {
+        super(new Params(includeProgress ? Priority.MID : Priority.HIGH));
+        this.id = jobCounter.incrementAndGet();
 
-    private OnJobResponseListener<List<Course>> mCallback;
-
-    public RetrieveCoursesJob(OnJobResponseListener<List<Course>> callback, boolean cache) {
-        this(callback, cache, false, null);
-    }
-
-    public RetrieveCoursesJob(OnJobResponseListener<List<Course>> callback, boolean cache, boolean includeProgress, String token) {
-        super(new Params(includeProgress ? Priority.MID : Priority.HIGH).requireNetwork());
-        id = jobCounter.incrementAndGet();
-
-        mCallback = callback;
-
-        this.cache = cache;
+        this.result = result;
+        this.courseDataAccess = courseDataAccess;
         this.includeProgress = includeProgress;
-        this.token = token;
     }
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG)
-            Log.i(TAG, TAG + " added | cache " + cache + " | includeProgress " + includeProgress);
+        if (Config.DEBUG) Log.i(TAG, TAG + " added | includeProgress " + includeProgress);
     }
 
     @Override
     public void onRun() throws Throwable {
-        Type type = new TypeToken<List<Course>>() {
-        }.getType();
-
-        String url = Config.API + Config.COURSES + "?include_progress=" + includeProgress;
-
-        JsonRequest request = new JsonRequest(url, type);
-        request.setCache(cache);
-        if (token != null) {
-            request.setToken(token);
-        }
-
-        Object o = request.getResponse();
-        if (o != null) {
-            List<Course> courses = (List<Course>) o;
-            if (Config.DEBUG)
-                Log.i(TAG, "Courses received (" + courses.size() + ")");
-            mCallback.onResponse(courses);
+        if (includeProgress && !UserModel.isLoggedIn(GlobalApplication.getInstance())) {
+            result.error(Result.ErrorCode.NO_AUTH);
         } else {
-            if (Config.DEBUG)
-                Log.w(TAG, "No Courses received");
-            mCallback.onCancel();
+            result.success(courseDataAccess.getAllCourses(), Result.DataSource.LOCAL);
+
+            if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+                Type type = new TypeToken<List<Course>>(){}.getType();
+
+                String url = Config.API + Config.COURSES + "?include_progress=" + includeProgress;
+
+                JsonRequest request = new JsonRequest(url, type);
+                request.setCache(true);
+
+                String token = UserModel.getToken(GlobalApplication.getInstance());
+                request.setToken(token);
+
+                Object o = request.getResponse();
+                if (o != null) {
+                    List<Course> courses = (List<Course>) o;
+
+                    if (Config.DEBUG) Log.i(TAG, "Courses received (" + courses.size() + ")");
+
+                    for (Course course : courses) {
+                        courseDataAccess.addOrUpdateCourse(course);
+                    }
+
+                    result.success(courses, Result.DataSource.NETWORK);
+                } else {
+                    if (Config.DEBUG) Log.w(TAG, "No Courses received");
+                    result.error(Result.ErrorCode.NO_RESULT);
+                }
+            } else {
+                result.warn(Result.WarnCode.NO_NETWORK);
+            }
         }
     }
 
     @Override
     protected void onCancel() {
-        mCallback.onCancel();
+        result.error(Result.ErrorCode.ERROR);
     }
 
     @Override

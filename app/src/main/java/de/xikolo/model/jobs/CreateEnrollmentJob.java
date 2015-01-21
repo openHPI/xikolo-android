@@ -7,8 +7,14 @@ import com.path.android.jobqueue.Params;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import de.xikolo.GlobalApplication;
+import de.xikolo.data.database.CourseDataAccess;
+import de.xikolo.data.entities.Course;
 import de.xikolo.data.net.HttpRequest;
+import de.xikolo.model.Result;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 public class CreateEnrollmentJob extends Job {
 
@@ -18,51 +24,55 @@ public class CreateEnrollmentJob extends Job {
 
     private final int id;
 
-    private String enrollmentId;
-    private String token;
+    private Course course;
+    private Result<Void> result;
+    private CourseDataAccess courseDataAccess;
 
-    private OnJobResponseListener<Void> mCallback;
-
-    public CreateEnrollmentJob(OnJobResponseListener<Void> callback, String enrollmentId, String token) {
-        super(new Params(Priority.MID).requireNetwork());
+    public CreateEnrollmentJob(Result<Void> result, Course course, CourseDataAccess courseDataAccess) {
+        super(new Params(Priority.MID));
         id = jobCounter.incrementAndGet();
 
-        mCallback = callback;
-
-        this.enrollmentId = enrollmentId;
-        this.token = token;
+        this.result = result;
+        this.course = course;
+        this.courseDataAccess = courseDataAccess;
     }
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG)
-            Log.i(TAG, TAG + " added | enrollmentId " + enrollmentId);
+        if (Config.DEBUG) Log.i(TAG, TAG + " added | course.id " + course.id);
     }
 
     @Override
     public void onRun() throws Throwable {
-        String url = Config.API + Config.USER + Config.ENROLLMENTS + "?course_id=" + enrollmentId;
-
-        HttpRequest request = new HttpRequest(url);
-        request.setMethod(Config.HTTP_POST);
-        request.setToken(token);
-        request.setCache(false);
-
-        Object o = request.getResponse();
-        if (o != null) {
-            if (Config.DEBUG)
-                Log.i(TAG, "Enrollment created");
-            mCallback.onResponse(null);
+        if (!UserModel.isLoggedIn(GlobalApplication.getInstance())) {
+            result.error(Result.ErrorCode.NO_AUTH);
+        } else if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+            result.error(Result.ErrorCode.NO_NETWORK);
         } else {
-            if (Config.DEBUG)
-                Log.w(TAG, "Enrollment not created");
-            mCallback.onCancel();
+            String url = Config.API + Config.USER + Config.ENROLLMENTS + "?course_id=" + course.id;
+
+            HttpRequest request = new HttpRequest(url);
+            request.setMethod(Config.HTTP_POST);
+            request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
+            request.setCache(false);
+
+            Object o = request.getResponse();
+            if (o != null) {
+                if (Config.DEBUG) Log.i(TAG, "Enrollment created");
+                course.is_enrolled = true;
+                courseDataAccess.updateCourse(course);
+                result.success(null, Result.DataSource.NETWORK);
+            } else {
+                if (Config.DEBUG) Log.w(TAG, "Enrollment not created");
+                result.error(Result.ErrorCode.NO_RESULT);
+            }
         }
+
     }
 
     @Override
     protected void onCancel() {
-        mCallback.onCancel();
+        result.error(Result.ErrorCode.ERROR);
     }
 
     @Override
