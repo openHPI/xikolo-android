@@ -95,11 +95,11 @@ public class MainActivity extends BaseActivity
                 tag = "profile";
                 break;
             case NavigationAdapter.NAV_ID_ALL_COURSES:
-                newFragment = CourseListFragment.newInstance(CourseModel.FILTER_ALL);
+                newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_ALL);
                 tag = "all_courses";
                 break;
             case NavigationAdapter.NAV_ID_MY_COURSES:
-                newFragment = CourseListFragment.newInstance(CourseModel.FILTER_MY);
+                newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_MY);
                 tag = "my_courses";
                 break;
             case NavigationAdapter.NAV_ID_NEWS:
@@ -155,7 +155,6 @@ public class MainActivity extends BaseActivity
 
     public void restoreActionBar() {
         if (actionBar != null) {
-            actionBar.setNavigationMode(actionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setTitle(mTitle);
         }

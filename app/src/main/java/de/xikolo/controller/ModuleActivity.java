@@ -31,6 +31,7 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
+import de.xikolo.model.Result;
 import de.xikolo.util.DateUtil;
 
 public class ModuleActivity extends BaseActivity {
@@ -46,6 +47,7 @@ public class ModuleActivity extends BaseActivity {
     private Item mItem;
 
     private ItemModel mItemModel;
+    private Result<Void> mProgressionResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,8 @@ public class ModuleActivity extends BaseActivity {
             this.mItem = b.getParcelable(ARG_ITEM);
         }
 
-        mItemModel = new ItemModel(this, jobManager);
+        mItemModel = new ItemModel(this, jobManager, databaseHelper);
+        mProgressionResult = new Result<Void>(){};
 
         setTitle(mModule.name);
 
@@ -84,10 +87,10 @@ public class ModuleActivity extends BaseActivity {
             mModule.items.get(index).progress.visited = true;
 
             if (index == 0) {
-                mItemModel.updateProgression(mModule.items.get(index).id);
+                mItemModel.updateProgression(mProgressionResult, mModule, mModule.items.get(index));
             }
         } else {
-            mItemModel.updateProgression(mModule.items.get(0).id);
+            mItemModel.updateProgression(mProgressionResult, mModule, mModule.items.get(0));
             mModule.items.get(0).progress.visited = true;
         }
         pager.getAdapter().notifyDataSetChanged();
@@ -243,7 +246,7 @@ public class ModuleActivity extends BaseActivity {
 
             notifyDataSetChanged();
 
-            mItemModel.updateProgression(mItems.get(position).id);
+            mItemModel.updateProgression(mProgressionResult, mModule, mItems.get(position));
 
             if (lastPosition != position) {
                 PagerFragment fragment = (PagerFragment) getItem(lastPosition);
