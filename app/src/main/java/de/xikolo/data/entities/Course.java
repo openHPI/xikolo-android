@@ -69,7 +69,7 @@ public class Course implements Parcelable {
     }
 
     public Course() {
-
+        progress = new OverallProgress();
     }
 
     public Course(Parcel in) {
