@@ -2,32 +2,30 @@ package de.xikolo.data.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.xikolo.data.entities.Course;
-import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.OverallProgress;
 
-public class OverallProgressDataAccess extends DataAccess {
+class OverallProgressDataAccess extends DataAccess {
 
     public OverallProgressDataAccess(DatabaseHelper databaseHelper) {
         super(databaseHelper);
     }
 
     public void addProgress(String id, OverallProgress progress) {
-        database.insert(OverallProgressTable.TABLE_NAME, null, buildContentValues(id, progress));
+        getDatabase().insert(OverallProgressTable.TABLE_NAME, null, buildContentValues(id, progress));
     }
 
     public void addOrUpdateProgress(String id, OverallProgress progress) {
-        database.insertWithOnConflict(ModuleTable.TABLE_NAME, null, buildContentValues(id, progress),
-                SQLiteDatabase.CONFLICT_REPLACE);
+        if (updateProgress(id, progress) < 1) {
+            addProgress(id, progress);
+        }
     }
 
     public OverallProgress getProgress(String id) {
-        Cursor cursor = database.query(
+        Cursor cursor = getDatabase().query(
                 OverallProgressTable.TABLE_NAME,
                 new String[]{
                         OverallProgressTable.COLUMN_ID,
@@ -46,6 +44,7 @@ public class OverallProgressDataAccess extends DataAccess {
                 OverallProgressTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
+        cursor.moveToFirst();
         OverallProgress progress = buildProgress(cursor);
 
         cursor.close();
@@ -58,7 +57,7 @@ public class OverallProgressDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + OverallProgressTable.TABLE_NAME;
 
-        Cursor cursor = database.rawQuery(selectQuery, null);
+        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -75,6 +74,7 @@ public class OverallProgressDataAccess extends DataAccess {
     private OverallProgress buildProgress(Cursor cursor) {
         OverallProgress progress = new OverallProgress();
 
+        cursor.getString(0);
         progress.items.count_available = cursor.getInt(1);
         progress.items.count_visited = cursor.getInt(2);
         progress.items.count_completed = cursor.getInt(3);
@@ -110,22 +110,27 @@ public class OverallProgressDataAccess extends DataAccess {
 
     public int getProgressCount() {
         String countQuery = "SELECT * FROM " + OverallProgressTable.TABLE_NAME;
-        Cursor cursor = database.rawQuery(countQuery, null);
+        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+
         cursor.close();
 
-        return cursor.getCount();
+        return count;
     }
 
-    public void updateProgress(String id, OverallProgress progress) {
-        database.update(
+    public int updateProgress(String id, OverallProgress progress) {
+        int affected = getDatabase().update(
                 OverallProgressTable.TABLE_NAME,
                 buildContentValues(id, progress),
                 OverallProgressTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)});
+
+        return affected;
     }
 
     public void deleteProgress(String id) {
-        database.delete(
+        getDatabase().delete(
                 OverallProgressTable.TABLE_NAME,
                 OverallProgressTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)});

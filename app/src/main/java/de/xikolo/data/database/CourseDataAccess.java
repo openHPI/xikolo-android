@@ -2,7 +2,6 @@ package de.xikolo.data.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,21 +10,28 @@ import de.xikolo.data.entities.Course;
 
 public class CourseDataAccess extends DataAccess {
 
+    private OverallProgressDataAccess progressDataAccess;
+
     public CourseDataAccess(DatabaseHelper databaseHelper) {
         super(databaseHelper);
+
+        this.progressDataAccess = new OverallProgressDataAccess(databaseHelper);
     }
 
     public void addCourse(Course course) {
-        database.insert(CourseTable.TABLE_NAME, null, buildContentValues(course));
+        getDatabase().insert(CourseTable.TABLE_NAME, null, buildContentValues(course));
+
+        progressDataAccess.addProgress(course.id, course.progress);
     }
 
     public void addOrUpdateCourse(Course course) {
-        database.insertWithOnConflict(CourseTable.TABLE_NAME, null, buildContentValues(course),
-                SQLiteDatabase.CONFLICT_REPLACE);
+        if (updateCourse(course) < 1) {
+            addCourse(course);
+        }
     }
 
     public Course getCourse(String id) {
-        Cursor cursor = database.query(
+        Cursor cursor = getDatabase().query(
                 CourseTable.TABLE_NAME,
                 new String[]{
                         CourseTable.COLUMN_ID,
@@ -44,7 +50,9 @@ public class CourseDataAccess extends DataAccess {
                 CourseTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
+        cursor.moveToFirst();
         Course course = buildCourse(cursor);
+        course.progress = progressDataAccess.getProgress(id);
 
         cursor.close();
 
@@ -56,11 +64,12 @@ public class CourseDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + CourseTable.TABLE_NAME;
 
-        Cursor cursor = database.rawQuery(selectQuery, null);
+        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
                 Course course = buildCourse(cursor);
+                course.progress = progressDataAccess.getProgress(course.id);
                 courseList.add(course);
             } while (cursor.moveToNext());
         }
@@ -109,25 +118,45 @@ public class CourseDataAccess extends DataAccess {
 
     public int getCoursesCount() {
         String countQuery = "SELECT * FROM " + CourseTable.TABLE_NAME;
-        Cursor cursor = database.rawQuery(countQuery, null);
+        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+
         cursor.close();
 
-        return cursor.getCount();
+        return count;
     }
 
-    public void updateCourse(Course course) {
-        database.update(
+    public int getEnrollmentsCount() {
+        String countQuery = "SELECT * FROM " + CourseTable.TABLE_NAME + " WHERE " + CourseTable.COLUMN_IS_ENROLLED + " != 0 ";
+        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+
+        cursor.close();
+
+        return count;
+    }
+
+    public int updateCourse(Course course) {
+        int affected = getDatabase().update(
                 CourseTable.TABLE_NAME,
                 buildContentValues(course),
                 CourseTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(course.id)});
+
+        progressDataAccess.updateProgress(course.id, course.progress);
+
+        return affected;
     }
 
     public void deleteCourse(Course course) {
-        database.delete(
+        getDatabase().delete(
                 CourseTable.TABLE_NAME,
                 CourseTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(course.id)});
+
+        progressDataAccess.deleteProgress(course.id);
     }
 
 }

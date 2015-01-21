@@ -2,7 +2,6 @@ package de.xikolo.data.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,21 +11,28 @@ import de.xikolo.data.entities.Module;
 
 public class ModuleDataAccess extends DataAccess {
 
+    private OverallProgressDataAccess progressDataAccess;
+
     public ModuleDataAccess(DatabaseHelper databaseHelper) {
         super(databaseHelper);
+
+        this.progressDataAccess = new OverallProgressDataAccess(databaseHelper);
     }
 
     public void addModule(Course course, Module module) {
-        database.insert(ModuleTable.TABLE_NAME, null, buildContentValues(course, module));
+        getDatabase().insert(ModuleTable.TABLE_NAME, null, buildContentValues(course, module));
+
+        progressDataAccess.addProgress(module.id, module.progress);
     }
 
     public void addOrUpdateModule(Course course, Module module) {
-        database.insertWithOnConflict(ModuleTable.TABLE_NAME, null, buildContentValues(course, module),
-                SQLiteDatabase.CONFLICT_REPLACE);
+        if (updateModule(course, module) < 1) {
+            addModule(course, module);
+        }
     }
 
     public Module getModule(String id) {
-        Cursor cursor = database.query(
+        Cursor cursor = getDatabase().query(
                 ModuleTable.TABLE_NAME,
                 new String[]{
                         ModuleTable.COLUMN_ID,
@@ -39,7 +45,9 @@ public class ModuleDataAccess extends DataAccess {
                 ModuleTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
+        cursor.moveToFirst();
         Module module = buildModule(cursor);
+        module.progress = progressDataAccess.getProgress(module.id);
 
         cursor.close();
 
@@ -51,11 +59,32 @@ public class ModuleDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + ModuleTable.TABLE_NAME;
 
-        Cursor cursor = database.rawQuery(selectQuery, null);
+        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
                 Module module = buildModule(cursor);
+                module.progress = progressDataAccess.getProgress(module.id);
+                moduleList.add(module);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return moduleList;
+    }
+
+    public List<Module> getAllModulesForCourse(Course course) {
+        List<Module> moduleList = new ArrayList<Module>();
+
+        String selectQuery = "SELECT * FROM " + ModuleTable.TABLE_NAME + " WHERE " + ModuleTable.COLUMN_COURSE_ID + " = \'" + course.id + "\'";
+
+        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Module module = buildModule(cursor);
+                module.progress = progressDataAccess.getProgress(module.id);
                 moduleList.add(module);
             } while (cursor.moveToNext());
         }
@@ -93,25 +122,34 @@ public class ModuleDataAccess extends DataAccess {
 
     public int getModulesCount() {
         String countQuery = "SELECT * FROM " + ModuleTable.TABLE_NAME;
-        Cursor cursor = database.rawQuery(countQuery, null);
+        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+
         cursor.close();
 
-        return cursor.getCount();
+        return count;
     }
 
-    public void updateModule(Course course, Module module) {
-        database.update(
+    public int updateModule(Course course, Module module) {
+        int affected = getDatabase().update(
                 ModuleTable.TABLE_NAME,
                 buildContentValues(course, module),
                 ModuleTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(module.id)});
+
+        progressDataAccess.updateProgress(module.id, module.progress);
+
+        return affected;
     }
 
     public void deleteModule(Module module) {
-        database.delete(
+        getDatabase().delete(
                 ModuleTable.TABLE_NAME,
                 ModuleTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(module.id)});
+
+        progressDataAccess.deleteProgress(module.id);
     }
 
 }

@@ -2,7 +2,6 @@ package de.xikolo.data.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +16,17 @@ public class ItemDataAccess extends DataAccess {
     }
 
     public void addItem(Module module, Item item) {
-        database.insert(ItemTable.TABLE_NAME, null, buildContentValues(module, item));
+        getDatabase().insert(ItemTable.TABLE_NAME, null, buildContentValues(module, item));
     }
 
     public void addOrUpdateItem(Module module, Item item) {
-        database.insertWithOnConflict(ItemTable.TABLE_NAME, null, buildContentValues(module, item),
-                SQLiteDatabase.CONFLICT_REPLACE);
+        if (updateItem(module, item) < 1) {
+            addItem(module, item);
+        }
     }
 
     public Item getItem(String id) {
-        Cursor cursor = database.query(
+        Cursor cursor = getDatabase().query(
                 ItemTable.TABLE_NAME,
                 new String[]{
                         ItemTable.COLUMN_ID,
@@ -42,6 +42,7 @@ public class ItemDataAccess extends DataAccess {
                 ItemTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
+        cursor.moveToFirst();
         Item item = buildItem(cursor);
 
         cursor.close();
@@ -54,7 +55,26 @@ public class ItemDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + ItemTable.TABLE_NAME;
 
-        Cursor cursor = database.rawQuery(selectQuery, null);
+        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Item item = buildItem(cursor);
+                itemList.add(item);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return itemList;
+    }
+
+    public List<Item> getAllItemsForModule(Module module) {
+        List<Item> itemList = new ArrayList<Item>();
+
+        String selectQuery = "SELECT * FROM " + ItemTable.TABLE_NAME + " WHERE " + ItemTable.COLUMN_MODULE_ID + " = \'" + module.id + "\'";
+
+        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -102,22 +122,27 @@ public class ItemDataAccess extends DataAccess {
 
     public int getItemsCount() {
         String countQuery = "SELECT * FROM " + ItemTable.TABLE_NAME;
-        Cursor cursor = database.rawQuery(countQuery, null);
+        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+
         cursor.close();
 
-        return cursor.getCount();
+        return count;
     }
 
-    public void updateItem(Module module, Item item) {
-        database.update(
+    public int updateItem(Module module, Item item) {
+        int affected = getDatabase().update(
                 ItemTable.TABLE_NAME,
                 buildContentValues(module, item),
                 ItemTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(item.id)});
+
+        return affected;
     }
 
     public void deleteItem(Item item) {
-        database.delete(
+        getDatabase().delete(
                 ItemTable.TABLE_NAME,
                 ItemTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(item.id)});
