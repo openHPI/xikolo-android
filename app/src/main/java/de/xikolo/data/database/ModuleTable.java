@@ -2,7 +2,7 @@ package de.xikolo.data.database;
 
 import android.database.sqlite.SQLiteDatabase;
 
-public class ModuleTable implements Table {
+class ModuleTable implements Table {
 
     public static final String TABLE_NAME = "module";
 
@@ -23,8 +23,7 @@ public class ModuleTable implements Table {
                     COLUMN_AVAILABLE_TO + " text, " +
                     COLUMN_LOCKED + " integer, " +
                     COLUMN_COURSE_ID + " text, " +
-                    "FOREIGN KEY(" + COLUMN_COURSE_ID + ") REFERENCES " + CourseTable.TABLE_NAME + "(" + Table.COLUMN_ID + "), " +
-                    "FOREIGN KEY(" + COLUMN_ID + ") REFERENCES " + OverallProgressTable.TABLE_NAME + "(" + Table.COLUMN_ID + ")" +
+                    "FOREIGN KEY(" + COLUMN_COURSE_ID + ") REFERENCES " + CourseTable.TABLE_NAME + "(" + Table.COLUMN_ID + ") ON UPDATE CASCADE ON DELETE CASCADE " +
                     ");";
 
     @Override

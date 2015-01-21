@@ -2,7 +2,7 @@ package de.xikolo.data.database;
 
 import android.database.sqlite.SQLiteDatabase;
 
-public class CourseTable implements Table {
+class CourseTable implements Table {
 
     public static final String TABLE_NAME = "course";
 
@@ -31,8 +31,7 @@ public class CourseTable implements Table {
                     COLUMN_AVAILABLE_FROM + " text, " +
                     COLUMN_AVAILABLE_TO + " text, " +
                     COLUMN_LOCKED + " integer, " +
-                    COLUMN_IS_ENROLLED + " integer, " +
-                    "FOREIGN KEY(" + COLUMN_ID + ") REFERENCES " + OverallProgressTable.TABLE_NAME + "(" + Table.COLUMN_ID + ")" +
+                    COLUMN_IS_ENROLLED + " integer " +
                      ");";
 
     @Override

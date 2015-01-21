@@ -2,7 +2,7 @@ package de.xikolo.data.database;
 
 import android.database.sqlite.SQLiteDatabase;
 
-public class ItemTable implements Table {
+class ItemTable implements Table {
 
     public static final String TABLE_NAME = "item";
 
@@ -30,7 +30,7 @@ public class ItemTable implements Table {
                     COLUMN_VISITED + " integer, " +
                     COLUMN_COMPLETED + " integer, " +
                     COLUMN_MODULE_ID + " text, " +
-                    "FOREIGN KEY(" + COLUMN_MODULE_ID + ") REFERENCES " + ModuleTable.TABLE_NAME + "(" + Table.COLUMN_ID + ")" +
+                    "FOREIGN KEY(" + COLUMN_MODULE_ID + ") REFERENCES " + ModuleTable.TABLE_NAME + "(" + Table.COLUMN_ID + ") ON UPDATE CASCADE ON DELETE CASCADE " +
                     ");";
 
     @Override

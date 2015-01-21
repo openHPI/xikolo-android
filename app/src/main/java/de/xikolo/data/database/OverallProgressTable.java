@@ -2,7 +2,7 @@ package de.xikolo.data.database;
 
 import android.database.sqlite.SQLiteDatabase;
 
-public class OverallProgressTable implements Table {
+class OverallProgressTable implements Table {
 
     public static final String TABLE_NAME = "overall_progress";
 
