@@ -12,6 +12,8 @@ import java.lang.reflect.Type;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import de.xikolo.util.Config;
+
 public class JsonRequest extends HttpRequest {
 
     public static final String TAG = JsonRequest.class.getSimpleName();
@@ -37,7 +39,7 @@ public class JsonRequest extends HttpRequest {
 
             return o;
         } catch (Exception e) {
-            Log.w(TAG, "Error for URL " + mUrl, e);
+            if (Config.DEBUG) Log.w(TAG, "Error for URL " + mUrl, e);
         }
         return null;
     }
