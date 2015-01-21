@@ -16,11 +16,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.RELEASE"
             shrinkResources false
+            debuggable false
         }
         debug {
             minifyEnabled false
             buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.DEBUG"
             shrinkResources false
+            debuggable true
         }
     }
     productFlavors {
