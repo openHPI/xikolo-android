@@ -34,23 +34,26 @@ public class NavigationAdapter extends BaseAdapter {
     public static final int NAV_ID_DOWNLOADS = 5;
     public static final int NAV_ID_SETTINGS = 4;
     private List<Element> elements;
-    private Activity mContext;
+    private Activity mActivity;
 
-    public NavigationAdapter(Activity context) {
-        this.mContext = context;
+    private CourseModel courseModel;
+
+    public NavigationAdapter(Activity activity, CourseModel courseModel) {
+        this.mActivity = activity;
+        this.courseModel = courseModel;
         elements = new ArrayList<Element>() {{
-            add(new Element(mContext.getString(R.string.icon_profile),
-                    mContext.getString(R.string.title_section_login)));
-            add(new Element(mContext.getString(R.string.icon_courses),
-                    mContext.getString(R.string.title_section_all_courses)));
-            add(new Element(mContext.getString(R.string.icon_course),
-                    mContext.getString(R.string.title_section_my_courses)));
-            add(new Element(mContext.getString(R.string.icon_news),
-                    mContext.getString(R.string.title_section_news)));
-//            add(new Element(mContext.getString(R.string.icon_downloads),
-//                    mContext.getString(R.string.title_section_downloads)));
-            add(new Element(mContext.getString(R.string.icon_settings),
-                    mContext.getString(R.string.title_section_settings)));
+            add(new Element(mActivity.getString(R.string.icon_profile),
+                    mActivity.getString(R.string.title_section_login)));
+            add(new Element(mActivity.getString(R.string.icon_courses),
+                    mActivity.getString(R.string.title_section_all_courses)));
+            add(new Element(mActivity.getString(R.string.icon_course),
+                    mActivity.getString(R.string.title_section_my_courses)));
+            add(new Element(mActivity.getString(R.string.icon_news),
+                    mActivity.getString(R.string.title_section_news)));
+//            add(new Element(mActivity.getString(R.string.icon_downloads),
+//                    mActivity.getString(R.string.title_section_downloads)));
+            add(new Element(mActivity.getString(R.string.icon_settings),
+                    mActivity.getString(R.string.title_section_settings)));
         }};
     }
 
@@ -75,7 +78,7 @@ public class NavigationAdapter extends BaseAdapter {
         if (rowView == null) {
             ViewHolder viewHolder = new ViewHolder();
 
-            LayoutInflater inflater = mContext.getLayoutInflater();
+            LayoutInflater inflater = mActivity.getLayoutInflater();
             if (i == NAV_ID_PROFILE) {
                 rowView = inflater.inflate(R.layout.item_navi_profile, null);
                 viewHolder.containerLogin = rowView.findViewById(R.id.containerLogin);
@@ -100,11 +103,11 @@ public class NavigationAdapter extends BaseAdapter {
         Element element = (Element) getItem(i);
         holder.icon.setText(element.icon);
 
-        if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mContext)) {
+        if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mActivity)) {
             holder.containerLogin.setVisibility(View.GONE);
             holder.containerProfile.setVisibility(View.VISIBLE);
 
-            User user = UserModel.readUser(mContext);
+            User user = UserModel.getSavedUser(mActivity);
             holder.name.setText(user.first_name + " " + user.last_name);
             holder.email.setText(user.email);
 
@@ -113,7 +116,7 @@ public class NavigationAdapter extends BaseAdapter {
                 if (holder.img.getDrawable() != null) {
                     lastImage = holder.img.getDrawable();
                 } else {
-                    lastImage = mContext.getResources().getDrawable(R.drawable.avatar);
+                    lastImage = mActivity.getResources().getDrawable(R.drawable.avatar);
                 }
                 DisplayImageOptions options = new DisplayImageOptions.Builder()
                         .showImageOnLoading(lastImage)
@@ -125,7 +128,7 @@ public class NavigationAdapter extends BaseAdapter {
                 ImageLoader.getInstance().displayImage("drawable://" + R.drawable.avatar, holder.img);
             }
 
-        } else if (i == NAV_ID_PROFILE && !UserModel.isLoggedIn(mContext)) {
+        } else if (i == NAV_ID_PROFILE && !UserModel.isLoggedIn(mActivity)) {
             holder.containerLogin.setVisibility(View.VISIBLE);
             holder.containerProfile.setVisibility(View.GONE);
             holder.label.setText(element.label);
@@ -134,32 +137,32 @@ public class NavigationAdapter extends BaseAdapter {
         }
 
         if (i == ((ListView) viewGroup).getCheckedItemPosition()) {
-            if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mContext)) {
-                holder.name.setTextColor(mContext.getResources().getColor(R.color.apptheme_main));
-                holder.email.setTextColor(mContext.getResources().getColor(R.color.apptheme_main));
+            if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mActivity)) {
+                holder.name.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
+                holder.email.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
             } else {
-                holder.icon.setTextColor(mContext.getResources().getColor(R.color.apptheme_main));
-                holder.label.setTextColor(mContext.getResources().getColor(R.color.apptheme_main));
+                holder.icon.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
+                holder.label.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
             }
         } else {
-            if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mContext)) {
-                holder.name.setTextColor(mContext.getResources().getColor(R.color.white));
-                holder.email.setTextColor(mContext.getResources().getColor(R.color.white));
+            if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mActivity)) {
+                holder.name.setTextColor(mActivity.getResources().getColor(R.color.white));
+                holder.email.setTextColor(mActivity.getResources().getColor(R.color.white));
             } else {
-                holder.icon.setTextColor(mContext.getResources().getColor(R.color.white));
-                holder.label.setTextColor(mContext.getResources().getColor(R.color.white));
+                holder.icon.setTextColor(mActivity.getResources().getColor(R.color.white));
+                holder.label.setTextColor(mActivity.getResources().getColor(R.color.white));
             }
         }
 
-        if (i == NAV_ID_MY_COURSES && UserModel.isLoggedIn(mContext)) {
-            int size = CourseModel.readEnrollmentsSize(mContext);
+        if (i == NAV_ID_MY_COURSES && UserModel.isLoggedIn(mActivity)) {
+            int size = courseModel.getEnrollmentsCount();
             holder.counter.setText(String.valueOf(size));
             if (size > 0) {
                 holder.counter.setVisibility(View.VISIBLE);
             } else {
                 holder.counter.setVisibility(View.GONE);
             }
-        } else if (i == NAV_ID_MY_COURSES && !UserModel.isLoggedIn(mContext)) {
+        } else if (i == NAV_ID_MY_COURSES && !UserModel.isLoggedIn(mActivity)) {
             holder.counter.setText(String.valueOf(0));
             holder.counter.setVisibility(View.GONE);
         }

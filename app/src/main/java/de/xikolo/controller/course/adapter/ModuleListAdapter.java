@@ -23,15 +23,15 @@ public class ModuleListAdapter extends BaseAdapter {
 
     private List<Module> mModules;
 
-    private Activity mContext;
+    private Activity mActivity;
     private Course mCourse;
 
     private ItemListAdapter.OnItemButtonClickListener mItemCallback;
     private OnModuleButtonClickListener mModuleCallback;
 
-    public ModuleListAdapter(Activity context, Course course, OnModuleButtonClickListener moduleCallback,
+    public ModuleListAdapter(Activity activity, Course course, OnModuleButtonClickListener moduleCallback,
                              ItemListAdapter.OnItemButtonClickListener itemCallback) {
-        this.mContext = context;
+        this.mActivity = activity;
         this.mModules = new ArrayList<Module>();
         this.mCourse = course;
         this.mModuleCallback = moduleCallback;
@@ -62,7 +62,7 @@ public class ModuleListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View rowView = view;
         if (rowView == null) {
-            LayoutInflater inflater = mContext.getLayoutInflater();
+            LayoutInflater inflater = mActivity.getLayoutInflater();
             rowView = inflater.inflate(R.layout.item_module, null);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
@@ -77,19 +77,19 @@ public class ModuleListAdapter extends BaseAdapter {
 
         holder.title.setText(module.name);
 
-        ItemListAdapter itemAdapter = new ItemListAdapter(mContext, mCourse, module, mItemCallback);
+        ItemListAdapter itemAdapter = new ItemListAdapter(mActivity, mCourse, module, mItemCallback);
         holder.listView.setAdapter(itemAdapter);
         if (module.items != null && module.items.size() > 0) {
             holder.progress.setVisibility(View.GONE);
             itemAdapter.updateItems(module.items);
 
             if (!DateUtil.nowIsBetween(module.available_from, module.available_to)) {
-                holder.title.setTextColor(mContext.getResources().getColor(R.color.gray_light));
-                holder.separator.setBackgroundColor(mContext.getResources().getColor(R.color.gray_light));
+                holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
+                holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
                 holder.title.setClickable(false);
             } else {
-                holder.title.setTextColor(mContext.getResources().getColor(R.color.text_color));
-                holder.separator.setBackgroundColor(mContext.getResources().getColor(R.color.apptheme_main));
+                holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_color));
+                holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.apptheme_main));
                 holder.title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

@@ -20,10 +20,10 @@ public class ModuleProgressListAdapter extends BaseAdapter {
 
     private List<Module> mModules;
 
-    private Activity mContext;
+    private Activity mActivity;
 
-    public ModuleProgressListAdapter(Activity context) {
-        mContext = context;
+    public ModuleProgressListAdapter(Activity activity) {
+        mActivity = activity;
         mModules = new ArrayList<Module>();
     }
 
@@ -59,7 +59,7 @@ public class ModuleProgressListAdapter extends BaseAdapter {
         }
         Module total = new Module();
 
-        total.name = mContext.getString(R.string.total);
+        total.name = mActivity.getString(R.string.total);
 
         total.progress.items.count_visited = count_visited;
         total.progress.items.count_available = count_available;
@@ -92,7 +92,7 @@ public class ModuleProgressListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View rowView = view;
         if (rowView == null) {
-            LayoutInflater inflater = mContext.getLayoutInflater();
+            LayoutInflater inflater = mActivity.getLayoutInflater();
             rowView = inflater.inflate(R.layout.item_module_progress, null);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
@@ -117,30 +117,30 @@ public class ModuleProgressListAdapter extends BaseAdapter {
         int percentage;
 
         holder.count1.setText(module.progress.self_tests.points_scored + " " +
-                mContext.getString(R.string.of) + " " + module.progress.self_tests.points_possible + " " +
-                mContext.getString(R.string.self_tests) + " " + mContext.getString(R.string.points));
+                mActivity.getString(R.string.of) + " " + module.progress.self_tests.points_possible + " " +
+                mActivity.getString(R.string.self_tests) + " " + mActivity.getString(R.string.points));
         percentage = getPercentage(module.progress.self_tests.points_scored,
                 module.progress.self_tests.points_possible);
         holder.percentage1.setText(percentage + "%");
         holder.progress1.setProgress(percentage);
 
         holder.count2.setText(module.progress.assignments.points_scored + " " +
-                mContext.getString(R.string.of) + " " + module.progress.assignments.points_possible + " " +
-                mContext.getString(R.string.assignments) + " " + mContext.getString(R.string.points));
+                mActivity.getString(R.string.of) + " " + module.progress.assignments.points_possible + " " +
+                mActivity.getString(R.string.assignments) + " " + mActivity.getString(R.string.points));
         percentage = getPercentage(module.progress.assignments.points_scored,
                 module.progress.assignments.points_possible);
         holder.percentage2.setText(percentage + "%");
         holder.progress2.setProgress(percentage);
 
         holder.count3.setText(module.progress.items.count_visited + " " +
-                mContext.getString(R.string.of) + " " + module.progress.items.count_available + " " +
-                mContext.getString(R.string.visited));
+                mActivity.getString(R.string.of) + " " + module.progress.items.count_available + " " +
+                mActivity.getString(R.string.visited));
         percentage = getPercentage(module.progress.items.count_visited,
                 module.progress.items.count_available);
         holder.percentage3.setText(percentage + "%");
         holder.progress3.setProgress(percentage);
 
-        if (module.name.equals(mContext.getString(R.string.total))) {
+        if (module.name.equals(mActivity.getString(R.string.total))) {
             holder.separator.setVisibility(View.VISIBLE);
         } else {
             holder.separator.setVisibility(View.GONE);

@@ -24,14 +24,14 @@ public class ItemListAdapter extends BaseAdapter {
 
     private List<Item> mItems;
 
-    private Activity mContext;
+    private Activity mActivity;
     private Course mCourse;
     private Module mModule;
 
     private OnItemButtonClickListener mCallback;
 
-    public ItemListAdapter(Activity context, Course course, Module module, OnItemButtonClickListener callback) {
-        this.mContext = context;
+    public ItemListAdapter(Activity activity, Course course, Module module, OnItemButtonClickListener callback) {
+        this.mActivity = activity;
         this.mItems = new ArrayList<Item>();
         this.mCourse = course;
         this.mModule = module;
@@ -62,7 +62,7 @@ public class ItemListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View rowView = view;
         if (rowView == null) {
-            LayoutInflater inflater = mContext.getLayoutInflater();
+            LayoutInflater inflater = mActivity.getLayoutInflater();
             rowView = inflater.inflate(R.layout.item_module_item, null);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
@@ -78,15 +78,15 @@ public class ItemListAdapter extends BaseAdapter {
         holder.title.setText(ItemTitle.format(mModule.name, item.title));
 
         if (item.type.equals(Item.TYPE_TEXT)) {
-            holder.icon.setText(mContext.getString(R.string.icon_text));
+            holder.icon.setText(mActivity.getString(R.string.icon_text));
         } else if (item.type.equals(Item.TYPE_VIDEO)) {
-            holder.icon.setText(mContext.getString(R.string.icon_video));
+            holder.icon.setText(mActivity.getString(R.string.icon_video));
         } else if (item.type.equals(Item.TYPE_SELFTEST)) {
-            holder.icon.setText(mContext.getString(R.string.icon_selftest));
+            holder.icon.setText(mActivity.getString(R.string.icon_selftest));
         } else if (item.type.equals(Item.TYPE_ASSIGNMENT) || item.type.equals(Item.TYPE_EXAM)) {
-            holder.icon.setText(mContext.getString(R.string.icon_assignment));
+            holder.icon.setText(mActivity.getString(R.string.icon_assignment));
         } else if (item.type.equals(Item.TYPE_LTI)) {
-            holder.icon.setText(mContext.getString(R.string.icon_lti));
+            holder.icon.setText(mActivity.getString(R.string.icon_lti));
         }
 
         if (!item.progress.visited) {
@@ -97,10 +97,10 @@ public class ItemListAdapter extends BaseAdapter {
 
         if (!DateUtil.nowIsBetween(mModule.available_from, mModule.available_to)
                 || !DateUtil.nowIsBetween(item.available_from, item.available_to)) {
-            holder.container.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+            holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
             holder.container.setForeground(null);
-            holder.title.setTextColor(mContext.getResources().getColor(R.color.gray_light));
-            holder.icon.setTextColor(mContext.getResources().getColor(R.color.gray_light));
+            holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
+            holder.icon.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
             holder.unseenIndicator.setVisibility(View.GONE);
             holder.container.setEnabled(false);
         } else {

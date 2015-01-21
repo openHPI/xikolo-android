@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.xikolo.R;
+import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.DisplayUtil;
@@ -28,20 +29,29 @@ public class CourseListAdapter extends BaseAdapter {
 
     private List<Course> mCourses;
 
-    private Activity mContext;
-
+    private Activity mActivity;
     private OnCourseButtonClickListener mCallback;
+    private String mFilter;
 
-    public CourseListAdapter(Activity context, OnCourseButtonClickListener callback) {
-        this.mContext = context;
+    public CourseListAdapter(Activity activity, OnCourseButtonClickListener callback, String filter) {
         this.mCourses = new ArrayList<Course>();
+        this.mActivity = activity;
         this.mCallback = callback;
+        this.mFilter = filter;
     }
 
     public void updateCourses(List<Course> courses) {
-        if (courses == null)
-            throw new NullPointerException("Courses can't be null");
+        if (courses == null) throw new NullPointerException("Courses can't be null");
         mCourses = courses;
+        if (mFilter.equals(CourseListFragment.FILTER_MY)) {
+            ArrayList<Course> removeList = new ArrayList<Course>();
+            for (Course course : mCourses) {
+                if (!course.is_enrolled) {
+                    removeList.add(course);
+                }
+            }
+            mCourses.removeAll(removeList);
+        }
         this.notifyDataSetChanged();
     }
 
@@ -64,7 +74,7 @@ public class CourseListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View rowView = view;
         if (rowView == null) {
-            LayoutInflater inflater = mContext.getLayoutInflater();
+            LayoutInflater inflater = mActivity.getLayoutInflater();
             rowView = inflater.inflate(R.layout.item_courses, null);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.container = (ViewGroup) rowView.findViewById(R.id.container);
@@ -84,7 +94,7 @@ public class CourseListAdapter extends BaseAdapter {
         Date dateEnd = DateUtil.parse(course.available_to);
 
         DateFormat dateOut;
-        if (DisplayUtil.is7inchTablet(mContext)) {
+        if (DisplayUtil.is7inchTablet(mActivity)) {
             dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault());
         } else {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
@@ -110,7 +120,7 @@ public class CourseListAdapter extends BaseAdapter {
                     mCallback.onEnterButtonClicked(course);
                 }
             });
-            holder.enroll.setText(mContext.getString(R.string.btn_enter_course));
+            holder.enroll.setText(mActivity.getString(R.string.btn_enter_course));
             holder.enroll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -124,7 +134,7 @@ public class CourseListAdapter extends BaseAdapter {
                     mCallback.onDetailButtonClicked(course);
                 }
             });
-            holder.enroll.setText(mContext.getString(R.string.btn_enroll_me));
+            holder.enroll.setText(mActivity.getString(R.string.btn_enroll_me));
             holder.enroll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -136,7 +146,7 @@ public class CourseListAdapter extends BaseAdapter {
         }
 
         if (course.is_enrolled && !DateUtil.nowIsAfter(course.available_from)) {
-            holder.enroll.setText(mContext.getString(R.string.btn_starts_soon));
+            holder.enroll.setText(mActivity.getString(R.string.btn_starts_soon));
             holder.enroll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

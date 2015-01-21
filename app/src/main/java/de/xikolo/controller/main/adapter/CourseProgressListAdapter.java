@@ -20,10 +20,10 @@ public class CourseProgressListAdapter extends BaseAdapter {
 
     private List<Course> mCourses;
 
-    private Activity mContext;
+    private Activity mActivity;
 
-    public CourseProgressListAdapter(Activity context) {
-        this.mContext = context;
+    public CourseProgressListAdapter(Activity activity) {
+        this.mActivity = activity;
         this.mCourses = new ArrayList<Course>();
     }
 
@@ -53,7 +53,7 @@ public class CourseProgressListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View rowView = view;
         if (rowView == null) {
-            LayoutInflater inflater = mContext.getLayoutInflater();
+            LayoutInflater inflater = mActivity.getLayoutInflater();
             rowView = inflater.inflate(R.layout.item_enrollment_progress, null);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
@@ -69,8 +69,8 @@ public class CourseProgressListAdapter extends BaseAdapter {
         holder.title.setText(course.name);
 
         holder.count.setText(course.progress.items.count_visited + " " +
-                mContext.getString(R.string.of) + " " + course.progress.items.count_available + " " +
-                mContext.getString(R.string.visited));
+                mActivity.getString(R.string.of) + " " + course.progress.items.count_available + " " +
+                mActivity.getString(R.string.visited));
 
         int percentage = getPercentage(course.progress.items.count_visited,
                 course.progress.items.count_available);
