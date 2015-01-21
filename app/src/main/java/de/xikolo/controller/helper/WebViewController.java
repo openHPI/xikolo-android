@@ -117,7 +117,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
             Map<String, String> header = new HashMap<String, String>();
             header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
             if (UserModel.isLoggedIn(mActivity)) {
-                header.put(Config.HEADER_AUTHORIZATION, "Token " + UserModel.readAccessToken(mActivity));
+                header.put(Config.HEADER_AUTHORIZATION, "Token " + UserModel.getToken(mActivity));
             }
             mWebView.loadUrl(mUrl, header);
         } else {
