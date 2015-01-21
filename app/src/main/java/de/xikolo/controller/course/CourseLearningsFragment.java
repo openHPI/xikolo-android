@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +27,9 @@ import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.ModuleModel;
-import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.Result;
+import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.ToastUtil;
 
 public class CourseLearningsFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
         ModuleListAdapter.OnModuleButtonClickListener, ItemListAdapter.OnItemButtonClickListener {
@@ -45,9 +46,9 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     private SwipeRefreshLayout mRefreshLayout;
     private ProgressBar mProgress;
 
-    private boolean mCache;
-
     private ModuleModel mModuleModel;
+    private ItemModel mItemModel;
+    private Result<List<Module>> mModuleResult;
     private ModuleListAdapter mAdapter;
 
     private Course mCourse;
@@ -84,35 +85,48 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         }
         setHasOptionsMenu(true);
 
-        mModuleModel = new ModuleModel(getActivity(), jobManager);
-        mModuleModel.setRetrieveModulesListener(new OnModelResponseListener<List<Module>>() {
+        mModuleModel = new ModuleModel(getActivity(), jobManager, databaseHelper);
+        mItemModel = new ItemModel(getActivity(), jobManager, databaseHelper);
+        mModuleResult = new Result<List<Module>>() {
             @Override
-            public void onResponse(final List<Module> response) {
+            protected void onSuccess(List<Module> result, DataSource dataSource) {
                 mRefreshLayout.setRefreshing(false);
                 mProgress.setVisibility(View.GONE);
-                if (response != null) {
-                    mAdapter.updateModules(response);
-                    mModules = response;
 
-                    for (final Module module : mModules) {
-                        if (module.items == null || module.items.size() == 0) {
-                            ItemModel itemModel = new ItemModel(getActivity(), jobManager);
-                            itemModel.setRetrieveItemsListener(new OnModelResponseListener<List<Item>>() {
-                                @Override
-                                public void onResponse(final List<Item> response) {
-                                    if (response != null) {
-                                        module.items = response;
-                                        mAdapter.updateModules(mModules);
-                                    }
-                                }
-                            });
-                            itemModel.retrieveItems(mCourse.id, module.id, mCache);
-                        }
+                mAdapter.updateModules(result);
+                mModules = result;
+
+                for (final Module module : mModules) {
+                    if (module.items == null || module.items.size() == 0) {
+
+                        Result<List<Item>> itemResult = new Result<List<Item>>() {
+                            @Override
+                            protected void onSuccess(List<Item> result, DataSource dataSource) {
+                                module.items = result;
+                                mAdapter.updateModules(mModules);
+                            }
+                        };
+                        mItemModel.getItems(itemResult, mCourse, module);
                     }
-
                 }
             }
-        });
+
+            @Override
+            protected void onWarning(WarnCode warnCode) {
+                if (warnCode == WarnCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
+                }
+                mRefreshLayout.setRefreshing(false);
+                mProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                ToastUtil.show(getActivity(), R.string.error);
+                mRefreshLayout.setRefreshing(false);
+                mProgress.setVisibility(View.GONE);
+            }
+        };
     }
 
     @Override
@@ -137,10 +151,9 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         super.onStart();
 
         if (mModules == null) {
-            mCache = true;
             mRefreshLayout.setRefreshing(true);
             mProgress.setVisibility(View.VISIBLE);
-            mModuleModel.retrieveModules(mCourse.id, mCache, false);
+            mModuleModel.getModules(mModuleResult, mCourse, false);
         } else {
             mProgress.setVisibility(View.GONE);
             mAdapter.updateModules(mModules);
@@ -149,9 +162,8 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
     @Override
     public void onRefresh() {
-        mCache = false;
         mRefreshLayout.setRefreshing(true);
-        mModuleModel.retrieveModules(mCourse.id, mCache, false);
+        mModuleModel.getModules(mModuleResult, mCourse, false);
     }
 
     @Override
@@ -176,13 +188,8 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Log.w(TAG, "onActivityResult");
-
         if (requestCode == REQUEST_CODE_MODULES && resultCode == Activity.RESULT_OK) {
             Module newModule = data.getExtras().getParcelable(ModuleActivity.ARG_MODULE);
-
-            Log.w(TAG, newModule.id);
 
             if (mModules != null && mAdapter != null) {
                 mModules.set(mModules.indexOf(newModule), newModule);

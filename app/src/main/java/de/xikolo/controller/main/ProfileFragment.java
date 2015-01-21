@@ -28,11 +28,10 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.controller.main.adapter.CourseProgressListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.data.entities.AccessToken;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.User;
 import de.xikolo.model.CourseModel;
-import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
@@ -48,6 +47,9 @@ public class ProfileFragment extends ContentFragment {
 
     private UserModel mUserModel;
     private CourseModel mCourseModel;
+    private Result<List<Course>> mCoursesResult;
+    private Result<Void> mLoginResult;
+    private Result<User> mUserResult;
 
     private ProgressBar mFragmentProgress;
     private ViewGroup mContainerLogin;
@@ -96,45 +98,62 @@ public class ProfileFragment extends ContentFragment {
             mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
         }
 
-        mCourseModel = new CourseModel(getActivity(), jobManager);
-        mCourseModel.setRetrieveCoursesListener(new OnModelResponseListener<List<Course>>() {
+        mCourseModel = new CourseModel(getActivity(), jobManager, databaseHelper);
+        mCoursesResult = new Result<List<Course>>() {
             @Override
-            public void onResponse(final List<Course> response) {
-                if (response != null) {
-                    showCoursesProgress(response);
-                }
+            protected void onSuccess(List<Course> result, DataSource dataSource) {
+                mCoursesProgress.setVisibility(View.GONE);
+                showCoursesProgress(result);
             }
-        });
 
-        mUserModel = new UserModel(getActivity(), jobManager);
-        mUserModel.setRetrieveUserListener(new OnModelResponseListener<User>() {
             @Override
-            public void onResponse(final User response) {
-                if (response != null) {
-                    updateLayout();
-                    mCallback.updateDrawer();
+            protected void onError(ErrorCode errorCode) {
+                if (errorCode == ErrorCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
+                }
+                mCoursesProgress.setVisibility(View.GONE);
+            }
+        };
+
+        mUserModel = new UserModel(getActivity(), jobManager, databaseHelper);
+        mLoginResult = new Result<Void>() {
+            @Override
+            protected void onSuccess(Void result, DataSource dataSource) {
+                mUserModel.getUser(mUserResult);
+                mCourseModel.getCourses(mCoursesResult, false);
+            }
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                if (errorCode == ErrorCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
                 } else {
                     ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
-                    UserModel.logout(getActivity());
-                    mCourses = null;
-                    updateLayout();
-                    mCallback.updateDrawer();
                 }
+                mContainerLogin.setVisibility(View.VISIBLE);
+                mFragmentProgress.setVisibility(View.GONE);
             }
-        });
-        mUserModel.setLoginListener(new OnModelResponseListener<AccessToken>() {
+        };
+        mUserResult = new Result<User>() {
             @Override
-            public void onResponse(final AccessToken response) {
-                if (response != null) {
-                    mUserModel.retrieveUser(false);
-                    mCourseModel.retrieveCourses(CourseModel.FILTER_MY, false, true);
+            protected void onSuccess(User result, DataSource dataSource) {
+                updateLayout();
+                mActivityCallback.updateDrawer();
+            }
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                if (errorCode == ErrorCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
                 } else {
                     ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
-                    mContainerLogin.setVisibility(View.VISIBLE);
-                    mFragmentProgress.setVisibility(View.GONE);
                 }
+                mUserModel.logout();
+                mCourses = null;
+                updateLayout();
+                mActivityCallback.updateDrawer();
             }
-        });
+        };
     }
 
     @Override
@@ -168,22 +187,18 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                if (NetworkUtil.isOnline(getActivity())) {
-                    String email = mEditEmail.getText().toString().trim();
-                    String password = mEditPassword.getText().toString();
-                    if (isEmailValid(email)) {
-                        if (password != null && !password.equals("")) {
-                            mUserModel.login(email, password);
-                            mContainerLogin.setVisibility(View.GONE);
-                            mFragmentProgress.setVisibility(View.VISIBLE);
-                        } else {
-                            mEditPassword.setError(getString(R.string.error_password));
-                        }
+                String email = mEditEmail.getText().toString().trim();
+                String password = mEditPassword.getText().toString();
+                if (isEmailValid(email)) {
+                    if (password != null && !password.equals("")) {
+                        mUserModel.login(mLoginResult, email, password);
+                        mContainerLogin.setVisibility(View.GONE);
+                        mFragmentProgress.setVisibility(View.VISIBLE);
                     } else {
-                        mEditEmail.setError(getString(R.string.error_email));
+                        mEditPassword.setError(getString(R.string.error_password));
                     }
                 } else {
-                    NetworkUtil.showNoConnectionToast(getActivity());
+                    mEditEmail.setError(getString(R.string.error_email));
                 }
             }
         });
@@ -205,10 +220,10 @@ public class ProfileFragment extends ContentFragment {
             @Override
             public void onClick(View view) {
                 hideKeyboard(view);
-                UserModel.logout(getActivity());
+                mUserModel.logout();
                 mCourses = null;
                 updateLayout();
-                mCallback.updateDrawer();
+                mActivityCallback.updateDrawer();
             }
         });
 
@@ -222,14 +237,9 @@ public class ProfileFragment extends ContentFragment {
         super.onStart();
         showHeader();
         if (UserModel.isLoggedIn(getActivity()) && mCourses == null) {
-            if (NetworkUtil.isOnline(getActivity())) {
-                mUserModel.retrieveUser(false);
-                mCourseModel.retrieveCourses(CourseModel.FILTER_MY, true, true);
-                mCoursesProgress.setVisibility(View.VISIBLE);
-            } else {
-                NetworkUtil.showNoConnectionToast(getActivity());
-                mCoursesProgress.setVisibility(View.GONE);
-            }
+            mUserModel.getUser(mUserResult);
+            mCourseModel.getCourses(mCoursesResult, false);
+            mCoursesProgress.setVisibility(View.VISIBLE);
         } else if (UserModel.isLoggedIn(getActivity()) && mCourses != null) {
             showCoursesProgress(mCourses);
         }
@@ -245,7 +255,7 @@ public class ProfileFragment extends ContentFragment {
         } else {
             mContainerLogin.setVisibility(View.GONE);
             mContainerProfile.setVisibility(View.VISIBLE);
-            showUser(UserModel.readUser(getActivity()));
+            showUser(UserModel.getSavedUser(getActivity()));
             setProfilePicMargin();
         }
         showHeader();
@@ -291,7 +301,7 @@ public class ProfileFragment extends ContentFragment {
 
         mTextEmail.setText(user.email);
 
-        mTextEnrollCounts.setText(String.valueOf(CourseModel.readEnrollmentsSize(getActivity())));
+        mTextEnrollCounts.setText(String.valueOf(mCourseModel.getEnrollmentsCount()));
     }
 
     private void setProfilePicMargin() {
@@ -302,19 +312,19 @@ public class ProfileFragment extends ContentFragment {
 
     private void showHeader() {
         if (!UserModel.isLoggedIn(getActivity())) {
-            mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, getString(R.string.title_section_login));
+            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, getString(R.string.title_section_login));
         } else {
-            User user = UserModel.readUser(getActivity());
-            mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
+            User user = UserModel.getSavedUser(getActivity());
+            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
         }
     }
 
     private void showCoursesProgress(List<Course> courses) {
         mCourses = courses;
-        mAdapter.updateCourses(courses);
-        mTextEnrollCounts.setText(String.valueOf(CourseModel.readEnrollmentsSize(getActivity())));
+//        mAdapter.updateCourses(courses);
+        mTextEnrollCounts.setText(String.valueOf(mCourseModel.getEnrollmentsCount()));
         mCoursesProgress.setVisibility(View.GONE);
-        mCallback.updateDrawer();
+        mActivityCallback.updateDrawer();
     }
 
     private void hideKeyboard(View view) {

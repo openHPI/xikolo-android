@@ -23,7 +23,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import de.xikolo.R;
+import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
+import de.xikolo.model.CourseModel;
 import de.xikolo.model.UserModel;
 
 /**
@@ -31,7 +33,7 @@ import de.xikolo.model.UserModel;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationFragment extends Fragment {
+public class NavigationFragment extends BaseFragment {
 
     /**
      * Remember the position of the selected item.
@@ -102,7 +104,7 @@ public class NavigationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mAdapter = new NavigationAdapter(getActivity());
+        mAdapter = new NavigationAdapter(getActivity(), new CourseModel(getActivity(), jobManager, databaseHelper));
 
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation, container, false);

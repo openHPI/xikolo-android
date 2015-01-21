@@ -85,9 +85,9 @@ public class WebViewFragment extends ContentFragment {
     public void onStart() {
         super.onStart();
         if (isTopLevelContent && mUrl.contains(Config.NEWS)) {
-            mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_NEWS, getString(R.string.title_section_news));
+            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_NEWS, getString(R.string.title_section_news));
         } else if (!isTopLevelContent && mTitle != null) {
-            mCallback.onLowLevelFragmentAttached(NavigationAdapter.NAV_ID_LOW_LEVEL_CONTENT, mTitle);
+            mActivityCallback.onLowLevelFragmentAttached(NavigationAdapter.NAV_ID_LOW_LEVEL_CONTENT, mTitle);
         }
     }
 
@@ -101,7 +101,7 @@ public class WebViewFragment extends ContentFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!mCallback.isDrawerOpen())
+        if (!mActivityCallback.isDrawerOpen())
             inflater.inflate(R.menu.refresh, menu);
     }
 

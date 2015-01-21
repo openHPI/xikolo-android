@@ -21,7 +21,9 @@ import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.ModuleModel;
-import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.Result;
+import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.ToastUtil;
 
 public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -35,6 +37,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     private List<Module> mModules;
 
     private ModuleModel mModuleModel;
+    private Result<List<Module>> mModulesResult;
 
     private ModuleProgressListAdapter mAdapter;
 
@@ -73,18 +76,30 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
         }
         setHasOptionsMenu(true);
 
-        mModuleModel = new ModuleModel(getActivity(), jobManager);
-        mModuleModel.setRetrieveModulesListener(new OnModelResponseListener<List<Module>>() {
+        mModuleModel = new ModuleModel(getActivity(), jobManager, databaseHelper);
+        mModulesResult = new Result<List<Module>>() {
             @Override
-            public void onResponse(final List<Module> response) {
+            protected void onSuccess(List<Module> result, DataSource dataSource) {
                 mProgress.setVisibility(View.GONE);
                 mRefreshLayout.setRefreshing(false);
-                if (response != null) {
-                    mModules = response;
-                    mAdapter.updateModules(response);
+                mModules = result;
+                mAdapter.updateModules(mModules);
+            }
+
+            @Override
+            protected void onWarning(WarnCode warnCode) {
+                if (warnCode == WarnCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
                 }
             }
-        });
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                mProgress.setVisibility(View.GONE);
+                mRefreshLayout.setRefreshing(false);
+                ToastUtil.show(getActivity(), R.string.error);
+            }
+        };
     }
 
     @Override
@@ -110,7 +125,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
 
         if (mModules == null) {
             mProgress.setVisibility(View.VISIBLE);
-            mModuleModel.retrieveModules(mCourse.id, true, true);
+            mModuleModel.getModules(mModulesResult, mCourse, true);
         } else {
             mProgress.setVisibility(View.GONE);
             mAdapter.updateModules(mModules);
@@ -136,6 +151,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
-        mModuleModel.retrieveModules(mCourse.id, false, true);
+        mModuleModel.getModules(mModulesResult, mCourse, true);
     }
+
 }

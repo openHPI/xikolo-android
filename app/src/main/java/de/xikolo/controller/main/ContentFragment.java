@@ -7,13 +7,13 @@ import de.xikolo.controller.BaseFragment;
 
 public abstract class ContentFragment extends BaseFragment {
 
-    protected OnFragmentInteractionListener mCallback;
+    protected OnFragmentInteractionListener mActivityCallback;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mCallback = (OnFragmentInteractionListener) activity;
+            mActivityCallback = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -23,7 +23,7 @@ public abstract class ContentFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mCallback = null;
+        mActivityCallback = null;
     }
 
     public interface OnFragmentInteractionListener {

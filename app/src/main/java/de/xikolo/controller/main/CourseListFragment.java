@@ -24,7 +24,7 @@ import de.xikolo.controller.main.adapter.CourseListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
-import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
@@ -35,6 +35,9 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public static final String TAG = CourseListFragment.class.getSimpleName();
 
     public static final String ARG_FILTER = "arg_filter";
+
+    public static final String FILTER_ALL = "filter_all";
+    public static final String FILTER_MY = "filter_my";
 
     private static final String KEY_COURSES = "courses";
 
@@ -51,6 +54,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     private List<Course> mCourses;
 
     private CourseModel mCourseModel;
+
+    private Result<List<Course>> mCourseResult;
 
     public CourseListFragment() {
         // Required empty public constructor
@@ -76,21 +81,31 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         }
         setHasOptionsMenu(true);
 
-        mCourseModel = new CourseModel(getActivity(), jobManager);
-        mCourseModel.setRetrieveCoursesListener(new OnModelResponseListener<List<Course>>() {
+        mCourseModel = new CourseModel(getActivity(), jobManager, databaseHelper);
+        mCourseResult = new Result<List<Course>>() {
             @Override
-            public void onResponse(final List<Course> response) {
-                if (response != null) {
-                    mCourses = response;
-                    updateView();
-                } else {
-                    mRefreshLayout.setRefreshing(false);
-                    mProgress.setVisibility(View.GONE);
-                    ToastUtil.show(getActivity(), getActivity().getString(R.string.toast_no_courses)
-                            + " " + getActivity().getString(R.string.toast_no_network));
+            protected void onSuccess(List<Course> result, DataSource dataSource) {
+                mCourses = result;
+                updateView();
+            }
+
+            @Override
+            protected void onWarning(WarnCode warnCode) {
+                if (warnCode == WarnCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
                 }
             }
-        });
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                   if (errorCode == ErrorCode.NO_RESULT) {
+                       ToastUtil.show(getActivity(), getActivity().getString(R.string.toast_no_courses)
+                               + " " + getActivity().getString(R.string.toast_no_network));
+                   } else if (errorCode == ErrorCode.NO_NETWORK) {
+                       NetworkUtil.showNoConnectionToast(getActivity());
+                   }
+            }
+        };
     }
 
     @Override
@@ -109,7 +124,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
         RefeshLayoutController.setup(mRefreshLayout, this);
 
-        mCourseListAdapter = new CourseListAdapter(getActivity(), this);
+        mCourseListAdapter = new CourseListAdapter(getActivity(), this, mFilter);
 
         mAbsListView = (AbsListView) layout.findViewById(R.id.listView);
         mAbsListView.setAdapter(mCourseListAdapter);
@@ -129,10 +144,10 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mProgress.setVisibility(View.VISIBLE);
         mTextNotification.setVisibility(View.GONE);
 
-        if (mFilter.equals(CourseModel.FILTER_ALL)) {
-            mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
-        } else if (mFilter.equals(CourseModel.FILTER_MY)) {
-            mCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
+        if (mFilter.equals(FILTER_ALL)) {
+            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
+        } else if (mFilter.equals(FILTER_MY)) {
+            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
             if (!UserModel.isLoggedIn(getActivity())) {
                 mProgress.setVisibility(View.GONE);
                 mNotification.setVisibility(View.VISIBLE);
@@ -140,7 +155,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 mNotification.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+                        mActivityCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
                     }
                 });
             }
@@ -151,13 +166,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             mRefreshLayout.setRefreshing(false);
             mProgress.setVisibility(View.GONE);
         } else {
-            if (NetworkUtil.isOnline(getActivity())) {
-                mRefreshLayout.setRefreshing(true);
-                mCourseModel.retrieveCourses(mFilter, true, false);
-            } else {
-                mProgress.setVisibility(View.GONE);
-                NetworkUtil.showNoConnectionToast(getActivity());
-            }
+            mRefreshLayout.setRefreshing(true);
+            mCourseModel.getCourses(mCourseResult, false);
         }
     }
 
@@ -165,14 +175,14 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         if (isAdded()) {
             mRefreshLayout.setRefreshing(false);
             mProgress.setVisibility(View.GONE);
-            if (mFilter.equals(CourseModel.FILTER_MY)) {
+            if (mFilter.equals(FILTER_MY)) {
                 if (!UserModel.isLoggedIn(getActivity())) {
                     mNotification.setVisibility(View.VISIBLE);
                     mTextNotification.setText(getString(R.string.notification_please_login));
                     mNotification.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+                            mActivityCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
                         }
                     });
                 } else if (mCourses.size() == 0) {
@@ -181,7 +191,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     mNotification.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mCallback.toggleDrawer(NavigationAdapter.NAV_ID_ALL_COURSES);
+                            mActivityCallback.toggleDrawer(NavigationAdapter.NAV_ID_ALL_COURSES);
                         }
                     });
                 } else {
@@ -191,33 +201,35 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             if (mCourses != null) {
                 mCourseListAdapter.updateCourses(mCourses);
             }
-            mCallback.updateDrawer();
+            mActivityCallback.updateDrawer();
         }
     }
 
     @Override
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
-        if (NetworkUtil.isOnline(getActivity())) {
-            mCourseModel.retrieveCourses(mFilter, false, false);
-        } else {
-            mRefreshLayout.setRefreshing(false);
-            NetworkUtil.showNoConnectionToast(getActivity());
-        }
+        mCourseModel.getCourses(mCourseResult, false);
     }
 
     @Override
     public void onEnrollButtonClicked(Course course) {
-        if (UserModel.isLoggedIn(getActivity())) {
-            if (NetworkUtil.isOnline(getActivity())) {
-                mCourseModel.createEnrollment(course.id);
-            } else {
-                NetworkUtil.showNoConnectionToast(getActivity());
+        Result<Void> result = new Result<Void>() {
+            @Override
+            protected void onSuccess(Void result, DataSource dataSource) {
+                mCourseModel.getCourses(mCourseResult, false);
             }
-        } else {
-            ToastUtil.show(getActivity(), R.string.toast_please_log_in);
-            mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
-        }
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                if (errorCode == ErrorCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
+                } else if (errorCode == ErrorCode.NO_AUTH) {
+                    ToastUtil.show(getActivity(), R.string.toast_please_log_in);
+                    mActivityCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+                }
+            }
+        };
+        mCourseModel.addEnrollment(result, course);
     }
 
     @Override
@@ -230,7 +242,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             startActivity(intent);
         } else {
             ToastUtil.show(getActivity(), R.string.toast_please_log_in);
-            mCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+            mActivityCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
         }
     }
 
@@ -245,7 +257,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!mCallback.isDrawerOpen())
+        if (!mActivityCallback.isDrawerOpen())
             inflater.inflate(R.menu.refresh, menu);
     }
 

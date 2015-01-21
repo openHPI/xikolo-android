@@ -18,9 +18,10 @@ import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.ItemText;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
-import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.Result;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.ToastUtil;
 
 public class LtiFragment extends PagerFragment<ItemText> {
 
@@ -33,6 +34,7 @@ public class LtiFragment extends PagerFragment<ItemText> {
     private WebViewController mWebViewController;
 
     private ItemModel mItemModel;
+    private Result<Item> mItemResult;
 
     public LtiFragment() {
 
@@ -46,16 +48,25 @@ public class LtiFragment extends PagerFragment<ItemText> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemModel = new ItemModel(getActivity(), jobManager);
-        mItemModel.setRetrieveItemDetailListener(new OnModelResponseListener<Item>() {
+        mItemModel = new ItemModel(getActivity(), jobManager, databaseHelper);
+        mItemResult = new Result<Item>() {
             @Override
-            public void onResponse(final Item response) {
-                if (response != null) {
-                    mItem = response;
-                    mWebViewController.request(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ITEMS + mItem.id);
+            protected void onSuccess(Item result, DataSource dataSource) {
+                mRefreshLayout.setRefreshing(false);
+                mItem = result;
+                mWebViewController.request(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ITEMS + mItem.id);
+            }
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                mRefreshLayout.setRefreshing(false);
+                if (errorCode == ErrorCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
+                } else {
+                    ToastUtil.show(getActivity(), R.string.error);
                 }
             }
-        });
+        };
     }
 
     @Override
@@ -72,13 +83,8 @@ public class LtiFragment extends PagerFragment<ItemText> {
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);
         } else {
-            if (NetworkUtil.isOnline(getActivity())) {
-//                mRefreshLayout.setRefreshing(true);
-//                mItemModel.retrieveItemDetail(mCourse.id, mModule.id, mItem.id, Item.TYPE_TEXT, true);
-            } else {
-                mRefreshLayout.setRefreshing(false);
-                NetworkUtil.showNoConnectionToast(getActivity());
-            }
+            mRefreshLayout.setRefreshing(true);
+            mItemModel.getItemDetail(mItemResult, mCourse, mModule, mItem, Item.TYPE_LTI);
         }
 
         return layout;

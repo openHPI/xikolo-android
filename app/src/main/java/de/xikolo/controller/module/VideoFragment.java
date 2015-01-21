@@ -23,8 +23,9 @@ import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.ItemVideo;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
-import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.ToastUtil;
 
 public class VideoFragment extends PagerFragment<ItemVideo> {
 
@@ -44,6 +45,7 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
     private VideoController mVideoController;
 
     private ItemModel mItemModel;
+    private Result<Item> mItemResult;
 
     private boolean wasSaved = false;
 
@@ -59,16 +61,25 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemModel = new ItemModel(getActivity(), jobManager);
-        mItemModel.setRetrieveItemDetailListener(new OnModelResponseListener<Item>() {
+        mItemModel = new ItemModel(getActivity(), jobManager, databaseHelper);
+        mItemResult = new Result<Item>() {
             @Override
-            public void onResponse(final Item response) {
-                if (response != null) {
-                    mItem = response;
-                    setupVideo();
-                }
+            protected void onSuccess(Item result, DataSource dataSource) {
+                mItem = result;
+                setupVideo();
             }
-        });
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                if (errorCode == ErrorCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
+                } else {
+                    ToastUtil.show(getActivity(), R.string.error);
+                }
+                mProgress.setVisibility(View.VISIBLE);
+                mContainer.setVisibility(View.GONE);
+            }
+        };
     }
 
     @Override
@@ -157,11 +168,7 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
         super.onStart();
 
         if (!wasSaved) {
-            if (NetworkUtil.isOnline(getActivity())) {
-                mItemModel.retrieveItemDetail(mCourse.id, mModule.id, mItem.id, Item.TYPE_VIDEO, true);
-            } else {
-                NetworkUtil.showNoConnectionToast(getActivity());
-            }
+            mItemModel.getItemDetail(mItemResult, mCourse, mModule, mItem, Item.TYPE_VIDEO);
         } else {
             setupVideo();
         }

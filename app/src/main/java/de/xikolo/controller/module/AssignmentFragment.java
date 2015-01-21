@@ -18,8 +18,9 @@ import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.ItemAssignment;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
-import de.xikolo.model.OnModelResponseListener;
+import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.ToastUtil;
 
 public class AssignmentFragment extends PagerFragment<ItemAssignment> {
 
@@ -32,6 +33,7 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
     private WebViewController mWebViewController;
 
     private ItemModel mItemModel;
+    private Result<Item> mItemResult;
 
     public AssignmentFragment() {
 
@@ -45,16 +47,25 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemModel = new ItemModel(getActivity(), jobManager);
-        mItemModel.setRetrieveItemDetailListener(new OnModelResponseListener<Item>() {
+        mItemModel = new ItemModel(getActivity(), jobManager, databaseHelper);
+        mItemResult = new Result<Item>() {
             @Override
-            public void onResponse(final Item response) {
-                if (response != null) {
-                    mItem = response;
-                    mWebViewController.request(mItem.object.url);
+            protected void onSuccess(Item result, DataSource dataSource) {
+                mRefreshLayout.setRefreshing(false);
+                mItem = result;
+                mWebViewController.request(mItem.object.url);
+            }
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                mRefreshLayout.setRefreshing(false);
+                if (errorCode == ErrorCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
+                } else {
+                    ToastUtil.show(getActivity(), R.string.error);
                 }
             }
-        });
+        };
     }
 
     @Override
@@ -70,13 +81,8 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);
         } else {
-            if (NetworkUtil.isOnline(getActivity())) {
-                mRefreshLayout.setRefreshing(true);
-                mItemModel.retrieveItemDetail(mCourse.id, mModule.id, mItem.id, Item.TYPE_ASSIGNMENT, true);
-            } else {
-                mRefreshLayout.setRefreshing(false);
-                NetworkUtil.showNoConnectionToast(getActivity());
-            }
+            mRefreshLayout.setRefreshing(true);
+            mItemModel.getItemDetail(mItemResult, mCourse, mModule, mItem, Item.TYPE_ASSIGNMENT);
         }
 
         return layout;

@@ -1,35 +1,19 @@
 package de.xikolo.controller.course;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.helper.WebViewController;
-import de.xikolo.model.OnModelResponseListener;
-import de.xikolo.model.UserModel;
-import de.xikolo.util.Config;
-import de.xikolo.util.NetworkUtil;
 
 public class EmbeddedWebViewFragment extends BaseFragment {
 
