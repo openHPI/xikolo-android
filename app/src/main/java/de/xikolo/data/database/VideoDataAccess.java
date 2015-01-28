@@ -2,8 +2,6 @@ package de.xikolo.data.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +74,6 @@ public class VideoDataAccess extends DataAccess {
 
     private VideoItemDetail buildVideo(Cursor cursor) {
         VideoItemDetail video = new VideoItemDetail();
-
-        Log.i("VIDEO DB", DatabaseUtils.dumpCursorToString(cursor));
 
         video.id = cursor.getString(0);
         video.title = cursor.getString(1);

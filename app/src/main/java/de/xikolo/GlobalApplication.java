@@ -1,7 +1,6 @@
 package de.xikolo;
 
 import android.app.Application;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.http.HttpResponseCache;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -20,7 +19,6 @@ import java.io.IOException;
 
 import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.util.Config;
-import de.xikolo.util.FontsOverride;
 import de.xikolo.util.SslCertificateUtil;
 
 public class GlobalApplication extends Application {
@@ -75,7 +73,8 @@ public class GlobalApplication extends Application {
 
     private void configureFontTypefaces() {
         // Set global Typefaces
-        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
+        // Doesn't work on Android 5 anymore
+//        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
     }
 
     private void configureDatabase() {

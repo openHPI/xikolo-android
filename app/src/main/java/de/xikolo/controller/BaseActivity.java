@@ -1,16 +1,20 @@
 package de.xikolo.controller;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.path.android.jobqueue.JobManager;
 
+import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.data.database.DatabaseHelper;
+import de.xikolo.model.events.NetworkStateEvent;
 
 public abstract class BaseActivity extends ActionBarActivity {
 
@@ -58,6 +62,26 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
     }
 
+    public void onEventMainThread(NetworkStateEvent event) {
+        Log.d("onNetworkStateEvent", event.getMessage());
+        if (toolbar != null) {
+            if (event.isOnline()) {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
+                toolbar.setSubtitle("");
+            } else {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.text_color));
+                toolbar.setSubtitle("Offline Mode");
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        EventBus.getDefault().registerSticky(this);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -79,6 +103,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void onStop() {
         super.onStop();
 
+        EventBus.getDefault().unregister(this);
         globalApplication.flushHttpResponseCache();
     }
 

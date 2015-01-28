@@ -20,6 +20,7 @@ import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.ToastUtil;
 import de.xikolo.view.CustomFontTextView;
 import de.xikolo.view.CustomSizeVideoView;
 
@@ -67,6 +68,8 @@ public class VideoController {
     private boolean savedIsPlaying = false;
 
     private boolean seekBarUpdaterIsRunning = false;
+
+    private boolean error = false;
 
     public VideoController(Activity activity, View videoContainer) {
         mActivity = activity;
@@ -134,6 +137,26 @@ public class VideoController {
                 pause();
                 mPlayButton.setText(mActivity.getString(R.string.icon_reload));
                 show();
+            }
+        });
+        mVideo.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                switch (what) {
+                    case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_UNKNOWN appeared");
+                        break;
+                    case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_SERVER_DIED appeared");
+                        break;
+                }
+                // TODO proper error handling
+                error = true;
+                mVideoProgress.setVisibility(View.GONE);
+                hide();
+                ToastUtil.show(mActivity, R.string.error);
+
+                return true;
             }
         });
 
@@ -225,14 +248,16 @@ public class VideoController {
     }
 
     public void show(int timeout) {
-        mVideoController.setVisibility(View.VISIBLE);
-        if (mControllerListener != null) {
-            mControllerListener.onControllerShow();
-        }
-        Message msg = mHandler.obtainMessage(FADE_OUT);
-        if (timeout != 0) {
-            mHandler.removeMessages(FADE_OUT);
-            mHandler.sendMessageDelayed(msg, timeout);
+        if (!error) {
+            mVideoController.setVisibility(View.VISIBLE);
+            if (mControllerListener != null) {
+                mControllerListener.onControllerShow();
+            }
+            Message msg = mHandler.obtainMessage(FADE_OUT);
+            if (timeout != 0) {
+                mHandler.removeMessages(FADE_OUT);
+                mHandler.sendMessageDelayed(msg, timeout);
+            }
         }
     }
 
