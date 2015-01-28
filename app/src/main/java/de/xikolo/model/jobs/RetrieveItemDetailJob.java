@@ -10,13 +10,14 @@ import java.lang.reflect.Type;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
+import de.xikolo.data.database.VideoDataAccess;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
 import de.xikolo.data.net.JsonRequest;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.ItemAssignment;
-import de.xikolo.data.entities.ItemText;
-import de.xikolo.data.entities.ItemVideo;
+import de.xikolo.data.entities.AssignmentItemDetail;
+import de.xikolo.data.entities.TextItemDetail;
+import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
@@ -36,7 +37,9 @@ public class RetrieveItemDetailJob extends Job {
     private Item item;
     private String itemType;
 
-    public RetrieveItemDetailJob(Result<Item> result, Course course, Module module, Item item, String itemType) {
+    private VideoDataAccess videoDataAccess;
+
+    public RetrieveItemDetailJob(Result<Item> result, Course course, Module module, Item item, String itemType, VideoDataAccess videoDataAccess) {
         super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
@@ -45,6 +48,7 @@ public class RetrieveItemDetailJob extends Job {
         this.module = module;
         this.item = item;
         this.itemType = itemType;
+        this.videoDataAccess = videoDataAccess;
     }
 
     @Override
@@ -56,34 +60,52 @@ public class RetrieveItemDetailJob extends Job {
     public void onRun() throws Throwable {
         if (!UserModel.isLoggedIn(GlobalApplication.getInstance()) || !course.is_enrolled) {
             result.error(Result.ErrorCode.NO_AUTH);
-        } else if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-            result.error(Result.ErrorCode.NO_NETWORK);
         } else {
-            Type type = null;
-            if (itemType.equals(Item.TYPE_TEXT)) {
-                type = new TypeToken<Item<ItemText>>(){}.getType();
-            } else if (itemType.equals(Item.TYPE_VIDEO)) {
-                type = new TypeToken<Item<ItemVideo>>(){}.getType();
-            } else if (itemType.equals(Item.TYPE_SELFTEST)
-                    || itemType.equals(Item.TYPE_ASSIGNMENT)
-                    || itemType.equals(Item.TYPE_EXAM)) {
-                type = new TypeToken<Item<ItemAssignment>>(){}.getType();
+            if (itemType.equals(Item.TYPE_VIDEO)) {
+                item.detail = videoDataAccess.getVideo(item.id);
+                if (item.detail != null) {
+                    result.success(item, Result.DataSource.LOCAL);
+                }
             }
 
-            String url = Config.API + Config.COURSES + course.id + "/"
-                    + Config.MODULES + module.id + "/" + Config.ITEMS + item.id;
+            if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+                Type type = null;
+                if (itemType.equals(Item.TYPE_TEXT)) {
+                    type = new TypeToken<Item<TextItemDetail>>(){}.getType();
+                } else if (itemType.equals(Item.TYPE_VIDEO)) {
+                    type = new TypeToken<Item<VideoItemDetail>>(){}.getType();
+                } else if (itemType.equals(Item.TYPE_SELFTEST)
+                        || itemType.equals(Item.TYPE_ASSIGNMENT)
+                        || itemType.equals(Item.TYPE_EXAM)) {
+                    type = new TypeToken<Item<AssignmentItemDetail>>(){}.getType();
+                }
 
-            JsonRequest request = new JsonRequest(url, type);
-            request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
+                String url = Config.API + Config.COURSES + course.id + "/"
+                        + Config.MODULES + module.id + "/" + Config.ITEMS + item.id;
 
-            Object o = request.getResponse();
-            if (o != null) {
-                Item item = (Item) o;
-                if (Config.DEBUG) Log.i(TAG, "ItemDetail received");
-                result.success(item, Result.DataSource.NETWORK);
+                JsonRequest request = new JsonRequest(url, type);
+                request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
+
+                Object o = request.getResponse();
+                if (o != null) {
+                    Item item = (Item) o;
+                    if (Config.DEBUG) Log.i(TAG, "ItemDetail received");
+
+                    if (itemType.equals(Item.TYPE_VIDEO)) {
+                        videoDataAccess.addOrUpdateVideo((VideoItemDetail) item.detail);
+                    }
+
+                    result.success(item, Result.DataSource.NETWORK);
+                } else {
+                    if (Config.DEBUG) Log.w(TAG, "No ItemDetail received");
+                    result.error(Result.ErrorCode.NO_RESULT);
+                }
             } else {
-                if (Config.DEBUG) Log.w(TAG, "No ItemDetail received");
-                result.error(Result.ErrorCode.NO_RESULT);
+                if (itemType.equals(Item.TYPE_VIDEO)) {
+                    result.warn(Result.WarnCode.NO_NETWORK);
+                } else {
+                    result.error(Result.ErrorCode.NO_NETWORK);
+                }
             }
         }
     }

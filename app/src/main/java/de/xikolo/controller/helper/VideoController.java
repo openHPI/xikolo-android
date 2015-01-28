@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 import de.xikolo.R;
 import de.xikolo.data.preferences.Settings;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.ItemVideo;
+import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.view.CustomFontTextView;
@@ -258,14 +258,14 @@ public class VideoController {
         mVideo.setVideoURI(Uri.parse(uri));
     }
 
-    public void setVideo(Item<ItemVideo> video) {
+    public void setVideo(Item<VideoItemDetail> video) {
         int connectivityStatus = NetworkUtil.getConnectivityStatus(mActivity);
 
         if (connectivityStatus == NetworkUtil.TYPE_WIFI
                 || (connectivityStatus == NetworkUtil.TYPE_MOBILE && !Settings.isLowVideoQualityEnabledOnMobile(mActivity))) {
-            setVideoURI(video.object.stream.hd_url);
+            setVideoURI(video.detail.stream.hd_url);
         } else {
-            setVideoURI(video.object.url);
+            setVideoURI(video.detail.url);
         }
     }
 

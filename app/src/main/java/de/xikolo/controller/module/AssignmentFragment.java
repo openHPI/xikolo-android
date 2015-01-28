@@ -15,14 +15,14 @@ import de.xikolo.R;
 import de.xikolo.controller.helper.WebViewController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.ItemAssignment;
+import de.xikolo.data.entities.AssignmentItemDetail;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
-public class AssignmentFragment extends PagerFragment<ItemAssignment> {
+public class AssignmentFragment extends PagerFragment<AssignmentItemDetail> {
 
     public static final String TAG = AssignmentFragment.class.getSimpleName();
 
@@ -53,7 +53,7 @@ public class AssignmentFragment extends PagerFragment<ItemAssignment> {
             protected void onSuccess(Item result, DataSource dataSource) {
                 mRefreshLayout.setRefreshing(false);
                 mItem = result;
-                mWebViewController.request(mItem.object.url);
+                mWebViewController.request(mItem.detail.url);
             }
 
             @Override

@@ -6,9 +6,10 @@ import android.os.Parcelable;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.ItemDetail;
 import de.xikolo.data.entities.Module;
 
-public abstract class PagerFragment<T extends Parcelable> extends BaseFragment {
+public abstract class PagerFragment<T extends ItemDetail> extends BaseFragment {
 
     public static final String ARG_COURSE = "arg_course";
     public static final String ARG_MODULE = "arg_module";

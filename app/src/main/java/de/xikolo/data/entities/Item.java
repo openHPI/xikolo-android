@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Item<T extends Parcelable> implements Parcelable {
+public class Item<T extends ItemDetail> implements Parcelable {
 
     public static final String TYPE_TEXT = "text";
     public static final String TYPE_VIDEO = "video";
@@ -36,7 +36,7 @@ public class Item<T extends Parcelable> implements Parcelable {
     public boolean locked;
 
     @SerializedName("object")
-    public T object;
+    public T detail;
 
     @SerializedName("progress")
     public Progress progress;
@@ -55,7 +55,7 @@ public class Item<T extends Parcelable> implements Parcelable {
         parcel.writeString(available_from);
         parcel.writeString(available_to);
         parcel.writeByte((byte) (locked ? 1 : 0 ));
-        parcel.writeParcelable(object, i);
+        parcel.writeParcelable(detail, i);
         parcel.writeParcelable(progress, i);
     }
 
@@ -67,7 +67,7 @@ public class Item<T extends Parcelable> implements Parcelable {
         available_from = in.readString();
         available_to = in.readString();
         locked = in.readByte() != 0;
-        object = in.readParcelable(Item.class.getClassLoader());
+        detail = in.readParcelable(Item.class.getClassLoader());
         progress = in.readParcelable(Item.class.getClassLoader());
     }
 

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ItemVideo implements Parcelable {
+public class VideoItemDetail extends ItemDetail {
 
     @SerializedName("id")
     public String id;
@@ -52,7 +52,7 @@ public class ItemVideo implements Parcelable {
         parcel.writeParcelable(stream, i);
     }
 
-    public ItemVideo(Parcel in) {
+    public VideoItemDetail(Parcel in) {
         id = in.readString();
         title = in.readString();
         minutes = in.readString();
@@ -61,7 +61,11 @@ public class ItemVideo implements Parcelable {
         download_url = in.readString();
         slides_url = in.readString();
         transcript_url = in.readString();
-        stream =  in.readParcelable(ItemVideo.class.getClassLoader());
+        stream =  in.readParcelable(VideoItemDetail.class.getClassLoader());
+    }
+
+    public VideoItemDetail() {
+        stream = new Stream();
     }
 
     @Override
@@ -72,7 +76,7 @@ public class ItemVideo implements Parcelable {
             return false;
         if (((Object) this).getClass() != obj.getClass())
             return false;
-        ItemVideo o = (ItemVideo) obj;
+        VideoItemDetail o = (VideoItemDetail) obj;
         if (id == null) {
             if (o.id != null)
                 return false;
@@ -89,13 +93,13 @@ public class ItemVideo implements Parcelable {
         return result;
     }
 
-    public static final Creator<ItemVideo> CREATOR = new Creator<ItemVideo>() {
-        public ItemVideo createFromParcel(Parcel in) {
-            return new ItemVideo(in);
+    public static final Creator<VideoItemDetail> CREATOR = new Creator<VideoItemDetail>() {
+        public VideoItemDetail createFromParcel(Parcel in) {
+            return new VideoItemDetail(in);
         }
 
-        public ItemVideo[] newArray(int size) {
-            return new ItemVideo[size];
+        public VideoItemDetail[] newArray(int size) {
+            return new VideoItemDetail[size];
         }
     };
 
@@ -118,6 +122,10 @@ public class ItemVideo implements Parcelable {
             sd_url = in.readString();
             vimeo_id = in.readString();
             poster = in.readString();
+        }
+
+        public Stream() {
+
         }
 
         @Override

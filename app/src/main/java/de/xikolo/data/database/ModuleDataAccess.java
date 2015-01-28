@@ -45,10 +45,11 @@ public class ModuleDataAccess extends DataAccess {
                 ModuleTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
-        cursor.moveToFirst();
-        Module module = buildModule(cursor);
-        module.progress = progressDataAccess.getProgress(module.id);
-
+        Module module = null;
+        if (cursor.moveToFirst()) {
+            module = buildModule(cursor);
+            module.progress = progressDataAccess.getProgress(module.id);
+        }
         cursor.close();
 
         return module;

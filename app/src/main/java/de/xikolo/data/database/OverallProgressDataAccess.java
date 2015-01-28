@@ -44,9 +44,10 @@ class OverallProgressDataAccess extends DataAccess {
                 OverallProgressTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
-        cursor.moveToFirst();
-        OverallProgress progress = buildProgress(cursor);
-
+        OverallProgress progress = null;
+        if (cursor.moveToFirst()) {
+            progress = buildProgress(cursor);
+        }
         cursor.close();
 
         return progress;

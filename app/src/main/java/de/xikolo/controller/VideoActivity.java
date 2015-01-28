@@ -16,7 +16,7 @@ import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.helper.VideoController;
 import de.xikolo.controller.module.VideoFragment;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.ItemVideo;
+import de.xikolo.data.entities.VideoItemDetail;
 
 public class VideoActivity extends BaseActivity {
 
@@ -24,7 +24,7 @@ public class VideoActivity extends BaseActivity {
 
     private VideoController mVideoController;
 
-    private Item<ItemVideo> mItem;
+    private Item<VideoItemDetail> mItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class VideoActivity extends BaseActivity {
             mVideoController.returnFromSavedInstanceState(getIntent().getExtras());
         }
 
-        setTitle(mItem.object.title);
+        setTitle(mItem.detail.title);
 
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override

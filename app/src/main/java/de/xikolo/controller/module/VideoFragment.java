@@ -20,14 +20,14 @@ import de.xikolo.controller.VideoActivity;
 import de.xikolo.controller.helper.VideoController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.ItemVideo;
+import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
-public class VideoFragment extends PagerFragment<ItemVideo> {
+public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
     public static final String TAG = VideoFragment.class.getSimpleName();
 
@@ -160,7 +160,7 @@ public class VideoFragment extends PagerFragment<ItemVideo> {
 
         mVideoController.setVideo(mItem);
 
-        mTitle.setText(mItem.object.title);
+        mTitle.setText(mItem.detail.title);
     }
 
     @Override

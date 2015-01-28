@@ -29,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mTables.add(new CourseTable());
         mTables.add(new ModuleTable());
         mTables.add(new ItemTable());
+        mTables.add(new VideoTable());
     }
 
     @Override

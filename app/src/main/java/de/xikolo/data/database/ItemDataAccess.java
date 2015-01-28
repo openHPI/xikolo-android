@@ -42,9 +42,10 @@ public class ItemDataAccess extends DataAccess {
                 ItemTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
-        cursor.moveToFirst();
-        Item item = buildItem(cursor);
-
+        Item item = null;
+        if (cursor.moveToFirst()) {
+            item = buildItem(cursor);
+        }
         cursor.close();
 
         return item;

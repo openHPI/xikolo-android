@@ -15,7 +15,7 @@ import de.xikolo.R;
 import de.xikolo.controller.helper.WebViewController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.ItemText;
+import de.xikolo.data.entities.TextItemDetail;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
@@ -23,7 +23,7 @@ import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
-public class TextFragment extends PagerFragment<ItemText> {
+public class TextFragment extends PagerFragment<TextItemDetail> {
 
     public static final String TAG = TextFragment.class.getSimpleName();
 

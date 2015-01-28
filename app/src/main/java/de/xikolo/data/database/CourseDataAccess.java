@@ -50,10 +50,11 @@ public class CourseDataAccess extends DataAccess {
                 CourseTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
-        cursor.moveToFirst();
-        Course course = buildCourse(cursor);
-        course.progress = progressDataAccess.getProgress(id);
-
+        Course course = null;
+        if (cursor.moveToFirst()) {
+            course = buildCourse(cursor);
+            course.progress = progressDataAccess.getProgress(id);
+        }
         cursor.close();
 
         return course;
