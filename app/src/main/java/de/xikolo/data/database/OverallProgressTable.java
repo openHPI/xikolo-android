@@ -48,6 +48,7 @@ class OverallProgressTable implements Table {
 
     @Override
     public void deleteTable(SQLiteDatabase db) {
-        deleteTable(db);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
     }
 }
