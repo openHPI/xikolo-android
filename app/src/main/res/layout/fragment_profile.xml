@@ -129,12 +129,8 @@
                         android:layout_marginBottom="8dp"
                         android:layout_marginTop="24dp"
                         android:background="@drawable/button_gray"
-                        android:minHeight="0dp"
-                        android:padding="8dp"
                         android:text="@string/logout"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/Button"  />
 
                 </RelativeLayout>
 
@@ -228,15 +224,13 @@
                     android:id="@+id/btnLogin"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
                     android:layout_below="@+id/textForgotPw"
                     android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/button_main"
                     android:text="@string/login"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    style="@style/Button" />
 
                 <View
                     android:id="@+id/line"
@@ -261,14 +255,12 @@
                     android:id="@+id/btnNew"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
                     android:layout_below="@+id/textNew"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/button_gray"
                     android:text="@string/button_new"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    style="@style/Button" />
 
             </RelativeLayout>
 

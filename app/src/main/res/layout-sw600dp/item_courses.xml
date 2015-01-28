@@ -94,20 +94,14 @@
 
         <Button
             android:id="@+id/btnEnroll"
+            style="@style/Button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/textDateIcon"
             android:layout_marginTop="4dp"
             android:background="@drawable/button_main"
-            android:includeFontPadding="false"
-            android:minHeight="0dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
-            android:text="@string/btn_enroll_me"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="@string/btn_enroll_me" />
 
     </RelativeLayout>
 
