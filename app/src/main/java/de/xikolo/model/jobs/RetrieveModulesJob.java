@@ -76,7 +76,7 @@ public class RetrieveModulesJob extends Job {
                     result.success(modules, Result.DataSource.NETWORK);
                 } else {
                     if (Config.DEBUG) Log.w(TAG, "No Modules received");
-                   result.error(Result.ErrorCode.NO_NETWORK);
+                   result.error(Result.ErrorCode.NO_RESULT);
                 }
             } else {
                 result.warn(Result.WarnCode.NO_NETWORK);
