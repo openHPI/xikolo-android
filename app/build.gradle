@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 21
-        versionName "1.0"
+        versionName "0.9-beta1"
         versionCode 1
     }
     buildTypes {
@@ -15,7 +15,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.RELEASE"
-            shrinkResources false
+            shrinkResources true
             debuggable false
         }
         debug {
@@ -39,11 +39,11 @@ android {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.path:android-priority-jobqueue:1.1.2'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.jpardogo.materialtabstrip:library:1.0.4'
+    compile 'com.jpardogo.materialtabstrip:library:1.0.8'
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile fileTree(dir: 'libs', include: ['*.jar'])
