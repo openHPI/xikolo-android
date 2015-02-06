@@ -32,6 +32,7 @@ import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
+import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.util.DateUtil;
 
 public class ModuleActivity extends BaseActivity {
@@ -48,6 +49,8 @@ public class ModuleActivity extends BaseActivity {
 
     private ItemModel mItemModel;
     private Result<Void> mProgressionResult;
+
+    private PagerSlidingTabStrip mPagerSlidingTabStrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +78,10 @@ public class ModuleActivity extends BaseActivity {
         pager.setAdapter(adapter);
 
         // Bind the tabs to the ViewPager
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setViewPager(pager);
+        mPagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        mPagerSlidingTabStrip.setViewPager(pager);
 
-        tabs.setOnPageChangeListener(adapter);
+        mPagerSlidingTabStrip.setOnPageChangeListener(adapter);
 
         if (mItem != null) {
             int index = mModule.items.indexOf(mItem);
@@ -94,6 +97,19 @@ public class ModuleActivity extends BaseActivity {
             mModule.items.get(0).progress.visited = true;
         }
         pager.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onEventMainThread(NetworkStateEvent event) {
+        super.onEventMainThread(event);
+
+        if (mPagerSlidingTabStrip != null) {
+            if (event.isOnline()) {
+                mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
+            } else {
+                mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.offline_mode));
+            }
+        }
     }
 
     @Override

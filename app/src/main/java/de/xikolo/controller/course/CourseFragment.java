@@ -16,12 +16,14 @@ import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import de.greenrobot.event.EventBus;
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.course.dialog.UnenrollDialog;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.Result;
+import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
@@ -36,6 +38,7 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
 
     private ViewPager mPager;
     private CoursePagerAdapter mAdapter;
+    private PagerSlidingTabStrip mPagerSlidingTabStrip;
 
     public CourseFragment() {
         // Required empty public constructor
@@ -64,16 +67,40 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
         View layout = inflater.inflate(R.layout.fragment_course, container, false);
 
         // Initialize the ViewPager and set an adapter
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) layout.findViewById(R.id.tabs);
+        mPagerSlidingTabStrip = (PagerSlidingTabStrip) layout.findViewById(R.id.tabs);
         mPager = (ViewPager) layout.findViewById(R.id.pager);
 
         mAdapter = new CoursePagerAdapter(getChildFragmentManager());
         mPager.setAdapter(mAdapter);
 
         // Bind the tabs to the ViewPager
-        tabs.setViewPager(mPager);
+        mPagerSlidingTabStrip.setViewPager(mPager);
 
         return layout;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(NetworkStateEvent event) {
+        if (mPagerSlidingTabStrip != null) {
+            if (event.isOnline()) {
+                mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
+            } else {
+                mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.offline_mode));
+            }
+        }
     }
 
     @Override
