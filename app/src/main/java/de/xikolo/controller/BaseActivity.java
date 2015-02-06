@@ -63,14 +63,19 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     public void onEventMainThread(NetworkStateEvent event) {
-        Log.d("onNetworkStateEvent", event.getMessage());
         if (toolbar != null) {
             if (event.isOnline()) {
                 toolbar.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
                 toolbar.setSubtitle("");
+                if (Build.VERSION.SDK_INT >= 21) {
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.apptheme_main_dark));
+                }
             } else {
-                toolbar.setBackgroundColor(getResources().getColor(R.color.text_color));
-                toolbar.setSubtitle("Offline Mode");
+                toolbar.setBackgroundColor(getResources().getColor(R.color.offline_mode));
+                toolbar.setSubtitle(getString(R.string.offline_mode));
+                if (Build.VERSION.SDK_INT >= 21) {
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.offline_mode_dark));
+                }
             }
         }
     }

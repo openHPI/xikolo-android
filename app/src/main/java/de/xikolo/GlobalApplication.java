@@ -7,6 +7,7 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -86,13 +87,16 @@ public class GlobalApplication extends Application {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
+                .resetViewBeforeLoading(false)
                 .showImageOnLoading(R.drawable.gradient_default_image)
                 .showImageForEmptyUri(R.drawable.gradient_default_image)
                 .showImageOnFail(R.drawable.gradient_default_image)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)
-                .diskCacheSize(30 * 1024 * 1024) // 30 MiB
+                .diskCacheSize(30 * 1024 * 1024) // 30 MB
+                .memoryCache(new LruMemoryCache(10 * 1024 * 1024)) // 10 MB
+                .memoryCacheSize(10 * 1024 * 1024)
                 .build();
         ImageLoader.getInstance().init(config);
     }
