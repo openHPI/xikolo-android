@@ -1,16 +1,18 @@
 Xikolo Android App Signing
 ==========================
 
-The Key store (_xikolo.jks_) can be found in the root directory. Please use this Key store to sign Release APKs.
+The Key store _xikolo.jks_ can be found in the root directory. Please use this Key store to sign Release APKs.
 
 ## Signing Process
 
 If your build is stable and should be released
+
 1. Open the app/build.gradle file
 2. Increase the versionName semantically
 3. Increase the versionCode by 1
 
 Then in Android Studio
+
 1. Go to Build -> Generate Signed APK...
 2. Choose _app_ as Module
 3. Click Next
