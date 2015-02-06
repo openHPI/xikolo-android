@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- -->
+    <string name="title_section_profile">Profil</string>
+    <string name="title_section_login">Anmelden</string>
+    <string name="title_section_logout">Abmelden</string>
+    <string name="title_section_all_courses">Alle Kurse</string>
+    <string name="title_section_news">Neuigkeiten</string>
+    <string name="title_section_downloads">Downloads</string>
+    <string name="title_section_settings">Einstellungen</string>
+    <string name="title_section_my_courses">Meine Kurse</string>
+
+    <!-- -->
+    <string name="navigation_drawer_open">Öffne Navigation</string>
+    <string name="navigation_drawer_close">Schließe Navigation</string>
+
+    <!-- -->
+    <string name="action_refresh">Aktualisieren</string>
+    <string name="action_unenroll">Kursteilnahme beenden</string>
+
+    <!-- -->
+    <string name="tab_learnings">Lernmaterial</string>
+    <string name="tab_discussions">Diskussionen</string>
+    <string name="tab_progress">Fortschritt</string>
+    <string name="tab_details">Kursdetails</string>
+    <string name="tab_announcements">Neuigkeiten</string>
+    <string name="tab_rooms">Lerngruppen</string>
+
+    <!-- -->
+    <string name="btn_enroll_me">Für den Kurs einschreiben</string>
+    <string name="btn_enter_course">Zum Kurs</string>
+    <string name="btn_starts_soon">Kurs hat noch nicht begonnen</string>
+
+    <!-- -->
+    <string name="dialog_unenroll_title">Kursteilnahme beenden?</string>
+    <string name="dialog_unenroll_message">Sie werden aus dem Kurs ausgetragen.</string>
+    <string name="dialog_unenroll_yes">Teilnahme beenden</string>
+    <string name="dialog_unenroll_no">Abbrechen</string>
+
+    <!-- -->
+    <string name="toast_no_courses">Keine Kurse erhalten.</string>
+    <string name="toast_no_network">Bitte aktivieren Sie die Netzwerk-Verbindung.</string>
+    <string name="toast_please_log_in">Bitte melden Sie sich an.</string>
+    <string name="toast_log_in_failed">Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten.</string>
+
+    <!-- -->
+    <string name="icon_cal"></string>
+    <string name="icon_lang"></string>
+    <string name="icon_courses"></string>
+    <string name="icon_news"></string>
+    <string name="icon_downloads"></string>
+    <string name="icon_settings"></string>
+    <string name="icon_course"></string>
+    <string name="icon_profile"></string>
+    <string name="icon_text"></string>
+    <string name="icon_video"></string>
+    <string name="icon_selftest"></string>
+    <string name="icon_assignment"></string>
+    <string name="icon_lti">&#xe67a;</string>
+    <string name="icon_bonus"></string>
+    <string name="icon_info">&#xe666;</string>
+    <string name="icon_visited">&#xf06e;</string>
+    <string name="icon_play">&#xe652;</string>
+    <string name="icon_pause">&#xe651;</string>
+    <string name="icon_reload">&#xe65b;</string>
+    <string name="icon_fullscreen">&#xe658;</string>
+
+    <!-- -->
+    <string name="title_activity_module">Module</string>
+
+    <!-- -->
+    <string name="error">An error occurred, please try again later.</string>
+    <string name="error_email">Bitte geben Sie eine E-Mail-Adresse ein.</string>
+    <string name="error_password">Bitte geben Sie ein Passwort ein.</string>
+    <string name="login">Anmelden</string>
+    <string name="login_with_credentials">Mit Passwort anmelden</string>
+    <string name="logout">Abmelden</string>
+    <string name="input_email">* E-Mail</string>
+    <string name="hint_email">E-Mail</string>
+    <string name="input_password">* Passwort</string>
+    <string name="hint_password">Passwort</string>
+    <string name="forgot_password">Passwort vergessen?</string>
+    <string name="header_new">Neu hier?</string>
+    <string name="button_new">Neues Benutzerkonto anlegen</string>
+    <string name="enrollments">Kurseinschreibungen</string>
+    <string name="of">von</string>
+    <string name="visited">besucht</string>
+    <string name="total">Gesamt</string>
+    <string name="self_tests">Selbsttests</string>
+    <string name="assignments">Hausaufgaben</string>
+    <string name="points">Punkte</string>
+
+    <!-- -->
+    <string name="notification_no_enrollments">Bitte melden Sie sich für einen Kurs an.</string>
+    <string name="notification_please_login">@string/toast_please_log_in</string>
+
+    <!-- -->
+    <string name="offline_mode">Offline-Modus</string>
+
+    <!-- -->
+    <string name="settings_category_general">Allgemein</string>
+
+    <string name="settings_title_video_quality">Mobile Datennutzung beschränken</string>
+    <string name="settings_summary_video_quality">HD Videos nur über WLAN laden</string>
+
+    <string name="settings_category_about">Info</string>
+
+    <string name="settings_title_licenses">Open-Source-Lizenzen</string>
+    <string name="settings_summary_licenses">Lizenzdetails für Open-Source-Software</string>
+
+    <string name="settings_title_build">Build-Version</string>
+    <string name="settings_summary_build">Version:</string>
+
+</resources>
