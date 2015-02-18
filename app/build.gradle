@@ -35,6 +35,9 @@ android {
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_SAP"
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 
 }
 
