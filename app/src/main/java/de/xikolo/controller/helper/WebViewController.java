@@ -35,6 +35,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
     private String mUrl;
 
     private boolean mInAppLinksEnabled;
+    private boolean mLoadExternalUrl;
 
     public WebViewController(Activity activity, WebView webView, SwipeRefreshLayout refreshLayout, ProgressBar progress) {
         mActivity = activity;
@@ -43,6 +44,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         mProgress = progress;
 
         mInAppLinksEnabled = true;
+        mLoadExternalUrl = false;
 
         setup();
 
@@ -84,7 +86,8 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Config.HOST) && mInAppLinksEnabled) {
+                // TODO Unsicher da so jede url aufgerufen werden kann
+                if (url.contains(Config.HOST) && mInAppLinksEnabled || mLoadExternalUrl) {
                     request(url);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -114,12 +117,16 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         mUrl = url;
         if (NetworkUtil.isOnline(mActivity)) {
             mRefreshLayout.setRefreshing(true);
-            Map<String, String> header = new HashMap<String, String>();
-            header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
-            if (UserModel.isLoggedIn(mActivity)) {
-                header.put(Config.HEADER_AUTHORIZATION, "Token " + UserModel.getToken(mActivity));
+            if (!mLoadExternalUrl) {
+                Map<String, String> header = new HashMap<String, String>();
+                header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
+                if (UserModel.isLoggedIn(mActivity)) {
+                    header.put(Config.HEADER_AUTHORIZATION, "Token " + UserModel.getToken(mActivity));
+                }
+                mWebView.loadUrl(mUrl, header);
+            } else {
+                mWebView.loadUrl(mUrl, null);
             }
-            mWebView.loadUrl(mUrl, header);
         } else {
             mRefreshLayout.setRefreshing(false);
             NetworkUtil.showNoConnectionToast(mActivity);
@@ -129,6 +136,10 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
     @Override
     public void onRefresh() {
         request(mUrl);
+    }
+
+    public void setLoadExternalUrl(boolean loadExt) {
+        this.mLoadExternalUrl = loadExt;
     }
 
 }

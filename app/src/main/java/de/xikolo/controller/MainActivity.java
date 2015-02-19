@@ -17,6 +17,7 @@ import de.xikolo.controller.main.ContentFragment;
 import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.controller.main.DownloadsFragment;
 import de.xikolo.controller.main.ProfileFragment;
+import de.xikolo.controller.main.QRViewFragment;
 import de.xikolo.controller.main.WebViewFragment;
 import de.xikolo.controller.navigation.NavigationFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
@@ -105,6 +106,10 @@ public class MainActivity extends BaseActivity
             case NavigationAdapter.NAV_ID_NEWS:
                 newFragment = WebViewFragment.newInstance(Config.URI + Config.NEWS, true, null);
                 tag = "news";
+                break;
+            case NavigationAdapter.NAV_ID_QUIZ:
+                newFragment = QRViewFragment.newInstance();
+                tag = "qr";
                 break;
             case NavigationAdapter.NAV_ID_DOWNLOADS:
                 newFragment = DownloadsFragment.newInstance();

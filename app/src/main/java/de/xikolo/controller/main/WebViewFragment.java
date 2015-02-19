@@ -28,6 +28,7 @@ public class WebViewFragment extends ContentFragment {
     private String mUrl;
     private String mTitle;
     private boolean isTopLevelContent;
+    private boolean loadQuizUrl = false;
 
     private WebView mWebView;
     private ProgressBar mProgress;
@@ -71,6 +72,7 @@ public class WebViewFragment extends ContentFragment {
 
         mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
         mWebViewController.setInAppLinksEnabled(false);
+        mWebViewController.setLoadExternalUrl(loadQuizUrl);
 
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);
@@ -84,7 +86,9 @@ public class WebViewFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (isTopLevelContent && mUrl.contains(Config.NEWS)) {
+        if(isTopLevelContent && loadQuizUrl) {
+            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_QUIZ, getString(R.string.title_section_quiz));
+        } else if (isTopLevelContent && mUrl.contains(Config.NEWS)) {
             mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_NEWS, getString(R.string.title_section_news));
         } else if (!isTopLevelContent && mTitle != null) {
             mActivityCallback.onLowLevelFragmentAttached(NavigationAdapter.NAV_ID_LOW_LEVEL_CONTENT, mTitle);
@@ -119,5 +123,8 @@ public class WebViewFragment extends ContentFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    public void setLoadQuizUrl(boolean loadQuizUrl) {
+        this.loadQuizUrl = loadQuizUrl;
+    }
 }
 
