@@ -66,6 +66,7 @@
     <string name="icon_pause">&#xe651;</string>
     <string name="icon_reload">&#xe65b;</string>
     <string name="icon_fullscreen">&#xe658;</string>
+    <string name="icon_quiz">☑</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
