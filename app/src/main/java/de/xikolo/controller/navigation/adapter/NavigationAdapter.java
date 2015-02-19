@@ -54,7 +54,7 @@ public class NavigationAdapter extends BaseAdapter {
             add(new Element(mActivity.getString(R.string.icon_news),
                     mActivity.getString(R.string.title_section_news)));
             // Quiz
-            add(new Element(mActivity.getString(R.string.icon_news),
+            add(new Element(mActivity.getString(R.string.icon_quiz),
                     mActivity.getString(R.string.title_section_quiz)));
 //            add(new Element(mActivity.getString(R.string.icon_downloads),
 //                    mActivity.getString(R.string.title_section_downloads)));
