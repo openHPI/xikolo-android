@@ -66,7 +66,7 @@
     <string name="icon_pause">&#xe651;</string>
     <string name="icon_reload">&#xe65b;</string>
     <string name="icon_fullscreen">&#xe658;</string>
-    <string name="icon_quiz">☑</string>
+    <string name="icon_quiz">&#xe61d;</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -114,5 +114,7 @@
 
     <string name="settings_title_build">Build-Version</string>
     <string name="settings_summary_build">Version:</string>
+
+    <string name="url_invalid_html_title">URL fehlerhaft</string>
 
 </resources>

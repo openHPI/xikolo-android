@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ public class QRViewFragment extends ContentFragment implements ZBarScannerView.R
 
     private static String HTTP_PREFIX = "http://";
     private static String HTTPS_PREFIX = "https://";
+
     final String quizViewFragmentTag = "quiz";
 
     private ZBarScannerView mScannerView;
