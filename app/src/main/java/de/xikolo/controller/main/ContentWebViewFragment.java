@@ -16,19 +16,22 @@ import de.xikolo.controller.helper.WebViewController;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.util.Config;
 
-public class WebViewFragment extends ContentFragment {
+public class ContentWebViewFragment extends ContentFragment {
 
-    public static final String TAG = WebViewFragment.class.getSimpleName();
+    public static final String TAG = ContentWebViewFragment.class.getSimpleName();
 
     // the fragment initialization parameters
     private static final String ARG_URL = "arg_url";
-    private static final String ARG_TOP_LEVEL_CONTENT = "arg_top_level_content";
     private static final String ARG_TITLE = "arg_title";
+    private static final String ARG_INAPP_LINKS = "arg_inapp_links";
+    private static final String ARG_EXTERNAL_LINKS = "arg_external_links";
+    private static final String ARG_ID = "arg_id";
 
     private String mUrl;
     private String mTitle;
-    private boolean isTopLevelContent;
-    private boolean loadQuizUrl = false;
+    private boolean mInAppLinksEnabled;
+    private boolean mExternalLinksEnabled;
+    private int id;
 
     private WebView mWebView;
     private ProgressBar mProgress;
@@ -36,16 +39,18 @@ public class WebViewFragment extends ContentFragment {
 
     private WebViewController mWebViewController;
 
-    public WebViewFragment() {
+    public ContentWebViewFragment() {
         // Required empty public constructor
     }
 
-    public static WebViewFragment newInstance(String url, boolean topLevelContent, String title) {
-        WebViewFragment fragment = new WebViewFragment();
+    public static ContentWebViewFragment newInstance(int id, String url, String title, boolean inAppLinksEnabled, boolean externalLinksEnabled) {
+        ContentWebViewFragment fragment = new ContentWebViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
-        args.putBoolean(ARG_TOP_LEVEL_CONTENT, topLevelContent);
         args.putString(ARG_TITLE, title);
+        args.putBoolean(ARG_INAPP_LINKS, inAppLinksEnabled);
+        args.putBoolean(ARG_EXTERNAL_LINKS, externalLinksEnabled);
+        args.putInt(ARG_ID, id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,8 +60,10 @@ public class WebViewFragment extends ContentFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mUrl = getArguments().getString(ARG_URL);
-            isTopLevelContent = getArguments().getBoolean(ARG_TOP_LEVEL_CONTENT);
             mTitle = getArguments().getString(ARG_TITLE);
+            mInAppLinksEnabled = getArguments().getBoolean(ARG_INAPP_LINKS);
+            mExternalLinksEnabled = getArguments().getBoolean(ARG_EXTERNAL_LINKS);
+            id = getArguments().getInt(ARG_ID);
         }
 
         setHasOptionsMenu(true);
@@ -71,8 +78,8 @@ public class WebViewFragment extends ContentFragment {
         mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
         mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
-        mWebViewController.setInAppLinksEnabled(false);
-        mWebViewController.setLoadExternalUrl(loadQuizUrl);
+        mWebViewController.setInAppLinksEnabled(mInAppLinksEnabled);
+        mWebViewController.setLoadExternalUrlEnabled(mExternalLinksEnabled);
 
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);
@@ -86,13 +93,7 @@ public class WebViewFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if(isTopLevelContent && loadQuizUrl) {
-            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_QUIZ, getString(R.string.title_section_quiz));
-        } else if (isTopLevelContent && mUrl.contains(Config.NEWS)) {
-            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_NEWS, getString(R.string.title_section_news));
-        } else if (!isTopLevelContent && mTitle != null) {
-            mActivityCallback.onLowLevelFragmentAttached(NavigationAdapter.NAV_ID_LOW_LEVEL_CONTENT, mTitle);
-        }
+        mActivityCallback.onFragmentAttached(id, mTitle);
     }
 
     @Override
@@ -123,8 +124,4 @@ public class WebViewFragment extends ContentFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setLoadQuizUrl(boolean loadQuizUrl) {
-        this.loadQuizUrl = loadQuizUrl;
-    }
 }
-

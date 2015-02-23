@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,11 +16,10 @@ import de.xikolo.controller.main.ContentFragment;
 import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.controller.main.DownloadsFragment;
 import de.xikolo.controller.main.ProfileFragment;
-import de.xikolo.controller.main.QRViewFragment;
-import de.xikolo.controller.main.WebViewFragment;
+import de.xikolo.controller.main.QuizDemoFragment;
+import de.xikolo.controller.main.ContentWebViewFragment;
 import de.xikolo.controller.navigation.NavigationFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.model.CourseModel;
 import de.xikolo.util.Config;
 
 public class MainActivity extends BaseActivity
@@ -63,25 +61,10 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void attachFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
-    @Override
-    public void onTopLevelFragmentAttached(int id, String title) {
+    public void onFragmentAttached(int id, String title) {
         setTitle(title);
         mNavigationFragment.markItem(id);
         mNavigationFragment.setDrawerIndicatorEnabled(true);
-    }
-
-    @Override
-    public void onLowLevelFragmentAttached(int id, String title) {
-        setTitle(title);
-        mNavigationFragment.markItem(id);
-        mNavigationFragment.setDrawerIndicatorEnabled(false);
     }
 
     @Override
@@ -104,11 +87,11 @@ public class MainActivity extends BaseActivity
                 tag = "my_courses";
                 break;
             case NavigationAdapter.NAV_ID_NEWS:
-                newFragment = WebViewFragment.newInstance(Config.URI + Config.NEWS, true, null);
+                newFragment = ContentWebViewFragment.newInstance(NavigationAdapter.NAV_ID_NEWS, Config.URI + Config.NEWS, getString(R.string.title_section_news), false, false);
                 tag = "news";
                 break;
             case NavigationAdapter.NAV_ID_QUIZ:
-                newFragment = QRViewFragment.newInstance();
+                newFragment = QuizDemoFragment.newInstance();
                 tag = "qr";
                 break;
             case NavigationAdapter.NAV_ID_DOWNLOADS:
@@ -198,7 +181,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void toggleDrawer(int pos) {
+    public void selectDrawerSection(int pos) {
         this.mNavigationFragment.selectItem(pos);
     }
 

@@ -37,7 +37,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
     private String mUrl;
 
     private boolean mInAppLinksEnabled;
-    private boolean mLoadExternalUrl;
+    private boolean mLoadExternalUrlEnabled;
 
     public WebViewController(Activity activity, WebView webView, SwipeRefreshLayout refreshLayout, ProgressBar progress) {
         mActivity = activity;
@@ -46,7 +46,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         mProgress = progress;
 
         mInAppLinksEnabled = true;
-        mLoadExternalUrl = false;
+        mLoadExternalUrlEnabled = false;
 
         setup();
 
@@ -55,6 +55,10 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
     public void setInAppLinksEnabled(boolean enabled) {
         mInAppLinksEnabled = enabled;
+    }
+
+    public void setLoadExternalUrlEnabled(boolean loadExt) {
+        this.mLoadExternalUrlEnabled = loadExt;
     }
 
     private void setup() {
@@ -88,7 +92,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Config.HOST) && mInAppLinksEnabled || mLoadExternalUrl) {
+                if (url.contains(Config.HOST) && mInAppLinksEnabled || mLoadExternalUrlEnabled) {
                     request(url);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -117,43 +121,31 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         }
         mUrl = url;
 
-        if(!mLoadExternalUrl || Patterns.WEB_URL.matcher(mUrl).matches()) {
-
+        if(!mLoadExternalUrlEnabled || Patterns.WEB_URL.matcher(mUrl).matches()) {
             if (NetworkUtil.isOnline(mActivity)) {
-
                 mRefreshLayout.setRefreshing(true);
-                if (!mLoadExternalUrl) {
-
+                if (!mLoadExternalUrlEnabled) {
                     Map<String, String> header = new HashMap<String, String>();
                     header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
                     if (UserModel.isLoggedIn(mActivity)) {
                         header.put(Config.HEADER_AUTHORIZATION, "Token " + UserModel.getToken(mActivity));
                     }
                     mWebView.loadUrl(mUrl, header);
-
                 } else {
-
-                mWebView.loadUrl(mUrl, null);
-
+                    mWebView.loadUrl(mUrl, null);
                 }
             } else {
-
                 mRefreshLayout.setRefreshing(false);
                 NetworkUtil.showNoConnectionToast(mActivity);
-
             }
         } else {
-            mWebView.loadData(Config.INVALID_URL_HTML_PREFIX + mActivity.getString(R.string.url_invalid_html_title) + Config.INVALID_URL_HTML_SUFFIX, "text/html",null);
+            mWebView.loadData(Config.INVALID_URL_HTML_PREFIX + mActivity.getString(R.string.url_invalid_html_title) + Config.INVALID_URL_HTML_SUFFIX, "text/html", null);
         }
     }
 
     @Override
     public void onRefresh() {
         request(mUrl);
-    }
-
-    public void setLoadExternalUrl(boolean loadExt) {
-        this.mLoadExternalUrl = loadExt;
     }
 
 }

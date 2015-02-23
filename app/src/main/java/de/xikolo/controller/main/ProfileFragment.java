@@ -312,10 +312,10 @@ public class ProfileFragment extends ContentFragment {
 
     private void showHeader() {
         if (!UserModel.isLoggedIn(getActivity())) {
-            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, getString(R.string.title_section_login));
+            mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, getString(R.string.title_section_login));
         } else {
             User user = UserModel.getSavedUser(getActivity());
-            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
+            mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
         }
     }
 

@@ -44,7 +44,7 @@ public class DownloadsFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_DOWNLOADS, getString(R.string.title_section_downloads));
+        mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_DOWNLOADS, getString(R.string.title_section_downloads));
     }
 
     @Override
