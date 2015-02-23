@@ -1,4 +1,4 @@
-package de.xikolo.controller.course;
+package de.xikolo.controller;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,19 +12,20 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import de.xikolo.R;
-import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.helper.WebViewController;
 
-public class EmbeddedWebViewFragment extends BaseFragment {
+public class WebViewFragment extends BaseFragment {
 
-    public static final String TAG = EmbeddedWebViewFragment.class.getSimpleName();
+    public static final String TAG = WebViewFragment.class.getSimpleName();
 
     // the fragment initialization parameters
     private static final String ARG_URL = "arg_url";
-    private static final String ARG_INAPPLINKS = "arg_inapplinks";
+    private static final String ARG_INAPP_LINKS = "arg_inapp_links";
+    private static final String ARG_EXTERNAL_LINKS = "arg_external_links";
 
     private String mUrl;
     private boolean mInAppLinksEnabled;
+    private boolean mExternalLinksEnabled;
 
     private WebView mWebView;
     private SwipeRefreshLayout mRefreshLayout;
@@ -32,15 +33,16 @@ public class EmbeddedWebViewFragment extends BaseFragment {
 
     private WebViewController mWebViewController;
 
-    public EmbeddedWebViewFragment() {
+    public WebViewFragment() {
         // Required empty public constructor
     }
 
-    public static EmbeddedWebViewFragment newInstance(String url, boolean inAppLinksEnabled) {
-        EmbeddedWebViewFragment fragment = new EmbeddedWebViewFragment();
+    public static WebViewFragment newInstance(String url, boolean inAppLinksEnabled, boolean externalLinksEnabled) {
+        WebViewFragment fragment = new WebViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
-        args.putBoolean(ARG_INAPPLINKS, inAppLinksEnabled);
+        args.putBoolean(ARG_INAPP_LINKS, inAppLinksEnabled);
+        args.putBoolean(ARG_EXTERNAL_LINKS, externalLinksEnabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,7 +52,8 @@ public class EmbeddedWebViewFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mUrl = getArguments().getString(ARG_URL);
-            mInAppLinksEnabled = getArguments().getBoolean(ARG_INAPPLINKS);
+            mInAppLinksEnabled = getArguments().getBoolean(ARG_INAPP_LINKS);
+            mExternalLinksEnabled = getArguments().getBoolean(ARG_EXTERNAL_LINKS);
         }
         setHasOptionsMenu(true);
     }
@@ -65,6 +68,7 @@ public class EmbeddedWebViewFragment extends BaseFragment {
 
         mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
         mWebViewController.setInAppLinksEnabled(mInAppLinksEnabled);
+        mWebViewController.setLoadExternalUrlEnabled(mExternalLinksEnabled);
 
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);

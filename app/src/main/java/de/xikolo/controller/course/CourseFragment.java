@@ -19,6 +19,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import de.greenrobot.event.EventBus;
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
+import de.xikolo.controller.WebViewFragment;
 import de.xikolo.controller.course.dialog.UnenrollDialog;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
@@ -189,19 +190,19 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
                         fragment = CourseLearningsFragment.newInstance(mCourse);
                         break;
                     case 1:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.DISCUSSIONS, true);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.DISCUSSIONS, true, false);
                         break;
                     case 2:
                         fragment = ProgressFragment.newInstance(mCourse);
                         break;
                     case 3:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ANNOUNCEMENTS, false);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ANNOUNCEMENTS, false, false);
                         break;
                     case 4:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ROOMS, true);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ROOMS, true, false);
                         break;
                     case 5:
-                        fragment = EmbeddedWebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false, false);
                         break;
                 }
             }
