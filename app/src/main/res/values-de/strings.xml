@@ -67,6 +67,7 @@
     <string name="icon_reload">&#xe65b;</string>
     <string name="icon_fullscreen">&#xe658;</string>
     <string name="icon_quiz">&#xe61d;</string>
+    <string name="icon_hd">&#xe657;</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
