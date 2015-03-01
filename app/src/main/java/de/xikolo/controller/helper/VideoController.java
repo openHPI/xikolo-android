@@ -30,9 +30,18 @@ public class VideoController {
 
     public static final String KEY_TIME = "key_time";
     public static final String KEY_ISPLAYING = "key_isplaying";
+    public static final String KEY_VIDEO_QUALITY = "key_quality";
+    public static final String KEY_DID_USER_CHANGE_QUALITY = "key_changedquality";
 
     private static final int MILLISECONDS = 100;
-    private static final int minimumTimeToSave = 100;
+
+    /**
+     * Beim drehen des Bildschirms wird das Video für einen kurzen Moment auf 00:00 gesetzt
+     * Um einen Neustart zu verhindern muss die vergangene Zeit >100ms betragen um als
+     * gespeicherter Wert registriert zu werden. Die Variable könnte aber theoretisch jeden
+     * Wert >0ms annehmen, zur Sicherheit ist sie aber auf 100ms gesetzt.
+     */
+    private static final int minimumTimeNeeded = 100;
 
     private static final int sDefaultTimeout = 3000;
     private static final int FADE_OUT = 1;
@@ -67,13 +76,14 @@ public class VideoController {
 
     private boolean wasSaved = false;
     private int savedTime = 0;
-    private boolean savedIsPlaying = false;
 
     private boolean seekBarUpdaterIsRunning = false;
 
     private Item<VideoItemDetail> mVideoItemDetails;
     private boolean playVideoInHD = false;
-    private boolean overrideIsPlaying = false;
+    private boolean userChangedVideoQuality = false;
+    // Umgeht Fehler, dass bei Veränderung der Qualität und Wechsel der Bildschirmausrichtung das Video stehen bleibt bzw. weiter läuft
+    private boolean savedIsPlaying = false;
     private int currentPosition = 0;
 
     private boolean error = false;
@@ -192,7 +202,7 @@ public class VideoController {
             public void onClick(View v) {
                 show();
                 if (mFullscreenListener != null) {
-                    mFullscreenListener.onFullscreenClick(mVideoView.getCurrentPosition(), mVideoView.isPlaying());
+                    mFullscreenListener.onFullscreenClick(savedTime, savedIsPlaying || mVideoView.isPlaying(), playVideoInHD, userChangedVideoQuality);
                 }
             }
         });
@@ -233,7 +243,6 @@ public class VideoController {
                 toggleHD();
             }
         });
-
     }
 
     public void seekTo(int progress) {
@@ -248,6 +257,7 @@ public class VideoController {
     public void start() {
         mPlayButton.setText(mActivity.getString(R.string.icon_pause));
         mVideoView.start();
+        savedIsPlaying = true;
         if (!seekBarUpdaterIsRunning) {
             new Thread(mSeekBarUpdater).start();
         }
@@ -256,6 +266,7 @@ public class VideoController {
     public void pause() {
         mPlayButton.setText(mActivity.getString(R.string.icon_play));
         mVideoView.pause();
+        savedIsPlaying = false;
     }
 
     public void show() {
@@ -301,16 +312,18 @@ public class VideoController {
     public void setVideo(Item<VideoItemDetail> video) {
         mVideoItemDetails = video;
 
-        int connectivityStatus = NetworkUtil.getConnectivityStatus(mActivity);
+        if (!userChangedVideoQuality) {
+            int connectivityStatus = NetworkUtil.getConnectivityStatus(mActivity);
 
-        if (connectivityStatus == NetworkUtil.TYPE_WIFI
-                || (connectivityStatus == NetworkUtil.TYPE_MOBILE && !Settings.isLowVideoQualityEnabledOnMobile(mActivity))) {
-//            setVideoURI(video.detail.stream.hd_url);
-            setVideoQualityHD(mVideoItemDetails, true);
-        } else {
-//            setVideoURI(video.detail.url);
-            setVideoQualityHD(mVideoItemDetails, false);
+            if (connectivityStatus == NetworkUtil.TYPE_WIFI
+                    || (connectivityStatus == NetworkUtil.TYPE_MOBILE && !Settings.isLowVideoQualityEnabledOnMobile(mActivity))) {
+                playVideoInHD = true;
+            } else {
+                playVideoInHD = false;
+            }
         }
+
+        updateVideoQuality(mVideoItemDetails);
     }
 
     public void enableHeader() {
@@ -323,13 +336,12 @@ public class VideoController {
 
     public void onSaveInstanceState(Bundle outState) {
         if (mVideoView != null) {
-            currentPosition = mVideoView.getCurrentPosition();
-            // Falls Gerät rotiert wurde ist currentPosition 0 und Video startet neu
-            if(currentPosition > minimumTimeToSave) {
-                savedTime = mVideoView.getCurrentPosition();
-            }
+            saveCurrentPosition();
+
             outState.putInt(KEY_TIME, savedTime);
-            outState.putBoolean(KEY_ISPLAYING, mVideoView.isPlaying() || overrideIsPlaying);
+            outState.putBoolean(KEY_ISPLAYING, savedIsPlaying || mVideoView.isPlaying());
+            outState.putBoolean(KEY_VIDEO_QUALITY, playVideoInHD);
+            outState.putBoolean(KEY_DID_USER_CHANGE_QUALITY, userChangedVideoQuality);
         }
     }
 
@@ -338,6 +350,10 @@ public class VideoController {
             wasSaved = true;
             savedTime = savedInstanceState.getInt(KEY_TIME);
             savedIsPlaying = savedInstanceState.getBoolean(KEY_ISPLAYING);
+            playVideoInHD = savedInstanceState.getBoolean(KEY_VIDEO_QUALITY);
+            userChangedVideoQuality = savedInstanceState.getBoolean(KEY_DID_USER_CHANGE_QUALITY);
+
+            setHDSwitchColor(playVideoInHD);
         }
     }
 
@@ -362,34 +378,47 @@ public class VideoController {
     }
 
     private void toggleHD() {
-        currentPosition = mVideoView.getCurrentPosition();
-        if(currentPosition > minimumTimeToSave) {
-            savedTime = currentPosition;
-        }
-        wasSaved = true;
-        overrideIsPlaying = mVideoView.isPlaying();
+        userChangedVideoQuality = true;
 
-        setVideoQualityHD(mVideoItemDetails, !playVideoInHD);
+        playVideoInHD = !playVideoInHD;
 
+        saveCurrentPosition();
+        updateVideoQuality(mVideoItemDetails);
         seekTo(savedTime);
     }
 
-    private void setVideoQualityHD(Item<VideoItemDetail> video, Boolean setHD) {
+    private void saveCurrentPosition() {
+        if (mVideoView != null) {
+            currentPosition = mVideoView.getCurrentPosition();
+            if (currentPosition > minimumTimeNeeded) {
+                savedTime = currentPosition;
+                savedIsPlaying = mVideoView.isPlaying();
+                wasSaved = true;
+            }
+        }
+    }
 
-        playVideoInHD = setHD;
-
+    private void updateVideoQuality(Item<VideoItemDetail> video) {
         if (playVideoInHD) {
-            mHDSwitch.setTextColor(mActivity.getResources().getColor(R.color.video_hd_enabled));
             setVideoURI(video.detail.stream.hd_url);
         } else {
-            mHDSwitch.setTextColor(mActivity.getResources().getColor(R.color.video_hd_disabled));
             setVideoURI(video.detail.url);
+        }
+
+        setHDSwitchColor(playVideoInHD);
+    }
+
+    private void setHDSwitchColor(boolean isHD) {
+        if(isHD) {
+            mHDSwitch.setTextColor(mActivity.getResources().getColor(R.color.video_hd_enabled));
+        } else {
+            mHDSwitch.setTextColor(mActivity.getResources().getColor(R.color.video_hd_disabled));
         }
     }
 
     public interface OnFullscreenClickListener {
 
-        public void onFullscreenClick(int currentPosition, boolean isPlaying);
+        public void onFullscreenClick(int currentPosition, boolean isPlaying, boolean videoQualityInHD, boolean didUserChangeVideoQuality);
 
     }
 
