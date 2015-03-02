@@ -93,6 +93,8 @@
     <string name="assignments">Hausaufgaben</string>
     <string name="points">Punkte</string>
     <string name="scan_qr">Bitte QR Code scannen</string>
+    <string name="slides_as_pdf">Präsentationsfolien als PDF</string>
+    <string name="download">Herunterladen</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Bitte melden Sie sich für einen Kurs an.</string>
@@ -102,10 +104,13 @@
     <string name="offline_mode">Offline-Modus</string>
 
     <!-- -->
-    <string name="settings_category_general">Allgemein</string>
+    <string name="settings_category_data_usage">Mobile Datennutzung</string>
 
-    <string name="settings_title_video_quality">Mobile Datennutzung beschränken</string>
-    <string name="settings_summary_video_quality">HD Videos nur über WLAN laden</string>
+    <string name="settings_title_video_quality">Datennutzung für Videos beschränken</string>
+    <string name="settings_summary_video_quality">HD Videos nur über WLAN streamen</string>
+
+    <string name="settings_title_download_network">Datennutzung für Downloads beschränken</string>
+    <string name="settings_summary_download_network">Downloads nur über WLAN laden</string>
 
     <string name="settings_category_about">Info</string>
 

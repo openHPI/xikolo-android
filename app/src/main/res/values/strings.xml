@@ -93,6 +93,8 @@
     <string name="assignments">Assignments</string>
     <string name="points">Points</string>
     <string name="scan_qr">Please scan the QR Code</string>
+    <string name="slides_as_pdf">Presentation slides as PDF</string>
+    <string name="download">Download</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Please enroll for courses.</string>
@@ -102,10 +104,13 @@
     <string name="offline_mode">Offline Mode</string>
 
     <!-- -->
-    <string name="settings_category_general">General</string>
+    <string name="settings_category_data_usage">Mobile Data Usage</string>
 
-    <string name="settings_title_video_quality">Limit mobile data usage</string>
-    <string name="settings_summary_video_quality">Only stream HD video on Wi-Fi</string>
+    <string name="settings_title_video_quality">Limit data usage for videos</string>
+    <string name="settings_summary_video_quality">Only stream HD videos on Wi-Fi</string>
+
+    <string name="settings_title_download_network">Limit data usage for downloads</string>
+    <string name="settings_summary_download_network">Only download files on Wi-Fi</string>
 
     <string name="settings_category_about">About</string>
 
