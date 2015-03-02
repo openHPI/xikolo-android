@@ -67,6 +67,8 @@
     <string name="icon_reload">&#xe65b;</string>
     <string name="icon_fullscreen">&#xe658;</string>
     <string name="icon_quiz">&#xe61d;</string>
+    <string name="icon_download_video">&#xe662;</string>
+    <string name="icon_download_pdf">&#xe660;</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -94,6 +96,9 @@
     <string name="points">Points</string>
     <string name="scan_qr">Please scan the QR Code</string>
     <string name="slides_as_pdf">Presentation slides as PDF</string>
+    <string name="transcript_as_pdf">Transcript as PDF</string>
+    <string name="video_hd_as_mp4">Video (HD) as MP4</string>
+    <string name="video_sd_as_mp4">Video (SD) as MP4</string>
     <string name="download">Download</string>
 
     <!-- -->

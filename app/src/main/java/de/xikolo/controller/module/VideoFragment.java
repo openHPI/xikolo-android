@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,13 +20,14 @@ import de.xikolo.controller.VideoActivity;
 import de.xikolo.controller.helper.VideoController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.entities.Module;
+import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
+import de.xikolo.view.IconButton;
 
 public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
@@ -41,8 +41,14 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     private View mContainer;
     private ProgressBar mProgress;
 
+    private TextView mTextDownloadVideoHd;
+    private IconButton mButtonDownloadVideoHd;
+    private TextView mTextDownloadVideoSd;
+    private IconButton mButtonDownloadVideoSd;
     private TextView mTextDownloadSlides;
-    private Button mButtonDownloadSlides;
+    private IconButton mButtonDownloadSlides;
+    private TextView mTextDownloadTranscript;
+    private IconButton mButtonDownloadTranscript;
 
     private ViewGroup mVideoContainer;
     private ViewGroup mVideoMetadata;
@@ -96,13 +102,39 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
         mTitle = (TextView) layout.findViewById(R.id.textTitle);
+
+        final DownloadModel dm = new DownloadModel();
+        
+        mTextDownloadVideoHd = (TextView) layout.findViewById(R.id.textDownloadVideoHd);
+        mButtonDownloadVideoHd = (IconButton) layout.findViewById(R.id.buttonDownloadVideoHd);
+        mButtonDownloadVideoHd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dm.startDownload(mItem.detail.stream.hd_url, DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
+            }
+        });
+        mTextDownloadVideoSd = (TextView) layout.findViewById(R.id.textDownloadVideoSd);
+        mButtonDownloadVideoSd = (IconButton) layout.findViewById(R.id.buttonDownloadVideoSd);
+        mButtonDownloadVideoSd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dm.startDownload(mItem.detail.stream.sd_url, DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
+            }
+        });
         mTextDownloadSlides = (TextView) layout.findViewById(R.id.textDownloadSlides);
-        mButtonDownloadSlides = (Button) layout.findViewById(R.id.buttonDownloadSlides);
+        mButtonDownloadSlides = (IconButton) layout.findViewById(R.id.buttonDownloadSlides);
         mButtonDownloadSlides.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadModel dm = new DownloadModel();
                 dm.startDownload(mItem.detail.slides_url, DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
+            }
+        });
+        mTextDownloadTranscript = (TextView) layout.findViewById(R.id.textDownloadTranscript);
+        mButtonDownloadTranscript = (IconButton) layout.findViewById(R.id.buttonDownloadTranscript);
+        mButtonDownloadTranscript.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dm.startDownload(mItem.detail.transcript_url, DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
             }
         });
         
@@ -175,11 +207,24 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         mVideoController.setVideo(mItem);
 
         mTitle.setText(mItem.detail.title);
-        
+
+        if (mItem.detail.stream.hd_url == null) {
+            mTextDownloadVideoHd.setVisibility(View.GONE);
+            mButtonDownloadVideoHd.setVisibility(View.GONE);
+        }
+        if (mItem.detail.stream.sd_url == null) {
+            mTextDownloadVideoSd.setVisibility(View.GONE);
+            mButtonDownloadVideoSd.setVisibility(View.GONE);
+        }
         if (mItem.detail.slides_url == null) {
             mTextDownloadSlides.setVisibility(View.GONE);
             mButtonDownloadSlides.setVisibility(View.GONE);
         }
+        // seems buggy at backend
+//        if (mItem.detail.transcript_url == null) {
+            mTextDownloadTranscript.setVisibility(View.GONE);
+            mButtonDownloadTranscript.setVisibility(View.GONE);
+//        }
     }
 
     @Override
