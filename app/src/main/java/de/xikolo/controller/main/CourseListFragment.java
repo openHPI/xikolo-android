@@ -145,9 +145,9 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mTextNotification.setVisibility(View.GONE);
 
         if (mFilter.equals(FILTER_ALL)) {
-            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
+            mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
         } else if (mFilter.equals(FILTER_MY)) {
-            mActivityCallback.onTopLevelFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
+            mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
             if (!UserModel.isLoggedIn(getActivity())) {
                 mProgress.setVisibility(View.GONE);
                 mNotification.setVisibility(View.VISIBLE);
@@ -155,7 +155,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 mNotification.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mActivityCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+                        mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                     }
                 });
             }
@@ -182,7 +182,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     mNotification.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mActivityCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+                            mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                         }
                     });
                 } else if (mCourses.size() == 0) {
@@ -191,7 +191,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     mNotification.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mActivityCallback.toggleDrawer(NavigationAdapter.NAV_ID_ALL_COURSES);
+                            mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_ALL_COURSES);
                         }
                     });
                 } else {
@@ -225,7 +225,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     NetworkUtil.showNoConnectionToast(getActivity());
                 } else if (errorCode == ErrorCode.NO_AUTH) {
                     ToastUtil.show(getActivity(), R.string.toast_please_log_in);
-                    mActivityCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+                    mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                 }
             }
         };
@@ -242,7 +242,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             startActivity(intent);
         } else {
             ToastUtil.show(getActivity(), R.string.toast_please_log_in);
-            mActivityCallback.toggleDrawer(NavigationAdapter.NAV_ID_PROFILE);
+            mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
         }
     }
 

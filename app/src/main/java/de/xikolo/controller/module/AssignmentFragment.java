@@ -77,6 +77,8 @@ public class AssignmentFragment extends PagerFragment<AssignmentItemDetail> {
         mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
         mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
+        mWebViewController.setInAppLinksEnabled(true);
+        mWebViewController.setLoadExternalUrlEnabled(false);
 
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);

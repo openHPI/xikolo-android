@@ -7,6 +7,7 @@
     <string name="title_section_logout">Log out</string>
     <string name="title_section_all_courses">All Courses</string>
     <string name="title_section_news">News</string>
+    <string name="title_section_quiz">Quiz Demo</string>
     <string name="title_section_downloads">Downloads</string>
     <string name="title_section_settings">Settings</string>
     <string name="title_section_my_courses">My Courses</string>
@@ -65,6 +66,7 @@
     <string name="icon_pause">&#xe651;</string>
     <string name="icon_reload">&#xe65b;</string>
     <string name="icon_fullscreen">&#xe658;</string>
+    <string name="icon_quiz">&#xe61d;</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -90,6 +92,7 @@
     <string name="self_tests">Self-tests</string>
     <string name="assignments">Assignments</string>
     <string name="points">Points</string>
+    <string name="scan_qr">Please scan the QR Code</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Please enroll for courses.</string>
@@ -111,5 +114,7 @@
 
     <string name="settings_title_build">Build version</string>
     <string name="settings_summary_build">Version:</string>
+
+    <string name="url_invalid_html_title">URL invalid</string>
 
 </resources>

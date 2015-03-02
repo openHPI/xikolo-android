@@ -79,6 +79,7 @@ public class LtiFragment extends PagerFragment<TextItemDetail> {
 
         mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
         mWebViewController.setInAppLinksEnabled(true);
+        mWebViewController.setLoadExternalUrlEnabled(false);
 
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);
