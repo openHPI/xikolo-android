@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.concurrent.TimeUnit;
 
 import de.xikolo.R;
-import de.xikolo.data.preferences.Settings;
+import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.util.Config;
@@ -287,7 +287,7 @@ public class VideoController {
         int connectivityStatus = NetworkUtil.getConnectivityStatus(mActivity);
 
         if (connectivityStatus == NetworkUtil.TYPE_WIFI
-                || (connectivityStatus == NetworkUtil.TYPE_MOBILE && !Settings.isLowVideoQualityEnabledOnMobile(mActivity))) {
+                || (connectivityStatus == NetworkUtil.TYPE_MOBILE && !AppPreferences.isVideoQualityLimitedOnMobile(mActivity))) {
             setVideoURI(video.detail.stream.hd_url);
         } else {
             setVideoURI(video.detail.url);

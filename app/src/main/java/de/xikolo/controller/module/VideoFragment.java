@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.entities.Module;
+import de.xikolo.model.DownloadModel;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
@@ -38,6 +40,9 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     private TextView mTitle;
     private View mContainer;
     private ProgressBar mProgress;
+
+    private TextView mTextDownloadSlides;
+    private Button mButtonDownloadSlides;
 
     private ViewGroup mVideoContainer;
     private ViewGroup mVideoMetadata;
@@ -91,7 +96,16 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
         mTitle = (TextView) layout.findViewById(R.id.textTitle);
-
+        mTextDownloadSlides = (TextView) layout.findViewById(R.id.textDownloadSlides);
+        mButtonDownloadSlides = (Button) layout.findViewById(R.id.buttonDownloadSlides);
+        mButtonDownloadSlides.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DownloadModel dm = new DownloadModel();
+                dm.startDownload(mItem.detail.slides_url, DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
+            }
+        });
+        
         mVideoContainer = (ViewGroup) layout.findViewById(R.id.videoContainer);
         mVideoMetadata = (ViewGroup) layout.findViewById(R.id.videoMetadata);
 
@@ -161,6 +175,11 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         mVideoController.setVideo(mItem);
 
         mTitle.setText(mItem.detail.title);
+        
+        if (mItem.detail.slides_url == null) {
+            mTextDownloadSlides.setVisibility(View.GONE);
+            mButtonDownloadSlides.setVisibility(View.GONE);
+        }
     }
 
     @Override
