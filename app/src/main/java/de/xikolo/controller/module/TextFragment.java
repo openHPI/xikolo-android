@@ -78,7 +78,8 @@ public class TextFragment extends PagerFragment<TextItemDetail> {
         mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
         mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
-        mWebViewController.setInAppLinksEnabled(true);
+        mWebViewController.setInAppLinksEnabled(false);
+        mWebViewController.setLoadExternalUrlEnabled(false);
 
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);

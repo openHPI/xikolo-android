@@ -28,17 +28,13 @@ public abstract class ContentFragment extends BaseFragment {
 
     public interface OnFragmentInteractionListener {
 
-        public void attachFragment(Fragment fragment);
-
-        public void onTopLevelFragmentAttached(int id, String title);
-
-        public void onLowLevelFragmentAttached(int id, String title);
+        public void onFragmentAttached(int id, String title);
 
         public boolean isDrawerOpen();
 
         public void updateDrawer();
 
-        public void toggleDrawer(int pos);
+        public void selectDrawerSection(int pos);
 
     }
 

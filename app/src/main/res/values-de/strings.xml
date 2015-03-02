@@ -7,6 +7,7 @@
     <string name="title_section_logout">Abmelden</string>
     <string name="title_section_all_courses">Alle Kurse</string>
     <string name="title_section_news">Neuigkeiten</string>
+    <string name="title_section_quiz">Quiz Demo</string>
     <string name="title_section_downloads">Downloads</string>
     <string name="title_section_settings">Einstellungen</string>
     <string name="title_section_my_courses">Meine Kurse</string>
@@ -65,6 +66,7 @@
     <string name="icon_pause">&#xe651;</string>
     <string name="icon_reload">&#xe65b;</string>
     <string name="icon_fullscreen">&#xe658;</string>
+    <string name="icon_quiz">&#xe61d;</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -90,6 +92,7 @@
     <string name="self_tests">Selbsttests</string>
     <string name="assignments">Hausaufgaben</string>
     <string name="points">Punkte</string>
+    <string name="scan_qr">Bitte QR Code scannen</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Bitte melden Sie sich für einen Kurs an.</string>
@@ -111,5 +114,7 @@
 
     <string name="settings_title_build">Build-Version</string>
     <string name="settings_summary_build">Version:</string>
+
+    <string name="url_invalid_html_title">URL fehlerhaft</string>
 
 </resources>
