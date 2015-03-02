@@ -37,10 +37,10 @@ public class DownloadModel {
                     fileName += "_transcript.pdf";
                     break;
                 case VIDEO_SD:
-                    fileName += "_video_sd.pdf";
+                    fileName += "_video_sd.mp4";
                     break;
                 case VIDEO_HD:
-                    fileName += "_video_hd.pdf";
+                    fileName += "_video_hd.mp4";
                     break;
             }
             

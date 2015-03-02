@@ -94,6 +94,9 @@
     <string name="points">Punkte</string>
     <string name="scan_qr">Bitte QR Code scannen</string>
     <string name="slides_as_pdf">Präsentationsfolien als PDF</string>
+    <string name="transcript_as_pdf">Transcript als PDF</string>
+    <string name="video_hd_as_mp4">Video (HD) als MP4</string>
+    <string name="video_sd_as_mp4">Video (SD) als MP4</string>
     <string name="download">Herunterladen</string>
 
     <!-- -->
