@@ -1,5 +1,6 @@
 package de.xikolo.controller.main;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +20,7 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.controller.CourseActivity;
 import de.xikolo.controller.CourseDetailsActivity;
+import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.controller.main.adapter.CourseListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
@@ -50,6 +52,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     private View mNotification;
     private TextView mTextNotification;
+    private NotificationController mNotificationController;
 
     private List<Course> mCourses;
 
@@ -130,7 +133,19 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mAbsListView.setAdapter(mCourseListAdapter);
 
         mNotification = layout.findViewById(R.id.containerNotification);
-        mTextNotification = (TextView) layout.findViewById(R.id.textNotification);
+        mTextNotification = (TextView) layout.findViewById(R.id.textNotificationSummary);
+
+        mNotificationController = new NotificationController(getActivity(), layout);
+        mNotificationController.setSymbol(R.string.icon_news);
+        mNotificationController.setTitle("Titel");
+        mNotificationController.setSummary("Hier steht eine Summary");
+
+        mNotificationController.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Click");
+            }
+        });
 
         mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
@@ -142,7 +157,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         super.onStart();
 
         mProgress.setVisibility(View.VISIBLE);
-        mTextNotification.setVisibility(View.GONE);
+//        mTextNotification.setVisibility(View.GONE);
 
         if (mFilter.equals(FILTER_ALL)) {
             mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
