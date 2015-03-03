@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayoutCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <de.xikolo.view.CustomFontTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:padding="4dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/icon_info"
+        android:textColor="@color/gray_text"
+        android:textSize="48sp"
+        app:customFont="xikolo.ttf"
+        android:id="@+id/textNotificationSymbol"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutNotificationText"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8">
+
+        <TextView
+            android:id="@+id/textNotificationHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray_text"
+            android:textSize="24sp"
+            android:text="Title"
+            android:lines="1" />
+
+        <TextView
+            android:id="@+id/textNotificationSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray_text"
+            android:textSize="18sp"
+            android:text="Summary" />
+    </LinearLayout>
+
+</LinearLayout>
