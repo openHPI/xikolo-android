@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App Icon Font Symbols -->
+
+    <!-- xikolo.ttf -->
+    <string name="icon_cal" translatable="false"></string>
+    <string name="icon_lang" translatable="false"></string>
+    <string name="icon_courses" translatable="false"></string>
+    <string name="icon_news" translatable="false"></string>
+    <string name="icon_downloads" translatable="false"></string>
+    <string name="icon_settings" translatable="false"></string>
+    <string name="icon_course" translatable="false"></string>
+    <string name="icon_profile" translatable="false"></string>
+    <string name="icon_text" translatable="false"></string>
+    <string name="icon_video" translatable="false"></string>
+    <string name="icon_selftest" translatable="false"></string>
+    <string name="icon_assignment" translatable="false"></string>
+    <string name="icon_lti" translatable="false">&#xe67a;</string>
+    <string name="icon_bonus" translatable="false"></string>
+    <string name="icon_info" translatable="false">&#xe666;</string>
+    <string name="icon_play" translatable="false">&#xe652;</string>
+    <string name="icon_pause" translatable="false">&#xe651;</string>
+    <string name="icon_reload" translatable="false">&#xe65b;</string>
+    <string name="icon_fullscreen" translatable="false">&#xe658;</string>
+    <string name="icon_quiz" translatable="false">&#xe61d;</string>
+    <string name="icon_hd" translatable="false">&#xe657;</string>
+
+    <!-- fontawesome.ttf -->
+    <string name="icon_visited" translatable="false">&#xf06e;</string>
+
+</resources>
