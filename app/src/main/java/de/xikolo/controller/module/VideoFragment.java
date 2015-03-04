@@ -12,12 +12,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
 import de.xikolo.controller.helper.VideoController;
+import de.xikolo.controller.module.helper.DownloadViewController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
@@ -27,7 +29,6 @@ import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
-import de.xikolo.view.IconButton;
 
 public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
@@ -41,14 +42,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     private View mContainer;
     private ProgressBar mProgress;
 
-    private TextView mTextDownloadVideoHd;
-    private IconButton mButtonDownloadVideoHd;
-    private TextView mTextDownloadVideoSd;
-    private IconButton mButtonDownloadVideoSd;
-    private TextView mTextDownloadSlides;
-    private IconButton mButtonDownloadSlides;
-    private TextView mTextDownloadTranscript;
-    private IconButton mButtonDownloadTranscript;
+    private LinearLayout mLinearLayoutDownloads;
 
     private ViewGroup mVideoContainer;
     private ViewGroup mVideoMetadata;
@@ -103,40 +97,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
         mTitle = (TextView) layout.findViewById(R.id.textTitle);
 
-        final DownloadModel dm = new DownloadModel();
-        
-        mTextDownloadVideoHd = (TextView) layout.findViewById(R.id.textDownloadVideoHd);
-        mButtonDownloadVideoHd = (IconButton) layout.findViewById(R.id.buttonDownloadVideoHd);
-        mButtonDownloadVideoHd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dm.startDownload(mItem.detail.stream.hd_url, DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
-            }
-        });
-        mTextDownloadVideoSd = (TextView) layout.findViewById(R.id.textDownloadVideoSd);
-        mButtonDownloadVideoSd = (IconButton) layout.findViewById(R.id.buttonDownloadVideoSd);
-        mButtonDownloadVideoSd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dm.startDownload(mItem.detail.stream.sd_url, DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
-            }
-        });
-        mTextDownloadSlides = (TextView) layout.findViewById(R.id.textDownloadSlides);
-        mButtonDownloadSlides = (IconButton) layout.findViewById(R.id.buttonDownloadSlides);
-        mButtonDownloadSlides.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dm.startDownload(mItem.detail.slides_url, DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
-            }
-        });
-        mTextDownloadTranscript = (TextView) layout.findViewById(R.id.textDownloadTranscript);
-        mButtonDownloadTranscript = (IconButton) layout.findViewById(R.id.buttonDownloadTranscript);
-        mButtonDownloadTranscript.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dm.startDownload(mItem.detail.transcript_url, DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
-            }
-        });
+        mLinearLayoutDownloads = (LinearLayout) layout.findViewById(R.id.containerDownloads);
         
         mVideoContainer = (ViewGroup) layout.findViewById(R.id.videoContainer);
         mVideoMetadata = (ViewGroup) layout.findViewById(R.id.videoMetadata);
@@ -189,7 +150,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
         return layout;
     }
-
+    
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == FULL_SCREEN_REQUEST && resultCode == Activity.RESULT_OK) {
@@ -210,23 +171,15 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
         mTitle.setText(mItem.detail.title);
 
-        if (mItem.detail.stream.hd_url == null) {
-            mTextDownloadVideoHd.setVisibility(View.GONE);
-            mButtonDownloadVideoHd.setVisibility(View.GONE);
-        }
-        if (mItem.detail.stream.sd_url == null) {
-            mTextDownloadVideoSd.setVisibility(View.GONE);
-            mButtonDownloadVideoSd.setVisibility(View.GONE);
-        }
-        if (mItem.detail.slides_url == null) {
-            mTextDownloadSlides.setVisibility(View.GONE);
-            mButtonDownloadSlides.setVisibility(View.GONE);
-        }
-        // seems buggy at backend
-//        if (mItem.detail.transcript_url == null) {
-            mTextDownloadTranscript.setVisibility(View.GONE);
-            mButtonDownloadTranscript.setVisibility(View.GONE);
-//        }
+        mLinearLayoutDownloads.removeAllViews();
+        DownloadViewController hdVideo = new DownloadViewController(DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
+        mLinearLayoutDownloads.addView(hdVideo.getView());
+        DownloadViewController sdVideo = new DownloadViewController(DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
+        mLinearLayoutDownloads.addView(sdVideo.getView());
+        DownloadViewController slides = new DownloadViewController(DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
+        mLinearLayoutDownloads.addView(slides.getView());
+//        DownloadViewController transcript = new DownloadViewController(DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
+//        mLinearLayoutDownloads.addView(transcript.getView());
     }
 
     @Override

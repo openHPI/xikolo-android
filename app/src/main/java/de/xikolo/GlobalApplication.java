@@ -1,6 +1,11 @@
 package de.xikolo;
 
 import android.app.Application;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.http.HttpResponseCache;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -18,7 +23,11 @@ import com.path.android.jobqueue.log.CustomLogger;
 import java.io.File;
 import java.io.IOException;
 
+import de.greenrobot.event.EventBus;
 import de.xikolo.data.database.DatabaseHelper;
+import de.xikolo.data.entities.Download;
+import de.xikolo.data.net.DownloadHelper;
+import de.xikolo.model.events.DownloadCompletedEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.SslCertificateUtil;
 
@@ -63,9 +72,12 @@ public class GlobalApplication extends Application {
         configureHttpResponseCache();
         configureWebViewCookies();
         configureJobManager();
+        registerDownloadBroadcastReceiver();
 
-        if (Config.DEBUG)
+        // just for debugging, never use for production
+        if (Config.DEBUG) {
             SslCertificateUtil.disableSslCertificateChecking();
+        }
     }
 
     private void configureDefaultSettings() {
@@ -179,6 +191,21 @@ public class GlobalApplication extends Application {
         if (cookieSyncManager != null) {
             cookieSyncManager.sync();
         }
+    }
+
+    private void registerDownloadBroadcastReceiver() {
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                    long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+                    Download dl = DownloadHelper.getDownloadForId(downloadId);
+                    EventBus.getDefault().post(new DownloadCompletedEvent(dl));
+                }
+            }
+        };
+        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
 }
