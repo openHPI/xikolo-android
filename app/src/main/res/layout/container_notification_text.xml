@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/gray_text"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:text="Title"
             android:lines="1" />
 

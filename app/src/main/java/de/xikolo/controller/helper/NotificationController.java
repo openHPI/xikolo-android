@@ -4,19 +4,15 @@ import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import de.xikolo.R;
-import de.xikolo.controller.MainActivity;
 import de.xikolo.view.CustomFontTextView;
 
 public class NotificationController {
 
-    Activity activity;
+    Activity mActivity;
 
     private CardView cardView;
     private View layout_notification_text;
@@ -25,23 +21,21 @@ public class NotificationController {
     private CustomFontTextView symbolTextView;
     private TextView titleTextView;
     private TextView summaryTextView;
-    private LinearLayout linearLayoutNotificationText;
-    private LinearLayout.LayoutParams linearLayoutNotificationTextParams;
-    private LinearLayout linearLayoutCard;
 
     private Boolean mIsLoading = false;
+    private int mVisibility = FrameLayout.VISIBLE;
 
     public NotificationController(Activity activity, View layout) {
-        LayoutInflater inflater = activity.getLayoutInflater();
+        this.mActivity = activity;
 
-        this.activity = activity;
+        LayoutInflater inflater = mActivity.getLayoutInflater();
 
         cardView = (CardView) layout.findViewById(R.id.containerNotification);
-        layout_notification_text = inflater.inflate(R.layout.layout_notification_text, null);
-        layout_notification_loading = inflater.inflate(R.layout.layout_notification_loading, null);
+        layout_notification_text = inflater.inflate(R.layout.container_notification_text, null);
+        layout_notification_loading = inflater.inflate(R.layout.container_progress, null);
 
-        if(cardView == null) {
-            // TODO Exceptions werfen
+        if (cardView == null) {
+            throw new IllegalArgumentException("Layout does not contain NotificationCard view");
         }
 
         symbolTextView = (CustomFontTextView) layout_notification_text.findViewById(R.id.textNotificationSymbol);
@@ -52,35 +46,35 @@ public class NotificationController {
     }
 
     public void setLoading(Boolean isLoading) {
-        this.mIsLoading = isLoading;
+        if (!(this.mIsLoading == isLoading)) {
+            this.mIsLoading = isLoading;
 
-        cardView.removeAllViews();
+            cardView.removeAllViews();
 
-        if(mIsLoading) {
-            cardView.addView(layout_notification_loading);
-        } else {
-            cardView.addView(layout_notification_text);
+            if (mIsLoading) {
+                cardView.addView(layout_notification_loading);
+            } else {
+                cardView.addView(layout_notification_text);
+            }
         }
     }
 
     public void setVisible(Boolean visible) {
-        int visibility = 0;
-        if(visible) {
-            visibility = FrameLayout.VISIBLE;
+        if (visible) {
+            mVisibility = FrameLayout.VISIBLE;
         } else {
-            visibility = FrameLayout.INVISIBLE;
+            mVisibility = FrameLayout.INVISIBLE;
         }
-        cardView.setVisibility(visibility);
+
+        cardView.setVisibility(mVisibility);
     }
 
     public Boolean isVisible() {
-        int visibility = cardView.getVisibility();
-
-        if(visibility == FrameLayout.VISIBLE) {
+        if (mVisibility == FrameLayout.VISIBLE) {
             return true;
         }
 
-        return  false;
+        return false;
     }
 
     public Boolean isLoading() {
@@ -95,16 +89,20 @@ public class NotificationController {
         return symbolTextView.getText();
     }
 
+    public void setSymbol(int title) {
+        symbolTextView.setText(mActivity.getResources().getString(title));
+    }
+
     public void setSymbol(String symbol) {
         symbolTextView.setText(symbol);
-    }
-    public void setSymbol(int title) {
-        String title_string = activity.getResources().getString(title);
-        titleTextView.setText(title_string);
     }
 
     public CharSequence getTitle() {
         return titleTextView.getText();
+    }
+
+    public void setTitle(int title) {
+        titleTextView.setText(mActivity.getResources().getString(title));
     }
 
     public void setTitle(String title) {
@@ -115,8 +113,11 @@ public class NotificationController {
         return summaryTextView.getText();
     }
 
+    public void setSummary(int summary) {
+        summaryTextView.setText(mActivity.getResources().getString(summary));
+    }
+
     public void setSummary(String summary) {
         summaryTextView.setText(summary);
     }
-
 }
