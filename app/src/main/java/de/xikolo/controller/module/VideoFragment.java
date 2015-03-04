@@ -166,12 +166,14 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
         mVideoController.setOnFullscreenButtonClickedListener(new VideoController.OnFullscreenClickListener() {
             @Override
-            public void onFullscreenClick(int currentPosition, boolean isPlaying) {
+            public void onFullscreenClick(int currentPosition, boolean isPlaying, boolean isVideoQualityInHD, boolean didUserChangeVideoQuality) {
                 Intent intent = new Intent(getActivity(), VideoActivity.class);
                 Bundle b = new Bundle();
                 b.putParcelable(KEY_ITEM, mItem);
                 b.putInt(VideoController.KEY_TIME, currentPosition);
                 b.putBoolean(VideoController.KEY_ISPLAYING, isPlaying);
+                b.putBoolean(VideoController.KEY_VIDEO_QUALITY, isVideoQualityInHD);
+                b.putBoolean(VideoController.KEY_DID_USER_CHANGE_QUALITY, didUserChangeVideoQuality);
                 intent.putExtras(b);
                 startActivityForResult(intent, FULL_SCREEN_REQUEST);
             }

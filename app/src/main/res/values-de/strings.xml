@@ -46,29 +46,6 @@
     <string name="toast_log_in_failed">Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten.</string>
 
     <!-- -->
-    <string name="icon_cal"></string>
-    <string name="icon_lang"></string>
-    <string name="icon_courses"></string>
-    <string name="icon_news"></string>
-    <string name="icon_downloads"></string>
-    <string name="icon_settings"></string>
-    <string name="icon_course"></string>
-    <string name="icon_profile"></string>
-    <string name="icon_text"></string>
-    <string name="icon_video"></string>
-    <string name="icon_selftest"></string>
-    <string name="icon_assignment"></string>
-    <string name="icon_lti">&#xe67a;</string>
-    <string name="icon_bonus"></string>
-    <string name="icon_info">&#xe666;</string>
-    <string name="icon_visited">&#xf06e;</string>
-    <string name="icon_play">&#xe652;</string>
-    <string name="icon_pause">&#xe651;</string>
-    <string name="icon_reload">&#xe65b;</string>
-    <string name="icon_fullscreen">&#xe658;</string>
-    <string name="icon_quiz">&#xe61d;</string>
-
-    <!-- -->
     <string name="title_activity_module">Module</string>
 
     <!-- -->
