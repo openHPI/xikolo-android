@@ -79,6 +79,8 @@
     <!-- -->
     <string name="notification_no_enrollments">Please enroll for courses.</string>
     <string name="notification_please_login">@string/toast_please_log_in</string>
+    <string name="notification_file_already_downloaded">File already downloaded.</string>
+    <string name="notification_no_external_write_access">No write access for external storage.</string>
 
     <!-- -->
     <string name="offline_mode">Offline Mode</string>

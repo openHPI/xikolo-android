@@ -1,5 +1,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -63,105 +62,13 @@
                     android:paddingTop="16dp"
                     android:text="@string/title_section_downloads" />
 
-                <TextView
-                    android:id="@+id/textDownloadVideoHd"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/containerDownloads"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/buttonDownloadVideoHd"
                     android:layout_alignParentLeft="true"
-                    android:paddingBottom="8dp"
-                    android:singleLine="true"
-                    android:text="@string/video_hd_as_mp4"
-                    android:textSize="16sp" />
-
-                <de.xikolo.view.IconButton
-                    android:id="@+id/buttonDownloadVideoHd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_below="@+id/textDownloads"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/button_main"
-                    app:iconColor="@color/white"
-                    app:iconText="@string/icon_download_video"
-                    app:labelColor="@color/white"
-                    app:labelText="@string/download" />
-
-                <TextView
-                    android:id="@+id/textDownloadVideoSd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/buttonDownloadVideoSd"
-                    android:layout_alignParentLeft="true"
-                    android:paddingBottom="8dp"
-                    android:singleLine="true"
-                    android:text="@string/video_sd_as_mp4"
-                    android:textSize="16sp" />
-
-                <de.xikolo.view.IconButton
-                    android:id="@+id/buttonDownloadVideoSd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/buttonDownloadVideoHd"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/button_main"
-                    app:iconColor="@color/white"
-                    app:iconText="@string/icon_download_video"
-                    app:labelColor="@color/white"
-                    app:labelText="@string/download" />
-
-                <TextView
-                    android:id="@+id/textDownloadSlides"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/buttonDownloadSlides"
-                    android:layout_alignParentLeft="true"
-                    android:paddingBottom="8dp"
-                    android:singleLine="true"
-                    android:text="@string/slides_as_pdf"
-                    android:textSize="16sp" />
-
-                <de.xikolo.view.IconButton
-                    android:id="@+id/buttonDownloadSlides"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/buttonDownloadVideoSd"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/button_main"
-                    app:iconColor="@color/white"
-                    app:iconText="@string/icon_download_pdf"
-                    app:labelColor="@color/white"
-                    app:labelText="@string/download" />
-
-                <TextView
-                    android:id="@+id/textDownloadTranscript"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/buttonDownloadTranscript"
-                    android:layout_alignParentLeft="true"
-                    android:paddingBottom="8dp"
-                    android:singleLine="true"
-                    android:text="@string/transcript_as_pdf"
-                    android:textSize="16sp" />
-
-                <de.xikolo.view.IconButton
-                    android:id="@+id/buttonDownloadTranscript"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/buttonDownloadSlides"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/button_main"
-                    app:iconColor="@color/white"
-                    app:iconText="@string/icon_download_pdf"
-                    app:labelColor="@color/white"
-                    app:labelText="@string/download" />
+                    android:orientation="vertical" />
 
             </RelativeLayout>
 
