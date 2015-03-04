@@ -43,7 +43,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     private String mFilter;
     private SwipeRefreshLayout mRefreshLayout;
-    private ProgressBar mProgress;
 
     private AbsListView mAbsListView;
     private CourseListAdapter mCourseListAdapter;
@@ -129,9 +128,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mAbsListView.setAdapter(mCourseListAdapter);
 
         mNotificationController = new NotificationController(getActivity(), layout);
-        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
-
-        mNotificationController.setVisible(false);
+        mNotificationController.setNotificationVisible(false);
 
         return layout;
     }
@@ -140,32 +137,31 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public void onStart() {
         super.onStart();
 
-        mProgress.setVisibility(View.VISIBLE);
+        mNotificationController.setProgressVisible(true);
 
         if (mFilter.equals(FILTER_ALL)) {
             mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
         } else if (mFilter.equals(FILTER_MY)) {
             mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
             if (!UserModel.isLoggedIn(getActivity())) {
-                mProgress.setVisibility(View.GONE);
-                mNotificationController.setLoading(false);
-                mNotificationController.setTitle("Please login TITLE");
-                mNotificationController.setSummary(R.string.notification_please_login);
+                mNotificationController.setProgressVisible(false);
+                mNotificationController.setTitle(R.string.notification_please_login);
+                mNotificationController.setSummary(R.string.notification_please_login_summary);
                 mNotificationController.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                     }
                 });
-                mNotificationController.setVisible(true);
+                mNotificationController.setNotificationVisible(true);
             }
         }
 
         if (mCourses != null) {
             mCourseListAdapter.updateCourses(mCourses);
             mRefreshLayout.setRefreshing(false);
-            mProgress.setVisibility(View.GONE);
-            mNotificationController.setVisible(false);
+            mNotificationController.setProgressVisible(false);
+            mNotificationController.setNotificationVisible(false);
         } else {
             mRefreshLayout.setRefreshing(true);
             mCourseModel.getCourses(mCourseResult, false);
@@ -175,30 +171,30 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     private void updateView() {
         if (isAdded()) {
             mRefreshLayout.setRefreshing(false);
-            mProgress.setVisibility(View.GONE);
-            mNotificationController.setLoading(false);
+            mNotificationController.setProgressVisible(false);
             if (mFilter.equals(FILTER_MY)) {
                 if (!UserModel.isLoggedIn(getActivity())) {
-                    mNotificationController.setSummary(R.string.notification_please_login);
+                    mNotificationController.setTitle(R.string.notification_please_login);
+                    mNotificationController.setSummary(R.string.notification_please_login_summary);
                     mNotificationController.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                         }
                     });
-                    mNotificationController.setVisible(true);
+                    mNotificationController.setNotificationVisible(true);
                 } else if (mCourses.size() == 0) {
-                    mNotificationController.setLoading(false);
-                    mNotificationController.setSummary(R.string.notification_no_enrollments);
+                    mNotificationController.setTitle(R.string.notification_no_enrollments);
+                    mNotificationController.setSummary(R.string.notification_no_enrollments_summary);
                     mNotificationController.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_ALL_COURSES);
                         }
                     });
-                    mNotificationController.setVisible(true);
+                    mNotificationController.setNotificationVisible(true);
                 } else {
-                    mNotificationController.setVisible(false);
+                    mNotificationController.setNotificationVisible(false);
                 }
             }
             if (mCourses != null) {

@@ -2,9 +2,9 @@ package de.xikolo.controller.helper;
 
 import android.app.Activity;
 import android.support.v7.widget.CardView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import de.xikolo.R;
@@ -15,62 +15,57 @@ public class NotificationController {
     Activity mActivity;
 
     private CardView cardView;
-    private View layout_notification_text;
-    private View layout_notification_loading;
+    private ProgressBar progressView;
 
     private CustomFontTextView symbolTextView;
     private TextView titleTextView;
     private TextView summaryTextView;
 
     private Boolean mIsLoading = false;
-    private int mVisibility = FrameLayout.VISIBLE;
+    private int mVisibilityNotification = FrameLayout.VISIBLE;
 
     public NotificationController(Activity activity, View layout) {
         this.mActivity = activity;
 
-        LayoutInflater inflater = mActivity.getLayoutInflater();
-
         cardView = (CardView) layout.findViewById(R.id.containerNotification);
-        layout_notification_text = inflater.inflate(R.layout.container_notification_text, null);
-        layout_notification_loading = inflater.inflate(R.layout.container_progress, null);
+        progressView = (ProgressBar) layout.findViewById(R.id.progress);
 
         if (cardView == null) {
             throw new IllegalArgumentException("Layout does not contain NotificationCard view");
         }
+        if (progressView == null) {
+            throw new IllegalArgumentException("Layout does not contain ProgressBar view");
+        }
 
-        symbolTextView = (CustomFontTextView) layout_notification_text.findViewById(R.id.textNotificationSymbol);
-        titleTextView = (TextView) layout_notification_text.findViewById(R.id.textNotificationHeader);
-        summaryTextView = (TextView) layout_notification_text.findViewById(R.id.textNotificationSummary);
-
-        cardView.addView(layout_notification_text);
+        symbolTextView = (CustomFontTextView) cardView.findViewById(R.id.textNotificationSymbol);
+        titleTextView = (TextView) cardView.findViewById(R.id.textNotificationHeader);
+        summaryTextView = (TextView) cardView.findViewById(R.id.textNotificationSummary);
     }
 
-    public void setLoading(Boolean isLoading) {
+    public void setProgressVisible(Boolean isLoading) {
         if (!(this.mIsLoading == isLoading)) {
             this.mIsLoading = isLoading;
 
-            cardView.removeAllViews();
-
             if (mIsLoading) {
-                cardView.addView(layout_notification_loading);
+                progressView.setVisibility(ProgressBar.VISIBLE);
             } else {
-                cardView.addView(layout_notification_text);
+                progressView.setVisibility(ProgressBar.INVISIBLE);
             }
         }
     }
 
-    public void setVisible(Boolean visible) {
+    public void setNotificationVisible(Boolean visible) {
         if (visible) {
-            mVisibility = FrameLayout.VISIBLE;
+            mVisibilityNotification = FrameLayout.VISIBLE;
         } else {
-            mVisibility = FrameLayout.INVISIBLE;
+            mVisibilityNotification = FrameLayout.INVISIBLE;
         }
 
-        cardView.setVisibility(mVisibility);
+        cardView.setVisibility(mVisibilityNotification);
     }
 
-    public Boolean isVisible() {
-        if (mVisibility == FrameLayout.VISIBLE) {
+    public Boolean isNotificationVisible() {
+        if (mVisibilityNotification == FrameLayout.VISIBLE) {
             return true;
         }
 
