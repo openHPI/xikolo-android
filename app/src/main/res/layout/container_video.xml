@@ -90,6 +90,17 @@
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
+            <de.xikolo.view.CustomFontTextView
+                android:id="@+id/hdSwitch"
+                style="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="@string/icon_hd"
+                android:textColor="@color/video_hd_disabled"
+                android:textSize="24sp"
+                app:customFont="xikolo.ttf" />
+
         </LinearLayout>
 
     </RelativeLayout>
