@@ -202,6 +202,7 @@ public class VideoController {
             public void onClick(View v) {
                 show();
                 if (mFullscreenListener != null) {
+                    saveCurrentPosition();
                     mFullscreenListener.onFullscreenClick(savedTime, savedIsPlaying || mVideoView.isPlaying(), playVideoInHD, userChangedVideoQuality);
                 }
             }
