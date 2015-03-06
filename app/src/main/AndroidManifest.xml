@@ -65,7 +65,7 @@
             android:name=".controller.VideoActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controller.ModuleActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="sensorLandscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ModuleActivity" />
