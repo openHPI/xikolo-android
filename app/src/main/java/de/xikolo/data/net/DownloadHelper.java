@@ -32,6 +32,11 @@ public class DownloadHelper {
         return dm.enqueue(request);
     }
 
+    public static int remove(long... ids) {
+        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
+        return dm.remove(ids);
+    }
+
     public static Download buildDownloadObject(Cursor c) {
         long id = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID));
         String title = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));

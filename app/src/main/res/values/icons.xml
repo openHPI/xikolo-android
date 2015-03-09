@@ -27,6 +27,7 @@
     <string name="icon_hd" translatable="false">&#xe657;</string>
     <string name="icon_download_video" translatable="false">&#xe662;</string>
     <string name="icon_download_pdf" translatable="false">&#xe660;</string>
+    <string name="icon_cancel" translatable="false">&#xe643;</string>
 
     <!-- fontawesome.ttf -->
     <string name="icon_visited" translatable="false">&#xf06e;</string>
