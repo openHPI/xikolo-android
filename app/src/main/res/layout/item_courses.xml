@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:res="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:foreground="@drawable/fg_container">
+    android:foreground="@drawable/fg_container"
+    res:cardCornerRadius="4dp">
 
     <ImageView
         android:id="@+id/imageView"
@@ -105,4 +106,4 @@
 
     </RelativeLayout>
 
-</FrameLayout>
+</android.support.v7.widget.CardView>
