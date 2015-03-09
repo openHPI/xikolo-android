@@ -75,6 +75,8 @@
     <string name="video_hd_as_mp4">Video (HD) als MP4</string>
     <string name="video_sd_as_mp4">Video (SD) als MP4</string>
     <string name="download">Herunterladen</string>
+    <string name="open">Öffnen</string>
+    <string name="delete">Löschen</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Bitte melden Sie sich für einen Kurs an.</string>

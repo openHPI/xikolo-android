@@ -139,7 +139,8 @@ public class GlobalApplication extends Application {
 
                     @Override
                     public boolean isDebugEnabled() {
-                        return Config.DEBUG;
+//                        return Config.DEBUG;
+                        return false;
                     }
 
                     @Override
@@ -201,7 +202,9 @@ public class GlobalApplication extends Application {
                 if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
                     long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
                     Download dl = DownloadHelper.getDownloadForId(downloadId);
-                    EventBus.getDefault().post(new DownloadCompletedEvent(dl));
+                    if (dl != null) {
+                        EventBus.getDefault().post(new DownloadCompletedEvent(dl));
+                    }
                 }
             }
         };
