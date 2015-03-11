@@ -78,6 +78,9 @@
     <string name="open">Open</string>
     <string name="play">Play</string>
     <string name="delete">Delete</string>
+    <string name="files">Files</string>
+    <string name="overall">Overall</string>
+    <string name="courses">Courses</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Please enroll for courses.</string>

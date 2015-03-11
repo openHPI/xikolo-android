@@ -5,19 +5,27 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controller.downloads.adapter.DownlodsAdapter;
+import de.xikolo.model.DownloadModel;
+import de.xikolo.util.FileUtil;
+import de.xikolo.util.ToastUtil;
 
-public class DownloadsFragment extends Fragment {
+public class DownloadsFragment extends Fragment implements DownlodsAdapter.OnDeleteButtonClickedListener {
 
     public static final String TAG = DownloadsFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    private String mParam1;
-//    private String mParam2;
+    private ListView listView;
+    private DownlodsAdapter adapter;
+
+    private DownloadModel downloadModel;
 
     public DownloadsFragment() {
         // Required empty public constructor
@@ -25,32 +33,67 @@ public class DownloadsFragment extends Fragment {
 
     public static DownloadsFragment newInstance() {
         DownloadsFragment fragment = new DownloadsFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+        downloadModel = new DownloadModel(getActivity(), GlobalApplication.getInstance().getJobManager());
+        adapter = new DownlodsAdapter(getActivity(), this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_downloads, container, false);
+        View layout = inflater.inflate(R.layout.fragment_downloads, container, false);
+
+        listView = (ListView) layout.findViewById(R.id.listView);
+        listView.setAdapter(adapter);
+
+        return layout;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        fetchItems();
+    }
+
+    private void fetchItems() {
+        List<DownlodsAdapter.Item> items = new ArrayList<DownlodsAdapter.Item>();
+
+        items.add(new DownlodsAdapter.SectionItem(getString(R.string.overall)));
+        DownlodsAdapter.FolderItem total = new DownlodsAdapter.FolderItem(downloadModel.getAppFolder().substring(downloadModel.getAppFolder().lastIndexOf(File.separator) + 1),
+                downloadModel.getAppFolder());
+        items.add(total);
+
+        List<String> folders = downloadModel.getFoldersWithDownloads();
+        if (folders.size() > 0) {
+            items.add(new DownlodsAdapter.SectionItem(getString(R.string.courses)));
+            for (String folder : folders) {
+                DownlodsAdapter.FolderItem item = new DownlodsAdapter.FolderItem(folder.substring(folder.lastIndexOf(File.separator) + 1, folder.lastIndexOf("_")),
+                        folder);
+                items.add(item);
+            }
+        }
+
+        adapter.updateItems(items);
+    }
+
+    @Override
+    public void onDeleteButtonClicked(DownlodsAdapter.FolderItem item) {
+        File dir = new File(item.getPath());
+
+        if (dir.exists()) {
+            FileUtil.delete(dir);
+        } else {
+            ToastUtil.show(getActivity(), R.string.error);
+        }
+
+        fetchItems();
+    }
 }

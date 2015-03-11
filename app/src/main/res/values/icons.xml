@@ -31,5 +31,6 @@
 
     <!-- fontawesome.ttf -->
     <string name="icon_visited" translatable="false">&#xf06e;</string>
+    <string name="icon_trash" translatable="false">&#xf1f8;</string>
 
 </resources>

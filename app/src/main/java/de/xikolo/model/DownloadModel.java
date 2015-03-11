@@ -8,6 +8,8 @@ import android.util.Log;
 import com.path.android.jobqueue.JobManager;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import de.xikolo.GlobalApplication;
@@ -171,6 +173,33 @@ public class DownloadModel extends BaseModel {
                 + module.name + "_" + module.id + File.separator
                 + item.title + "_" + item.id + File.separator
                 + file;
+    }
+
+    public List<String> getFoldersWithDownloads() {
+        List<String> folders = new ArrayList<String>();
+
+        File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+                + GlobalApplication.getInstance().getString(R.string.app_name));
+
+        if (publicAppFolder.isDirectory()) {
+            File[] files = publicAppFolder.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    folders.add(file.getAbsolutePath());
+                }
+            }
+        }
+
+        return folders;
+    }
+
+    public String getAppFolder() {
+        File appFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+                + GlobalApplication.getInstance().getString(R.string.app_name));
+
+        createFolderIfNotExists(appFolder);
+
+        return appFolder.getAbsolutePath();
     }
 
     private void createFolderIfNotExists(File file) {
