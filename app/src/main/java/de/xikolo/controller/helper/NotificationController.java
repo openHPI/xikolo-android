@@ -48,6 +48,7 @@ public class NotificationController {
 
             if (mIsLoading) {
                 progressView.setVisibility(ProgressBar.VISIBLE);
+                setNotificationVisible(false);
             } else {
                 progressView.setVisibility(ProgressBar.INVISIBLE);
             }
@@ -57,6 +58,7 @@ public class NotificationController {
     public void setNotificationVisible(Boolean visible) {
         if (visible) {
             mVisibilityNotification = FrameLayout.VISIBLE;
+            setProgressVisible(false);
         } else {
             mVisibilityNotification = FrameLayout.INVISIBLE;
         }
@@ -115,4 +117,14 @@ public class NotificationController {
     public void setSummary(String summary) {
         summaryTextView.setText(summary);
     }
+
+    public void toggleViews() {
+        setProgressVisible(!(!isLoading() && !isNotificationVisible()));
+    }
+
+    public void setBothInvisible() {
+        setNotificationVisible(false);
+        setProgressVisible(false);
+    }
+
 }

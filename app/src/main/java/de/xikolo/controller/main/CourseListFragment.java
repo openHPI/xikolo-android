@@ -128,7 +128,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mAbsListView.setAdapter(mCourseListAdapter);
 
         mNotificationController = new NotificationController(getActivity(), layout);
-        mNotificationController.setNotificationVisible(false);
+        mNotificationController.setBothInvisible();
 
         return layout;
     }
@@ -144,7 +144,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         } else if (mFilter.equals(FILTER_MY)) {
             mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
             if (!UserModel.isLoggedIn(getActivity())) {
-                mNotificationController.setProgressVisible(false);
                 mNotificationController.setTitle(R.string.notification_please_login);
                 mNotificationController.setSummary(R.string.notification_please_login_summary);
                 mNotificationController.setOnClickListener(new View.OnClickListener() {
@@ -160,8 +159,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         if (mCourses != null) {
             mCourseListAdapter.updateCourses(mCourses);
             mRefreshLayout.setRefreshing(false);
-            mNotificationController.setProgressVisible(false);
-            mNotificationController.setNotificationVisible(false);
+            mNotificationController.setBothInvisible();
         } else {
             mRefreshLayout.setRefreshing(true);
             mCourseModel.getCourses(mCourseResult, false);
@@ -170,8 +168,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     private void updateView() {
         if (isAdded()) {
+            mNotificationController.setBothInvisible();
             mRefreshLayout.setRefreshing(false);
-            mNotificationController.setProgressVisible(false);
             if (mFilter.equals(FILTER_MY)) {
                 if (!UserModel.isLoggedIn(getActivity())) {
                     mNotificationController.setTitle(R.string.notification_please_login);
@@ -193,8 +191,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                         }
                     });
                     mNotificationController.setNotificationVisible(true);
-                } else {
-                    mNotificationController.setNotificationVisible(false);
                 }
             }
             if (mCourses != null) {
