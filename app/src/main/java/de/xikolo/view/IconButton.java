@@ -2,6 +2,7 @@ package de.xikolo.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +22,9 @@ public class IconButton extends RelativeLayout {
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.IconButton, 0, 0);
         String labelText = a.getString(R.styleable.IconButton_labelText);
-        int labelColor = a.getColor(R.styleable.IconButton_labelColor, R.color.white);
+        int labelColor = a.getColor(R.styleable.IconButton_labelColor, Color.WHITE);
         String iconText = a.getString(R.styleable.IconButton_iconText);
-        int iconColor = a.getColor(R.styleable.IconButton_iconColor, R.color.white);
+        int iconColor = a.getColor(R.styleable.IconButton_iconColor, Color.WHITE);
         a.recycle();
 
         LayoutInflater inflater = (LayoutInflater) context

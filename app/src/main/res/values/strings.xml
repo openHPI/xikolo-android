@@ -76,6 +76,7 @@
     <string name="video_sd_as_mp4">Video (SD) as MP4</string>
     <string name="download">Download</string>
     <string name="open">Open</string>
+    <string name="play">Play</string>
     <string name="delete">Delete</string>
 
     <!-- -->
@@ -83,6 +84,7 @@
     <string name="notification_please_login">@string/toast_please_log_in</string>
     <string name="notification_file_already_downloaded">File already downloaded.</string>
     <string name="notification_no_external_write_access">No write access for external storage.</string>
+    <string name="notification_no_offline_video">No network connection or downloaded video file available.</string>
 
     <!-- -->
     <string name="offline_mode">Offline Mode</string>
