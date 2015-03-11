@@ -1,14 +1,14 @@
-package de.xikolo.controller.main;
+package de.xikolo.controller.downloads;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.xikolo.R;
-import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 
-public class DownloadsFragment extends ContentFragment {
+public class DownloadsFragment extends Fragment {
 
     public static final String TAG = DownloadsFragment.class.getSimpleName();
 
@@ -44,7 +44,6 @@ public class DownloadsFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_DOWNLOADS, getString(R.string.title_section_downloads));
     }
 
     @Override
