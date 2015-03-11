@@ -2,7 +2,6 @@ package de.xikolo.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -14,7 +13,6 @@ import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controller.main.ContentFragment;
 import de.xikolo.controller.main.CourseListFragment;
-import de.xikolo.controller.main.DownloadsFragment;
 import de.xikolo.controller.main.ProfileFragment;
 import de.xikolo.controller.main.QuizDemoFragment;
 import de.xikolo.controller.main.ContentWebViewFragment;
@@ -95,8 +93,7 @@ public class MainActivity extends BaseActivity
                 tag = "qr";
                 break;
             case NavigationAdapter.NAV_ID_DOWNLOADS:
-                newFragment = DownloadsFragment.newInstance();
-                tag = "downloads";
+                intent = new Intent(MainActivity.this, DownloadsActivity.class);
                 break;
             case NavigationAdapter.NAV_ID_SETTINGS:
                 intent = new Intent(MainActivity.this, SettingsActivity.class);
