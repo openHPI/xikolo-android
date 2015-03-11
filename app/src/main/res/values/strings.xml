@@ -70,19 +70,36 @@
     <string name="assignments">Assignments</string>
     <string name="points">Points</string>
     <string name="scan_qr">Please scan the QR Code</string>
+    <string name="slides_as_pdf">Presentation slides as PDF</string>
+    <string name="transcript_as_pdf">Transcript as PDF</string>
+    <string name="video_hd_as_mp4">Video (HD) as MP4</string>
+    <string name="video_sd_as_mp4">Video (SD) as MP4</string>
+    <string name="download">Download</string>
+    <string name="open">Open</string>
+    <string name="play">Play</string>
+    <string name="delete">Delete</string>
+    <string name="files">Files</string>
+    <string name="overall">Overall</string>
+    <string name="courses">Courses</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Please enroll for courses.</string>
     <string name="notification_please_login">@string/toast_please_log_in</string>
+    <string name="notification_file_already_downloaded">File already downloaded.</string>
+    <string name="notification_no_external_write_access">No write access for external storage.</string>
+    <string name="notification_no_offline_video">No network connection or downloaded video file available.</string>
 
     <!-- -->
     <string name="offline_mode">Offline Mode</string>
 
     <!-- -->
-    <string name="settings_category_general">General</string>
+    <string name="settings_category_data_usage">Mobile Data Usage</string>
 
-    <string name="settings_title_video_quality">Limit mobile data usage</string>
-    <string name="settings_summary_video_quality">Only stream HD video on Wi-Fi</string>
+    <string name="settings_title_video_quality">Limit data usage for videos</string>
+    <string name="settings_summary_video_quality">Only stream HD videos on Wi-Fi</string>
+
+    <string name="settings_title_download_network">Limit data usage for downloads</string>
+    <string name="settings_summary_download_network">Only download files on Wi-Fi</string>
 
     <string name="settings_category_about">About</string>
 

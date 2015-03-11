@@ -78,6 +78,18 @@ public class HttpRequest {
         return null;
     }
 
+    public long getContentLength() {
+        try {
+            HttpsURLConnection conn = createConnection();
+            conn.connect();
+            final String contentLengthStr = conn.getHeaderField("content-length");
+            return Long.parseLong(contentLengthStr);
+        } catch (Exception e) {
+            if (Config.DEBUG) Log.w(TAG, "Error for URL " + mUrl, e);
+        }
+        return 0;
+    }
+
     public Object getResponse() {
         try {
             InputStreamReader in = new InputStreamReader(new BufferedInputStream(createConnection().getInputStream()));

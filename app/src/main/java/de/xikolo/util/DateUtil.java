@@ -34,7 +34,6 @@ public class DateUtil {
 
     public static boolean nowIsAfter(String from) {
         Date dateBegin = parse(from);
-        ;
 
         Date dateNow = new Date();
 

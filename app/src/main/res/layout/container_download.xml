@@ -1,0 +1,126 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/AppTheme">
+
+    <TextView
+        android:id="@+id/textFileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="4dp"
+        android:paddingTop="8dp"
+        android:singleLine="true"
+        android:textColor="@color/text_color"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textFileSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textFileName"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="4dp"
+        android:paddingTop="8dp"
+        android:singleLine="true"
+        android:text="--"
+        android:textColor="@color/text_color"
+        android:textSize="14sp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textFileName"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:id="@+id/downloadStartContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.xikolo.view.IconButton
+                android:id="@+id/buttonDownloadStart"
+                app:labelText="@string/download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/button_main"
+                android:minHeight="36dp"
+                android:minWidth="88dp"
+                android:elevation="1dp"
+                android:translationZ="1dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/downloadRunningContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.xikolo.view.CustomFontTextView
+                android:id="@+id/buttonDownloadCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/icon_cancel"
+                android:textColor="@color/text_color"
+                android:textSize="26sp"
+                app:customFont="xikolo.ttf" />
+
+            <ProgressBar
+                android:id="@+id/progressDownload"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/buttonDownloadCancel"
+                android:indeterminate="true"
+                android:max="100" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/downloadEndContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/buttonDownloadOpen"
+                style="@style/Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/button_main"
+                android:text="@string/open" />
+
+            <Button
+                android:id="@+id/buttonDownloadDelete"
+                style="@style/Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_toLeftOf="@+id/buttonDownloadOpen"
+                android:background="@drawable/button_gray"
+                android:text="@string/delete" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</RelativeLayout>

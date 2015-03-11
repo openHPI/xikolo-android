@@ -70,19 +70,36 @@
     <string name="assignments">Hausaufgaben</string>
     <string name="points">Punkte</string>
     <string name="scan_qr">Bitte QR Code scannen</string>
+    <string name="slides_as_pdf">Präsentationsfolien als PDF</string>
+    <string name="transcript_as_pdf">Transcript als PDF</string>
+    <string name="video_hd_as_mp4">Video (HD) als MP4</string>
+    <string name="video_sd_as_mp4">Video (SD) als MP4</string>
+    <string name="download">Herunterladen</string>
+    <string name="open">Öffnen</string>
+    <string name="play">Abspielen</string>
+    <string name="delete">Löschen</string>
+    <string name="files">Dateien</string>
+    <string name="overall">Insgesamt</string>
+    <string name="courses">Kurse</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Bitte melden Sie sich für einen Kurs an.</string>
     <string name="notification_please_login">@string/toast_please_log_in</string>
+    <string name="notification_file_already_downloaded">Datei bereits heruntergeladen.</string>
+    <string name="notification_no_external_write_access">Kein Schreibzugriff für externen Speicher.</string>
+    <string name="notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>
 
     <!-- -->
     <string name="offline_mode">Offline-Modus</string>
 
     <!-- -->
-    <string name="settings_category_general">Allgemein</string>
+    <string name="settings_category_data_usage">Mobile Datennutzung</string>
 
-    <string name="settings_title_video_quality">Mobile Datennutzung beschränken</string>
-    <string name="settings_summary_video_quality">HD Videos nur über WLAN laden</string>
+    <string name="settings_title_video_quality">Datennutzung für Videos beschränken</string>
+    <string name="settings_summary_video_quality">HD Videos nur über WLAN streamen</string>
+
+    <string name="settings_title_download_network">Datennutzung für Downloads beschränken</string>
+    <string name="settings_summary_download_network">Downloads nur über WLAN laden</string>
 
     <string name="settings_category_about">Info</string>
 

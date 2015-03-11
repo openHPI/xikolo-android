@@ -47,7 +47,28 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
+                    android:textColor="@color/apptheme_main"
                     android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/textDownloads"
+                    style="?android:attr/listSeparatorTextViewStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/textTitle"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/title_section_downloads" />
+
+                <LinearLayout
+                    android:id="@+id/containerDownloads"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/textDownloads"
+                    android:orientation="vertical" />
 
             </RelativeLayout>
 

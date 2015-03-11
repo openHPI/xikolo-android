@@ -145,8 +145,6 @@ public class ModuleActivity extends BaseActivity {
         b.putParcelable(ARG_MODULE, mModule);
         intent.putExtras(b);
         setResult(RESULT_OK, intent);
-
-        Log.w(TAG, "setResult");
     }
 
     public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.CustomTabProvider {
