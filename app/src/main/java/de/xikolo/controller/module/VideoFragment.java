@@ -36,6 +36,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
     public static final int FULL_SCREEN_REQUEST = 1;
 
+    public static final String KEY_COURSE = "key_course";
+    public static final String KEY_MODULE = "key_module";
     public static final String KEY_ITEM = "key_item";
 
     private TextView mTitle;
@@ -130,6 +132,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             public void onFullscreenClick(int currentPosition, boolean isPlaying, boolean isVideoQualityInHD, boolean didUserChangeVideoQuality) {
                 Intent intent = new Intent(getActivity(), VideoActivity.class);
                 Bundle b = new Bundle();
+                b.putParcelable(KEY_COURSE, mCourse);
+                b.putParcelable(KEY_MODULE, mModule);
                 b.putParcelable(KEY_ITEM, mItem);
                 b.putInt(VideoController.KEY_TIME, currentPosition);
                 b.putBoolean(VideoController.KEY_ISPLAYING, isPlaying);
@@ -167,16 +171,16 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         mProgress.setVisibility(View.GONE);
         mContainer.setVisibility(View.VISIBLE);
 
-        mVideoController.setVideo(mItem);
+        mVideoController.setVideo(mCourse, mModule, mItem);
 
         mTitle.setText(mItem.detail.title);
 
         mLinearLayoutDownloads.removeAllViews();
-        DownloadViewController hdVideo = new DownloadViewController(DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
+        DownloadViewController hdVideo = new DownloadViewController(mVideoController, DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
         mLinearLayoutDownloads.addView(hdVideo.getView());
-        DownloadViewController sdVideo = new DownloadViewController(DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
+        DownloadViewController sdVideo = new DownloadViewController(mVideoController, DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
         mLinearLayoutDownloads.addView(sdVideo.getView());
-        DownloadViewController slides = new DownloadViewController(DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
+        DownloadViewController slides = new DownloadViewController(mVideoController, DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
         mLinearLayoutDownloads.addView(slides.getView());
 //        DownloadViewController transcript = new DownloadViewController(DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
 //        mLinearLayoutDownloads.addView(transcript.getView());

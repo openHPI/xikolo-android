@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/AppTheme">
 
     <TextView
         android:id="@+id/textFileName"
@@ -41,6 +42,7 @@
 
             <de.xikolo.view.IconButton
                 android:id="@+id/buttonDownloadStart"
+                app:labelText="@string/download"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -50,9 +52,8 @@
                 android:background="@drawable/button_main"
                 android:minHeight="36dp"
                 android:minWidth="88dp"
-                app:iconColor="@color/white"
-                app:labelColor="@color/white"
-                app:labelText="@string/download" />
+                android:elevation="1dp"
+                android:translationZ="1dp" />
 
         </RelativeLayout>
 
@@ -67,7 +68,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:padding="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
                 android:text="@string/icon_cancel"
                 android:textColor="@color/text_color"
                 android:textSize="26sp"

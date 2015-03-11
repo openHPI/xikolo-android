@@ -15,7 +15,9 @@ import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.helper.VideoController;
 import de.xikolo.controller.module.VideoFragment;
+import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
 
 public class VideoActivity extends BaseActivity {
@@ -24,6 +26,8 @@ public class VideoActivity extends BaseActivity {
 
     private VideoController mVideoController;
 
+    private Course mCourse;
+    private Module mModule;
     private Item<VideoItemDetail> mItem;
 
     @Override
@@ -49,9 +53,11 @@ public class VideoActivity extends BaseActivity {
         mVideoController.disableHeader();
 
         Bundle b = getIntent().getExtras();
-        if (b == null || !b.containsKey(VideoFragment.KEY_ITEM)) {
+        if (b == null || !b.containsKey(VideoFragment.KEY_COURSE) || !b.containsKey(VideoFragment.KEY_MODULE) || !b.containsKey(VideoFragment.KEY_ITEM)) {
             throw new WrongParameterException();
         } else {
+            mCourse = getIntent().getExtras().getParcelable(VideoFragment.KEY_COURSE);
+            mModule = getIntent().getExtras().getParcelable(VideoFragment.KEY_MODULE);
             mItem = getIntent().getExtras().getParcelable(VideoFragment.KEY_ITEM);
             mVideoController.returnFromSavedInstanceState(getIntent().getExtras());
         }
@@ -91,7 +97,7 @@ public class VideoActivity extends BaseActivity {
                     size.y - usableRect.bottom);
         }
 
-        mVideoController.setVideo(mItem);
+        mVideoController.setVideo(mCourse, mModule, mItem);
     }
 
     private void hideSystemBars() {

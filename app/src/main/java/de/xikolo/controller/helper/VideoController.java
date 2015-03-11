@@ -14,10 +14,14 @@ import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.data.preferences.AppPreferences;
+import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
+import de.xikolo.data.preferences.AppPreferences;
+import de.xikolo.model.DownloadModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
@@ -46,6 +50,8 @@ public class VideoController {
     private static final int sDefaultTimeout = 3000;
     private static final int FADE_OUT = 1;
 
+    private DownloadModel mDownloadModel;
+
     private Activity mActivity;
 
     private View mVideoContainer;
@@ -64,6 +70,10 @@ public class VideoController {
     private TextView mTotalTime;
     private CustomFontTextView mHDSwitch;
 
+    private View mVideoWarning;
+    private TextView mVideoWarningText;
+    private TextView mRetryButton;
+
     private CustomFontTextView mPlayButton;
 
     private OnFullscreenClickListener mFullscreenListener;
@@ -79,7 +89,10 @@ public class VideoController {
 
     private boolean seekBarUpdaterIsRunning = false;
 
+    private Course mCourse;
+    private Module mModule;
     private Item<VideoItemDetail> mVideoItemDetails;
+
     private boolean playVideoInHD = false;
     private boolean userChangedVideoQuality = false;
     // Umgeht Fehler, dass bei Veränderung der Qualität und Wechsel der Bildschirmausrichtung das Video stehen bleibt bzw. weiter läuft
@@ -108,6 +121,10 @@ public class VideoController {
 
         mPlayButton = (CustomFontTextView) mVideoContainer.findViewById(R.id.btnPlay);
 
+        mVideoWarning = mVideoContainer.findViewById(R.id.videoWarning);
+        mVideoWarningText = (TextView) mVideoContainer.findViewById(R.id.videoWarningText);
+        mRetryButton = (TextView) mVideoContainer.findViewById(R.id.btnRetry);
+
         mVideoContainer.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -115,6 +132,8 @@ public class VideoController {
                 return false;
             }
         });
+
+        mDownloadModel = new DownloadModel(activity, GlobalApplication.getInstance().getJobManager());
 
         setup();
     }
@@ -243,6 +262,13 @@ public class VideoController {
                 toggleHD();
             }
         });
+
+        mRetryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateVideoQuality(mCourse, mModule, mVideoItemDetails);
+            }
+        });
     }
 
     public void seekTo(int progress) {
@@ -302,20 +328,22 @@ public class VideoController {
         mVideoView.setDimensions(w, h);
     }
 
-    public void setVideoURI(String uri) {
+    private void setVideoURI(String uri) {
         if (Config.DEBUG) {
             Log.i(TAG, "Video URI: " + uri);
         }
         mVideoView.setVideoURI(Uri.parse(uri));
     }
 
-    public void setVideo(Item<VideoItemDetail> video) {
+    public void setVideo(Course course, Module module, Item<VideoItemDetail> video) {
+        mCourse = course;
+        mModule = module;
         mVideoItemDetails = video;
 
         if (!userChangedVideoQuality) {
             int connectivityStatus = NetworkUtil.getConnectivityStatus(mActivity);
 
-            if (connectivityStatus == NetworkUtil.TYPE_WIFI
+            if (connectivityStatus == NetworkUtil.TYPE_WIFI || connectivityStatus == NetworkUtil.TYPE_NOT_CONNECTED
                     || (connectivityStatus == NetworkUtil.TYPE_MOBILE && !AppPreferences.isVideoQualityLimitedOnMobile(mActivity))) {
                 playVideoInHD = true;
             } else {
@@ -323,7 +351,7 @@ public class VideoController {
             }
         }
 
-        updateVideoQuality(mVideoItemDetails);
+        updateVideoQuality(course, module, mVideoItemDetails);
     }
 
     public void enableHeader() {
@@ -383,8 +411,30 @@ public class VideoController {
         playVideoInHD = !playVideoInHD;
 
         saveCurrentPosition();
-        updateVideoQuality(mVideoItemDetails);
+        updateVideoQuality(mCourse, mModule, mVideoItemDetails);
         seekTo(savedTime);
+    }
+
+    public void playHD() {
+        userChangedVideoQuality = true;
+
+        playVideoInHD = true;
+
+        saveCurrentPosition();
+        updateVideoQuality(mCourse, mModule, mVideoItemDetails);
+        seekTo(savedTime);
+        start();
+    }
+
+    public void playSD() {
+        userChangedVideoQuality = true;
+
+        playVideoInHD = false;
+
+        saveCurrentPosition();
+        updateVideoQuality(mCourse, mModule, mVideoItemDetails);
+        seekTo(savedTime);
+        start();
     }
 
     private void saveCurrentPosition() {
@@ -398,11 +448,31 @@ public class VideoController {
         }
     }
 
-    private void updateVideoQuality(Item<VideoItemDetail> video) {
+    private void updateVideoQuality(Course course, Module module, Item<VideoItemDetail> video) {
+        String stream;
+        DownloadModel.DownloadFileType fileType;
+
+        mVideoWarning.setVisibility(View.GONE);
+
         if (playVideoInHD) {
-            setVideoURI(video.detail.stream.hd_url);
+            stream = video.detail.stream.hd_url;
+            fileType = DownloadModel.DownloadFileType.VIDEO_HD;
         } else {
-            setVideoURI(video.detail.url);
+            stream = video.detail.stream.sd_url;
+            fileType = DownloadModel.DownloadFileType.VIDEO_SD;
+        }
+
+        if (!mDownloadModel.downloadRunning(fileType, course, module, video)
+                && mDownloadModel.downloadExists(fileType, course, module, video)) {
+            setVideoURI("file://" + mDownloadModel.getDownloadFile(fileType, course, module, video).getAbsolutePath());
+        } else if (NetworkUtil.isOnline(mActivity)) {
+            setVideoURI(stream);
+        } else if (playVideoInHD) {
+            playVideoInHD = false;
+            updateVideoQuality(course, module, video);
+        } else {
+            mVideoWarning.setVisibility(View.VISIBLE);
+            mVideoWarningText.setText(mActivity.getString(R.string.notification_no_offline_video));
         }
 
         setHDSwitchColor(playVideoInHD);

@@ -92,7 +92,6 @@ public class DownloadModel extends BaseModel {
 
             Set<Download> dlSet = DownloadHelper.getAllDownloads();
             for (Download download : dlSet) {
-                Log.i(TAG, download.localFilename);
                 if (download.equals(dl)) {
                     DownloadHelper.remove(download.id);
                 }
@@ -143,6 +142,14 @@ public class DownloadModel extends BaseModel {
     private boolean downloadExists(String filename) {
         File file = new File(filename);
         return file.isFile() && file.exists();
+    }
+
+    public File getDownloadFile(DownloadFileType type, Course course, Module module, Item item) {
+        File file = new File(buildDownloadFilename(type, course, module, item));
+        if (file.isFile() && file.exists()) {
+            return file;
+        }
+        return null;
     }
 
     public long getDownloadFileSize(DownloadFileType type, Course course, Module module, Item item) {
