@@ -78,6 +78,9 @@
     <string name="open">Öffnen</string>
     <string name="play">Abspielen</string>
     <string name="delete">Löschen</string>
+    <string name="files">Dateien</string>
+    <string name="overall">Insgesamt</string>
+    <string name="courses">Kurse</string>
 
     <!-- -->
     <string name="notification_no_enrollments">Bitte melden Sie sich für einen Kurs an.</string>

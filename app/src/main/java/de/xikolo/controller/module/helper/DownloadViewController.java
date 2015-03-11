@@ -25,7 +25,7 @@ import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.events.DownloadCompletedEvent;
-import de.xikolo.util.FileSizeUtil;
+import de.xikolo.util.FileUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.view.IconButton;
 
@@ -172,8 +172,8 @@ public class DownloadViewController {
                             if (progressBarUpdaterRunning) {
                                 downloadProgress.setIndeterminate(false);
                                 downloadProgress.setProgress((int) (dl.bytesDownloadedSoFar * 100 / dl.totalSizeBytes));
-                                fileSizeText.setText(FileSizeUtil.getFormattedFileSize(dl.bytesDownloadedSoFar) + " / "
-                                        + FileSizeUtil.getFormattedFileSize(dl.totalSizeBytes));
+                                fileSizeText.setText(FileUtil.getFormattedFileSize(dl.bytesDownloadedSoFar) + " / "
+                                        + FileUtil.getFormattedFileSize(dl.totalSizeBytes));
                             }
                         }
                     });
@@ -182,7 +182,7 @@ public class DownloadViewController {
                 if (progressBarUpdaterRunning) {
                     downloadProgress.postDelayed(this, MILLISECONDS);
                 } else {
-                    fileSizeText.setText(FileSizeUtil.getFormattedFileSize(downloadModel.getDownloadFileSize(type, course, module, item)));
+                    fileSizeText.setText(FileUtil.getFormattedFileSize(downloadModel.getDownloadFileSize(type, course, module, item)));
                 }
             }
         };
@@ -216,7 +216,7 @@ public class DownloadViewController {
             downloadModel.getRemoteDownloadFileSize(new Result<Long>() {
                 @Override
                 protected void onSuccess(Long result, DataSource dataSource) {
-                    fileSizeText.setText(FileSizeUtil.getFormattedFileSize(result));
+                    fileSizeText.setText(FileUtil.getFormattedFileSize(result));
                 }
             }, uri);
         }
@@ -252,7 +252,7 @@ public class DownloadViewController {
             downloadEndContainer.setVisibility(View.VISIBLE);
         }
 
-        fileSizeText.setText(FileSizeUtil.getFormattedFileSize(downloadModel.getDownloadFileSize(type, course, module, item)));
+        fileSizeText.setText(FileUtil.getFormattedFileSize(downloadModel.getDownloadFileSize(type, course, module, item)));
 
         progressBarUpdaterRunning = false;
     }
