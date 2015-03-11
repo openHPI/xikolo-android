@@ -1,0 +1,24 @@
+<resources>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
+
+        <item name="colorPrimary">@color/apptheme_main</item>
+        <item name="colorPrimaryDark">@color/apptheme_main_dark</item>
+        <item name="colorAccent">@color/apptheme_second</item>
+
+        <item name="android:textColor">@color/text_color</item>
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
+    </style>
+
+    <style name="AppTheme" parent="AppTheme.Base">
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarAppTheme</item>
+
+        <item name="android:seekBarStyle">@style/SeekBarAppTheme</item>
+
+    </style>
+
+</resources>
