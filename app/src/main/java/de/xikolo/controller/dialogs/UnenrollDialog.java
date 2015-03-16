@@ -1,4 +1,4 @@
-package de.xikolo.controller.course.dialog;
+package de.xikolo.controller.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -31,7 +31,7 @@ public class UnenrollDialog extends DialogFragment {
                         }
                     }
                 })
-                .setNegativeButton(R.string.dialog_unenroll_no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         UnenrollDialog.this.getDialog().cancel();

@@ -1,4 +1,4 @@
-package de.xikolo.controller.settings.dialog;
+package de.xikolo.controller.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -20,7 +20,7 @@ import de.greenrobot.event.EventBus;
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.WebViewFragment;
-import de.xikolo.controller.course.dialog.UnenrollDialog;
+import de.xikolo.controller.dialogs.UnenrollDialog;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.Result;

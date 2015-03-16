@@ -1,6 +1,7 @@
 package de.xikolo.controller.downloads;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,9 @@ import java.util.List;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controller.dialogs.ConfirmDeleteDialog;
 import de.xikolo.controller.downloads.adapter.DownlodsAdapter;
+import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.util.FileUtil;
 import de.xikolo.util.ToastUtil;
@@ -85,7 +88,28 @@ public class DownloadsFragment extends Fragment implements DownlodsAdapter.OnDel
     }
 
     @Override
-    public void onDeleteButtonClicked(DownlodsAdapter.FolderItem item) {
+    public void onDeleteButtonClicked(final DownlodsAdapter.FolderItem item) {
+        if (AppPreferences.confirmBeforeDeleting(GlobalApplication.getInstance())) {
+            ConfirmDeleteDialog dialog = ConfirmDeleteDialog.getInstance(true);
+            dialog.setConfirmDeleteDialogListener(new ConfirmDeleteDialog.ConfirmDeleteDialogListener() {
+                @Override
+                public void onDialogPositiveClick(DialogFragment dialog) {
+                    deleteFolder(item);
+                }
+
+                @Override
+                public void onDialogPositiveAndAlwaysClick(DialogFragment dialog) {
+                    AppPreferences.setConfirmBeforeDeleting(getActivity(), false);
+                    deleteFolder(item);
+                }
+            });
+            dialog.show(getActivity().getSupportFragmentManager(), ConfirmDeleteDialog.TAG);
+        } else {
+            deleteFolder(item);
+        }
+    }
+
+    private void deleteFolder(DownlodsAdapter.FolderItem item) {
         File dir = new File(item.getPath());
 
         if (dir.exists()) {
@@ -96,4 +120,5 @@ public class DownloadsFragment extends Fragment implements DownlodsAdapter.OnDel
 
         fetchItems();
     }
+
 }
