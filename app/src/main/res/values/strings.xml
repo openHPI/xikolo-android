@@ -47,6 +47,10 @@
     <string name="dialog_confirm_delete_yes">Delete</string>
     <string name="dialog_confirm_delete_yes_always">Delete and don\'t ask again</string>
 
+    <string name="dialog_mobile_download_title">Allow mobile downloads?</string>
+    <string name="dialog_mobile_download_message">Do you want to allow downloads on mobile networks? Be aware that this affects your mobile data volume.</string>
+    <string name="dialog_mobile_download_yes">Allow</string>
+
     <!-- -->
     <string name="toast_no_courses">No courses received.</string>
     <string name="toast_no_network">Please enable network connection.</string>
