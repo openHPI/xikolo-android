@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import de.xikolo.R;
+import de.xikolo.util.DisplayUtil;
 
 public class ConfirmDeleteDialog extends DialogFragment {
 
@@ -50,14 +51,6 @@ public class ConfirmDeleteDialog extends DialogFragment {
                         }
                     }
                 })
-                .setNeutralButton(R.string.dialog_confirm_delete_yes_always, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (mListener != null) {
-                            mListener.onDialogPositiveAndAlwaysClick(ConfirmDeleteDialog.this);
-                        }
-                    }
-                })
                 .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -65,6 +58,17 @@ public class ConfirmDeleteDialog extends DialogFragment {
                     }
                 })
                 .setCancelable(true);
+
+        if (DisplayUtil.is7inchTablet(getActivity())) {
+            builder.setNeutralButton(R.string.dialog_confirm_delete_yes_always, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (mListener != null) {
+                        mListener.onDialogPositiveAndAlwaysClick(ConfirmDeleteDialog.this);
+                    }
+                }
+            });
+        }
 
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(true);
