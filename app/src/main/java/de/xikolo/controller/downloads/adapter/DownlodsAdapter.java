@@ -86,19 +86,21 @@ public class DownlodsAdapter extends BaseAdapter {
 
             long numberOfFiles = FileUtil.folderFileNumber(dir);
 
-            if (numberOfFiles > 0) {
-                holder.subTitle.setText(numberOfFiles + " " + mActivity.getString(R.string.files) + ": "
-                        + FileUtil.getFormattedFileSize(FileUtil.folderSize(dir)));
-            } else {
-                holder.subTitle.setText(numberOfFiles + " " + mActivity.getString(R.string.files));
-            }
-
             holder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     callback.onDeleteButtonClicked(folderItem);
                 }
             });
+
+            if (numberOfFiles > 0) {
+                holder.subTitle.setText(numberOfFiles + " " + mActivity.getString(R.string.files) + ": "
+                        + FileUtil.getFormattedFileSize(FileUtil.folderSize(dir)));
+                holder.delete.setVisibility(View.VISIBLE);
+            } else {
+                holder.subTitle.setText(numberOfFiles + " " + mActivity.getString(R.string.files));
+                holder.delete.setVisibility(View.GONE);
+            }
 
             if (i == getCount() - 1 || getItem(i + 1) instanceof SectionItem) {
                 holder.separator.setVisibility(View.INVISIBLE);

@@ -37,7 +37,15 @@
     <string name="dialog_unenroll_title">Un-enroll this course?</string>
     <string name="dialog_unenroll_message">You\'ll be un-enrolled from this course.</string>
     <string name="dialog_unenroll_yes">Un-enroll</string>
-    <string name="dialog_unenroll_no">Cancel</string>
+
+    <string name="dialog_negative">Cancel</string>
+
+    <string name="dialog_confirm_delete_title">Delete this file?</string>
+    <string name="dialog_confirm_delete_message">The downloaded file will be deleted and can\'t used offline anymore.</string>
+    <string name="dialog_confirm_delete_title_multi">Delete this files?</string>
+    <string name="dialog_confirm_delete_message_multi">The downloaded files will be deleted and can\'t used offline anymore.</string>
+    <string name="dialog_confirm_delete_yes">Delete</string>
+    <string name="dialog_confirm_delete_yes_always">Delete and don\'t ask again</string>
 
     <!-- -->
     <string name="toast_no_courses">No courses received.</string>
@@ -93,6 +101,10 @@
     <string name="offline_mode">Offline Mode</string>
 
     <!-- -->
+    <string name="settings_category_general">General</string>
+
+    <string name="settings_title_ask_delete">Confirm before deleting</string>
+
     <string name="settings_category_data_usage">Mobile Data Usage</string>
 
     <string name="settings_title_video_quality">Limit data usage for videos</string>

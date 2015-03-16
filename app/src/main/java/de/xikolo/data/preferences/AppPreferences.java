@@ -16,4 +16,16 @@ public class AppPreferences {
         return preferences.getBoolean("download_network", true);
     }
 
+    public static boolean confirmBeforeDeleting(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getBoolean("confirm_delete", true);
+    }
+
+    public static void setConfirmBeforeDeleting(Context context, boolean confirmBeforeDeleting) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("confirm_delete", confirmBeforeDeleting);
+        editor.commit();
+    }
+
 }
