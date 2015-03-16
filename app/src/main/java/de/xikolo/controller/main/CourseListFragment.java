@@ -98,12 +98,12 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
             @Override
             protected void onError(ErrorCode errorCode) {
-                   if (errorCode == ErrorCode.NO_RESULT) {
-                       ToastUtil.show(getActivity(), getActivity().getString(R.string.toast_no_courses)
-                               + " " + getActivity().getString(R.string.toast_no_network));
-                   } else if (errorCode == ErrorCode.NO_NETWORK) {
-                       NetworkUtil.showNoConnectionToast(getActivity());
-                   }
+                if (errorCode == ErrorCode.NO_RESULT) {
+                    ToastUtil.show(getActivity(), getActivity().getString(R.string.toast_no_courses)
+                            + " " + getActivity().getString(R.string.toast_no_network));
+                } else if (errorCode == ErrorCode.NO_NETWORK) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
+                }
             }
         };
     }
@@ -198,6 +198,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     mNotification.setVisibility(View.GONE);
                 }
             }
+
             if (mCourses != null) {
                 mCourseListAdapter.updateCourses(mCourses);
             }
