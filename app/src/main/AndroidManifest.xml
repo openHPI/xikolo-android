@@ -60,6 +60,7 @@
         <activity
             android:name=".controller.QuizDemoActivity"
             android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize"
             android:parentActivityName=".controller.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
