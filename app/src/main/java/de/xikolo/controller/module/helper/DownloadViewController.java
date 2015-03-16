@@ -19,6 +19,7 @@ import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.ConfirmDeleteDialog;
+import de.xikolo.controller.dialogs.MobileDownloadDialog;
 import de.xikolo.controller.helper.VideoController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Download;
@@ -89,13 +90,20 @@ public class DownloadViewController {
             @Override
             public void onClick(View v) {
                 if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                    downloadModel.startDownload(uri,
-                            DownloadViewController.this.type,
-                            DownloadViewController.this.course,
-                            DownloadViewController.this.module,
-                            DownloadViewController.this.item);
-
-                    showRunningState();
+                    if (NetworkUtil.getConnectivityStatus(activity) == NetworkUtil.TYPE_MOBILE &&
+                            AppPreferences.isDownloadNetworkLimitedOnMobile(activity)) {
+                        MobileDownloadDialog dialog = MobileDownloadDialog.getInstance();
+                        dialog.setMobileDownloadDialogListener(new MobileDownloadDialog.MobileDownloadDialogListener() {
+                            @Override
+                            public void onDialogPositiveClick(DialogFragment dialog) {
+                                AppPreferences.setIsDownloadNetworkLimitedOnMobile(activity, false);
+                                startDownload();
+                            }
+                        });
+                        dialog.show(activity.getSupportFragmentManager(), MobileDownloadDialog.TAG);
+                    } else {
+                        startDownload();
+                    }
                 } else {
                     NetworkUtil.showNoConnectionToast(GlobalApplication.getInstance());
                 }
@@ -223,6 +231,15 @@ public class DownloadViewController {
                 DownloadViewController.this.item);
 
         showStartState();
+    }
+
+    private void startDownload() {
+        downloadModel.startDownload(uri,
+                DownloadViewController.this.type,
+                DownloadViewController.this.course,
+                DownloadViewController.this.module,
+                DownloadViewController.this.item);
+        showRunningState();
     }
 
     public View getView() {

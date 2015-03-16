@@ -11,9 +11,23 @@ public class AppPreferences {
         return preferences.getBoolean("video_quality", true);
     }
 
+    public static void setIsVideoQualityLimitedOnMobile(Context context, boolean isVideoQualityLimitedOnMobile) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("video_quality", isVideoQualityLimitedOnMobile);
+        editor.commit();
+    }
+
     public static boolean isDownloadNetworkLimitedOnMobile(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getBoolean("download_network", true);
+    }
+
+    public static void setIsDownloadNetworkLimitedOnMobile(Context context, boolean isDownloadNetworkLimitedOnMobile) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("download_network", isDownloadNetworkLimitedOnMobile);
+        editor.commit();
     }
 
     public static boolean confirmBeforeDeleting(Context context) {
