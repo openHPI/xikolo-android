@@ -8,7 +8,7 @@ public class FileUtil {
     public static String getFormattedFileSize(long size) {
         if (size <= 0)
             return "0";
-        final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
@@ -37,13 +37,22 @@ public class FileUtil {
         return files;
     }
 
-    public static void delete(File directory) {
-        for (File file : directory.listFiles()) {
-            if (file.isFile()) {
+    public static void delete(File file) {
+        if (file.isDirectory()) {
+            if (file.list().length == 0) {
                 file.delete();
             } else {
-                delete(file);
+                String files[] = file.list();
+                for (String temp : files) {
+                    File fileDelete = new File(file, temp);
+                    delete(fileDelete);
+                }
+                if (file.list().length == 0) {
+                    file.delete();
+                }
             }
+        } else {
+            file.delete();
         }
     }
 

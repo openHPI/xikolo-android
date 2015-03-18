@@ -8,7 +8,7 @@ import android.preference.PreferenceFragment;
 
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
-import de.xikolo.controller.settings.dialog.LicensesDialog;
+import de.xikolo.controller.dialogs.LicensesDialog;
 import de.xikolo.util.BuildFlavor;
 
 public class SettingsFragment extends PreferenceFragment {
