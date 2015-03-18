@@ -1,8 +1,6 @@
 package de.xikolo.controller.main.adapter;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +9,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.xikolo.R;
+import de.xikolo.controller.helper.ImageLoaderController;
 import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.util.DateUtil;
@@ -117,27 +112,7 @@ public class CourseListAdapter extends BaseAdapter {
         holder.teacher.setText(course.lecturer);
         holder.language.setText(course.language);
 
-        ImageLoader.getInstance().loadImage(course.visual_url, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-                holder.img.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.gradient_default_image));
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                holder.img.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.gradient_default_image));
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                holder.img.setImageDrawable(new BitmapDrawable(mActivity.getResources(), loadedImage));
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-                holder.img.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.gradient_default_image));
-            }
-        });
+        ImageLoaderController.loadImage(course.visual_url, holder.img);
 
         if (course.is_enrolled && DateUtil.nowIsAfter(course.available_from)) {
             holder.container.setOnClickListener(new View.OnClickListener() {
