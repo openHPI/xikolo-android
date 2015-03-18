@@ -83,8 +83,10 @@
     <string name="courses">Kurse</string>
 
     <!-- -->
-    <string name="notification_no_enrollments">Bitte melden Sie sich für einen Kurs an.</string>
-    <string name="notification_please_login">@string/toast_please_log_in</string>
+    <string name="notification_no_enrollments">Keine Kurse vorhanden</string>
+    <string name="notification_no_enrollments_summary">Sie haben sich bisher für keinen Kurs eingetragen.</string>
+    <string name="notification_please_login">Anmeldung erforderlich</string>
+    <string name="notification_please_login_summary">Bitte melden Sie sich an, um auf Ihre Kurse zuzugreifen.</string>
     <string name="notification_file_already_downloaded">Datei bereits heruntergeladen.</string>
     <string name="notification_no_external_write_access">Kein Schreibzugriff für externen Speicher.</string>
     <string name="notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>
