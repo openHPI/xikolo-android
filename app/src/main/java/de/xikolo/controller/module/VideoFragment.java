@@ -95,7 +95,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         View layout = inflater.inflate(R.layout.fragment_video, container, false);
 
         mContainer = layout.findViewById(R.id.container);
-        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
+        mProgress = (ProgressBar) layout.findViewById(R.id.containerProgress);
 
         mTitle = (TextView) layout.findViewById(R.id.textTitle);
 

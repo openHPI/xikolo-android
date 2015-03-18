@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
+import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.main.adapter.CourseProgressListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.data.entities.Course;
@@ -51,7 +52,7 @@ public class ProfileFragment extends ContentFragment {
     private Result<Void> mLoginResult;
     private Result<User> mUserResult;
 
-    private ProgressBar mFragmentProgress;
+    private NotificationController mNotificationController;
     private ViewGroup mContainerLogin;
     private EditText mEditEmail;
     private EditText mEditPassword;
@@ -131,7 +132,7 @@ public class ProfileFragment extends ContentFragment {
                     ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
                 }
                 mContainerLogin.setVisibility(View.VISIBLE);
-                mFragmentProgress.setVisibility(View.GONE);
+                mNotificationController.setProgressVisible(false);
             }
         };
         mUserResult = new Result<User>() {
@@ -161,7 +162,7 @@ public class ProfileFragment extends ContentFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        mFragmentProgress = (ProgressBar) view.findViewById(R.id.progress);
+        mNotificationController = new NotificationController(view);
 
         mContainerLogin = (ViewGroup) view.findViewById(R.id.containerLogin);
         mEditEmail = (EditText) view.findViewById(R.id.editEmail);
@@ -193,7 +194,7 @@ public class ProfileFragment extends ContentFragment {
                     if (password != null && !password.equals("")) {
                         mUserModel.login(mLoginResult, email, password);
                         mContainerLogin.setVisibility(View.GONE);
-                        mFragmentProgress.setVisibility(View.VISIBLE);
+                        mNotificationController.setProgressVisible(true);
                     } else {
                         mEditPassword.setError(getString(R.string.error_password));
                     }
@@ -246,7 +247,7 @@ public class ProfileFragment extends ContentFragment {
     }
 
     private void updateLayout() {
-        mFragmentProgress.setVisibility(View.GONE);
+        mNotificationController.setProgressVisible(false);
         mEditEmail.setText(null);
         mEditPassword.setText(null);
         if (!UserModel.isLoggedIn(getActivity())) {

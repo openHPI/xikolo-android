@@ -45,7 +45,7 @@ public class DownloadModel extends BaseModel {
             String filename = buildDownloadFilename(type, course, module, item);
 
             if (downloadExists(filename)) {
-                ToastUtil.show(GlobalApplication.getInstance(), R.string.notification_file_already_downloaded);
+                ToastUtil.show(GlobalApplication.getInstance(), R.string.toast_file_already_downloaded);
             } else {
 
                 File dlFile = new File(filename);
@@ -56,7 +56,7 @@ public class DownloadModel extends BaseModel {
             }
         } else {
             Log.w(TAG, "No write access for external storage");
-            ToastUtil.show(GlobalApplication.getInstance(), R.string.notification_no_external_write_access);
+            ToastUtil.show(GlobalApplication.getInstance(), R.string.toast_no_external_write_access);
         }
         return 0;
     }
@@ -77,7 +77,7 @@ public class DownloadModel extends BaseModel {
             }
         } else {
             Log.w(TAG, "No write access for external storage");
-            ToastUtil.show(GlobalApplication.getInstance(), R.string.notification_no_external_write_access);
+            ToastUtil.show(GlobalApplication.getInstance(), R.string.toast_no_external_write_access);
             return false;
         }
     }
@@ -102,7 +102,7 @@ public class DownloadModel extends BaseModel {
             deleteDownload(type, course, module, item);
         } else {
             Log.w(TAG, "No write access for external storage");
-            ToastUtil.show(GlobalApplication.getInstance(), R.string.notification_no_external_write_access);
+            ToastUtil.show(GlobalApplication.getInstance(), R.string.toast_no_external_write_access);
         }
     }
 

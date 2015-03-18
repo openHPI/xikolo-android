@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.config.Configuration;
 import com.path.android.jobqueue.log.CustomLogger;
@@ -103,6 +104,7 @@ public class GlobalApplication extends Application {
                 .showImageOnLoading(R.drawable.gradient_default_image)
                 .showImageForEmptyUri(R.drawable.gradient_default_image)
                 .showImageOnFail(R.drawable.gradient_default_image)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)

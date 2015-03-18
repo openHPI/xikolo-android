@@ -67,7 +67,7 @@ public class ModuleListAdapter extends BaseAdapter {
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
             viewHolder.listView = (AbsListView) rowView.findViewById(R.id.listView);
-            viewHolder.progress = (ProgressBar) rowView.findViewById(R.id.progress);
+            viewHolder.progress = (ProgressBar) rowView.findViewById(R.id.containerProgress);
             viewHolder.separator = rowView.findViewById(R.id.separator);
             rowView.setTag(viewHolder);
         }
