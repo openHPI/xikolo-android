@@ -58,7 +58,7 @@ public class CourseProgressListAdapter extends BaseAdapter {
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
             viewHolder.percentage = (TextView) rowView.findViewById(R.id.textPercentage);
-            viewHolder.progressItems = (ProgressBar) rowView.findViewById(R.id.progress);
+            viewHolder.progressItems = (ProgressBar) rowView.findViewById(R.id.containerProgress);
             viewHolder.count = (TextView) rowView.findViewById(R.id.textCount);
             rowView.setTag(viewHolder);
         }

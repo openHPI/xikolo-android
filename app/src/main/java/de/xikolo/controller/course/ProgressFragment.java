@@ -108,7 +108,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
         View layout = inflater.inflate(R.layout.fragment_progress, container, false);
 
         mProgressScrollView = (ListView) layout.findViewById(R.id.listView);
-        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
+        mProgress = (ProgressBar) layout.findViewById(R.id.containerProgress);
 
         mAdapter = new ModuleProgressListAdapter(getActivity());
         mProgressScrollView.setAdapter(mAdapter);

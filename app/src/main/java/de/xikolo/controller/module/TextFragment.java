@@ -54,7 +54,7 @@ public class TextFragment extends PagerFragment<TextItemDetail> {
             protected void onSuccess(Item result, DataSource dataSource) {
                 mRefreshLayout.setRefreshing(false);
                 mItem = result;
-                mWebViewController.request(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ITEMS + mItem.id);
+                mWebViewController.request(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ITEMS + mItem.id, false);
             }
 
             @Override
@@ -75,9 +75,9 @@ public class TextFragment extends PagerFragment<TextItemDetail> {
         View layout = inflater.inflate(R.layout.fragment_webview, container, false);
         mWebView = (WebView) layout.findViewById(R.id.webView);
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
-        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
+        mProgress = (ProgressBar) layout.findViewById(R.id.containerProgress);
 
-        mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
+        mWebViewController = new WebViewController(getActivity(), layout);
         mWebViewController.setInAppLinksEnabled(false);
         mWebViewController.setLoadExternalUrlEnabled(false);
 

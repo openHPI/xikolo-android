@@ -137,7 +137,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
         RefeshLayoutController.setup(mRefreshLayout, this);
 
-        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
+        mProgress = (ProgressBar) layout.findViewById(R.id.containerProgress);
 
         mListView = (AbsListView) layout.findViewById(R.id.listView);
         mAdapter = new ModuleListAdapter(getActivity(), mCourse, this, this);

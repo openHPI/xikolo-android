@@ -473,7 +473,7 @@ public class VideoController {
             updateVideoQuality(course, module, video);
         } else {
             mVideoWarning.setVisibility(View.VISIBLE);
-            mVideoWarningText.setText(mActivity.getString(R.string.notification_no_offline_video));
+            mVideoWarningText.setText(mActivity.getString(R.string.video_notification_no_offline_video));
         }
 
         setHDSwitchColor(playVideoInHD);

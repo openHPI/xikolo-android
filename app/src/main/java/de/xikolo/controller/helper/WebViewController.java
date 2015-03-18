@@ -30,7 +30,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
     private Activity mActivity;
     private WebView mWebView;
-    private ProgressBar mProgress;
+    private NotificationController mNotificationController;
 
     private SwipeRefreshLayout mRefreshLayout;
 
@@ -39,18 +39,18 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
     private boolean mInAppLinksEnabled;
     private boolean mLoadExternalUrlEnabled;
 
-    public WebViewController(Activity activity, WebView webView, SwipeRefreshLayout refreshLayout, ProgressBar progress) {
+    public WebViewController(Activity activity, View layout) {
         mActivity = activity;
-        mWebView = webView;
-        mRefreshLayout = refreshLayout;
-        mProgress = progress;
+        mWebView = (WebView) layout.findViewById(R.id.webView);
+        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        mNotificationController = new NotificationController(layout);
 
         mInAppLinksEnabled = true;
         mLoadExternalUrlEnabled = false;
 
         setup();
 
-        RefeshLayoutController.setup(refreshLayout, this);
+        RefeshLayoutController.setup(mRefreshLayout, this);
     }
 
     public void setInAppLinksEnabled(boolean enabled) {
@@ -68,7 +68,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mWebView.setWebChromeClient(new WebChromeClient());
 
-        mProgress.setVisibility(View.VISIBLE);
+        mNotificationController.setProgressVisible(true);
 
         mWebView.setWebViewClient(new WebViewClient() {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
@@ -77,14 +77,16 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                mRefreshLayout.setRefreshing(true);
+                if (!mNotificationController.isProgressVisible()) {
+                    mRefreshLayout.setRefreshing(true);
+                }
                 mWebView.setVisibility(View.GONE);
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                mProgress.setVisibility(View.GONE);
+                mNotificationController.setInvisible();
                 mRefreshLayout.setRefreshing(false);
                 mWebView.setVisibility(View.VISIBLE);
                 super.onPageFinished(view, url);
@@ -93,7 +95,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.contains(Config.HOST) && mInAppLinksEnabled || mLoadExternalUrlEnabled) {
-                    request(url);
+                    request(url, true);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     mActivity.startActivity(i);
@@ -115,7 +117,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         });
     }
 
-    public void request(String url) {
+    public void request(String url, boolean userRequest) {
         if (Config.DEBUG) {
             Log.i(TAG, "Request URL: " + url);
         }
@@ -123,7 +125,9 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
         if(!mLoadExternalUrlEnabled || Patterns.WEB_URL.matcher(mUrl).matches()) {
             if (NetworkUtil.isOnline(mActivity)) {
-                mRefreshLayout.setRefreshing(true);
+                if (!mNotificationController.isProgressVisible()) {
+                    mRefreshLayout.setRefreshing(true);
+                }
                 if (!mLoadExternalUrlEnabled) {
                     Map<String, String> header = new HashMap<String, String>();
                     header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
@@ -136,7 +140,14 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                 }
             } else {
                 mRefreshLayout.setRefreshing(false);
-                NetworkUtil.showNoConnectionToast(mActivity);
+
+                mNotificationController.setTitle(R.string.notification_no_network);
+                mNotificationController.setSummary(R.string.notification_no_network_summary);
+                mNotificationController.setNotificationVisible(true);
+
+                if (userRequest) {
+                    NetworkUtil.showNoConnectionToast(mActivity);
+                }
             }
         } else {
             mWebView.loadData(Config.INVALID_URL_HTML_PREFIX + mActivity.getString(R.string.url_invalid_html_title) + Config.INVALID_URL_HTML_SUFFIX, "text/html", null);
@@ -145,7 +156,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
     @Override
     public void onRefresh() {
-        request(mUrl);
+        request(mUrl, true);
     }
 
 }

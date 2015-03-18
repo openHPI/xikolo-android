@@ -52,12 +52,6 @@
     <string name="dialog_mobile_download_yes">Allow</string>
 
     <!-- -->
-    <string name="toast_no_courses">No courses received.</string>
-    <string name="toast_no_network">Please enable network connection.</string>
-    <string name="toast_please_log_in">Please log in.</string>
-    <string name="toast_log_in_failed">Login failed. Please check your credentials.</string>
-
-    <!-- -->
     <string name="title_activity_module">Module</string>
 
     <!-- -->
@@ -95,13 +89,23 @@
     <string name="courses">Courses</string>
 
     <!-- -->
+    <string name="notification_no_network">Please enable network connection</string>
+    <string name="notification_no_network_summary">This content cannot by displayed without network connection.</string>
+    <string name="notification_no_network_with_offline_mode_summary">Please update this content with enabled network connection. Afterwards, this content can be used offline.</string>
     <string name="notification_no_enrollments">Please enroll for courses</string>
     <string name="notification_no_enrollments_summary">You enrolled for no courses yet.</string>
     <string name="notification_please_login">Login required</string>
     <string name="notification_please_login_summary">Please login to access your courses.</string>
-    <string name="notification_file_already_downloaded">File already downloaded.</string>
-    <string name="notification_no_external_write_access">No write access for external storage.</string>
-    <string name="notification_no_offline_video">No network connection or downloaded video file available.</string>
+
+    <string name="video_notification_no_offline_video">No network connection or downloaded video file available.</string>
+
+    <!-- -->
+    <string name="toast_no_courses">No courses received.</string>
+    <string name="toast_no_network">Please enable network connection.</string>
+    <string name="toast_please_log_in">Please log in.</string>
+    <string name="toast_log_in_failed">Login failed. Please check your credentials.</string>
+    <string name="toast_file_already_downloaded">File already downloaded.</string>
+    <string name="toast_no_external_write_access">No write access for external storage.</string>
 
     <!-- -->
     <string name="offline_mode">Offline Mode</string>

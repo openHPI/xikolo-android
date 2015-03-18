@@ -53,7 +53,7 @@ public class AssignmentFragment extends PagerFragment<AssignmentItemDetail> {
             protected void onSuccess(Item result, DataSource dataSource) {
                 mRefreshLayout.setRefreshing(false);
                 mItem = result;
-                mWebViewController.request(mItem.detail.url);
+                mWebViewController.request(mItem.detail.url, false);
             }
 
             @Override
@@ -74,9 +74,9 @@ public class AssignmentFragment extends PagerFragment<AssignmentItemDetail> {
         View layout = inflater.inflate(R.layout.fragment_webview, container, false);
         mWebView = (WebView) layout.findViewById(R.id.webView);
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
-        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
+        mProgress = (ProgressBar) layout.findViewById(R.id.containerProgress);
 
-        mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
+        mWebViewController = new WebViewController(getActivity(), layout);
         mWebViewController.setInAppLinksEnabled(true);
         mWebViewController.setLoadExternalUrlEnabled(false);
 
