@@ -9,8 +9,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.xikolo.R;
+import de.xikolo.controller.helper.ImageLoaderController;
 import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.util.DateUtil;
@@ -73,6 +72,7 @@ public class CourseListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View rowView = view;
+        Boolean test;
         if (rowView == null) {
             LayoutInflater inflater = mActivity.getLayoutInflater();
             rowView = inflater.inflate(R.layout.item_courses, null);
@@ -111,7 +111,8 @@ public class CourseListAdapter extends BaseAdapter {
         holder.title.setText(course.name);
         holder.teacher.setText(course.lecturer);
         holder.language.setText(course.language);
-        ImageLoader.getInstance().displayImage(course.visual_url, holder.img);
+
+        ImageLoaderController.loadImage(course.visual_url, holder.img);
 
         if (course.is_enrolled && DateUtil.nowIsAfter(course.available_from)) {
             holder.container.setOnClickListener(new View.OnClickListener() {
@@ -158,16 +159,6 @@ public class CourseListAdapter extends BaseAdapter {
         return rowView;
     }
 
-    static class ViewHolder {
-        ViewGroup container;
-        TextView title;
-        TextView teacher;
-        TextView date;
-        TextView language;
-        ImageView img;
-        Button enroll;
-    }
-
     public interface OnCourseButtonClickListener {
 
         public void onEnrollButtonClicked(Course course);
@@ -176,6 +167,16 @@ public class CourseListAdapter extends BaseAdapter {
 
         public void onDetailButtonClicked(Course course);
 
+    }
+
+    static class ViewHolder {
+        ViewGroup container;
+        TextView title;
+        TextView teacher;
+        TextView date;
+        TextView language;
+        ImageView img;
+        Button enroll;
     }
 
 }
