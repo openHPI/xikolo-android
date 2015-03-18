@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,12 +18,15 @@ import java.io.File;
 import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controller.dialogs.ConfirmDeleteDialog;
+import de.xikolo.controller.dialogs.MobileDownloadDialog;
 import de.xikolo.controller.helper.VideoController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Download;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
+import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.events.DownloadCompletedEvent;
@@ -61,12 +66,15 @@ public class DownloadViewController {
     private Runnable progressBarUpdater;
     private boolean progressBarUpdaterRunning = false;
 
-    public DownloadViewController(final VideoController videoController, final DownloadModel.DownloadFileType type, final Course course, final Module module, final Item<VideoItemDetail> item) {
+    private FragmentActivity activity;
+
+    public DownloadViewController(final FragmentActivity activity, final VideoController videoController, final DownloadModel.DownloadFileType type, final Course course, final Module module, final Item<VideoItemDetail> item) {
         this.videoController = videoController;
         this.type = type;
         this.course = course;
         this.module = module;
         this.item = item;
+        this.activity = activity;
 
         this.downloadModel = new DownloadModel(GlobalApplication.getInstance(), GlobalApplication.getInstance().getJobManager());
 
@@ -82,13 +90,20 @@ public class DownloadViewController {
             @Override
             public void onClick(View v) {
                 if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                    downloadModel.startDownload(uri,
-                            DownloadViewController.this.type,
-                            DownloadViewController.this.course,
-                            DownloadViewController.this.module,
-                            DownloadViewController.this.item);
-
-                    showRunningState();
+                    if (NetworkUtil.getConnectivityStatus(activity) == NetworkUtil.TYPE_MOBILE &&
+                            AppPreferences.isDownloadNetworkLimitedOnMobile(activity)) {
+                        MobileDownloadDialog dialog = MobileDownloadDialog.getInstance();
+                        dialog.setMobileDownloadDialogListener(new MobileDownloadDialog.MobileDownloadDialogListener() {
+                            @Override
+                            public void onDialogPositiveClick(DialogFragment dialog) {
+                                AppPreferences.setIsDownloadNetworkLimitedOnMobile(activity, false);
+                                startDownload();
+                            }
+                        });
+                        dialog.show(activity.getSupportFragmentManager(), MobileDownloadDialog.TAG);
+                    } else {
+                        startDownload();
+                    }
                 } else {
                     NetworkUtil.showNoConnectionToast(GlobalApplication.getInstance());
                 }
@@ -117,13 +132,24 @@ public class DownloadViewController {
         downloadDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadModel.cancelDownload(
-                        DownloadViewController.this.type,
-                        DownloadViewController.this.course,
-                        DownloadViewController.this.module,
-                        DownloadViewController.this.item);
+                if (AppPreferences.confirmBeforeDeleting(GlobalApplication.getInstance())) {
+                    ConfirmDeleteDialog dialog = ConfirmDeleteDialog.getInstance(false);
+                    dialog.setConfirmDeleteDialogListener(new ConfirmDeleteDialog.ConfirmDeleteDialogListener() {
+                        @Override
+                        public void onDialogPositiveClick(DialogFragment dialog) {
+                            deleteFile();
+                        }
 
-                showStartState();
+                        @Override
+                        public void onDialogPositiveAndAlwaysClick(DialogFragment dialog) {
+                            AppPreferences.setConfirmBeforeDeleting(activity, false);
+                            deleteFile();
+                        }
+                    });
+                    dialog.show(activity.getSupportFragmentManager(), ConfirmDeleteDialog.TAG);
+                } else {
+                    deleteFile();
+                }
             }
         });
 
@@ -195,6 +221,25 @@ public class DownloadViewController {
             showStartState();
         }
 
+    }
+
+    private void deleteFile() {
+        downloadModel.cancelDownload(
+                DownloadViewController.this.type,
+                DownloadViewController.this.course,
+                DownloadViewController.this.module,
+                DownloadViewController.this.item);
+
+        showStartState();
+    }
+
+    private void startDownload() {
+        downloadModel.startDownload(uri,
+                DownloadViewController.this.type,
+                DownloadViewController.this.course,
+                DownloadViewController.this.module,
+                DownloadViewController.this.item);
+        showRunningState();
     }
 
     public View getView() {

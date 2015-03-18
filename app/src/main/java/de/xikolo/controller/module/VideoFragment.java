@@ -176,11 +176,11 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         mTitle.setText(mItem.detail.title);
 
         mLinearLayoutDownloads.removeAllViews();
-        DownloadViewController hdVideo = new DownloadViewController(mVideoController, DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
+        DownloadViewController hdVideo = new DownloadViewController(getActivity(), mVideoController, DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
         mLinearLayoutDownloads.addView(hdVideo.getView());
-        DownloadViewController sdVideo = new DownloadViewController(mVideoController, DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
+        DownloadViewController sdVideo = new DownloadViewController(getActivity(), mVideoController, DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
         mLinearLayoutDownloads.addView(sdVideo.getView());
-        DownloadViewController slides = new DownloadViewController(mVideoController, DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
+        DownloadViewController slides = new DownloadViewController(getActivity(), mVideoController, DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
         mLinearLayoutDownloads.addView(slides.getView());
 //        DownloadViewController transcript = new DownloadViewController(DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
 //        mLinearLayoutDownloads.addView(transcript.getView());

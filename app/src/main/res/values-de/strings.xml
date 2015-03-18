@@ -37,7 +37,19 @@
     <string name="dialog_unenroll_title">Kursteilnahme beenden?</string>
     <string name="dialog_unenroll_message">Sie werden aus dem Kurs ausgetragen.</string>
     <string name="dialog_unenroll_yes">Teilnahme beenden</string>
-    <string name="dialog_unenroll_no">Abbrechen</string>
+
+    <string name="dialog_negative">Abbrechen</string>
+
+    <string name="dialog_confirm_delete_title">Datei löschen?</string>
+    <string name="dialog_confirm_delete_message">Die heruntergeladene Datei wird gelöscht und kann nicht mehr offline genutzt werden.</string>
+    <string name="dialog_confirm_delete_title_multi">Dateien löschen?</string>
+    <string name="dialog_confirm_delete_message_multi">Die heruntergeladenen Dateien werden gelöscht und können nicht mehr offline genutzt werden.</string>
+    <string name="dialog_confirm_delete_yes">Löschen</string>
+    <string name="dialog_confirm_delete_yes_always">Löschen und nicht erneut nachfragen</string>
+
+    <string name="dialog_mobile_download_title">Mobile Downloads erlauben?</string>
+    <string name="dialog_mobile_download_message">Möchten Sie Downloads über Mobile Netzwerke erlauben? Bitte beachten Sie, dass dies ihr Mobiles Datenvolumen beeinträchtigt.</string>
+    <string name="dialog_mobile_download_yes">Erlauben</string>
 
     <!-- -->
     <string name="toast_no_courses">Keine Kurse erhalten.</string>
@@ -95,6 +107,10 @@
     <string name="offline_mode">Offline-Modus</string>
 
     <!-- -->
+    <string name="settings_category_general">Allgemein</string>
+
+    <string name="settings_title_ask_delete">Vor Löschen bestätigen</string>
+
     <string name="settings_category_data_usage">Mobile Datennutzung</string>
 
     <string name="settings_title_video_quality">Datennutzung für Videos beschränken</string>
