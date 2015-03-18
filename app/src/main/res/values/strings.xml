@@ -83,8 +83,10 @@
     <string name="courses">Courses</string>
 
     <!-- -->
-    <string name="notification_no_enrollments">Please enroll for courses.</string>
-    <string name="notification_please_login">@string/toast_please_log_in</string>
+    <string name="notification_no_enrollments">Please enroll for courses</string>
+    <string name="notification_no_enrollments_summary">You enrolled for no courses yet.</string>
+    <string name="notification_please_login">Login required</string>
+    <string name="notification_please_login_summary">Please login to access your courses.</string>
     <string name="notification_file_already_downloaded">File already downloaded.</string>
     <string name="notification_no_external_write_access">No write access for external storage.</string>
     <string name="notification_no_offline_video">No network connection or downloaded video file available.</string>

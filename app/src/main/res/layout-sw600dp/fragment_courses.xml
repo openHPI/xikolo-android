@@ -30,6 +30,6 @@
 
     <include layout="@layout/container_progress" />
 
-    <include layout="@layout/container_notification" />
+    <include layout="@layout/container_card" />
 
 </FrameLayout>
