@@ -29,7 +29,7 @@ public class CreateEnrollmentJob extends Job {
     private CourseDataAccess courseDataAccess;
 
     public CreateEnrollmentJob(Result<Void> result, Course course, CourseDataAccess courseDataAccess) {
-        super(new Params(Priority.MID));
+        super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
         this.result = result;

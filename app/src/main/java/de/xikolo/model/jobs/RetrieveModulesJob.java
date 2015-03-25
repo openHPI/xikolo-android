@@ -34,7 +34,7 @@ public class RetrieveModulesJob extends Job {
     private ModuleDataAccess moduleDataAccess;
 
     public RetrieveModulesJob(Result<List<Module>> result, Course course, boolean includeProgress, ModuleDataAccess moduleDataAccess) {
-        super(new Params(Priority.HIGH));
+        super(new Params(Priority.MID));
         id = jobCounter.incrementAndGet();
 
         this.result = result;

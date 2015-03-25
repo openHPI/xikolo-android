@@ -25,7 +25,7 @@ public class RetrieveContentLengthJob extends Job {
     private String url;
 
     public RetrieveContentLengthJob(Result<Long> result, String url) {
-        super(new Params(Priority.MID));
+        super(new Params(Priority.LOW));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
