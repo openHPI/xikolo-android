@@ -32,7 +32,11 @@ public class ItemModel extends BaseModel {
     }
 
     public void getItems(Result<List<Item>> result, Course course, Module module) {
-        mJobManager.addJobInBackground(new RetrieveItemsJob(result, course, module, itemDataAccess));
+        mJobManager.addJobInBackground(new RetrieveItemsJob(result, course, module, itemDataAccess, false));
+    }
+
+    public void getItems(Result<List<Item>> result, Course course, Module module, boolean onlyLocal) {
+        mJobManager.addJobInBackground(new RetrieveItemsJob(result, course, module, itemDataAccess, onlyLocal));
     }
 
     public void getItemDetail(Result<Item> result, Course course, Module module, Item item, String itemType) {

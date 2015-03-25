@@ -43,6 +43,11 @@ public class ModuleListAdapter extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
+    public void clear() {
+        this.mModules.clear();
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return mModules.size();
