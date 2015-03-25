@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +22,7 @@ import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.ModuleActivity;
 import de.xikolo.controller.course.adapter.ItemListAdapter;
 import de.xikolo.controller.course.adapter.ModuleListAdapter;
+import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
@@ -44,12 +46,12 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
     private AbsListView mListView;
     private SwipeRefreshLayout mRefreshLayout;
-    private ProgressBar mProgress;
 
     private ModuleModel mModuleModel;
     private ItemModel mItemModel;
-    private Result<List<Module>> mModuleResult;
     private ModuleListAdapter mAdapter;
+
+    private NotificationController mNotificationController;
 
     private Course mCourse;
     private List<Module> mModules;
@@ -87,46 +89,6 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
         mModuleModel = new ModuleModel(getActivity(), jobManager, databaseHelper);
         mItemModel = new ItemModel(getActivity(), jobManager, databaseHelper);
-        mModuleResult = new Result<List<Module>>() {
-            @Override
-            protected void onSuccess(List<Module> result, DataSource dataSource) {
-                mRefreshLayout.setRefreshing(false);
-                mProgress.setVisibility(View.GONE);
-
-                mAdapter.updateModules(result);
-                mModules = result;
-
-                for (final Module module : mModules) {
-                    if (module.items == null || module.items.size() == 0) {
-
-                        Result<List<Item>> itemResult = new Result<List<Item>>() {
-                            @Override
-                            protected void onSuccess(List<Item> result, DataSource dataSource) {
-                                module.items = result;
-                                mAdapter.updateModules(mModules);
-                            }
-                        };
-                        mItemModel.getItems(itemResult, mCourse, module);
-                    }
-                }
-            }
-
-            @Override
-            protected void onWarning(WarnCode warnCode) {
-                if (warnCode == WarnCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
-                }
-                mRefreshLayout.setRefreshing(false);
-                mProgress.setVisibility(View.GONE);
-            }
-
-            @Override
-            protected void onError(ErrorCode errorCode) {
-                ToastUtil.show(getActivity(), R.string.error);
-                mRefreshLayout.setRefreshing(false);
-                mProgress.setVisibility(View.GONE);
-            }
-        };
     }
 
     @Override
@@ -137,11 +99,11 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
         RefeshLayoutController.setup(mRefreshLayout, this);
 
-        mProgress = (ProgressBar) layout.findViewById(R.id.containerProgress);
-
         mListView = (AbsListView) layout.findViewById(R.id.listView);
         mAdapter = new ModuleListAdapter(getActivity(), mCourse, this, this);
         mListView.setAdapter(mAdapter);
+
+        mNotificationController = new NotificationController(layout);
 
         return layout;
     }
@@ -151,19 +113,81 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         super.onStart();
 
         if (mModules == null) {
-            mRefreshLayout.setRefreshing(true);
-            mProgress.setVisibility(View.VISIBLE);
-            mModuleModel.getModules(mModuleResult, mCourse, false);
-        } else {
-            mProgress.setVisibility(View.GONE);
-            mAdapter.updateModules(mModules);
+            requestModulesWithItems(false, false);
         }
     }
 
     @Override
     public void onRefresh() {
-        mRefreshLayout.setRefreshing(true);
-        mModuleModel.getModules(mModuleResult, mCourse, false);
+        requestModulesWithItems(true, false);
+    }
+
+    private void requestModulesWithItems(final boolean userRequest, final boolean includeProgress) {
+        Result<List<Module>> result = new Result<List<Module>>() {
+            @Override
+            protected void onSuccess(List<Module> result, DataSource dataSource) {
+                mRefreshLayout.setRefreshing(false);
+                mNotificationController.setInvisible();
+
+                if (mModules != null) {
+                    for (Module newModule : result) {
+                        for (Module oldModule : mModules) {
+                            if (newModule.equals(oldModule) && oldModule.items != null) {
+                                newModule.items = oldModule.items;
+                            }
+                        }
+                    }
+                }
+                mModules = result;
+
+                if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
+                    mAdapter.clear();
+                    mNotificationController.setTitle(R.string.notification_no_network);
+                    mNotificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
+                    mNotificationController.setNotificationVisible(true);
+                } else {
+                    mAdapter.updateModules(result);
+
+                    boolean local = false;
+                    if (dataSource == DataSource.LOCAL) {
+                        local = true;
+                    }
+                    for (final Module module : mModules) {
+                        Result<List<Item>> itemResult = new Result<List<Item>>() {
+                            @Override
+                            protected void onSuccess(List<Item> result, DataSource dataSource) {
+                                module.items = result;
+                                mAdapter.updateModules(mModules);
+                            }
+                        };
+                        mItemModel.getItems(itemResult, mCourse, module, local);
+                    }
+                }
+            }
+
+            @Override
+            protected void onWarning(WarnCode warnCode) {
+                if (warnCode == WarnCode.NO_NETWORK && userRequest) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
+                }
+                mRefreshLayout.setRefreshing(false);
+                mNotificationController.setInvisible();
+            }
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                ToastUtil.show(getActivity(), R.string.error);
+                mRefreshLayout.setRefreshing(false);
+                mNotificationController.setInvisible();
+            }
+        };
+
+        if (mModules == null || mModules.size() == 0) {
+            mNotificationController.setProgressVisible(true);
+        } else {
+            mRefreshLayout.setRefreshing(true);
+        }
+        mModuleModel.getModules(result, mCourse, includeProgress);
     }
 
     @Override

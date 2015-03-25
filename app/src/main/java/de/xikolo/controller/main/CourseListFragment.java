@@ -84,7 +84,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         Result<List<Course>> result = new Result<List<Course>>() {
             @Override
             protected void onSuccess(List<Course> result, DataSource dataSource) {
-                Log.d(TAG, "onSuccess" + dataSource.name());
                 mCourses = result;
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
@@ -184,8 +183,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public void onStart() {
         super.onStart();
 
-        Log.w(TAG, "onStart");
-
         if (mFilter.equals(FILTER_ALL)) {
             mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
         } else if (mFilter.equals(FILTER_MY)) {
@@ -193,12 +190,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         }
 
         if (mCourses != null && mCourses.size() > 0) {
-            Log.i(TAG, "mCourses != null");
-
             updateView();
         } else {
-            Log.i(TAG, "mCourses == null");
-
             requestCourses(false, false);
         }
     }
