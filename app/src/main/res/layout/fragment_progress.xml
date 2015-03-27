@@ -26,6 +26,6 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/container_progress" />
+    <include layout="@layout/container_notification" />
 
 </FrameLayout>

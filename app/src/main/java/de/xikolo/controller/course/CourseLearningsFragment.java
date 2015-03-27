@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +111,10 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         super.onStart();
 
         if (mModules == null) {
+            mNotificationController.setProgressVisible(true);
             requestModulesWithItems(false, false);
+        } else {
+            mAdapter.updateModules(mModules);
         }
     }
 
@@ -170,8 +171,6 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
                 if (warnCode == WarnCode.NO_NETWORK && userRequest) {
                     NetworkUtil.showNoConnectionToast(getActivity());
                 }
-                mRefreshLayout.setRefreshing(false);
-                mNotificationController.setInvisible();
             }
 
             @Override
@@ -182,11 +181,10 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
             }
         };
 
-        if (mModules == null || mModules.size() == 0) {
-            mNotificationController.setProgressVisible(true);
-        } else {
+        if (!mNotificationController.isProgressVisible()) {
             mRefreshLayout.setRefreshing(true);
         }
+
         mModuleModel.getModules(result, mCourse, includeProgress);
     }
 
