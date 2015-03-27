@@ -37,6 +37,10 @@ public class ModuleProgressListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        mModules.clear();
+    }
+
     private void addTotalModule() {
         int count_visited = 0;
         int count_available = 0;
