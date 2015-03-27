@@ -13,7 +13,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -130,9 +129,9 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                 }
                 if (!mLoadExternalUrlEnabled) {
                     Map<String, String> header = new HashMap<String, String>();
-                    header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
+                    header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
                     if (UserModel.isLoggedIn(mActivity)) {
-                        header.put(Config.HEADER_AUTHORIZATION, "Token " + UserModel.getToken(mActivity));
+                        header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + UserModel.getToken(mActivity));
                     }
                     mWebView.loadUrl(mUrl, header);
                 } else {

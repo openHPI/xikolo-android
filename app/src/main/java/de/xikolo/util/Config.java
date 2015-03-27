@@ -39,9 +39,10 @@ public class Config {
     public static final String HEADER_USER_PLATFORM = "User-Platform";
     public static final String HEADER_CACHE_CONTROL = "Cache-Control";
 
-    public static final String HEADER_VALUE_USER_PLATFORM_ANDROID = "Android";
-    public static final String HEADER_VALUE_ACCEPT_SAP = "application/vnd.xikolo.v1, application/json";
-    public static final String HEADER_VALUE_NO_CACHE = "no-cache";
+    public static final String HEADER_ACCEPT_VALUE = "application/vnd.xikolo.v1, application/json";
+    public static final String HEADER_AUTHORIZATION_VALUE_SCHEMA = "Token token=";
+    public static final String HEADER_USER_PLATFORM_VALUE = "Android";
+    public static final String HEADER_CACHE_CONTROL_VALUE = "no-cache";
 
     public static final String HTTP_GET = "GET";
     public static final String HTTP_POST = "POST";
