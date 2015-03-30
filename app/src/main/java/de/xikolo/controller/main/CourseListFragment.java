@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -239,7 +240,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     }
 
     @Override
-    public void onEnrollButtonClicked(Course course) {
+    public void onEnrollButtonClicked(final Button button, Course course) {
         Result<Void> result = new Result<Void>() {
             @Override
             protected void onSuccess(Void result, DataSource dataSource) {
@@ -248,6 +249,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
             @Override
             protected void onError(ErrorCode errorCode) {
+                button.setText(getActivity().getString(R.string.btn_enroll_me));
                 if (errorCode == ErrorCode.NO_NETWORK) {
                     NetworkUtil.showNoConnectionToast(getActivity());
                 } else if (errorCode == ErrorCode.NO_AUTH) {
@@ -256,6 +258,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 }
             }
         };
+        button.setText("...");
         mCourseModel.addEnrollment(result, course);
     }
 
