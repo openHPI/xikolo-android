@@ -1,6 +1,14 @@
 Xikolo Android App Changelog
 ============================
 
+## v0.9-beta4
+* Material Design updates
+* Notifications for Offline Mode
+* Dialog for Mobile Downloads
+* Dialog for Deleting Downloads
+* Disabled Quiz App Demo
+* Bugfixes
+
 ## v0.9-beta3
 * Video and Slide Downloads for Offline Mode
 * Video Switch for SD/HD Stream
