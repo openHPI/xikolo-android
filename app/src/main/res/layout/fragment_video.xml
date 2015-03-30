@@ -76,6 +76,6 @@
 
     </ScrollView>
 
-    <include layout="@layout/container_progress" />
+    <include layout="@layout/container_notification" />
 
 </FrameLayout>
