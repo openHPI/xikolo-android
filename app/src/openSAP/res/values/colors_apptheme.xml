@@ -6,6 +6,8 @@
     <color name="apptheme_main_dark">#d89a00</color>
     <color name="apptheme_main_light">#f5c859</color>
 
+    <color name="apptheme_main_dark_status">#906700</color>
+
     <color name="apptheme_main_alpha">#1af0ab00</color>
 
     <!-- navi colors + 5% apptheme_main -->

@@ -21,4 +21,7 @@
 
     </style>
 
+    <style name="AppThemeTranslucentStatus" parent="AppTheme.Base">
+    </style>
+
 </resources>
