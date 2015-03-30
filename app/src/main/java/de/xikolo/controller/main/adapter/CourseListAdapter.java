@@ -134,8 +134,7 @@ public class CourseListAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     holder.enroll.setClickable(false);
-                    holder.enroll.setText("...");
-                    mCallback.onEnrollButtonClicked(course);
+                    mCallback.onEnrollButtonClicked(holder.enroll, course);
                 }
             });
         }
@@ -155,7 +154,7 @@ public class CourseListAdapter extends BaseAdapter {
 
     public interface OnCourseButtonClickListener {
 
-        public void onEnrollButtonClicked(Course course);
+        public void onEnrollButtonClicked(Button button, Course course);
 
         public void onEnterButtonClicked(Course course);
 
