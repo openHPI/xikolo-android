@@ -29,9 +29,9 @@ public class NavigationAdapter extends BaseAdapter {
     public static final int NAV_ID_ALL_COURSES = 1;
     public static final int NAV_ID_MY_COURSES = 2;
     public static final int NAV_ID_NEWS = 3;
-    public static final int NAV_ID_QUIZ = 4;
-    public static final int NAV_ID_DOWNLOADS = 5;
-    public static final int NAV_ID_SETTINGS = 6;
+//    public static final int NAV_ID_QUIZ = 4;
+    public static final int NAV_ID_DOWNLOADS = 4;
+    public static final int NAV_ID_SETTINGS = 5;
     private List<Element> elements;
     private Activity mActivity;
 
@@ -49,8 +49,8 @@ public class NavigationAdapter extends BaseAdapter {
                     mActivity.getString(R.string.title_section_my_courses)));
             add(new Element(mActivity.getString(R.string.icon_news),
                     mActivity.getString(R.string.title_section_news)));
-            add(new Element(mActivity.getString(R.string.icon_quiz),
-                    mActivity.getString(R.string.title_section_quiz)));
+//            add(new Element(mActivity.getString(R.string.icon_quiz),
+//                    mActivity.getString(R.string.title_section_quiz)));
             add(new Element(mActivity.getString(R.string.icon_downloads),
                     mActivity.getString(R.string.title_section_downloads)));
             add(new Element(mActivity.getString(R.string.icon_settings),

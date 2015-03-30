@@ -110,7 +110,6 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
             @Override
             protected void onError(ErrorCode errorCode) {
                 mRefreshLayout.setRefreshing(false);
-                Log.e(TAG, errorCode.name());
                 if (errorCode == ErrorCode.NO_NETWORK) {
                     mNotificationController.setTitle(R.string.notification_no_network);
                     mNotificationController.setSummary(R.string.notification_no_network_summary);
