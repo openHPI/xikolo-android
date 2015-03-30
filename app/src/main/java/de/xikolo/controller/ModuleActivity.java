@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,11 +21,9 @@ import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
-import de.xikolo.controller.module.AssignmentFragment;
-import de.xikolo.controller.module.LtiFragment;
 import de.xikolo.controller.module.PagerFragment;
-import de.xikolo.controller.module.TextFragment;
 import de.xikolo.controller.module.VideoFragment;
+import de.xikolo.controller.module.WebItemFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
@@ -68,7 +65,8 @@ public class ModuleActivity extends BaseActivity {
         }
 
         mItemModel = new ItemModel(this, jobManager, databaseHelper);
-        mProgressionResult = new Result<Void>(){};
+        mProgressionResult = new Result<Void>() {
+        };
 
         setTitle(mModule.name);
 
@@ -232,15 +230,15 @@ public class ModuleActivity extends BaseActivity {
             Fragment fragment = mFragmentManager.findFragmentByTag(name);
             if (fragment == null) {
                 if (item.type.equals(Item.TYPE_TEXT)) {
-                    fragment = TextFragment.newInstance(mCourse, mModule, mItems.get(position));
+                    fragment = WebItemFragment.newInstance(mCourse, mModule, mItems.get(position));
                 } else if (item.type.equals(Item.TYPE_VIDEO)) {
                     fragment = VideoFragment.newInstance(mCourse, mModule, mItems.get(position));
                 } else if (item.type.equals(Item.TYPE_SELFTEST)
                         || item.type.equals(Item.TYPE_ASSIGNMENT)
                         || item.type.equals(Item.TYPE_EXAM)) {
-                    fragment = AssignmentFragment.newInstance(mCourse, mModule, mItems.get(position));
+                    fragment = WebItemFragment.newInstance(mCourse, mModule, mItems.get(position));
                 } else if (item.type.equals(Item.TYPE_LTI)) {
-                    fragment = LtiFragment.newInstance(mCourse, mModule, mItems.get(position));
+                    fragment = WebItemFragment.newInstance(mCourse, mModule, mItems.get(position));
                 }
             }
             return fragment;
