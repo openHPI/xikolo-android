@@ -34,7 +34,7 @@ public class QuizDemoFragment extends ContentFragment implements ZBarScannerView
     @Override
     public void onStart() {
         super.onStart();
-        mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_QUIZ, getString(R.string.scan_qr));
+//        mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_QUIZ, getString(R.string.scan_qr));
     }
 
     @Override
