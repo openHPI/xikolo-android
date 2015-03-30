@@ -30,7 +30,7 @@
             android:padding="4dp"
             android:text="@string/icon_info"
             android:textColor="@color/gray_text"
-            android:textSize="32sp"
+            android:textSize="48sp"
             app:customFont="xikolo.ttf" />
 
         <LinearLayout
@@ -45,14 +45,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_text"
-                android:textSize="18sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/textNotificationSummary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_text"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
 

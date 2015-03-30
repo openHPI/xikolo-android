@@ -32,7 +32,7 @@ public class DeleteEnrollmentJob extends Job {
     private ModuleDataAccess moduleDataAccess;
 
     public DeleteEnrollmentJob(Result<Void> result, Course course, CourseDataAccess courseDataAccess, ModuleDataAccess moduleDataAccess) {
-        super(new Params(Priority.MID));
+        super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
         this.result = result;

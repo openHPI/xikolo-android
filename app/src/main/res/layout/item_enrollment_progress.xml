@@ -21,7 +21,7 @@
         android:textSize="18sp" />
 
     <include
-        android:id="@+id/progress"
+        android:id="@+id/containerProgress"
         layout="@layout/container_progress_bar_3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/progress"
+        android:layout_below="@+id/containerProgress"
         android:layout_marginBottom="4dp"
         android:orientation="horizontal">
 

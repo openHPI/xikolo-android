@@ -30,27 +30,21 @@ public class CourseListAdapter extends BaseAdapter {
 
     private Activity mActivity;
     private OnCourseButtonClickListener mCallback;
-    private String mFilter;
 
-    public CourseListAdapter(Activity activity, OnCourseButtonClickListener callback, String filter) {
+    public CourseListAdapter(Activity activity, OnCourseButtonClickListener callback) {
         this.mCourses = new ArrayList<Course>();
         this.mActivity = activity;
         this.mCallback = callback;
-        this.mFilter = filter;
     }
 
     public void updateCourses(List<Course> courses) {
         if (courses == null) throw new NullPointerException("Courses can't be null");
         mCourses = courses;
-        if (mFilter.equals(CourseListFragment.FILTER_MY)) {
-            ArrayList<Course> removeList = new ArrayList<Course>();
-            for (Course course : mCourses) {
-                if (!course.is_enrolled) {
-                    removeList.add(course);
-                }
-            }
-            mCourses.removeAll(removeList);
-        }
+        this.notifyDataSetChanged();
+    }
+
+    public void clear() {
+        mCourses.clear();
         this.notifyDataSetChanged();
     }
 
@@ -140,8 +134,7 @@ public class CourseListAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     holder.enroll.setClickable(false);
-                    holder.enroll.setText("...");
-                    mCallback.onEnrollButtonClicked(course);
+                    mCallback.onEnrollButtonClicked(holder.enroll, course);
                 }
             });
         }
@@ -161,7 +154,7 @@ public class CourseListAdapter extends BaseAdapter {
 
     public interface OnCourseButtonClickListener {
 
-        public void onEnrollButtonClicked(Course course);
+        public void onEnrollButtonClicked(Button button, Course course);
 
         public void onEnterButtonClicked(Course course);
 

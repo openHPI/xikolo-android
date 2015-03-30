@@ -1,7 +1,6 @@
 package de.xikolo.controller.main;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,12 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
 
 import de.xikolo.R;
 import de.xikolo.controller.helper.WebViewController;
-import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.util.Config;
 
 public class ContentWebViewFragment extends ContentFragment {
 
@@ -34,8 +30,6 @@ public class ContentWebViewFragment extends ContentFragment {
     private int id;
 
     private WebView mWebView;
-    private ProgressBar mProgress;
-    private SwipeRefreshLayout mRefreshLayout;
 
     private WebViewController mWebViewController;
 
@@ -74,17 +68,15 @@ public class ContentWebViewFragment extends ContentFragment {
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_webview, container, false);
         mWebView = (WebView) layout.findViewById(R.id.webView);
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
-        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
-        mWebViewController = new WebViewController(getActivity(), mWebView, mRefreshLayout, mProgress);
+        mWebViewController = new WebViewController(getActivity(), layout);
         mWebViewController.setInAppLinksEnabled(mInAppLinksEnabled);
         mWebViewController.setLoadExternalUrlEnabled(mExternalLinksEnabled);
 
         if (savedInstanceState != null) {
             mWebView.restoreState(savedInstanceState);
         } else {
-            mWebViewController.request(mUrl);
+            mWebViewController.request(mUrl, false);
         }
 
         return layout;

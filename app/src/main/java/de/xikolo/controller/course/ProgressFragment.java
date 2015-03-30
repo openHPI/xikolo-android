@@ -17,6 +17,7 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.course.adapter.ModuleProgressListAdapter;
+import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
@@ -37,13 +38,13 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     private List<Module> mModules;
 
     private ModuleModel mModuleModel;
-    private Result<List<Module>> mModulesResult;
 
     private ModuleProgressListAdapter mAdapter;
 
     private SwipeRefreshLayout mRefreshLayout;
     private ListView mProgressScrollView;
-    private ProgressBar mProgress;
+
+    private NotificationController mNotificationController;
 
     public ProgressFragment() {
         // Required empty public constructor
@@ -77,29 +78,6 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
         setHasOptionsMenu(true);
 
         mModuleModel = new ModuleModel(getActivity(), jobManager, databaseHelper);
-        mModulesResult = new Result<List<Module>>() {
-            @Override
-            protected void onSuccess(List<Module> result, DataSource dataSource) {
-                mProgress.setVisibility(View.GONE);
-                mRefreshLayout.setRefreshing(false);
-                mModules = result;
-                mAdapter.updateModules(mModules);
-            }
-
-            @Override
-            protected void onWarning(WarnCode warnCode) {
-                if (warnCode == WarnCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
-                }
-            }
-
-            @Override
-            protected void onError(ErrorCode errorCode) {
-                mProgress.setVisibility(View.GONE);
-                mRefreshLayout.setRefreshing(false);
-                ToastUtil.show(getActivity(), R.string.error);
-            }
-        };
     }
 
     @Override
@@ -108,13 +86,14 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
         View layout = inflater.inflate(R.layout.fragment_progress, container, false);
 
         mProgressScrollView = (ListView) layout.findViewById(R.id.listView);
-        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
 
         mAdapter = new ModuleProgressListAdapter(getActivity());
         mProgressScrollView.setAdapter(mAdapter);
 
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
         RefeshLayoutController.setup(mRefreshLayout, this);
+
+        mNotificationController = new NotificationController(layout);
 
         return layout;
     }
@@ -124,12 +103,52 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
         super.onStart();
 
         if (mModules == null) {
-            mProgress.setVisibility(View.VISIBLE);
-            mModuleModel.getModules(mModulesResult, mCourse, true);
+            mNotificationController.setProgressVisible(true);
+            requestProgress(false);
         } else {
-            mProgress.setVisibility(View.GONE);
             mAdapter.updateModules(mModules);
         }
+    }
+
+    private void requestProgress(final boolean userRequest) {
+        Result<List<Module>> result = new Result<List<Module>>() {
+            @Override
+            protected void onSuccess(List<Module> result, DataSource dataSource) {
+                mModules = result;
+
+                mNotificationController.setInvisible();
+                mRefreshLayout.setRefreshing(false);
+
+                if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
+                    mAdapter.clear();
+                    mNotificationController.setTitle(R.string.notification_no_network);
+                    mNotificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
+                    mNotificationController.setNotificationVisible(true);
+                } else {
+                    mAdapter.updateModules(mModules);
+                }
+            }
+
+            @Override
+            protected void onWarning(WarnCode warnCode) {
+                if (warnCode == WarnCode.NO_NETWORK && userRequest) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
+                }
+            }
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                mNotificationController.setInvisible();
+                mRefreshLayout.setRefreshing(false);
+                ToastUtil.show(getActivity(), R.string.error);
+            }
+        };
+
+        if (!mNotificationController.isProgressVisible()) {
+            mRefreshLayout.setRefreshing(true);
+        }
+
+        mModuleModel.getModules(result, mCourse, true);
     }
 
     @Override
@@ -151,7 +170,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         mRefreshLayout.setRefreshing(true);
-        mModuleModel.getModules(mModulesResult, mCourse, true);
+        requestProgress(true);
     }
 
 }

@@ -54,14 +54,14 @@ public class HttpRequest {
             URL url = new URL(mUrl);
             urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setRequestMethod(mMethod);
-            urlConnection.addRequestProperty(Config.HEADER_ACCEPT, Config.HEADER_VALUE_ACCEPT_SAP);
-            urlConnection.addRequestProperty(Config.HEADER_USER_PLATFORM, Config.HEADER_VALUE_USER_PLATFORM_ANDROID);
+            urlConnection.addRequestProperty(Config.HEADER_ACCEPT, Config.HEADER_ACCEPT_VALUE);
+            urlConnection.addRequestProperty(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
 
             if (!mCache) {
-                urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_VALUE_NO_CACHE);
+                urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_CACHE_CONTROL_VALUE);
             }
             if (mToken != null) {
-                urlConnection.addRequestProperty(Config.HEADER_AUTHORIZATION, "Token token=" + mToken);
+                urlConnection.addRequestProperty(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + mToken);
             }
 
             final int statusCode = urlConnection.getResponseCode();
