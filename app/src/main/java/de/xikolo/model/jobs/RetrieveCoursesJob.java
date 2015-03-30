@@ -33,7 +33,7 @@ public class RetrieveCoursesJob extends Job {
     private boolean includeProgress;
 
     public RetrieveCoursesJob(Result<List<Course>> result, boolean includeProgress, CourseDataAccess courseDataAccess) {
-        super(new Params(includeProgress ? Priority.MID : Priority.HIGH));
+        super(new Params(includeProgress ? Priority.MID : Priority.MID));
         this.id = jobCounter.incrementAndGet();
 
         this.result = result;

@@ -52,12 +52,6 @@
     <string name="dialog_mobile_download_yes">Erlauben</string>
 
     <!-- -->
-    <string name="toast_no_courses">Keine Kurse erhalten.</string>
-    <string name="toast_no_network">Bitte aktivieren Sie die Netzwerk-Verbindung.</string>
-    <string name="toast_please_log_in">Bitte melden Sie sich an.</string>
-    <string name="toast_log_in_failed">Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten.</string>
-
-    <!-- -->
     <string name="title_activity_module">Module</string>
 
     <!-- -->
@@ -95,13 +89,23 @@
     <string name="courses">Kurse</string>
 
     <!-- -->
+    <string name="notification_no_network">Bitte Netzwerk-Verbindung aktivieren</string>
+    <string name="notification_no_network_summary">Dieser Inhalt kann nicht ohne Netzwerk-Verbindung dargestellt werden.</string>
+    <string name="notification_no_network_with_offline_mode_summary">Bitte aktualisieren Sie diesen Inhalt mit aktivierter Netzwerk-Verbindung. Danach kann dieser Inhalt offline genutzt werden.</string>
     <string name="notification_no_enrollments">Keine Kurse vorhanden</string>
     <string name="notification_no_enrollments_summary">Sie haben sich bisher für keinen Kurs eingetragen.</string>
     <string name="notification_please_login">Anmeldung erforderlich</string>
     <string name="notification_please_login_summary">Bitte melden Sie sich an, um auf Ihre Kurse zuzugreifen.</string>
-    <string name="notification_file_already_downloaded">Datei bereits heruntergeladen.</string>
-    <string name="notification_no_external_write_access">Kein Schreibzugriff für externen Speicher.</string>
-    <string name="notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>
+
+    <string name="video_notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>
+
+    <!-- -->
+    <string name="toast_no_courses">Keine Kurse erhalten.</string>
+    <string name="toast_no_network">Bitte aktivieren Sie die Netzwerk-Verbindung.</string>
+    <string name="toast_please_log_in">Bitte melden Sie sich an.</string>
+    <string name="toast_log_in_failed">Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten.</string>
+    <string name="toast_file_already_downloaded">Datei bereits heruntergeladen.</string>
+    <string name="toast_no_external_write_access">Kein Schreibzugriff für externen Speicher.</string>
 
     <!-- -->
     <string name="offline_mode">Offline-Modus</string>

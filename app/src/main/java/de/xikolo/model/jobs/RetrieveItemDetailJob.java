@@ -11,13 +11,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.database.VideoDataAccess;
-import de.xikolo.data.entities.Course;
-import de.xikolo.data.entities.Module;
-import de.xikolo.data.net.JsonRequest;
-import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.AssignmentItemDetail;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.LtiItemDetail;
+import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.TextItemDetail;
 import de.xikolo.data.entities.VideoItemDetail;
+import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
@@ -63,9 +64,7 @@ public class RetrieveItemDetailJob extends Job {
         } else {
             if (itemType.equals(Item.TYPE_VIDEO)) {
                 item.detail = videoDataAccess.getVideo(item.id);
-                if (item.detail != null) {
-                    result.success(item, Result.DataSource.LOCAL);
-                }
+                result.success(item, Result.DataSource.LOCAL);
             }
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
@@ -78,6 +77,9 @@ public class RetrieveItemDetailJob extends Job {
                         || itemType.equals(Item.TYPE_ASSIGNMENT)
                         || itemType.equals(Item.TYPE_EXAM)) {
                     type = new TypeToken<Item<AssignmentItemDetail>>(){}.getType();
+                } else if (itemType.equals(Item.TYPE_LTI)) {
+                    type = new TypeToken<Item<LtiItemDetail>>() {
+                    }.getType();
                 }
 
                 String url = Config.API + Config.COURSES + course.id + "/"

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
+import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.helper.VideoController;
 import de.xikolo.controller.module.helper.DownloadViewController;
 import de.xikolo.data.entities.Course;
@@ -42,7 +44,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
     private TextView mTitle;
     private View mContainer;
-    private ProgressBar mProgress;
+
+    private NotificationController mNotificationController;
 
     private LinearLayout mLinearLayoutDownloads;
 
@@ -52,7 +55,6 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     private VideoController mVideoController;
 
     private ItemModel mItemModel;
-    private Result<Item> mItemResult;
 
     private boolean wasSaved = false;
 
@@ -69,24 +71,6 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         super.onCreate(savedInstanceState);
 
         mItemModel = new ItemModel(getActivity(), jobManager, databaseHelper);
-        mItemResult = new Result<Item>() {
-            @Override
-            protected void onSuccess(Item result, DataSource dataSource) {
-                mItem = result;
-                setupVideo();
-            }
-
-            @Override
-            protected void onError(ErrorCode errorCode) {
-                if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
-                } else {
-                    ToastUtil.show(getActivity(), R.string.error);
-                }
-                mProgress.setVisibility(View.VISIBLE);
-                mContainer.setVisibility(View.GONE);
-            }
-        };
     }
 
     @Override
@@ -95,7 +79,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         View layout = inflater.inflate(R.layout.fragment_video, container, false);
 
         mContainer = layout.findViewById(R.id.container);
-        mProgress = (ProgressBar) layout.findViewById(R.id.progress);
+
+        mNotificationController = new NotificationController(layout);
 
         mTitle = (TextView) layout.findViewById(R.id.textTitle);
 
@@ -166,9 +151,61 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (!wasSaved) {
+            requestVideo(false);
+        } else {
+            setupVideo();
+        }
+    }
+
+    private void requestVideo(final boolean userRequest) {
+        Result<Item> result = new Result<Item>() {
+            @Override
+            protected void onSuccess(Item result, DataSource dataSource) {
+                mItem = result;
+
+                if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.detail == null) {
+                    mNotificationController.setTitle(R.string.notification_no_network);
+                    mNotificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
+                    mNotificationController.setNotificationVisible(true);
+                    mNotificationController.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestVideo(true);
+                        }
+                    });
+                } else if (result.detail != null) {
+                    setupVideo();
+                }
+            }
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                ToastUtil.show(getActivity(), R.string.error);
+                mNotificationController.setInvisible();
+                mContainer.setVisibility(View.GONE);
+            }
+
+            @Override
+            protected void onWarning(WarnCode warnCode) {
+                if (warnCode == WarnCode.NO_NETWORK && userRequest) {
+                    NetworkUtil.showNoConnectionToast(getActivity());
+                }
+            }
+        };
+
+        mContainer.setVisibility(View.GONE);
+        mNotificationController.setProgressVisible(true);
+        mItemModel.getItemDetail(result, mCourse, mModule, mItem, Item.TYPE_VIDEO);
+    }
+
     private void setupVideo() {
         wasSaved = true;
-        mProgress.setVisibility(View.GONE);
+        mNotificationController.setInvisible();
         mContainer.setVisibility(View.VISIBLE);
 
         mVideoController.setVideo(mCourse, mModule, mItem);
@@ -184,17 +221,6 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         mLinearLayoutDownloads.addView(slides.getView());
 //        DownloadViewController transcript = new DownloadViewController(DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
 //        mLinearLayoutDownloads.addView(transcript.getView());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (!wasSaved) {
-            mItemModel.getItemDetail(mItemResult, mCourse, mModule, mItem, Item.TYPE_VIDEO);
-        } else {
-            setupVideo();
-        }
     }
 
     @Override

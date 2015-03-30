@@ -34,14 +34,18 @@ public class RetrieveItemsJob extends Job {
     private Module module;
     private ItemDataAccess itemDataAccess;
 
-    public RetrieveItemsJob(Result<List<Item>> result, Course course, Module module, ItemDataAccess itemDataAccess) {
-        super(new Params(Priority.HIGH));
+    private boolean onlyLocal;
+
+    public RetrieveItemsJob(Result<List<Item>> result, Course course, Module module, ItemDataAccess itemDataAccess, boolean onlyLocal) {
+        super(new Params(Priority.MID));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.course = course;
         this.module = module;
         this.itemDataAccess = itemDataAccess;
+
+        this.onlyLocal = onlyLocal;
     }
 
     @Override
@@ -56,31 +60,34 @@ public class RetrieveItemsJob extends Job {
         } else {
             result.success(itemDataAccess.getAllItemsForModule(module), Result.DataSource.LOCAL);
 
-            if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                Type type = new TypeToken<List<Item>>(){}.getType();
+            if (!onlyLocal) {
+                if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+                    Type type = new TypeToken<List<Item>>() {
+                    }.getType();
 
-                String url = Config.API + Config.COURSES + course.id + "/"
-                        + Config.MODULES + module.id + "/" + Config.ITEMS;
+                    String url = Config.API + Config.COURSES + course.id + "/"
+                            + Config.MODULES + module.id + "/" + Config.ITEMS;
 
-                JsonRequest request = new JsonRequest(url, type);
-                request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
+                    JsonRequest request = new JsonRequest(url, type);
+                    request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
 
-                Object o = request.getResponse();
-                if (o != null) {
-                    List<Item> items = (List<Item>) o;
-                    if (Config.DEBUG) Log.i(TAG, "Items received (" + items.size() + ")");
+                    Object o = request.getResponse();
+                    if (o != null) {
+                        List<Item> items = (List<Item>) o;
+                        if (Config.DEBUG) Log.i(TAG, "Items received (" + items.size() + ")");
 
-                    for (Item item : items) {
-                        itemDataAccess.addOrUpdateItem(module, item);
+                        for (Item item : items) {
+                            itemDataAccess.addOrUpdateItem(module, item);
+                        }
+
+                        result.success(items, Result.DataSource.NETWORK);
+                    } else {
+                        if (Config.DEBUG) Log.w(TAG, "No Item received");
+                        result.error(Result.ErrorCode.NO_RESULT);
                     }
-
-                    result.success(items, Result.DataSource.NETWORK);
                 } else {
-                    if (Config.DEBUG) Log.w(TAG, "No Item received");
-                    result.error(Result.ErrorCode.NO_RESULT);
+                    result.warn(Result.WarnCode.NO_NETWORK);
                 }
-            } else {
-                result.warn(Result.WarnCode.NO_NETWORK);
             }
         }
 

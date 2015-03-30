@@ -34,7 +34,7 @@ public class CreateAccessTokenJob extends Job {
     private UserPreferences userPreferences;
 
     public CreateAccessTokenJob(Result<Void> result, String email, String password, UserPreferences userPreferences) {
-        super(new Params(Priority.MID));
+        super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
