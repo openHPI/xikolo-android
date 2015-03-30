@@ -2,6 +2,7 @@ package de.xikolo.controller;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +26,8 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected ActionBar actionBar;
 
     protected Toolbar toolbar;
+
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,15 @@ public abstract class BaseActivity extends ActionBarActivity {
             actionBar.setHomeButtonEnabled(true);
 //            actionBar.setLogo(R.drawable.ic_logo);
         }
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (Build.VERSION.SDK_INT >= 21) {
+            if (drawerLayout != null) {
+                drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.apptheme_main));
+            } else {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.apptheme_main_dark_status));
+            }
+        }
     }
 
     protected void setActionBarElevation(float elevation) {
@@ -66,13 +78,21 @@ public abstract class BaseActivity extends ActionBarActivity {
                 toolbar.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
                 toolbar.setSubtitle("");
                 if (Build.VERSION.SDK_INT >= 21) {
-                    getWindow().setStatusBarColor(getResources().getColor(R.color.apptheme_main_dark));
+                    if (drawerLayout != null) {
+                        drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.apptheme_main));
+                    } else {
+                        getWindow().setStatusBarColor(getResources().getColor(R.color.apptheme_main_dark_status));
+                    }
                 }
             } else {
                 toolbar.setBackgroundColor(getResources().getColor(R.color.offline_mode));
                 toolbar.setSubtitle(getString(R.string.offline_mode));
                 if (Build.VERSION.SDK_INT >= 21) {
-                    getWindow().setStatusBarColor(getResources().getColor(R.color.offline_mode_dark));
+                    if (drawerLayout != null) {
+                        drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.offline_mode));
+                    } else {
+                        getWindow().setStatusBarColor(getResources().getColor(R.color.offline_mode_dark));
+                    }
                 }
             }
         }

@@ -117,6 +117,9 @@ public class NavigationFragment extends BaseFragment {
         });
         mDrawerListView.setAdapter(mAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+
+        mDrawerListView.setFitsSystemWindows(true);
+
         return mDrawerListView;
     }
 
