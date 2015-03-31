@@ -185,6 +185,11 @@ public class NavigationFragment extends BaseFragment {
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
                 updateDrawer();
             }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, 0);
+            }
         };
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
