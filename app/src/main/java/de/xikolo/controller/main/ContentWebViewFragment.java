@@ -1,6 +1,7 @@
 package de.xikolo.controller.main;
 
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -105,7 +106,7 @@ public class ContentWebViewFragment extends ContentFragment {
         int itemId = item.getItemId();
         switch (itemId) {
             case android.R.id.home:
-                getActivity().getSupportFragmentManager().popBackStack();
+                NavUtils.navigateUpFromSameTask(getActivity());
                 return true;
             case R.id.action_refresh:
                 mWebViewController.onRefresh();

@@ -229,6 +229,10 @@ public class NavigationFragment extends BaseFragment {
         }
     }
 
+    public int getItem() {
+        return mCurrentSelectedPosition;
+    }
+
     public void closeDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);

@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -114,7 +115,7 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
         int itemId = item.getItemId();
         switch (itemId) {
             case android.R.id.home:
-                getActivity().finish();
+                NavUtils.navigateUpFromSameTask(getActivity());
                 return true;
             case R.id.action_unenroll:
                 UnenrollDialog dialog = new UnenrollDialog();

@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -145,7 +146,7 @@ public class VideoActivity extends BaseActivity {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             setResult();
-            finish();
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
