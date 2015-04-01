@@ -70,6 +70,7 @@ public class ModuleListAdapter extends BaseAdapter {
             LayoutInflater inflater = mActivity.getLayoutInflater();
             rowView = inflater.inflate(R.layout.item_module, null);
             ViewHolder viewHolder = new ViewHolder();
+            viewHolder.container = (ViewGroup) rowView.findViewById(R.id.container);
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
             viewHolder.listView = (AbsListView) rowView.findViewById(R.id.listView);
             viewHolder.progress = (ProgressBar) rowView.findViewById(R.id.containerProgress);
@@ -91,11 +92,11 @@ public class ModuleListAdapter extends BaseAdapter {
             if (!DateUtil.nowIsBetween(module.available_from, module.available_to)) {
                 holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
                 holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
-                holder.title.setClickable(false);
+                holder.container.setClickable(false);
             } else {
                 holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_color));
                 holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.apptheme_main));
-                holder.title.setOnClickListener(new View.OnClickListener() {
+                holder.container.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mModuleCallback.onModuleButtonClicked(mCourse, module);
@@ -116,6 +117,7 @@ public class ModuleListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
+        ViewGroup container;
         TextView title;
         AbsListView listView;
         ProgressBar progress;
