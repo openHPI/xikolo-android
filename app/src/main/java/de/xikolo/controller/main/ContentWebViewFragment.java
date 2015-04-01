@@ -74,7 +74,7 @@ public class ContentWebViewFragment extends ContentFragment {
         mWebViewController.setLoadExternalUrlEnabled(mExternalLinksEnabled);
 
         if (savedInstanceState != null) {
-            mWebView.restoreState(savedInstanceState);
+            mWebViewController.restoreState(savedInstanceState);
         } else {
             mWebViewController.request(mUrl, false);
         }
@@ -90,9 +90,7 @@ public class ContentWebViewFragment extends ContentFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mWebView != null) {
-            mWebView.saveState(outState);
-        }
+        mWebViewController.saveState(outState);
         super.onSaveInstanceState(outState);
     }
 
