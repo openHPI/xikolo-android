@@ -106,7 +106,7 @@ public class CourseListAdapter extends BaseAdapter {
         holder.teacher.setText(course.lecturer);
         holder.language.setText(course.language);
 
-        ImageLoaderController.loadImage(course.visual_url, holder.img);
+        ImageLoaderController.loadCourseImage(course.visual_url, holder.img, holder.container);
 
         if (course.is_enrolled && DateUtil.nowIsAfter(course.available_from)) {
             holder.container.setOnClickListener(new View.OnClickListener() {
