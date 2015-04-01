@@ -66,7 +66,6 @@ public class CourseListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View rowView = view;
-        Boolean test;
         if (rowView == null) {
             LayoutInflater inflater = mActivity.getLayoutInflater();
             rowView = inflater.inflate(R.layout.item_courses, null);
