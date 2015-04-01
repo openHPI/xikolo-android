@@ -91,7 +91,7 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
         }
 
         if (savedInstanceState != null) {
-            mWebView.restoreState(savedInstanceState);
+            mWebViewController.restoreState(savedInstanceState);
         } else {
             requestItemDetail(false);
         }
@@ -135,9 +135,7 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mWebView != null) {
-            mWebView.saveState(outState);
-        }
+        mWebViewController.saveState(outState);
         super.onSaveInstanceState(outState);
     }
 

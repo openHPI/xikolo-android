@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.util.Patterns;
@@ -156,6 +157,19 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
     @Override
     public void onRefresh() {
         request(mUrl, true);
+    }
+
+    public void saveState(Bundle outState) {
+        if (mWebView != null) {
+            mWebView.saveState(outState);
+        }
+    }
+
+    public void restoreState(Bundle savedInstanceState) {
+        if (mWebView != null) {
+            mWebView.restoreState(savedInstanceState);
+            mUrl = mWebView.getUrl();
+        }
     }
 
 }
