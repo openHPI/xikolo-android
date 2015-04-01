@@ -18,6 +18,7 @@ import de.xikolo.controller.main.QuizDemoFragment;
 import de.xikolo.controller.main.ContentWebViewFragment;
 import de.xikolo.controller.navigation.NavigationFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
+import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 
 public class MainActivity extends BaseActivity
@@ -125,10 +126,17 @@ public class MainActivity extends BaseActivity
     @Override
     public void onBackPressed() {
         if (!mNavigationFragment.isDrawerOpen()) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 1)
-                getSupportFragmentManager().popBackStack();
-            else
+            if (UserModel.isLoggedIn(this)
+                    && mNavigationFragment.getItem() == NavigationAdapter.NAV_ID_MY_COURSES) {
                 finish();
+            } else if (!UserModel.isLoggedIn(this)
+                    && mNavigationFragment.getItem() == NavigationAdapter.NAV_ID_ALL_COURSES) {
+                finish();
+            } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                getSupportFragmentManager().popBackStack();
+            } else {
+                finish();
+            }
         } else {
             mNavigationFragment.closeDrawer();
         }
