@@ -39,12 +39,13 @@
     <LinearLayout
         android:id="@+id/containerProfile"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:paddingBottom="16dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="16dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/apptheme_second">
 
         <de.xikolo.view.CircularImageView
             android:id="@+id/imgProfile"
