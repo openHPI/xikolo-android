@@ -81,14 +81,6 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     public void onEventMainThread(NetworkStateEvent event) {
-        if(contentLayout != null) {
-            if(event.isOnline()) {
-                contentLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
-            } else {
-                contentLayout.setBackgroundColor(getResources().getColor(R.color.offline_mode));
-            }
-        }
-
         if (toolbar != null) {
             if (event.isOnline()) {
                 toolbar.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
@@ -99,6 +91,9 @@ public abstract class BaseActivity extends ActionBarActivity {
                     } else {
                         getWindow().setStatusBarColor(getResources().getColor(R.color.apptheme_main_dark_status));
                     }
+                    if(contentLayout != null) {
+                        contentLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
+                    }
                 }
             } else {
                 toolbar.setBackgroundColor(getResources().getColor(R.color.offline_mode));
@@ -108,6 +103,9 @@ public abstract class BaseActivity extends ActionBarActivity {
                         drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.offline_mode));
                     } else {
                         getWindow().setStatusBarColor(getResources().getColor(R.color.offline_mode_dark));
+                    }
+                    if(contentLayout != null) {
+                        contentLayout.setBackgroundColor(getResources().getColor(R.color.offline_mode));
                     }
                 }
             }
