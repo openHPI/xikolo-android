@@ -6,6 +6,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.FrameLayout;
 
 import com.path.android.jobqueue.JobManager;
 
@@ -28,6 +29,8 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected Toolbar toolbar;
 
     private DrawerLayout drawerLayout;
+
+    private FrameLayout contentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,11 @@ public abstract class BaseActivity extends ActionBarActivity {
                 getWindow().setStatusBarColor(getResources().getColor(R.color.apptheme_main_dark_status));
             }
         }
+
+        contentLayout = (FrameLayout) findViewById(R.id.contentLayout);
+        if(contentLayout != null) {
+            contentLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
+        }
     }
 
     protected void setActionBarElevation(float elevation) {
@@ -83,6 +91,9 @@ public abstract class BaseActivity extends ActionBarActivity {
                     } else {
                         getWindow().setStatusBarColor(getResources().getColor(R.color.apptheme_main_dark_status));
                     }
+                    if(contentLayout != null) {
+                        contentLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
+                    }
                 }
             } else {
                 toolbar.setBackgroundColor(getResources().getColor(R.color.offline_mode));
@@ -92,6 +103,9 @@ public abstract class BaseActivity extends ActionBarActivity {
                         drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.offline_mode));
                     } else {
                         getWindow().setStatusBarColor(getResources().getColor(R.color.offline_mode_dark));
+                    }
+                    if(contentLayout != null) {
+                        contentLayout.setBackgroundColor(getResources().getColor(R.color.offline_mode));
                     }
                 }
             }

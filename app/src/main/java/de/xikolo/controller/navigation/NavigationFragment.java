@@ -118,8 +118,6 @@ public class NavigationFragment extends BaseFragment {
         mDrawerListView.setAdapter(mAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
-        mDrawerListView.setFitsSystemWindows(true);
-
         return mDrawerListView;
     }
 
@@ -184,6 +182,11 @@ public class NavigationFragment extends BaseFragment {
                 }
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
                 updateDrawer();
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, 0);
             }
         };
 
