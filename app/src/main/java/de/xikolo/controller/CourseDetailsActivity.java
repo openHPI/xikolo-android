@@ -1,15 +1,21 @@
 package de.xikolo.controller;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import de.xikolo.R;
+import de.xikolo.controller.dialogs.UnenrollDialog;
 import de.xikolo.controller.exceptions.WrongParameterException;
+import de.xikolo.controller.helper.EnrollmentController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.util.Config;
 
-public class CourseDetailsActivity extends BaseActivity {
+public class CourseDetailsActivity extends BaseActivity implements UnenrollDialog.UnenrollDialogListener {
 
     public static final String TAG = CourseDetailsActivity.class.getSimpleName();
 
@@ -42,4 +48,32 @@ public class CourseDetailsActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (mCourse.is_enrolled) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.course, menu);
+            return true;
+        } else {
+            return super.onCreateOptionsMenu(menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_unenroll:
+                UnenrollDialog dialog = new UnenrollDialog();
+                dialog.setUnenrollDialogListener(this);
+                dialog.show(getSupportFragmentManager(), UnenrollDialog.TAG);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        EnrollmentController.unenroll(this, mCourse);
+    }
 }

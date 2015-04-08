@@ -3,7 +3,6 @@ package de.xikolo.controller.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,14 +10,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import de.xikolo.R;
 import de.xikolo.controller.CourseActivity;
 import de.xikolo.controller.CourseDetailsActivity;
+import de.xikolo.controller.dialogs.ProgressDialog;
 import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.controller.main.adapter.CourseListAdapter;
@@ -27,6 +27,9 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
+import de.xikolo.model.events.EnrollEvent;
+import de.xikolo.model.events.UnenrollEvent;
+import de.xikolo.util.DateUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
@@ -79,6 +82,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         setHasOptionsMenu(true);
 
         mCourseModel = new CourseModel(getActivity(), jobManager, databaseHelper);
+
+        EventBus.getDefault().register(this);
     }
 
     private void requestCourses(final boolean userRequest, final boolean includeProgress) {
@@ -240,16 +245,28 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     }
 
     @Override
-    public void onEnrollButtonClicked(final Button button, Course course) {
-        Result<Void> result = new Result<Void>() {
+    public void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onEnrollButtonClicked(Course course) {
+        final ProgressDialog dialog = ProgressDialog.getInstance();
+        Result<Course> result = new Result<Course>() {
             @Override
-            protected void onSuccess(Void result, DataSource dataSource) {
-                requestCourses(false, false);
+            protected void onSuccess(Course result, DataSource dataSource) {
+                dialog.dismiss();
+                EventBus.getDefault().post(new EnrollEvent(result));
+                if (DateUtil.nowIsAfter(result.available_from)) {
+                    onEnterButtonClicked(result);
+                }
             }
 
             @Override
             protected void onError(ErrorCode errorCode) {
-                button.setText(getActivity().getString(R.string.btn_enroll_me));
+                dialog.dismiss();
                 if (errorCode == ErrorCode.NO_NETWORK) {
                     NetworkUtil.showNoConnectionToast(getActivity());
                 } else if (errorCode == ErrorCode.NO_AUTH) {
@@ -258,7 +275,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 }
             }
         };
-        button.setText("...");
+        dialog.show(getChildFragmentManager(), ProgressDialog.TAG);
         mCourseModel.addEnrollment(result, course);
     }
 
@@ -291,6 +308,30 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         b.putParcelable(CourseActivity.ARG_COURSE, course);
         intent.putExtras(b);
         startActivity(intent);
+    }
+
+    public void onEventMainThread(UnenrollEvent event) {
+        if (mCourses != null && mCourses.contains(event.getCourse())) {
+            if (isMyCoursesFilter()) {
+                mCourses.remove(event.getCourse());
+            } else {
+                mCourses.set(mCourses.indexOf(event.getCourse()), event.getCourse());
+            }
+        }
+        updateView();
+    }
+
+    public void onEventMainThread(EnrollEvent event) {
+        if (isMyCoursesFilter()) {
+            if (mCourses != null && !mCourses.contains(event.getCourse())) {
+                mCourses.add(event.getCourse());
+            }
+        } else {
+            if (mCourses != null && mCourses.contains(event.getCourse())) {
+                mCourses.set(mCourses.indexOf(event.getCourse()), event.getCourse());
+            }
+        }
+        updateView();
     }
 
     @Override

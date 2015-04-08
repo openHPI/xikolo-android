@@ -22,13 +22,10 @@ import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.WebViewFragment;
 import de.xikolo.controller.dialogs.UnenrollDialog;
+import de.xikolo.controller.helper.EnrollmentController;
 import de.xikolo.data.entities.Course;
-import de.xikolo.model.CourseModel;
-import de.xikolo.model.Result;
 import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.util.Config;
-import de.xikolo.util.NetworkUtil;
-import de.xikolo.util.ToastUtil;
 
 public class CourseFragment extends BaseFragment implements UnenrollDialog.UnenrollDialogListener {
 
@@ -128,23 +125,7 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        CourseModel model = new CourseModel(getActivity(), jobManager, databaseHelper);
-        Result<Void> result = new Result<Void>() {
-            @Override
-            protected void onSuccess(Void result, DataSource dataSource) {
-                getActivity().finish();
-            }
-
-            @Override
-            protected void onError(ErrorCode errorCode) {
-                if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
-                } else {
-                    ToastUtil.show(getActivity(), R.string.error);
-                }
-            }
-        };
-        model.deleteEnrollment(result, mCourse);
+        EnrollmentController.unenroll(getActivity(), mCourse);
     }
 
     @Override

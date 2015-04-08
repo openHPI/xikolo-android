@@ -51,6 +51,9 @@
     <string name="dialog_mobile_download_message">Do you want to allow downloads on mobile networks? Be aware that this affects your mobile data volume.</string>
     <string name="dialog_mobile_download_yes">Allow</string>
 
+    <string name="dialog_progress_title">Please wait</string>
+    <string name="dialog_progress_message">Loading&#8230;</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 

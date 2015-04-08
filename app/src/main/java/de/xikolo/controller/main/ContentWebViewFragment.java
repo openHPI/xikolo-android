@@ -91,7 +91,9 @@ public class ContentWebViewFragment extends ContentFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        mWebViewController.saveState(outState);
+        if (mWebViewController != null) {
+            mWebViewController.saveState(outState);
+        }
         super.onSaveInstanceState(outState);
     }
 
