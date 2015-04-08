@@ -2,6 +2,7 @@ package de.xikolo.controller.navigation.adapter;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class NavigationAdapter extends BaseAdapter {
     public static final int NAV_ID_ALL_COURSES = 1;
     public static final int NAV_ID_MY_COURSES = 2;
     public static final int NAV_ID_NEWS = 3;
-//    public static final int NAV_ID_QUIZ = 4;
+    //    public static final int NAV_ID_QUIZ = 4;
     public static final int NAV_ID_DOWNLOADS = 4;
     public static final int NAV_ID_SETTINGS = 5;
     private List<Element> elements;
@@ -82,11 +83,16 @@ public class NavigationAdapter extends BaseAdapter {
             LayoutInflater inflater = mActivity.getLayoutInflater();
             if (i == NAV_ID_PROFILE) {
                 rowView = inflater.inflate(R.layout.item_navi_profile, null);
+
                 viewHolder.containerLogin = rowView.findViewById(R.id.containerLogin);
                 viewHolder.containerProfile = rowView.findViewById(R.id.containerProfile);
                 viewHolder.name = (TextView) rowView.findViewById(R.id.textName);
                 viewHolder.email = (TextView) rowView.findViewById(R.id.textEmail);
                 viewHolder.img = (CircularImageView) rowView.findViewById(R.id.imgProfile);
+
+                setStatusBarPadding(viewHolder.containerLogin);
+                setStatusBarPadding(viewHolder.containerProfile);
+
             } else if (i == NAV_ID_SETTINGS || i == NAV_ID_DOWNLOADS) {
                 rowView = inflater.inflate(R.layout.item_navi_sub, null);
             } else {
@@ -139,16 +145,14 @@ public class NavigationAdapter extends BaseAdapter {
 
         if (i == ((ListView) viewGroup).getCheckedItemPosition()) {
             if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mActivity)) {
-                holder.name.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
-                holder.email.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
+                holder.img.setBorderColor(mActivity.getResources().getColor(R.color.apptheme_main));
             } else {
                 holder.icon.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
                 holder.label.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
             }
         } else {
             if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mActivity)) {
-                holder.name.setTextColor(mActivity.getResources().getColor(R.color.white));
-                holder.email.setTextColor(mActivity.getResources().getColor(R.color.white));
+                holder.img.setBorderColor(mActivity.getResources().getColor(R.color.white));
             } else {
                 holder.icon.setTextColor(mActivity.getResources().getColor(R.color.white));
                 holder.label.setTextColor(mActivity.getResources().getColor(R.color.white));
@@ -169,6 +173,27 @@ public class NavigationAdapter extends BaseAdapter {
         }
 
         return rowView;
+    }
+
+    private void setStatusBarPadding(View view) {
+       view.setPadding(view.getPaddingLeft(),
+                getStatusBarHeight() + view.getPaddingTop(),
+                view.getPaddingRight(),
+                view.getPaddingBottom());
+    }
+
+    private int getStatusBarHeight() {
+        int result = 0;
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return result;
+        }
+
+        int resourceId = mActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = mActivity.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     static class Element {
