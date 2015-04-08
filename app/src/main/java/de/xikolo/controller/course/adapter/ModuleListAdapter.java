@@ -105,6 +105,7 @@ public class ModuleListAdapter extends BaseAdapter {
             }
         } else {
             holder.progress.setVisibility(View.VISIBLE);
+            holder.container.setClickable(false);
         }
 
         return rowView;

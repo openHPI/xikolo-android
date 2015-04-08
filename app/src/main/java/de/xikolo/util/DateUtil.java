@@ -5,10 +5,13 @@ import android.util.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateUtil {
 
     public static final String TAG = DateUtil.class.getSimpleName();
+
+    public static final String XIKOLO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     public static boolean nowIsBetween(String from, String to) {
         Date dateBegin = parse(from);
@@ -47,7 +50,7 @@ public class DateUtil {
     }
 
     public static Date parse(String date) {
-        SimpleDateFormat dateFm = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat dateFm = new SimpleDateFormat(XIKOLO_DATE_FORMAT, Locale.getDefault());
         Date parsedDate = null;
         try {
             if (date != null) {
@@ -59,6 +62,11 @@ public class DateUtil {
             parsedDate = null;
         }
         return parsedDate;
+    }
+
+    public static String format(Date date) {
+        SimpleDateFormat dateFm = new SimpleDateFormat(XIKOLO_DATE_FORMAT, Locale.getDefault());
+        return dateFm.format(date);
     }
 
 }
