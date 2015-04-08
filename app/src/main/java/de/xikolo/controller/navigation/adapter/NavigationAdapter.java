@@ -90,8 +90,8 @@ public class NavigationAdapter extends BaseAdapter {
                 viewHolder.email = (TextView) rowView.findViewById(R.id.textEmail);
                 viewHolder.img = (CircularImageView) rowView.findViewById(R.id.imgProfile);
 
-                setPadding(viewHolder.containerLogin);
-                setPadding(viewHolder.containerProfile);
+                setStatusBarPadding(viewHolder.containerLogin);
+                setStatusBarPadding(viewHolder.containerProfile);
 
             } else if (i == NAV_ID_SETTINGS || i == NAV_ID_DOWNLOADS) {
                 rowView = inflater.inflate(R.layout.item_navi_sub, null);
@@ -145,16 +145,14 @@ public class NavigationAdapter extends BaseAdapter {
 
         if (i == ((ListView) viewGroup).getCheckedItemPosition()) {
             if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mActivity)) {
-                holder.name.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
-                holder.email.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
+                holder.img.setBorderColor(mActivity.getResources().getColor(R.color.apptheme_main));
             } else {
                 holder.icon.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
                 holder.label.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
             }
         } else {
             if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mActivity)) {
-                holder.name.setTextColor(mActivity.getResources().getColor(R.color.white));
-                holder.email.setTextColor(mActivity.getResources().getColor(R.color.white));
+                holder.img.setBorderColor(mActivity.getResources().getColor(R.color.white));
             } else {
                 holder.icon.setTextColor(mActivity.getResources().getColor(R.color.white));
                 holder.label.setTextColor(mActivity.getResources().getColor(R.color.white));
@@ -177,7 +175,7 @@ public class NavigationAdapter extends BaseAdapter {
         return rowView;
     }
 
-    private void setPadding(View view) {
+    private void setStatusBarPadding(View view) {
        view.setPadding(view.getPaddingLeft(),
                 getStatusBarHeight() + view.getPaddingTop(),
                 view.getPaddingRight(),
