@@ -25,10 +25,10 @@ public class CreateEnrollmentJob extends Job {
     private final int id;
 
     private Course course;
-    private Result<Void> result;
+    private Result<Course> result;
     private CourseDataAccess courseDataAccess;
 
-    public CreateEnrollmentJob(Result<Void> result, Course course, CourseDataAccess courseDataAccess) {
+    public CreateEnrollmentJob(Result<Course> result, Course course, CourseDataAccess courseDataAccess) {
         super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
@@ -61,7 +61,7 @@ public class CreateEnrollmentJob extends Job {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
                 course.is_enrolled = true;
                 courseDataAccess.updateCourse(course);
-                result.success(null, Result.DataSource.NETWORK);
+                result.success(course, Result.DataSource.NETWORK);
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Enrollment not created");
                 result.error(Result.ErrorCode.NO_RESULT);

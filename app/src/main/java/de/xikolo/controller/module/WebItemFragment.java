@@ -137,7 +137,9 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        mWebViewController.saveState(outState);
+        if (mWebViewController != null) {
+            mWebViewController.saveState(outState);
+        }
         super.onSaveInstanceState(outState);
     }
 

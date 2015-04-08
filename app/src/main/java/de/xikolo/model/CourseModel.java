@@ -36,11 +36,11 @@ public class CourseModel extends BaseModel {
         mJobManager.addJobInBackground(new RetrieveCoursesJob(result, includeProgress, courseDataAccess));
     }
 
-    public void addEnrollment(Result<Void> result, Course course) {
+    public void addEnrollment(Result<Course> result, Course course) {
         mJobManager.addJobInBackground(new CreateEnrollmentJob(result, course, courseDataAccess));
     }
 
-    public void deleteEnrollment(Result<Void> result, Course course) {
+    public void deleteEnrollment(Result<Course> result, Course course) {
         mJobManager.addJobInBackground(new DeleteEnrollmentJob(result, course, courseDataAccess, moduleDataAccess));
 
 

@@ -26,12 +26,12 @@ public class DeleteEnrollmentJob extends Job {
 
     private final int id;
 
-    private Result<Void> result;
+    private Result<Course> result;
     private Course course;
     private CourseDataAccess courseDataAccess;
     private ModuleDataAccess moduleDataAccess;
 
-    public DeleteEnrollmentJob(Result<Void> result, Course course, CourseDataAccess courseDataAccess, ModuleDataAccess moduleDataAccess) {
+    public DeleteEnrollmentJob(Result<Course> result, Course course, CourseDataAccess courseDataAccess, ModuleDataAccess moduleDataAccess) {
         super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
@@ -70,7 +70,7 @@ public class DeleteEnrollmentJob extends Job {
                     moduleDataAccess.deleteModule(module);
                 }
 
-                result.success(null, Result.DataSource.NETWORK);
+                result.success(course, Result.DataSource.NETWORK);
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Enrollment not deleted");
                 result.error(Result.ErrorCode.NO_RESULT);
