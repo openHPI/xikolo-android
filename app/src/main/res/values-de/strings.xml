@@ -96,6 +96,7 @@
     <string name="notification_no_enrollments_summary">Sie haben sich bisher für keinen Kurs eingetragen.</string>
     <string name="notification_please_login">Anmeldung erforderlich</string>
     <string name="notification_please_login_summary">Bitte melden Sie sich an, um auf Ihre Kurse zuzugreifen.</string>
+    <string name="notification_url_invalid">URL fehlerhaft</string>
 
     <string name="video_notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>
 
@@ -130,7 +131,5 @@
 
     <string name="settings_title_build">Build-Version</string>
     <string name="settings_summary_build">Version:</string>
-
-    <string name="url_invalid_html_title">URL fehlerhaft</string>
 
 </resources>

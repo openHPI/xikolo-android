@@ -123,12 +123,12 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         }
         mUrl = url;
 
-        if(!mLoadExternalUrlEnabled || Patterns.WEB_URL.matcher(mUrl).matches()) {
+        if (!mLoadExternalUrlEnabled || Patterns.WEB_URL.matcher(mUrl).matches()) {
             if (NetworkUtil.isOnline(mActivity)) {
                 if (!mNotificationController.isProgressVisible()) {
                     mRefreshLayout.setRefreshing(true);
                 }
-                if (!mLoadExternalUrlEnabled) {
+                if (url.contains(Config.HOST)) {
                     Map<String, String> header = new HashMap<String, String>();
                     header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
                     if (UserModel.isLoggedIn(mActivity)) {
@@ -150,7 +150,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                 }
             }
         } else {
-            mWebView.loadData(Config.INVALID_URL_HTML_PREFIX + mActivity.getString(R.string.url_invalid_html_title) + Config.INVALID_URL_HTML_SUFFIX, "text/html", null);
+            mNotificationController.setTitle(R.string.notification_url_invalid);
         }
     }
 

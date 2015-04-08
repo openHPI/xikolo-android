@@ -79,8 +79,7 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
         mWebViewController = new WebViewController(getActivity(), layout);
 
         if (mItem.type.equals(Item.TYPE_TEXT)
-                || mItem.type.equals(Item.TYPE_VIDEO)
-                || mItem.type.equals(Item.TYPE_LTI)) {
+                || mItem.type.equals(Item.TYPE_VIDEO)) {
             mWebViewController.setInAppLinksEnabled(false);
             mWebViewController.setLoadExternalUrlEnabled(false);
         } else if (mItem.type.equals(Item.TYPE_SELFTEST)
@@ -88,6 +87,9 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
                 || mItem.type.equals(Item.TYPE_EXAM)) {
             mWebViewController.setInAppLinksEnabled(true);
             mWebViewController.setLoadExternalUrlEnabled(false);
+        } else if (mItem.type.equals(Item.TYPE_LTI)) {
+            mWebViewController.setInAppLinksEnabled(true);
+            mWebViewController.setLoadExternalUrlEnabled(true);
         }
 
         if (savedInstanceState != null) {

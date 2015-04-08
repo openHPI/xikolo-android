@@ -68,7 +68,4 @@ public class Config {
     public static final String ENROLLMENTS = "enrollments/";
     public static final String PROGRESSIONS = "progressions/";
 
-    public static final String INVALID_URL_HTML_PREFIX = "<html>\n<head>\n\t<title></title>\n</head>\n<body>\n<br><h1 style=\"text-align: center;\">&#10006;</h1>\n<h1 style=\"text-align: center;\">";
-    public static final String INVALID_URL_HTML_SUFFIX = "</h1>\n</body>\n</html>\n";
-
 }
