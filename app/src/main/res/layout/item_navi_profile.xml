@@ -39,22 +39,20 @@
     <LinearLayout
         android:id="@+id/containerProfile"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="16dp"
+        android:layout_height="fill_parent"
+        android:padding="16dp"
         android:orientation="vertical"
-        android:background="@color/apptheme_second">
+        android:background="@drawable/gradient_default_image">
 
         <de.xikolo.view.CircularImageView
             android:id="@+id/imgProfile"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="true"
+            android:layout_marginBottom="10dp"
             app:border_color="@color/white"
             app:border_width="1dp"
-            app:shadow="false" />
+            app:shadow="true" />
 
         <TextView
             android:id="@+id/textName"
