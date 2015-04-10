@@ -5,8 +5,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:foreground="@drawable/fg_container"
-    res:cardCornerRadius="4dp"
-    res:cardPreventCornerOverlap="true">
+    res:cardCornerRadius="2dp"
+    res:cardPreventCornerOverlap="true"
+    res:cardUseCompatPadding="true">
 
     <ImageView
         android:id="@+id/imageView"
