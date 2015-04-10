@@ -1,6 +1,10 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.0
+* Updated Material Design
+* Bugfixes
+
 ## v0.9-beta5
 * Fixed LTI Items
 * Fixed WebView authentication issue
