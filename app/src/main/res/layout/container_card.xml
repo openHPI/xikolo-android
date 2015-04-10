@@ -9,7 +9,9 @@
     android:foreground="@drawable/fg_container"
     android:padding="24dp"
     android:visibility="gone"
-    app:cardCornerRadius="4dp"
+    app:cardCornerRadius="2dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
     app:maxWidth="600dp">
 
     <LinearLayout
