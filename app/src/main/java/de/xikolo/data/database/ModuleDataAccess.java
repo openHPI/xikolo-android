@@ -19,15 +19,17 @@ public class ModuleDataAccess extends DataAccess {
         this.progressDataAccess = new OverallProgressDataAccess(databaseHelper);
     }
 
-    public void addModule(Course course, Module module) {
+    public void addModule(Course course, Module module, boolean includeProgress) {
         getDatabase().insert(ModuleTable.TABLE_NAME, null, buildContentValues(course, module));
 
-        progressDataAccess.addProgress(module.id, module.progress);
+        if (includeProgress) {
+            progressDataAccess.addOrUpdateProgress(module.id, module.progress);
+        }
     }
 
-    public void addOrUpdateModule(Course course, Module module) {
-        if (updateModule(course, module) < 1) {
-            addModule(course, module);
+    public void addOrUpdateModule(Course course, Module module, boolean includeProgress) {
+        if (updateModule(course, module, includeProgress) < 1) {
+            addModule(course, module, includeProgress);
         }
     }
 
@@ -132,14 +134,16 @@ public class ModuleDataAccess extends DataAccess {
         return count;
     }
 
-    public int updateModule(Course course, Module module) {
+    public int updateModule(Course course, Module module, boolean includeProgress) {
         int affected = getDatabase().update(
                 ModuleTable.TABLE_NAME,
                 buildContentValues(course, module),
                 ModuleTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(module.id)});
 
-        progressDataAccess.updateProgress(module.id, module.progress);
+        if (includeProgress) {
+            progressDataAccess.addOrUpdateProgress(module.id, module.progress);
+        }
 
         return affected;
     }

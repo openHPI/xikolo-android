@@ -71,7 +71,7 @@ public class RetrieveCoursesJob extends Job {
                     if (Config.DEBUG) Log.i(TAG, "Courses received (" + courses.size() + ")");
 
                     for (Course course : courses) {
-                        courseDataAccess.addOrUpdateCourse(course);
+                        courseDataAccess.addOrUpdateCourse(course, includeProgress);
                     }
 
                     result.success(courses, Result.DataSource.NETWORK);
