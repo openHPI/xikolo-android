@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -70,7 +71,7 @@ public class ModuleListAdapter extends BaseAdapter {
             LayoutInflater inflater = mActivity.getLayoutInflater();
             rowView = inflater.inflate(R.layout.item_module, null);
             ViewHolder viewHolder = new ViewHolder();
-            viewHolder.container = (ViewGroup) rowView.findViewById(R.id.container);
+            viewHolder.container = (FrameLayout) rowView.findViewById(R.id.container);
             viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
             viewHolder.listView = (AbsListView) rowView.findViewById(R.id.listView);
             viewHolder.progress = (ProgressBar) rowView.findViewById(R.id.containerProgress);
@@ -93,9 +94,11 @@ public class ModuleListAdapter extends BaseAdapter {
                 holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
                 holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
                 holder.container.setClickable(false);
+                holder.container.setForeground(null);
             } else {
                 holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_color));
                 holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.apptheme_main));
+                holder.container.setForeground(mActivity.getResources().getDrawable(R.drawable.bg_tabs));
                 holder.container.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -103,6 +106,12 @@ public class ModuleListAdapter extends BaseAdapter {
                     }
                 });
             }
+        } else if (module.items == null) {
+            holder.progress.setVisibility(View.GONE);
+            holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
+            holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
+            holder.container.setClickable(false);
+            holder.container.setForeground(null);
         } else {
             holder.progress.setVisibility(View.VISIBLE);
             holder.container.setClickable(false);
@@ -118,7 +127,7 @@ public class ModuleListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        ViewGroup container;
+        FrameLayout container;
         TextView title;
         AbsListView listView;
         ProgressBar progress;

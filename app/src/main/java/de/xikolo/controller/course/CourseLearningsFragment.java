@@ -134,13 +134,9 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
                 List<Module> lockedModules = new ArrayList<Module>();
                 if (mModules != null) {
                     for (Module newModule : result) {
-                        if (!DateUtil.nowIsBetween(newModule.available_from, newModule.available_to)) {
-                            lockedModules.add(newModule);
-                        } else {
-                            for (Module oldModule : mModules) {
-                                if (newModule.equals(oldModule) && oldModule.items != null) {
-                                    newModule.items = oldModule.items;
-                                }
+                        for (Module oldModule : mModules) {
+                            if (newModule.equals(oldModule) && oldModule.items != null) {
+                                newModule.items = oldModule.items;
                             }
                         }
                     }
@@ -162,11 +158,20 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
                         Result<List<Item>> itemResult = new Result<List<Item>>() {
                             @Override
                             protected void onSuccess(List<Item> result, DataSource dataSource) {
-                                module.items = result;
+                                if (result.size() > 0) {
+                                    module.items = result;
+                                } else {
+                                    module.items = null;
+                                }
                                 mAdapter.updateModules(mModules);
                             }
                         };
-                        mItemModel.getItems(itemResult, mCourse, module, local);
+                        if (!DateUtil.nowIsBetween(module.available_from, module.available_to)) {
+                            module.items = null;
+                            mAdapter.updateModules(mModules);
+                        } else {
+                            mItemModel.getItems(itemResult, mCourse, module, local);
+                        }
                     }
                 }
             }
