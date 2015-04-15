@@ -7,6 +7,7 @@ import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -53,7 +54,17 @@ public class RetrieveModulesJob extends Job {
         if (!UserModel.isLoggedIn(GlobalApplication.getInstance()) || !course.is_enrolled) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
-            result.success(moduleDataAccess.getAllModulesForCourse(course), Result.DataSource.LOCAL);
+            List<Module> localModules = moduleDataAccess.getAllModulesForCourse(course);
+            if (includeProgress) {
+                List<Module> deleteList = new ArrayList<Module>();
+                for (Module module : localModules) {
+                    if (module.progress == null) {
+                        deleteList.add(module);
+                    }
+                }
+                localModules.removeAll(deleteList);
+            }
+            result.success(localModules, Result.DataSource.LOCAL);
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
                 Type type = new TypeToken<List<Module>>(){}.getType();
@@ -70,7 +81,7 @@ public class RetrieveModulesJob extends Job {
                     if (Config.DEBUG) Log.i(TAG, "Modules received (" + modules.size() + ")");
 
                     for (Module module : modules) {
-                        moduleDataAccess.addOrUpdateModule(course, module);
+                        moduleDataAccess.addOrUpdateModule(course, module, includeProgress);
                     }
 
                     result.success(modules, Result.DataSource.NETWORK);

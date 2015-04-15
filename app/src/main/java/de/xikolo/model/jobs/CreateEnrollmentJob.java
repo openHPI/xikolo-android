@@ -60,7 +60,7 @@ public class CreateEnrollmentJob extends Job {
             if (o != null) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
                 course.is_enrolled = true;
-                courseDataAccess.updateCourse(course);
+                courseDataAccess.updateCourse(course, false);
                 result.success(course, Result.DataSource.NETWORK);
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Enrollment not created");

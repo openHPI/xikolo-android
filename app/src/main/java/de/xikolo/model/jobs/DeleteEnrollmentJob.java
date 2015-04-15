@@ -65,7 +65,7 @@ public class DeleteEnrollmentJob extends Job {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment deleted");
 
                 course.is_enrolled = false;
-                courseDataAccess.updateCourse(course);
+                courseDataAccess.updateCourse(course, false);
                 for (Module module : moduleDataAccess.getAllModulesForCourse(course)) {
                     moduleDataAccess.deleteModule(module);
                 }

@@ -116,15 +116,15 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
             protected void onSuccess(List<Module> result, DataSource dataSource) {
                 mModules = result;
 
-                mNotificationController.setInvisible();
-                mRefreshLayout.setRefreshing(false);
-
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
                     mAdapter.clear();
+                    mRefreshLayout.setRefreshing(false);
                     mNotificationController.setTitle(R.string.notification_no_network);
                     mNotificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
                     mNotificationController.setNotificationVisible(true);
-                } else {
+                } else if (mModules != null && mModules.size() > 0) {
+                    mNotificationController.setInvisible();
+                    mRefreshLayout.setRefreshing(false);
                     mAdapter.updateModules(mModules);
                 }
             }
