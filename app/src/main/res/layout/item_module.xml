@@ -65,6 +65,40 @@
                 android:layout_gravity="center"
                 android:visibility="visible" />
 
+            <LinearLayout
+                android:id="@+id/moduleNotificationContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <de.xikolo.view.CustomFontTextView
+                    android:id="@+id/moduleNotificationIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingBottom="6dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="6dp"
+                    android:text="@string/icon_locked"
+                    android:textColor="@color/gray_light"
+                    android:textSize="20sp"
+                    res:customFont="xikolo.ttf" />
+
+                <de.xikolo.view.CustomFontTextView
+                    android:id="@+id/moduleNotificationLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingRight="8dp"
+                    android:text="@string/module_notification_no_content"
+                    android:textColor="@color/gray_light"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
         </FrameLayout>
 
     </RelativeLayout>

@@ -90,6 +90,14 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         Result<List<Course>> result = new Result<List<Course>>() {
             @Override
             protected void onSuccess(List<Course> result, DataSource dataSource) {
+                if (result.size() > 0) {
+                    mNotificationController.setInvisible();
+                }
+                if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) ||
+                        dataSource.equals(DataSource.NETWORK)) {
+                    mRefreshLayout.setRefreshing(false);
+                }
+
                 mCourses = result;
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
@@ -204,8 +212,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     private void updateView() {
         if (isAdded()) {
-            mNotificationController.setInvisible();
-            mRefreshLayout.setRefreshing(false);
             if (isMyCoursesFilter() && !UserModel.isLoggedIn(getActivity())) {
                 mCourses = null;
 
