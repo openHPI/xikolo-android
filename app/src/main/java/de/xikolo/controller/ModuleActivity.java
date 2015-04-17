@@ -9,8 +9,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.util.DateUtil;
+import de.xikolo.util.ToastUtil;
 
 public class ModuleActivity extends BaseActivity {
 
@@ -176,8 +180,8 @@ public class ModuleActivity extends BaseActivity {
         }
 
         @Override
-        public View getCustomTabView(ViewGroup viewGroup, int position) {
-            View layout = getLayoutInflater().inflate(R.layout.tab_item, null);
+        public View getCustomTabView(final ViewGroup viewGroup, int position) {
+            final View layout = getLayoutInflater().inflate(R.layout.tab_item, null);
 
             TextView label = (TextView) layout.findViewById(R.id.tabLabel);
             View unseenIndicator = layout.findViewById(R.id.unseenIndicator);
@@ -186,7 +190,7 @@ public class ModuleActivity extends BaseActivity {
             ViewCompat.setAlpha(label, alpha);
             ViewCompat.setAlpha(unseenIndicator, alpha);
 
-            Item item = mItems.get(position);
+            final Item item = mItems.get(position);
             if (!item.progress.visited) {
                 unseenIndicator.setVisibility(View.VISIBLE);
             } else {
@@ -194,6 +198,23 @@ public class ModuleActivity extends BaseActivity {
             }
 
             label.setText(getPageTitle(position));
+
+            final GestureDetector gestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    ToastUtil.show(mContext, item.title, Gravity.CENTER_HORIZONTAL | Gravity.TOP,
+                            0, (int) viewGroup.getY() + layout.getHeight() + mPagerSlidingTabStrip.getIndicatorHeight());
+                }
+
+            });
+
+            layout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return gestureDetector.onTouchEvent(event);
+                }
+            });
 
             return layout;
         }
