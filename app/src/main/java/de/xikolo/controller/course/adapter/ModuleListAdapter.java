@@ -10,13 +10,17 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.xikolo.R;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
 import de.xikolo.util.DateUtil;
+import de.xikolo.util.DisplayUtil;
 
 public class ModuleListAdapter extends BaseAdapter {
 
@@ -76,6 +80,8 @@ public class ModuleListAdapter extends BaseAdapter {
             viewHolder.listView = (AbsListView) rowView.findViewById(R.id.listView);
             viewHolder.progress = (ProgressBar) rowView.findViewById(R.id.containerProgress);
             viewHolder.separator = rowView.findViewById(R.id.separator);
+            viewHolder.moduleNotificationContainer = rowView.findViewById(R.id.moduleNotificationContainer);
+            viewHolder.moduleNotificationLabel = (TextView) rowView.findViewById(R.id.moduleNotificationLabel);
             rowView.setTag(viewHolder);
         }
         final ViewHolder holder = (ViewHolder) rowView.getTag();
@@ -86,38 +92,65 @@ public class ModuleListAdapter extends BaseAdapter {
 
         ItemListAdapter itemAdapter = new ItemListAdapter(mActivity, mCourse, module, mItemCallback);
         holder.listView.setAdapter(itemAdapter);
-        if (module.items != null && module.items.size() > 0) {
-            holder.progress.setVisibility(View.GONE);
-            itemAdapter.updateItems(module.items);
 
-            if (!DateUtil.nowIsBetween(module.available_from, module.available_to)) {
-                holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
-                holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
-                holder.container.setClickable(false);
-                holder.container.setForeground(null);
-            } else {
-                holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_color));
-                holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.apptheme_main));
-                holder.container.setForeground(mActivity.getResources().getDrawable(R.drawable.bg_tabs));
-                holder.container.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mModuleCallback.onModuleButtonClicked(mCourse, module);
-                    }
-                });
-            }
-        } else if (module.items == null) {
-            holder.progress.setVisibility(View.GONE);
-            holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
-            holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
-            holder.container.setClickable(false);
-            holder.container.setForeground(null);
+        if ((module.available_from != null && DateUtil.nowIsBefore(module.available_from)) ||
+                module.items == null) {
+            contentLocked(module, holder);
+        } else if (module.items.size() > 0) {
+            contentAvailable(module, holder);
+            itemAdapter.updateItems(module.items);
         } else {
-            holder.progress.setVisibility(View.VISIBLE);
-            holder.container.setClickable(false);
+            contentLocked(module, holder);
         }
 
         return rowView;
+    }
+
+    private void contentAvailable(final Module module, ViewHolder holder) {
+        holder.progress.setVisibility(View.GONE);
+        holder.moduleNotificationContainer.setVisibility(View.GONE);
+        holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_color));
+        holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.apptheme_main));
+        holder.container.setForeground(mActivity.getResources().getDrawable(R.drawable.bg_tabs));
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mModuleCallback.onModuleButtonClicked(mCourse, module);
+            }
+        });
+    }
+
+    private void contentLocked(Module module, ViewHolder holder) {
+        holder.progress.setVisibility(View.GONE);
+        holder.moduleNotificationContainer.setVisibility(View.VISIBLE);
+        holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
+        holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
+        holder.container.setClickable(false);
+        holder.container.setForeground(null);
+        if (module.available_from != null && DateUtil.nowIsBefore(module.available_from)) {
+            DateFormat dateOut;
+            if (DisplayUtil.is7inchTablet(mActivity)) {
+                dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault());
+            } else {
+                dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault());
+            }
+
+            Date date = DateUtil.parse(module.available_from);
+
+            holder.moduleNotificationLabel.setText(String.format(mActivity.getString(R.string.available_at),
+                    dateOut.format(date)));
+        } else {
+            holder.moduleNotificationLabel.setText(mActivity.getString(R.string.module_notification_no_content));
+        }
+    }
+
+    private void contentLoading(Module module, ViewHolder holder) {
+        holder.progress.setVisibility(View.VISIBLE);
+        holder.moduleNotificationContainer.setVisibility(View.GONE);
+        holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_color));
+        holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.apptheme_main));
+        holder.container.setClickable(false);
+        holder.container.setForeground(null);
     }
 
     public interface OnModuleButtonClickListener {
@@ -132,6 +165,9 @@ public class ModuleListAdapter extends BaseAdapter {
         AbsListView listView;
         ProgressBar progress;
         View separator;
+
+        View moduleNotificationContainer;
+        TextView moduleNotificationLabel;
     }
 
 }

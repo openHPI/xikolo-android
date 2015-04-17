@@ -28,7 +28,6 @@ import de.xikolo.data.entities.Module;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.ModuleModel;
 import de.xikolo.model.Result;
-import de.xikolo.util.DateUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
@@ -128,21 +127,15 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         Result<List<Module>> result = new Result<List<Module>>() {
             @Override
             protected void onSuccess(List<Module> result, DataSource dataSource) {
-                mRefreshLayout.setRefreshing(false);
-                mNotificationController.setInvisible();
-
-                List<Module> lockedModules = new ArrayList<Module>();
-                if (mModules != null) {
-                    for (Module newModule : result) {
-                        for (Module oldModule : mModules) {
-                            if (newModule.equals(oldModule) && oldModule.items != null) {
-                                newModule.items = oldModule.items;
-                            }
-                        }
-                    }
+                if (result.size() > 0) {
+                    mNotificationController.setInvisible();
                 }
+                if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) ||
+                        dataSource.equals(DataSource.NETWORK)) {
+                    mRefreshLayout.setRefreshing(false);
+                }
+
                 mModules = result;
-                mModules.removeAll(lockedModules);
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
                     mAdapter.clear();
@@ -151,28 +144,6 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
                     mNotificationController.setNotificationVisible(true);
                 } else {
                     mAdapter.updateModules(mModules);
-
-                    final boolean local = dataSource == DataSource.LOCAL;
-
-                    for (final Module module : mModules) {
-                        Result<List<Item>> itemResult = new Result<List<Item>>() {
-                            @Override
-                            protected void onSuccess(List<Item> result, DataSource dataSource) {
-                                if (result.size() > 0) {
-                                    module.items = result;
-                                } else {
-                                    module.items = null;
-                                }
-                                mAdapter.updateModules(mModules);
-                            }
-                        };
-                        if (!DateUtil.nowIsBetween(module.available_from, module.available_to)) {
-                            module.items = null;
-                            mAdapter.updateModules(mModules);
-                        } else {
-                            mItemModel.getItems(itemResult, mCourse, module, local);
-                        }
-                    }
                 }
             }
 
@@ -195,7 +166,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
             mRefreshLayout.setRefreshing(true);
         }
 
-        mModuleModel.getModules(result, mCourse, includeProgress);
+        mModuleModel.getModulesWithItems(result, mCourse, includeProgress);
     }
 
     @Override

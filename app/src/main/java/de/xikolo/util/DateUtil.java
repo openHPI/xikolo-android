@@ -35,14 +35,28 @@ public class DateUtil {
         return dateNow.after(dateBegin) && dateNow.before(dateEnd);
     }
 
-    public static boolean nowIsAfter(String from) {
-        Date dateBegin = parse(from);
+    public static boolean nowIsAfter(String date) {
+        Date d = parse(date);
 
         Date dateNow = new Date();
 
-        if (dateBegin == null) {
+        if (d == null) {
             return true;
-        } else if (dateNow.after(dateBegin)) {
+        } else if (dateNow.after(d)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean nowIsBefore(String date) {
+        Date d = parse(date);
+
+        Date dateNow = new Date();
+
+        if (d == null) {
+            return true;
+        } else if (dateNow.before(d)) {
             return true;
         }
 
