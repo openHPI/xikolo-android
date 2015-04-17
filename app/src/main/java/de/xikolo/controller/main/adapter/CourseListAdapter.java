@@ -21,6 +21,7 @@ import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.DisplayUtil;
+import de.xikolo.util.LanguageUtil;
 
 public class CourseListAdapter extends BaseAdapter {
 
@@ -103,7 +104,7 @@ public class CourseListAdapter extends BaseAdapter {
 
         holder.title.setText(course.name);
         holder.teacher.setText(course.lecturer);
-        holder.language.setText(course.language);
+        holder.language.setText(LanguageUtil.languageForCode(mActivity, course.language));
 
         ImageLoaderController.loadCourseImage(course.visual_url, holder.img, holder.container);
 

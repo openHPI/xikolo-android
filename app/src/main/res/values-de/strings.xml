@@ -90,6 +90,7 @@
     <string name="files">Dateien</string>
     <string name="overall">Insgesamt</string>
     <string name="courses">Kurse</string>
+    <string name="available_at">Verfügbar ab %1$s</string>
 
     <!-- -->
     <string name="notification_no_network">Bitte Netzwerk-Verbindung aktivieren</string>
@@ -102,6 +103,7 @@
     <string name="notification_url_invalid">URL fehlerhaft</string>
 
     <string name="video_notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>
+    <string name="module_notification_no_content">Kein Inhalt verfügbar</string>
 
     <!-- -->
     <string name="toast_no_courses">Keine Kurse erhalten.</string>
@@ -134,5 +136,9 @@
 
     <string name="settings_title_build">Build-Version</string>
     <string name="settings_summary_build">Version:</string>
+
+    <!-- -->
+    <string name="lang_en">Englisch</string>
+    <string name="lang_de">Deutsch</string>
 
 </resources>
