@@ -10,7 +10,8 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:textColor="@color/white"
+        android:textColor="#99FFFFFF"
+        app:pstsTextColorSelected="@android:color/white"
         app:pstsIndicatorColor="@color/white"
         app:pstsTabPaddingLeftRight="14dip" />
 
