@@ -71,6 +71,7 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
 
         mAdapter = new CoursePagerAdapter(getChildFragmentManager());
         mPager.setAdapter(mAdapter);
+        mPager.setOffscreenPageLimit(mAdapter.getCount() - 1);
 
         // Bind the tabs to the ViewPager
         mPagerSlidingTabStrip.setViewPager(mPager);
@@ -139,8 +140,8 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
                 getString(R.string.tab_learnings),
                 getString(R.string.tab_discussions),
                 getString(R.string.tab_progress),
-                getString(R.string.tab_announcements),
                 getString(R.string.tab_rooms),
+                getString(R.string.tab_announcements),
                 getString(R.string.tab_details)
         };
         private FragmentManager mFragmentManager;
@@ -178,10 +179,10 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
                         fragment = ProgressFragment.newInstance(mCourse);
                         break;
                     case 3:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ANNOUNCEMENTS, false, false);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ROOMS, true, false);
                         break;
                     case 4:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ROOMS, true, false);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ANNOUNCEMENTS, false, false);
                         break;
                     case 5:
                         fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false, false);
