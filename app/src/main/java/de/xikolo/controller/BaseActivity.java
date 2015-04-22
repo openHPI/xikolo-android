@@ -4,7 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
@@ -16,7 +16,7 @@ import de.xikolo.R;
 import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.model.events.NetworkStateEvent;
 
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected GlobalApplication globalApplication;
 
@@ -69,7 +69,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
 
         contentLayout = (FrameLayout) findViewById(R.id.contentLayout);
-        if(contentLayout != null) {
+        if (contentLayout != null) {
             contentLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
         }
     }
@@ -91,7 +91,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                     } else {
                         getWindow().setStatusBarColor(getResources().getColor(R.color.apptheme_main_dark_status));
                     }
-                    if(contentLayout != null) {
+                    if (contentLayout != null) {
                         contentLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
                     }
                 }
@@ -104,7 +104,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                     } else {
                         getWindow().setStatusBarColor(getResources().getColor(R.color.offline_mode_dark));
                     }
-                    if(contentLayout != null) {
+                    if (contentLayout != null) {
                         contentLayout.setBackgroundColor(getResources().getColor(R.color.offline_mode));
                     }
                 }
