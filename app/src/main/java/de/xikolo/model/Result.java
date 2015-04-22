@@ -8,16 +8,10 @@ import de.xikolo.model.events.NetworkStateEvent;
 
 public abstract class Result<T> {
 
-    public enum ErrorCode {
-        NO_NETWORK, NO_RESULT, ERROR, NO_AUTH
-    }
+    private ResultFilter resultFilter;
 
-    public enum DataSource {
-        NETWORK, LOCAL
-    }
-
-    public enum WarnCode {
-        NO_NETWORK
+    public void setResultFilter(ResultFilter resultFilter) {
+        this.resultFilter = resultFilter;
     }
 
     protected void onSuccess(T result, DataSource dataSource) {
@@ -36,10 +30,18 @@ public abstract class Result<T> {
         if (dataSource == DataSource.NETWORK) {
             EventBus.getDefault().postSticky(new NetworkStateEvent(true));
         }
+
+        final T filteredResult;
+        if (resultFilter != null) {
+            filteredResult = (T) resultFilter.onFilter(result, dataSource);
+        } else {
+            filteredResult = result;
+        }
+
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                onSuccess(result, dataSource);
+                onSuccess(filteredResult, dataSource);
             }
         });
     }
@@ -66,6 +68,26 @@ public abstract class Result<T> {
                 onError(errorCode);
             }
         });
+    }
+
+    public enum ErrorCode {
+        NO_NETWORK, NO_RESULT, ERROR, NO_AUTH
+    }
+
+    public enum DataSource {
+        NETWORK, LOCAL
+    }
+
+    public enum WarnCode {
+        NO_NETWORK
+    }
+
+    public static abstract class ResultFilter<T> {
+
+        public T onFilter(T result, DataSource dataSource) {
+            return result;
+        }
+
     }
 
 }
