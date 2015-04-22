@@ -1,6 +1,10 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.0.1
+* A lot of smaller improvements
+* Bugfixes
+
 ## v1.0
 * Updated Material Design
 * Bugfixes
