@@ -1,19 +1,13 @@
 package de.xikolo.controller.main;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -34,7 +28,6 @@ import de.xikolo.data.entities.User;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
-import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 import de.xikolo.view.CircularImageView;
@@ -49,20 +42,11 @@ public class ProfileFragment extends ContentFragment {
     private UserModel mUserModel;
     private CourseModel mCourseModel;
     private Result<List<Course>> mCoursesResult;
-    private Result<Void> mLoginResult;
     private Result<User> mUserResult;
 
     private NotificationController mNotificationController;
-    private ViewGroup mContainerLogin;
-    private EditText mEditEmail;
-    private EditText mEditPassword;
-    private Button mBtnLogin;
-    private Button mBtnNew;
-    private TextView mTextReset;
 
-    private ViewGroup mContainerProfile;
     private TextView mTextName;
-    private Button mBtnLogout;
     private CustomSizeImageView mImgHeader;
     private CircularImageView mImgProfile;
     private TextView mTextEnrollCounts;
@@ -117,24 +101,6 @@ public class ProfileFragment extends ContentFragment {
         };
 
         mUserModel = new UserModel(getActivity(), jobManager, databaseHelper);
-        mLoginResult = new Result<Void>() {
-            @Override
-            protected void onSuccess(Void result, DataSource dataSource) {
-                mUserModel.getUser(mUserResult);
-                mCourseModel.getCourses(mCoursesResult, false);
-            }
-
-            @Override
-            protected void onError(ErrorCode errorCode) {
-                if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
-                } else {
-                    ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
-                }
-                mContainerLogin.setVisibility(View.VISIBLE);
-                mNotificationController.setProgressVisible(false);
-            }
-        };
         mUserResult = new Result<User>() {
             @Override
             protected void onSuccess(User result, DataSource dataSource) {
@@ -149,10 +115,6 @@ public class ProfileFragment extends ContentFragment {
                 } else {
                     ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
                 }
-                mUserModel.logout();
-                mCourses = null;
-                updateLayout();
-                mActivityCallback.updateDrawer();
             }
         };
     }
@@ -164,16 +126,7 @@ public class ProfileFragment extends ContentFragment {
 
         mNotificationController = new NotificationController(view);
 
-        mContainerLogin = (ViewGroup) view.findViewById(R.id.containerLogin);
-        mEditEmail = (EditText) view.findViewById(R.id.editEmail);
-        mEditPassword = (EditText) view.findViewById(R.id.editPassword);
-        mBtnLogin = (Button) view.findViewById(R.id.btnLogin);
-        mBtnNew = (Button) view.findViewById(R.id.btnNew);
-        mTextReset = (TextView) view.findViewById(R.id.textForgotPw);
-
-        mContainerProfile = (ViewGroup) view.findViewById(R.id.containerProfile);
         mTextName = (TextView) view.findViewById(R.id.textName);
-        mBtnLogout = (Button) view.findViewById(R.id.btnLogout);
         mImgHeader = (CustomSizeImageView) view.findViewById(R.id.imageHeader);
         mImgProfile = (CircularImageView) view.findViewById(R.id.imageProfile);
         mTextEnrollCounts = (TextView) view.findViewById(R.id.textEnrollCount);
@@ -184,50 +137,6 @@ public class ProfileFragment extends ContentFragment {
         mAdapter = new CourseProgressListAdapter(getActivity());
         mProgressListView.setAdapter(mAdapter);
 
-        mBtnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hideKeyboard(view);
-                String email = mEditEmail.getText().toString().trim();
-                String password = mEditPassword.getText().toString();
-                if (isEmailValid(email)) {
-                    if (password != null && !password.equals("")) {
-                        mUserModel.login(mLoginResult, email, password);
-                        mContainerLogin.setVisibility(View.GONE);
-                        mNotificationController.setProgressVisible(true);
-                    } else {
-                        mEditPassword.setError(getString(R.string.error_password));
-                    }
-                } else {
-                    mEditEmail.setError(getString(R.string.error_email));
-                }
-            }
-        });
-        mBtnNew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hideKeyboard(view);
-                startUrlIntent(Config.URI + Config.ACCOUNT + Config.NEW);
-            }
-        });
-        mTextReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hideKeyboard(view);
-                startUrlIntent(Config.URI + Config.ACCOUNT + Config.RESET);
-            }
-        });
-        mBtnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hideKeyboard(view);
-                mUserModel.logout();
-                mCourses = null;
-                updateLayout();
-                mActivityCallback.updateDrawer();
-            }
-        });
-
         updateLayout();
 
         return view;
@@ -236,30 +145,26 @@ public class ProfileFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        showHeader();
-        if (UserModel.isLoggedIn(getActivity()) && mCourses == null) {
-            mUserModel.getUser(mUserResult);
-            mCourseModel.getCourses(mCoursesResult, false);
-            mCoursesProgress.setVisibility(View.VISIBLE);
-        } else if (UserModel.isLoggedIn(getActivity()) && mCourses != null) {
-            showCoursesProgress(mCourses);
+
+        if (UserModel.isLoggedIn(getActivity())) {
+            showHeader();
+            if (mCourses == null) {
+                mUserModel.getUser(mUserResult);
+                mCourseModel.getCourses(mCoursesResult, false);
+                mCoursesProgress.setVisibility(View.VISIBLE);
+            } else {
+                showCoursesProgress(mCourses);
+            }
+        } else {
+            getActivity().getSupportFragmentManager().popBackStack();
         }
     }
 
     private void updateLayout() {
         mNotificationController.setProgressVisible(false);
-        mEditEmail.setText(null);
-        mEditPassword.setText(null);
-        if (!UserModel.isLoggedIn(getActivity())) {
-            mContainerLogin.setVisibility(View.VISIBLE);
-            mContainerProfile.setVisibility(View.GONE);
-        } else {
-            mContainerLogin.setVisibility(View.GONE);
-            mContainerProfile.setVisibility(View.VISIBLE);
-            showUser(UserModel.getSavedUser(getActivity()));
-            setProfilePicMargin();
-        }
         showHeader();
+        showUser(UserModel.getSavedUser(getActivity()));
+        setProfilePicMargin();
     }
 
     private void showUser(User user) {
@@ -312,12 +217,8 @@ public class ProfileFragment extends ContentFragment {
     }
 
     private void showHeader() {
-        if (!UserModel.isLoggedIn(getActivity())) {
-            mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, getString(R.string.title_section_login));
-        } else {
-            User user = UserModel.getSavedUser(getActivity());
-            mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
-        }
+        User user = UserModel.getSavedUser(getActivity());
+        mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
     }
 
     private void showCoursesProgress(List<Course> courses) {
@@ -326,22 +227,6 @@ public class ProfileFragment extends ContentFragment {
         mTextEnrollCounts.setText(String.valueOf(mCourseModel.getEnrollmentsCount()));
         mCoursesProgress.setVisibility(View.GONE);
         mActivityCallback.updateDrawer();
-    }
-
-    private void hideKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    private boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private void startUrlIntent(String url) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
-        startActivity(i);
     }
 
 }

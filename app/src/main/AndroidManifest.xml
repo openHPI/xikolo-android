@@ -59,6 +59,14 @@
                 android:value="MainActivity" />
         </activity>
         <activity
+            android:name=".controller.LoginActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controller.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MainActivity" />
+        </activity>
+        <activity
             android:name=".controller.QuizDemoActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTop"

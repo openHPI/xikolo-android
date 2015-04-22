@@ -6,14 +6,21 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
+import de.greenrobot.event.EventBus;
 import de.xikolo.BuildConfig;
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controller.LoginActivity;
 import de.xikolo.controller.dialogs.LicensesDialog;
+import de.xikolo.model.UserModel;
+import de.xikolo.model.events.LoginEvent;
+import de.xikolo.model.events.LogoutEvent;
 import de.xikolo.util.BuildFlavor;
 
 public class SettingsFragment extends PreferenceFragment {
 
     public static final String TAG = SettingsFragment.class.getSimpleName();
+    private Preference login_out;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -26,6 +33,8 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        EventBus.getDefault().register(this);
 
         addPreferencesFromResource(R.xml.settings);
 
@@ -82,6 +91,52 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+        login_out = findPreference("login_out");
+        if (UserModel.isLoggedIn(getActivity())) {
+            buildLogoutView(login_out);
+        } else {
+            buildLoginView(login_out);
+        }
+    }
+
+    private void buildLoginView(Preference pref) {
+        if (pref != null) {
+            pref.setTitle(getString(R.string.login));
+            pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+        }
+    }
+
+    private void buildLogoutView(Preference pref) {
+        if (pref != null) {
+            pref.setTitle(getString(R.string.logout));
+            pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    UserModel userModel = new UserModel(getActivity(),
+                            GlobalApplication.getInstance().getJobManager(),
+                            GlobalApplication.getInstance().getDatabaseHelper());
+                    userModel.logout();
+                    EventBus.getDefault().post(new LogoutEvent());
+                    return true;
+                }
+            });
+        }
+    }
+
+    public void onEventMainThread(LoginEvent event) {
+        buildLogoutView(login_out);
+    }
+
+    public void onEventMainThread(LogoutEvent event) {
+        buildLoginView(login_out);
     }
 
     private void openUrl(String url) {
@@ -90,4 +145,10 @@ public class SettingsFragment extends PreferenceFragment {
         startActivity(i);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
 }

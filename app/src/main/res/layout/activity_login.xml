@@ -1,0 +1,149 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_holo_light"
+    tools:context="de.xikolo.controller.LoginActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
+
+        <RelativeLayout
+            android:id="@+id/containerLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <TextView
+                android:id="@+id/textHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/login_with_credentials"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textInputEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textHeader"
+                android:layout_marginTop="4dp"
+                android:text="@string/input_email"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textInputEmail"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/edittext_rounded"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                android:padding="12dp"
+                android:textColorHint="@color/gray_light"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textInputPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/editEmail"
+                android:layout_marginTop="8dp"
+                android:text="@string/input_password"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editPassword"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textInputPassword"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/edittext_rounded"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:textColorHint="@color/gray_light"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textForgotPw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/editPassword"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="2dp"
+                android:text="@string/forgot_password"
+                android:textColor="@color/apptheme_main"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnLogin"
+                style="@style/Button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/textForgotPw"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/button_main"
+                android:text="@string/login" />
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/btnLogin"
+                android:background="@color/gray_light" />
+
+            <TextView
+                android:id="@+id/textNew"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/line"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/header_new"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btnNew"
+                style="@style/Button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/textNew"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_gray"
+                android:text="@string/button_new" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

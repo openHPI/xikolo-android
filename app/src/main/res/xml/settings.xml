@@ -49,6 +49,9 @@
             android:summary="@string/settings_summary_build"
             android:title="@string/settings_title_build" />
 
+        <Preference
+            android:key="login_out" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

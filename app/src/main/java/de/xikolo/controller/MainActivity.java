@@ -9,16 +9,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import de.greenrobot.event.EventBus;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controller.main.ContentFragment;
+import de.xikolo.controller.main.ContentWebViewFragment;
 import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.controller.main.ProfileFragment;
-import de.xikolo.controller.main.QuizDemoFragment;
-import de.xikolo.controller.main.ContentWebViewFragment;
 import de.xikolo.controller.navigation.NavigationFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.model.UserModel;
+import de.xikolo.model.events.LoginEvent;
+import de.xikolo.model.events.LogoutEvent;
 import de.xikolo.util.Config;
 
 public class MainActivity extends BaseActivity
@@ -74,8 +76,12 @@ public class MainActivity extends BaseActivity
         ContentFragment newFragment = null;
         switch (position) {
             case NavigationAdapter.NAV_ID_PROFILE:
-                newFragment = ProfileFragment.newInstance();
-                tag = "profile";
+                if (UserModel.isLoggedIn(this)) {
+                    newFragment = ProfileFragment.newInstance();
+                    tag = "profile";
+                } else {
+                    intent = new Intent(MainActivity.this, LoginActivity.class);
+                }
                 break;
             case NavigationAdapter.NAV_ID_ALL_COURSES:
                 newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_ALL);
@@ -189,5 +195,14 @@ public class MainActivity extends BaseActivity
     public void selectDrawerSection(int pos) {
         this.mNavigationFragment.selectItem(pos);
     }
+
+    public void onEventMainThread(LoginEvent event) {
+        updateDrawer();
+    }
+
+    public void onEventMainThread(LogoutEvent event) {
+        updateDrawer();
+    }
+
 
 }
