@@ -28,6 +28,8 @@ import de.xikolo.model.CourseModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.model.events.EnrollEvent;
+import de.xikolo.model.events.LoginEvent;
+import de.xikolo.model.events.LogoutEvent;
 import de.xikolo.model.events.UnenrollEvent;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.NetworkUtil;
@@ -107,16 +109,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     mRefreshLayout.setRefreshing(false);
                     mCourseListAdapter.clear();
                 } else {
-                    if (isMyCoursesFilter()) {
-                        ArrayList<Course> removeList = new ArrayList<Course>();
-                        for (Course course : mCourses) {
-                            if (!course.is_enrolled) {
-                                removeList.add(course);
-                            }
-                        }
-                        mCourses.removeAll(removeList);
-                    }
-
                     updateView();
                 }
             }
@@ -162,7 +154,11 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             } else {
                 mRefreshLayout.setRefreshing(true);
             }
-            mCourseModel.getCourses(result, includeProgress);
+            if (isMyCoursesFilter()) {
+                mCourseModel.getCourses(result, includeProgress, CourseModel.CourseFilter.MY);
+            } else {
+                mCourseModel.getCourses(result, includeProgress);
+            }
         }
     }
 
@@ -338,6 +334,22 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             }
         }
         updateView();
+    }
+
+    public void onEventMainThread(LoginEvent event) {
+        mCourses = null;
+        if (mCourseListAdapter != null) {
+            mCourseListAdapter.clear();
+        }
+        requestCourses(false, false);
+    }
+
+    public void onEventMainThread(LogoutEvent event) {
+        mCourses = null;
+        if (mCourseListAdapter != null) {
+            mCourseListAdapter.clear();
+        }
+        requestCourses(false, false);
     }
 
     @Override
