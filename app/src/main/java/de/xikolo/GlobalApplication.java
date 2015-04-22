@@ -160,7 +160,7 @@ public class GlobalApplication extends Application {
                         Log.e(TAG, String.format(text, args));
                     }
                 })
-                .minConsumerCount(1) // always keep at least one consumer alive
+                .minConsumerCount(numThreads > 3 ? 3 : numThreads) // always keep at least one consumer alive
                 .maxConsumerCount(numThreads) // consumers at a time
                 .loadFactor(2) // jobs per consumer
                 .consumerKeepAlive(120) // wait 2 minute
