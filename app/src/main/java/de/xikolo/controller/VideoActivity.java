@@ -68,7 +68,7 @@ public class VideoActivity extends BaseActivity {
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
-                if (Build.VERSION.SDK_INT >= 16) {
+                if (Build.VERSION.SDK_INT >= 17) {
                     if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
                         mVideoController.show();
                     }
@@ -81,21 +81,26 @@ public class VideoActivity extends BaseActivity {
         });
 
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(R.color.actionbar_alpha);
+            getWindow().setStatusBarColor(getResources().getColor(R.color.black));
         }
 
         hideSystemBars();
 
-        if (Build.VERSION.SDK_INT >= 16) {
+        View layout = findViewById(R.id.container);
+        if (Build.VERSION.SDK_INT >= 17) {
+            layout.setFitsSystemWindows(true);
+
             Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
-            display.getRealSize(size);
+            display.getRealSize(size); // API 17
             Rect usableRect = new Rect();
             getWindow().getDecorView().getWindowVisibleDisplayFrame(usableRect);
             mVideoController.getControllerView().setPadding(0,
                     0,
                     size.x - usableRect.right,
                     size.y - usableRect.bottom);
+        } else {
+            layout.setFitsSystemWindows(false);
         }
 
         mVideoController.setVideo(mCourse, mModule, mItem);
@@ -104,13 +109,13 @@ public class VideoActivity extends BaseActivity {
     private void hideSystemBars() {
         View decorView = getWindow().getDecorView();
         int uiOptions;
-        if (Build.VERSION.SDK_INT >= 16) {
-            uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
-                    | View.SYSTEM_UI_FLAG_LOW_PROFILE // API 14
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN // API 16
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // API 16
+        if (Build.VERSION.SDK_INT >= 17) {
+            uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE// API 16
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE; // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // API 16
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
+                    | View.SYSTEM_UI_FLAG_LOW_PROFILE // API 14
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN; // API 16
         } else {
             uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
                     | View.SYSTEM_UI_FLAG_LOW_PROFILE; // API 14
@@ -121,10 +126,10 @@ public class VideoActivity extends BaseActivity {
     private void showSystemBars() {
         View decorView = getWindow().getDecorView();
         int uiOptions;
-        if (Build.VERSION.SDK_INT >= 16) {
-            uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // API 16
+        if (Build.VERSION.SDK_INT >= 17) {
+            uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE // API 16
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE; // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN; // API 16
         } else {
             uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
         }
