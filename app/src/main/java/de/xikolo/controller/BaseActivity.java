@@ -41,8 +41,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         databaseHelper = globalApplication.getDatabaseHelper();
 
         databaseHelper.open();
-
-        EventBus.getDefault().registerSticky(this);
     }
 
     protected void setupActionBar() {
@@ -117,6 +115,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        EventBus.getDefault().registerSticky(this);
     }
 
     @Override
@@ -141,11 +141,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onStop();
 
         globalApplication.flushHttpResponseCache();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
 
         EventBus.getDefault().unregister(this);
     }
