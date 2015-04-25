@@ -1,6 +1,10 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.0.2
+* Bugfix for VideoActivity not hiding system bars properly, since Android Lollipop
+* Bugfix for ActionBar not restored offline mode state
+
 ## v1.0.1
 * A lot of smaller improvements
 * Bugfixes
