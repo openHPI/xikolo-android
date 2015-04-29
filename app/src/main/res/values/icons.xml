@@ -29,9 +29,14 @@
     <string name="icon_download_pdf" translatable="false">&#xe660;</string>
     <string name="icon_cancel" translatable="false">&#xe643;</string>
     <string name="icon_locked" translatable="false">&#xe62b;</string>
+    <string name="icon_restricted" translatable="false">&#xe645;</string>
 
     <!-- fontawesome.ttf -->
     <string name="icon_visited" translatable="false">&#xf06e;</string>
     <string name="icon_trash" translatable="false">&#xf1f8;</string>
+
+    <!-- materialdesign.ttf -->
+    <string name="icon_download" translatable="false">&#xf262;</string>
+    <string name="icon_delete" translatable="false">&#xf24a;</string>
 
 </resources>

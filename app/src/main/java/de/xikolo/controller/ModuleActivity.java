@@ -170,7 +170,7 @@ public class ModuleActivity extends BaseActivity {
 
             List<Item> toRemove = new ArrayList<Item>();
             for (Item item : items) {
-                if (!DateUtil.nowIsBetween(item.available_from, item.available_to)) {
+                if (!DateUtil.nowIsBetween(item.available_from, item.available_to) || item.locked) {
                     toRemove.add(item);
                 }
             }

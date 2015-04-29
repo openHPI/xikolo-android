@@ -87,6 +87,9 @@ public class ItemListAdapter extends BaseAdapter {
             holder.icon.setText(mActivity.getString(R.string.icon_assignment));
         } else if (item.type.equals(Item.TYPE_LTI)) {
             holder.icon.setText(mActivity.getString(R.string.icon_lti));
+        } else {
+            holder.icon.setText(mActivity.getString(R.string.icon_restricted));
+            item.locked = true;
         }
 
         if (!item.progress.visited) {
@@ -96,7 +99,8 @@ public class ItemListAdapter extends BaseAdapter {
         }
 
         if (!DateUtil.nowIsBetween(mModule.available_from, mModule.available_to)
-                || !DateUtil.nowIsBetween(item.available_from, item.available_to)) {
+                || !DateUtil.nowIsBetween(item.available_from, item.available_to)
+                || item.locked) {
             holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
             holder.container.setForeground(null);
             holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
