@@ -15,16 +15,34 @@
 
         <TextView
             android:id="@+id/textTitle"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/downloadBtn"
             android:paddingBottom="2dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
+            android:singleLine="true"
             android:textSize="24sp" />
+
+        <de.xikolo.view.CustomFontTextView
+            android:id="@+id/downloadBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textTitle"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:contentDescription="@string/download"
+            android:paddingBottom="5dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:text="@string/icon_download"
+            android:textColor="@drawable/text_button"
+            android:textSize="22sp"
+            res:customFont="materialdesign.ttf" />
 
         <View
             android:id="@+id/separator"
@@ -87,7 +105,7 @@
                     android:textSize="20sp"
                     res:customFont="xikolo.ttf" />
 
-                <de.xikolo.view.CustomFontTextView
+                <TextView
                     android:id="@+id/moduleNotificationLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
