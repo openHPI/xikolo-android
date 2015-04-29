@@ -30,7 +30,6 @@
         android:singleLine="true"
         android:textSize="14sp" />
 
-
     <de.xikolo.view.CustomFontTextView
         android:id="@+id/deleteBtn"
         android:layout_width="wrap_content"
@@ -39,10 +38,11 @@
         android:layout_centerVertical="true"
         android:clickable="true"
         android:padding="16dp"
-        android:text="@string/icon_trash"
+        android:text="@string/icon_delete"
         android:textColor="@drawable/text_button"
         android:textSize="24sp"
-        app:customFont="fontawesome.ttf" />
+        android:contentDescription="@string/delete"
+        app:customFont="materialdesign.ttf" />
 
     <View
         android:id="@+id/separator"
