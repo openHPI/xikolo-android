@@ -19,6 +19,7 @@ import de.xikolo.R;
 import de.xikolo.controller.helper.ImageLoaderController;
 import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.data.entities.Course;
+import de.xikolo.model.CourseModel;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.DisplayUtil;
 import de.xikolo.util.LanguageUtil;
@@ -41,6 +42,7 @@ public class CourseListAdapter extends BaseAdapter {
     public void updateCourses(List<Course> courses) {
         if (courses == null) throw new NullPointerException("Courses can't be null");
         mCourses = courses;
+        CourseModel.sortCourses(mCourses);
         this.notifyDataSetChanged();
     }
 

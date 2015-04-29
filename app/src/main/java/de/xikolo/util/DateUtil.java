@@ -83,4 +83,21 @@ public class DateUtil {
         return dateFm.format(date);
     }
 
+    public static int compare(String lhs, String rhs) {
+        Date dateLhs = parse(lhs);
+        Date dateRhs = parse(rhs);
+
+        if (dateLhs != null && dateRhs != null) {
+            if (dateLhs.before(dateRhs)) {
+                return 1;
+            } else if (dateLhs.after(dateRhs)) {
+                return -1;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
 }

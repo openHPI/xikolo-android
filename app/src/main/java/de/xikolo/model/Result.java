@@ -33,7 +33,7 @@ public abstract class Result<T> {
 
         final T filteredResult;
         if (resultFilter != null) {
-            filteredResult = (T) resultFilter.onFilter(result, dataSource);
+            filteredResult = resultFilter.onFilter(result, dataSource);
         } else {
             filteredResult = result;
         }
@@ -82,11 +82,9 @@ public abstract class Result<T> {
         NO_NETWORK
     }
 
-    public static abstract class ResultFilter<T> {
+    public abstract class ResultFilter {
 
-        public T onFilter(T result, DataSource dataSource) {
-            return result;
-        }
+        public abstract T onFilter(T result, DataSource dataSource);
 
     }
 
