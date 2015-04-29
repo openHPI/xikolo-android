@@ -83,7 +83,9 @@ public class ItemListAdapter extends BaseAdapter {
             holder.icon.setText(mActivity.getString(R.string.icon_video));
         } else if (item.type.equals(Item.TYPE_SELFTEST)) {
             holder.icon.setText(mActivity.getString(R.string.icon_selftest));
-        } else if (item.type.equals(Item.TYPE_ASSIGNMENT) || item.type.equals(Item.TYPE_EXAM)) {
+        } else if (item.type.equals(Item.TYPE_ASSIGNMENT)
+                || item.type.equals(Item.TYPE_EXAM)
+                || item.type.equals(Item.TYPE_PEER)) {
             holder.icon.setText(mActivity.getString(R.string.icon_assignment));
         } else if (item.type.equals(Item.TYPE_LTI)) {
             holder.icon.setText(mActivity.getString(R.string.icon_lti));

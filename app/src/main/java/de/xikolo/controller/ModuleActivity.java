@@ -230,7 +230,9 @@ public class ModuleActivity extends BaseActivity {
                 title = mContext.getString(R.string.icon_video);
             } else if (item.type.equals(Item.TYPE_SELFTEST)) {
                 title = mContext.getString(R.string.icon_selftest);
-            } else if (item.type.equals(Item.TYPE_ASSIGNMENT) || item.type.equals(Item.TYPE_EXAM)) {
+            } else if (item.type.equals(Item.TYPE_ASSIGNMENT)
+                    || item.type.equals(Item.TYPE_EXAM)
+                    || item.type.equals(Item.TYPE_PEER)) {
                 title = mContext.getString(R.string.icon_assignment);
             } else if (item.type.equals(Item.TYPE_LTI)) {
                 title = mContext.getString(R.string.icon_lti);
@@ -261,6 +263,8 @@ public class ModuleActivity extends BaseActivity {
                         || item.type.equals(Item.TYPE_EXAM)) {
                     fragment = WebItemFragment.newInstance(mCourse, mModule, mItems.get(position));
                 } else if (item.type.equals(Item.TYPE_LTI)) {
+                    fragment = WebItemFragment.newInstance(mCourse, mModule, mItems.get(position));
+                } else if (item.type.equals(Item.TYPE_PEER)) {
                     fragment = WebItemFragment.newInstance(mCourse, mModule, mItems.get(position));
                 }
             }

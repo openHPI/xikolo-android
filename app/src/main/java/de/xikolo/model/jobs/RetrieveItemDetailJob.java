@@ -16,6 +16,7 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.LtiItemDetail;
 import de.xikolo.data.entities.Module;
+import de.xikolo.data.entities.PeerAssessmentItemDetail;
 import de.xikolo.data.entities.TextItemDetail;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.net.JsonRequest;
@@ -79,6 +80,9 @@ public class RetrieveItemDetailJob extends Job {
                     type = new TypeToken<Item<AssignmentItemDetail>>(){}.getType();
                 } else if (itemType.equals(Item.TYPE_LTI)) {
                     type = new TypeToken<Item<LtiItemDetail>>() {
+                    }.getType();
+                } else if (itemType.equals(Item.TYPE_PEER)) {
+                    type = new TypeToken<Item<PeerAssessmentItemDetail>>() {
                     }.getType();
                 }
 
