@@ -20,6 +20,7 @@ import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.ItemDetail;
 import de.xikolo.data.entities.LtiItemDetail;
 import de.xikolo.data.entities.Module;
+import de.xikolo.data.entities.PeerAssessmentItemDetail;
 import de.xikolo.data.entities.TextItemDetail;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.model.ItemModel;
@@ -56,6 +57,8 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
             return PagerFragment.newInstance(new WebItemFragment<AssignmentItemDetail>(), course, module, item);
         } else if (item.type.equals(Item.TYPE_LTI)) {
             return PagerFragment.newInstance(new WebItemFragment<LtiItemDetail>(), course, module, item);
+        } else if (item.type.equals(Item.TYPE_PEER)) {
+            return PagerFragment.newInstance(new WebItemFragment<PeerAssessmentItemDetail>(), course, module, item);
         }
         return null;
     }
@@ -84,7 +87,8 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
             mWebViewController.setLoadExternalUrlEnabled(false);
         } else if (mItem.type.equals(Item.TYPE_SELFTEST)
                 || mItem.type.equals(Item.TYPE_ASSIGNMENT)
-                || mItem.type.equals(Item.TYPE_EXAM)) {
+                || mItem.type.equals(Item.TYPE_EXAM)
+                || mItem.type.equals(Item.TYPE_PEER)) {
             mWebViewController.setInAppLinksEnabled(true);
             mWebViewController.setLoadExternalUrlEnabled(false);
         } else if (mItem.type.equals(Item.TYPE_LTI)) {
