@@ -1,6 +1,11 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.0.3
+* Add Peer Assessment Items
+* Bugfix for wrong ordering of entities
+* Bugfix for unknown Item types
+
 ## v1.0.2
 * Bugfix for VideoActivity not hiding system bars properly, since Android Lollipop
 * Bugfix for ActionBar not restored offline mode state
