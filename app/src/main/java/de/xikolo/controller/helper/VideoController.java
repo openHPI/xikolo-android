@@ -181,10 +181,24 @@ public class VideoController {
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 switch (what) {
                     case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_UNKNOWN appeared");
+                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_UNKNOWN appeared");
                         break;
                     case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_SERVER_DIED appeared");
+                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_SERVER_DIED appeared");
+                        break;
+                }
+                switch (extra) {
+                    case MediaPlayer.MEDIA_ERROR_IO:
+                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_IO appeared");
+                        break;
+                    case MediaPlayer.MEDIA_ERROR_MALFORMED:
+                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_MALFORMED appeared");
+                        break;
+                    case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
+                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_UNSUPPORTED appeared");
+                        break;
+                    case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
+                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_TIMED_OUT appeared");
                         break;
                 }
                 // TODO proper error handling
