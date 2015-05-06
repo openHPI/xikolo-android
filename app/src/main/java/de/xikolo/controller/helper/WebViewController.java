@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Browser;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.util.Patterns;
@@ -98,6 +99,11 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                     request(url, true);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    if (url.contains(Config.HOST) && UserModel.isLoggedIn(mActivity)) {
+                        Bundle headers = new Bundle();
+                        headers.putString(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + UserModel.getToken(mActivity));
+                        i.putExtra(Browser.EXTRA_HEADERS, headers);
+                    }
                     mActivity.startActivity(i);
                 }
                 return true;
