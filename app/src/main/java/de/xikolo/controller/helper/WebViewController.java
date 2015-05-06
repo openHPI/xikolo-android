@@ -127,36 +127,38 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         if (Config.DEBUG) {
             Log.i(TAG, "Request URL: " + url);
         }
-        mUrl = url;
+        if (url != null) {
+            mUrl = url;
 
-        if (!mLoadExternalUrlEnabled || Patterns.WEB_URL.matcher(mUrl).matches()) {
-            if (NetworkUtil.isOnline(mActivity)) {
-                if (!mNotificationController.isProgressVisible()) {
-                    mRefreshLayout.setRefreshing(true);
-                }
-                if (url.contains(Config.HOST)) {
-                    Map<String, String> header = new HashMap<String, String>();
-                    header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
-                    if (UserModel.isLoggedIn(mActivity)) {
-                        header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + UserModel.getToken(mActivity));
+            if (!mLoadExternalUrlEnabled || Patterns.WEB_URL.matcher(mUrl).matches()) {
+                if (NetworkUtil.isOnline(mActivity)) {
+                    if (!mNotificationController.isProgressVisible()) {
+                        mRefreshLayout.setRefreshing(true);
                     }
-                    mWebView.loadUrl(mUrl, header);
+                    if (url.contains(Config.HOST)) {
+                        Map<String, String> header = new HashMap<String, String>();
+                        header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
+                        if (UserModel.isLoggedIn(mActivity)) {
+                            header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + UserModel.getToken(mActivity));
+                        }
+                        mWebView.loadUrl(mUrl, header);
+                    } else {
+                        mWebView.loadUrl(mUrl, null);
+                    }
                 } else {
-                    mWebView.loadUrl(mUrl, null);
+                    mRefreshLayout.setRefreshing(false);
+
+                    mNotificationController.setTitle(R.string.notification_no_network);
+                    mNotificationController.setSummary(R.string.notification_no_network_summary);
+                    mNotificationController.setNotificationVisible(true);
+
+                    if (userRequest) {
+                        NetworkUtil.showNoConnectionToast(mActivity);
+                    }
                 }
             } else {
-                mRefreshLayout.setRefreshing(false);
-
-                mNotificationController.setTitle(R.string.notification_no_network);
-                mNotificationController.setSummary(R.string.notification_no_network_summary);
-                mNotificationController.setNotificationVisible(true);
-
-                if (userRequest) {
-                    NetworkUtil.showNoConnectionToast(mActivity);
-                }
+                mNotificationController.setTitle(R.string.notification_url_invalid);
             }
-        } else {
-            mNotificationController.setTitle(R.string.notification_url_invalid);
         }
     }
 
