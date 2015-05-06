@@ -42,6 +42,7 @@
             android:text="@string/icon_download"
             android:textColor="@drawable/text_button"
             android:textSize="22sp"
+            android:visibility="gone"
             res:customFont="materialdesign.ttf" />
 
         <View
