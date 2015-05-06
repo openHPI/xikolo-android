@@ -32,7 +32,7 @@ class CourseTable implements Table {
                     COLUMN_AVAILABLE_TO + " text, " +
                     COLUMN_LOCKED + " integer, " +
                     COLUMN_IS_ENROLLED + " integer " +
-                     ");";
+                    ");";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -41,7 +41,23 @@ class CourseTable implements Table {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        deleteTable(db);
+        if (oldVersion == 1) {
+
+            switch (newVersion) {
+                case 2:
+                    // keep db
+                    System.out.println("Keeping " + TABLE_NAME);
+                    break;
+                default:
+                    System.out.println("Deleting " + TABLE_NAME);
+                    deleteTable(db);
+                    break;
+            }
+
+        } else {
+            System.out.println("Deleting " + TABLE_NAME);
+            deleteTable(db);
+        }
     }
 
     @Override

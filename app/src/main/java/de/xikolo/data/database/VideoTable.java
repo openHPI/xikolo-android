@@ -9,6 +9,7 @@ class VideoTable implements Table {
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_MINUTES = "minutes";
     public static final String COLUMN_SECONDS = "seconds";
+    public static final String COLUMN_PROGRESS = "progress";
     public static final String COLUMN_URL = "url";
     public static final String COLUMN_DOWNLOAD_URL = "download_url";
     public static final String COLUMN_SLIDES_URL = "slides_url";
@@ -25,6 +26,7 @@ class VideoTable implements Table {
                     COLUMN_TITLE + " text, " +
                     COLUMN_MINUTES + " text, " +
                     COLUMN_SECONDS + " text, " +
+                    COLUMN_PROGRESS + " integer, " +
                     COLUMN_URL + " text, " +
                     COLUMN_DOWNLOAD_URL + " text, " +
                     COLUMN_SLIDES_URL + " text, " +
@@ -43,7 +45,23 @@ class VideoTable implements Table {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        deleteTable(db);
+        if(oldVersion == 1) {
+
+            switch(newVersion) {
+                case 2:
+                    System.out.println("Adding Column " + COLUMN_PROGRESS);
+                    db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COLUMN_PROGRESS + " INTEGER DEFAULT 0");
+                    break;
+                default:
+                    System.out.println("Deleting " + TABLE_NAME);
+                    deleteTable(db);
+                    break;
+            }
+
+        } else {
+            System.out.println("Deleting " + TABLE_NAME);
+            deleteTable(db);
+        }
     }
 
     @Override

@@ -77,8 +77,8 @@ public class VideoDataAccess extends DataAccess {
 
         video.id = cursor.getString(0);
         video.title = cursor.getString(1);
-        video.minutes = cursor.getString(2);
-        video.seconds = cursor.getString(3);
+//        video.minutes = cursor.getString(2);
+//        video.seconds = cursor.getString(3);
         video.url = cursor.getString(4);
         video.download_url = cursor.getString(5);
         video.slides_url = cursor.getString(6);
@@ -95,8 +95,8 @@ public class VideoDataAccess extends DataAccess {
         ContentValues values = new ContentValues();
         values.put(VideoTable.COLUMN_ID, video.id);
         values.put(VideoTable.COLUMN_TITLE, video.title);
-        values.put(VideoTable.COLUMN_MINUTES, video.minutes);
-        values.put(VideoTable.COLUMN_SECONDS, video.seconds);
+//        values.put(VideoTable.COLUMN_MINUTES, video.minutes);
+//        values.put(VideoTable.COLUMN_SECONDS, video.seconds);
         values.put(VideoTable.COLUMN_URL, video.url);
         values.put(VideoTable.COLUMN_DOWNLOAD_URL, video.download_url);
         values.put(VideoTable.COLUMN_SLIDES_URL, video.slides_url);
