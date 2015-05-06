@@ -1,6 +1,11 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.1
+* Add download all Items for Module
+* Open LTI Items in external Browser and log in user
+* Bugfixes
+
 ## v1.0.3
 * Add Peer Assessment Items
 * Bugfix for wrong ordering of entities
