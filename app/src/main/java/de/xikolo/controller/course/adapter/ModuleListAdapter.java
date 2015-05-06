@@ -1,6 +1,6 @@
 package de.xikolo.controller.course.adapter;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Locale;
 
 import de.xikolo.R;
+import de.xikolo.controller.dialogs.ModuleDownloadDialog;
+import de.xikolo.controller.helper.ModuleDownloadController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
 import de.xikolo.util.DateUtil;
@@ -28,13 +30,13 @@ public class ModuleListAdapter extends BaseAdapter {
 
     private List<Module> mModules;
 
-    private Activity mActivity;
+    private FragmentActivity mActivity;
     private Course mCourse;
 
     private ItemListAdapter.OnItemButtonClickListener mItemCallback;
     private OnModuleButtonClickListener mModuleCallback;
 
-    public ModuleListAdapter(Activity activity, Course course, OnModuleButtonClickListener moduleCallback,
+    public ModuleListAdapter(FragmentActivity activity, Course course, OnModuleButtonClickListener moduleCallback,
                              ItemListAdapter.OnItemButtonClickListener itemCallback) {
         this.mActivity = activity;
         this.mModules = new ArrayList<Module>();
@@ -82,6 +84,7 @@ public class ModuleListAdapter extends BaseAdapter {
             viewHolder.separator = rowView.findViewById(R.id.separator);
             viewHolder.moduleNotificationContainer = rowView.findViewById(R.id.moduleNotificationContainer);
             viewHolder.moduleNotificationLabel = (TextView) rowView.findViewById(R.id.moduleNotificationLabel);
+            viewHolder.download = rowView.findViewById(R.id.downloadBtn);
             rowView.setTag(viewHolder);
         }
         final ViewHolder holder = (ViewHolder) rowView.getTag();
@@ -118,6 +121,14 @@ public class ModuleListAdapter extends BaseAdapter {
                 mModuleCallback.onModuleButtonClicked(mCourse, module);
             }
         });
+        holder.download.setVisibility(View.VISIBLE);
+        holder.download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ModuleDownloadController moduleDownloadController = new ModuleDownloadController(mActivity);
+                moduleDownloadController.initModuleDownloads(mCourse, module);
+            }
+        });
     }
 
     private void contentLocked(Module module, ViewHolder holder) {
@@ -127,6 +138,7 @@ public class ModuleListAdapter extends BaseAdapter {
         holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
         holder.container.setClickable(false);
         holder.container.setForeground(null);
+        holder.download.setVisibility(View.GONE);
         if (module.available_from != null && DateUtil.nowIsBefore(module.available_from)) {
             DateFormat dateOut;
             if (DisplayUtil.is7inchTablet(mActivity)) {
@@ -168,6 +180,8 @@ public class ModuleListAdapter extends BaseAdapter {
 
         View moduleNotificationContainer;
         TextView moduleNotificationLabel;
+
+        View download;
     }
 
 }

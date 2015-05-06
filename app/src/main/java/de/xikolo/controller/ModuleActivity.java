@@ -25,6 +25,7 @@ import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
+import de.xikolo.controller.helper.ModuleDownloadController;
 import de.xikolo.controller.module.PagerFragment;
 import de.xikolo.controller.module.VideoFragment;
 import de.xikolo.controller.module.WebItemFragment;
@@ -132,6 +133,11 @@ public class ModuleActivity extends BaseActivity {
         if (id == android.R.id.home) {
             setResult();
             NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        if (id == R.id.action_download) {
+            ModuleDownloadController moduleDownloadController = new ModuleDownloadController(this);
+            moduleDownloadController.initModuleDownloads(mCourse, mModule);
             return true;
         }
         return super.onOptionsItemSelected(item);

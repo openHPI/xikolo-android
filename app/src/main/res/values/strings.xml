@@ -54,6 +54,14 @@
     <string name="dialog_progress_title">Please wait</string>
     <string name="dialog_progress_message">Loading&#8230;</string>
 
+    <string name="dialog_module_downloads_title">Download all content for %1$s?</string>
+
+    <string-array name="dialog_module_downloads_array" translatable="false">
+        <item>@string/video_hd_as_mp4</item>
+        <item>@string/video_sd_as_mp4</item>
+        <item>@string/slides_as_pdf</item>
+    </string-array>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -91,6 +99,7 @@
     <string name="overall">Overall</string>
     <string name="courses">Courses</string>
     <string name="available_at">Available at %1$s</string>
+    <string name="download_all_content">Download contents</string>
 
     <!-- -->
     <string name="notification_no_network">Please enable network connection</string>

@@ -54,6 +54,8 @@
     <string name="dialog_progress_title">Bitte warten</string>
     <string name="dialog_progress_message">Wird geladen&#8230;</string>
 
+    <string name="dialog_module_downloads_title">Gesamten Inhalt für %1$s herunterladen?</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -91,6 +93,7 @@
     <string name="overall">Insgesamt</string>
     <string name="courses">Kurse</string>
     <string name="available_at">Verfügbar ab %1$s</string>
+    <string name="download_all_content">Inhalte herunterladen</string>
 
     <!-- -->
     <string name="notification_no_network">Bitte Netzwerk-Verbindung aktivieren</string>
