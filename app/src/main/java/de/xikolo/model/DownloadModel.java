@@ -169,9 +169,9 @@ public class DownloadModel extends BaseModel {
         String file = item.title + type.getFileSuffix();
 
         return publicAppFolder.getAbsolutePath() + File.separator
-                + course.name + "_" + course.id + File.separator
-                + module.name + "_" + module.id + File.separator
-                + item.title + "_" + item.id + File.separator
+                + course.name.replaceAll("/", "-") + "_" + course.id + File.separator
+                + module.name.replaceAll("/", "-") + "_" + module.id + File.separator
+                + item.title.replaceAll("/", "-") + "_" + item.id + File.separator
                 + file;
     }
 
