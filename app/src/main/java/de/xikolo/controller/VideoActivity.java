@@ -20,6 +20,8 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
+import de.xikolo.model.ItemModel;
+import de.xikolo.model.Result;
 
 public class VideoActivity extends BaseActivity {
 
@@ -30,6 +32,27 @@ public class VideoActivity extends BaseActivity {
     private Course mCourse;
     private Module mModule;
     private Item<VideoItemDetail> mItem;
+    private ItemModel itemModel;
+
+    Result<Void> saveVideoProgressResult = new Result<Void>() {
+        @Override
+        protected void onSuccess(Void result, DataSource dataSource) {
+            super.onSuccess(result, dataSource);
+            System.out.println("SUCCESS SAVING VIDEO");
+        }
+
+        @Override
+        protected void onWarning(WarnCode warnCode) {
+            super.onWarning(warnCode);
+            System.out.println("WARNING SAVING VIDEO");
+        }
+
+        @Override
+        protected void onError(ErrorCode errorCode) {
+            super.onError(errorCode);
+            System.out.println("ERROR SAVING VIDEO");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +61,8 @@ public class VideoActivity extends BaseActivity {
         setContentView(R.layout.activity_video);
 
         View videoContainer = findViewById(R.id.videoContainer);
+
+        itemModel = new ItemModel(this, jobManager, databaseHelper);
 
         mVideoController = new VideoController(this, videoContainer);
         mVideoController.setControllerListener(new VideoController.ControllerListener() {
@@ -161,6 +186,13 @@ public class VideoActivity extends BaseActivity {
     public void onBackPressed() {
         setResult();
         finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        itemModel.updateVideo(saveVideoProgressResult, mVideoController.getVideoItemDetail());
     }
 
     private void setResult() {

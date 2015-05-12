@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import de.xikolo.R;
@@ -57,6 +55,26 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     private ItemModel mItemModel;
 
     private boolean wasSaved = false;
+
+    Result<Void> saveVideoProgressResult = new Result<Void>() {
+        @Override
+        protected void onSuccess(Void result, DataSource dataSource) {
+            super.onSuccess(result, dataSource);
+            System.out.println("SUCCESS SAVING VIDEO");
+        }
+
+        @Override
+        protected void onWarning(WarnCode warnCode) {
+            super.onWarning(warnCode);
+            System.out.println("WARNING SAVING VIDEO");
+        }
+
+        @Override
+        protected void onError(ErrorCode errorCode) {
+            super.onError(errorCode);
+            System.out.println("ERROR SAVING VIDEO");
+        }
+    };
 
     public VideoFragment() {
 
@@ -120,7 +138,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                 b.putParcelable(KEY_COURSE, mCourse);
                 b.putParcelable(KEY_MODULE, mModule);
                 b.putParcelable(KEY_ITEM, mItem);
-                b.putInt(VideoController.KEY_TIME, currentPosition);
+//                b.putInt(VideoController.KEY_TIME, currentPosition);
                 b.putBoolean(VideoController.KEY_ISPLAYING, isPlaying);
                 b.putBoolean(VideoController.KEY_VIDEO_QUALITY, isVideoQualityInHD);
                 b.putBoolean(VideoController.KEY_DID_USER_CHANGE_QUALITY, didUserChangeVideoQuality);
@@ -160,6 +178,13 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         } else {
             setupVideo();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mItemModel.updateVideo(saveVideoProgressResult, mVideoController.getVideoItemDetail());
     }
 
     private void requestVideo(final boolean userRequest) {
@@ -253,6 +278,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         if (mVideoController != null) {
             mVideoController.pause();
             mVideoController.show();
+            mItemModel.updateVideo(saveVideoProgressResult, mVideoController.getVideoItemDetail());
         }
     }
 
