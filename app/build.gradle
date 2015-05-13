@@ -29,10 +29,12 @@ android {
         openHPI {
             applicationId "de.xikolo.openhpi"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_HPI"
+            manifestPlaceholders = [ webUrl:"open.hpi.de" ]
         }
         openSAP {
             applicationId "de.xikolo.opensap"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_SAP"
+            manifestPlaceholders = [ webUrl:"open.sap.com" ]
         }
     }
     lintOptions {

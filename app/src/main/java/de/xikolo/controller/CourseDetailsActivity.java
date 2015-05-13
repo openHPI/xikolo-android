@@ -1,5 +1,7 @@
 package de.xikolo.controller;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -8,12 +10,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.List;
+
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.UnenrollDialog;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.helper.EnrollmentController;
 import de.xikolo.data.entities.Course;
+import de.xikolo.model.CourseModel;
+import de.xikolo.model.Result;
 import de.xikolo.util.Config;
+import de.xikolo.util.DeepLinkingUtil;
 
 public class CourseDetailsActivity extends BaseActivity implements UnenrollDialog.UnenrollDialogListener {
 
@@ -29,13 +36,64 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
         setContentView(R.layout.activity_coursedetails);
         setupActionBar();
 
-        Bundle b = getIntent().getExtras();
-        if (b == null || !b.containsKey(ARG_COURSE)) {
-            throw new WrongParameterException();
-        } else {
-            this.mCourse = b.getParcelable(ARG_COURSE);
-        }
+        final Intent intent = getIntent();
+        if (intent != null) {
+            String action = intent.getAction();
 
+            // TODO Nimmt an, dass alle Intents vom Type "VIEW" für einen Course sind
+            if (action != null && action == Intent.ACTION_VIEW) {
+
+                Result<List<Course>> result = new Result<List<Course>>() {
+
+                    @Override
+                    protected void onSuccess(List<Course> result, DataSource dataSource) {
+                        super.onSuccess(result, dataSource);
+
+                        Uri data = intent.getData();
+                        String courseIdent = DeepLinkingUtil.getCourseIdentifierFromUri(data);
+                        System.out.println("COURSE_IDENT: " + courseIdent);
+
+                        for (Course course : result) {
+                            if (course.course_code.equals(courseIdent)) {
+                                System.out.println("FOUND COURSE");
+                                mCourse = course;
+                                handleCourseData();
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    protected void onWarning(WarnCode warnCode) {
+                        super.onWarning(warnCode);
+
+                        System.out.println("COURSE RESULT WARNING");
+                    }
+
+                    @Override
+                    protected void onError(ErrorCode errorCode) {
+                        super.onError(errorCode);
+
+                        System.out.println("COURSE RESULT ERROR");
+                    }
+                };
+
+                CourseModel courseModel = new CourseModel(this, jobManager, databaseHelper);
+                courseModel.getCourses(result, false);
+            } else {
+                Bundle b = getIntent().getExtras();
+                if (b == null || !b.containsKey(ARG_COURSE)) {
+                    throw new WrongParameterException();
+                } else {
+                    this.mCourse = b.getParcelable(ARG_COURSE);
+                }
+
+                handleCourseData();
+            }
+        }
+    }
+
+    private void handleCourseData() {
         setTitle(mCourse.name);
 
         String tag = "content";
@@ -50,7 +108,7 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (mCourse.is_enrolled) {
+        if (mCourse != null && mCourse.is_enrolled) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.course, menu);
             return true;

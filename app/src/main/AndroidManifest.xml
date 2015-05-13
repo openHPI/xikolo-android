@@ -57,6 +57,17 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${webUrl}"
+                    android:pathPrefix="/courses/"
+                    android:scheme="https" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".controller.LoginActivity"
