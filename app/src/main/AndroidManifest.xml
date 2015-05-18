@@ -41,17 +41,24 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${webUrl}"
+                    android:pathPattern="/news"
+                    android:scheme="https" />
+                <data
+                    android:host="${webUrl}"
+                    android:pathPattern="/courses"
+                    android:scheme="https" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".controller.CourseActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controller.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="MainActivity" />
-        </activity>
-        <activity
-            android:name=".controller.CourseDetailsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controller.MainActivity">
             <meta-data
@@ -65,9 +72,17 @@
 
                 <data
                     android:host="${webUrl}"
-                    android:pathPrefix="/courses/"
-                    android:scheme="https" />
+                    android:pathPattern="/courses/..*/resume"
+                    android:scheme="https"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".controller.CourseDetailsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controller.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MainActivity" />
         </activity>
         <activity
             android:name=".controller.LoginActivity"
