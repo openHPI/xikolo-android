@@ -65,7 +65,6 @@ public class MainActivity extends BaseActivity
         if (intent != null) {
             String action = intent.getAction();
 
-            // TODO Nimmt an, dass alle Intents vom Type "VIEW" für News sind
             if (action != null && action == Intent.ACTION_VIEW) {
                 handleIntent(intent.getData());
             }

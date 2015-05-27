@@ -16,6 +16,7 @@ import de.xikolo.model.CourseModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.Config;
 import de.xikolo.util.DeepLinkingUtil;
+import de.xikolo.util.ToastUtil;
 
 public class CourseActivity extends BaseActivity {
 
@@ -24,6 +25,7 @@ public class CourseActivity extends BaseActivity {
     public static final String ARG_COURSE = "arg_course";
 
     private Course mCourse;
+    private int firstFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +38,10 @@ public class CourseActivity extends BaseActivity {
         if (intent != null) {
             String action = intent.getAction();
 
-            // TODO Nimmt an, dass alle Intents vom Type "VIEW" für einen Course sind
             if (action != null && action == Intent.ACTION_VIEW) {
 
-                Uri data = intent.getData();
+                final Uri data = intent.getData();
                 final String courseIdent = DeepLinkingUtil.getCourseIdentifierFromResumeUri(data);
-                System.out.println("CourseIdent: " + courseIdent);
 
                 Result<List<Course>> result = new Result<List<Course>>() {
 
@@ -49,41 +49,71 @@ public class CourseActivity extends BaseActivity {
                     protected void onSuccess(List<Course> result, DataSource dataSource) {
                         super.onSuccess(result, dataSource);
 
-                        for (Course course : result) {
-                            if (course.course_code.equals(courseIdent)) {
-                                mCourse = course;
-                                if(mCourse.locked) {
-                                    setTitle(mCourse.name);
+                        if(dataSource == DataSource.NETWORK || true) {
+                            for (Course course : result) {
+                                if (course.course_code.equals(courseIdent)) {
+                                    mCourse = course;
+                                    if (mCourse.locked || !mCourse.is_enrolled) {
+                                        setTitle(mCourse.name);
 
-                                    String tag = "content";
+                                        String tag = "details";
 
-                                    FragmentManager fragmentManager = getSupportFragmentManager();
-                                    if (fragmentManager.findFragmentByTag(tag) == null) {
-                                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                        transaction.replace(R.id.content, WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false, false), tag);
-                                        transaction.commit();
+                                        if(dataSource == DataSource.NETWORK) {
+                                            if(mCourse.locked) {
+                                                ToastUtil.show(getApplicationContext(), R.string.notification_course_locked);
+                                            } else if(!mCourse.is_enrolled) {
+                                                ToastUtil.show(getApplicationContext(), R.string.notification_not_enrolled);
+                                            }
+                                        }
+
+                                        FragmentManager fragmentManager = getSupportFragmentManager();
+                                        if (fragmentManager.findFragmentByTag(tag) == null) {
+                                            FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                            transaction.replace(R.id.content, WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false, false), tag);
+                                            transaction.commitAllowingStateLoss();
+                                        }
+                                    } else {
+
+                                        DeepLinkingUtil.CourseTab courseTab = DeepLinkingUtil.getTab(data.getPath());
+
+                                        if(courseTab != null) {
+                                            switch (courseTab) {
+                                                case RESUME:
+                                                    firstFragment = 0;
+                                                    break;
+                                                case PINBOARD:
+                                                    firstFragment = 1;
+                                                    break;
+                                                case PROGRESS:
+                                                    firstFragment = 2;
+                                                    break;
+                                                case LEARNING_ROOMS:
+                                                    firstFragment = 3;
+                                                    break;
+                                                case ANNOUNCEMENTS:
+                                                    firstFragment = 4;
+                                                    break;
+                                            }
+                                        }
+
+                                                handleCourseData();
                                     }
-                                } else {
-                                    handleCourseData();
+                                    break;
                                 }
-                                break;
                             }
                         }
+
                     }
 
                     @Override
                     protected void onWarning(WarnCode warnCode) {
                         super.onWarning(warnCode);
-
-                        System.out.println("COURSE RESULT WARNING");
                     }
 
                     @Override
                     protected void onError(ErrorCode errorCode) {
                         super.onError(errorCode);
 
-                        // TODO Was wenn keine Netzwerkverbindung?
-                        System.out.println("COURSE RESULT ERROR");
                         finish();
                     }
                 };
@@ -111,8 +141,8 @@ public class CourseActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, CourseFragment.newInstance(mCourse), tag);
-            transaction.commit();
+            transaction.replace(R.id.content, CourseFragment.newInstance(mCourse, firstFragment), tag);
+            transaction.commitAllowingStateLoss();
         }
     }
 

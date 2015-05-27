@@ -73,7 +73,27 @@
                 <data
                     android:host="${webUrl}"
                     android:pathPattern="/courses/..*/resume"
-                    android:scheme="https"/>
+                    android:scheme="https" />
+                <data
+                    android:host="${webUrl}"
+                    android:pathPattern="/courses/..*/pinboard"
+                    android:scheme="https" />
+                <data
+                    android:host="${webUrl}"
+                    android:pathPattern="/courses/..*/progress"
+                    android:scheme="https" />
+                <data
+                    android:host="${webUrl}"
+                    android:pathPattern="/courses/..*/learning_rooms"
+                    android:scheme="https" />
+                <data
+                    android:host="${webUrl}"
+                    android:pathPattern="/courses/..*/announcements"
+                    android:scheme="https" />
+                <data
+                    android:host="${webUrl}"
+                    android:pathPattern="/courses/..*/learning_rooms"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity

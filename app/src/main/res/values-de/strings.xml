@@ -100,10 +100,12 @@
     <string name="notification_no_network_summary">Dieser Inhalt kann nicht ohne Netzwerk-Verbindung dargestellt werden.</string>
     <string name="notification_no_network_with_offline_mode_summary">Bitte aktualisieren Sie diesen Inhalt mit aktivierter Netzwerk-Verbindung. Danach kann dieser Inhalt offline genutzt werden.</string>
     <string name="notification_no_enrollments">Keine Kurse vorhanden</string>
+    <string name="notification_not_enrolled">Sie haben sich noch nicht für diesen Kurs angemeldet</string>
     <string name="notification_no_enrollments_summary">Sie haben sich bisher für keinen Kurs eingetragen.</string>
     <string name="notification_please_login">Anmeldung erforderlich</string>
     <string name="notification_please_login_summary">Bitte melden Sie sich an, um auf Ihre Kurse zuzugreifen.</string>
     <string name="notification_url_invalid">URL fehlerhaft</string>
+    <string name="notification_course_locked">Dieser Kurs ist vorerst gesperrt</string>
 
     <string name="video_notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>
     <string name="module_notification_no_content">Kein Inhalt verfügbar</string>
