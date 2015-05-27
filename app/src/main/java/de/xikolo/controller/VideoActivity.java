@@ -38,19 +38,16 @@ public class VideoActivity extends BaseActivity {
         @Override
         protected void onSuccess(Void result, DataSource dataSource) {
             super.onSuccess(result, dataSource);
-            System.out.println("SUCCESS SAVING VIDEO");
         }
 
         @Override
         protected void onWarning(WarnCode warnCode) {
             super.onWarning(warnCode);
-            System.out.println("WARNING SAVING VIDEO");
         }
 
         @Override
         protected void onError(ErrorCode errorCode) {
             super.onError(errorCode);
-            System.out.println("ERROR SAVING VIDEO");
         }
     };
 

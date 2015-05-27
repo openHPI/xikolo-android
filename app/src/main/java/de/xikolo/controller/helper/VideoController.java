@@ -353,7 +353,7 @@ public class VideoController {
             }
         }
 
-        if(mVideoItemDetails.detail.progress > minimumTimeNeeded) {
+        if (mVideoItemDetails.detail.progress > minimumTimeNeeded) {
             savedTime = mVideoItemDetails.detail.progress;
             wasSaved = true;
         }
@@ -491,7 +491,7 @@ public class VideoController {
     }
 
     private void setHDSwitchColor(boolean isHD) {
-        if(isHD) {
+        if (isHD) {
             mHDSwitch.setTextColor(mActivity.getResources().getColor(R.color.video_hd_enabled));
         } else {
             mHDSwitch.setTextColor(mActivity.getResources().getColor(R.color.video_hd_disabled));
