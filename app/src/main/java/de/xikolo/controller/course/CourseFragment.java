@@ -32,8 +32,10 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
     public final static String TAG = CourseFragment.class.getSimpleName();
 
     private static final String ARG_COURSE = "arg_course";
+    private static final String ARG_START = "arg_start";
 
     private Course mCourse;
+    private int firstFragment;
 
     private ViewPager mPager;
     private CoursePagerAdapter mAdapter;
@@ -43,10 +45,11 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
         // Required empty public constructor
     }
 
-    public static CourseFragment newInstance(Course course) {
+    public static CourseFragment newInstance(Course course, int firstFragment) {
         CourseFragment fragment = new CourseFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_COURSE, course);
+        args.putInt(ARG_START, firstFragment);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,6 +59,7 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mCourse = getArguments().getParcelable(ARG_COURSE);
+            firstFragment = getArguments().getInt(ARG_START);
         }
         setHasOptionsMenu(true);
     }
@@ -75,6 +79,8 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
 
         // Bind the tabs to the ViewPager
         mPagerSlidingTabStrip.setViewPager(mPager);
+
+        mPager.setCurrentItem(firstFragment);
 
         return layout;
     }

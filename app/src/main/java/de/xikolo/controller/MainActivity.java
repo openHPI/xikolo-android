@@ -1,6 +1,7 @@
 package de.xikolo.controller;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controller.main.ContentFragment;
@@ -22,6 +22,7 @@ import de.xikolo.model.UserModel;
 import de.xikolo.model.events.LoginEvent;
 import de.xikolo.model.events.LogoutEvent;
 import de.xikolo.util.Config;
+import de.xikolo.util.DeepLinkingUtil;
 
 public class MainActivity extends BaseActivity
         implements NavigationFragment.NavigationDrawerCallbacks, ContentFragment.OnFragmentInteractionListener {
@@ -59,6 +60,33 @@ public class MainActivity extends BaseActivity
             Log.i(TAG, "Build Type: " + BuildConfig.buildType);
             Log.i(TAG, "Build Flavor: " + BuildConfig.buildFlavor);
         }
+
+        final Intent intent = getIntent();
+        if (intent != null) {
+            String action = intent.getAction();
+
+            if (action != null && action == Intent.ACTION_VIEW) {
+                handleIntent(intent.getData());
+            }
+        }
+
+    }
+
+    private void handleIntent(Uri uri) {
+
+        DeepLinkingUtil.Type type = DeepLinkingUtil.getType(uri);
+
+        switch (type) {
+            case ALL_COURSES:
+                onNavigationDrawerItemSelected(NavigationAdapter.NAV_ID_ALL_COURSES);
+                break;
+            case NEWS:
+                onNavigationDrawerItemSelected(NavigationAdapter.NAV_ID_NEWS);
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override

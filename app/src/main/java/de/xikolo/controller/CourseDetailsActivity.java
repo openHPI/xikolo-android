@@ -50,7 +50,7 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (mCourse.is_enrolled) {
+        if (mCourse != null && mCourse.is_enrolled) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.course, menu);
             return true;

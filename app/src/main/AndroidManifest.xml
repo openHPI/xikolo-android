@@ -41,6 +41,21 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${webUrl}"
+                    android:pathPattern="/news"
+                    android:scheme="https" />
+                <data
+                    android:host="${webUrl}"
+                    android:pathPattern="/courses"
+                    android:scheme="https" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".controller.CourseActivity"
@@ -49,6 +64,24 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+
+                <data android:host="${webUrl}" />
+
+                <data android:pathPattern="/courses/..*/resume" />
+                <data android:pathPattern="/courses/..*/pinboard" />
+                <data android:pathPattern="/courses/..*/progress" />
+                <data android:pathPattern="/courses/..*/learning_rooms" />
+                <data android:pathPattern="/courses/..*/announcements" />
+                <data android:pathPattern="/courses/..*/learning_rooms" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".controller.CourseDetailsActivity"
