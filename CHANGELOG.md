@@ -1,6 +1,10 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.1.1
+* Add deep links
+* Remember progress per video
+
 ## v1.1
 * Add download all Items for Module
 * Open LTI Items in external Browser and log in user
