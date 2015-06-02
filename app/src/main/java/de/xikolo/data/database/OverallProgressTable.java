@@ -43,7 +43,25 @@ class OverallProgressTable implements Table {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        deleteTable(db);
+
+       if(oldVersion == 1) {
+
+           switch(newVersion) {
+               case 2:
+                   // keep db
+                   System.out.println("Keeping " + TABLE_NAME);
+                   break;
+               default:
+                   System.out.println("Deleting " + TABLE_NAME);
+                   deleteTable(db);
+                   break;
+           }
+
+       } else {
+           System.out.println("Deleting " + TABLE_NAME);
+           deleteTable(db);
+       }
+
     }
 
     @Override

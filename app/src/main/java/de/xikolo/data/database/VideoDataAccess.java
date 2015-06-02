@@ -32,6 +32,7 @@ public class VideoDataAccess extends DataAccess {
                         VideoTable.COLUMN_TITLE,
                         VideoTable.COLUMN_MINUTES,
                         VideoTable.COLUMN_SECONDS,
+                        VideoTable.COLUMN_PROGRESS,
                         VideoTable.COLUMN_URL,
                         VideoTable.COLUMN_DOWNLOAD_URL,
                         VideoTable.COLUMN_SLIDES_URL,
@@ -79,14 +80,15 @@ public class VideoDataAccess extends DataAccess {
         video.title = cursor.getString(1);
         video.minutes = cursor.getString(2);
         video.seconds = cursor.getString(3);
-        video.url = cursor.getString(4);
-        video.download_url = cursor.getString(5);
-        video.slides_url = cursor.getString(6);
-        video.transcript_url = cursor.getString(7);
-        video.stream.hd_url = cursor.getString(8);
-        video.stream.sd_url = cursor.getString(9);
-        video.stream.vimeo_id = cursor.getString(10);
-        video.stream.poster = cursor.getString(11);
+        video.progress = cursor.getInt(4);
+        video.url = cursor.getString(5);
+        video.download_url = cursor.getString(6);
+        video.slides_url = cursor.getString(7);
+        video.transcript_url = cursor.getString(8);
+        video.stream.hd_url = cursor.getString(9);
+        video.stream.sd_url = cursor.getString(10);
+        video.stream.vimeo_id = cursor.getString(11);
+        video.stream.poster = cursor.getString(12);
 
         return video;
     }
@@ -97,6 +99,7 @@ public class VideoDataAccess extends DataAccess {
         values.put(VideoTable.COLUMN_TITLE, video.title);
         values.put(VideoTable.COLUMN_MINUTES, video.minutes);
         values.put(VideoTable.COLUMN_SECONDS, video.seconds);
+        values.put(VideoTable.COLUMN_PROGRESS, video.progress);
         values.put(VideoTable.COLUMN_URL, video.url);
         values.put(VideoTable.COLUMN_DOWNLOAD_URL, video.download_url);
         values.put(VideoTable.COLUMN_SLIDES_URL, video.slides_url);

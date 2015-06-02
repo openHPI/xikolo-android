@@ -19,6 +19,9 @@ public class VideoItemDetail extends ItemDetail {
     @SerializedName("seconds")
     public String seconds;
 
+    @SerializedName("progress")
+    public int progress;
+
     @SerializedName("url")
     public String url;
 
@@ -45,6 +48,7 @@ public class VideoItemDetail extends ItemDetail {
         parcel.writeString(title);
         parcel.writeString(minutes);
         parcel.writeString(seconds);
+        parcel.writeInt(progress);
         parcel.writeString(url);
         parcel.writeString(download_url);
         parcel.writeString(slides_url);
@@ -57,6 +61,7 @@ public class VideoItemDetail extends ItemDetail {
         title = in.readString();
         minutes = in.readString();
         seconds = in.readString();
+        progress = in.readInt();
         url = in.readString();
         download_url = in.readString();
         slides_url = in.readString();

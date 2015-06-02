@@ -144,7 +144,6 @@ public class VideoController {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mVideoProgress.setVisibility(View.GONE);
-                seekTo(0);
                 mSeekBar.setMax(mVideoView.getDuration());
                 show();
 
@@ -156,6 +155,8 @@ public class VideoController {
                     if (savedIsPlaying) {
                         start();
                     }
+                } else {
+                    seekTo(0);
                 }
 
                 mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
@@ -366,7 +367,16 @@ public class VideoController {
             }
         }
 
+        if (mVideoItemDetails.detail.progress > minimumTimeNeeded) {
+            savedTime = mVideoItemDetails.detail.progress;
+            wasSaved = true;
+        }
         updateVideoQuality(course, module, mVideoItemDetails);
+    }
+
+    public VideoItemDetail getVideoItemDetail() {
+        saveCurrentPosition();
+        return mVideoItemDetails.detail;
     }
 
     public void enableHeader() {
@@ -381,7 +391,6 @@ public class VideoController {
         if (mVideoView != null) {
             saveCurrentPosition();
 
-            outState.putInt(KEY_TIME, savedTime);
             outState.putBoolean(KEY_ISPLAYING, savedIsPlaying || mVideoView.isPlaying());
             outState.putBoolean(KEY_VIDEO_QUALITY, playVideoInHD);
             outState.putBoolean(KEY_DID_USER_CHANGE_QUALITY, userChangedVideoQuality);
@@ -391,7 +400,7 @@ public class VideoController {
     public void returnFromSavedInstanceState(Bundle savedInstanceState) {
         if (mVideoView != null) {
             wasSaved = true;
-            savedTime = savedInstanceState.getInt(KEY_TIME);
+
             savedIsPlaying = savedInstanceState.getBoolean(KEY_ISPLAYING);
             playVideoInHD = savedInstanceState.getBoolean(KEY_VIDEO_QUALITY);
             userChangedVideoQuality = savedInstanceState.getBoolean(KEY_DID_USER_CHANGE_QUALITY);
@@ -460,6 +469,8 @@ public class VideoController {
                 savedIsPlaying = mVideoView.isPlaying();
                 wasSaved = true;
             }
+
+            mVideoItemDetails.detail.progress = savedTime;
         }
     }
 
@@ -494,7 +505,7 @@ public class VideoController {
     }
 
     private void setHDSwitchColor(boolean isHD) {
-        if(isHD) {
+        if (isHD) {
             mHDSwitch.setTextColor(mActivity.getResources().getColor(R.color.video_hd_enabled));
         } else {
             mHDSwitch.setTextColor(mActivity.getResources().getColor(R.color.video_hd_disabled));
