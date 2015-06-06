@@ -181,7 +181,9 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     public void onPause() {
         super.onPause();
 
-        mItemModel.updateVideo(saveVideoProgressResult, mVideoController.getVideoItemDetail());
+        if(mVideoController.getVideoItemDetail() != null) {
+            mItemModel.updateVideo(saveVideoProgressResult, mVideoController.getVideoItemDetail());
+        }
     }
 
     private void requestVideo(final boolean userRequest) {
@@ -275,7 +277,9 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         if (mVideoController != null) {
             mVideoController.pause();
             mVideoController.show();
-            mItemModel.updateVideo(saveVideoProgressResult, mVideoController.getVideoItemDetail());
+           if(mVideoController.getVideoItemDetail() != null) {
+               mItemModel.updateVideo(saveVideoProgressResult, mVideoController.getVideoItemDetail());
+           }
         }
     }
 
