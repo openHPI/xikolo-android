@@ -56,6 +56,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
     private boolean wasSaved = false;
 
+    VideoItemDetail itemDetail;
+
     Result<Void> saveVideoProgressResult = new Result<Void>() {
         @Override
         protected void onSuccess(Void result, DataSource dataSource) {
@@ -181,8 +183,12 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     public void onPause() {
         super.onPause();
 
-        if(mVideoController.getVideoItemDetail() != null) {
-            mItemModel.updateVideo(saveVideoProgressResult, mVideoController.getVideoItemDetail());
+        if(mVideoController != null) {
+            itemDetail = mVideoController.getVideoItemDetail();
+
+            if(itemDetail != null) {
+                mItemModel.updateVideo(saveVideoProgressResult, itemDetail);
+            }
         }
     }
 
@@ -277,8 +283,10 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         if (mVideoController != null) {
             mVideoController.pause();
             mVideoController.show();
-           if(mVideoController.getVideoItemDetail() != null) {
-               mItemModel.updateVideo(saveVideoProgressResult, mVideoController.getVideoItemDetail());
+
+            itemDetail = mVideoController.getVideoItemDetail();
+           if(itemDetail != null) {
+               mItemModel.updateVideo(saveVideoProgressResult, itemDetail);
            }
         }
     }

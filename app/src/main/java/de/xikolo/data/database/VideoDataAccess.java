@@ -99,7 +99,9 @@ public class VideoDataAccess extends DataAccess {
         values.put(VideoTable.COLUMN_TITLE, video.title);
         values.put(VideoTable.COLUMN_MINUTES, video.minutes);
         values.put(VideoTable.COLUMN_SECONDS, video.seconds);
-        values.put(VideoTable.COLUMN_PROGRESS, video.progress);
+        if(video.progress > 0) {
+            values.put(VideoTable.COLUMN_PROGRESS, video.progress);
+        }
         values.put(VideoTable.COLUMN_URL, video.url);
         values.put(VideoTable.COLUMN_DOWNLOAD_URL, video.download_url);
         values.put(VideoTable.COLUMN_SLIDES_URL, video.slides_url);

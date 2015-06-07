@@ -376,7 +376,10 @@ public class VideoController {
 
     public VideoItemDetail getVideoItemDetail() {
         saveCurrentPosition();
-        return mVideoItemDetails.detail;
+        if(mVideoItemDetails != null) {
+            return mVideoItemDetails.detail;
+        }
+        return null;
     }
 
     public void enableHeader() {
@@ -470,7 +473,10 @@ public class VideoController {
                 wasSaved = true;
             }
 
-            mVideoItemDetails.detail.progress = savedTime;
+            if(mVideoItemDetails != null && savedTime > minimumTimeNeeded) {
+                mVideoItemDetails.detail.progress = savedTime;
+            }
+
         }
     }
 

@@ -55,7 +55,10 @@ public class ItemModel extends BaseModel {
     }
 
     public void updateVideo(Result<Void> result, VideoItemDetail videoItemDetail) {
-        mJobManager.addJobInBackground(new UpdateVideoJob(result, videoDataAccess, videoItemDetail));
+        if(videoItemDetail.progress > 0) {
+            mJobManager.addJobInBackground(new UpdateVideoJob(result, videoDataAccess, videoItemDetail));
+        } else {
+        }
     }
 
     public static void sortItems(List<Item> items) {

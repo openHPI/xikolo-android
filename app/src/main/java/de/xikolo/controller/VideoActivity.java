@@ -189,7 +189,12 @@ public class VideoActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
 
-        itemModel.updateVideo(saveVideoProgressResult, mVideoController.getVideoItemDetail());
+        if(mVideoController != null) {
+            VideoItemDetail itemDetail = mVideoController.getVideoItemDetail();
+            if(itemDetail != null) {
+                itemModel.updateVideo(saveVideoProgressResult, itemDetail);
+            }
+        }
     }
 
     private void setResult() {
