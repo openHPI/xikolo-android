@@ -1,6 +1,10 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.1.2
+* Bugfix for crash when returning from video
+* Bugfix for video progress being reset to zero
+
 ## v1.1.1
 * Add deep links
 * Remember progress per video
