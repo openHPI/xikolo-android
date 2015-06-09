@@ -29,4 +29,4 @@ openHPI Version on Google Play: https://play.google.com/store/apps/details?id=de
 
 ## Contributing
 
-PLease feel free to help us with the ongoing development of this app. See open issues to get some inspiration and pull a Merge Request as soon as you are ready to go.
+Please feel free to help us with the ongoing development of this app. See open issues to get some inspiration and pull a Merge Request as soon as you are ready to go.
