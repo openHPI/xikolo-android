@@ -21,6 +21,12 @@ For every released build please provide a [Changelog](CHANGELOG.md) entry and a 
 
 openHPI Version on Google Play: https://play.google.com/store/apps/details?id=de.xikolo.openhpi
 
+## Contributers
+
+- Jan Renz
+- Tobias Rohloff
+- Jonas Müller
+
 ## Contributing
 
 PLease feel free to help us with the ongoing development of this app. See open issues to get some inspiration and pull a Merge Request as soon as you are ready to go.
