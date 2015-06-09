@@ -16,3 +16,7 @@ See the [Signing](SIGNING.md) tutorial to build a release version.
 ## Version History
 
 For every released build please provide a [Changelog](CHANGELOG.md) entry and a git tag.
+
+## Store links
+
+openHPI Version on Google Play: https://play.google.com/store/apps/details?id=de.xikolo.openhpi
