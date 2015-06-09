@@ -36,6 +36,11 @@ android {
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_SAP"
             manifestPlaceholders = [ webUrl:"open.sap.com" ]
         }
+        moocHouse {
+            applicationId "de.xikolo.moochouse"
+            buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.MOOC_HOUSE"
+            manifestPlaceholders = [ webUrl:"mooc.house" ]
+        }
     }
     lintOptions {
         abortOnError false
