@@ -23,12 +23,20 @@ public class Config {
     public static final String API;
 
     static {
-        if (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI) {
-            FONT_SANS = FONT + "NeoSansStdRegular.ttf";
-            HOST = "open.hpi.de";
-        } else {
-            FONT_SANS = FONT + "BentonSansRegular.ttf";
-            HOST = "open.sap.com";
+
+        switch (BuildConfig.buildFlavor) {
+            case OPEN_HPI:
+                FONT_SANS = FONT + "NeoSansStdRegular.ttf";
+                HOST = "open.hpi.de";
+                break;
+            case OPEN_SAP:
+                FONT_SANS = FONT + "BentonSansRegular.ttf";
+                HOST = "open.sap.com";
+                break;
+            default:
+                FONT_SANS = FONT + "BentonSansRegular.ttf";
+                HOST = "mooc.house";
+                break;
         }
         URI = URI_SCHEME_HTTPS + "://" + HOST + "/";
         API = URI + "api/";
