@@ -62,6 +62,12 @@
         <item>@string/slides_as_pdf</item>
     </string-array>
 
+    <!-- preferences keys -->
+    <string name="preference_storage" translatable="false">storage</string>
+    <string name="preference_confirm_delete" translatable="false">confirm_delete</string>
+    <string name="preference_download_network" translatable="false">download_network</string>
+    <string name="preference_video_quality" translatable="false">video_quality</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -147,6 +153,11 @@
 
     <string name="settings_title_build">Build version</string>
     <string name="settings_summary_build">Version:</string>
+
+    <string name="settings_title_storage">Choose storage</string>
+    <string name="settings_title_storage_internal">Internal</string>
+    <string name="settings_title_storage_external">External</string>
+    <string name="settings_summary_storage">%1$s free</string>
 
     <!-- -->
     <string name="lang_en">English</string>

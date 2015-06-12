@@ -4,42 +4,51 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import de.xikolo.R;
+
 public class AppPreferences {
 
-    public static boolean isVideoQualityLimitedOnMobile(Context context) {
+    private static boolean getBoolean(String key, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getBoolean("video_quality", true);
+        return preferences.getBoolean(key, true);
     }
 
-    public static void setIsVideoQualityLimitedOnMobile(Context context, boolean isVideoQualityLimitedOnMobile) {
+    private static void putBoolean(boolean value, String key, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("video_quality", isVideoQualityLimitedOnMobile);
-        editor.commit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public static boolean isVideoQualityLimitedOnMobile(Context context) {
+        return getBoolean(context.getString(R.string.preference_video_quality), context);
+    }
+
+    public static void setIsVideoQualityLimitedOnMobile(Context context, boolean value) {
+        putBoolean(value, context.getString(R.string.preference_video_quality), context);
     }
 
     public static boolean isDownloadNetworkLimitedOnMobile(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getBoolean("download_network", true);
+        return getBoolean(context.getString(R.string.preference_download_network), context);
     }
 
-    public static void setIsDownloadNetworkLimitedOnMobile(Context context, boolean isDownloadNetworkLimitedOnMobile) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("download_network", isDownloadNetworkLimitedOnMobile);
-        editor.commit();
+    public static void setIsDownloadNetworkLimitedOnMobile(Context context, boolean value) {
+        putBoolean(value, context.getString(R.string.preference_download_network), context);
     }
 
     public static boolean confirmBeforeDeleting(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getBoolean("confirm_delete", true);
+        return getBoolean(context.getString(R.string.preference_confirm_delete), context);
     }
 
-    public static void setConfirmBeforeDeleting(Context context, boolean confirmBeforeDeleting) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("confirm_delete", confirmBeforeDeleting);
-        editor.commit();
+    public static void setConfirmBeforeDeleting(Context context, boolean value) {
+        putBoolean(value, context.getString(R.string.preference_confirm_delete), context);
     }
 
+    public static boolean isUsingExternalStorage(Context context) {
+        return getBoolean(context.getString(R.string.preference_storage), context);
+    }
+
+    public static void setIsUsingExternalStorage(Context context, boolean value) {
+        putBoolean(value, context.getString(R.string.preference_storage), context);
+    }
 }

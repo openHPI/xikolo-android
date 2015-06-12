@@ -4,8 +4,13 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="confirm_delete"
+            android:key="@string/preference_confirm_delete"
             android:title="@string/settings_title_ask_delete" />
+
+        <de.xikolo.view.StoragePreference
+            android:defaultValue="true"
+            android:title="@string/settings_title_storage"
+            android:key="@string/preference_storage"/>
 
     </PreferenceCategory>
 
@@ -13,13 +18,13 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="video_quality"
+            android:key="@string/preference_video_quality"
             android:summary="@string/settings_summary_video_quality"
             android:title="@string/settings_title_video_quality" />
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="download_network"
+            android:key="@string/preference_download_network"
             android:summary="@string/settings_summary_download_network"
             android:title="@string/settings_title_download_network" />
 
