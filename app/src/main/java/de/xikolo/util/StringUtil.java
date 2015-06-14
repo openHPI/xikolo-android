@@ -9,7 +9,11 @@ import java.io.File;
  * @author Denis Fyedyayev, 6/12/15.
  */
 public class StringUtil {
-    public static String getUsableMemory(Context context, File file) {
-        return Formatter.formatFileSize(context, file.getUsableSpace());
+    public static String getUsableMemory(Context context, String file) {
+        if (file != null) {
+            return Formatter.formatFileSize(context, new File(file).getUsableSpace());
+        } else {
+            return null;
+        }
     }
 }
