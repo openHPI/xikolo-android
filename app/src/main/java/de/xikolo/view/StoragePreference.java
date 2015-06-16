@@ -12,10 +12,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import java.io.File;
-
 import de.xikolo.R;
-import de.xikolo.util.ExternalStorageUtil;
+import de.xikolo.util.SDCardUtil;
 import de.xikolo.util.StringUtil;
 
 /**
@@ -43,7 +41,7 @@ public class StoragePreference extends DialogPreference {
         // Set default value for isUsingExternalMemory.
         setCheckBoxValues();
 
-        String externalMemory = StringUtil.getUsableMemory(getContext(), ExternalStorageUtil.getSDCardPath());
+        String externalMemory = StringUtil.getUsableMemory(getContext(), SDCardUtil.getSDCardPath());
         if (externalMemory == null) {   // There is no SD Card.
             view.findViewById(R.id.preference_storage_external_layout).setVisibility(View.GONE);
             setValue(false);

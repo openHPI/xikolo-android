@@ -34,7 +34,7 @@ public class Config {
                 HOST = "open.sap.com";
                 break;
             default:
-                FONT_SANS = FONT + "BentonSansRegular.ttf";
+                FONT_SANS = FONT + "AftaSansThin.ttf";
                 HOST = "mooc.house";
                 break;
         }
