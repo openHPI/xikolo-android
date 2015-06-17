@@ -4,7 +4,7 @@
     <string name="app_name">openHPI</string>
 
     <string name="settings_copyright">&#169; 2012 &#8211; 2015 Hasso Plattner Institute</string>
-    <string name="settings_imprint">Imprint</string>
-    <string name="settings_privacy">Data Protection</string>
+    <string name="settings_imprint">法律声明</string>
+    <string name="settings_privacy">隐私和数据保护</string>
 
 </resources>
