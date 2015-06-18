@@ -7,10 +7,10 @@
             android:key="@string/preference_confirm_delete"
             android:title="@string/settings_title_ask_delete" />
 
-        <de.xikolo.view.StoragePreference
-            android:defaultValue="true"
-            android:title="@string/settings_title_storage"
-            android:key="@string/preference_storage"/>
+        <!--<de.xikolo.view.StoragePreference-->
+            <!--android:defaultValue="true"-->
+            <!--android:title="@string/settings_title_storage"-->
+            <!--android:key="@string/preference_storage"/>-->
 
     </PreferenceCategory>
 
