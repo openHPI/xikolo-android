@@ -22,5 +22,4 @@ public class ExternalStorageUtil {
         }
         return false;
     }
-
 }
