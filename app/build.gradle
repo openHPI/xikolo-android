@@ -41,6 +41,11 @@ android {
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.MOOC_HOUSE"
             manifestPlaceholders = [ webUrl:"mooc.house" ]
         }
+        openUNE {
+            applicationId "de.xikolo.openune"
+            buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_UNE"
+            manifestPlaceholders = [ webUrl:"openune.cn" ]
+        }
     }
     lintOptions {
         abortOnError false

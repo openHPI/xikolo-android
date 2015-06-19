@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="apptheme_main">#328CDC</color>
+    <!-- 10% darker -->
+    <color name="apptheme_main_dark">#2D7EC6</color>
+    <color name="apptheme_main_light">#5AA3E3</color>
+
+    <color name="apptheme_main_dark_status">#1F588A</color>
+
+    <color name="apptheme_main_alpha">#1a328CDC</color>
+
+    <!-- navi colors + 5% apptheme_main -->
+    <color name="navi_main_light">#2e2824</color>
+    <color name="navi_sub_light">#1f1915</color>
+    <color name="navi_profile_light">#3c3531</color>
+
+    <color name="apptheme_gray">#5a6065</color>
+    <color name="apptheme_gray_dark">#474B4F</color>
+
+    <color name="apptheme_second">#56B7A4</color>
+    <color name="apptheme_third">#7DB7E4</color>
+
+    <color name="apptheme_second_transparent">#9956B7A4</color>
+    <color name="apptheme_third_transparent">#997DB7E4</color>
+
+</resources>

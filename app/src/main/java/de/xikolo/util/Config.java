@@ -33,6 +33,10 @@ public class Config {
                 FONT_SANS = FONT + "BentonSansRegular.ttf";
                 HOST = "open.sap.com";
                 break;
+            case OPEN_UNE:
+                FONT_SANS = FONT + "AftaSansThin.ttf";
+                HOST = "openune.cn";
+                break;
             default:
                 FONT_SANS = FONT + "AftaSansThin.ttf";
                 HOST = "mooc.house";
