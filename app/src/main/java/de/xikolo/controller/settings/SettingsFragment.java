@@ -15,7 +15,6 @@ import de.xikolo.controller.dialogs.LicensesDialog;
 import de.xikolo.model.UserModel;
 import de.xikolo.model.events.LoginEvent;
 import de.xikolo.model.events.LogoutEvent;
-import de.xikolo.util.BuildFlavor;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -42,11 +41,18 @@ public class SettingsFragment extends PreferenceFragment {
         copyright.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI) {
-                    openUrl("https://hpi.de");
-                } else if (BuildConfig.buildFlavor == BuildFlavor.OPEN_SAP) {
-                    openUrl("http://www.sap.com/corporate-en/about/legal/copyright/index.html");
+
+                switch (BuildConfig.buildFlavor) {
+                    case OPEN_SAP:
+                        openUrl("http://www.sap.com/corporate-en/about/legal/copyright/index.html");
+                        break;
+                    case OPEN_UNE:
+                        openUrl("http://www.guofudata.com");
+                        break;
+                    default:
+                        openUrl("https://hpi.de");
                 }
+
                 return true;
             }
         });
@@ -55,11 +61,21 @@ public class SettingsFragment extends PreferenceFragment {
         imprint.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI) {
-                    openUrl("https://open.hpi.de/pages/imprint");
-                } else if (BuildConfig.buildFlavor == BuildFlavor.OPEN_SAP) {
-                    openUrl("http://www.sap.com/corporate-en/about/legal/impressum.html");
+
+                switch (BuildConfig.buildFlavor) {
+                    case OPEN_SAP:
+                        openUrl("http://www.sap.com/corporate-en/about/legal/impressum.html");
+                        break;
+                    case MOOC_HOUSE:
+                        openUrl("https://mooc.house/pages/imprint");
+                        break;
+                    case OPEN_UNE:
+                        openUrl("https://openune.cn/pages/imprint");
+                        break;
+                    default:
+                        openUrl("https://open.hpi.de/pages/imprint");
                 }
+
                 return true;
             }
         });
@@ -68,11 +84,21 @@ public class SettingsFragment extends PreferenceFragment {
         privacy.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI) {
-                    openUrl("https://open.hpi.de/pages/privacy");
-                } else if (BuildConfig.buildFlavor == BuildFlavor.OPEN_SAP) {
-                    openUrl("http://www.sap.com/corporate-en/about/legal/privacy.html");
+
+                switch (BuildConfig.buildFlavor) {
+                    case OPEN_SAP:
+                        openUrl("http://www.sap.com/corporate-en/about/legal/privacy.html");
+                        break;
+                    case MOOC_HOUSE:
+                        openUrl("https://mooc.house/pages/privacy");
+                        break;
+                    case OPEN_UNE:
+                        openUrl("https://openune.cn/pages/privacy");
+                        break;
+                    default:
+                        openUrl("https://open.hpi.de/pages/privacy");
                 }
+
                 return true;
             }
         });
