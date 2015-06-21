@@ -151,5 +151,6 @@
     <!-- -->
     <string name="lang_en">English</string>
     <string name="lang_de">German</string>
+    <string name="lang_zh">中文</string>
 
 </resources>
