@@ -1,60 +1,41 @@
 package de.xikolo.data.entities;
 
+import com.koushikdutta.async.future.Future;
+
+import java.io.File;
+
 public class Download {
-    
-    public long id;
-    
+
+    public static final int STATUS_PENDING = 0;
+    public static final int STATUS_FAILED = 1;
+    public static final int STATUS_RUNNING = 2;
+    public static final int STATUS_SUCCESSFUL = 3;
+    public static final int STATUS_CANCELLED = 4;
+
     public String title;
-    
-    public String description;
-
     public String localFilename;
-
-    public String localUri;
-
     public String uri;
-
-    public int status;
-
-    public int reason;
-    
-    public long totalSizeBytes;
-    
+    public long totalSizeBytes = 1;
     public long bytesDownloadedSoFar;
-    
-    public long lastModifiedTimestamp;
-    
-    public String mediaproviderUri;
-    
-    public String mediaType;
+    public int status = STATUS_PENDING;
 
-    public Download() {};
-    
-    public Download(long id, String title, String description, String localFilename, String localUri, String uri, int status, int reason) {
-        this.id = id;
+    private Future<File> fileFuture;
+
+    public Download() {}
+
+    public Download(String title, String localFilename, String uri) {
         this.title = title;
-        this.description = description;
         this.localFilename = localFilename;
-        this.localUri = localUri;
         this.uri = uri;
-        this.status = status;
-        this.reason = reason;
     }
 
-    public Download(long id, String title, String description, String localFilename, String localUri, String uri, int status, int reason, long totalSizeBytes, long bytesDownloadedSoFar, long lastModifiedTimestamp, String mediaproviderUri, String mediaType) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.localFilename = localFilename;
-        this.localUri = localUri;
-        this.uri = uri;
-        this.status = status;
-        this.reason = reason;
-        this.totalSizeBytes = totalSizeBytes;
-        this.bytesDownloadedSoFar = bytesDownloadedSoFar;
-        this.lastModifiedTimestamp = lastModifiedTimestamp;
-        this.mediaproviderUri = mediaproviderUri;
-        this.mediaType = mediaType;
+    public void setFileFuture(Future<File> fileFuture) {
+        this.fileFuture = fileFuture;
+    }
+
+    public void cancel() {
+        fileFuture.cancel();
+        status = STATUS_CANCELLED;
     }
 
     @Override
@@ -64,10 +45,8 @@ public class Download {
 
         Download download = (Download) o;
 
-        if (localFilename != null ? !localFilename.equals(download.localFilename) : download.localFilename != null)
-            return false;
+        return !(localFilename != null ? !localFilename.equals(download.localFilename) : download.localFilename != null);
 
-        return true;
     }
 
     @Override

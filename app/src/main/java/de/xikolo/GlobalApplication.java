@@ -73,7 +73,7 @@ public class GlobalApplication extends Application {
         configureHttpResponseCache();
         configureWebViewCookies();
         configureJobManager();
-        registerDownloadBroadcastReceiver();
+        registerOnDownloadCompleted();
 
         // just for debugging, never use for production
         if (Config.DEBUG) {
@@ -196,21 +196,15 @@ public class GlobalApplication extends Application {
         }
     }
 
-    private void registerDownloadBroadcastReceiver() {
-        BroadcastReceiver receiver = new BroadcastReceiver() {
+    private void registerOnDownloadCompleted() {
+        DownloadHelper.getInstance().setCompletedCallback(new DownloadHelper.CompletedCallback() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
-                    long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-                    Download dl = DownloadHelper.getDownloadForId(downloadId);
-                    if (dl != null) {
-                        EventBus.getDefault().post(new DownloadCompletedEvent(dl));
-                    }
+            public void onCompleted(Download download) {
+                if (download != null) {
+                    EventBus.getDefault().post(new DownloadCompletedEvent(download));
                 }
             }
-        };
-        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        });
     }
 
 }

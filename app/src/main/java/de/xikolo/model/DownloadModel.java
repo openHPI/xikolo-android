@@ -1,6 +1,5 @@
 package de.xikolo.model;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
@@ -10,7 +9,6 @@ import com.path.android.jobqueue.JobManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
@@ -36,7 +34,7 @@ public class DownloadModel extends BaseModel {
         mJobManager.addJobInBackground(new RetrieveContentLengthJob(result, url));
     }
 
-    public long startDownload(String uri, DownloadFileType type, Course course, Module module, Item item) {
+    public void startDownload(String uri, DownloadFileType type, Course course, Module module, Item item) {
         if (Config.DEBUG) {
             Log.d(TAG, "Start download for " + uri);
         }
@@ -52,13 +50,12 @@ public class DownloadModel extends BaseModel {
 
                 createFolderIfNotExists(new File(dlFile.getAbsolutePath().replace(file, "")));
 
-                return DownloadHelper.request(uri, "file://" + dlFile.getAbsolutePath(), file);
+                DownloadHelper.getInstance().request(uri, dlFile.getAbsolutePath(), file);
             }
         } else {
             Log.w(TAG, "No write access for external storage");
             ToastUtil.show(GlobalApplication.getInstance(), R.string.toast_no_external_write_access);
         }
-        return 0;
     }
 
     public boolean deleteDownload(DownloadFileType type, Course course, Module module, Item item) {
@@ -92,10 +89,10 @@ public class DownloadModel extends BaseModel {
                 Log.d(TAG, "Cancel download " + filename);
             }
 
-            Set<Download> dlSet = DownloadHelper.getAllDownloads();
+            ArrayList<Download> dlSet = DownloadHelper.getInstance().getDownloads();
             for (Download download : dlSet) {
                 if (download.equals(dl)) {
-                    DownloadHelper.remove(download.id);
+                    DownloadHelper.getInstance().remove(download);
                 }
             }
 
@@ -115,7 +112,7 @@ public class DownloadModel extends BaseModel {
             Log.d(TAG, "Get download " + filename);
         }
 
-        Set<Download> dlSet = DownloadHelper.getAllDownloads();
+        ArrayList<Download> dlSet = DownloadHelper.getInstance().getDownloads();
         for (Download download : dlSet) {
             if (download.equals(dl)) {
                 return download;
@@ -126,14 +123,7 @@ public class DownloadModel extends BaseModel {
     }
 
     public boolean downloadRunning(DownloadFileType type, Course course, Module module, Item item) {
-        String dlFilename = buildDownloadFilename(type, course, module, item);
-        Download dl = new Download();
-        dl.localFilename = dlFilename;
-
-        int flags = DownloadManager.STATUS_PAUSED | DownloadManager.STATUS_PENDING | DownloadManager.STATUS_RUNNING;
-        Set<Download> dlSet = DownloadHelper.getAllDownloadsForStatus(flags);
-
-        return dlSet.contains(dl);
+        return DownloadHelper.getInstance().isRunning(buildDownloadFilename(type, course, module, item));
     }
 
     public boolean downloadExists(DownloadFileType type, Course course, Module module, Item item) {

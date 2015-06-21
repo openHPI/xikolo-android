@@ -303,8 +303,8 @@ public class DownloadViewController {
     }
 
     public void onEventMainThread(DownloadCompletedEvent event) {
-        if (event.getDownload().localUri.contains(item.id)
-                && DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri) == type) {
+        if (event.getDownload().localFilename.contains(item.id)
+                && DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localFilename) == type) {
 //            String suffix = DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri).getFileSuffix();
             showEndState();
         }
