@@ -123,10 +123,6 @@ public class MainActivity extends BaseActivity
                 newFragment = ContentWebViewFragment.newInstance(NavigationAdapter.NAV_ID_NEWS, Config.URI + Config.NEWS, getString(R.string.title_section_news), false, false);
                 tag = "news";
                 break;
-//            case NavigationAdapter.NAV_ID_QUIZ:
-//                newFragment = QuizDemoFragment.newInstance();
-//                tag = "qr";
-//                break;
             case NavigationAdapter.NAV_ID_DOWNLOADS:
                 intent = new Intent(MainActivity.this, DownloadsActivity.class);
                 break;
