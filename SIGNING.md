@@ -1,7 +1,7 @@
 Xikolo Android App Signing
 ==========================
 
-The Key store _xikolo.jks_ can be found in the root directory. Please use this Key store to sign Release APKs.
+Please use the _xikolo.jks_ key store to sign Release APKs. The key store is managed by the openHPI team.
 
 ## Signing Process
 
