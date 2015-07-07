@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_contributors_content" translatable="false">
+        openHPI-Team:\n
+        \n
+        • Jan Renz\n
+        • Tobias Rohloff\n
+        • Jonas Müller\n
+        \n
+        Community:\n
+        \n
+        • Prin53\n
+        • shls\n
+    </string>
+</resources>

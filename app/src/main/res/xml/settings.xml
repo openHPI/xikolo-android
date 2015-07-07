@@ -50,6 +50,11 @@
             android:title="@string/settings_title_licenses" />
 
         <Preference
+            android:key="open_source_contributors"
+            android:summary="@string/settings_summary_contributors"
+            android:title="@string/settings_title_contributors" />
+
+        <Preference
             android:key="build_version"
             android:summary="@string/settings_summary_build"
             android:title="@string/settings_title_build" />

@@ -11,6 +11,7 @@ import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.LoginActivity;
+import de.xikolo.controller.dialogs.ContributorsDialog;
 import de.xikolo.controller.dialogs.LicensesDialog;
 import de.xikolo.model.UserModel;
 import de.xikolo.model.events.LoginEvent;
@@ -114,6 +115,16 @@ public class SettingsFragment extends PreferenceFragment {
             public boolean onPreferenceClick(Preference preference) {
                 LicensesDialog dialog = new LicensesDialog();
                 dialog.show(getFragmentManager(), LicensesDialog.TAG);
+                return true;
+            }
+        });
+
+        Preference contributors = findPreference("open_source_contributors");
+        contributors.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ContributorsDialog dialog = new ContributorsDialog();
+                dialog.show(getFragmentManager(), ContributorsDialog.TAG);
                 return true;
             }
         });
