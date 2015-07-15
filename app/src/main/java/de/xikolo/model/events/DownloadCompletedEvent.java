@@ -7,7 +7,7 @@ public class DownloadCompletedEvent extends Event {
     private Download dl;
 
     public DownloadCompletedEvent(Download download) {
-        super(DownloadCompletedEvent.class.getSimpleName() + ": id = " + download.id + ", uri = " + download.uri);
+        super(DownloadCompletedEvent.class.getSimpleName() + ": uri = " + download.uri);
         this.dl = download;
     }
 

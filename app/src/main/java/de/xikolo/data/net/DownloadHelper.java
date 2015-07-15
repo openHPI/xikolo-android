@@ -1,119 +1,113 @@
 package de.xikolo.data.net;
 
-import android.app.Application;
-import android.app.DownloadManager;
-import android.database.Cursor;
-import android.net.Uri;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.concurrent.CancellationException;
 
 import de.xikolo.GlobalApplication;
+import de.xikolo.R;
 import de.xikolo.data.entities.Download;
-import de.xikolo.data.preferences.AppPreferences;
+import de.xikolo.util.NotificationProgressUtil;
 
 public class DownloadHelper {
 
-    public static long request(String uri, String target, String title) {
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uri));
+    private static DownloadHelper instance;
 
-        if (AppPreferences.isDownloadNetworkLimitedOnMobile(GlobalApplication.getInstance())) {
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-        } else {
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+    private ArrayList<Download> downloads;
+    private CompletedCallback completedCallback;
+
+    private DownloadHelper() {
+        downloads = new ArrayList<>();
+    }
+
+    public static DownloadHelper getInstance() {
+        if (instance == null) {
+            instance = new DownloadHelper();
         }
-
-        request.setDestinationUri(Uri.parse(target));
-        request.setVisibleInDownloadsUi(true);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setTitle(title);
-
-        return dm.enqueue(request);
+        return instance;
     }
 
-    public static int remove(long... ids) {
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
-        return dm.remove(ids);
-    }
-
-    public static Download buildDownloadObject(Cursor c) {
-        long id = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID));
-        String title = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
-        String description = c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
-        String localFilename = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-        String localUri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-        String uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
-        int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-        int reason = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON));
-        long totalSizeBytes = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-        long bytesDownloadedSoFar = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-        long lastModifiedTimestamp = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP));
-        String mediaproviderUri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_MEDIAPROVIDER_URI));
-        String mediaType = c.getString(c.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
-
-        return new Download(id, title, description, localFilename, localUri, uri, status, reason,
-                totalSizeBytes, bytesDownloadedSoFar, lastModifiedTimestamp, mediaproviderUri, mediaType);
-    }
-
-    public static Set<Download> getAllDownloads() {
-        Set<Download> downloadSet = new HashSet<Download>();
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
-        DownloadManager.Query query = new DownloadManager.Query();
-        Cursor c = dm.query(query);
-        if (c.moveToFirst()) {
-            do {
-                Download dl = buildDownloadObject(c);
-                downloadSet.add(dl);
-            } while (c.moveToNext());
+    public Download getDownload(String localFilename) {
+        for (Download download : downloads) {
+            if (download.localFilename.equals(localFilename)
+                    && download.status == Download.STATUS_RUNNING) {
+                return download;
+            }
         }
-        c.close();
-        return downloadSet;
+        return null;
     }
 
-    public static Download getDownloadForId(long id) {
-        Download dl = null;
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
-        DownloadManager.Query query = new DownloadManager.Query();
-        query.setFilterById(id);
-        Cursor c = dm.query(query);
-        if (c.moveToFirst()) {
-            dl = buildDownloadObject(c);
+    public void setCompletedCallback(CompletedCallback completedCallback) {
+        this.completedCallback = completedCallback;
+    }
+
+    public void request(String uri, String target, String title) {
+        final int notificationIndex = NotificationProgressUtil.getInstance()
+                .show(GlobalApplication.getInstance().getString(R.string.downloading_title),
+                        title, R.drawable.ic_launcher);
+        final Download download = new Download(title, target, uri);
+        download.setFileFuture(Ion.with(GlobalApplication.getInstance())
+                .load(uri)
+                .progress(new ProgressCallback() {
+                    @Override
+                    public void onProgress(long downloaded, long total) {
+                        download.status = Download.STATUS_RUNNING;
+                        download.bytesDownloadedSoFar = downloaded;
+                        download.totalSizeBytes = total;
+                        NotificationProgressUtil.getInstance()
+                                .setProgress(notificationIndex, (int) downloaded, (int) total);
+                    }
+                })
+                .write(new File(target))
+                .setCallback(new FutureCallback<File>() {
+                    @Override
+                    public void onCompleted(Exception e, File file) {
+                        String downloadMessage = GlobalApplication.getInstance().
+                                getString(R.string.downloading_title_completed);
+                        if (e != null) {
+                            if (e instanceof CancellationException) {
+                                download.status = Download.STATUS_CANCELLED;
+                                downloadMessage = GlobalApplication.getInstance().
+                                        getString(R.string.downloading_title_canceled);
+                            } else {
+                                // TODO: handle exception if needed.
+                                download.status = Download.STATUS_FAILED;
+                                downloadMessage = GlobalApplication.getInstance().
+                                        getString(R.string.downloading_title_error);
+                            }
+                            completedCallback.onCompleted(null);
+                        } else if (completedCallback != null) {
+                            download.status = Download.STATUS_SUCCESSFUL;
+                            completedCallback.onCompleted(download);
+                        }
+                        NotificationProgressUtil.getInstance().onCompleted(notificationIndex, downloadMessage);
+                    }
+                }));
+        downloads.add(download);
+    }
+
+    public boolean isRunning(String fileName) {
+        for (Download download : downloads) {
+            if (download.localFilename.equals(fileName) && download.status == Download.STATUS_RUNNING) {
+                return true;
+            }
         }
-        c.close();
-        return dl;
+        return false;
     }
 
-    public static Set<Download> getAllDownloadsForIds(long... ids) {
-        Set<Download> downloadSet = new HashSet<Download>();
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
-        DownloadManager.Query query = new DownloadManager.Query();
-        query.setFilterById(ids);
-        Cursor c = dm.query(query);
-        if (c.moveToFirst()) {
-            do {
-                Download dl = buildDownloadObject(c);
-                downloadSet.add(dl);
-            } while (c.moveToNext());
+    public void cancelDownload(String localFilename) {
+        for (Download download : downloads) {
+            if (download.localFilename.equals(localFilename)) {
+                download.cancel();
+            }
         }
-        c.close();
-        return downloadSet;
     }
 
-    public static Set<Download> getAllDownloadsForStatus(int flags) {
-        Set<Download> downloadSet = new HashSet<Download>();
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
-        DownloadManager.Query query = new DownloadManager.Query();
-        query.setFilterByStatus(flags);
-        Cursor c = dm.query(query);
-        if (c.moveToFirst()) {
-            do {
-                Download dl = buildDownloadObject(c);
-                downloadSet.add(dl);
-            } while (c.moveToNext());
-        }
-        c.close();
-        return downloadSet;
+    public interface CompletedCallback {
+        void onCompleted(Download download);
     }
-
 }

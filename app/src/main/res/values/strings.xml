@@ -68,6 +68,12 @@
     <string name="preference_download_network" translatable="false">download_network</string>
     <string name="preference_video_quality" translatable="false">video_quality</string>
 
+    <!-- downloading notification -->
+    <string name="downloading_title">Downloading…</string>
+    <string name="downloading_title_error">Error downloading…</string>
+    <string name="downloading_title_canceled">Download canceled…</string>
+    <string name="downloading_title_completed">Download completed…</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 

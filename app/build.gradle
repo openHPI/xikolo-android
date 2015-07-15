@@ -63,5 +63,6 @@ dependencies {
     compile 'com.android.support:support-v4:22.1.1'
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:cardview-v7:22.1.1'
+    compile 'com.koushikdutta.ion:ion:2.1.6'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
