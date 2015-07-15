@@ -82,19 +82,12 @@ public class DownloadModel extends BaseModel {
     public void cancelDownload(DownloadFileType type, Course course, Module module, Item item) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             String filename = buildDownloadFilename(type, course, module, item);
-            Download dl = new Download();
-            dl.localFilename = filename;
 
             if (Config.DEBUG) {
                 Log.d(TAG, "Cancel download " + filename);
             }
 
-            ArrayList<Download> dlSet = DownloadHelper.getInstance().getDownloads();
-            for (Download download : dlSet) {
-                if (download.equals(dl)) {
-                    DownloadHelper.getInstance().remove(download);
-                }
-            }
+            DownloadHelper.getInstance().cancelDownload(filename);
 
             deleteDownload(type, course, module, item);
         } else {
@@ -105,21 +98,10 @@ public class DownloadModel extends BaseModel {
 
     public Download getDownload(DownloadFileType type, Course course, Module module, Item item) {
         String filename = buildDownloadFilename(type, course, module, item);
-        Download dl = new Download();
-        dl.localFilename = filename;
-
         if (Config.DEBUG) {
             Log.d(TAG, "Get download " + filename);
         }
-
-        ArrayList<Download> dlSet = DownloadHelper.getInstance().getDownloads();
-        for (Download download : dlSet) {
-            if (download.equals(dl)) {
-                return download;
-            }
-        }
-
-        return null;
+        return DownloadHelper.getInstance().getDownload(filename);
     }
 
     public boolean downloadRunning(DownloadFileType type, Course course, Module module, Item item) {

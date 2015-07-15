@@ -71,6 +71,7 @@
     <!-- downloading notification -->
     <string name="downloading_title">Downloading…</string>
     <string name="downloading_title_error">Error downloading…</string>
+    <string name="downloading_title_canceled">Download canceled…</string>
     <string name="downloading_title_completed">Download completed…</string>
 
     <!-- -->

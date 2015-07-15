@@ -34,7 +34,9 @@ public class Download {
     }
 
     public void cancel() {
-        fileFuture.cancel();
+        if (!fileFuture.isCancelled()) {
+            fileFuture.cancel();
+        }
         status = STATUS_CANCELLED;
     }
 

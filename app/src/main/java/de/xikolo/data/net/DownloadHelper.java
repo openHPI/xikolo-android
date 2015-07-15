@@ -6,6 +6,7 @@ import com.koushikdutta.ion.ProgressCallback;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.CancellationException;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
@@ -30,8 +31,14 @@ public class DownloadHelper {
         return instance;
     }
 
-    public ArrayList<Download> getDownloads() {
-        return downloads;
+    public Download getDownload(String localFilename) {
+        for (Download download : downloads) {
+            if (download.localFilename.equals(localFilename)
+                    && download.status == Download.STATUS_RUNNING) {
+                return download;
+            }
+        }
+        return null;
     }
 
     public void setCompletedCallback(CompletedCallback completedCallback) {
@@ -62,25 +69,25 @@ public class DownloadHelper {
                         String downloadMessage = GlobalApplication.getInstance().
                                 getString(R.string.downloading_title_completed);
                         if (e != null) {
-                            // TODO: handle exception if needed.
-                            download.status = Download.STATUS_FAILED;
-                            downloadMessage = GlobalApplication.getInstance().
-                                    getString(R.string.downloading_title_error);
+                            if (e instanceof CancellationException) {
+                                download.status = Download.STATUS_CANCELLED;
+                                downloadMessage = GlobalApplication.getInstance().
+                                        getString(R.string.downloading_title_canceled);
+                            } else {
+                                // TODO: handle exception if needed.
+                                download.status = Download.STATUS_FAILED;
+                                downloadMessage = GlobalApplication.getInstance().
+                                        getString(R.string.downloading_title_error);
+                            }
                             completedCallback.onCompleted(null);
                         } else if (completedCallback != null) {
                             download.status = Download.STATUS_SUCCESSFUL;
                             completedCallback.onCompleted(download);
                         }
                         NotificationProgressUtil.getInstance().onCompleted(notificationIndex, downloadMessage);
-                        downloads.remove(download);
                     }
                 }));
         downloads.add(download);
-    }
-
-    public void remove(Download download) {
-        download.cancel();
-        downloads.remove(download);
     }
 
     public boolean isRunning(String fileName) {
@@ -90,6 +97,14 @@ public class DownloadHelper {
             }
         }
         return false;
+    }
+
+    public void cancelDownload(String localFilename) {
+        for (Download download : downloads) {
+            if (download.localFilename.equals(localFilename)) {
+                download.cancel();
+            }
+        }
     }
 
     public interface CompletedCallback {
