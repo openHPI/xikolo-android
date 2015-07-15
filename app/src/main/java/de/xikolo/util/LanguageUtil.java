@@ -7,12 +7,15 @@ import de.xikolo.R;
 public class LanguageUtil {
 
     public static String languageForCode(Context context, String code) {
-        if (code.equals("en")) {
-            return context.getString(R.string.lang_en);
-        } else if (code.equals("de")) {
-            return context.getString(R.string.lang_de);
-        } else {
-            return null;
+        switch (code) {
+            case "en":
+                return context.getString(R.string.lang_en);
+            case "de":
+                return context.getString(R.string.lang_de);
+            case "cn":
+                return context.getString(R.string.lang_zh);
+            default:
+                return null;
         }
     }
 
