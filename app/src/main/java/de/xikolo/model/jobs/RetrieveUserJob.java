@@ -27,14 +27,12 @@ public class RetrieveUserJob extends Job {
     private final int id;
 
     private Result<User> result;
-    private UserPreferences userPreferences;
 
-    public RetrieveUserJob(Result<User> result, UserPreferences userPreferences) {
+    public RetrieveUserJob(Result<User> result) {
         super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
-        this.userPreferences = userPreferences;
     }
 
     @Override
@@ -47,6 +45,9 @@ public class RetrieveUserJob extends Job {
         if (!UserModel.isLoggedIn(GlobalApplication.getInstance())) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
+            UserPreferences userPreferences = GlobalApplication.getInstance()
+                    .getPreferencesFactory().getUserPreferences();
+
             result.success(userPreferences.getUser(), Result.DataSource.LOCAL);
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {

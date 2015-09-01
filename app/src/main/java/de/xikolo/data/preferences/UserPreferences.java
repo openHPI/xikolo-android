@@ -7,20 +7,19 @@ import de.xikolo.data.entities.AccessToken;
 import de.xikolo.data.entities.User;
 import de.xikolo.util.Config;
 
-public class UserPreferences {
+public class UserPreferences extends Preferences {
 
     public static String ACCESS_TOKEN_DEFAULT = null;
+
     private static String USER_ID = "id";
     private static String USER_FIRST_NAME = "first_name";
     private static String USER_LAST_NAME = "last_name";
     private static String USER_EMAIL = "email";
     private static String USER_ACCESS_TOKEN = "token";
     private static String USER_VISUAL_URL = "visual_url";
-    private Context mContext;
 
     public UserPreferences(Context context) {
-        super();
-        this.mContext = context;
+        super(context);
     }
 
     public User getUser() {

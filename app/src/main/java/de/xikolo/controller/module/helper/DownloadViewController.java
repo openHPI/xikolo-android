@@ -84,6 +84,8 @@ public class DownloadViewController {
         fileSizeText = (TextView) view.findViewById(R.id.textFileSize);
         fileNameText = (TextView) view.findViewById(R.id.textFileName);
 
+        final AppPreferences appPreferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
+
         downloadStartContainer = view.findViewById(R.id.downloadStartContainer);
         downloadStartButton = (IconButton) view.findViewById(R.id.buttonDownloadStart);
         downloadStartButton.setOnClickListener(new View.OnClickListener() {
@@ -91,12 +93,12 @@ public class DownloadViewController {
             public void onClick(View v) {
                 if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
                     if (NetworkUtil.getConnectivityStatus(activity) == NetworkUtil.TYPE_MOBILE &&
-                            AppPreferences.isDownloadNetworkLimitedOnMobile(activity)) {
+                            appPreferences.isDownloadNetworkLimitedOnMobile()) {
                         MobileDownloadDialog dialog = MobileDownloadDialog.getInstance();
                         dialog.setMobileDownloadDialogListener(new MobileDownloadDialog.MobileDownloadDialogListener() {
                             @Override
                             public void onDialogPositiveClick(DialogFragment dialog) {
-                                AppPreferences.setIsDownloadNetworkLimitedOnMobile(activity, false);
+                                appPreferences.setIsDownloadNetworkLimitedOnMobile(false);
                                 startDownload();
                             }
                         });
@@ -132,7 +134,7 @@ public class DownloadViewController {
         downloadDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (AppPreferences.confirmBeforeDeleting(GlobalApplication.getInstance())) {
+                if (appPreferences.confirmBeforeDeleting()) {
                     ConfirmDeleteDialog dialog = ConfirmDeleteDialog.getInstance(false);
                     dialog.setConfirmDeleteDialogListener(new ConfirmDeleteDialog.ConfirmDeleteDialogListener() {
                         @Override
@@ -142,7 +144,7 @@ public class DownloadViewController {
 
                         @Override
                         public void onDialogPositiveAndAlwaysClick(DialogFragment dialog) {
-                            AppPreferences.setConfirmBeforeDeleting(activity, false);
+                            appPreferences.setConfirmBeforeDeleting(false);
                             deleteFile();
                         }
                     });

@@ -20,7 +20,6 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
-import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
@@ -360,7 +359,8 @@ public class VideoController {
             int connectivityStatus = NetworkUtil.getConnectivityStatus(mActivity);
 
             if (connectivityStatus == NetworkUtil.TYPE_WIFI || connectivityStatus == NetworkUtil.TYPE_NOT_CONNECTED
-                    || (connectivityStatus == NetworkUtil.TYPE_MOBILE && !AppPreferences.isVideoQualityLimitedOnMobile(mActivity))) {
+                    || (connectivityStatus == NetworkUtil.TYPE_MOBILE && !GlobalApplication.getInstance().getPreferencesFactory()
+                    .getAppPreferences().isVideoQualityLimitedOnMobile())) {
                 playVideoInHD = true;
             } else {
                 playVideoInHD = false;

@@ -15,40 +15,43 @@ public class UserModel extends BaseModel {
 
     public static final String TAG = UserModel.class.getSimpleName();
 
-    private UserPreferences mUserPref;
-
     public UserModel(JobManager jobManager) {
         super(jobManager);
-
-        this.mUserPref = new UserPreferences(GlobalApplication.getInstance());
     }
 
     public static String getToken(Context context) {
-        UserPreferences prefs = new UserPreferences(context);
+        UserPreferences prefs = GlobalApplication.getInstance()
+                .getPreferencesFactory().getUserPreferences();
         return prefs.getAccessToken().token;
     }
 
     public static User getSavedUser(Context context) {
-        UserPreferences prefs = new UserPreferences(context);
+        UserPreferences prefs = GlobalApplication.getInstance()
+                .getPreferencesFactory().getUserPreferences();
         return prefs.getUser();
     }
 
     public static boolean isLoggedIn(Context context) {
-        UserPreferences prefs = new UserPreferences(context);
+        UserPreferences prefs = GlobalApplication.getInstance()
+                .getPreferencesFactory().getUserPreferences();
         return prefs.getAccessToken().token != null;
     }
 
     public void logout() {
-        mUserPref.deleteUser();
-        GlobalApplication.getInstance().getDataAccessFactory().getDatabaseHelper().deleteDatabase();
+        GlobalApplication app = GlobalApplication.getInstance();
+
+        UserPreferences prefs = app.getPreferencesFactory().getUserPreferences();
+        prefs.deleteUser();
+
+        app.getDataAccessFactory().getDatabaseHelper().deleteDatabase();
     }
 
     public void login(Result<Void> result, String email, String password) {
-        mJobManager.addJobInBackground(new CreateAccessTokenJob(result, email, password, mUserPref));
+        mJobManager.addJobInBackground(new CreateAccessTokenJob(result, email, password));
     }
 
     public void getUser(Result<User> result) {
-        mJobManager.addJobInBackground(new RetrieveUserJob(result, mUserPref));
+        mJobManager.addJobInBackground(new RetrieveUserJob(result));
     }
 
 }

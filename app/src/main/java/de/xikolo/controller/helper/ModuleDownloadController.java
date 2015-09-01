@@ -46,15 +46,17 @@ public class ModuleDownloadController {
                 ModuleDownloadController.this.sdVideo = sdVideo;
                 ModuleDownloadController.this.slides = slides;
 
+                final AppPreferences appPreferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
+
                 if (hdVideo || sdVideo || slides) {
                     if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
                         if (NetworkUtil.getConnectivityStatus(app) == NetworkUtil.TYPE_MOBILE &&
-                                AppPreferences.isDownloadNetworkLimitedOnMobile(app)) {
+                                appPreferences.isDownloadNetworkLimitedOnMobile()) {
                             MobileDownloadDialog permissionDialog = MobileDownloadDialog.getInstance();
                             permissionDialog.setMobileDownloadDialogListener(new MobileDownloadDialog.MobileDownloadDialogListener() {
                                 @Override
                                 public void onDialogPositiveClick(DialogFragment dialog) {
-                                    AppPreferences.setIsDownloadNetworkLimitedOnMobile(app, false);
+                                    appPreferences.setIsDownloadNetworkLimitedOnMobile(false);
                                     startModuleDownloads(course, module);
                                 }
                             });

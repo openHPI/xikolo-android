@@ -6,49 +6,53 @@ import android.preference.PreferenceManager;
 
 import de.xikolo.R;
 
-public class AppPreferences {
+public class AppPreferences extends Preferences {
 
-    private static boolean getBoolean(String key, Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public AppPreferences(Context context) {
+        super(context);
+    }
+
+    private boolean getBoolean(String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         return preferences.getBoolean(key, true);
     }
 
-    private static void putBoolean(boolean value, String key, Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    private void putBoolean(boolean value, String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(key, value);
         editor.apply();
     }
 
-    public static boolean isVideoQualityLimitedOnMobile(Context context) {
-        return getBoolean(context.getString(R.string.preference_video_quality), context);
+    public boolean isVideoQualityLimitedOnMobile() {
+        return getBoolean(mContext.getString(R.string.preference_video_quality));
     }
 
-    public static void setIsVideoQualityLimitedOnMobile(Context context, boolean value) {
-        putBoolean(value, context.getString(R.string.preference_video_quality), context);
+    public void setIsVideoQualityLimitedOnMobile(boolean value) {
+        putBoolean(value, mContext.getString(R.string.preference_video_quality));
     }
 
-    public static boolean isDownloadNetworkLimitedOnMobile(Context context) {
-        return getBoolean(context.getString(R.string.preference_download_network), context);
+    public boolean isDownloadNetworkLimitedOnMobile() {
+        return getBoolean(mContext.getString(R.string.preference_download_network));
     }
 
-    public static void setIsDownloadNetworkLimitedOnMobile(Context context, boolean value) {
-        putBoolean(value, context.getString(R.string.preference_download_network), context);
+    public void setIsDownloadNetworkLimitedOnMobile(boolean value) {
+        putBoolean(value, mContext.getString(R.string.preference_download_network));
     }
 
-    public static boolean confirmBeforeDeleting(Context context) {
-        return getBoolean(context.getString(R.string.preference_confirm_delete), context);
+    public boolean confirmBeforeDeleting() {
+        return getBoolean(mContext.getString(R.string.preference_confirm_delete));
     }
 
-    public static void setConfirmBeforeDeleting(Context context, boolean value) {
-        putBoolean(value, context.getString(R.string.preference_confirm_delete), context);
+    public void setConfirmBeforeDeleting(boolean value) {
+        putBoolean(value, mContext.getString(R.string.preference_confirm_delete));
     }
 
-    public static boolean isUsingExternalStorage(Context context) {
-        return getBoolean(context.getString(R.string.preference_storage), context);
+    public boolean isUsingExternalStorage() {
+        return getBoolean(mContext.getString(R.string.preference_storage));
     }
 
-    public static void setIsUsingExternalStorage(Context context, boolean value) {
-        putBoolean(value, context.getString(R.string.preference_storage), context);
+    public void setIsUsingExternalStorage(boolean value) {
+        putBoolean(value, mContext.getString(R.string.preference_storage));
     }
 }

@@ -89,7 +89,9 @@ public class DownloadsFragment extends Fragment implements DownlodsAdapter.OnDel
 
     @Override
     public void onDeleteButtonClicked(final DownlodsAdapter.FolderItem item) {
-        if (AppPreferences.confirmBeforeDeleting(GlobalApplication.getInstance())) {
+        final AppPreferences appPreferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
+
+        if (appPreferences.confirmBeforeDeleting()) {
             ConfirmDeleteDialog dialog = ConfirmDeleteDialog.getInstance(true);
             dialog.setConfirmDeleteDialogListener(new ConfirmDeleteDialog.ConfirmDeleteDialogListener() {
                 @Override
@@ -99,7 +101,7 @@ public class DownloadsFragment extends Fragment implements DownlodsAdapter.OnDel
 
                 @Override
                 public void onDialogPositiveAndAlwaysClick(DialogFragment dialog) {
-                    AppPreferences.setConfirmBeforeDeleting(getActivity(), false);
+                    appPreferences.setConfirmBeforeDeleting(false);
                     deleteFolder(item);
                 }
             });

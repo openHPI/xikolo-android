@@ -29,6 +29,7 @@ import de.xikolo.data.database.DataAccessFactory;
 import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.data.entities.Download;
 import de.xikolo.data.net.DownloadHelper;
+import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.model.events.DownloadCompletedEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.SslCertificateUtil;
@@ -46,6 +47,8 @@ public class GlobalApplication extends Application {
     private DatabaseHelper databaseHelper;
 
     private DataAccessFactory dataAccessFactory;
+
+    private PreferencesFactory preferencesFactory;
 
     private CookieSyncManager cookieSyncManager;
 
@@ -66,6 +69,13 @@ public class GlobalApplication extends Application {
             dataAccessFactory = new DataAccessFactory(databaseHelper);
         }
         return dataAccessFactory;
+    }
+
+    public PreferencesFactory getPreferencesFactory() {
+        if (preferencesFactory == null) {
+            preferencesFactory = new PreferencesFactory(this);
+        }
+        return preferencesFactory;
     }
 
     @Override

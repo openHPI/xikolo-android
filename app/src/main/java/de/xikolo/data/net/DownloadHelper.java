@@ -18,7 +18,8 @@ public class DownloadHelper {
         DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uri));
 
-        if (AppPreferences.isDownloadNetworkLimitedOnMobile(GlobalApplication.getInstance())) {
+        if (GlobalApplication.getInstance().getPreferencesFactory()
+                .getAppPreferences().isDownloadNetworkLimitedOnMobile()) {
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
         } else {
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);

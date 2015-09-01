@@ -15,7 +15,6 @@ import de.xikolo.data.entities.AccessToken;
 import de.xikolo.data.net.JsonRequest;
 import de.xikolo.data.preferences.UserPreferences;
 import de.xikolo.model.Result;
-import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 
@@ -31,14 +30,12 @@ public class CreateAccessTokenJob extends Job {
     private String password;
 
     private Result<Void> result;
-    private UserPreferences userPreferences;
 
-    public CreateAccessTokenJob(Result<Void> result, String email, String password, UserPreferences userPreferences) {
+    public CreateAccessTokenJob(Result<Void> result, String email, String password) {
         super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
-        this.userPreferences = userPreferences;
 
         this.email = email;
         this.password = password;
@@ -66,6 +63,9 @@ public class CreateAccessTokenJob extends Job {
             if (o != null) {
                 AccessToken token = (AccessToken) o;
                 if (Config.DEBUG) Log.i(TAG, "AccessToken created");
+
+                UserPreferences userPreferences = GlobalApplication.getInstance()
+                        .getPreferencesFactory().getUserPreferences();
                 userPreferences.saveAccessToken(token);
                 result.success(null, Result.DataSource.NETWORK);
             } else {
