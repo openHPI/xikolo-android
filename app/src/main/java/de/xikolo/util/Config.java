@@ -1,7 +1,6 @@
 package de.xikolo.util;
 
 import de.xikolo.BuildConfig;
-import de.xikolo.data.preferences.EnrollmentsPreferences;
 import de.xikolo.data.preferences.UserPreferences;
 
 public class Config {
@@ -13,7 +12,6 @@ public class Config {
     public static final String FONT_XIKOLO = FONT + "xikolo.ttf";
 
     public static final String PREF_USER = UserPreferences.class.getName();
-    public static final String PREF_ENROLLMENTS = EnrollmentsPreferences.class.getName();
 
     public static final String URI_SCHEME_HTTP = "http";
     public static final String URI_SCHEME_HTTPS = "https";
