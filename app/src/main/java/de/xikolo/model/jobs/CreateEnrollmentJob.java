@@ -26,15 +26,13 @@ public class CreateEnrollmentJob extends Job {
 
     private Course course;
     private Result<Course> result;
-    private CourseDataAccess courseDataAccess;
 
-    public CreateEnrollmentJob(Result<Course> result, Course course, CourseDataAccess courseDataAccess) {
+    public CreateEnrollmentJob(Result<Course> result, Course course) {
         super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.course = course;
-        this.courseDataAccess = courseDataAccess;
     }
 
     @Override
@@ -60,6 +58,8 @@ public class CreateEnrollmentJob extends Job {
             if (o != null) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
                 course.is_enrolled = true;
+                CourseDataAccess courseDataAccess = GlobalApplication.getInstance()
+                        .getDataAccessFactory().getCourseDataAccess();
                 courseDataAccess.updateCourse(course, false);
                 result.success(course, Result.DataSource.NETWORK);
             } else {

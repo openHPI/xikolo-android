@@ -76,7 +76,7 @@ public class DownloadViewController {
         this.item = item;
         this.activity = activity;
 
-        this.downloadModel = new DownloadModel(GlobalApplication.getInstance(), GlobalApplication.getInstance().getJobManager());
+        this.downloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager());
 
         LayoutInflater inflater = LayoutInflater.from(GlobalApplication.getInstance());
         view = inflater.inflate(R.layout.container_download, null);

@@ -59,7 +59,7 @@ public class VideoActivity extends BaseActivity {
 
         View videoContainer = findViewById(R.id.videoContainer);
 
-        itemModel = new ItemModel(this, jobManager, databaseHelper);
+        itemModel = new ItemModel(jobManager);
 
         mVideoController = new VideoController(this, videoContainer);
         mVideoController.setControllerListener(new VideoController.ControllerListener() {

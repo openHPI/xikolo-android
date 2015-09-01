@@ -39,9 +39,7 @@ public class RetrieveItemDetailJob extends Job {
     private Item item;
     private String itemType;
 
-    private VideoDataAccess videoDataAccess;
-
-    public RetrieveItemDetailJob(Result<Item> result, Course course, Module module, Item item, String itemType, VideoDataAccess videoDataAccess) {
+    public RetrieveItemDetailJob(Result<Item> result, Course course, Module module, Item item, String itemType) {
         super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
@@ -50,7 +48,6 @@ public class RetrieveItemDetailJob extends Job {
         this.module = module;
         this.item = item;
         this.itemType = itemType;
-        this.videoDataAccess = videoDataAccess;
     }
 
     @Override
@@ -63,6 +60,8 @@ public class RetrieveItemDetailJob extends Job {
         if (!UserModel.isLoggedIn(GlobalApplication.getInstance()) || !course.is_enrolled) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
+            VideoDataAccess videoDataAccess = GlobalApplication.getInstance()
+                    .getDataAccessFactory().getVideoDataAccess();
             if (itemType.equals(Item.TYPE_VIDEO)) {
                 item.detail = videoDataAccess.getVideo(item.id);
                 result.success(item, Result.DataSource.LOCAL);

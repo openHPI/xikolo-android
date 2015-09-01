@@ -20,15 +20,8 @@ public class ModuleModel extends BaseModel {
 
     public static final String TAG = ModuleModel.class.getSimpleName();
 
-    private ModuleDataAccess moduleDataAccess;
-
-    private ItemDataAccess itemDataAccess;
-
-    public ModuleModel(Context context, JobManager jobManager, DatabaseHelper databaseHelper) {
-        super(context, jobManager);
-
-        this.moduleDataAccess = new ModuleDataAccess(databaseHelper);
-        this.itemDataAccess = new ItemDataAccess(databaseHelper);
+    public ModuleModel(JobManager jobManager) {
+        super(jobManager);
     }
 
     public void getModules(Result<List<Module>> result, Course course, boolean includeProgress) {
@@ -40,7 +33,7 @@ public class ModuleModel extends BaseModel {
             }
         });
 
-        mJobManager.addJobInBackground(new RetrieveModulesJob(result, course, includeProgress, moduleDataAccess));
+        mJobManager.addJobInBackground(new RetrieveModulesJob(result, course, includeProgress));
     }
 
     public void getModulesWithItems(Result<List<Module>> result, Course course, boolean includeProgress) {
@@ -55,7 +48,7 @@ public class ModuleModel extends BaseModel {
             }
         });
 
-        mJobManager.addJobInBackground(new RetrieveModulesWithItemsJob(result, course, includeProgress, moduleDataAccess, itemDataAccess));
+        mJobManager.addJobInBackground(new RetrieveModulesWithItemsJob(result, course, includeProgress));
     }
 
     public static void sortModules(List<Module> modules) {

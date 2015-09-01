@@ -70,7 +70,7 @@ public class ModuleActivity extends BaseActivity {
             this.mItem = b.getParcelable(ARG_ITEM);
         }
 
-        mItemModel = new ItemModel(this, jobManager, databaseHelper);
+        mItemModel = new ItemModel(jobManager);
         mProgressionResult = new Result<Void>() {
         };
 

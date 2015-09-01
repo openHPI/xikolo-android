@@ -2,7 +2,6 @@ package de.xikolo.controller.module;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,7 +66,7 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemModel = new ItemModel(getActivity(), jobManager, databaseHelper);
+        mItemModel = new ItemModel(jobManager);
     }
 
     @Override

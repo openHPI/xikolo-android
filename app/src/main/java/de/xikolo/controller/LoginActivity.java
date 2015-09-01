@@ -56,7 +56,7 @@ public class LoginActivity extends BaseActivity {
 
         dialog = ProgressDialog.getInstance();
 
-        mUserModel = new UserModel(this, jobManager, databaseHelper);
+        mUserModel = new UserModel(jobManager);
         mLoginResult = new Result<Void>() {
             @Override
             protected void onSuccess(Void result, DataSource dataSource) {

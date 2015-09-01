@@ -118,7 +118,7 @@ public class CourseActivity extends BaseActivity {
                     }
                 };
 
-                CourseModel courseModel = new CourseModel(this, jobManager, databaseHelper);
+                CourseModel courseModel = new CourseModel(jobManager);
                 courseModel.getCourses(result, false);
             } else {
                 Bundle b = getIntent().getExtras();

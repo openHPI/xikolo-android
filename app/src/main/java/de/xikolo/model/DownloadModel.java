@@ -1,7 +1,6 @@
 package de.xikolo.model;
 
 import android.app.DownloadManager;
-import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -28,8 +27,8 @@ public class DownloadModel extends BaseModel {
 
     public static final String TAG = DownloadModel.class.getSimpleName();
 
-    public DownloadModel(Context context, JobManager jobManager) {
-        super(context, jobManager);
+    public DownloadModel(JobManager jobManager) {
+        super(jobManager);
     }
 
     public void getRemoteDownloadFileSize(Result<Long> result, String url) {

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
+import de.xikolo.data.database.DataAccessFactory;
 import de.xikolo.data.database.ItemDataAccess;
 import de.xikolo.data.database.ModuleDataAccess;
 import de.xikolo.data.entities.Course;
@@ -34,18 +35,14 @@ public class RetrieveModulesWithItemsJob extends Job {
     private Result<List<Module>> result;
     private Course course;
     private boolean includeProgress;
-    private ModuleDataAccess moduleDataAccess;
-    private ItemDataAccess itemDataAccess;
 
-    public RetrieveModulesWithItemsJob(Result<List<Module>> result, Course course, boolean includeProgress, ModuleDataAccess moduleDataAccess, ItemDataAccess itemDataAccess) {
+    public RetrieveModulesWithItemsJob(Result<List<Module>> result, Course course, boolean includeProgress) {
         super(new Params(Priority.MID));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.course = course;
         this.includeProgress = includeProgress;
-        this.moduleDataAccess = moduleDataAccess;
-        this.itemDataAccess = itemDataAccess;
     }
 
     @Override
@@ -58,6 +55,10 @@ public class RetrieveModulesWithItemsJob extends Job {
         if (!UserModel.isLoggedIn(GlobalApplication.getInstance()) || !course.is_enrolled) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
+            DataAccessFactory dataAccessFactory = GlobalApplication.getInstance().getDataAccessFactory();
+            ModuleDataAccess moduleDataAccess = dataAccessFactory.getModuleDataAccess();
+            ItemDataAccess itemDataAccess = dataAccessFactory.getItemDataAccess();
+
             List<Module> localModules = moduleDataAccess.getAllModulesForCourse(course);
             List<Module> deleteList = new ArrayList<Module>();
             for (Module module : localModules) {

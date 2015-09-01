@@ -157,9 +157,7 @@ public class SettingsFragment extends PreferenceFragment {
             pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    UserModel userModel = new UserModel(getActivity(),
-                            GlobalApplication.getInstance().getJobManager(),
-                            GlobalApplication.getInstance().getDatabaseHelper());
+                    UserModel userModel = new UserModel(GlobalApplication.getInstance().getJobManager());
                     userModel.logout();
                     EventBus.getDefault().post(new LogoutEvent());
                     return true;

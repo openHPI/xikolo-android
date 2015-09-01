@@ -83,7 +83,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         }
         setHasOptionsMenu(true);
 
-        mCourseModel = new CourseModel(getActivity(), jobManager, databaseHelper);
+        mCourseModel = new CourseModel(jobManager);
 
         EventBus.getDefault().register(this);
     }

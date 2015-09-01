@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.path.android.jobqueue.JobManager;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.data.entities.User;
 import de.xikolo.data.preferences.UserPreferences;
@@ -15,13 +16,11 @@ public class UserModel extends BaseModel {
     public static final String TAG = UserModel.class.getSimpleName();
 
     private UserPreferences mUserPref;
-    private DatabaseHelper databaseHelper;
 
-    public UserModel(Context context, JobManager jobManager, DatabaseHelper databaseHelper) {
-        super(context, jobManager);
+    public UserModel(JobManager jobManager) {
+        super(jobManager);
 
-        this.mUserPref = new UserPreferences(context);
-        this.databaseHelper = databaseHelper;
+        this.mUserPref = new UserPreferences(GlobalApplication.getInstance());
     }
 
     public static String getToken(Context context) {
@@ -41,7 +40,7 @@ public class UserModel extends BaseModel {
 
     public void logout() {
         mUserPref.deleteUser();
-        databaseHelper.deleteDatabase();
+        GlobalApplication.getInstance().getDataAccessFactory().getDatabaseHelper().deleteDatabase();
     }
 
     public void login(Result<Void> result, String email, String password) {

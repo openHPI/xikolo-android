@@ -28,16 +28,14 @@ public class RetrieveCoursesJob extends Job {
     private final int id;
 
     private Result<List<Course>> result;
-    private CourseDataAccess courseDataAccess;
 
     private boolean includeProgress;
 
-    public RetrieveCoursesJob(Result<List<Course>> result, boolean includeProgress, CourseDataAccess courseDataAccess) {
+    public RetrieveCoursesJob(Result<List<Course>> result, boolean includeProgress) {
         super(new Params(includeProgress ? Priority.MID : Priority.MID));
         this.id = jobCounter.incrementAndGet();
 
         this.result = result;
-        this.courseDataAccess = courseDataAccess;
         this.includeProgress = includeProgress;
     }
 
@@ -51,6 +49,8 @@ public class RetrieveCoursesJob extends Job {
         if (includeProgress && !UserModel.isLoggedIn(GlobalApplication.getInstance())) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
+            CourseDataAccess courseDataAccess = GlobalApplication.getInstance()
+                    .getDataAccessFactory().getCourseDataAccess();
             result.success(courseDataAccess.getAllCourses(), Result.DataSource.LOCAL);
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {

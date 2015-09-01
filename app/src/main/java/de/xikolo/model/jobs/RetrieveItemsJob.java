@@ -32,16 +32,14 @@ public class RetrieveItemsJob extends Job {
     private Result<List<Item>> result;
     private Course course;
     private Module module;
-    private ItemDataAccess itemDataAccess;
 
-    public RetrieveItemsJob(Result<List<Item>> result, Course course, Module module, ItemDataAccess itemDataAccess) {
+    public RetrieveItemsJob(Result<List<Item>> result, Course course, Module module) {
         super(new Params(Priority.MID));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.course = course;
         this.module = module;
-        this.itemDataAccess = itemDataAccess;
     }
 
     @Override
@@ -54,6 +52,8 @@ public class RetrieveItemsJob extends Job {
         if (!UserModel.isLoggedIn(GlobalApplication.getInstance()) || !course.is_enrolled) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
+            ItemDataAccess itemDataAccess = GlobalApplication.getInstance()
+                    .getDataAccessFactory().getItemDataAccess();
             result.success(itemDataAccess.getAllItemsForModule(module), Result.DataSource.LOCAL);
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {

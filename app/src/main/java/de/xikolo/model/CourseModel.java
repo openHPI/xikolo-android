@@ -1,7 +1,5 @@
 package de.xikolo.model;
 
-import android.content.Context;
-
 import com.path.android.jobqueue.JobManager;
 
 import java.util.ArrayList;
@@ -9,11 +7,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import de.xikolo.data.database.CourseDataAccess;
-import de.xikolo.data.database.DatabaseHelper;
-import de.xikolo.data.database.ModuleDataAccess;
+import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.Course;
-import de.xikolo.data.entities.Module;
 import de.xikolo.model.jobs.CreateEnrollmentJob;
 import de.xikolo.model.jobs.DeleteEnrollmentJob;
 import de.xikolo.model.jobs.RetrieveCoursesJob;
@@ -27,18 +22,13 @@ public class CourseModel extends BaseModel {
 
     public static final String TAG = CourseModel.class.getSimpleName();
 
-    private CourseDataAccess courseDataAccess;
-    private ModuleDataAccess moduleDataAccess;
-
-    public CourseModel(Context context, JobManager jobManager, DatabaseHelper databaseHelper) {
-        super(context, jobManager);
-
-        courseDataAccess = new CourseDataAccess(databaseHelper);
-        moduleDataAccess = new ModuleDataAccess(databaseHelper);
+    public CourseModel(JobManager jobManager) {
+        super(jobManager);
     }
 
     public int getEnrollmentsCount() {
-        return courseDataAccess.getEnrollmentsCount();
+        return GlobalApplication.getInstance()
+                .getDataAccessFactory().getCourseDataAccess().getEnrollmentsCount();
     }
 
     public void getCourses(Result<List<Course>> result, boolean includeProgress) {
@@ -63,15 +53,15 @@ public class CourseModel extends BaseModel {
             }
         });
 
-        mJobManager.addJobInBackground(new RetrieveCoursesJob(result, includeProgress, courseDataAccess));
+        mJobManager.addJobInBackground(new RetrieveCoursesJob(result, includeProgress));
     }
 
     public void addEnrollment(Result<Course> result, Course course) {
-        mJobManager.addJobInBackground(new CreateEnrollmentJob(result, course, courseDataAccess));
+        mJobManager.addJobInBackground(new CreateEnrollmentJob(result, course));
     }
 
     public void deleteEnrollment(Result<Course> result, Course course) {
-        mJobManager.addJobInBackground(new DeleteEnrollmentJob(result, course, courseDataAccess, moduleDataAccess));
+        mJobManager.addJobInBackground(new DeleteEnrollmentJob(result, course));
     }
 
     public static void sortCourses(List<Course> courses) {

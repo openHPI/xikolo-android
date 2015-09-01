@@ -34,7 +34,7 @@ public class ModuleDownloadController {
     public ModuleDownloadController(FragmentActivity activity) {
         this.app = GlobalApplication.getInstance();
         this.activity = activity;
-        this.downloadModel = new DownloadModel(app, app.getJobManager());
+        this.downloadModel = new DownloadModel(app.getJobManager());
     }
 
     public void initModuleDownloads(final Course course, final Module module) {
@@ -72,7 +72,7 @@ public class ModuleDownloadController {
     }
     
     private void startModuleDownloads(final Course course, final Module module) {
-        ItemModel itemModel = new ItemModel(app, app.getJobManager(), app.getDatabaseHelper());
+        ItemModel itemModel = new ItemModel(app.getJobManager());
 
         final ProgressDialog dialog = ProgressDialog.getInstance();
         dialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);

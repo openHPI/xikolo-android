@@ -85,8 +85,8 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         }
         setHasOptionsMenu(true);
 
-        mModuleModel = new ModuleModel(getActivity(), jobManager, databaseHelper);
-        mItemModel = new ItemModel(getActivity(), jobManager, databaseHelper);
+        mModuleModel = new ModuleModel(jobManager);
+        mItemModel = new ItemModel(jobManager);
     }
 
     @Override

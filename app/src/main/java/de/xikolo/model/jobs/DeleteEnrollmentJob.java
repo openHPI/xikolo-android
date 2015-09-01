@@ -8,7 +8,7 @@ import com.path.android.jobqueue.Params;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
-import de.xikolo.data.database.CourseDataAccess;
+import de.xikolo.data.database.DataAccessFactory;
 import de.xikolo.data.database.ModuleDataAccess;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
@@ -28,17 +28,13 @@ public class DeleteEnrollmentJob extends Job {
 
     private Result<Course> result;
     private Course course;
-    private CourseDataAccess courseDataAccess;
-    private ModuleDataAccess moduleDataAccess;
 
-    public DeleteEnrollmentJob(Result<Course> result, Course course, CourseDataAccess courseDataAccess, ModuleDataAccess moduleDataAccess) {
+    public DeleteEnrollmentJob(Result<Course> result, Course course) {
         super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.course = course;
-        this.courseDataAccess = courseDataAccess;
-        this.moduleDataAccess = moduleDataAccess;
     }
 
     @Override
@@ -65,7 +61,9 @@ public class DeleteEnrollmentJob extends Job {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment deleted");
 
                 course.is_enrolled = false;
-                courseDataAccess.updateCourse(course, false);
+                DataAccessFactory dataAccessFactory = GlobalApplication.getInstance().getDataAccessFactory();
+                dataAccessFactory.getCourseDataAccess().updateCourse(course, false);
+                ModuleDataAccess moduleDataAccess = dataAccessFactory.getModuleDataAccess();
                 for (Module module : moduleDataAccess.getAllModulesForCourse(course)) {
                     moduleDataAccess.deleteModule(module);
                 }

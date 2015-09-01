@@ -2,26 +2,17 @@ package de.xikolo.model.jobs;
 
 import android.util.Log;
 
-import com.google.gson.reflect.TypeToken;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 
-import java.lang.reflect.Type;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.database.VideoDataAccess;
-import de.xikolo.data.entities.AssignmentItemDetail;
-import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.LtiItemDetail;
-import de.xikolo.data.entities.PeerAssessmentItemDetail;
-import de.xikolo.data.entities.TextItemDetail;
 import de.xikolo.data.entities.VideoItemDetail;
-import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
-import de.xikolo.util.NetworkUtil;
 
 public class UpdateVideoJob extends Job {
 
@@ -32,15 +23,13 @@ public class UpdateVideoJob extends Job {
     private final int id;
 
     private Result<Void> result;
-    private VideoDataAccess videoDataAccess;
-    VideoItemDetail videoItemDetail;
+    private VideoItemDetail videoItemDetail;
 
-    public UpdateVideoJob(Result<Void> result, VideoDataAccess videoDataAccess, VideoItemDetail videoItemDetail) {
+    public UpdateVideoJob(Result<Void> result, VideoItemDetail videoItemDetail) {
         super(new Params(Priority.MID));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
-        this.videoDataAccess = videoDataAccess;
         this.videoItemDetail = videoItemDetail;
     }
 
@@ -54,6 +43,8 @@ public class UpdateVideoJob extends Job {
         if (!UserModel.isLoggedIn(GlobalApplication.getInstance())) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
+            VideoDataAccess videoDataAccess = GlobalApplication.getInstance()
+                    .getDataAccessFactory().getVideoDataAccess();
             videoDataAccess.addOrUpdateVideo(videoItemDetail);
             result.success(null, Result.DataSource.LOCAL);
         }

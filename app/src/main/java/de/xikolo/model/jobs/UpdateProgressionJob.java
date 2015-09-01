@@ -15,7 +15,6 @@ import de.xikolo.data.net.HttpRequest;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
-import de.xikolo.util.NetworkUtil;
 
 public class UpdateProgressionJob extends Job {
 
@@ -25,32 +24,36 @@ public class UpdateProgressionJob extends Job {
 
     private final int id;
 
-    private Result<Void> result;
+    private transient Result<Void> result;
     private Item item;
     private Module module;
-    private ItemDataAccess itemDataAccess;
 
-    public UpdateProgressionJob(Result<Void> result, Module module, Item item, ItemDataAccess itemDataAccess) {
-        super(new Params(Priority.LOW));
+    public UpdateProgressionJob(Result<Void> result, Module module, Item item) {
+        super(new Params(Priority.LOW).requireNetwork().persist());
         id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.item = item;
         this.module = module;
-        this.itemDataAccess = itemDataAccess;
     }
 
     @Override
     public void onAdded() {
         if (Config.DEBUG) Log.i(TAG, TAG + " added | item.id " + item.id);
+        Log.d(TAG, "update progression added");
+
+        ItemDataAccess itemDataAccess = GlobalApplication.getInstance()
+                .getDataAccessFactory().getItemDataAccess();
+
+        item.progress.visited = true;
+        itemDataAccess.updateItem(module, item);
+        result.success(null, Result.DataSource.LOCAL);
     }
 
     @Override
     public void onRun() throws Throwable {
         if (!UserModel.isLoggedIn(GlobalApplication.getInstance())) {
             result.error(Result.ErrorCode.NO_AUTH);
-        } else if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-            result.error(Result.ErrorCode.NO_NETWORK);
         } else {
             String url = Config.API + Config.USER + Config.PROGRESSIONS + item.id;
 
@@ -62,12 +65,14 @@ public class UpdateProgressionJob extends Job {
             Object o = request.getResponse();
             if (o != null) {
                 if (Config.DEBUG) Log.i(TAG, "Progression updated");
-                item.progress.visited = true;
-                itemDataAccess.updateItem(module, item);
-                result.success(null, Result.DataSource.NETWORK);
+                if (result != null) {
+                    result.success(null, Result.DataSource.NETWORK);
+                }
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Progression not updated");
-                result.error(Result.ErrorCode.NO_RESULT);
+                if (result != null) {
+                    result.error(Result.ErrorCode.NO_RESULT);
+                }
             }
         }
     }

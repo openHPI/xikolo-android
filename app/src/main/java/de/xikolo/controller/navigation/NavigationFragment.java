@@ -103,7 +103,7 @@ public class NavigationFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mAdapter = new NavigationAdapter(getActivity(), new CourseModel(getActivity(), jobManager, databaseHelper));
+        mAdapter = new NavigationAdapter(getActivity(), new CourseModel(jobManager));
 
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation, container, false);

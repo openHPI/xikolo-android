@@ -83,7 +83,7 @@ public class ProfileFragment extends ContentFragment {
             mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
         }
 
-        mCourseModel = new CourseModel(getActivity(), jobManager, databaseHelper);
+        mCourseModel = new CourseModel(jobManager);
         mCoursesResult = new Result<List<Course>>() {
             @Override
             protected void onSuccess(List<Course> result, DataSource dataSource) {
@@ -100,7 +100,7 @@ public class ProfileFragment extends ContentFragment {
             }
         };
 
-        mUserModel = new UserModel(getActivity(), jobManager, databaseHelper);
+        mUserModel = new UserModel(jobManager);
         mUserResult = new Result<User>() {
             @Override
             protected void onSuccess(User result, DataSource dataSource) {

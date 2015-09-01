@@ -16,8 +16,7 @@ import de.xikolo.util.ToastUtil;
 public class EnrollmentController {
 
     public static void unenroll(final FragmentActivity activity, Course course) {
-        CourseModel model = new CourseModel(activity, GlobalApplication.getInstance().getJobManager(),
-                GlobalApplication.getInstance().getDatabaseHelper());
+        CourseModel model = new CourseModel(GlobalApplication.getInstance().getJobManager());
         final ProgressDialog progressDialog = ProgressDialog.getInstance();
         Result<Course> result = new Result<Course>() {
             @Override

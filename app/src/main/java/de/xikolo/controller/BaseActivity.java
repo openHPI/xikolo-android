@@ -38,9 +38,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         globalApplication = GlobalApplication.getInstance();
         jobManager = globalApplication.getJobManager();
-        databaseHelper = globalApplication.getDatabaseHelper();
-
-        databaseHelper.open();
     }
 
     protected void setupActionBar() {
@@ -124,7 +121,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
 
         globalApplication.startCookieSyncManager();
-        databaseHelper.open();
     }
 
     @Override
@@ -133,7 +129,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         globalApplication.syncCookieSyncManager();
         globalApplication.stopCookieSyncManager();
-        databaseHelper.close();
     }
 
     @Override
