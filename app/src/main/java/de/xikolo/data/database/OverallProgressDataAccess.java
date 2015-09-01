@@ -15,7 +15,9 @@ class OverallProgressDataAccess extends DataAccess {
     }
 
     public void addProgress(String id, OverallProgress progress) {
-        getDatabase().insert(OverallProgressTable.TABLE_NAME, null, buildContentValues(id, progress));
+        openDatabase().insert(OverallProgressTable.TABLE_NAME, null, buildContentValues(id, progress));
+
+        closeDatabase();
     }
 
     public void addOrUpdateProgress(String id, OverallProgress progress) {
@@ -25,7 +27,7 @@ class OverallProgressDataAccess extends DataAccess {
     }
 
     public OverallProgress getProgress(String id) {
-        Cursor cursor = getDatabase().query(
+        Cursor cursor = openDatabase().query(
                 OverallProgressTable.TABLE_NAME,
                 new String[]{
                         OverallProgressTable.COLUMN_ID,
@@ -49,6 +51,7 @@ class OverallProgressDataAccess extends DataAccess {
             progress = buildProgress(cursor);
         }
         cursor.close();
+        closeDatabase();
 
         return progress;
     }
@@ -58,7 +61,7 @@ class OverallProgressDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + OverallProgressTable.TABLE_NAME;
 
-        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
+        Cursor cursor = openDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -68,6 +71,7 @@ class OverallProgressDataAccess extends DataAccess {
         }
 
         cursor.close();
+        closeDatabase();
 
         return progressList;
     }
@@ -111,30 +115,35 @@ class OverallProgressDataAccess extends DataAccess {
 
     public int getProgressCount() {
         String countQuery = "SELECT * FROM " + OverallProgressTable.TABLE_NAME;
-        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+        Cursor cursor = openDatabase().rawQuery(countQuery, null);
 
         int count = cursor.getCount();
 
         cursor.close();
+        closeDatabase();
 
         return count;
     }
 
     public int updateProgress(String id, OverallProgress progress) {
-        int affected = getDatabase().update(
+        int affected = openDatabase().update(
                 OverallProgressTable.TABLE_NAME,
                 buildContentValues(id, progress),
                 OverallProgressTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)});
 
+        closeDatabase();
+
         return affected;
     }
 
     public void deleteProgress(String id) {
-        getDatabase().delete(
+        openDatabase().delete(
                 OverallProgressTable.TABLE_NAME,
                 OverallProgressTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)});
+
+        closeDatabase();
     }
 
 }

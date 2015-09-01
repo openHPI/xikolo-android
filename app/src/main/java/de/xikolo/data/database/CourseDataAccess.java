@@ -19,11 +19,13 @@ public class CourseDataAccess extends DataAccess {
     }
 
     public void addCourse(Course course, boolean includeProgress) {
-        getDatabase().insert(CourseTable.TABLE_NAME, null, buildContentValues(course));
+        openDatabase().insert(CourseTable.TABLE_NAME, null, buildContentValues(course));
 
         if (includeProgress) {
             progressDataAccess.addOrUpdateProgress(course.id, course.progress);
         }
+
+        closeDatabase();
     }
 
     public void addOrUpdateCourse(Course course, boolean includeProgress) {
@@ -33,7 +35,7 @@ public class CourseDataAccess extends DataAccess {
     }
 
     public Course getCourse(String id) {
-        Cursor cursor = getDatabase().query(
+        Cursor cursor = openDatabase().query(
                 CourseTable.TABLE_NAME,
                 new String[]{
                         CourseTable.COLUMN_ID,
@@ -58,6 +60,7 @@ public class CourseDataAccess extends DataAccess {
             course.progress = progressDataAccess.getProgress(id);
         }
         cursor.close();
+        closeDatabase();
 
         return course;
     }
@@ -67,7 +70,7 @@ public class CourseDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + CourseTable.TABLE_NAME;
 
-        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
+        Cursor cursor = openDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -78,6 +81,7 @@ public class CourseDataAccess extends DataAccess {
         }
 
         cursor.close();
+        closeDatabase();
 
         return courseList;
     }
@@ -121,28 +125,30 @@ public class CourseDataAccess extends DataAccess {
 
     public int getCoursesCount() {
         String countQuery = "SELECT * FROM " + CourseTable.TABLE_NAME;
-        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+        Cursor cursor = openDatabase().rawQuery(countQuery, null);
 
         int count = cursor.getCount();
 
         cursor.close();
+        closeDatabase();
 
         return count;
     }
 
     public int getEnrollmentsCount() {
         String countQuery = "SELECT * FROM " + CourseTable.TABLE_NAME + " WHERE " + CourseTable.COLUMN_IS_ENROLLED + " != 0 ";
-        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+        Cursor cursor = openDatabase().rawQuery(countQuery, null);
 
         int count = cursor.getCount();
 
         cursor.close();
+        closeDatabase();
 
         return count;
     }
 
     public int updateCourse(Course course, boolean includeProgress) {
-        int affected = getDatabase().update(
+        int affected = openDatabase().update(
                 CourseTable.TABLE_NAME,
                 buildContentValues(course),
                 CourseTable.COLUMN_ID + " =? ",
@@ -152,16 +158,20 @@ public class CourseDataAccess extends DataAccess {
             progressDataAccess.addOrUpdateProgress(course.id, course.progress);
         }
 
+        closeDatabase();
+
         return affected;
     }
 
     public void deleteCourse(Course course) {
-        getDatabase().delete(
+        openDatabase().delete(
                 CourseTable.TABLE_NAME,
                 CourseTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(course.id)});
 
         progressDataAccess.deleteProgress(course.id);
+
+        closeDatabase();
     }
 
 }

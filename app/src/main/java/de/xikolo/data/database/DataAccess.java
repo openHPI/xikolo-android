@@ -10,8 +10,12 @@ abstract class DataAccess {
         this.databaseHelper = databaseHelper;
     }
 
-    protected SQLiteDatabase getDatabase() {
-       return databaseHelper.getDatabase();
+    protected SQLiteDatabase openDatabase() {
+       return databaseHelper.openDatabase();
+    }
+
+    protected void closeDatabase() {
+        databaseHelper.close();
     }
 
 }

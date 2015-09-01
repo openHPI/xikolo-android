@@ -20,11 +20,13 @@ public class ModuleDataAccess extends DataAccess {
     }
 
     public void addModule(Course course, Module module, boolean includeProgress) {
-        getDatabase().insert(ModuleTable.TABLE_NAME, null, buildContentValues(course, module));
+        openDatabase().insert(ModuleTable.TABLE_NAME, null, buildContentValues(course, module));
 
         if (includeProgress) {
             progressDataAccess.addOrUpdateProgress(module.id, module.progress);
         }
+
+        closeDatabase();
     }
 
     public void addOrUpdateModule(Course course, Module module, boolean includeProgress) {
@@ -34,7 +36,7 @@ public class ModuleDataAccess extends DataAccess {
     }
 
     public Module getModule(String id) {
-        Cursor cursor = getDatabase().query(
+        Cursor cursor = openDatabase().query(
                 ModuleTable.TABLE_NAME,
                 new String[]{
                         ModuleTable.COLUMN_ID,
@@ -53,6 +55,7 @@ public class ModuleDataAccess extends DataAccess {
             module.progress = progressDataAccess.getProgress(module.id);
         }
         cursor.close();
+        closeDatabase();
 
         return module;
     }
@@ -62,7 +65,7 @@ public class ModuleDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + ModuleTable.TABLE_NAME;
 
-        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
+        Cursor cursor = openDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -73,6 +76,7 @@ public class ModuleDataAccess extends DataAccess {
         }
 
         cursor.close();
+        closeDatabase();
 
         return moduleList;
     }
@@ -82,7 +86,7 @@ public class ModuleDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + ModuleTable.TABLE_NAME + " WHERE " + ModuleTable.COLUMN_COURSE_ID + " = \'" + course.id + "\'";
 
-        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
+        Cursor cursor = openDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -93,6 +97,7 @@ public class ModuleDataAccess extends DataAccess {
         }
 
         cursor.close();
+        closeDatabase();
 
         return moduleList;
     }
@@ -125,17 +130,18 @@ public class ModuleDataAccess extends DataAccess {
 
     public int getModulesCount() {
         String countQuery = "SELECT * FROM " + ModuleTable.TABLE_NAME;
-        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+        Cursor cursor = openDatabase().rawQuery(countQuery, null);
 
         int count = cursor.getCount();
 
         cursor.close();
+        closeDatabase();
 
         return count;
     }
 
     public int updateModule(Course course, Module module, boolean includeProgress) {
-        int affected = getDatabase().update(
+        int affected = openDatabase().update(
                 ModuleTable.TABLE_NAME,
                 buildContentValues(course, module),
                 ModuleTable.COLUMN_ID + " =? ",
@@ -145,16 +151,20 @@ public class ModuleDataAccess extends DataAccess {
             progressDataAccess.addOrUpdateProgress(module.id, module.progress);
         }
 
+        closeDatabase();
+
         return affected;
     }
 
     public void deleteModule(Module module) {
-        getDatabase().delete(
+        openDatabase().delete(
                 ModuleTable.TABLE_NAME,
                 ModuleTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(module.id)});
 
         progressDataAccess.deleteProgress(module.id);
+
+        closeDatabase();
     }
 
 }

@@ -2,7 +2,6 @@ package de.xikolo.data.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -21,6 +20,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private List<Table> mTables;
 
+    private int mOpenCounter;
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
@@ -30,6 +31,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mTables.add(new ModuleTable());
         mTables.add(new ItemTable());
         mTables.add(new VideoTable());
+
+        mOpenCounter = 0;
     }
 
     @Override
@@ -58,20 +61,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void open() throws SQLiteException {
-        db = this.getWritableDatabase();
-    }
-
-    public SQLiteDatabase getDatabase() {
-        if (db == null || !db.isOpen()) {
-            open();
+    public synchronized SQLiteDatabase openDatabase() {
+        mOpenCounter++;
+        if(mOpenCounter == 1) {
+            db = getWritableDatabase();
         }
         return this.db;
     }
 
+    @Override
+    public synchronized void close() {
+        if (mOpenCounter > 0) {
+            mOpenCounter--;
+        }
+        if(mOpenCounter == 0) {
+            super.close();
+        }
+    }
+
     public void deleteDatabase() {
         for (Table table : mTables) {
-            table.deleteTable(getDatabase());
+            table.deleteTable(openDatabase());
         }
     }
 

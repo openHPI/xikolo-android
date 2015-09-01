@@ -16,7 +16,9 @@ public class ItemDataAccess extends DataAccess {
     }
 
     public void addItem(Module module, Item item) {
-        getDatabase().insert(ItemTable.TABLE_NAME, null, buildContentValues(module, item));
+        openDatabase().insert(ItemTable.TABLE_NAME, null, buildContentValues(module, item));
+
+        closeDatabase();
     }
 
     public void addOrUpdateItem(Module module, Item item) {
@@ -26,7 +28,7 @@ public class ItemDataAccess extends DataAccess {
     }
 
     public Item getItem(String id) {
-        Cursor cursor = getDatabase().query(
+        Cursor cursor = openDatabase().query(
                 ItemTable.TABLE_NAME,
                 new String[]{
                         ItemTable.COLUMN_ID,
@@ -47,6 +49,7 @@ public class ItemDataAccess extends DataAccess {
             item = buildItem(cursor);
         }
         cursor.close();
+        closeDatabase();
 
         return item;
     }
@@ -56,7 +59,7 @@ public class ItemDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + ItemTable.TABLE_NAME;
 
-        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
+        Cursor cursor = openDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -66,6 +69,7 @@ public class ItemDataAccess extends DataAccess {
         }
 
         cursor.close();
+        closeDatabase();
 
         return itemList;
     }
@@ -75,7 +79,7 @@ public class ItemDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + ItemTable.TABLE_NAME + " WHERE " + ItemTable.COLUMN_MODULE_ID + " = \'" + module.id + "\'";
 
-        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
+        Cursor cursor = openDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -85,6 +89,7 @@ public class ItemDataAccess extends DataAccess {
         }
 
         cursor.close();
+        closeDatabase();
 
         return itemList;
     }
@@ -123,30 +128,35 @@ public class ItemDataAccess extends DataAccess {
 
     public int getItemsCount() {
         String countQuery = "SELECT * FROM " + ItemTable.TABLE_NAME;
-        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+        Cursor cursor = openDatabase().rawQuery(countQuery, null);
 
         int count = cursor.getCount();
 
         cursor.close();
+        closeDatabase();
 
         return count;
     }
 
     public int updateItem(Module module, Item item) {
-        int affected = getDatabase().update(
+        int affected = openDatabase().update(
                 ItemTable.TABLE_NAME,
                 buildContentValues(module, item),
                 ItemTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(item.id)});
 
+        closeDatabase();
+
         return affected;
     }
 
     public void deleteItem(Item item) {
-        getDatabase().delete(
+        openDatabase().delete(
                 ItemTable.TABLE_NAME,
                 ItemTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(item.id)});
+
+        closeDatabase();
     }
 
 }

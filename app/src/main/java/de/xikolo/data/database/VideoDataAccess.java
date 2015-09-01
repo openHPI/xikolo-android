@@ -15,7 +15,9 @@ public class VideoDataAccess extends DataAccess {
     }
 
     public void addVideo(VideoItemDetail video) {
-        getDatabase().insert(VideoTable.TABLE_NAME, null, buildContentValues(video));
+        openDatabase().insert(VideoTable.TABLE_NAME, null, buildContentValues(video));
+
+        closeDatabase();
     }
 
     public void addOrUpdateVideo(VideoItemDetail video) {
@@ -25,7 +27,7 @@ public class VideoDataAccess extends DataAccess {
     }
 
     public VideoItemDetail getVideo(String id) {
-        Cursor cursor = getDatabase().query(
+        Cursor cursor = openDatabase().query(
                 VideoTable.TABLE_NAME,
                 new String[]{
                         VideoTable.COLUMN_ID,
@@ -49,7 +51,9 @@ public class VideoDataAccess extends DataAccess {
         if (cursor.moveToFirst()) {
             video = buildVideo(cursor);
         }
+
         cursor.close();
+        closeDatabase();
 
         return video;
     }
@@ -59,7 +63,7 @@ public class VideoDataAccess extends DataAccess {
 
         String selectQuery = "SELECT * FROM " + VideoTable.TABLE_NAME;
 
-        Cursor cursor = getDatabase().rawQuery(selectQuery, null);
+        Cursor cursor = openDatabase().rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -69,6 +73,7 @@ public class VideoDataAccess extends DataAccess {
         }
 
         cursor.close();
+        closeDatabase();
 
         return videoList;
     }
@@ -116,30 +121,35 @@ public class VideoDataAccess extends DataAccess {
 
     public int getVideosCount() {
         String countQuery = "SELECT * FROM " + VideoTable.TABLE_NAME;
-        Cursor cursor = getDatabase().rawQuery(countQuery, null);
+        Cursor cursor = openDatabase().rawQuery(countQuery, null);
 
         int count = cursor.getCount();
 
         cursor.close();
+        closeDatabase();
 
         return count;
     }
 
     public int updateVideo(VideoItemDetail video) {
-        int affected = getDatabase().update(
+        int affected = openDatabase().update(
                 VideoTable.TABLE_NAME,
                 buildContentValues(video),
                 VideoTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(video.id)});
 
+        closeDatabase();
+
         return affected;
     }
 
     public void deleteVideo(VideoItemDetail video) {
-        getDatabase().delete(
+        openDatabase().delete(
                 VideoTable.TABLE_NAME,
                 VideoTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(video.id)});
+
+        closeDatabase();
     }
 
 }
