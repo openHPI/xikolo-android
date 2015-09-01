@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
+import de.xikolo.data.database.DataAccessFactory;
 import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.data.entities.Download;
 import de.xikolo.data.net.DownloadHelper;
@@ -44,6 +45,8 @@ public class GlobalApplication extends Application {
 
     private DatabaseHelper databaseHelper;
 
+    private DataAccessFactory dataAccessFactory;
+
     private CookieSyncManager cookieSyncManager;
 
     public GlobalApplication() {
@@ -58,8 +61,11 @@ public class GlobalApplication extends Application {
         return jobManager;
     }
 
-    public DatabaseHelper getDatabaseHelper() {
-        return databaseHelper;
+    public DataAccessFactory getDataAccessFactory() {
+        if (dataAccessFactory == null) {
+            dataAccessFactory = new DataAccessFactory(databaseHelper);
+        }
+        return dataAccessFactory;
     }
 
     @Override
@@ -80,6 +86,8 @@ public class GlobalApplication extends Application {
             SslCertificateUtil.disableSslCertificateChecking();
         }
     }
+
+
 
     private void configureDefaultSettings() {
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
