@@ -2,6 +2,8 @@ package de.xikolo.data.entities;
 
 import android.os.Parcelable;
 
-public abstract class ItemDetail implements Parcelable {
+import java.io.Serializable;
+
+public abstract class ItemDetail implements Parcelable, Serializable {
 
 }

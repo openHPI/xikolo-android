@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 public class VideoItemDetail extends ItemDetail {
 
     @SerializedName("id")
@@ -108,7 +110,7 @@ public class VideoItemDetail extends ItemDetail {
         }
     };
 
-    public static class Stream implements Parcelable {
+    public static class Stream implements Parcelable, Serializable {
 
         @SerializedName("hd_url")
         public String hd_url;

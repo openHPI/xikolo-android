@@ -5,7 +5,9 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Item<T extends ItemDetail> implements Parcelable {
+import java.io.Serializable;
+
+public class Item<T extends ItemDetail> implements Parcelable, Serializable {
 
     public static final String TYPE_TEXT = "text";
     public static final String TYPE_VIDEO = "video";
@@ -111,7 +113,7 @@ public class Item<T extends ItemDetail> implements Parcelable {
         }
     };
 
-    public static class Progress implements Parcelable {
+    public static class Progress implements Parcelable, Serializable {
 
         @SerializedName("visited")
         public boolean visited;

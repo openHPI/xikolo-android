@@ -5,7 +5,9 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class OverallProgress implements Parcelable {
+import java.io.Serializable;
+
+public class OverallProgress implements Parcelable, Serializable {
 
     @SerializedName("items")
     public ItemCount items;
@@ -51,7 +53,7 @@ public class OverallProgress implements Parcelable {
         }
     };
 
-    public static class ItemCount implements Parcelable {
+    public static class ItemCount implements Parcelable, Serializable {
 
         @SerializedName("count_available")
         public int count_available;
@@ -97,7 +99,7 @@ public class OverallProgress implements Parcelable {
 
     }
 
-    public static class TestCount implements Parcelable {
+    public static class TestCount implements Parcelable, Serializable {
 
         @SerializedName("count_available")
         public float count_available;

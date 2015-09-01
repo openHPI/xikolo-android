@@ -5,10 +5,11 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Module implements Parcelable {
+public class Module implements Parcelable, Serializable {
 
     @SerializedName("id")
     public String id;
