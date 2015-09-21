@@ -1,6 +1,11 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.1.4
+* Added contributors
+* Removed unused parts
+* Fixed concurrent access to database
+
 ## v1.1.3
 * Added Chinese translation
 * Minor bugfixes
