@@ -1,5 +1,7 @@
 Xikolo Android App Changelog
 ============================
+## v1.1.5
+* Fixed a bug for downloading videos from courses containing a : in the course title
 
 ## v1.1.4
 * Added contributors
