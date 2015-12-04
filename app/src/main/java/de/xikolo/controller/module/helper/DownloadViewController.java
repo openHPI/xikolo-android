@@ -1,12 +1,16 @@
 package de.xikolo.controller.module.helper;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +42,7 @@ public class DownloadViewController {
 
     public static final String TAG = DownloadViewController.class.getSimpleName();
     private static final int MILLISECONDS = 250;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 54;
 
     private VideoController videoController;
 
@@ -236,11 +241,32 @@ public class DownloadViewController {
     }
 
     private void startDownload() {
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this.activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this.activity,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            }
+        }
         downloadModel.startDownload(uri,
                 DownloadViewController.this.type,
                 DownloadViewController.this.course,
                 DownloadViewController.this.module,
                 DownloadViewController.this.item);
+        if(DownloadViewController.this.type.toString().equals("TRANSCRIPT") || DownloadViewController.this.type.toString().equals("SLIDES")){
+        //TODO
+        }
         showRunningState();
     }
 
@@ -263,7 +289,10 @@ public class DownloadViewController {
             downloadModel.getRemoteDownloadFileSize(new Result<Long>() {
                 @Override
                 protected void onSuccess(Long result, DataSource dataSource) {
-                    fileSizeText.setText(FileUtil.getFormattedFileSize(result));
+                    String filesize = FileUtil.getFormattedFileSize(result);
+                    if(!filesize.equals("0")){//TODO remove when filesize is properly fetched
+                        fileSizeText.setText(filesize);
+                    }
                 }
             }, uri);
         }
@@ -304,7 +333,7 @@ public class DownloadViewController {
         progressBarUpdaterRunning = false;
     }
 
-    public void onEventMainThread(DownloadCompletedEvent event) {
+    public void onEventMainThread(DownloadCompletedEvent event) { //TODO why is it never used?
         if (event.getDownload().localUri.contains(item.id)
                 && DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri) == type) {
 //            String suffix = DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri).getFileSuffix();
