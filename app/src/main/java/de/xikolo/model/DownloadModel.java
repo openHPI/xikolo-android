@@ -165,12 +165,12 @@ public class DownloadModel extends BaseModel {
         File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
                 + GlobalApplication.getInstance().getString(R.string.app_name));
 
-        String file = item.title + type.getFileSuffix();
+        String file = item.title.replaceAll("/", "-").replaceAll(":", "-").replaceAll(" ", "-") + type.getFileSuffix();
 
         return publicAppFolder.getAbsolutePath() + File.separator
-                + course.name.replaceAll("/", "-").replaceAll(":", "-") + "_" + course.id + File.separator
-                + module.name.replaceAll("/", "-").replaceAll(":", "-") + "_" + module.id + File.separator
-                + item.title.replaceAll("/", "-").replaceAll(":", "-") + "_" + item.id + File.separator
+                + course.name.replaceAll("/", "-").replaceAll(":", "-").replaceAll(" ", "-") + "_" + course.id + File.separator
+                + module.name.replaceAll("/", "-").replaceAll(":", "-").replaceAll(" ", "-") + "_" + module.id + File.separator
+                + item.title.replaceAll("/", "-").replaceAll(":", "-").replaceAll(" ", "-") + "_" + item.id + File.separator
                 + file;
     }
 
