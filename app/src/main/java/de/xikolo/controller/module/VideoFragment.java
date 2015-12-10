@@ -2,11 +2,9 @@ package de.xikolo.controller.module;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
@@ -30,7 +27,6 @@ import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
-import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
@@ -43,7 +39,6 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     public static final String KEY_COURSE = "key_course";
     public static final String KEY_MODULE = "key_module";
     public static final String KEY_ITEM = "key_item";
-    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 54;
 
     private TextView mTitle;
     private View mContainer;
@@ -300,28 +295,6 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     public void pageScrolling(int state) {
         if (mVideoController != null) {
             mVideoController.hide();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if(Config.DEBUG) {
-                        Log.i(TAG, "Permission granted");
-                    }
-                } else {
-                    if(Config.DEBUG){
-                        Log.i(TAG, "Permission denied");
-                    }
-                }
-                return;
-            }
-            //other permissions in the future
         }
     }
 

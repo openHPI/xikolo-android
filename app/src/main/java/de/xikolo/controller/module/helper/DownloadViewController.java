@@ -34,6 +34,7 @@ import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.events.DownloadCompletedEvent;
+import de.xikolo.model.events.PermissionGrantedEvent;
 import de.xikolo.util.FileUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.view.IconButton;
@@ -67,6 +68,7 @@ public class DownloadViewController {
     private Button downloadDeleteButton;
 
     private String uri;
+    private boolean isPermissionPending;
 
     private Runnable progressBarUpdater;
     private boolean progressBarUpdaterRunning = false;
@@ -104,12 +106,12 @@ public class DownloadViewController {
                             @Override
                             public void onDialogPositiveClick(DialogFragment dialog) {
                                 appPreferences.setIsDownloadNetworkLimitedOnMobile(false);
-                                startDownload();
+                                prepareDownload();
                             }
                         });
                         dialog.show(activity.getSupportFragmentManager(), MobileDownloadDialog.TAG);
                     } else {
-                        startDownload();
+                        prepareDownload();
                     }
                 } else {
                     NetworkUtil.showNoConnectionToast(GlobalApplication.getInstance());
@@ -191,6 +193,8 @@ public class DownloadViewController {
             view.setVisibility(View.GONE);
         }
 
+        isPermissionPending = false;
+
         EventBus.getDefault().register(this);
 
         progressBarUpdater = new Runnable() {
@@ -240,7 +244,7 @@ public class DownloadViewController {
         showStartState();
     }
 
-    private void startDownload() {
+    private void prepareDownload() {
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this.activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -254,18 +258,24 @@ public class DownloadViewController {
                 // sees the explanation, try again to request the permission.
             } else {
                 // No explanation needed, we can request the permission.
+                isPermissionPending = true;
                 ActivityCompat.requestPermissions(this.activity,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
             }
+        } else {
+            startDownload();
         }
+    }
+
+    public void startDownload(){
         downloadModel.startDownload(uri,
                 DownloadViewController.this.type,
                 DownloadViewController.this.course,
                 DownloadViewController.this.module,
                 DownloadViewController.this.item);
-        if(DownloadViewController.this.type.toString().equals("TRANSCRIPT") || DownloadViewController.this.type.toString().equals("SLIDES")){
-        //TODO
+        if (DownloadViewController.this.type.toString().equals("TRANSCRIPT") || DownloadViewController.this.type.toString().equals("SLIDES")) {
+            //TODO
         }
         showRunningState();
     }
@@ -290,7 +300,7 @@ public class DownloadViewController {
                 @Override
                 protected void onSuccess(Long result, DataSource dataSource) {
                     String filesize = FileUtil.getFormattedFileSize(result);
-                    if(!filesize.equals("0")){//TODO remove when filesize is properly fetched
+                    if (!filesize.equals("0")) {//TODO remove when filesize is properly fetched
                         fileSizeText.setText(filesize);
                     }
                 }
@@ -338,6 +348,13 @@ public class DownloadViewController {
                 && DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri) == type) {
 //            String suffix = DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri).getFileSuffix();
             showEndState();
+        }
+    }
+
+    public void onEvent(PermissionGrantedEvent permissionGrantedEvent){
+        if(isPermissionPending){
+            isPermissionPending=false;
+            startDownload();
         }
     }
 
