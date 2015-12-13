@@ -1,5 +1,6 @@
 package de.xikolo.controller.module.helper;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,11 +9,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -32,6 +35,9 @@ import de.xikolo.model.DownloadModel;
 import de.xikolo.model.PermissionsModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.events.DownloadCompletedEvent;
+import de.xikolo.model.events.PermissionDeniedEvent;
+import de.xikolo.model.events.PermissionGrantedEvent;
+import de.xikolo.util.Config;
 import de.xikolo.util.FileUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.view.IconButton;
@@ -64,6 +70,7 @@ public class DownloadViewController {
     private Button downloadDeleteButton;
 
     private String uri;
+    private boolean permissionPending;
 
     private Runnable progressBarUpdater;
     private boolean progressBarUpdaterRunning = false;
@@ -238,13 +245,23 @@ public class DownloadViewController {
     }
 
     private void startDownload() {
-        PermissionsModel permissionsModel = new PermissionsModel(GlobalApplication.getInstance().getJobManager(), activity.super);
-        downloadModel.startDownload(uri,
-                DownloadViewController.this.type,
-                DownloadViewController.this.course,
-                DownloadViewController.this.module,
-                DownloadViewController.this.item);
-        showRunningState();
+        PermissionsModel permissionsModel = new PermissionsModel(GlobalApplication.getInstance().getJobManager(), activity);
+        int status = permissionsModel.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        switch(status){
+            case 1:
+                downloadModel.startDownload(uri,
+                        DownloadViewController.this.type,
+                        DownloadViewController.this.course,
+                        DownloadViewController.this.module,
+                        DownloadViewController.this.item);
+                showRunningState();
+                break;
+            case 92:
+                //Permission pending. Do nothing until Callback succeeds and EventBus tells you to.
+                break;
+            default:
+                break;
+        }
     }
 
     public View getView() {
@@ -313,6 +330,21 @@ public class DownloadViewController {
 //            String suffix = DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri).getFileSuffix();
             showEndState();
         }
+    }
+
+    public void onEvent(PermissionGrantedEvent permissionGrantedEvent){
+        if(Config.DEBUG){
+            Log.i(TAG, "Permission granted");
+        }
+        startDownload();
+    }
+
+    public void onEvent(PermissionDeniedEvent permissionDeniedEvent){
+        if(Config.DEBUG){
+            Log.i(TAG, "Permission denied");
+            Toast.makeText(GlobalApplication.getInstance(), "Cant get Permission", Toast.LENGTH_LONG).show();
+        }
+        //TODO Maybe ask to put Download on internal storage
     }
 
     public void openFileAsPdf() {
