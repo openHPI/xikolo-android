@@ -1,6 +1,7 @@
 package de.xikolo.controller;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -8,12 +9,15 @@ import android.support.v4.app.FragmentTransaction;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import de.xikolo.R;
 import de.xikolo.controller.course.CourseFragment;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.Result;
+import de.xikolo.model.events.PermissionDeniedEvent;
+import de.xikolo.model.events.PermissionGrantedEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.DeepLinkingUtil;
 import de.xikolo.util.ToastUtil;
@@ -143,6 +147,32 @@ public class CourseActivity extends BaseActivity {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.content, CourseFragment.newInstance(mCourse, firstFragment), tag);
             transaction.commitAllowingStateLoss();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 92: {//code for external storage
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    EventBus.getDefault().post(new PermissionGrantedEvent(requestCode));
+
+                } else {
+
+
+                    EventBus.getDefault().post(new PermissionDeniedEvent(requestCode));
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 

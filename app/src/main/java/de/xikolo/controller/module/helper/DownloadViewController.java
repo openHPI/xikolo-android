@@ -3,6 +3,7 @@ package de.xikolo.controller.module.helper;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.DialogFragment;
@@ -28,6 +29,7 @@ import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.model.DownloadModel;
+import de.xikolo.model.PermissionsModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.events.DownloadCompletedEvent;
 import de.xikolo.util.FileUtil;
@@ -236,6 +238,7 @@ public class DownloadViewController {
     }
 
     private void startDownload() {
+        PermissionsModel permissionsModel = new PermissionsModel(GlobalApplication.getInstance().getJobManager(), activity.super);
         downloadModel.startDownload(uri,
                 DownloadViewController.this.type,
                 DownloadViewController.this.course,

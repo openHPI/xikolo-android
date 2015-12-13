@@ -161,6 +161,9 @@
     <string name="settings_title_storage_external">SD Card</string>
     <string name="settings_summary_storage">%1$s free</string>
 
+    <string name="settings_title_permissions">Access your storage</string>
+    <string name="settings_permissions">We need to use your external storage to store </string>
+
     <!-- -->
     <string name="lang_en">English</string>
     <string name="lang_de">German</string>

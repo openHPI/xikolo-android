@@ -144,6 +144,8 @@
     <string name="settings_title_build">Build-Version</string>
     <string name="settings_summary_build">Version:</string>
 
+    <string name="settings_title_permissions">Zugriff auf die Speicherkarte</string>
+
     <!-- -->
     <string name="lang_en">Englisch</string>
     <string name="lang_de">Deutsch</string>
