@@ -30,6 +30,8 @@ import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.events.DownloadCompletedEvent;
+import de.xikolo.model.events.DownloadDeletedEvent;
+import de.xikolo.model.events.DownloadStartedEvent;
 import de.xikolo.util.FileUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.view.IconButton;
@@ -226,13 +228,13 @@ public class DownloadViewController {
     }
 
     private void deleteFile() {
-        downloadModel.cancelDownload(
+        if (downloadModel.cancelDownload(
                 DownloadViewController.this.type,
                 DownloadViewController.this.course,
                 DownloadViewController.this.module,
-                DownloadViewController.this.item);
-
-        showStartState();
+                DownloadViewController.this.item)) {
+            showStartState();
+        }
     }
 
     private void startDownload() {
@@ -311,6 +313,18 @@ public class DownloadViewController {
                 && DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri) == type) {
 //            String suffix = DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri).getFileSuffix();
             showEndState();
+        }
+    }
+
+    public void onEventMainThread(DownloadStartedEvent event) {
+        if (event.getUrl().equals(uri) && !progressBarUpdaterRunning) {
+            showRunningState();
+        }
+    }
+
+    public void onEventMainThread(DownloadDeletedEvent event) {
+        if (event.getItem().id.equals(item.id) && progressBarUpdaterRunning) {
+            showStartState();
         }
     }
 

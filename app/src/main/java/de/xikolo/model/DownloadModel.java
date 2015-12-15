@@ -21,6 +21,8 @@ import de.xikolo.data.entities.Download;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.data.net.DownloadHelper;
+import de.xikolo.model.events.DownloadDeletedEvent;
+import de.xikolo.model.events.DownloadStartedEvent;
 import de.xikolo.model.events.PermissionDeniedEvent;
 import de.xikolo.model.events.PermissionGrantedEvent;
 import de.xikolo.model.jobs.RetrieveContentLengthJob;
@@ -108,6 +110,7 @@ public class DownloadModel extends BaseModel {
 
                     createFolderIfNotExists(new File(dlFile.getAbsolutePath().replace(file, "")));
 
+                    EventBus.getDefault().post(new DownloadStartedEvent(uri));
                     return DownloadHelper.request(uri, "file://" + dlFile.getAbsolutePath(), file);
                 }
             } else {
@@ -139,6 +142,8 @@ public class DownloadModel extends BaseModel {
             } else {
                 pendingAction = PendingAction.DELETE;
                 pendingAction.savePayload(null, type, course, module, item);
+
+                EventBus.getDefault().post(new DownloadDeletedEvent(item));
                 return false;
             }
         } else {
@@ -148,7 +153,7 @@ public class DownloadModel extends BaseModel {
         }
     }
 
-    public void cancelDownload(DownloadFileType type, Course course, Module module, Item item) {
+    public boolean cancelDownload(DownloadFileType type, Course course, Module module, Item item) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionsModel.requestPermission(PermissionsModel.WRITE_EXTERNAL_STORAGE) == 1) {
                 String filename = buildDownloadFilename(type, course, module, item);
@@ -166,14 +171,16 @@ public class DownloadModel extends BaseModel {
                     }
                 }
 
-                deleteDownload(type, course, module, item);
+                return deleteDownload(type, course, module, item);
             } else {
                 pendingAction = PendingAction.CANCEL;
                 pendingAction.savePayload(null, type, course, module, item);
+                return false;
             }
         } else {
             Log.w(TAG, "No write access for external storage");
             ToastUtil.show(GlobalApplication.getInstance(), R.string.toast_no_external_write_access);
+            return false;
         }
     }
 
