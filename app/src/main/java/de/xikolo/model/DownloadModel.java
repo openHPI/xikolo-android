@@ -99,7 +99,7 @@ public class DownloadModel extends BaseModel {
         }
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionsModel.requestPermission(PermissionsModel.WRITE_EXTERNAL_STORAGE) == 1) {
-                String file = item.title + type.getFileSuffix();
+                String file =  this.escapeFilename(item.title) + type.getFileSuffix();
                 String filename = buildDownloadFilename(type, course, module, item);
 
                 if (downloadExists(filename)) {
@@ -270,13 +270,17 @@ public class DownloadModel extends BaseModel {
         File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
                 + GlobalApplication.getInstance().getString(R.string.app_name));
 
-        String file = item.title + type.getFileSuffix();
+        String file = this.escapeFilename(item.title) + type.getFileSuffix();
 
         return publicAppFolder.getAbsolutePath() + File.separator
-                + course.name.replaceAll("/", "-").replaceAll(":", "-") + "_" + course.id + File.separator
-                + module.name.replaceAll("/", "-").replaceAll(":", "-") + "_" + module.id + File.separator
-                + item.title.replaceAll("/", "-").replaceAll(":", "-") + "_" + item.id + File.separator
+                + escapeFilename(course.name) + "_" + course.id + File.separator
+                + escapeFilename(course.name) + "_" + module.id + File.separator
+                + escapeFilename(course.title) + "_" + item.id + File.separator
                 + file;
+    }
+
+    private String escapeFilename(String filename) {
+        return filename.replaceAll("/", "-").replaceAll(":", "-").replaceAll(" ", "-");
     }
 
     public List<String> getFoldersWithDownloads() {
