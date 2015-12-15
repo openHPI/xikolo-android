@@ -185,29 +185,33 @@ public class DownloadModel extends BaseModel {
     }
 
     public void onEvent(PermissionGrantedEvent permissionGrantedEvent) {
-        if (pendingAction != null) {
-            switch (pendingAction) {
-                case START:
-                    startDownload(pendingAction.getUri(), pendingAction.getType(),
-                            pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
-                    break;
-                case DELETE:
-                    deleteDownload(pendingAction.getType(),
-                            pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
-                    break;
-                case CANCEL:
-                    cancelDownload(pendingAction.getType(),
-                            pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
-                    break;
-                default:
-                    pendingAction = null;
+        if (permissionGrantedEvent.getRequestCode() == PermissionsModel.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
+            if (pendingAction != null) {
+                switch (pendingAction) {
+                    case START:
+                        startDownload(pendingAction.getUri(), pendingAction.getType(),
+                                pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
+                        break;
+                    case DELETE:
+                        deleteDownload(pendingAction.getType(),
+                                pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
+                        break;
+                    case CANCEL:
+                        cancelDownload(pendingAction.getType(),
+                                pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
+                        break;
+                    default:
+                        pendingAction = null;
+                }
             }
+            pendingAction = null;
         }
-        pendingAction = null;
     }
 
-    public void onEvent(PermissionDeniedEvent permissionDeniedEvent){
-        pendingAction = null;
+    public void onEvent(PermissionDeniedEvent permissionDeniedEvent) {
+        if (permissionDeniedEvent.getRequestCode() == PermissionsModel.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
+            pendingAction = null;
+        }
     }
 
     public Download getDownload(DownloadFileType type, Course course, Module module, Item item) {
@@ -274,13 +278,13 @@ public class DownloadModel extends BaseModel {
 
         return publicAppFolder.getAbsolutePath() + File.separator
                 + escapeFilename(course.name) + "_" + course.id + File.separator
-                + escapeFilename(course.name) + "_" + module.id + File.separator
-                + escapeFilename(course.title) + "_" + item.id + File.separator
+                + escapeFilename(module.name) + "_" + module.id + File.separator
+                + escapeFilename(item.title) + "_" + item.id + File.separator
                 + file;
     }
 
     private String escapeFilename(String filename) {
-        return filename.replaceAll("/", "-").replaceAll(":", "-").replaceAll(" ", "-");
+        return filename.replaceAll("[^a-zA-Z0-9.-]", "_");
     }
 
     public List<String> getFoldersWithDownloads() {

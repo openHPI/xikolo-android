@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 
 import de.xikolo.R;
+import de.xikolo.model.PermissionsModel;
 
 public class PermissionsDialog extends DialogFragment {
 
@@ -23,11 +24,7 @@ public class PermissionsDialog extends DialogFragment {
                 .setPositiveButton(R.string.title_section_settings, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-                        intent.setData(uri);
-                        getActivity().startActivity(intent);
+                        PermissionsModel.startAppInfo(getActivity());
                     }
                 })
                 .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {

@@ -14,9 +14,9 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.util.FileUtil;
 
-public class DownlodsAdapter extends BaseAdapter {
+public class DownloadsAdapter extends BaseAdapter {
 
-    public static final String TAG = DownlodsAdapter.class.getSimpleName();
+    public static final String TAG = DownloadsAdapter.class.getSimpleName();
 
     private Activity mActivity;
 
@@ -24,11 +24,11 @@ public class DownlodsAdapter extends BaseAdapter {
 
     private OnDeleteButtonClickedListener callback;
 
-    public DownlodsAdapter(Activity activity, OnDeleteButtonClickedListener callback) {
+    public DownloadsAdapter(Activity activity, OnDeleteButtonClickedListener callback) {
         this(activity, callback, new ArrayList<Item>());
     }
 
-    public DownlodsAdapter(Activity activity, OnDeleteButtonClickedListener callback, List<Item> items) {
+    public DownloadsAdapter(Activity activity, OnDeleteButtonClickedListener callback, List<Item> items) {
         this.mActivity = activity;
         this.callback = callback;
         this.items = items;
