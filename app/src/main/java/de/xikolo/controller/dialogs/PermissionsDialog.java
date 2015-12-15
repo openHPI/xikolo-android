@@ -14,8 +14,8 @@ public class PermissionsDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.settings_permissions)
-                .setTitle(R.string.settings_title_permissions)
+        builder.setMessage(R.string.dialog_permissions)
+                .setTitle(R.string.dialog_title_permissions)
                 .setCancelable(true);
 
         AlertDialog dialog = builder.create();

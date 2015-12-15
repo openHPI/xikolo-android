@@ -1,7 +1,6 @@
 package de.xikolo.controller;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -9,15 +8,12 @@ import android.support.v4.app.FragmentTransaction;
 
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.R;
 import de.xikolo.controller.course.CourseFragment;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.Result;
-import de.xikolo.model.events.PermissionDeniedEvent;
-import de.xikolo.model.events.PermissionGrantedEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.DeepLinkingUtil;
 import de.xikolo.util.ToastUtil;
@@ -53,7 +49,7 @@ public class CourseActivity extends BaseActivity {
                     protected void onSuccess(List<Course> result, DataSource dataSource) {
                         super.onSuccess(result, dataSource);
 
-                        if(dataSource == DataSource.NETWORK || true) {
+                        if (dataSource == DataSource.NETWORK || true) {
                             for (Course course : result) {
                                 if (course.course_code.equals(courseIdent)) {
                                     mCourse = course;
@@ -62,10 +58,10 @@ public class CourseActivity extends BaseActivity {
 
                                         String tag = "details";
 
-                                        if(dataSource == DataSource.NETWORK) {
-                                            if(mCourse.locked) {
+                                        if (dataSource == DataSource.NETWORK) {
+                                            if (mCourse.locked) {
                                                 ToastUtil.show(getApplicationContext(), R.string.notification_course_locked);
-                                            } else if(!mCourse.is_enrolled) {
+                                            } else if (!mCourse.is_enrolled) {
                                                 ToastUtil.show(getApplicationContext(), R.string.notification_not_enrolled);
                                             }
                                         }
@@ -80,7 +76,7 @@ public class CourseActivity extends BaseActivity {
 
                                         DeepLinkingUtil.CourseTab courseTab = DeepLinkingUtil.getTab(data.getPath());
 
-                                        if(courseTab != null) {
+                                        if (courseTab != null) {
                                             switch (courseTab) {
                                                 case RESUME:
                                                     firstFragment = 0;
@@ -100,7 +96,7 @@ public class CourseActivity extends BaseActivity {
                                             }
                                         }
 
-                                                handleCourseData();
+                                        handleCourseData();
                                     }
                                     break;
                                 }
@@ -147,32 +143,6 @@ public class CourseActivity extends BaseActivity {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.content, CourseFragment.newInstance(mCourse, firstFragment), tag);
             transaction.commitAllowingStateLoss();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 92: {//code for external storage
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    EventBus.getDefault().post(new PermissionGrantedEvent(requestCode));
-
-                } else {
-
-
-                    EventBus.getDefault().post(new PermissionDeniedEvent(requestCode));
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 

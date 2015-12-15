@@ -1,5 +1,6 @@
 package de.xikolo.controller;
 
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -15,6 +16,8 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.model.events.NetworkStateEvent;
+import de.xikolo.model.events.PermissionDeniedEvent;
+import de.xikolo.model.events.PermissionGrantedEvent;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -138,6 +141,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         globalApplication.flushHttpResponseCache();
 
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            EventBus.getDefault().post(new PermissionGrantedEvent(requestCode));
+
+        } else {
+
+            EventBus.getDefault().post(new PermissionDeniedEvent(requestCode));
+
+        }
     }
 
 }

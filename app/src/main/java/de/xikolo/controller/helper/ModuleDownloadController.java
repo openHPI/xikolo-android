@@ -34,7 +34,7 @@ public class ModuleDownloadController {
     public ModuleDownloadController(FragmentActivity activity) {
         this.app = GlobalApplication.getInstance();
         this.activity = activity;
-        this.downloadModel = new DownloadModel(app.getJobManager());
+        this.downloadModel = new DownloadModel(app.getJobManager(), activity);
     }
 
     public void initModuleDownloads(final Course course, final Module module) {

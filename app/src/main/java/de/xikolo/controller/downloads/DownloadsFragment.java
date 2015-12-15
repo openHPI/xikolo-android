@@ -43,7 +43,7 @@ public class DownloadsFragment extends Fragment implements DownlodsAdapter.OnDel
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        downloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager());
+        downloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), getActivity());
         adapter = new DownlodsAdapter(getActivity(), this);
     }
 

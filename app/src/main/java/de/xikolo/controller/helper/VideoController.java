@@ -132,7 +132,7 @@ public class VideoController {
             }
         });
 
-        mDownloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager());
+        mDownloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), activity);
 
         setup();
     }

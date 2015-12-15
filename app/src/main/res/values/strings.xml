@@ -55,6 +55,9 @@
 
     <string name="dialog_module_downloads_title">Download all content for %1$s?</string>
 
+    <string name="dialog_title_permissions">External storage access required</string>
+    <string name="dialog_permissions">Please allow this app to access your external storage in order to use this functionality.</string>
+
     <string-array name="dialog_module_downloads_array" translatable="false">
         <item>@string/video_hd_as_mp4</item>
         <item>@string/video_sd_as_mp4</item>
@@ -160,9 +163,6 @@
     <string name="settings_title_storage_internal">Internal</string>
     <string name="settings_title_storage_external">SD Card</string>
     <string name="settings_summary_storage">%1$s free</string>
-
-    <string name="settings_title_permissions">Access your storage</string>
-    <string name="settings_permissions">We need to use your external storage to store </string>
 
     <!-- -->
     <string name="lang_en">English</string>

@@ -55,6 +55,9 @@
 
     <string name="dialog_module_downloads_title">Gesamten Inhalt für %1$s herunterladen?</string>
 
+    <string name="dialog_title_permissions">Zugriff auf Speicher benötigt</string>
+    <string name="dialog_permissions">Bitte erlaube dieser App den Zugriff auf den externen Speicher, um diese Funktionalität zu nutzen.</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -143,8 +146,6 @@
 
     <string name="settings_title_build">Build-Version</string>
     <string name="settings_summary_build">Version:</string>
-
-    <string name="settings_title_permissions">Zugriff auf die Speicherkarte</string>
 
     <!-- -->
     <string name="lang_en">Englisch</string>
