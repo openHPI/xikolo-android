@@ -82,7 +82,7 @@ public class DownloadsAdapter extends BaseAdapter {
 
             final FolderItem folderItem = (FolderItem) item;
             File dir = new File(folderItem.getPath());
-            holder.title.setText(folderItem.getTitle());
+            holder.title.setText(folderItem.getTitle().replaceAll("_", " "));
 
             long numberOfFiles = FileUtil.folderFileNumber(dir);
 
