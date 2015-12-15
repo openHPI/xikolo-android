@@ -3,7 +3,11 @@ package de.xikolo.controller.dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import de.xikolo.R;
 
@@ -16,6 +20,22 @@ public class PermissionsDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.dialog_permissions)
                 .setTitle(R.string.dialog_title_permissions)
+                .setPositiveButton(R.string.title_section_settings, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                        intent.setData(uri);
+                        getActivity().startActivity(intent);
+                    }
+                })
+                .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PermissionsDialog.this.getDialog().cancel();
+                    }
+                })
                 .setCancelable(true);
 
         AlertDialog dialog = builder.create();
