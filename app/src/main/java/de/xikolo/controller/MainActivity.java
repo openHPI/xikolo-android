@@ -61,32 +61,39 @@ public class MainActivity extends BaseActivity
             Log.i(TAG, "Build Flavor: " + BuildConfig.buildFlavor);
         }
 
-        final Intent intent = getIntent();
-        if (intent != null) {
-            String action = intent.getAction();
-
-            if (action != null && action == Intent.ACTION_VIEW) {
-                handleIntent(intent.getData());
-            }
-        }
-
+        handleIntent(getIntent());
     }
 
-    private void handleIntent(Uri uri) {
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
 
-        DeepLinkingUtil.Type type = DeepLinkingUtil.getType(uri);
+        handleIntent(intent);
+    }
 
-        switch (type) {
-            case ALL_COURSES:
-                onNavigationDrawerItemSelected(NavigationAdapter.NAV_ID_ALL_COURSES);
-                break;
-            case NEWS:
-                onNavigationDrawerItemSelected(NavigationAdapter.NAV_ID_NEWS);
-                break;
-            default:
-                break;
+    private void handleIntent(Intent intent) {
+        if (intent != null) {
+            String action = intent.getAction();
+            Log.d(TAG, action + " " + intent.getData());
+
+            if (action != null && action.equals(Intent.ACTION_VIEW)) {
+                Uri uri = intent.getData();
+
+                DeepLinkingUtil.Type type = DeepLinkingUtil.getType(uri);
+                if (type != null) {
+                    switch (type) {
+                        case ALL_COURSES:
+                            mNavigationFragment.selectItem(NavigationAdapter.NAV_ID_ALL_COURSES);
+                            break;
+                        case NEWS:
+                            mNavigationFragment.selectItem(NavigationAdapter.NAV_ID_NEWS);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
         }
-
     }
 
     @Override

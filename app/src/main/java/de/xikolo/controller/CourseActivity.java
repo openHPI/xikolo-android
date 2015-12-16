@@ -38,88 +38,8 @@ public class CourseActivity extends BaseActivity {
         if (intent != null) {
             String action = intent.getAction();
 
-            if (action != null && action == Intent.ACTION_VIEW) {
-
-                final Uri data = intent.getData();
-                final String courseIdent = DeepLinkingUtil.getCourseIdentifierFromResumeUri(data);
-
-                Result<List<Course>> result = new Result<List<Course>>() {
-
-                    @Override
-                    protected void onSuccess(List<Course> result, DataSource dataSource) {
-                        super.onSuccess(result, dataSource);
-
-                        if (dataSource == DataSource.NETWORK || true) {
-                            for (Course course : result) {
-                                if (course.course_code.equals(courseIdent)) {
-                                    mCourse = course;
-                                    if (mCourse.locked || !mCourse.is_enrolled) {
-                                        setTitle(mCourse.name);
-
-                                        String tag = "details";
-
-                                        if (dataSource == DataSource.NETWORK) {
-                                            if (mCourse.locked) {
-                                                ToastUtil.show(getApplicationContext(), R.string.notification_course_locked);
-                                            } else if (!mCourse.is_enrolled) {
-                                                ToastUtil.show(getApplicationContext(), R.string.notification_not_enrolled);
-                                            }
-                                        }
-
-                                        FragmentManager fragmentManager = getSupportFragmentManager();
-                                        if (fragmentManager.findFragmentByTag(tag) == null) {
-                                            FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                            transaction.replace(R.id.content, WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false, false), tag);
-                                            transaction.commitAllowingStateLoss();
-                                        }
-                                    } else {
-
-                                        DeepLinkingUtil.CourseTab courseTab = DeepLinkingUtil.getTab(data.getPath());
-
-                                        if (courseTab != null) {
-                                            switch (courseTab) {
-                                                case RESUME:
-                                                    firstFragment = 0;
-                                                    break;
-                                                case PINBOARD:
-                                                    firstFragment = 1;
-                                                    break;
-                                                case PROGRESS:
-                                                    firstFragment = 2;
-                                                    break;
-                                                case LEARNING_ROOMS:
-                                                    firstFragment = 3;
-                                                    break;
-                                                case ANNOUNCEMENTS:
-                                                    firstFragment = 4;
-                                                    break;
-                                            }
-                                        }
-
-                                        handleCourseData();
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-
-                    @Override
-                    protected void onWarning(WarnCode warnCode) {
-                        super.onWarning(warnCode);
-                    }
-
-                    @Override
-                    protected void onError(ErrorCode errorCode) {
-                        super.onError(errorCode);
-
-                        finish();
-                    }
-                };
-
-                CourseModel courseModel = new CourseModel(jobManager);
-                courseModel.getCourses(result, false);
+            if (action != null && action.equals(Intent.ACTION_VIEW)) {
+                handleDeepLinkIntent(intent);
             } else {
                 Bundle b = getIntent().getExtras();
                 if (b == null || !b.containsKey(ARG_COURSE)) {
@@ -133,16 +53,112 @@ public class CourseActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent != null) {
+            String action = intent.getAction();
+
+            if (action != null && action.equals(Intent.ACTION_VIEW)) {
+                handleDeepLinkIntent(intent);
+            }
+        }
+    }
+
+    private void handleDeepLinkIntent(Intent intent) {
+        final Uri data = intent.getData();
+        final String courseIntent = DeepLinkingUtil.getCourseIdentifierFromResumeUri(data);
+
+        Result<List<Course>> result = new Result<List<Course>>() {
+
+            @Override
+            protected void onSuccess(List<Course> result, DataSource dataSource) {
+                super.onSuccess(result, dataSource);
+
+                if (dataSource == DataSource.NETWORK) {
+                    for (Course course : result) {
+                        if (course.course_code.equals(courseIntent)) {
+                            mCourse = course;
+                            if (mCourse.locked || !mCourse.is_enrolled) {
+                                setTitle(mCourse.name);
+
+                                String tag = mCourse.name;
+
+                                if (mCourse.locked) {
+                                    ToastUtil.show(getApplicationContext(), R.string.notification_course_locked);
+                                } else if (!mCourse.is_enrolled) {
+                                    ToastUtil.show(getApplicationContext(), R.string.notification_not_enrolled);
+                                }
+
+                                FragmentManager fragmentManager = getSupportFragmentManager();
+                                if (fragmentManager.findFragmentByTag(tag) == null) {
+                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                    transaction.replace(R.id.content, WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false, false), tag);
+                                    transaction.commit();
+                                }
+                            } else {
+                                DeepLinkingUtil.CourseTab courseTab = DeepLinkingUtil.getTab(data.getPath());
+
+                                if (courseTab != null) {
+                                    switch (courseTab) {
+                                        case RESUME:
+                                            firstFragment = 0;
+                                            break;
+                                        case PINBOARD:
+                                            firstFragment = 1;
+                                            break;
+                                        case PROGRESS:
+                                            firstFragment = 2;
+                                            break;
+                                        case LEARNING_ROOMS:
+                                            firstFragment = 3;
+                                            break;
+                                        case ANNOUNCEMENTS:
+                                            firstFragment = 4;
+                                            break;
+                                        case DETAILS:
+                                            firstFragment = 5;
+                                            break;
+                                    }
+                                }
+
+                                handleCourseData();
+                            }
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            protected void onWarning(WarnCode warnCode) {
+                super.onWarning(warnCode);
+            }
+
+            @Override
+            protected void onError(ErrorCode errorCode) {
+                super.onError(errorCode);
+
+                finish();
+            }
+        };
+
+        CourseModel courseModel = new CourseModel(jobManager);
+        courseModel.getCourses(result, false);
+    }
+
     private void handleCourseData() {
         setTitle(mCourse.name);
 
-        String tag = "content";
+        String tag = mCourse.name;
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.content, CourseFragment.newInstance(mCourse, firstFragment), tag);
-            transaction.commitAllowingStateLoss();
+            transaction.commit();
         }
     }
 

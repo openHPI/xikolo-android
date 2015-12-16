@@ -54,7 +54,7 @@ public class DeepLinkingUtil {
             return CourseTab.ANNOUNCEMENTS;
         }
 
-        return null;
+        return CourseTab.DETAILS;
     }
 
     public static Type getType(Uri uri) {
