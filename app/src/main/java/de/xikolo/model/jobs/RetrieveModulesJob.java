@@ -73,6 +73,8 @@ public class RetrieveModulesJob extends Job {
                         + Config.MODULES + "?include_progress=" + includeProgress;
 
                 JsonRequest request = new JsonRequest(url, type);
+                request.setCache(false);
+
                 request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
 
                 Object o = request.getResponse();

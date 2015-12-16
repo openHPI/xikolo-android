@@ -78,6 +78,8 @@ public class RetrieveModulesWithItemsJob extends Job {
                         + Config.MODULES + "?include_progress=" + includeProgress;
 
                 JsonRequest request = new JsonRequest(url, type);
+                request.setCache(false);
+
                 request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
 
                 Object o = request.getResponse();
@@ -97,6 +99,8 @@ public class RetrieveModulesWithItemsJob extends Job {
                                 + Config.MODULES + module.id + "/" + Config.ITEMS;
 
                         JsonRequest requestItemList = new JsonRequest(urlItemList, typeItemList);
+                        requestItemList.setCache(false);
+
                         requestItemList.setToken(UserModel.getToken(GlobalApplication.getInstance()));
 
                         Object oItemList = requestItemList.getResponse();

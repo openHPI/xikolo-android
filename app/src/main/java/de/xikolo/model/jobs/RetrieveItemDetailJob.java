@@ -89,6 +89,8 @@ public class RetrieveItemDetailJob extends Job {
                         + Config.MODULES + module.id + "/" + Config.ITEMS + item.id;
 
                 JsonRequest request = new JsonRequest(url, type);
+                request.setCache(false);
+
                 request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
 
                 Object o = request.getResponse();

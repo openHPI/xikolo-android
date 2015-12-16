@@ -59,7 +59,7 @@ public class RetrieveCoursesJob extends Job {
                 String url = Config.API + Config.COURSES + "?include_progress=" + includeProgress;
 
                 JsonRequest request = new JsonRequest(url, type);
-                request.setCache(true);
+                request.setCache(false);
 
                 String token = UserModel.getToken(GlobalApplication.getInstance());
                 request.setToken(token);

@@ -56,6 +56,8 @@ public class RetrieveUserJob extends Job {
                 String url = Config.API + Config.USER;
 
                 JsonRequest request = new JsonRequest(url, type);
+                request.setCache(false);
+
                 request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
 
                 Object o = request.getResponse();
