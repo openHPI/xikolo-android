@@ -4,5 +4,5 @@
         android:state_pressed="true" />
     <item android:color="@color/apptheme_second"
         android:state_focused="true" />
-    <item android:color="@color/text_color" />
+    <item android:color="@color/gray_light" />
 </selector>

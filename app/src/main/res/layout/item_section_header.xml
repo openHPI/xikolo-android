@@ -6,9 +6,14 @@
 
     <TextView
         android:id="@+id/sectionHeader"
-        style="?android:attr/listSeparatorTextViewStyle"
         android:layout_width="fill_parent"
-        android:paddingBottom="4dp"
-        android:paddingTop="16dp" />
+        android:layout_height="48dp"
+        android:background="@android:color/transparent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/apptheme_second"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium" />
 
 </LinearLayout>
