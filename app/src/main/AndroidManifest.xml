@@ -71,10 +71,6 @@
 
                 <data
                     android:host="${webUrl}"
-                    android:pathPattern="/courses/..*"
-                    android:scheme="https" />
-                <data
-                    android:host="${webUrl}"
                     android:pathPattern="/courses/..*/resume"
                     android:scheme="https" />
                 <data
