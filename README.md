@@ -19,7 +19,7 @@ For every released build please provide a [Changelog](CHANGELOG.md) entry and a 
 
 ## Store links
 
-openHPI Version on Google Play: https://play.google.com/store/apps/details?id=de.xikolo.openhpi
+openHPI Version on Google Play: https://play.google.com/store/apps/details?id=de.xikolo.openhpi  
 openSAP Version on Google Play: https://play.google.com/store/apps/details?id=de.xikolo.opensap
 
 ## Contributers
