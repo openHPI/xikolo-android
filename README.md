@@ -27,6 +27,7 @@ openSAP Version on Google Play: https://play.google.com/store/apps/details?id=de
 - Jan Renz
 - Tobias Rohloff
 - Jonas Müller
+- Bjarne Sievers
 
 ## Contributing
 

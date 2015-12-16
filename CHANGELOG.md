@@ -1,5 +1,13 @@
 Xikolo Android App Changelog
 ============================
+
+## v1.1.6
+* Added Android 6 Marshmallow Permissions
+* Critical bugfix for changed caching behavior in Android 6 Marshmallow
+* Bugfix for download filenames
+* Bugfix for Deep Linking
+* Minor text style updates
+
 ## v1.1.5
 * Fixed a bug for downloading videos from courses containing a : in the course title
 
