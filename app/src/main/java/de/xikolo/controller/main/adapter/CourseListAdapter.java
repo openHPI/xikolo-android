@@ -91,7 +91,7 @@ public class CourseListAdapter extends BaseAdapter {
 
         DateFormat dateOut;
         if (DisplayUtil.is7inchTablet(mActivity)) {
-            dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault());
+            dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault());
         } else {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
         }
