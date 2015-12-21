@@ -48,7 +48,7 @@ public class CourseModel extends BaseModel {
                     }
                     result.removeAll(removeList);
                 }
-                sortCourses(result);
+                sortCoursesAscending(result);
                 return result;
             }
         });
@@ -64,13 +64,76 @@ public class CourseModel extends BaseModel {
         mJobManager.addJobInBackground(new DeleteEnrollmentJob(result, course));
     }
 
-    public static void sortCourses(List<Course> courses) {
+    public static void sortCoursesAscending(List<Course> courses) {
         Collections.sort(courses, new Comparator<Course>() {
             @Override
             public int compare(Course lhs, Course rhs) {
                 return DateUtil.compare(lhs.available_from, rhs.available_from);
             }
         });
+    }
+
+    public static void sortCoursesDecending(List<Course> courses) {
+        Collections.sort(courses, new Comparator<Course>() {
+            @Override
+            public int compare(Course rhs, Course lhs) {
+                return DateUtil.compare(lhs.available_from, rhs.available_from);
+            }
+        });
+    }
+
+    public static List<Course> getCurrentAndFutureCourses(List<Course> courses) {
+        List<Course> currentCourses = new ArrayList<>();
+
+        for (Course course : courses) {
+            if (DateUtil.nowIsBetween(course.available_from, course.available_to) ||
+                    DateUtil.nowIsBefore(course.available_from)) {
+                currentCourses.add(course);
+            }
+        }
+
+        sortCoursesDecending(currentCourses);
+
+        return currentCourses;
+    }
+
+    public static List<Course> getPastCourses(List<Course> courses) {
+        List<Course> pastCourses = new ArrayList<>(courses);
+
+        List<Course> currentCourses = getCurrentAndFutureCourses(courses);
+
+        pastCourses.removeAll(currentCourses);
+
+        sortCoursesAscending(pastCourses);
+
+        return pastCourses;
+    }
+
+    public static List<Course> getCurrentAndPastCourses(List<Course> courses) {
+        List<Course> currentCourses = new ArrayList<>();
+
+        for (Course course : courses) {
+            if (DateUtil.nowIsBetween(course.available_from, course.available_to) ||
+                    DateUtil.nowIsAfter(course.available_to)) {
+                currentCourses.add(course);
+            }
+        }
+
+        sortCoursesAscending(currentCourses);
+
+        return currentCourses;
+    }
+
+    public static List<Course> getFutureCourses(List<Course> courses) {
+        List<Course> futureCourses = new ArrayList<>(courses);
+
+        List<Course> currentCourses = getCurrentAndPastCourses(courses);
+
+        futureCourses.removeAll(currentCourses);
+
+        sortCoursesDecending(futureCourses);
+
+        return futureCourses;
     }
 
 }

@@ -11,6 +11,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+        <item name="android:selectableItemBackground">@color/black_alpha</item>
+
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base">

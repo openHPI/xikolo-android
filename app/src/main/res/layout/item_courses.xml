@@ -4,107 +4,148 @@
     android:id="@+id/container"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:foreground="@drawable/fg_container"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     res:cardCornerRadius="2dp"
     res:cardPreventCornerOverlap="true"
     res:cardUseCompatPadding="true">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="fill_parent"
-        android:layout_height="210dp"
-        android:layout_gravity="center_horizontal|top"
-        android:scaleType="centerCrop" />
-
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:background="@color/white_alpha"
-        android:paddingBottom="4pt"
-        android:paddingLeft="4pt"
-        android:paddingRight="4pt"
-        android:paddingTop="4pt">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textTitle"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:id="@+id/imageContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="4dp"
-            android:singleLine="true"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_alignParentStart="true">
 
-        <TextView
-            android:id="@+id/textTeacher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textTitle"
-            android:layout_marginBottom="4dp"
-            android:singleLine="true"
-            android:textColor="@color/apptheme_main"
-            android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="fill_parent"
+                android:layout_height="160dp"
+                android:layout_gravity="center_horizontal|top"
+                android:scaleType="centerCrop" />
 
-        <de.xikolo.view.CustomFontTextView
-            android:id="@+id/textDateIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textTeacher"
-            android:layout_marginRight="4dp"
-            android:singleLine="true"
-            android:text="@string/icon_cal"
-            android:textColor="@color/gray_text"
-            android:textSize="20sp"
-            res:customFont="xikolo.ttf" />
+            <TextView
+                android:id="@+id/textBanner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:layout_marginTop="8dp"
+                android:paddingBottom="4dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="4dp"
+                android:textColor="@color/white"
+                android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/textDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textTeacher"
-            android:layout_marginRight="8dp"
-            android:layout_toRightOf="@+id/textDateIcon"
-            android:singleLine="true"
-            android:textColor="@color/gray_text"
-            android:textSize="14sp" />
+        </FrameLayout>
 
-        <de.xikolo.view.CustomFontTextView
-            android:id="@+id/textLangIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textTeacher"
-            android:layout_marginRight="4dp"
-            android:layout_toRightOf="@+id/textDate"
-            android:singleLine="true"
-            android:text="@string/icon_lang"
-            android:textColor="@color/gray_text"
-            android:textSize="20sp"
-            res:customFont="xikolo.ttf" />
-
-        <TextView
-            android:id="@+id/textLanguage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textTeacher"
-            android:layout_toRightOf="@+id/textLangIcon"
-            android:singleLine="true"
-            android:textColor="@color/gray_text"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/btnEnroll"
-            style="@style/Button"
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textDateIcon"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/button_main"
-            android:text="@string/btn_enroll_me" />
+            android:layout_below="@+id/imageContainer"
+            android:paddingBottom="4pt"
+            android:paddingLeft="4pt"
+            android:paddingRight="4pt"
+            android:paddingTop="4pt">
+
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="2dp"
+                android:fontFamily="sans-serif-medium"
+                android:singleLine="true"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textTeacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textTitle"
+                android:layout_marginBottom="4dp"
+                android:singleLine="true"
+                android:textColor="@color/apptheme_main"
+                android:textSize="14sp" />
+
+            <de.xikolo.view.CustomFontTextView
+                android:id="@+id/textDateIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textTeacher"
+                android:layout_marginRight="4dp"
+                android:singleLine="true"
+                android:text="@string/icon_cal"
+                android:textColor="@color/gray_text"
+                android:textSize="20sp"
+                res:customFont="xikolo.ttf" />
+
+            <TextView
+                android:id="@+id/textDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textTeacher"
+                android:layout_marginRight="8dp"
+                android:layout_toRightOf="@+id/textDateIcon"
+                android:singleLine="true"
+                android:textColor="@color/gray_text"
+                android:textSize="14sp" />
+
+            <de.xikolo.view.CustomFontTextView
+                android:id="@+id/textLangIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textTeacher"
+                android:layout_marginRight="4dp"
+                android:layout_toRightOf="@+id/textDate"
+                android:singleLine="true"
+                android:text="@string/icon_lang"
+                android:textColor="@color/gray_text"
+                android:textSize="20sp"
+                res:customFont="xikolo.ttf" />
+
+            <TextView
+                android:id="@+id/textLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textTeacher"
+                android:layout_toRightOf="@+id/textLangIcon"
+                android:singleLine="true"
+                android:textColor="@color/gray_text"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textDateIcon"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="@color/gray_text"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnEnroll"
+                style="@style/Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textDescription"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/button_main"
+                android:text="@string/btn_enroll_me" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

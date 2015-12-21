@@ -12,6 +12,14 @@
     <string name="title_section_my_courses">My Courses</string>
 
     <!-- -->
+    <string name="header_current_courses">Current and upcoming courses</string>
+    <string name="header_self_paced_courses">Self-paced courses</string>
+    <string name="header_my_current_courses">My current courses</string>
+    <string name="header_my_future_courses">My upcoming courses</string>
+    <string name="banner_running">Running</string>
+    <string name="banner_self_paced">Self-paced</string>
+
+    <!-- -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 

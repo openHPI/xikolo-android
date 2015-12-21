@@ -12,6 +12,14 @@
     <string name="title_section_my_courses">Meine Kurse</string>
 
     <!-- -->
+    <string name="header_current_courses">Aktuelle und zukünftige Kurse</string>
+    <string name="header_self_paced_courses">Kurse im Selbststudium</string>
+    <string name="header_my_current_courses">Meine aktuellen Kurse</string>
+    <string name="header_my_future_courses">Meine zukünftigen Kurse</string>
+    <string name="banner_running">Läuft</string>
+    <string name="banner_self_paced">Selbststudium</string>
+
+    <!-- -->
     <string name="navigation_drawer_open">Öffne Navigation</string>
     <string name="navigation_drawer_close">Schließe Navigation</string>
 

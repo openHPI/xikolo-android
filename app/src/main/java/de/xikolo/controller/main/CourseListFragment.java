@@ -3,13 +3,14 @@ package de.xikolo.controller.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import de.xikolo.model.events.UnenrollEvent;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
+import de.xikolo.view.AutofitRecyclerView;
 
 public class CourseListFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener,
         CourseListAdapter.OnCourseButtonClickListener {
@@ -50,7 +52,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     private String mFilter;
     private SwipeRefreshLayout mRefreshLayout;
 
-    private AbsListView mAbsListView;
+    private AutofitRecyclerView mRecyclerView;
     private CourseListAdapter mCourseListAdapter;
 
     private NotificationController mNotificationController;
@@ -178,10 +180,22 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
         RefeshLayoutController.setup(mRefreshLayout, this);
 
-        mCourseListAdapter = new CourseListAdapter(getActivity(), this);
+        if (isAllCoursesFilter()) {
+            mCourseListAdapter = new CourseListAdapter(this, CourseModel.CourseFilter.ALL);
+        } else if (isMyCoursesFilter()) {
+            mCourseListAdapter = new CourseListAdapter(this, CourseModel.CourseFilter.MY);
+        }
 
-        mAbsListView = (AbsListView) layout.findViewById(R.id.listView);
-        mAbsListView.setAdapter(mCourseListAdapter);
+        mRecyclerView = (AutofitRecyclerView) layout.findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mCourseListAdapter);
+
+        mRecyclerView.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return mCourseListAdapter.isHeader(position) ? mRecyclerView.getSpanCount() : 1;
+            }
+        });
 
         mNotificationController = new NotificationController(layout);
         mNotificationController.setInvisible();

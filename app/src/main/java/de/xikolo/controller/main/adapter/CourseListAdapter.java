@@ -1,10 +1,10 @@
 package de.xikolo.controller.main.adapter;
 
-import android.app.Activity;
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,142 +15,223 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.helper.ImageLoaderController;
-import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.DisplayUtil;
 import de.xikolo.util.LanguageUtil;
 
-public class CourseListAdapter extends BaseAdapter {
+public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final String TAG = CourseListAdapter.class.getSimpleName();
 
-    private List<Course> mCourses;
+    private static final int ITEM_VIEW_TYPE_HEADER = 0;
+    private static final int ITEM_VIEW_TYPE_ITEM = 1;
 
-    private Activity mActivity;
-    private OnCourseButtonClickListener mCallback;
+    private CourseModel.CourseFilter courseFilter;
 
-    public CourseListAdapter(Activity activity, OnCourseButtonClickListener callback) {
-        this.mCourses = new ArrayList<Course>();
-        this.mActivity = activity;
-        this.mCallback = callback;
+    // first category
+    private List<Course> firstCourses;
+
+    // second category
+    private List<Course> secondCourses;
+
+    private List<String> header;
+
+    private OnCourseButtonClickListener callback;
+
+    public CourseListAdapter(OnCourseButtonClickListener callback, CourseModel.CourseFilter courseFilter) {
+        this.firstCourses = new ArrayList<>();
+        this.secondCourses = new ArrayList<>();
+        this.header = new ArrayList<>();
+        this.callback = callback;
+        this.courseFilter = courseFilter;
     }
 
     public void updateCourses(List<Course> courses) {
         if (courses == null) throw new NullPointerException("Courses can't be null");
-        mCourses = courses;
-        CourseModel.sortCourses(mCourses);
+
+        Context context = GlobalApplication.getInstance();
+
+        header.clear();
+        if (courses.size() > 0) {
+            if (courseFilter == CourseModel.CourseFilter.ALL) {
+                header.add(context.getString(R.string.header_current_courses));
+                header.add(context.getString(R.string.header_self_paced_courses));
+                firstCourses = CourseModel.getCurrentAndFutureCourses(courses);
+                secondCourses = CourseModel.getPastCourses(courses);
+            } else if (courseFilter == CourseModel.CourseFilter.MY) {
+                header.add(context.getString(R.string.header_my_current_courses));
+                header.add(context.getString(R.string.header_my_future_courses));
+                firstCourses = CourseModel.getCurrentAndPastCourses(courses);
+                secondCourses = CourseModel.getFutureCourses(courses);
+            }
+        }
+
         this.notifyDataSetChanged();
     }
 
     public void clear() {
-        mCourses.clear();
+        firstCourses.clear();
+        secondCourses.clear();
+        header.clear();
         this.notifyDataSetChanged();
     }
 
-    @Override
-    public int getCount() {
-        return mCourses.size();
+    public boolean isHeader(int position) {
+        return position == 0 || position == firstCourses.size() + 1;
     }
 
     @Override
-    public Object getItem(int i) {
-        return mCourses.get(i);
+    public int getItemCount() {
+        return firstCourses.size() + secondCourses.size() + header.size();
+    }
+
+    private Course getItem(int position) {
+        if (position <= firstCourses.size()) {
+            return firstCourses.get(position - 1);
+        } else {
+            return secondCourses.get(position - 2 - firstCourses.size());
+        }
     }
 
     @Override
-    public long getItemId(int i) {
-        return i;
+    public int getItemViewType(int position) {
+        if (isHeader(position)) {
+            return ITEM_VIEW_TYPE_HEADER;
+        } else {
+            return ITEM_VIEW_TYPE_ITEM;
+        }
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View rowView = view;
-        if (rowView == null) {
-            LayoutInflater inflater = mActivity.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.item_courses, null);
-            ViewHolder viewHolder = new ViewHolder();
-            viewHolder.container = (ViewGroup) rowView.findViewById(R.id.container);
-            viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
-            viewHolder.teacher = (TextView) rowView.findViewById(R.id.textTeacher);
-            viewHolder.date = (TextView) rowView.findViewById(R.id.textDate);
-            viewHolder.language = (TextView) rowView.findViewById(R.id.textLanguage);
-            viewHolder.img = (ImageView) rowView.findViewById(R.id.imageView);
-            viewHolder.enroll = (Button) rowView.findViewById(R.id.btnEnroll);
-            rowView.setTag(viewHolder);
-        }
-        final ViewHolder holder = (ViewHolder) rowView.getTag();
-
-        final Course course = mCourses.get(i);
-
-        Date dateBegin = DateUtil.parse(course.available_from);
-        Date dateEnd = DateUtil.parse(course.available_to);
-
-        DateFormat dateOut;
-        if (DisplayUtil.is7inchTablet(mActivity)) {
-            dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == ITEM_VIEW_TYPE_HEADER) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
+            HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
+            return headerViewHolder;
         } else {
-            dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_courses, parent, false);
+            CourseViewHolder courseViewHolder = new CourseViewHolder(view);
+            return courseViewHolder;
         }
+    }
 
-        if (dateBegin != null && dateEnd != null) {
-            holder.date.setText(dateOut.format(dateBegin) + " - " + dateOut.format(dateEnd));
-        } else if (dateBegin != null) {
-            holder.date.setText(dateOut.format(dateBegin));
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof HeaderViewHolder) {
+            HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
+
+            if (position == 0) {
+                viewHolder.header.setText(header.get(0));
+            } else if (position == firstCourses.size() + 1) {
+                viewHolder.header.setText(header.get(1));
+            }
         } else {
-            holder.date.setText("");
+            CourseViewHolder viewHolder = (CourseViewHolder) holder;
+
+            final Course course = getItem(position);
+
+            Context context = GlobalApplication.getInstance();
+
+            Date dateBegin = DateUtil.parse(course.available_from);
+            Date dateEnd = DateUtil.parse(course.available_to);
+
+            DateFormat dateOut;
+            if (DisplayUtil.is7inchTablet(context)) {
+                dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault());
+            } else {
+                dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+            }
+
+            if (dateBegin != null && dateEnd != null) {
+                viewHolder.date.setText(dateOut.format(dateBegin) + " - " + dateOut.format(dateEnd));
+            } else if (dateBegin != null) {
+                viewHolder.date.setText(dateOut.format(dateBegin));
+            } else {
+                viewHolder.date.setText("");
+            }
+
+            viewHolder.title.setText(course.name);
+            viewHolder.teacher.setText(course.lecturer);
+            viewHolder.language.setText(LanguageUtil.languageForCode(context, course.language));
+
+            if (courseFilter == CourseModel.CourseFilter.ALL) {
+                viewHolder.description.setText(course.description);
+                viewHolder.description.setVisibility(View.VISIBLE);
+
+                if (DateUtil.nowIsBetween(course.available_from, course.available_to)) {
+                    viewHolder.banner.setVisibility(View.VISIBLE);
+                    viewHolder.banner.setText(context.getText(R.string.banner_running));
+                    viewHolder.banner.setBackgroundColor(context.getResources().getColor(R.color.banner_green));
+                } else {
+                    viewHolder.banner.setVisibility(View.GONE);
+                }
+            } else {
+                viewHolder.description.setVisibility(View.GONE);
+                if (DateUtil.nowIsBetween(course.available_from, course.available_to)) {
+                    viewHolder.banner.setVisibility(View.VISIBLE);
+                    viewHolder.banner.setText(context.getText(R.string.banner_running));
+                    viewHolder.banner.setBackgroundColor(context.getResources().getColor(R.color.banner_green));
+                } else if (DateUtil.nowIsAfter(course.available_to)) {
+                    viewHolder.banner.setVisibility(View.VISIBLE);
+                    viewHolder.banner.setText(context.getText(R.string.banner_self_paced));
+                    viewHolder.banner.setBackgroundColor(context.getResources().getColor(R.color.banner_yellow));
+                } else {
+                    viewHolder.banner.setVisibility(View.GONE);
+                }
+            }
+
+            ImageLoaderController.loadCourseImage(course.visual_url, viewHolder.img, viewHolder.container);
+
+            if (course.is_enrolled && DateUtil.nowIsAfter(course.available_from)) {
+                viewHolder.container.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        callback.onEnterButtonClicked(course);
+                    }
+                });
+                viewHolder.enroll.setText(context.getString(R.string.btn_enter_course));
+                viewHolder.enroll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        callback.onEnterButtonClicked(course);
+                    }
+                });
+            } else {
+                viewHolder.container.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        callback.onDetailButtonClicked(course);
+                    }
+                });
+                viewHolder.enroll.setText(context.getString(R.string.btn_enroll_me));
+                viewHolder.enroll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        callback.onEnrollButtonClicked(course);
+                    }
+                });
+            }
+
+            if (course.is_enrolled && !DateUtil.nowIsAfter(course.available_from)) {
+                viewHolder.enroll.setText(context.getString(R.string.btn_starts_soon));
+                viewHolder.enroll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        callback.onDetailButtonClicked(course);
+                    }
+                });
+            }
         }
+    }
 
-        holder.title.setText(course.name);
-        holder.teacher.setText(course.lecturer);
-        holder.language.setText(LanguageUtil.languageForCode(mActivity, course.language));
-
-        ImageLoaderController.loadCourseImage(course.visual_url, holder.img, holder.container);
-
-        if (course.is_enrolled && DateUtil.nowIsAfter(course.available_from)) {
-            holder.container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mCallback.onEnterButtonClicked(course);
-                }
-            });
-            holder.enroll.setText(mActivity.getString(R.string.btn_enter_course));
-            holder.enroll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mCallback.onEnterButtonClicked(course);
-                }
-            });
-        } else {
-            holder.container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mCallback.onDetailButtonClicked(course);
-                }
-            });
-            holder.enroll.setText(mActivity.getString(R.string.btn_enroll_me));
-            holder.enroll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mCallback.onEnrollButtonClicked(course);
-                }
-            });
-        }
-
-        if (course.is_enrolled && !DateUtil.nowIsAfter(course.available_from)) {
-            holder.enroll.setText(mActivity.getString(R.string.btn_starts_soon));
-            holder.enroll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mCallback.onDetailButtonClicked(course);
-                }
-            });
-        }
-
-        return rowView;
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
     }
 
     public interface OnCourseButtonClickListener {
@@ -163,14 +244,42 @@ public class CourseListAdapter extends BaseAdapter {
 
     }
 
-    static class ViewHolder {
+    static class CourseViewHolder extends RecyclerView.ViewHolder {
         ViewGroup container;
         TextView title;
         TextView teacher;
         TextView date;
         TextView language;
+        TextView description;
         ImageView img;
         Button enroll;
+        TextView banner;
+
+        public CourseViewHolder(View itemView) {
+            super(itemView);
+            container = (ViewGroup) itemView.findViewById(R.id.container);
+            title = (TextView) itemView.findViewById(R.id.textTitle);
+            teacher = (TextView) itemView.findViewById(R.id.textTeacher);
+            date = (TextView) itemView.findViewById(R.id.textDate);
+            language = (TextView) itemView.findViewById(R.id.textLanguage);
+            description = (TextView) itemView.findViewById(R.id.textDescription);
+            img = (ImageView) itemView.findViewById(R.id.imageView);
+            enroll = (Button) itemView.findViewById(R.id.btnEnroll);
+            banner = (TextView) itemView.findViewById(R.id.textBanner);
+        }
+
+    }
+
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        ViewGroup container;
+        TextView header;
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+            container = (ViewGroup) itemView.findViewById(R.id.container);
+            header = (TextView) itemView.findViewById(R.id.textHeader);
+        }
+
     }
 
 }
