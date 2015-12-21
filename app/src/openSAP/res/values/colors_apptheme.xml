@@ -20,10 +20,8 @@
     <color name="apptheme_sap_gold_d">#FC8613</color>
     <color name="apptheme_sap_gold_d_dark">#e27811</color>
 
-    <color name="apptheme_sap_gray_m">#999999</color>
-    <color name="apptheme_sap_gray_m_dark">#898989</color>
-    <color name="apptheme_sap_gray_d">#666666</color>
-    <color name="apptheme_sap_gray_d_dark">#5c5c5c</color>
+    <color name="apptheme_gray">#5a6065</color>
+    <color name="apptheme_gray_dark">#474B4F</color>
 
     <color name="apptheme_second">#226CA9</color>
     <color name="apptheme_third">#8AB54E</color>
