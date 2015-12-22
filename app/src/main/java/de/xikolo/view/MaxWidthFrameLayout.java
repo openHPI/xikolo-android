@@ -2,24 +2,24 @@ package de.xikolo.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.widget.FrameLayout;
 
 import de.xikolo.R;
 
-public class MaxWidthCardView extends CardView{
+public class MaxWidthFrameLayout extends FrameLayout {
 
     private final int mMaxWidth;
 
-    public MaxWidthCardView(Context context) {
+    public MaxWidthFrameLayout(Context context) {
         super(context);
         mMaxWidth = 0;
     }
 
-    public MaxWidthCardView(Context context, AttributeSet attrs) {
+    public MaxWidthFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.MaxWidthCardView);
-        mMaxWidth = a.getDimensionPixelSize(R.styleable.MaxWidthCardView_maxWidth, Integer.MAX_VALUE);
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.MaxWidthFrameLayout);
+        mMaxWidth = a.getDimensionPixelSize(R.styleable.MaxWidthFrameLayout_maxWidth, Integer.MAX_VALUE);
         a.recycle();
     }
 

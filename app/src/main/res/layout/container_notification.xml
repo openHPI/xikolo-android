@@ -6,6 +6,6 @@
 
     <include layout="@layout/container_progress" />
 
-    <include layout="@layout/container_card" />
+    <include layout="@layout/container_info_message" />
 
 </FrameLayout>

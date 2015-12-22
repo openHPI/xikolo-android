@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<de.xikolo.view.MaxWidthCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<de.xikolo.view.MaxWidthFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/containerNotification"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_margin="5dp"
-    android:foreground="@drawable/fg_container"
+    android:foreground="?android:attr/selectableItemBackground"
     android:padding="24dp"
     android:visibility="gone"
-    app:cardCornerRadius="2dp"
-    app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true"
     app:maxWidth="600dp">
 
     <LinearLayout
@@ -24,10 +20,9 @@
 
         <de.xikolo.view.CustomFontTextView
             android:id="@+id/textNotificationSymbol"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
-            android:layout_weight="0.2"
             android:gravity="center_vertical|center_horizontal"
             android:padding="4dp"
             android:text="@string/icon_info"
@@ -37,9 +32,8 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutNotificationText"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.8"
             android:orientation="vertical">
 
             <TextView
@@ -47,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_text"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/textNotificationSummary"
@@ -55,7 +49,9 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_text"
                 android:textSize="14sp" />
+
         </LinearLayout>
+
     </LinearLayout>
 
-</de.xikolo.view.MaxWidthCardView>
+</de.xikolo.view.MaxWidthFrameLayout>

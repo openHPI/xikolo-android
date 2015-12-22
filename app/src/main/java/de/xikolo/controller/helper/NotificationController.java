@@ -2,6 +2,7 @@ package de.xikolo.controller.helper;
 
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -11,7 +12,7 @@ import de.xikolo.view.CustomFontTextView;
 
 public class NotificationController {
 
-    private CardView cardView;
+    private FrameLayout notificationView;
     private ProgressBar progressView;
 
     private CustomFontTextView symbolTextView;
@@ -19,19 +20,19 @@ public class NotificationController {
     private TextView summaryTextView;
 
     public NotificationController(View layout) {
-        cardView = (CardView) layout.findViewById(R.id.containerNotification);
+        notificationView = (FrameLayout) layout.findViewById(R.id.containerNotification);
         progressView = (ProgressBar) layout.findViewById(R.id.containerProgress);
 
-        if (cardView == null) {
-            throw new IllegalArgumentException("Layout does not contain NotificationCard view");
+        if (notificationView == null) {
+            throw new IllegalArgumentException("Layout does not contain Notification view");
         }
         if (progressView == null) {
             throw new IllegalArgumentException("Layout does not contain ProgressBar view");
         }
 
-        symbolTextView = (CustomFontTextView) cardView.findViewById(R.id.textNotificationSymbol);
-        titleTextView = (TextView) cardView.findViewById(R.id.textNotificationHeader);
-        summaryTextView = (TextView) cardView.findViewById(R.id.textNotificationSummary);
+        symbolTextView = (CustomFontTextView) notificationView.findViewById(R.id.textNotificationSymbol);
+        titleTextView = (TextView) notificationView.findViewById(R.id.textNotificationHeader);
+        summaryTextView = (TextView) notificationView.findViewById(R.id.textNotificationSummary);
     }
 
     public void setProgressVisible(Boolean visible) {
@@ -45,15 +46,15 @@ public class NotificationController {
 
     public void setNotificationVisible(Boolean visible) {
         if (visible) {
-            cardView.setVisibility(View.VISIBLE);
+            notificationView.setVisibility(View.VISIBLE);
             setProgressVisible(false);
         } else {
-            cardView.setVisibility(View.GONE);
+            notificationView.setVisibility(View.GONE);
         }
     }
 
     public Boolean isNotificationVisible() {
-        return cardView.getVisibility() == View.VISIBLE;
+        return notificationView.getVisibility() == View.VISIBLE;
     }
 
     public Boolean isProgressVisible() {
@@ -61,7 +62,7 @@ public class NotificationController {
     }
 
     public void setOnClickListener(View.OnClickListener listener) {
-        cardView.setOnClickListener(listener);
+        notificationView.setOnClickListener(listener);
     }
 
     public CharSequence getSymbol() {
