@@ -142,7 +142,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textDescription"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/button_main"
                 android:text="@string/btn_enroll_me" />
 
         </RelativeLayout>

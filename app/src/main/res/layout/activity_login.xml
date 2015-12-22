@@ -109,7 +109,6 @@
                 android:layout_below="@+id/textForgotPw"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/button_main"
                 android:text="@string/login" />
 
             <View

@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <item name="colorPrimary">@color/apptheme_main</item>
         <item name="colorPrimaryDark">@color/apptheme_main_dark</item>
@@ -10,8 +10,6 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
-        <item name="android:selectableItemBackground">@color/black_alpha</item>
 
     </style>
 
