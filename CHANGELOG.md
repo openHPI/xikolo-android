@@ -1,6 +1,13 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.2
+* New course overview with categories and ribbons
+* Added Dashboard to Deep Links
+* Update in-app notification style
+* Bugfix for download section
+* Minor UI updates
+
 ## v1.1.6
 * Added Android 6 Marshmallow Permissions
 * Critical bugfix for changed caching behavior in Android 6 Marshmallow
