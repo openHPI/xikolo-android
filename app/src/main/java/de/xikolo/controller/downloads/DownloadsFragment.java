@@ -3,10 +3,11 @@ package de.xikolo.controller.downloads;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
 
     public static final String TAG = DownloadsFragment.class.getSimpleName();
 
-    private ListView listView;
+    private RecyclerView recyclerView;
     private DownloadsAdapter adapter;
 
     private DownloadModel downloadModel;
@@ -54,7 +55,7 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
 
         downloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), getActivity());
         permissionsModel = new PermissionsModel(GlobalApplication.getInstance().getJobManager(), getActivity());
-        adapter = new DownloadsAdapter(getActivity(), this);
+        adapter = new DownloadsAdapter(this);
 
         EventBus.getDefault().register(this);
     }
@@ -65,8 +66,11 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_downloads, container, false);
 
-        listView = (ListView) layout.findViewById(R.id.listView);
-        listView.setAdapter(adapter);
+        recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
 
         mNotificationController = new NotificationController(layout);
         mNotificationController.setInvisible();
@@ -94,23 +98,28 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
     }
 
     private void fetchItems() {
-        List<DownloadsAdapter.Item> items = new ArrayList<DownloadsAdapter.Item>();
         if (permissionsModel.requestPermission(PermissionsModel.WRITE_EXTERNAL_STORAGE) == 1) {
             mNotificationController.setInvisible();
 
-            items.add(new DownloadsAdapter.SectionItem(getString(R.string.overall)));
+            adapter.clear();
+
+            List<DownloadsAdapter.FolderItem> list = new ArrayList<>();
+
             DownloadsAdapter.FolderItem total = new DownloadsAdapter.FolderItem(downloadModel.getAppFolder().substring(downloadModel.getAppFolder().lastIndexOf(File.separator) + 1),
                     downloadModel.getAppFolder());
-            items.add(total);
+            list.add(total);
+
+            adapter.addItem(getString(R.string.overall), list);
 
             List<String> folders = downloadModel.getFoldersWithDownloads();
             if (folders.size() > 0) {
-                items.add(new DownloadsAdapter.SectionItem(getString(R.string.courses)));
+                list = new ArrayList<>();
                 for (String folder : folders) {
                     DownloadsAdapter.FolderItem item = new DownloadsAdapter.FolderItem(folder.substring(folder.lastIndexOf(File.separator) + 1, folder.lastIndexOf("_")),
                             folder);
-                    items.add(item);
+                    list.add(item);
                 }
+                adapter.addItem(getString(R.string.courses), list);
             }
         } else {
             mNotificationController.setTitle(R.string.dialog_title_permissions);
@@ -123,7 +132,6 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
             });
             mNotificationController.setNotificationVisible(true);
         }
-        adapter.updateItems(items);
     }
 
     @Override

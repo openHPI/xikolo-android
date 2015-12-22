@@ -2,50 +2,54 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
-    android:layout_width="fill_parent"
-    android:layout_height="48dp">
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/deleteBtn"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:singleLine="true"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/subTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/title"
-        android:textColor="@color/gray_light"
-        android:layout_toLeftOf="@+id/deleteBtn"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:singleLine="true"
-        android:textSize="14sp" />
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent">
 
     <de.xikolo.view.CustomFontTextView
-        android:id="@+id/deleteBtn"
+        android:id="@+id/buttonDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:clickable="true"
-        android:padding="16dp"
+        android:contentDescription="@string/delete"
+        android:paddingBottom="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
         android:text="@string/icon_delete"
         android:textColor="@drawable/text_button"
         android:textSize="24sp"
-        android:contentDescription="@string/delete"
         app:customFont="materialdesign.ttf" />
 
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/buttonDelete"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:singleLine="true"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textSubTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textTitle"
+        android:layout_toLeftOf="@+id/buttonDelete"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:singleLine="true"
+        android:textColor="@color/gray_light"
+        android:textSize="14sp" />
+
     <View
-        android:id="@+id/separator"
+        android:id="@+id/divider"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"

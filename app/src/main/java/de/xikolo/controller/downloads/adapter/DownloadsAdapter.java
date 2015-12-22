@@ -1,92 +1,96 @@
 package de.xikolo.controller.downloads.adapter;
 
-import android.app.Activity;
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.util.FileUtil;
+import de.xikolo.util.HeaderAndSectionsList;
 
-public class DownloadsAdapter extends BaseAdapter {
+public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final String TAG = DownloadsAdapter.class.getSimpleName();
 
-    private Activity mActivity;
+    private static final int ITEM_VIEW_TYPE_HEADER = 0;
+    private static final int ITEM_VIEW_TYPE_ITEM = 1;
 
-    private List<Item> items;
+    private HeaderAndSectionsList<String, List<FolderItem>> headerAndSectionsList;
 
     private OnDeleteButtonClickedListener callback;
 
-    public DownloadsAdapter(Activity activity, OnDeleteButtonClickedListener callback) {
-        this(activity, callback, new ArrayList<Item>());
-    }
-
-    public DownloadsAdapter(Activity activity, OnDeleteButtonClickedListener callback, List<Item> items) {
-        this.mActivity = activity;
+    public DownloadsAdapter(OnDeleteButtonClickedListener callback) {
         this.callback = callback;
-        this.items = items;
+        this.headerAndSectionsList = new HeaderAndSectionsList<>();
     }
 
-    public void updateItems(List<Item> items) {
-        this.items = items;
+    public void addItem(String header, List<FolderItem> folder) {
+        this.headerAndSectionsList.add(header, folder);
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        this.headerAndSectionsList.clear();
         notifyDataSetChanged();
     }
 
     @Override
-    public int getCount() {
-        return items.size();
+    public int getItemCount() {
+        return headerAndSectionsList.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return items.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        final Item item = items.get(i);
-
-        View rowView = view;
-        if (rowView == null) {
-            LayoutInflater inflater = mActivity.getLayoutInflater();
-            if (item instanceof FolderItem) {
-                rowView = inflater.inflate(R.layout.item_download, null);
-                ViewHolderFolder viewHolderFolder = new ViewHolderFolder();
-                viewHolderFolder.title = (TextView) rowView.findViewById(R.id.title);
-                viewHolderFolder.subTitle = (TextView) rowView.findViewById(R.id.subTitle);
-                viewHolderFolder.separator = rowView.findViewById(R.id.separator);
-                viewHolderFolder.delete = (TextView) rowView.findViewById(R.id.deleteBtn);
-                rowView.setTag(viewHolderFolder);
-            } else if (item instanceof SectionItem) {
-                rowView = inflater.inflate(R.layout.item_section_header, null);
-                ViewHolderSection viewHolderSection = new ViewHolderSection();
-                viewHolderSection.title = (TextView) rowView.findViewById(R.id.sectionHeader);
-                rowView.setTag(viewHolderSection);
-            }
+    public int getItemViewType(int position) {
+        if (headerAndSectionsList.isHeader(position)) {
+            return ITEM_VIEW_TYPE_HEADER;
+        } else {
+            return ITEM_VIEW_TYPE_ITEM;
         }
+    }
 
-        if (item instanceof FolderItem) {
-            final ViewHolderFolder holder = (ViewHolderFolder) rowView.getTag();
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == ITEM_VIEW_TYPE_HEADER) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_section_header, parent, false);
+            view.setEnabled(false);
+            view.setOnClickListener(null);
+            HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
+            return headerViewHolder;
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_download, parent, false);
+            view.setEnabled(false);
+            view.setOnClickListener(null);
+            FolderViewHolder folderViewHolder = new FolderViewHolder(view);
+            return folderViewHolder;
+        }
+    }
 
-            final FolderItem folderItem = (FolderItem) item;
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof HeaderViewHolder) {
+            HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
+
+            viewHolder.title.setText((String) headerAndSectionsList.getItem(position));
+        } else {
+            FolderViewHolder viewHolder = (FolderViewHolder) holder;
+
+            final FolderItem folderItem = (FolderItem) headerAndSectionsList.getItem(position);
+
+            Context context = GlobalApplication.getInstance();
+
             File dir = new File(folderItem.getPath());
-            holder.title.setText(folderItem.getTitle().replaceAll("_", " "));
+            viewHolder.title.setText(folderItem.getTitle().replaceAll("_", " "));
 
             long numberOfFiles = FileUtil.folderFileNumber(dir);
 
-            holder.delete.setOnClickListener(new View.OnClickListener() {
+            viewHolder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     callback.onDeleteButtonClicked(folderItem);
@@ -94,49 +98,28 @@ public class DownloadsAdapter extends BaseAdapter {
             });
 
             if (numberOfFiles > 0) {
-                holder.subTitle.setText(numberOfFiles + " " + mActivity.getString(R.string.files) + ": "
+                viewHolder.subTitle.setText(numberOfFiles + " " + context.getString(R.string.files) + ": "
                         + FileUtil.getFormattedFileSize(FileUtil.folderSize(dir)));
-                holder.delete.setVisibility(View.VISIBLE);
+                viewHolder.delete.setVisibility(View.VISIBLE);
             } else {
-                holder.subTitle.setText(numberOfFiles + " " + mActivity.getString(R.string.files));
-                holder.delete.setVisibility(View.GONE);
+                viewHolder.subTitle.setText(numberOfFiles + " " + context.getString(R.string.files));
+                viewHolder.delete.setVisibility(View.GONE);
             }
 
-            if (i == getCount() - 1 || getItem(i + 1) instanceof SectionItem) {
-                holder.separator.setVisibility(View.INVISIBLE);
+            if (position == getItemCount() - 1 || headerAndSectionsList.isHeader(position + 1)) {
+                viewHolder.divider.setVisibility(View.INVISIBLE);
+            } else {
+                viewHolder.divider.setVisibility(View.VISIBLE);
             }
-        } else if (item instanceof SectionItem) {
-            final ViewHolderSection holder = (ViewHolderSection) rowView.getTag();
-
-            SectionItem sectionItem = (SectionItem) item;
-
-            holder.title.setText(sectionItem.getTitle());
         }
-
-        rowView.setEnabled(false);
-        rowView.setOnClickListener(null);
-
-        return rowView;
     }
 
-    public static interface Item {
-
-        public boolean isSection();
-
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
     }
 
-    static class ViewHolderFolder {
-        TextView title;
-        TextView subTitle;
-        TextView delete;
-        View separator;
-    }
-
-    static class ViewHolderSection {
-        TextView title;
-    }
-
-    public static class FolderItem implements Item {
+    public static class FolderItem {
 
         private String title;
 
@@ -155,34 +138,37 @@ public class DownloadsAdapter extends BaseAdapter {
             return path;
         }
 
-        @Override
-        public boolean isSection() {
-            return false;
-        }
-    }
-
-    public static class SectionItem implements Item {
-
-        private String title;
-
-        public SectionItem(String title) {
-            this.title = title;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        @Override
-        public boolean isSection() {
-            return true;
-        }
-
     }
 
     public static interface OnDeleteButtonClickedListener {
 
         public void onDeleteButtonClicked(FolderItem item);
+
+    }
+
+    static class FolderViewHolder extends RecyclerView.ViewHolder {
+        TextView title;
+        TextView subTitle;
+        TextView delete;
+        View divider;
+
+        public FolderViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.textTitle);
+            subTitle = (TextView) itemView.findViewById(R.id.textSubTitle);
+            delete = (TextView) itemView.findViewById(R.id.buttonDelete);
+            divider = itemView.findViewById(R.id.divider);
+        }
+
+    }
+
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        TextView title;
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.textHeader);
+        }
 
     }
 
