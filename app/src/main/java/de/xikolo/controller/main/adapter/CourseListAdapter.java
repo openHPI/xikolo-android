@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,6 +21,7 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.DisplayUtil;
+import de.xikolo.util.HeaderAndSectionsList;
 import de.xikolo.util.LanguageUtil;
 
 public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -33,22 +33,18 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private CourseModel.CourseFilter courseFilter;
 
-    // first category
-    private List<Course> firstCourses;
-
-    // second category
-    private List<Course> secondCourses;
-
-    private List<String> header;
+    private HeaderAndSectionsList<String, List<Course>> headerAndSectionsList;
 
     private OnCourseButtonClickListener callback;
 
     public CourseListAdapter(OnCourseButtonClickListener callback, CourseModel.CourseFilter courseFilter) {
-        this.firstCourses = new ArrayList<>();
-        this.secondCourses = new ArrayList<>();
-        this.header = new ArrayList<>();
+        this.headerAndSectionsList = new HeaderAndSectionsList<>();
         this.callback = callback;
         this.courseFilter = courseFilter;
+    }
+
+    public boolean isHeader(int position) {
+        return headerAndSectionsList.isHeader(position);
     }
 
     public void updateCourses(List<Course> courses) {
@@ -56,18 +52,31 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         Context context = GlobalApplication.getInstance();
 
-        header.clear();
+        headerAndSectionsList.clear();
+        List<Course> subList;
         if (courses.size() > 0) {
             if (courseFilter == CourseModel.CourseFilter.ALL) {
-                header.add(context.getString(R.string.header_current_courses));
-                header.add(context.getString(R.string.header_self_paced_courses));
-                firstCourses = CourseModel.getCurrentAndFutureCourses(courses);
-                secondCourses = CourseModel.getPastCourses(courses);
+                subList = CourseModel.getCurrentAndFutureCourses(courses);
+                if (subList.size() > 0) {
+                    headerAndSectionsList.add(context.getString(R.string.header_current_courses),
+                            subList);
+                }
+                subList = CourseModel.getPastCourses(courses);
+                if (subList.size() > 0) {
+                    headerAndSectionsList.add(context.getString(R.string.header_self_paced_courses),
+                            subList);
+                }
             } else if (courseFilter == CourseModel.CourseFilter.MY) {
-                header.add(context.getString(R.string.header_my_current_courses));
-                header.add(context.getString(R.string.header_my_future_courses));
-                firstCourses = CourseModel.getCurrentAndPastCourses(courses);
-                secondCourses = CourseModel.getFutureCourses(courses);
+                subList = CourseModel.getCurrentAndPastCourses(courses);
+                if (subList.size() > 0) {
+                    headerAndSectionsList.add(context.getString(R.string.header_my_current_courses),
+                            subList);
+                }
+                subList = CourseModel.getFutureCourses(courses);
+                if (subList.size() > 0) {
+                    headerAndSectionsList.add(context.getString(R.string.header_my_future_courses),
+                            subList);
+                }
             }
         }
 
@@ -75,32 +84,18 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void clear() {
-        firstCourses.clear();
-        secondCourses.clear();
-        header.clear();
+        headerAndSectionsList.clear();
         this.notifyDataSetChanged();
-    }
-
-    public boolean isHeader(int position) {
-        return position == 0 || position == firstCourses.size() + 1;
     }
 
     @Override
     public int getItemCount() {
-        return firstCourses.size() + secondCourses.size() + header.size();
-    }
-
-    private Course getItem(int position) {
-        if (position <= firstCourses.size()) {
-            return firstCourses.get(position - 1);
-        } else {
-            return secondCourses.get(position - 2 - firstCourses.size());
-        }
+        return headerAndSectionsList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (isHeader(position)) {
+        if (headerAndSectionsList.isHeader(position)) {
             return ITEM_VIEW_TYPE_HEADER;
         } else {
             return ITEM_VIEW_TYPE_ITEM;
@@ -125,15 +120,11 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
 
-            if (position == 0) {
-                viewHolder.header.setText(header.get(0));
-            } else if (position == firstCourses.size() + 1) {
-                viewHolder.header.setText(header.get(1));
-            }
+            viewHolder.header.setText((String) headerAndSectionsList.getItem(position));
         } else {
             CourseViewHolder viewHolder = (CourseViewHolder) holder;
 
-            final Course course = getItem(position);
+            final Course course = (Course) headerAndSectionsList.getItem(position);
 
             Context context = GlobalApplication.getInstance();
 
