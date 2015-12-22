@@ -54,6 +54,10 @@
                     android:host="${webUrl}"
                     android:pathPattern="/courses"
                     android:scheme="https" />
+                <data
+                    android:host="${webUrl}"
+                    android:pathPattern="/dashboard"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity

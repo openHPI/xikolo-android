@@ -88,6 +88,9 @@ public class MainActivity extends BaseActivity
                         case NEWS:
                             mNavigationFragment.selectItem(NavigationAdapter.NAV_ID_NEWS);
                             break;
+                        case MY_COURSES:
+                            mNavigationFragment.selectItem(NavigationAdapter.NAV_ID_MY_COURSES);
+                            break;
                         default:
                             break;
                     }

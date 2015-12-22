@@ -6,6 +6,7 @@ public class DeepLinkingUtil {
 
     public static final String ROUTE_COURSES = "/" + "courses";
     public static final String ROUTE_NEWS = "/" + "news";
+    public static final String ROUTE_DASHBOARD = "/" + "dashboard";
 
     public static final String SLASH = "/";
 
@@ -19,7 +20,7 @@ public class DeepLinkingUtil {
     private static String path;
 
     public enum Type {
-        ALL_COURSES, NEWS
+        ALL_COURSES, NEWS, MY_COURSES
     }
 
     public enum CourseTab {
@@ -65,6 +66,8 @@ public class DeepLinkingUtil {
             return Type.NEWS;
         } else if (path.matches(ROUTE_COURSES)) {
             return Type.ALL_COURSES;
+        } else if (path.matches(ROUTE_DASHBOARD)) {
+            return Type.MY_COURSES;
         }
 
         return null;
