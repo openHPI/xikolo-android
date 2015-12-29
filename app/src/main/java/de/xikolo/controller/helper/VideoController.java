@@ -1,6 +1,7 @@
 package de.xikolo.controller.helper;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -48,57 +56,45 @@ public class VideoController {
 
     private static final int sDefaultTimeout = 3000;
     private static final int FADE_OUT = 1;
-
+    boolean isCastLoaded = false;
     private DownloadModel mDownloadModel;
-
     private Activity mActivity;
-
     private View mVideoContainer;
-
     private View mVideoProgress;
-
     private CustomSizeVideoView mVideoView;
     private View mVideoController;
-
     private View mVideoHeader;
     private View mFullscreenButton;
-
     private View mVideoFooter;
     private SeekBar mSeekBar;
     private TextView mCurrentTime;
     private TextView mTotalTime;
     private CustomFontTextView mHDSwitch;
-
     private View mVideoWarning;
     private TextView mVideoWarningText;
     private TextView mRetryButton;
-
     private CustomFontTextView mPlayButton;
-
     private OnFullscreenClickListener mFullscreenListener;
-
     private ControllerListener mControllerListener;
-
     private Runnable mSeekBarUpdater;
-
     private Handler mHandler = new MessageHandler(this);
-
     private boolean wasSaved = false;
     private int savedTime = 0;
-
     private boolean seekBarUpdaterIsRunning = false;
-
     private Course mCourse;
     private Module mModule;
     private Item<VideoItemDetail> mVideoItemDetails;
-
     private boolean playVideoInHD = false;
     private boolean userChangedVideoQuality = false;
     // Umgeht Fehler, dass bei Veränderung der Qualität und Wechsel der Bildschirmausrichtung das Video stehen bleibt bzw. weiter läuft
     private boolean savedIsPlaying = false;
+    private boolean isPlaying = false;
+    private boolean isCastPlaying = false;
     private int currentPosition = 0;
 
     private boolean error = false;
+
+    private VideoCastManager mCastManager;
 
     public VideoController(Activity activity, View videoContainer) {
         mActivity = activity;
@@ -133,7 +129,7 @@ public class VideoController {
         });
 
         mDownloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), activity);
-
+        mCastManager = VideoCastManager.getInstance();
         setup();
     }
 
@@ -245,7 +241,9 @@ public class VideoController {
             @Override
             public void onClick(View v) {
                 show();
-                if (mVideoView.isPlaying()) {
+                if (mVideoView.isPlaying() && isPlaying) {
+                    pause();
+                } else if (isCastPlaying) {
                     pause();
                 } else {
                     start();
@@ -296,17 +294,75 @@ public class VideoController {
     }
 
     public void start() {
-        mPlayButton.setText(mActivity.getString(R.string.icon_pause));
-        mVideoView.start();
-        savedIsPlaying = true;
-        if (!seekBarUpdaterIsRunning) {
-            new Thread(mSeekBarUpdater).start();
+        if (!mCastManager.isConnected()) {//If not connected to Chromecast
+            mPlayButton.setText(mActivity.getString(R.string.icon_pause));
+            mVideoView.start();
+            savedIsPlaying = true;
+            isPlaying = true;
+            if (!seekBarUpdaterIsRunning) {
+                new Thread(mSeekBarUpdater).start();
+            }
+        } else {
+            try {
+                isCastLoaded = mCastManager.isRemoteMediaLoaded();
+                if (isCastLoaded && mCastManager.getRemoteMediaInformation().getMetadata().getString(MediaMetadata.KEY_TITLE).equals(mVideoItemDetails.title)) {
+                    mCastManager.play();
+                } else {
+                    mCastManager.loadMedia(buildMetadata(), true, mVideoItemDetails.position);
+                }
+            } catch (TransientNetworkDisconnectionException e) {
+                e.printStackTrace();
+            } catch (NoConnectionException e) {
+                e.printStackTrace();
+            } catch (CastException e) {
+                e.printStackTrace();
+            } finally {
+                mPlayButton.setText("Playing on Chromecast");
+                mPlayButton.setTextSize(18);
+                mVideoView.setBackgroundColor(Color.BLACK);
+                isCastPlaying = true;
+            }
         }
+    }
+
+    private MediaInfo buildMetadata() {
+        MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
+        mediaMetadata.putString(MediaMetadata.KEY_TITLE, mVideoItemDetails.title);
+        MediaInfo mediaInfo = new MediaInfo.Builder(
+                mVideoItemDetails.detail.url)//enable choosing detail.stream.hd_url/sd_url
+                .setContentType("video/mp4")
+                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                .setMetadata(mediaMetadata)
+                .build();
+        return mediaInfo;
     }
 
     public void pause() {
         mPlayButton.setText(mActivity.getString(R.string.icon_play));
+        if (isCastPlaying) {
+            try {
+                mCastManager.pause();
+            } catch (CastException e) {
+                e.printStackTrace();
+            } catch (TransientNetworkDisconnectionException e) {
+                e.printStackTrace();
+            } catch (NoConnectionException e) {
+                e.printStackTrace();
+            } finally {
+                isCastPlaying = false;
+                mPlayButton.setTextSize(72);
+            }
+        } else {
+            mVideoView.pause();
+            isPlaying = false;
+        }
+        savedIsPlaying = false;
+    }
+
+    public void pauseIfLocal() {
+        mPlayButton.setText(mActivity.getString(R.string.icon_play));
         mVideoView.pause();
+        isPlaying = false;
         savedIsPlaying = false;
     }
 
@@ -358,13 +414,9 @@ public class VideoController {
         if (!userChangedVideoQuality) {
             int connectivityStatus = NetworkUtil.getConnectivityStatus(mActivity);
 
-            if (connectivityStatus == NetworkUtil.TYPE_WIFI || connectivityStatus == NetworkUtil.TYPE_NOT_CONNECTED
+            playVideoInHD = connectivityStatus == NetworkUtil.TYPE_WIFI || connectivityStatus == NetworkUtil.TYPE_NOT_CONNECTED
                     || (connectivityStatus == NetworkUtil.TYPE_MOBILE && !GlobalApplication.getInstance().getPreferencesFactory()
-                    .getAppPreferences().isVideoQualityLimitedOnMobile())) {
-                playVideoInHD = true;
-            } else {
-                playVideoInHD = false;
-            }
+                    .getAppPreferences().isVideoQualityLimitedOnMobile());
         }
 
         if (mVideoItemDetails.detail.progress > minimumTimeNeeded) {
@@ -520,15 +572,15 @@ public class VideoController {
 
     public interface OnFullscreenClickListener {
 
-        public void onFullscreenClick(int currentPosition, boolean isPlaying, boolean videoQualityInHD, boolean didUserChangeVideoQuality);
+        void onFullscreenClick(int currentPosition, boolean isPlaying, boolean videoQualityInHD, boolean didUserChangeVideoQuality);
 
     }
 
     public interface ControllerListener {
 
-        public void onControllerShow();
+        void onControllerShow();
 
-        public void onControllerHide();
+        void onControllerHide();
 
     }
 

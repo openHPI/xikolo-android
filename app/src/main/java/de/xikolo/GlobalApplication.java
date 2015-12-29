@@ -12,6 +12,9 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import com.google.android.gms.cast.CastMediaControlIntent;
+import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -90,6 +93,7 @@ public class GlobalApplication extends Application {
         configureWebViewCookies();
         configureJobManager();
         registerDownloadBroadcastReceiver();
+        configureVideoCastManager();
 
         // just for debugging, never use for production
         if (Config.DEBUG) {
@@ -229,6 +233,20 @@ public class GlobalApplication extends Application {
             }
         };
         registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
+    private void configureVideoCastManager() {
+        CastConfiguration options = new CastConfiguration.Builder(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID)
+                .enableAutoReconnect()
+                .enableCaptionManagement()
+                .enableDebug()
+                .enableLockScreen()
+                .enableWifiReconnection()
+                .enableNotification()
+                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
+                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, true)
+                .build();
+        VideoCastManager.initialize(this, options);
     }
 
 }

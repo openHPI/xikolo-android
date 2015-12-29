@@ -111,7 +111,7 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.course, menu);
+        inflater.inflate(R.menu.course_fragment, menu);
     }
 
     @Override

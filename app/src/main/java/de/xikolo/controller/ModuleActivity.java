@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,8 @@ public class ModuleActivity extends BaseActivity {
     private Result<Void> mProgressionResult;
 
     private PagerSlidingTabStrip mPagerSlidingTabStrip;
+
+    private VideoCastManager mCastManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +124,7 @@ public class ModuleActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.module, menu);
+        mCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
         return true;
     }
 
@@ -155,6 +159,19 @@ public class ModuleActivity extends BaseActivity {
         b.putParcelable(ARG_MODULE, mModule);
         intent.putExtras(b);
         setResult(RESULT_OK, intent);
+    }
+
+    @Override
+    protected void onPause() {
+        mCastManager.decrementUiCounter();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCastManager = VideoCastManager.getInstance();
+        mCastManager.incrementUiCounter();
     }
 
     public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.CustomTabProvider {

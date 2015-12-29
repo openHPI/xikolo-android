@@ -65,5 +65,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    //releaseCompile project(path: 'com.google.android.libraries.cast.companionlibrary:CastCompanionLibrary', configuration: 'release')
+    //debugCompile project(path: 'com.google.android.libraries.cast.companionlibrary:CastCompanionLibrary', configuration: 'debug')
+    debugCompile project(':..:CastCompanionLibrary')
+    releaseCompile project(':..:CastCompanionLibrary')
+    //https://code.google.com/p/android/issues/detail?id=52962
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 }

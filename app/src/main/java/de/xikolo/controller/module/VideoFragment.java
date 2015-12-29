@@ -39,25 +39,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     public static final String KEY_COURSE = "key_course";
     public static final String KEY_MODULE = "key_module";
     public static final String KEY_ITEM = "key_item";
-
-    private TextView mTitle;
-    private View mContainer;
-
-    private NotificationController mNotificationController;
-
-    private LinearLayout mLinearLayoutDownloads;
-
-    private ViewGroup mVideoContainer;
-    private ViewGroup mVideoMetadata;
-
-    private VideoController mVideoController;
-
-    private ItemModel mItemModel;
-
-    private boolean wasSaved = false;
-
     VideoItemDetail itemDetail;
-
     Result<Void> saveVideoProgressResult = new Result<Void>() {
         @Override
         protected void onSuccess(Void result, DataSource dataSource) {
@@ -74,6 +56,15 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             super.onError(errorCode);
         }
     };
+    private TextView mTitle;
+    private View mContainer;
+    private NotificationController mNotificationController;
+    private LinearLayout mLinearLayoutDownloads;
+    private ViewGroup mVideoContainer;
+    private ViewGroup mVideoMetadata;
+    private VideoController mVideoController;
+    private ItemModel mItemModel;
+    private boolean wasSaved = false;
 
     public VideoFragment() {
 
@@ -281,7 +272,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     @Override
     public void pageChanged() {
         if (mVideoController != null) {
-            mVideoController.pause();
+            mVideoController.pauseIfLocal();
             mVideoController.show();
 
             itemDetail = mVideoController.getVideoItemDetail();

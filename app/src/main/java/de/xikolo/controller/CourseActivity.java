@@ -5,6 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 
 import java.util.List;
 
@@ -27,12 +30,18 @@ public class CourseActivity extends BaseActivity {
     private Course mCourse;
     private int firstFragment;
 
+    private VideoCastManager mCastManager;
+    //private MiniController mMiniController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
         setupActionBar();
         setActionBarElevation(0);
+        //mMiniController = (MiniController) findViewById(R.id.miniController);
+        mCastManager = VideoCastManager.getInstance();
+        //mCastManager.addMiniController(mMiniController);
 
         final Intent intent = getIntent();
         if (intent != null) {
@@ -162,4 +171,28 @@ public class CourseActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.module, menu);
+        mCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
+        return true;
+    }
+
+    @Override
+    protected void onPause() {
+        mCastManager.decrementUiCounter();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCastManager.incrementUiCounter();
+    }
+
+    @Override
+    protected void onDestroy() {
+        //mCastManager. removeMiniController(mMiniController);
+        super.onDestroy();
+    }
 }

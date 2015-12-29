@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controller.main.ContentFragment;
@@ -41,10 +44,13 @@ public class MainActivity extends BaseActivity
 
     private ContentFragment mFragment;
 
+    private VideoCastManager mCastManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        BaseCastManager.checkGooglePlayServices(this);
         setupActionBar();
 
         mNavigationFragment = (NavigationFragment)
@@ -200,6 +206,7 @@ public class MainActivity extends BaseActivity
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
+            mCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
             restoreActionBar();
             return true;
         }
@@ -213,6 +220,19 @@ public class MainActivity extends BaseActivity
 //            return true;
 //        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        mCastManager.decrementUiCounter();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCastManager = VideoCastManager.getInstance();
+        mCastManager.incrementUiCounter();
     }
 
     @Override
