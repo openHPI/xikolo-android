@@ -238,7 +238,7 @@ public class GlobalApplication extends Application {
     private void configureVideoCastManager() {
         CastConfiguration options = new CastConfiguration.Builder(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID)
                 .enableAutoReconnect()
-                .enableCaptionManagement()
+                        //.enableCaptionManagement()
                 .enableDebug()
                 .enableLockScreen()
                 .enableWifiReconnection()

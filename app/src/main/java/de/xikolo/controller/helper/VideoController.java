@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.gms.common.images.WebImage;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
@@ -328,6 +329,8 @@ public class VideoController {
     private MediaInfo buildMetadata() {
         MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
         mediaMetadata.putString(MediaMetadata.KEY_TITLE, mVideoItemDetails.title);
+        mediaMetadata.addImage(new WebImage(Uri.parse(
+                mVideoItemDetails.detail.stream.poster)));
         MediaInfo mediaInfo = new MediaInfo.Builder(
                 mVideoItemDetails.detail.url)//enable choosing detail.stream.hd_url/sd_url
                 .setContentType("video/mp4")
