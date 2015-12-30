@@ -3,6 +3,7 @@
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
@@ -12,16 +13,9 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
+        jcenter()
         flatDir {
             dirs 'libs'
         }
     }
 }
-
-/*dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    // to get around https://code.google.com/p/android/issues/detail?id=52962, we need to
-    // depend on both debug and release versions of the library
-    releaseCompile project(path: '..:CastCompanionLibrary', configuration: 'release')
-    debugCompile project(path: '..:CastCompanionLibrary', configuration: 'debug')
-}*/

@@ -1,2 +1,3 @@
 include 'app'
-include '..:CastCompanionLibrary'
+include ':CastCompanionLibrary'
+project(':CastCompanionLibrary').projectDir = new File('CastCompanionLibrary/')
