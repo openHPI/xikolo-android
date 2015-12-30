@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.android.libraries.cast.companionlibrary.widgets.MiniController;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class CourseActivity extends BaseActivity {
     private int firstFragment;
 
     private VideoCastManager mCastManager;
-    //private MiniController mMiniController;
+    private MiniController mMiniController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +40,9 @@ public class CourseActivity extends BaseActivity {
         setContentView(R.layout.activity_course);
         setupActionBar();
         setActionBarElevation(0);
-        //mMiniController = (MiniController) findViewById(R.id.miniController);
+        mMiniController = (MiniController) findViewById(R.id.miniController);
         mCastManager = VideoCastManager.getInstance();
-        //mCastManager.addMiniController(mMiniController);
+        mCastManager.addMiniController(mMiniController);
 
         final Intent intent = getIntent();
         if (intent != null) {
@@ -192,7 +193,7 @@ public class CourseActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        //mCastManager. removeMiniController(mMiniController);
+        mCastManager. removeMiniController(mMiniController);
         super.onDestroy();
     }
 }
