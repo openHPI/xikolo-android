@@ -3,6 +3,7 @@ package de.xikolo.controller;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.Menu;
 
 import de.xikolo.R;
 import de.xikolo.controller.settings.SettingsFragment;
@@ -29,4 +30,9 @@ public class SettingsActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //for not showing cast icon in Settings Screen
+        return true;
+    }
 }

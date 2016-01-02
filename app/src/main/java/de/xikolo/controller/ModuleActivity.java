@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.Menu;
@@ -19,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class ModuleActivity extends BaseActivity {
 
     private PagerSlidingTabStrip mPagerSlidingTabStrip;
 
-    private VideoCastManager mCastManager;
+    //private VideoCastManager mCastManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +124,9 @@ public class ModuleActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.module, menu);
-        mCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
+        super.onCreateOptionsMenu(menu);
+        menu.add(0, R.id.action_download, 50, R.string.download);
+        //mCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
         return true;
     }
 
@@ -140,6 +142,7 @@ public class ModuleActivity extends BaseActivity {
             return true;
         }
         if (id == R.id.action_download) {
+            Log.d(TAG, "Menu Download reached");
             ModuleDownloadController moduleDownloadController = new ModuleDownloadController(this);
             moduleDownloadController.initModuleDownloads(mCourse, mModule);
             return true;
@@ -163,15 +166,15 @@ public class ModuleActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
-        mCastManager.decrementUiCounter();
+        //mCastManager.decrementUiCounter();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mCastManager = VideoCastManager.getInstance();
-        mCastManager.incrementUiCounter();
+        //mCastManager = VideoCastManager.getInstance();
+        ///mCastManager.incrementUiCounter();
     }
 
     public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.CustomTabProvider {

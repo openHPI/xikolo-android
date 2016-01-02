@@ -79,18 +79,18 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
     public void onDialogPositiveClick(DialogFragment dialog) {
         EnrollmentController.unenroll(this, mCourse);
     }
-/*
+
     @Override
     protected void onPause() {
-        mCastManager.decrementUiCounter();
+        //mCastManager.decrementUiCounter();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mCastManager = VideoCastManager.getInstance();
-        mCastManager.incrementUiCounter();
+        //mCastManager = VideoCastManager.getInstance();
+        //mCastManager.incrementUiCounter();
     }
-  */
+
 }

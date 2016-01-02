@@ -7,8 +7,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.path.android.jobqueue.JobManager;
 
 import de.greenrobot.event.EventBus;
@@ -31,6 +34,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
 
+    protected VideoCastManager videoCastManager;
+
     private DrawerLayout drawerLayout;
 
     private FrameLayout contentLayout;
@@ -41,6 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         globalApplication = GlobalApplication.getInstance();
         jobManager = globalApplication.getJobManager();
+        videoCastManager = VideoCastManager.getInstance();
     }
 
     protected void setupActionBar() {
@@ -124,6 +130,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
 
         globalApplication.startCookieSyncManager();
+        videoCastManager.incrementUiCounter();
     }
 
     @Override
@@ -132,6 +139,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         globalApplication.syncCookieSyncManager();
         globalApplication.stopCookieSyncManager();
+        videoCastManager.decrementUiCounter();
     }
 
     @Override
@@ -157,4 +165,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.base_activity, menu);
+        videoCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
 }
