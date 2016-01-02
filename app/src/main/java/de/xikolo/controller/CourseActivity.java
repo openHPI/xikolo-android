@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 
-import com.google.android.libraries.cast.companionlibrary.widgets.MiniController;
-
 import java.util.List;
 
 import de.xikolo.R;
@@ -29,8 +27,6 @@ public class CourseActivity extends BaseActivity {
 
     private Course mCourse;
     private int firstFragment;
-
-    private MiniController mMiniController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +165,8 @@ public class CourseActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.module, menu);
+        super.onCreateOptionsMenu(menu);
+        menu.add(0, R.id.action_download, 1, R.string.download);
         return true;
     }
 }
