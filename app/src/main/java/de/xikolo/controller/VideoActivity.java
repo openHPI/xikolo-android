@@ -26,14 +26,6 @@ import de.xikolo.model.Result;
 public class VideoActivity extends BaseActivity {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
-
-    private VideoController mVideoController;
-
-    private Course mCourse;
-    private Module mModule;
-    private Item<VideoItemDetail> mItem;
-    private ItemModel itemModel;
-
     Result<Void> saveVideoProgressResult = new Result<Void>() {
         @Override
         protected void onSuccess(Void result, DataSource dataSource) {
@@ -50,6 +42,11 @@ public class VideoActivity extends BaseActivity {
             super.onError(errorCode);
         }
     };
+    private VideoController mVideoController;
+    private Course mCourse;
+    private Module mModule;
+    private Item<VideoItemDetail> mItem;
+    private ItemModel itemModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +70,6 @@ public class VideoActivity extends BaseActivity {
                 hideSystemBars();
             }
         });
-        mVideoController.disableHeader();
 
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(VideoFragment.KEY_COURSE) || !b.containsKey(VideoFragment.KEY_MODULE) || !b.containsKey(VideoFragment.KEY_ITEM)) {

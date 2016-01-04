@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.common.images.WebImage;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
@@ -91,6 +94,7 @@ public class VideoController {
     private boolean savedIsPlaying = false;
     private boolean isPlaying = false;
     private boolean isCastPlaying = false;
+    private boolean isDevicePlaybackSetUp = false;
     private int currentPosition = 0;
 
     private boolean error = false;
@@ -101,26 +105,74 @@ public class VideoController {
         mActivity = activity;
 
         mVideoContainer = videoContainer;
-        mVideoView = (CustomSizeVideoView) mVideoContainer.findViewById(R.id.videoView);
         mVideoController = mVideoContainer.findViewById(R.id.videoController);
+        mVideoView = (CustomSizeVideoView) mVideoContainer.findViewById(R.id.videoView);
+        mPlayButton = (CustomFontTextView) mVideoContainer.findViewById(R.id.btnPlay);
 
         mVideoProgress = mVideoContainer.findViewById(R.id.videoProgress);
 
-        mVideoHeader = mVideoContainer.findViewById(R.id.videoHeader);
-        mFullscreenButton = mVideoContainer.findViewById(R.id.btnFullscreen);
-
         mVideoFooter = mVideoContainer.findViewById(R.id.videoFooter);
-        mSeekBar = (SeekBar) mVideoContainer.findViewById(R.id.videoSeekBar);
-        mCurrentTime = (TextView) mVideoController.findViewById(R.id.currentTime);
-        mTotalTime = (TextView) mVideoController.findViewById(R.id.totalTime);
-        mHDSwitch = (CustomFontTextView) mVideoController.findViewById(R.id.hdSwitch);
-
-        mPlayButton = (CustomFontTextView) mVideoContainer.findViewById(R.id.btnPlay);
 
         mVideoWarning = mVideoContainer.findViewById(R.id.videoWarning);
         mVideoWarningText = (TextView) mVideoContainer.findViewById(R.id.videoWarningText);
         mRetryButton = (TextView) mVideoContainer.findViewById(R.id.btnRetry);
 
+        mPlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show();
+                if (mVideoView.isPlaying() && isPlaying) {
+                    pause();
+                } else if (isCastPlaying) {
+                    pause();
+                } else {
+                    start();
+                }
+            }
+        });
+
+        mCastManager = VideoCastManager.getInstance();
+
+        if (mCastManager.isConnected()) {
+            setupCastPlayback();
+        } else {
+            setupDevicePlayback();
+        }
+        mCastManager.addVideoCastConsumer(new VideoCastConsumerImpl() {
+            @Override
+            public void onConnected() {
+                super.onConnected();
+                setupCastPlayback();
+            }
+
+            @Override
+            public void onDisconnected() {
+                super.onDisconnected();
+                setupDevicePlayback();
+            }
+        });
+
+        mDownloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), activity);
+    }
+
+    public void setupCastPlayback() {
+        mVideoView.setBackgroundColor(Color.BLACK);
+        mVideoProgress.setVisibility(View.GONE);
+        mVideoFooter.setVisibility(View.GONE);
+        mPlayButton.setTextSize(R.dimen.btn_play_text_size / 3);
+        SpannableString ss1 = new SpannableString("" + R.string.btn_play_cast);//String containing Playbutton and text
+        ss1.setSpan(new RelativeSizeSpan(3f), 0, 1, 0); // set size of Playbutton
+        mPlayButton.setText(ss1);
+    }
+
+    public void setupDevicePlayback() {
+        setupViewVariables();
+        setup();
+        mPlayButton.setTextSize(R.dimen.btn_play_text_size);
+        mVideoProgress.setVisibility(View.VISIBLE);
+        mVideoFooter.setVisibility(View.VISIBLE);
+        mRetryButton.setVisibility(View.VISIBLE);
+        mVideoWarning.setVisibility(View.INVISIBLE);
         mVideoContainer.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -128,10 +180,17 @@ public class VideoController {
                 return false;
             }
         });
+        isDevicePlaybackSetUp = true;
+    }
 
-        mDownloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), activity);
-        mCastManager = VideoCastManager.getInstance();
-        setup();
+    public void setupViewVariables() {
+        mVideoHeader = mVideoContainer.findViewById(R.id.videoHeader);
+        mFullscreenButton = mVideoContainer.findViewById(R.id.btnFullscreen);
+
+        mSeekBar = (SeekBar) mVideoContainer.findViewById(R.id.videoSeekBar);
+        mCurrentTime = (TextView) mVideoController.findViewById(R.id.currentTime);
+        mTotalTime = (TextView) mVideoController.findViewById(R.id.totalTime);
+        mHDSwitch = (CustomFontTextView) mVideoController.findViewById(R.id.hdSwitch);
     }
 
     private void setup() {
@@ -238,20 +297,6 @@ public class VideoController {
             }
         });
 
-        mPlayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                show();
-                if (mVideoView.isPlaying() && isPlaying) {
-                    pause();
-                } else if (isCastPlaying) {
-                    pause();
-                } else {
-                    start();
-                }
-            }
-        });
-
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -318,9 +363,9 @@ public class VideoController {
             } catch (CastException e) {
                 e.printStackTrace();
             } finally {
-                mPlayButton.setText("Playing on Chromecast");
-                mPlayButton.setTextSize(18);
-                mVideoView.setBackgroundColor(Color.BLACK);
+                //mPlayButton.setText("Playing on Chromecast");
+                //mPlayButton.setTextSize(18);
+                //mVideoView.setBackgroundColor(Color.BLACK);
                 isCastPlaying = true;
             }
         }
@@ -354,6 +399,7 @@ public class VideoController {
             } finally {
                 isCastPlaying = false;
                 mPlayButton.setTextSize(72);
+                //mPlayButton.setText();
             }
         } else {
             mVideoView.pause();
@@ -424,9 +470,12 @@ public class VideoController {
 
         if (mVideoItemDetails.detail.progress > minimumTimeNeeded) {
             savedTime = mVideoItemDetails.detail.progress;
+            currentPosition = savedTime;
             wasSaved = true;
         }
-        updateVideoQuality(course, module, mVideoItemDetails);
+        if (isDevicePlaybackSetUp) {
+            updateVideoQuality(course, module, mVideoItemDetails);
+        }
     }
 
     public VideoItemDetail getVideoItemDetail() {
@@ -437,12 +486,14 @@ public class VideoController {
         return null;
     }
 
-    public void enableHeader() {
-        mVideoHeader.setVisibility(View.VISIBLE);
-    }
-
-    public void disableHeader() {
-        mVideoHeader.setVisibility(View.GONE);
+    public void useHeader(boolean useHeader) {
+        if (isDevicePlaybackSetUp) {
+            if (useHeader) {
+                mVideoHeader.setVisibility(View.VISIBLE);
+            } else {
+                mVideoHeader.setVisibility(View.GONE);
+            }
+        }
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -463,7 +514,9 @@ public class VideoController {
             playVideoInHD = savedInstanceState.getBoolean(KEY_VIDEO_QUALITY);
             userChangedVideoQuality = savedInstanceState.getBoolean(KEY_DID_USER_CHANGE_QUALITY);
 
-            setHDSwitchColor(playVideoInHD);
+            if (isDevicePlaybackSetUp) {
+                setHDSwitchColor(playVideoInHD);
+            }
         }
     }
 
@@ -503,9 +556,11 @@ public class VideoController {
         playVideoInHD = true;
 
         saveCurrentPosition();
-        updateVideoQuality(mCourse, mModule, mVideoItemDetails);
-        seekTo(savedTime);
-        start();
+        if (isDevicePlaybackSetUp) {
+            updateVideoQuality(mCourse, mModule, mVideoItemDetails);
+            seekTo(savedTime);
+            start();
+        }
     }
 
     public void playSD() {
@@ -514,9 +569,11 @@ public class VideoController {
         playVideoInHD = false;
 
         saveCurrentPosition();
-        updateVideoQuality(mCourse, mModule, mVideoItemDetails);
-        seekTo(savedTime);
-        start();
+        if (isDevicePlaybackSetUp) {
+            updateVideoQuality(mCourse, mModule, mVideoItemDetails);
+            seekTo(savedTime);
+            start();
+        }
     }
 
     private void saveCurrentPosition() {
