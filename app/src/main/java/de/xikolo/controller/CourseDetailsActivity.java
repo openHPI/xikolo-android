@@ -23,8 +23,6 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
 
     private Course mCourse;
 
-    //private VideoCastManager mCastManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +53,9 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
         if (mCourse != null && mCourse.is_enrolled) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.coursedetails, menu);
-            //mCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
-            return true;
-        } else {
-            return super.onCreateOptionsMenu(menu);
         }
+        super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
@@ -82,15 +78,12 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
 
     @Override
     protected void onPause() {
-        //mCastManager.decrementUiCounter();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //mCastManager = VideoCastManager.getInstance();
-        //mCastManager.incrementUiCounter();
     }
 
 }

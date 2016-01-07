@@ -43,8 +43,6 @@ public class MainActivity extends BaseActivity
 
     private ContentFragment mFragment;
 
-    //private VideoCastManager mCastManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,15 +220,12 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void onPause() {
-        //mCastManager.decrementUiCounter();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //mCastManager = VideoCastManager.getInstance();
-        //mCastManager.incrementUiCounter();
     }
 
     @Override

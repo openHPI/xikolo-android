@@ -166,7 +166,6 @@ public class CourseActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, R.id.action_download, 1, R.string.download);
         return true;
     }
 }

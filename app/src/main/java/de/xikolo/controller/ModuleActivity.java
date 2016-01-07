@@ -56,8 +56,6 @@ public class ModuleActivity extends BaseActivity {
 
     private PagerSlidingTabStrip mPagerSlidingTabStrip;
 
-    //private VideoCastManager mCastManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,8 +123,6 @@ public class ModuleActivity extends BaseActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.module, menu);
         super.onCreateOptionsMenu(menu);
-        menu.add(0, R.id.action_download, 50, R.string.download);
-        //mCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
         return true;
     }
 
@@ -166,15 +162,12 @@ public class ModuleActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
-        //mCastManager.decrementUiCounter();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //mCastManager = VideoCastManager.getInstance();
-        ///mCastManager.incrementUiCounter();
     }
 
     public class ModulePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.CustomTabProvider {
