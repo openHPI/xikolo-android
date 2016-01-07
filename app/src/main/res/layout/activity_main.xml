@@ -28,12 +28,7 @@
                 android:layout_height="0dip"
                 android:layout_weight="1" />
 
-            <com.google.android.libraries.cast.companionlibrary.widgets.MiniController
-                android:id="@+id/miniController"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:auto_setup="true"></com.google.android.libraries.cast.companionlibrary.widgets.MiniController>
+            <include layout="@layout/container_mini_controller" />
 
         </LinearLayout>
 
