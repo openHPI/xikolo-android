@@ -21,6 +21,12 @@
 
     </style>
 
+    <style name="AppThemeDarkStatusBar" parent="AppTheme">
+
+        <item name="colorPrimaryDark">@color/black</item>
+
+    </style>
+
     <style name="AppThemeTranslucentStatus" parent="AppTheme.Base">
     </style>
 

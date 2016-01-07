@@ -245,6 +245,7 @@ public class GlobalApplication extends Application {
                 .enableNotification()
                 .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
                 .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, true)
+                .setCastControllerImmersive(false)
                 .build();
         VideoCastManager.initialize(this, options);
     }

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
@@ -154,7 +155,7 @@
             android:launchMode="singleTask"
             android:parentActivityName="de.xikolo.controller.CourseDetailsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppThemeDarkStatusBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.xikolo.controller.CourseDetailsActivity" />
@@ -180,7 +181,9 @@
                 <action android:name="com.google.android.libraries.cast.companionlibrary.action.notificationvisibility" />
             </intent-filter>
         </service>
+
         <service android:name="com.google.android.libraries.cast.companionlibrary.cast.reconnection.ReconnectionService" />
+
     </application>
 
 </manifest>
