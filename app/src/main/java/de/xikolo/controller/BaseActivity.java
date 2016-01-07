@@ -3,15 +3,20 @@ package de.xikolo.controller;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
+import com.google.android.libraries.cast.companionlibrary.widgets.IntroductoryOverlay;
 import com.path.android.jobqueue.JobManager;
 
 import de.greenrobot.event.EventBus;
@@ -40,13 +45,45 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private FrameLayout contentLayout;
 
+    private MenuItem mediaRouteMenuItem;
+
+    private VideoCastConsumerImpl castConsumer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         globalApplication = GlobalApplication.getInstance();
         jobManager = globalApplication.getJobManager();
+
+        BaseCastManager.checkGooglePlayServices(this);
+
         videoCastManager = VideoCastManager.getInstance();
+
+        castConsumer = new VideoCastConsumerImpl() {
+            @Override
+            public void onCastAvailabilityChanged(boolean castPresent) {
+                if (castPresent) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mediaRouteMenuItem.isVisible()) {
+                                showOverlay();
+                            }
+                        }
+                    }, 1000);
+                }
+            }
+        };
+    }
+
+    private void showOverlay() {
+        IntroductoryOverlay overlay = new IntroductoryOverlay.Builder(this)
+                .setMenuItem(mediaRouteMenuItem)
+                .setTitleText(R.string.intro_overlay_text)
+                .setSingleTime()
+                .build();
+        overlay.show();
     }
 
     protected void setupActionBar() {
@@ -168,7 +205,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.base_activity, menu);
-        videoCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
+        mediaRouteMenuItem = videoCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
         return super.onCreateOptionsMenu(menu);
     }
 
