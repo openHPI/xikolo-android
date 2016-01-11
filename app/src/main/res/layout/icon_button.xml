@@ -32,6 +32,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="16dp"
         android:paddingTop="8dp"
-        android:textSize="16sp" />
+        android:textAllCaps="true"
+        android:textSize="14sp" />
 
 </merge>

@@ -20,7 +20,6 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.ConfirmDeleteDialog;
 import de.xikolo.controller.dialogs.MobileDownloadDialog;
-import de.xikolo.controller.helper.VideoController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Download;
 import de.xikolo.data.entities.Item;
@@ -41,7 +40,6 @@ public class DownloadViewController {
     public static final String TAG = DownloadViewController.class.getSimpleName();
     private static final int MILLISECONDS = 250;
 
-    private VideoController videoController;
 
     private DownloadModel.DownloadFileType type;
 
@@ -70,8 +68,7 @@ public class DownloadViewController {
 
     private FragmentActivity activity;
 
-    public DownloadViewController(final FragmentActivity activity, final VideoController videoController, final DownloadModel.DownloadFileType type, final Course course, final Module module, final Item<VideoItemDetail> item) {
-        this.videoController = videoController;
+    public DownloadViewController(final FragmentActivity activity, final DownloadModel.DownloadFileType type, final Course course, final Module module, final Item<VideoItemDetail> item) {
         this.type = type;
         this.course = course;
         this.module = module;
@@ -174,13 +171,13 @@ public class DownloadViewController {
                 uri = item.detail.stream.hd_url;
                 fileNameText.setText(GlobalApplication.getInstance().getText(R.string.video_hd_as_mp4));
                 downloadStartButton.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_video));
-                openFileAsVideo();
+                downloadOpenButton.setVisibility(View.GONE);
                 break;
             case VIDEO_SD:
                 uri = item.detail.stream.sd_url;
                 fileNameText.setText(GlobalApplication.getInstance().getText(R.string.video_sd_as_mp4));
                 downloadStartButton.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_video));
-                openFileAsVideo();
+                downloadOpenButton.setVisibility(View.GONE);
                 break;
         }
 
@@ -344,20 +341,6 @@ public class DownloadViewController {
                     GlobalApplication.getInstance().startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     // Instruct the user to install a PDF reader here, or something
-                }
-            }
-        });
-    }
-
-    public void openFileAsVideo() {
-        downloadOpenButton.setText(GlobalApplication.getInstance().getResources().getText(R.string.play));
-        downloadOpenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (type == DownloadModel.DownloadFileType.VIDEO_HD) {
-                    videoController.playHD();
-                } else if (type == DownloadModel.DownloadFileType.VIDEO_SD) {
-                    videoController.playSD();
                 }
             }
         });

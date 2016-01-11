@@ -1,24 +1,29 @@
 package de.xikolo.controller.module;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.gms.common.images.WebImage;
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
+
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
+import de.xikolo.controller.helper.ImageLoaderController;
 import de.xikolo.controller.helper.NotificationController;
-import de.xikolo.controller.helper.VideoController;
 import de.xikolo.controller.module.helper.DownloadViewController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
@@ -29,43 +34,29 @@ import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
+import de.xikolo.view.CustomSizeImageView;
 
 public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
     public static final String TAG = VideoFragment.class.getSimpleName();
 
-    public static final int FULL_SCREEN_REQUEST = 1;
-
     public static final String KEY_COURSE = "key_course";
     public static final String KEY_MODULE = "key_module";
     public static final String KEY_ITEM = "key_item";
+
     VideoItemDetail itemDetail;
-    Result<Void> saveVideoProgressResult = new Result<Void>() {
-        @Override
-        protected void onSuccess(Void result, DataSource dataSource) {
-            super.onSuccess(result, dataSource);
-        }
 
-        @Override
-        protected void onWarning(WarnCode warnCode) {
-            super.onWarning(warnCode);
-        }
-
-        @Override
-        protected void onError(ErrorCode errorCode) {
-            super.onError(errorCode);
-        }
-    };
     private TextView mTitle;
     private View mContainer;
     private NotificationController mNotificationController;
     private LinearLayout mLinearLayoutDownloads;
-    private ViewGroup mVideoContainer;
+    private ViewGroup mVideoPreview;
+    private CustomSizeImageView mVideoThumbnail;
     private ViewGroup mVideoMetadata;
-    private VideoController mVideoController;
+    private View mPlayButton;
     private ItemModel mItemModel;
-    private boolean wasSaved = false;
 
+    private VideoCastManager mCastManager;
     public VideoFragment() {
 
     }
@@ -79,6 +70,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         super.onCreate(savedInstanceState);
 
         mItemModel = new ItemModel(jobManager);
+
+        mCastManager = VideoCastManager.getInstance();
     }
 
     @Override
@@ -94,96 +87,47 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
         mLinearLayoutDownloads = (LinearLayout) layout.findViewById(R.id.containerDownloads);
         
-        mVideoContainer = (ViewGroup) layout.findViewById(R.id.videoContainer);
+        mVideoPreview = (ViewGroup) layout.findViewById(R.id.videoPreview);
+        mVideoThumbnail = (CustomSizeImageView) layout.findViewById(R.id.videoThumbnail);
         mVideoMetadata = (ViewGroup) layout.findViewById(R.id.videoMetadata);
 
-        mContainer.setVisibility(View.GONE);
+        mPlayButton = layout.findViewById(R.id.playButton);
 
-        mVideoController = new VideoController(getActivity(), mVideoContainer);
+        mContainer.setVisibility(View.GONE);
 
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             Display display = getActivity().getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            mVideoController.setDimensions(size.x, size.x / 16 * 9);
+            mVideoThumbnail.setDimensions(size.x, size.x / 16 * 9);
         } else {
             Display display = getActivity().getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            mVideoController.setDimensions((int) (size.x * 0.6), (int) (size.x * 0.6 / 16 * 9));
-            ViewGroup.LayoutParams params = mVideoContainer.getLayoutParams();
-            params.width = (int) (size.x * 0.6);
-            mVideoContainer.setLayoutParams(params);
+            mVideoThumbnail.setDimensions((int) (size.x * 0.6), (int) (size.x * 0.6 / 16 * 9));
 
             ViewGroup.LayoutParams params_meta = mVideoMetadata.getLayoutParams();
             params_meta.width = (int) (size.x * 0.6);
             mVideoMetadata.setLayoutParams(params_meta);
         }
 
-        mVideoController.setOnFullscreenButtonClickedListener(new VideoController.OnFullscreenClickListener() {
-            @Override
-            public void onFullscreenClick(int currentPosition, boolean isPlaying, boolean isVideoQualityInHD, boolean didUserChangeVideoQuality) {
-                Intent intent = new Intent(getActivity(), VideoActivity.class);
-                Bundle b = new Bundle();
-                b.putParcelable(KEY_COURSE, mCourse);
-                b.putParcelable(KEY_MODULE, mModule);
-                b.putParcelable(KEY_ITEM, mItem);
-//                b.putInt(VideoController.KEY_TIME, currentPosition);
-                b.putBoolean(VideoController.KEY_ISPLAYING, isPlaying);
-                b.putBoolean(VideoController.KEY_VIDEO_QUALITY, isVideoQualityInHD);
-                b.putBoolean(VideoController.KEY_DID_USER_CHANGE_QUALITY, didUserChangeVideoQuality);
-                intent.putExtras(b);
-                startActivityForResult(intent, FULL_SCREEN_REQUEST);
-            }
-        });
-
         if (savedInstanceState != null) {
-            wasSaved = true;
-            mVideoController.returnFromSavedInstanceState(savedInstanceState);
             mItem = savedInstanceState.getParcelable(KEY_ITEM);
+            setupView();
         } else {
-            mContainer.setVisibility(View.GONE);
+            requestVideoDetails(false);
         }
 
         return layout;
     }
-    
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == FULL_SCREEN_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                wasSaved = true;
-                mVideoController.returnFromSavedInstanceState(data.getExtras());
-                mItem = data.getExtras().getParcelable(KEY_ITEM);
-            }
-        }
-    }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        if (!wasSaved) {
-            requestVideo(false);
-        } else {
-            setupVideo();
-        }
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(KEY_ITEM, mItem);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        if(mVideoController != null) {
-            itemDetail = mVideoController.getVideoItemDetail();
-
-            if(itemDetail != null) {
-                mItemModel.updateVideo(saveVideoProgressResult, itemDetail);
-            }
-        }
-    }
-
-    private void requestVideo(final boolean userRequest) {
+    private void requestVideoDetails(final boolean userRequest) {
         Result<Item> result = new Result<Item>() {
             @Override
             protected void onSuccess(Item result, DataSource dataSource) {
@@ -196,11 +140,11 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                     mNotificationController.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            requestVideo(true);
+                            requestVideoDetails(true);
                         }
                     });
                 } else if (result.detail != null) {
-                    setupVideo();
+                    setupView();
                 }
             }
 
@@ -224,69 +168,66 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         mItemModel.getItemDetail(result, mCourse, mModule, mItem, Item.TYPE_VIDEO);
     }
 
-    private void setupVideo() {
-        wasSaved = true;
+    private void setupView() {
         mNotificationController.setInvisible();
         mContainer.setVisibility(View.VISIBLE);
 
-        mVideoController.setVideo(mCourse, mModule, mItem);
+        ImageLoaderController.loadImage(mItem.detail.stream.poster, mVideoThumbnail);
 
         mTitle.setText(mItem.detail.title);
 
         mLinearLayoutDownloads.removeAllViews();
-        DownloadViewController hdVideo = new DownloadViewController(getActivity(), mVideoController, DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
+        DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
         mLinearLayoutDownloads.addView(hdVideo.getView());
-        DownloadViewController sdVideo = new DownloadViewController(getActivity(), mVideoController, DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
+        DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
         mLinearLayoutDownloads.addView(sdVideo.getView());
-        DownloadViewController slides = new DownloadViewController(getActivity(), mVideoController, DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
+        DownloadViewController slides = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
         mLinearLayoutDownloads.addView(slides.getView());
-//        DownloadViewController transcript = new DownloadViewController(DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
+//        DownloadViewController transcript = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
 //        mLinearLayoutDownloads.addView(transcript.getView());
+
+        mPlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCastManager.isConnected()) {
+                    mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), 0, true);
+                } else {
+                    Intent intent = new Intent(getActivity(), VideoActivity.class);
+                    Bundle b = new Bundle();
+                    b.putParcelable(KEY_COURSE, mCourse);
+                    b.putParcelable(KEY_MODULE, mModule);
+                    b.putParcelable(KEY_ITEM, mItem);
+                    intent.putExtras(b);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(KEY_ITEM, mItem);
-        if (mVideoController != null) {
-            mVideoController.onSaveInstanceState(outState);
-        }
+    private MediaInfo buildCastMetadata() {
+        MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
+        mediaMetadata.putString(MediaMetadata.KEY_TITLE, mItem.title);
+        WebImage image = new WebImage(Uri.parse(mItem.detail.stream.poster));
+        // small size image used for notification, mini­controller and Lock Screen on JellyBean
+        mediaMetadata.addImage(image);
+        // large image, used on the Cast Player page and Lock Screen on KitKat
+        mediaMetadata.addImage(image);
+        MediaInfo mediaInfo = new MediaInfo.Builder(
+                mItem.detail.stream.hd_url)
+                .setContentType("video/mp4")
+                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                .setMetadata(mediaMetadata)
+                .build();
+        return mediaInfo;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.refresh, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        switch (itemId) {
-//            case R.id.action_refresh:
-//                onRefresh();
-//                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void pageChanged() {
-        if (mVideoController != null) {
-            mVideoController.pauseIfLocal();
-            mVideoController.show();
-
-            itemDetail = mVideoController.getVideoItemDetail();
-           if(itemDetail != null) {
-               mItemModel.updateVideo(saveVideoProgressResult, itemDetail);
-           }
-        }
     }
 
     @Override
     public void pageScrolling(int state) {
-        if (mVideoController != null) {
-            mVideoController.hide();
-        }
     }
 
 }

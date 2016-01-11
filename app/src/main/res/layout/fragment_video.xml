@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,27 +14,42 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:id="@+id/videoLayout"
-                android:layout_width="fill_parent"
+            <FrameLayout
+                android:id="@+id/videoPreview"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/video_bg">
+                android:layout_alignParentStart="true"
+                android:background="@color/video_bg"
+                android:gravity="center">
 
-                <include
-                    android:id="@id/videoContainer"
-                    layout="@layout/container_video"
+                <de.xikolo.view.CustomSizeImageView
+                    android:id="@+id/videoThumbnail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true" />
-            </RelativeLayout>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
+                <de.xikolo.view.CustomFontTextView
+                    android:id="@+id/playButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/circle_button"
+                    android:elevation="2dp"
+                    android:gravity="center"
+                    android:text="@string/icon_play"
+                    android:textColor="@color/white"
+                    android:textSize="32dp"
+                    app:customFont="xikolo.ttf" />
+
+            </FrameLayout>
 
             <RelativeLayout
                 android:id="@+id/videoMetadata"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/videoLayout"
+                android:layout_below="@+id/videoPreview"
                 android:layout_centerHorizontal="true"
                 android:paddingBottom="8dp"
                 android:paddingLeft="16dp"
@@ -53,16 +69,16 @@
                 <TextView
                     android:id="@+id/textDownloads"
                     android:layout_width="fill_parent"
+                    android:layout_height="48dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/textTitle"
-                    android:layout_height="48dp"
                     android:background="@android:color/transparent"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/apptheme_second"
-                    android:textSize="14sp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/title_section_downloads" />
+                    android:gravity="center_vertical"
+                    android:text="@string/title_section_downloads"
+                    android:textColor="@color/apptheme_second"
+                    android:textSize="14sp" />
 
                 <LinearLayout
                     android:id="@+id/containerDownloads"
