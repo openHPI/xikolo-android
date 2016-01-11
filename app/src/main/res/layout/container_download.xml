@@ -92,32 +92,33 @@
         <RelativeLayout
             android:id="@+id/downloadEndContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/buttonDownloadOpen"
-                style="@style/Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/button_main"
-                android:text="@string/open" />
+            android:layout_height="wrap_content"
+            android:gravity="right">
 
             <Button
                 android:id="@+id/buttonDownloadDelete"
                 style="@style/Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="4dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="4dp"
-                android:layout_toLeftOf="@+id/buttonDownloadOpen"
                 android:background="@drawable/button_gray"
                 android:text="@string/delete" />
+
+            <Button
+                android:id="@+id/buttonDownloadOpen"
+                style="@style/Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_toLeftOf="@+id/buttonDownloadDelete"
+                android:background="@drawable/button_main"
+                android:text="@string/open" />
 
         </RelativeLayout>
 

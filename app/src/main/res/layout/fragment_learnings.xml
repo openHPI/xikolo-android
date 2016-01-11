@@ -30,6 +30,4 @@
 
     <include layout="@layout/container_notification" />
 
-    <include layout="@layout/container_mini_controller" />
-
 </FrameLayout>

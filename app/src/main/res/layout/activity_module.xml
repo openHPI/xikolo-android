@@ -26,8 +26,11 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/miniController"
         android:layout_below="@+id/tabs" />
 
-    <include layout="@layout/container_mini_controller" />
+    <include
+        android:id="@+id/miniController"
+        layout="@layout/container_mini_controller" />
 
 </RelativeLayout>
