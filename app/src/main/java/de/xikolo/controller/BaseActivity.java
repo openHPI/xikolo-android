@@ -75,6 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
             }
         };
+        videoCastManager.addVideoCastConsumer(castConsumer);
     }
 
     private void showOverlay() {
