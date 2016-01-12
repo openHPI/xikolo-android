@@ -416,6 +416,14 @@ public class VideoController {
         return mVideoController;
     }
 
+    public View getVideoView() {
+        return mVideoView;
+    }
+
+    public View getVideoContainer() {
+        return mVideoContainer;
+    }
+
     private String getTimeString(int millis) {
         return String.format("%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(millis),

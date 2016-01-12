@@ -1,9 +1,11 @@
 package de.xikolo.controller;
 
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -49,12 +51,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private VideoCastConsumerImpl castConsumer;
 
+    private boolean offlineModeToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         globalApplication = GlobalApplication.getInstance();
         jobManager = globalApplication.getJobManager();
+
+        offlineModeToolbar = true;
 
         BaseCastManager.checkGooglePlayServices(this);
 
@@ -100,22 +106,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-//            actionBar.setLogo(R.drawable.ic_logo);
         }
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (Build.VERSION.SDK_INT >= 21) {
-            if (drawerLayout != null) {
-                drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.apptheme_main));
-            } else {
-                getWindow().setStatusBarColor(getResources().getColor(R.color.apptheme_main_dark_status));
-            }
-        }
-
         contentLayout = (FrameLayout) findViewById(R.id.contentLayout);
-        if (contentLayout != null) {
-            contentLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
-        }
+        setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
     }
 
     protected void setActionBarElevation(float elevation) {
@@ -124,33 +119,33 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    protected void enableOfflineModeToolbar(boolean enable) {
+        this.offlineModeToolbar = enable;
+    }
+
     public void onEventMainThread(NetworkStateEvent event) {
-        if (toolbar != null) {
+        if (toolbar != null && offlineModeToolbar) {
             if (event.isOnline()) {
-                toolbar.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
                 toolbar.setSubtitle("");
-                if (Build.VERSION.SDK_INT >= 21) {
-                    if (drawerLayout != null) {
-                        drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.apptheme_main));
-                    } else {
-                        getWindow().setStatusBarColor(getResources().getColor(R.color.apptheme_main_dark_status));
-                    }
-                    if (contentLayout != null) {
-                        contentLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
-                    }
-                }
+                setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
             } else {
-                toolbar.setBackgroundColor(getResources().getColor(R.color.offline_mode));
                 toolbar.setSubtitle(getString(R.string.offline_mode));
-                if (Build.VERSION.SDK_INT >= 21) {
-                    if (drawerLayout != null) {
-                        drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.offline_mode));
-                    } else {
-                        getWindow().setStatusBarColor(getResources().getColor(R.color.offline_mode_dark));
-                    }
-                    if (contentLayout != null) {
-                        contentLayout.setBackgroundColor(getResources().getColor(R.color.offline_mode));
-                    }
+                setColorScheme(R.color.offline_mode, R.color.offline_mode_dark);
+            }
+        }
+    }
+
+    protected void setColorScheme(int color, int darkColor) {
+        if (toolbar != null) {
+            toolbar.setBackgroundColor(ContextCompat.getColor(this, color));
+            if (Build.VERSION.SDK_INT >= 21) {
+                if (drawerLayout != null) {
+                    drawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, color));
+                } else {
+                    getWindow().setStatusBarColor(ContextCompat.getColor(this, darkColor));
+                }
+                if (contentLayout != null) {
+                    contentLayout.setBackgroundColor(ContextCompat.getColor(this, color));
                 }
             }
         }
