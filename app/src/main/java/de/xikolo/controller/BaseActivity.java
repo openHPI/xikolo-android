@@ -1,7 +1,6 @@
 package de.xikolo.controller;
 
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -198,9 +196,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    protected void enableCastMediaRouterButton(boolean enable) {
+        if (mediaRouteMenuItem != null) {
+            mediaRouteMenuItem.setVisible(enable);
+            invalidateOptionsMenu();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.base_activity, menu);
+        getMenuInflater().inflate(R.menu.cast, menu);
         mediaRouteMenuItem = videoCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
         return super.onCreateOptionsMenu(menu);
     }

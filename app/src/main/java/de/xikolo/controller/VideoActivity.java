@@ -8,6 +8,7 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -195,6 +196,13 @@ public class VideoActivity extends BaseActivity {
             uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
         }
         decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        enableCastMediaRouterButton(false);
+        return true;
     }
 
     @Override

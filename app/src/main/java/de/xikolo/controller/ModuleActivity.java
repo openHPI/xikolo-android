@@ -121,7 +121,7 @@ public class ModuleActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.module, menu);
+        getMenuInflater().inflate(R.menu.download, menu);
         super.onCreateOptionsMenu(menu);
         return true;
     }
