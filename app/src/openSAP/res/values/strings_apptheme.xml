@@ -3,7 +3,8 @@
 
     <string name="app_name" translatable="false">openSAP</string>
 
-    <string name="settings_copyright" translatable="false">&#169; 2012 &#8211; 2015 Copyright SAP</string>
+    <string name="settings_copyright" translatable="false">&#169; 2012 &#8211; 2016 Copyright SAP
+    </string>
     <string name="settings_imprint" translatable="false">Legal Disclosure</string>
     <string name="settings_privacy" translatable="false">Privacy</string>
 
