@@ -190,7 +190,18 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             @Override
             public void onClick(View v) {
                 if (mCastManager.isConnected()) {
-                    mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), 0, true);
+                    mItemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
+                        @Override
+                        protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
+                            mItem.detail = result;
+                            mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), result.progress, true);
+                        }
+
+                        @Override
+                        protected void onError(ErrorCode errorCode) {
+                            mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), 0, true);
+                        }
+                    }, mItem.detail);
                 } else {
                     Intent intent = new Intent(getActivity(), VideoActivity.class);
                     Bundle b = new Bundle();
