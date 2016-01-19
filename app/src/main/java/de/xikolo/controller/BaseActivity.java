@@ -108,7 +108,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         contentLayout = (FrameLayout) findViewById(R.id.contentLayout);
-        setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
+        setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark_status);
     }
 
     protected void setActionBarElevation(float elevation) {
@@ -125,7 +125,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (toolbar != null && offlineModeToolbar) {
             if (event.isOnline()) {
                 toolbar.setSubtitle("");
-                setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
+                setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark_status);
             } else {
                 toolbar.setSubtitle(getString(R.string.offline_mode));
                 setColorScheme(R.color.offline_mode, R.color.offline_mode_dark);
