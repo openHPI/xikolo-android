@@ -18,25 +18,49 @@
 
         <RelativeLayout
             android:id="@+id/videoHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
             android:layout_alignParentTop="true"
             android:background="@drawable/gradient_black_transparent_top"
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:visibility="gone">
+            android:paddingTop="4dp">
 
-            <de.xikolo.view.CustomFontTextView
-                android:id="@+id/btnFullscreen"
+            <RelativeLayout
+                android:id="@+id/offlineHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="@string/icon_fullscreen"
-                android:textColor="@color/white_alpha"
-                android:textSize="32sp"
-                app:customFont="xikolo.ttf" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:visibility="gone">
+
+                <de.xikolo.view.CustomFontTextView
+                    android:id="@+id/offlineIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="6dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/icon_download_video"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:customFont="xikolo.ttf" />
+
+                <TextView
+                    android:id="@+id/offlineText"
+                    style="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/offlineIcon"
+                    android:text="@string/offline"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -52,59 +76,66 @@
             android:textSize="@dimen/btn_play_text_size"
             app:customFont="xikolo.ttf" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/videoFooter"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:background="@drawable/gradient_black_transparent_bottom"
-            android:gravity="center"
-            android:orientation="horizontal"
             android:paddingBottom="4dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
 
-            <TextView
-                android:id="@+id/currentTime"
-                style="bold"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="8dp"
-                android:text="--:--"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <SeekBar
-                android:id="@+id/videoSeekBar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingBottom="0dp"
-                android:paddingTop="0dp" />
+                <TextView
+                    android:id="@+id/currentTime"
+                    style="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="8dp"
+                    android:text="--:--"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/totalTime"
-                style="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:text="--:--"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <SeekBar
+                    android:id="@+id/videoSeekBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingBottom="0dp"
+                    android:paddingTop="0dp" />
 
-            <de.xikolo.view.CustomFontTextView
-                android:id="@+id/hdSwitch"
-                style="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:text="@string/icon_hd"
-                android:textColor="@color/video_hd_disabled"
-                android:textSize="24sp"
-                app:customFont="xikolo.ttf" />
+                <TextView
+                    android:id="@+id/totalTime"
+                    style="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:text="--:--"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-        </LinearLayout>
+                <de.xikolo.view.CustomFontTextView
+                    android:id="@+id/hdSwitch"
+                    style="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:text="@string/icon_hd"
+                    android:textColor="@color/video_hd_disabled"
+                    android:textSize="24sp"
+                    app:customFont="xikolo.ttf" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

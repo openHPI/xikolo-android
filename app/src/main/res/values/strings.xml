@@ -144,6 +144,7 @@
 
     <!-- -->
     <string name="offline_mode">Offline Mode</string>
+    <string name="offline" translatable="false">Offline</string>
 
     <!-- -->
     <string name="media_route_menu_title">CAST</string>

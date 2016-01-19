@@ -12,8 +12,9 @@ import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.model.jobs.RetrieveItemDetailJob;
 import de.xikolo.model.jobs.RetrieveItemsJob;
+import de.xikolo.model.jobs.RetrieveLocalVideoJob;
 import de.xikolo.model.jobs.UpdateProgressionJob;
-import de.xikolo.model.jobs.UpdateVideoJob;
+import de.xikolo.model.jobs.UpdateLocalVideoJob;
 
 public class ItemModel extends BaseModel {
 
@@ -43,11 +44,12 @@ public class ItemModel extends BaseModel {
         mJobManager.addJobInBackground(new UpdateProgressionJob(result, module, item));
     }
 
-    public void updateVideo(Result<Void> result, VideoItemDetail videoItemDetail) {
-        if(videoItemDetail.progress > 0) {
-            mJobManager.addJobInBackground(new UpdateVideoJob(result, videoItemDetail));
-        } else {
-        }
+    public void updateLocalVideoProgress(Result<Void> result, VideoItemDetail videoItemDetail) {
+        mJobManager.addJobInBackground(new UpdateLocalVideoJob(result, videoItemDetail));
+    }
+
+    public void getLocalVideoProgress(Result<VideoItemDetail> result, VideoItemDetail videoItemDetail) {
+            mJobManager.addJobInBackground(new RetrieveLocalVideoJob(result, videoItemDetail));
     }
 
     public static void sortItems(List<Item> items) {

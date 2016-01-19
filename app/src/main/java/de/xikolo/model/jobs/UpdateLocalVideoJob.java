@@ -14,9 +14,9 @@ import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 
-public class UpdateVideoJob extends Job {
+public class UpdateLocalVideoJob extends Job {
 
-    public static final String TAG = UpdateVideoJob.class.getSimpleName();
+    public static final String TAG = UpdateLocalVideoJob.class.getSimpleName();
 
     private static final AtomicInteger jobCounter = new AtomicInteger(0);
 
@@ -25,7 +25,7 @@ public class UpdateVideoJob extends Job {
     private Result<Void> result;
     private VideoItemDetail videoItemDetail;
 
-    public UpdateVideoJob(Result<Void> result, VideoItemDetail videoItemDetail) {
+    public UpdateLocalVideoJob(Result<Void> result, VideoItemDetail videoItemDetail) {
         super(new Params(Priority.MID));
         id = jobCounter.incrementAndGet();
 

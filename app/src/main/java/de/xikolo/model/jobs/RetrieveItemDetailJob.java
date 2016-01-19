@@ -100,6 +100,8 @@ public class RetrieveItemDetailJob extends Job {
 
                     if (itemType.equals(Item.TYPE_VIDEO)) {
                         videoDataAccess.addOrUpdateVideo((VideoItemDetail) item.detail);
+                        // get local video progress, if available
+                        item.detail = videoDataAccess.getVideo(item.id);
                     }
 
                     result.success(item, Result.DataSource.NETWORK);

@@ -21,7 +21,6 @@ public class VideoItemDetail extends ItemDetail {
     @SerializedName("seconds")
     public String seconds;
 
-    @SerializedName("progress")
     public int progress;
 
     @SerializedName("url")

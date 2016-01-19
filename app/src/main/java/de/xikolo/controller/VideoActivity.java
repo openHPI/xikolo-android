@@ -78,6 +78,13 @@ public class VideoActivity extends BaseActivity {
             mModule = getIntent().getExtras().getParcelable(VideoFragment.KEY_MODULE);
             mItem = getIntent().getExtras().getParcelable(VideoFragment.KEY_ITEM);
 
+            itemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
+                @Override
+                protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
+                    mItem.detail = result;
+                }
+            }, mItem.detail);
+
             mVideoTitleText.setText(mItem.detail.title);
         }
 
@@ -104,7 +111,7 @@ public class VideoActivity extends BaseActivity {
 
         updateVideoView(getResources().getConfiguration().orientation);
 
-        mVideoController.setVideo(mCourse, mModule, mItem);
+        mVideoController.setupVideo(mCourse, mModule, mItem);
     }
 
     private void updateVideoView(int orientation) {
@@ -126,9 +133,20 @@ public class VideoActivity extends BaseActivity {
                 videoContainer.setLayoutParams(params);
                 videoContainer.requestLayout();
 
-                mVideoController.getControllerView().setPadding(0, 0,
+                int statusBarHeight = 0;
+                int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+                if (resourceId > 0) {
+                    statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+                }
+
+                int videoOffset = (size.y - size.x / 16 * 9) / 2;
+
+                int systemBarHeight = size.y - getResources().getDisplayMetrics().heightPixels;
+
+                mVideoController.getControllerView().setPadding(0,
+                        videoOffset > statusBarHeight ? videoOffset : statusBarHeight,
                         size.x - getResources().getDisplayMetrics().widthPixels,
-                        size.y - getResources().getDisplayMetrics().heightPixels);
+                        videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
 
                 mVideoMetadataView.setVisibility(View.GONE);
             } else {
@@ -228,9 +246,10 @@ public class VideoActivity extends BaseActivity {
         super.onPause();
 
         if (mVideoController != null) {
+            mVideoController.pause();
             VideoItemDetail itemDetail = mVideoController.getVideoItemDetail();
             if (itemDetail != null) {
-                itemModel.updateVideo(new Result<Void>() {
+                itemModel.updateLocalVideoProgress(new Result<Void>() {
                 }, itemDetail);
             }
         }
