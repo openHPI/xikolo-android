@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">openUNE</string>
+    <string name="app_name" translatable="false">openUNE</string>
 
-    <string name="settings_copyright">&#169; 2012 &#8211; 2016 Guofudata</string>
+    <string name="settings_copyright" translatable="false">&#169; 2012 &#8211; %d Guofudata</string>
     <string name="settings_imprint">Imprint</string>
     <string name="settings_privacy">Data Protection</string>
 

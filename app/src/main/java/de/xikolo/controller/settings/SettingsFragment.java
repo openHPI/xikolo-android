@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
+import java.util.Calendar;
+
 import de.greenrobot.event.EventBus;
 import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
@@ -39,6 +41,7 @@ public class SettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.settings);
 
         Preference copyright = findPreference("copyright");
+        copyright.setTitle(String.format(String.valueOf(copyright.getTitle()), Calendar.getInstance().get(Calendar.YEAR)));
         copyright.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {

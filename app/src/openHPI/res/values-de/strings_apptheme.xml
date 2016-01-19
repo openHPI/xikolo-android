@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">openHPI</string>
-
-    <string name="settings_copyright">&#169; 2012 &#8211; 2015 Hasso-Plattner-Institut</string>
+    <string name="settings_copyright">&#169; 2012 &#8211; %d Hasso-Plattner-Institut</string>
     <string name="settings_imprint">Impressum</string>
     <string name="settings_privacy">Hinweise zum Datenschutz</string>
 
