@@ -183,4 +183,7 @@
     <string name="lang_de">German</string>
     <string name="lang_zh">Chinese</string>
 
+    <!-- -->
+    <string name="filename_cache_lastcourse">lastCourseExtras</string>
+
 </resources>

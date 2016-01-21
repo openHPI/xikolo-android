@@ -154,7 +154,7 @@
             android:name="com.google.android.libraries.cast.companionlibrary.cast.player.VideoCastControllerActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:parentActivityName="de.xikolo.controller.CourseDetailsActivity"
+            android:parentActivityName="de.xikolo.controller.ModuleActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeDarkStatusBar">
             <meta-data

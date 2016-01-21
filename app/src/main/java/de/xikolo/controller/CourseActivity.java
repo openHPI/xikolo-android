@@ -12,6 +12,7 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.controller.course.CourseFragment;
 import de.xikolo.controller.exceptions.WrongParameterException;
+import de.xikolo.controller.helper.CacheController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.Result;
@@ -44,7 +45,15 @@ public class CourseActivity extends BaseActivity {
             } else {
                 Bundle b = getIntent().getExtras();
                 if (b == null || !b.containsKey(ARG_COURSE)) {
-                    throw new WrongParameterException();
+                    if (videoCastManager.isConnected()) {
+                        CacheController cacheController = new CacheController();
+                        cacheController.readCachedExtras();
+                        if (cacheController.getCourse() != null) {
+                            mCourse = cacheController.getCourse();
+                        }
+                    } else {
+                        throw new WrongParameterException();
+                    }
                 } else {
                     this.mCourse = b.getParcelable(ARG_COURSE);
                 }

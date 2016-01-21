@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.UnenrollDialog;
 import de.xikolo.controller.exceptions.WrongParameterException;
+import de.xikolo.controller.helper.CacheController;
 import de.xikolo.controller.helper.EnrollmentController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.util.Config;
@@ -31,7 +32,15 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
 
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(ARG_COURSE)) {
-            throw new WrongParameterException();
+            if (videoCastManager.isConnected()) {
+                CacheController cacheController = new CacheController();
+                cacheController.readCachedExtras();
+                if (cacheController.getCourse() != null) {
+                    mCourse = cacheController.getCourse();
+                }
+            } else {
+                throw new WrongParameterException();
+            }
         } else {
             this.mCourse = b.getParcelable(ARG_COURSE);
         }

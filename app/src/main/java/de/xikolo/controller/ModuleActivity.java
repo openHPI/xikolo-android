@@ -26,6 +26,7 @@ import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
+import de.xikolo.controller.helper.CacheController;
 import de.xikolo.controller.helper.ModuleDownloadController;
 import de.xikolo.controller.module.PagerFragment;
 import de.xikolo.controller.module.VideoFragment;
@@ -64,7 +65,21 @@ public class ModuleActivity extends BaseActivity {
 
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(ARG_COURSE) || !b.containsKey(ARG_MODULE)) {
-            throw new WrongParameterException();
+            if (videoCastManager.isConnected()) {
+                CacheController cacheController = new CacheController();
+                cacheController.readCachedExtras();
+                if (cacheController.getCourse() != null) {
+                    mCourse = cacheController.getCourse();
+                }
+                if (cacheController.getModule() != null) {
+                    mModule = cacheController.getModule();
+                }
+                if (cacheController.getItem() != null) {
+                    mItem = cacheController.getItem();
+                }
+            } else {
+                throw new WrongParameterException();
+            }
         } else {
             this.mCourse = b.getParcelable(ARG_COURSE);
             this.mModule = b.getParcelable(ARG_MODULE);

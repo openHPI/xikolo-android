@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +16,10 @@ import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.common.images.WebImage;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
-import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
 
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
+import de.xikolo.controller.helper.CacheController;
 import de.xikolo.controller.helper.ImageLoaderController;
 import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.module.helper.DownloadViewController;
@@ -194,11 +192,13 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                         @Override
                         protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
                             mItem.detail = result;
+                            setCurrentCourse();
                             mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), result.progress, true);
                         }
 
                         @Override
                         protected void onError(ErrorCode errorCode) {
+                            setCurrentCourse();
                             mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), 0, true);
                         }
                     }, mItem.detail);
@@ -230,6 +230,15 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                 .setMetadata(mediaMetadata)
                 .build();
         return mediaInfo;
+    }
+
+    private void setCurrentCourse() {
+        CacheController cacheController = new CacheController();
+        Intent i = getActivity().getIntent();
+        if (i.getExtras() != null) {
+            Bundle b = getActivity().getIntent().getExtras();
+            cacheController.setCachedExtras(b);
+        }
     }
 
 
