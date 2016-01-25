@@ -27,8 +27,9 @@
             android:id="@+id/textLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/textIcon"
-            android:layout_toRightOf="@+id/textIcon"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="56dp"
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textColor="@color/white"
@@ -40,9 +41,9 @@
         android:id="@+id/containerProfile"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="16dp"
+        android:background="@drawable/gradient_default_image"
         android:orientation="vertical"
-        android:background="@drawable/gradient_default_image">
+        android:padding="16dp">
 
         <de.xikolo.view.CircularImageView
             android:id="@+id/imgProfile"

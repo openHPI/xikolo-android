@@ -10,14 +10,6 @@
 
     <color name="apptheme_main_alpha">#1a328CDC</color>
 
-    <!-- navi colors + 5% apptheme_main -->
-    <color name="navi_main_light">#2e2824</color>
-    <color name="navi_sub_light">#1f1915</color>
-    <color name="navi_profile_light">#3c3531</color>
-
-    <color name="apptheme_gray">#5a6065</color>
-    <color name="apptheme_gray_dark">#474B4F</color>
-
     <color name="apptheme_second">#56B7A4</color>
     <color name="apptheme_third">#7DB7E4</color>
 
