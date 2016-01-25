@@ -1,10 +1,6 @@
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:choiceMode="singleChoice"
-    android:dividerHeight="1dp"
-    android:divider="@color/navi_main"
     android:background="@color/navi_sub"
-    tools:context="de.xikolo.controller.navigation.NavigationFragment"
-    android:drawSelectorOnTop="false" />
+    tools:context="de.xikolo.controller.navigation.NavigationFragment" />

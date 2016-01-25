@@ -1,13 +1,13 @@
 package de.xikolo.controller.navigation.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -16,15 +16,17 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.data.entities.User;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.UserModel;
 import de.xikolo.view.CircularImageView;
 
-public class NavigationAdapter extends BaseAdapter {
+public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.BaseNavigationViewHolder> {
 
     public static final String TAG = NavigationAdapter.class.getSimpleName();
+
     public static final int NAV_ID_LOW_LEVEL_CONTENT = -1;
     public static final int NAV_ID_PROFILE = 0;
     public static final int NAV_ID_ALL_COURSES = 1;
@@ -32,168 +34,157 @@ public class NavigationAdapter extends BaseAdapter {
     public static final int NAV_ID_NEWS = 3;
     public static final int NAV_ID_DOWNLOADS = 4;
     public static final int NAV_ID_SETTINGS = 5;
+
     private List<Element> elements;
-    private Activity mActivity;
 
     private CourseModel courseModel;
 
-    public NavigationAdapter(Activity activity, CourseModel courseModel) {
-        this.mActivity = activity;
+    private int checkedItem = -1;
+
+    OnItemClickListener mItemClickListener;
+
+    public NavigationAdapter(CourseModel courseModel) {
+        final Context context = GlobalApplication.getInstance();
+
         this.courseModel = courseModel;
         elements = new ArrayList<Element>() {{
-            add(new Element(mActivity.getString(R.string.icon_profile),
-                    mActivity.getString(R.string.title_section_login)));
-            add(new Element(mActivity.getString(R.string.icon_courses),
-                    mActivity.getString(R.string.title_section_all_courses)));
-            add(new Element(mActivity.getString(R.string.icon_course),
-                    mActivity.getString(R.string.title_section_my_courses)));
-            add(new Element(mActivity.getString(R.string.icon_news),
-                    mActivity.getString(R.string.title_section_news)));
-            add(new Element(mActivity.getString(R.string.icon_downloads),
-                    mActivity.getString(R.string.title_section_downloads)));
-            add(new Element(mActivity.getString(R.string.icon_settings),
-                    mActivity.getString(R.string.title_section_settings)));
+            add(new Element(context.getString(R.string.icon_profile),
+                    context.getString(R.string.title_section_login)));
+            add(new Element(context.getString(R.string.icon_courses),
+                    context.getString(R.string.title_section_all_courses)));
+            add(new Element(context.getString(R.string.icon_course),
+                    context.getString(R.string.title_section_my_courses)));
+            add(new Element(context.getString(R.string.icon_news),
+                    context.getString(R.string.title_section_news)));
+            add(new Element(context.getString(R.string.icon_downloads),
+                    context.getString(R.string.title_section_downloads)));
+            add(new Element(context.getString(R.string.icon_settings),
+                    context.getString(R.string.title_section_settings)));
         }};
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return elements.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return elements.get(i);
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View rowView = view;
-        if (rowView == null) {
-            ViewHolder viewHolder = new ViewHolder();
-
-            LayoutInflater inflater = mActivity.getLayoutInflater();
-            if (i == NAV_ID_PROFILE) {
-                rowView = inflater.inflate(R.layout.item_navi_profile, null);
-
-                viewHolder.containerLogin = rowView.findViewById(R.id.containerLogin);
-                viewHolder.containerProfile = rowView.findViewById(R.id.containerProfile);
-                viewHolder.name = (TextView) rowView.findViewById(R.id.textName);
-                viewHolder.email = (TextView) rowView.findViewById(R.id.textEmail);
-                viewHolder.img = (CircularImageView) rowView.findViewById(R.id.imgProfile);
-
-                setStatusBarPadding(viewHolder.containerLogin);
-                setStatusBarPadding(viewHolder.containerProfile);
-
-            } else if (i == NAV_ID_SETTINGS || i == NAV_ID_DOWNLOADS) {
-                rowView = inflater.inflate(R.layout.item_navi_sub, null);
-            } else {
-                rowView = inflater.inflate(R.layout.item_navi_main, null);
-                viewHolder.counter = (TextView) rowView.findViewById(R.id.textCounter);
-            }
-
-            viewHolder.icon = (TextView) rowView.findViewById(R.id.textIcon);
-            viewHolder.label = (TextView) rowView.findViewById(R.id.textLabel);
-
-            rowView.setTag(viewHolder);
+    public BaseNavigationViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View itemView;
+        if (viewType == NAV_ID_PROFILE) {
+            itemView = LayoutInflater.
+                    from(viewGroup.getContext()).
+                    inflate(R.layout.item_navi_profile, viewGroup, false);
+            return new ProfileNavigationViewHolder(itemView);
+        } else if (viewType == NAV_ID_SETTINGS || viewType == NAV_ID_DOWNLOADS) {
+            itemView = LayoutInflater.
+                    from(viewGroup.getContext()).
+                    inflate(R.layout.item_navi_sub, viewGroup, false);
+            return new BaseNavigationViewHolder(itemView);
+        } else {
+            itemView = LayoutInflater.
+                    from(viewGroup.getContext()).
+                    inflate(R.layout.item_navi_main, viewGroup, false);
+            return new CounterNavigationViewHolder(itemView);
         }
-        ViewHolder holder = (ViewHolder) rowView.getTag();
+    }
 
-        Element element = (Element) getItem(i);
-        holder.icon.setText(element.icon);
+    @Override
+    public void onBindViewHolder(BaseNavigationViewHolder viewHolder, int position) {
+        Element element = elements.get(position);
 
-        if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mActivity)) {
-            holder.containerLogin.setVisibility(View.GONE);
-            holder.containerProfile.setVisibility(View.VISIBLE);
+        Context context = GlobalApplication.getInstance();
 
-            User user = UserModel.getSavedUser(mActivity);
-            holder.name.setText(user.first_name + " " + user.last_name);
-            holder.email.setText(user.email);
+        viewHolder.icon.setText(element.icon);
 
-            if (user.user_visual != null) {
-                Drawable lastImage;
-                if (holder.img.getDrawable() != null) {
-                    lastImage = holder.img.getDrawable();
+        if (position == NAV_ID_PROFILE) {
+            ProfileNavigationViewHolder profileViewHolder = (ProfileNavigationViewHolder) viewHolder;
+
+            if (UserModel.isLoggedIn(context)) {
+                profileViewHolder.containerLogin.setVisibility(View.GONE);
+                profileViewHolder.containerProfile.setVisibility(View.VISIBLE);
+
+                User user = UserModel.getSavedUser(context);
+                profileViewHolder.name.setText(String.format(context.getResources().getString(R.string.user_name),
+                        user.first_name, user.last_name));
+                profileViewHolder.email.setText(user.email);
+
+                if (user.user_visual != null) {
+                    Drawable lastImage;
+                    if (profileViewHolder.img.getDrawable() != null) {
+                        lastImage = profileViewHolder.img.getDrawable();
+                    } else {
+                        lastImage = ContextCompat.getDrawable(context, R.drawable.avatar);
+                    }
+                    DisplayImageOptions options = new DisplayImageOptions.Builder()
+                            .showImageOnLoading(lastImage)
+                            .showImageForEmptyUri(R.drawable.avatar)
+                            .showImageOnFail(R.drawable.avatar)
+                            .build();
+                    ImageLoader.getInstance().displayImage(user.user_visual, profileViewHolder.img, options);
                 } else {
-                    lastImage = mActivity.getResources().getDrawable(R.drawable.avatar);
+                    ImageLoader.getInstance().displayImage("drawable://" + R.drawable.avatar, profileViewHolder.img);
                 }
-                DisplayImageOptions options = new DisplayImageOptions.Builder()
-                        .showImageOnLoading(lastImage)
-                        .showImageForEmptyUri(R.drawable.avatar)
-                        .showImageOnFail(R.drawable.avatar)
-                        .build();
-                ImageLoader.getInstance().displayImage(user.user_visual, holder.img, options);
             } else {
-                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.avatar, holder.img);
+                profileViewHolder.containerLogin.setVisibility(View.VISIBLE);
+                profileViewHolder.containerProfile.setVisibility(View.GONE);
+                profileViewHolder.label.setText(element.label);
             }
+        } else if (position == NAV_ID_MY_COURSES) {
+            CounterNavigationViewHolder counterViewHolder = (CounterNavigationViewHolder) viewHolder;
 
-        } else if (i == NAV_ID_PROFILE && !UserModel.isLoggedIn(mActivity)) {
-            holder.containerLogin.setVisibility(View.VISIBLE);
-            holder.containerProfile.setVisibility(View.GONE);
-            holder.label.setText(element.label);
-        } else {
-            holder.label.setText(element.label);
-        }
+            viewHolder.label.setText(element.label);
 
-        if (i == ((ListView) viewGroup).getCheckedItemPosition()) {
-            if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mActivity)) {
-                holder.img.setBorderColor(mActivity.getResources().getColor(R.color.apptheme_main));
+            if (UserModel.isLoggedIn(context)) {
+                int size = courseModel.getEnrollmentsCount();
+                counterViewHolder.counter.setText(String.valueOf(size));
+                if (size > 0) {
+                    counterViewHolder.counter.setVisibility(View.VISIBLE);
+                } else {
+                    counterViewHolder.counter.setVisibility(View.GONE);
+                }
             } else {
-                holder.icon.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
-                holder.label.setTextColor(mActivity.getResources().getColor(R.color.apptheme_main));
+                counterViewHolder.counter.setText(String.valueOf(0));
+                counterViewHolder.counter.setVisibility(View.GONE);
             }
         } else {
-            if (i == NAV_ID_PROFILE && UserModel.isLoggedIn(mActivity)) {
-                holder.img.setBorderColor(mActivity.getResources().getColor(R.color.white));
+            viewHolder.label.setText(element.label);
+        }
+
+        if (position == getCheckedItemPosition()) {
+            if (position == NAV_ID_PROFILE && UserModel.isLoggedIn(context)) {
+                ProfileNavigationViewHolder profileViewHolder = (ProfileNavigationViewHolder) viewHolder;
+                profileViewHolder.img.setBorderColor(ContextCompat.getColor(context, R.color.apptheme_main));
             } else {
-                holder.icon.setTextColor(mActivity.getResources().getColor(R.color.white));
-                holder.label.setTextColor(mActivity.getResources().getColor(R.color.white));
+                viewHolder.icon.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
+                viewHolder.label.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
+            }
+        } else {
+            if (position == NAV_ID_PROFILE && UserModel.isLoggedIn(context)) {
+                ProfileNavigationViewHolder profileViewHolder = (ProfileNavigationViewHolder) viewHolder;
+                profileViewHolder.img.setBorderColor(ContextCompat.getColor(context, R.color.white));
+            } else {
+                viewHolder.icon.setTextColor(ContextCompat.getColor(context, R.color.white));
+                viewHolder.label.setTextColor(ContextCompat.getColor(context, R.color.white));
             }
         }
-
-        if (i == NAV_ID_MY_COURSES && UserModel.isLoggedIn(mActivity)) {
-            int size = courseModel.getEnrollmentsCount();
-            holder.counter.setText(String.valueOf(size));
-            if (size > 0) {
-                holder.counter.setVisibility(View.VISIBLE);
-            } else {
-                holder.counter.setVisibility(View.GONE);
-            }
-        } else if (i == NAV_ID_MY_COURSES && !UserModel.isLoggedIn(mActivity)) {
-            holder.counter.setText(String.valueOf(0));
-            holder.counter.setVisibility(View.GONE);
-        }
-
-        return rowView;
     }
 
-    private void setStatusBarPadding(View view) {
-       view.setPadding(view.getPaddingLeft(),
-                getStatusBarHeight() + view.getPaddingTop(),
-                view.getPaddingRight(),
-                view.getPaddingBottom());
+    public void setItemChecked(int position) {
+        checkedItem = position;
     }
 
-    private int getStatusBarHeight() {
-        int result = 0;
-
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return result;
-        }
-
-        int resourceId = mActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = mActivity.getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
+    public int getCheckedItemPosition() {
+        return checkedItem;
     }
 
     static class Element {
+
         public String icon;
         public String label;
 
@@ -201,18 +192,94 @@ public class NavigationAdapter extends BaseAdapter {
             this.icon = icon;
             this.label = text;
         }
+
     }
 
-    static class ViewHolder {
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    class BaseNavigationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         TextView icon;
         TextView label;
-        TextView counter;
+
+        public BaseNavigationViewHolder(View view) {
+            super(view);
+
+            icon = (TextView) view.findViewById(R.id.textIcon);
+            label = (TextView) view.findViewById(R.id.textLabel);
+
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mItemClickListener != null) {
+                mItemClickListener.onItemClick(view, getAdapterPosition());
+            }
+        }
+
+    }
+
+    class ProfileNavigationViewHolder extends BaseNavigationViewHolder {
 
         CircularImageView img;
         TextView name;
         TextView email;
         View containerLogin;
         View containerProfile;
+
+        public ProfileNavigationViewHolder(View view) {
+            super(view);
+
+            containerLogin = view.findViewById(R.id.containerLogin);
+            containerProfile = view.findViewById(R.id.containerProfile);
+            name = (TextView) view.findViewById(R.id.textName);
+            email = (TextView) view.findViewById(R.id.textEmail);
+            img = (CircularImageView) view.findViewById(R.id.imgProfile);
+
+            setStatusBarPadding(containerLogin);
+            setStatusBarPadding(containerProfile);
+        }
+
+        private void setStatusBarPadding(View view) {
+            view.setPadding(view.getPaddingLeft(),
+                    getStatusBarHeight() + view.getPaddingTop(),
+                    view.getPaddingRight(),
+                    view.getPaddingBottom());
+        }
+
+        private int getStatusBarHeight() {
+            int result = 0;
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                return result;
+            }
+
+            int resourceId = GlobalApplication.getInstance().getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                result = GlobalApplication.getInstance().getResources().getDimensionPixelSize(resourceId);
+            }
+            return result;
+        }
+
+    }
+
+    class CounterNavigationViewHolder extends BaseNavigationViewHolder {
+
+        TextView counter;
+
+        public CounterNavigationViewHolder(View view) {
+            super(view);
+
+            counter = (TextView) view.findViewById(R.id.textCounter);
+        }
+
     }
 
 }

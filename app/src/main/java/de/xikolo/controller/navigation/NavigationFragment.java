@@ -1,15 +1,18 @@
 package de.xikolo.controller.navigation;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,15 +20,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.UserModel;
+import de.xikolo.view.DividerItemDecoration;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -56,14 +57,14 @@ public class NavigationFragment extends BaseFragment {
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
+    private RecyclerView mDrawerListView;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
-    private BaseAdapter mAdapter;
+    private NavigationAdapter mAdapter;
 
     public NavigationFragment() {
     }
@@ -103,19 +104,28 @@ public class NavigationFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mAdapter = new NavigationAdapter(getActivity(), new CourseModel(jobManager));
+        mAdapter = new NavigationAdapter(new CourseModel(jobManager));
 
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new NavigationAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View view, int position) {
                 selectItem(position);
                 mAdapter.notifyDataSetChanged();
             }
         });
+        mAdapter.setItemChecked(mCurrentSelectedPosition);
+
+        mDrawerListView = (RecyclerView) inflater.inflate(
+                R.layout.fragment_navigation, container, false);
+
         mDrawerListView.setAdapter(mAdapter);
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        mDrawerListView.setHasFixedSize(true);
+        mDrawerListView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(getActivity(), R.drawable.navigation_divider),
+                false, true));
+
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        mDrawerListView.setLayoutManager(llm);
 
         return mDrawerListView;
     }
@@ -210,7 +220,7 @@ public class NavigationFragment extends BaseFragment {
         if (mCurrentSelectedPosition != position) {
             mCurrentSelectedPosition = position;
             if (mDrawerListView != null) {
-                mDrawerListView.setItemChecked(position, true);
+                mAdapter.setItemChecked(position);
             }
             closeDrawer();
             if (mCallbacks != null) {
@@ -224,7 +234,7 @@ public class NavigationFragment extends BaseFragment {
     public void markItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
+            mAdapter.setItemChecked(position);
         }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
@@ -248,10 +258,10 @@ public class NavigationFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mCallbacks = (NavigationDrawerCallbacks) activity;
+            mCallbacks = (NavigationDrawerCallbacks) context;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
         }
@@ -288,9 +298,9 @@ public class NavigationFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
+//        if (mDrawerToggle.onOptionsItemSelected(item)) {
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -311,7 +321,7 @@ public class NavigationFragment extends BaseFragment {
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
-    public static interface NavigationDrawerCallbacks {
+    public interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */

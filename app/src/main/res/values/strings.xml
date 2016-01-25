@@ -118,6 +118,7 @@
     <string name="available_at">Available at %1$s</string>
     <string name="download_all_content">Download contents</string>
     <string name="intro_overlay_text">Touch to cast videos on TV</string>
+    <string name="user_name">%1$s %2$s</string>
 
     <!-- -->
     <string name="notification_no_network">Please enable network connection</string>
