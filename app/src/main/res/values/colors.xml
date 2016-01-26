@@ -12,9 +12,10 @@
     <color name="navi_sub">#151515</color>
     <color name="navi_profile">#333333</color>
 
-    <color name="navi_main_light">#303030</color>
-    <color name="navi_sub_light">#212121</color>
-    <color name="navi_profile_light">#3d3d3d</color>
+    <color name="navi_main_light">#3b3b3b</color>
+    <color name="navi_sub_light">#2d2d2d</color>
+    <color name="navi_profile_light">#5b5b5b</color>
+    <color name="navi_profile_light_fg">#0dffffff</color>
 
     <color name="gray_text">#8A000000</color>
     <color name="gray_light">#61000000</color>
