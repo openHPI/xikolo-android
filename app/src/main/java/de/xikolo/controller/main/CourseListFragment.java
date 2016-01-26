@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +35,7 @@ import de.xikolo.util.DateUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 import de.xikolo.view.AutofitRecyclerView;
+import de.xikolo.view.SpaceItemDecoration;
 
 public class CourseListFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener,
         CourseListAdapter.OnCourseButtonClickListener {
@@ -196,6 +196,27 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 return mCourseListAdapter.isHeader(position) ? mRecyclerView.getSpanCount() : 1;
             }
         });
+
+        mRecyclerView.addItemDecoration(new SpaceItemDecoration(
+                getActivity().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
+                getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
+                false,
+                new SpaceItemDecoration.RecyclerViewInfo() {
+                    @Override
+                    public boolean isHeader(int position) {
+                        return mCourseListAdapter.isHeader(position);
+                    }
+
+                    @Override
+                    public int getSpanCount() {
+                        return mRecyclerView.getSpanCount();
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return mCourseListAdapter.getItemCount();
+                    }
+                }));
 
         mNotificationController = new NotificationController(layout);
         mNotificationController.setInvisible();

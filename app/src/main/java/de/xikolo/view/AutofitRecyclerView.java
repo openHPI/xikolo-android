@@ -60,4 +60,8 @@ public class AutofitRecyclerView extends RecyclerView {
         manager.setSpanSizeLookup(spanSizeLookup);
     }
 
+    public GridLayoutManager.SpanSizeLookup getSpanSizeLookup() {
+        return manager.getSpanSizeLookup();
+    }
+
 }
