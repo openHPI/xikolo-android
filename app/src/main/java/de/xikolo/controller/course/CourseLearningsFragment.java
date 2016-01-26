@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +32,7 @@ import de.xikolo.model.ModuleModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
+import de.xikolo.view.SpaceItemDecoration;
 
 public class CourseLearningsFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
         ModuleListAdapter.OnModuleButtonClickListener, ItemListAdapter.OnItemButtonClickListener {
@@ -42,7 +45,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
     private static final int REQUEST_CODE_MODULES = 1;
 
-    private AbsListView mListView;
+    private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mRefreshLayout;
 
     private ModuleModel mModuleModel;
@@ -97,9 +100,34 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
         RefeshLayoutController.setup(mRefreshLayout, this);
 
-        mListView = (AbsListView) layout.findViewById(R.id.listView);
+        mRecyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
         mAdapter = new ModuleListAdapter(getActivity(), mCourse, this, this);
-        mListView.setAdapter(mAdapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addItemDecoration(new SpaceItemDecoration(
+                0,
+                getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
+                false,
+                new SpaceItemDecoration.RecyclerViewInfo() {
+                    @Override
+                    public boolean isHeader(int position) {
+                        return false;
+                    }
+
+                    @Override
+                    public int getSpanCount() {
+                        return 1;
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return mAdapter.getItemCount();
+                    }
+                }
+        ));
 
         mNotificationController = new NotificationController(layout);
 

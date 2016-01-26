@@ -2,20 +2,21 @@ package de.xikolo.controller.course;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
-import de.xikolo.controller.course.adapter.ModuleProgressListAdapter;
+import de.xikolo.controller.course.adapter.ProgressListAdapter;
 import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.data.entities.Course;
@@ -24,6 +25,7 @@ import de.xikolo.model.ModuleModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
+import de.xikolo.view.SpaceItemDecoration;
 
 public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -38,10 +40,10 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
 
     private ModuleModel mModuleModel;
 
-    private ModuleProgressListAdapter mAdapter;
+    private ProgressListAdapter mAdapter;
 
     private SwipeRefreshLayout mRefreshLayout;
-    private ListView mProgressScrollView;
+    private RecyclerView mRecyclerView;
 
     private NotificationController mNotificationController;
 
@@ -84,10 +86,35 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_progress, container, false);
 
-        mProgressScrollView = (ListView) layout.findViewById(R.id.listView);
+        mRecyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
 
-        mAdapter = new ModuleProgressListAdapter(getActivity());
-        mProgressScrollView.setAdapter(mAdapter);
+        mAdapter = new ProgressListAdapter(getActivity());
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addItemDecoration(new SpaceItemDecoration(
+                0,
+                getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
+                false,
+                new SpaceItemDecoration.RecyclerViewInfo() {
+                    @Override
+                    public boolean isHeader(int position) {
+                        return false;
+                    }
+
+                    @Override
+                    public int getSpanCount() {
+                        return 1;
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return mAdapter.getItemCount();
+                    }
+                }
+        ));
 
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
         RefeshLayoutController.setup(mRefreshLayout, this);

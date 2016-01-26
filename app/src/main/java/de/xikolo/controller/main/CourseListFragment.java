@@ -175,7 +175,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_courses, container, false);
+        View layout = inflater.inflate(R.layout.fragment_course_list, container, false);
 
         mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
         RefeshLayoutController.setup(mRefreshLayout, this);

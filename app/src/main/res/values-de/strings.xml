@@ -84,11 +84,7 @@
     <string name="header_new">Neu hier?</string>
     <string name="button_new">Neues Benutzerkonto anlegen</string>
     <string name="enrollments">Kurseinschreibungen</string>
-    <string name="of">von</string>
-    <string name="visited">besucht</string>
     <string name="total">Gesamt</string>
-    <string name="self_tests">Selbsttests</string>
-    <string name="assignments">Hausaufgaben</string>
     <string name="points">Punkte</string>
     <string name="scan_qr">Bitte QR Code scannen</string>
     <string name="slides_as_pdf">Präsentationsfolien als PDF</string>
@@ -106,6 +102,10 @@
     <string name="download_all_content">Inhalte herunterladen</string>
     <string name="intro_overlay_text">Berühren, um Videos auf den Fernseher zu casten</string>
     <string name="user_name">%1$s %2$s</string>
+
+    <string name="self_test_points">%1$s von %2$s Selbsttest-Punkten</string>
+    <string name="assignments_points">%1$s von %2$s Hausaufgaben-Punkten</string>
+    <string name="items_visited">%1$s von %2$s besucht</string>
 
     <!-- -->
     <string name="notification_no_network">Bitte Netzwerk-Verbindung aktivieren</string>

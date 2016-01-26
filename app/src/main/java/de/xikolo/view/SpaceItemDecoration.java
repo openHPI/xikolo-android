@@ -25,7 +25,7 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
         if (!recyclerViewInfo.isHeader(position)) {
             int spanCount = recyclerViewInfo.getSpanCount();
 
-            int lastHeader = 0;
+            int lastHeader = -1;
 
             for (int i = position - 1; i >= 0; i--) {
                 if (recyclerViewInfo.isHeader(i)) {
@@ -34,7 +34,13 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
                 }
             }
 
-            int relativePosition = position - lastHeader - 1;
+            int relativePosition;
+            if (lastHeader >= 0) {
+                relativePosition = position - lastHeader - 1;
+            } else {
+                relativePosition = position;
+            }
+
             int column = relativePosition % spanCount;
 
             if (includeEdge || column != 0) {

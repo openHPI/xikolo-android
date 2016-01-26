@@ -80,12 +80,7 @@
     <string name="header_new">新用户?</string>
     <string name="button_new">创建新的账户</string>
     <string name="enrollments">注册课程</string>
-    <string name="of">的</string>
-    <string name="visited">已观看</string>
     <string name="total">总计</string>
-    <string name="self_tests">自我测试</string>
-    <string name="assignments">家庭作业</string>
-    <string name="points">分数</string>
     <string name="scan_qr">请扫描此二维码</string>
     <string name="slides_as_pdf">PDF格式演讲幻灯片</string>
     <string name="transcript_as_pdf">PDF格式字幕</string>

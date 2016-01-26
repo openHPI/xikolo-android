@@ -1,11 +1,13 @@
 package de.xikolo.controller.course.adapter;
 
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,8 +24,9 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.DisplayUtil;
+import de.xikolo.view.NonScrollableGridView;
 
-public class ModuleListAdapter extends BaseAdapter {
+public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.ModuleViewHolder> {
 
     public static final String TAG = ModuleListAdapter.class.getSimpleName();
 
@@ -38,7 +41,7 @@ public class ModuleListAdapter extends BaseAdapter {
     public ModuleListAdapter(FragmentActivity activity, Course course, OnModuleButtonClickListener moduleCallback,
                              ItemListAdapter.OnItemButtonClickListener itemCallback) {
         this.mActivity = activity;
-        this.mModules = new ArrayList<Module>();
+        this.mModules = new ArrayList<>();
         this.mCourse = course;
         this.mModuleCallback = moduleCallback;
         this.mItemCallback = itemCallback;
@@ -55,45 +58,25 @@ public class ModuleListAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mModules.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return mModules.get(i);
+    public ModuleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_module, parent, false);
+        return new ModuleViewHolder(view);
     }
 
     @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View rowView = view;
-        if (rowView == null) {
-            LayoutInflater inflater = mActivity.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.item_module, null);
-            ViewHolder viewHolder = new ViewHolder();
-            viewHolder.container = (FrameLayout) rowView.findViewById(R.id.container);
-            viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
-            viewHolder.listView = (AbsListView) rowView.findViewById(R.id.listView);
-            viewHolder.progress = (ProgressBar) rowView.findViewById(R.id.containerProgress);
-            viewHolder.separator = rowView.findViewById(R.id.separator);
-            viewHolder.moduleNotificationContainer = rowView.findViewById(R.id.moduleNotificationContainer);
-            viewHolder.moduleNotificationLabel = (TextView) rowView.findViewById(R.id.moduleNotificationLabel);
-            viewHolder.download = rowView.findViewById(R.id.downloadBtn);
-            rowView.setTag(viewHolder);
-        }
-        final ViewHolder holder = (ViewHolder) rowView.getTag();
-
-        final Module module = (Module) getItem(i);
+    public void onBindViewHolder(ModuleViewHolder holder, int position) {
+        final Module module = mModules.get(position);
 
         holder.title.setText(module.name);
 
         ItemListAdapter itemAdapter = new ItemListAdapter(mActivity, mCourse, module, mItemCallback);
         holder.listView.setAdapter(itemAdapter);
+        ViewCompat.setNestedScrollingEnabled(holder.listView, false);
 
         if ((module.available_from != null && DateUtil.nowIsBefore(module.available_from)) ||
                 module.items == null) {
@@ -104,16 +87,17 @@ public class ModuleListAdapter extends BaseAdapter {
         } else {
             contentLocked(module, holder);
         }
-
-        return rowView;
     }
 
-    private void contentAvailable(final Module module, ViewHolder holder) {
+    private void contentAvailable(final Module module, ModuleViewHolder holder) {
         holder.progress.setVisibility(View.GONE);
         holder.moduleNotificationContainer.setVisibility(View.GONE);
-        holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_main));
-        holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.apptheme_main));
-        holder.container.setForeground(mActivity.getResources().getDrawable(R.drawable.bg_tabs));
+        holder.title.setTextColor(ContextCompat.getColor(mActivity, R.color.text_main));
+        holder.separator.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.apptheme_main));
+
+        TypedValue outValue = new TypedValue();
+        mActivity.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+        holder.container.setForeground(ContextCompat.getDrawable(mActivity, outValue.resourceId));
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,11 +114,11 @@ public class ModuleListAdapter extends BaseAdapter {
         });
     }
 
-    private void contentLocked(Module module, ViewHolder holder) {
+    private void contentLocked(Module module, ModuleViewHolder holder) {
         holder.progress.setVisibility(View.GONE);
         holder.moduleNotificationContainer.setVisibility(View.VISIBLE);
-        holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_light));
-        holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.text_light));
+        holder.title.setTextColor(ContextCompat.getColor(mActivity, R.color.text_light));
+        holder.separator.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.text_light));
         holder.container.setClickable(false);
         holder.container.setForeground(null);
         holder.download.setVisibility(View.GONE);
@@ -155,25 +139,17 @@ public class ModuleListAdapter extends BaseAdapter {
         }
     }
 
-    private void contentLoading(Module module, ViewHolder holder) {
-        holder.progress.setVisibility(View.VISIBLE);
-        holder.moduleNotificationContainer.setVisibility(View.GONE);
-        holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_main));
-        holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.apptheme_main));
-        holder.container.setClickable(false);
-        holder.container.setForeground(null);
-    }
-
     public interface OnModuleButtonClickListener {
 
-        public void onModuleButtonClicked(Course course, Module module);
+        void onModuleButtonClicked(Course course, Module module);
 
     }
 
-    static class ViewHolder {
+    static class ModuleViewHolder extends RecyclerView.ViewHolder {
+
         FrameLayout container;
         TextView title;
-        AbsListView listView;
+        NonScrollableGridView listView;
         ProgressBar progress;
         View separator;
 
@@ -181,6 +157,20 @@ public class ModuleListAdapter extends BaseAdapter {
         TextView moduleNotificationLabel;
 
         View download;
+
+        public ModuleViewHolder(View view) {
+            super(view);
+
+            container = (FrameLayout) view.findViewById(R.id.container);
+            title = (TextView) view.findViewById(R.id.textTitle);
+            listView = (NonScrollableGridView) view.findViewById(R.id.listView);
+            progress = (ProgressBar) view.findViewById(R.id.containerProgress);
+            separator = view.findViewById(R.id.separator);
+            moduleNotificationContainer = view.findViewById(R.id.moduleNotificationContainer);
+            moduleNotificationLabel = (TextView) view.findViewById(R.id.moduleNotificationLabel);
+            download = view.findViewById(R.id.downloadBtn);
+        }
+
     }
 
 }

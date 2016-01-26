@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:foreground="@drawable/fg_container">
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -30,7 +30,6 @@
             android:id="@+id/textTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textIcon"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/unseenIndicator"
             android:layout_toRightOf="@+id/textIcon"

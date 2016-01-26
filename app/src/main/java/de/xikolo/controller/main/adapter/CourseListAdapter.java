@@ -109,7 +109,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
             return headerViewHolder;
         } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_courses, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_list, parent, false);
             CourseViewHolder courseViewHolder = new CourseViewHolder(view);
             return courseViewHolder;
         }

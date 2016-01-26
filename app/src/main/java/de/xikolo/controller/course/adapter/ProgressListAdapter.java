@@ -1,10 +1,10 @@
 package de.xikolo.controller.course.adapter;
 
 import android.app.Activity;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -14,17 +14,17 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.data.entities.Module;
 
-public class ModuleProgressListAdapter extends BaseAdapter {
+public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapter.ProgressViewHolder> {
 
-    public static final String TAG = ModuleProgressListAdapter.class.getSimpleName();
+    public static final String TAG = ProgressListAdapter.class.getSimpleName();
 
     private List<Module> mModules;
 
     private Activity mActivity;
 
-    public ModuleProgressListAdapter(Activity activity) {
+    public ProgressListAdapter(Activity activity) {
         mActivity = activity;
-        mModules = new ArrayList<Module>();
+        mModules = new ArrayList<>();
     }
 
     public void updateModules(List<Module> modules) {
@@ -78,70 +78,49 @@ public class ModuleProgressListAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mModules.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return mModules.get(i);
+    public ProgressViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progress, parent, false);
+        return new ProgressViewHolder(view);
     }
 
     @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View rowView = view;
-        if (rowView == null) {
-            LayoutInflater inflater = mActivity.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.item_module_progress, null);
-            ViewHolder viewHolder = new ViewHolder();
-            viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
-            viewHolder.count1 = (TextView) rowView.findViewById(R.id.textCount1);
-            viewHolder.count2 = (TextView) rowView.findViewById(R.id.textCount2);
-            viewHolder.count3 = (TextView) rowView.findViewById(R.id.textCount3);
-            viewHolder.progress1 = (ProgressBar) rowView.findViewById(R.id.progress1);
-            viewHolder.progress2 = (ProgressBar) rowView.findViewById(R.id.progress2);
-            viewHolder.progress3 = (ProgressBar) rowView.findViewById(R.id.progress3);
-            viewHolder.percentage1 = (TextView) rowView.findViewById(R.id.textPercentage1);
-            viewHolder.percentage2 = (TextView) rowView.findViewById(R.id.textPercentage2);
-            viewHolder.percentage3 = (TextView) rowView.findViewById(R.id.textPercentage3);
-            viewHolder.separator = rowView.findViewById(R.id.viewSeparator);
-            rowView.setTag(viewHolder);
-        }
-        final ViewHolder holder = (ViewHolder) rowView.getTag();
-
-        Module module = (Module) getItem(i);
+    public void onBindViewHolder(ProgressViewHolder holder, int position) {
+        Module module = mModules.get(position);
 
         holder.title.setText(module.name);
 
         int percentage;
 
-        holder.count1.setText(module.progress.self_tests.points_scored + " " +
-                mActivity.getString(R.string.of) + " " + module.progress.self_tests.points_possible + " " +
-                mActivity.getString(R.string.self_tests) + " " + mActivity.getString(R.string.points));
+        holder.count1.setText(String.format(mActivity.getString(R.string.self_test_points),
+                module.progress.self_tests.points_scored,
+                module.progress.self_tests.points_possible));
+
         percentage = getPercentage(module.progress.self_tests.points_scored,
                 module.progress.self_tests.points_possible);
-        holder.percentage1.setText(percentage + "%");
+        holder.percentage1.setText(String.format(mActivity.getString(R.string.percentage), percentage));
         holder.progress1.setProgress(percentage);
 
-        holder.count2.setText(module.progress.assignments.points_scored + " " +
-                mActivity.getString(R.string.of) + " " + module.progress.assignments.points_possible + " " +
-                mActivity.getString(R.string.assignments) + " " + mActivity.getString(R.string.points));
+        holder.count2.setText(String.format(mActivity.getString(R.string.assignments_points),
+                module.progress.assignments.points_scored,
+                module.progress.assignments.points_possible));
+
         percentage = getPercentage(module.progress.assignments.points_scored,
                 module.progress.assignments.points_possible);
-        holder.percentage2.setText(percentage + "%");
+        holder.percentage2.setText(String.format(mActivity.getString(R.string.percentage), percentage));
         holder.progress2.setProgress(percentage);
 
-        holder.count3.setText(module.progress.items.count_visited + " " +
-                mActivity.getString(R.string.of) + " " + module.progress.items.count_available + " " +
-                mActivity.getString(R.string.visited));
+        holder.count3.setText(String.format(mActivity.getString(R.string.items_visited),
+                module.progress.items.count_visited,
+                module.progress.items.count_available));
+
         percentage = getPercentage(module.progress.items.count_visited,
                 module.progress.items.count_available);
-        holder.percentage3.setText(percentage + "%");
+        holder.percentage3.setText(String.format(mActivity.getString(R.string.percentage), percentage));
         holder.progress3.setProgress(percentage);
 
         if (module.name.equals(mActivity.getString(R.string.total))) {
@@ -149,8 +128,6 @@ public class ModuleProgressListAdapter extends BaseAdapter {
         } else {
             holder.separator.setVisibility(View.GONE);
         }
-
-        return rowView;
     }
 
     private int getPercentage(int state, int max) {
@@ -173,7 +150,7 @@ public class ModuleProgressListAdapter extends BaseAdapter {
         return percentage;
     }
 
-    static class ViewHolder {
+    static class ProgressViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView count1;
         TextView count2;
@@ -185,6 +162,23 @@ public class ModuleProgressListAdapter extends BaseAdapter {
         TextView percentage2;
         TextView percentage3;
         View separator;
+
+        public ProgressViewHolder(View view) {
+            super(view);
+
+            title = (TextView) view.findViewById(R.id.textTitle);
+            count1 = (TextView) view.findViewById(R.id.textCount1);
+            count2 = (TextView) view.findViewById(R.id.textCount2);
+            count3 = (TextView) view.findViewById(R.id.textCount3);
+            progress1 = (ProgressBar) view.findViewById(R.id.progress1);
+            progress2 = (ProgressBar) view.findViewById(R.id.progress2);
+            progress3 = (ProgressBar) view.findViewById(R.id.progress3);
+            percentage1 = (TextView) view.findViewById(R.id.textPercentage1);
+            percentage2 = (TextView) view.findViewById(R.id.textPercentage2);
+            percentage3 = (TextView) view.findViewById(R.id.textPercentage3);
+            separator = view.findViewById(R.id.viewSeparator);
+        }
+
     }
 
 }

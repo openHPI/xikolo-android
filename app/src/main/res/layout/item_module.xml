@@ -3,15 +3,15 @@
     xmlns:res="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:foreground="@drawable/bg_tabs"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
     res:cardCornerRadius="2dp"
     res:cardPreventCornerOverlap="true"
     res:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textTitle"
@@ -21,9 +21,9 @@
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/downloadBtn"
             android:paddingBottom="2dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="6dp"
             android:singleLine="true"
             android:textSize="24sp" />
 
@@ -36,9 +36,9 @@
             android:clickable="true"
             android:contentDescription="@string/download"
             android:paddingBottom="5dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="6dp"
             android:text="@string/icon_download"
             android:textColor="@drawable/text_button"
             android:textSize="22sp"
@@ -69,12 +69,12 @@
                 android:layout_height="fill_parent"
                 android:columnWidth="300dp"
                 android:gravity="center_horizontal|top"
-                android:horizontalSpacing="@dimen/activity_horizontal_margin"
+                android:horizontalSpacing="@dimen/card_horizontal_margin"
                 android:listSelector="@color/transparent"
                 android:numColumns="auto_fit"
                 android:scrollbarStyle="outsideOverlay"
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="@dimen/activity_vertical_margin" />
+                android:verticalSpacing="@dimen/card_vertical_margin" />
 
             <ProgressBar
                 android:id="@+id/containerProgress"
