@@ -4,12 +4,11 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,7 +20,6 @@ import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controller.helper.NotificationController;
-import de.xikolo.controller.main.adapter.CourseProgressListAdapter;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.User;
@@ -51,20 +49,15 @@ public class ProfileFragment extends ContentFragment {
     private CircularImageView mImgProfile;
     private TextView mTextEnrollCounts;
     private TextView mTextEmail;
-    private ListView mProgressListView;
-    private ProgressBar mCoursesProgress;
 
     private List<Course> mCourses;
-
-    private CourseProgressListAdapter mAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
     public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        return fragment;
+        return new ProfileFragment();
     }
 
     @Override
@@ -87,7 +80,6 @@ public class ProfileFragment extends ContentFragment {
         mCoursesResult = new Result<List<Course>>() {
             @Override
             protected void onSuccess(List<Course> result, DataSource dataSource) {
-                mCoursesProgress.setVisibility(View.GONE);
                 showCoursesProgress(result);
             }
 
@@ -96,7 +88,6 @@ public class ProfileFragment extends ContentFragment {
                 if (errorCode == ErrorCode.NO_NETWORK) {
                     NetworkUtil.showNoConnectionToast(getActivity());
                 }
-                mCoursesProgress.setVisibility(View.GONE);
             }
         };
 
@@ -131,11 +122,6 @@ public class ProfileFragment extends ContentFragment {
         mImgProfile = (CircularImageView) view.findViewById(R.id.imageProfile);
         mTextEnrollCounts = (TextView) view.findViewById(R.id.textEnrollCount);
         mTextEmail = (TextView) view.findViewById(R.id.textEmail);
-        mProgressListView = (ListView) view.findViewById(R.id.listView);
-        mCoursesProgress = (ProgressBar) view.findViewById(R.id.progressBar);
-
-        mAdapter = new CourseProgressListAdapter(getActivity());
-        mProgressListView.setAdapter(mAdapter);
 
         updateLayout();
 
@@ -151,7 +137,6 @@ public class ProfileFragment extends ContentFragment {
             if (mCourses == null) {
                 mUserModel.getUser(mUserResult);
                 mCourseModel.getCourses(mCoursesResult, false);
-                mCoursesProgress.setVisibility(View.VISIBLE);
             } else {
                 showCoursesProgress(mCourses);
             }
@@ -168,7 +153,7 @@ public class ProfileFragment extends ContentFragment {
     }
 
     private void showUser(User user) {
-        mTextName.setText(user.first_name + " " + user.last_name);
+        mTextName.setText(String.format(getString(R.string.user_name), user.first_name, user.last_name));
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -193,7 +178,7 @@ public class ProfileFragment extends ContentFragment {
             if (mImgProfile.getDrawable() != null) {
                 lastImage = mImgProfile.getDrawable();
             } else {
-                lastImage = getActivity().getResources().getDrawable(R.drawable.avatar);
+                lastImage = ContextCompat.getDrawable(getActivity(), R.drawable.avatar);
             }
             DisplayImageOptions options = new DisplayImageOptions.Builder()
                     .showImageOnLoading(lastImage)
@@ -223,9 +208,7 @@ public class ProfileFragment extends ContentFragment {
 
     private void showCoursesProgress(List<Course> courses) {
         mCourses = courses;
-//        mAdapter.updateCourses(courses);
         mTextEnrollCounts.setText(String.valueOf(mCourseModel.getEnrollmentsCount()));
-        mCoursesProgress.setVisibility(View.GONE);
         mActivityCallback.updateDrawer();
     }
 
