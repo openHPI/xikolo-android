@@ -102,7 +102,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="6dp"
                     android:text="@string/icon_locked"
-                    android:textColor="@color/gray_light"
+                    android:textColor="@color/text_light"
                     android:textSize="20sp"
                     res:customFont="xikolo.ttf" />
 
@@ -113,7 +113,7 @@
                     android:layout_gravity="center_vertical"
                     android:paddingRight="8dp"
                     android:text="@string/module_notification_no_content"
-                    android:textColor="@color/gray_light"
+                    android:textColor="@color/text_light"
                     android:textSize="16sp" />
 
             </LinearLayout>

@@ -105,8 +105,8 @@ public class ItemListAdapter extends BaseAdapter {
                 || item.locked) {
             holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
             holder.container.setForeground(null);
-            holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
-            holder.icon.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
+            holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_light));
+            holder.icon.setTextColor(mActivity.getResources().getColor(R.color.text_light));
             holder.unseenIndicator.setVisibility(View.GONE);
             holder.container.setEnabled(false);
         } else {

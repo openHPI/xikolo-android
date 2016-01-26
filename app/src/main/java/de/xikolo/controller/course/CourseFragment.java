@@ -104,7 +104,7 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
             if (event.isOnline()) {
                 mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
             } else {
-                mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.offline_mode));
+                mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.offline_mode_actionbar));
             }
         }
     }

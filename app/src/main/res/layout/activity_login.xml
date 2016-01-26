@@ -1,9 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_holo_light"
-    tools:context="de.xikolo.controller.LoginActivity">
+    android:background="@color/background_main">
 
     <include
         android:id="@+id/toolbar"
@@ -59,7 +57,7 @@
                 android:hint="@string/hint_email"
                 android:inputType="textEmailAddress"
                 android:padding="12dp"
-                android:textColorHint="@color/gray_light"
+                android:textColorHint="@color/text_light"
                 android:textSize="20sp" />
 
             <TextView
@@ -85,7 +83,7 @@
                 android:hint="@string/hint_password"
                 android:inputType="textPassword"
                 android:padding="12dp"
-                android:textColorHint="@color/gray_light"
+                android:textColorHint="@color/text_light"
                 android:textSize="20sp" />
 
             <TextView
@@ -117,7 +115,7 @@
                 android:layout_height="2dp"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/btnLogin"
-                android:background="@color/gray_light" />
+                android:background="@color/text_light" />
 
             <TextView
                 android:id="@+id/textNew"

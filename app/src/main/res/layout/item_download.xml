@@ -45,7 +45,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:singleLine="true"
-        android:textColor="@color/gray_light"
+        android:textColor="@color/text_light"
         android:textSize="14sp" />
 
     <View
@@ -53,6 +53,6 @@
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/divider" />
+        android:background="@color/list_divider" />
 
 </RelativeLayout>

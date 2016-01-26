@@ -9,7 +9,9 @@
         <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
 
-        <item name="android:textColorPrimary">@color/text_color</item>
+        <item name="android:windowBackground">@color/background_main</item>
+
+        <item name="android:textColorPrimary">@color/white</item>
 
     </style>
 

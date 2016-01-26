@@ -128,7 +128,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
             } else {
                 toolbar.setSubtitle(getString(R.string.offline_mode));
-                setColorScheme(R.color.offline_mode, R.color.offline_mode_dark);
+                setColorScheme(R.color.offline_mode_actionbar, R.color.offline_mode_statusbar);
             }
         }
     }

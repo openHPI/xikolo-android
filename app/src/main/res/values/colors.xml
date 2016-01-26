@@ -1,40 +1,39 @@
 <resources>
-    <color name="actionbar_alpha">#99000000</color>
 
-    <color name="text_color">#DE000000</color>
+    <color name="text_main">#DE000000</color>
+    <color name="text_second">#8A000000</color>
+    <color name="text_light">#61000000</color>
 
-    <color name="offline_mode">#424242</color>
-    <color name="offline_mode_dark">#282828</color>
+    <color name="background_main">#fff3f3f3</color>
 
+    <color name="video_overlay_gradient_black">#99000000</color>
+    <color name="video_overlay_button">#ccffffff</color>
     <color name="video_bg">#CC000000</color>
+    <color name="video_hd_disabled">#5a6065</color>
+    <color name="video_hd_enabled">@color/apptheme_second</color>
 
-    <color name="navi_main">#252525</color>
-    <color name="navi_sub">#151515</color>
-    <color name="navi_profile">#333333</color>
+    <color name="offline_mode_actionbar">#424242</color>
+    <color name="offline_mode_statusbar">#282828</color>
 
-    <color name="navi_main_light">#3b3b3b</color>
-    <color name="navi_sub_light">#2d2d2d</color>
-    <color name="navi_profile_light">#5b5b5b</color>
+    <color name="navi_main_bg">#252525</color>
+    <color name="navi_sub_bg">#151515</color>
+    <color name="navi_profile_bg">#333333</color>
+
+    <color name="navi_main_light_bg">#3b3b3b</color>
+    <color name="navi_sub_light_bg">#2d2d2d</color>
+    <color name="navi_profile_light_bg">#5b5b5b</color>
     <color name="navi_profile_light_fg">#0dffffff</color>
 
-    <color name="gray_text">#8A000000</color>
-    <color name="gray_light">#61000000</color>
-    <color name="tab_text">#ff666666</color>
-
-    <color name="divider">#1F000000</color>
+    <color name="list_divider">#1F000000</color>
 
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-    <color name="white_alpha">#ccffffff</color>
-    <color name="black_alpha">#1a000000</color>
     <color name="transparent">#00000000</color>
-    <color name="background_holo_light">#fff3f3f3</color>
+
+    <color name="black_alpha">#1a000000</color>
 
     <color name="banner_yellow">#F5A704</color>
     <color name="banner_green">#8CB30D</color>
-
-    <color name="video_hd_disabled">#5a6065</color>
-    <color name="video_hd_enabled">@color/apptheme_second</color>
 
     <color name="button_gray">#5a6065</color>
     <!-- 30% white overlay -->

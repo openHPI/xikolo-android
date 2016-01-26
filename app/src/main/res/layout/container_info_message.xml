@@ -26,7 +26,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:padding="4dp"
             android:text="@string/icon_info"
-            android:textColor="@color/gray_text"
+            android:textColor="@color/text_second"
             android:textSize="32sp"
             app:customFont="xikolo.ttf" />
 
@@ -40,14 +40,14 @@
                 android:id="@+id/textNotificationHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray_text"
+                android:textColor="@color/text_second"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/textNotificationSummary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray_text"
+                android:textColor="@color/text_second"
                 android:textSize="14sp" />
 
         </LinearLayout>

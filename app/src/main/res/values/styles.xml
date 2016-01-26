@@ -3,7 +3,7 @@
     <style name="TextDropShadow">
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingBottom">4dp</item>
-        <item name="android:shadowColor">@color/actionbar_alpha</item>
+        <item name="android:shadowColor">@color/video_overlay_gradient_black</item>
         <item name="android:shadowDx">0</item>
         <item name="android:shadowDy">0</item>
         <item name="android:shadowRadius">8</item>

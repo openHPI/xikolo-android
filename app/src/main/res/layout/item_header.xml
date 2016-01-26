@@ -16,7 +16,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="8dp"
         android:singleLine="true"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_main"
         android:textSize="24sp" />
 
 </RelativeLayout>

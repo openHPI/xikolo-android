@@ -72,7 +72,7 @@
             android:layout_centerInParent="true"
             android:text="@string/icon_play"
             android:textAlignment="center"
-            android:textColor="@color/white_alpha"
+            android:textColor="@color/video_overlay_button"
             android:textSize="@dimen/btn_play_text_size"
             app:customFont="xikolo.ttf" />
 
@@ -180,7 +180,7 @@
             android:layout_centerHorizontal="true"
             android:padding="16dp"
             android:text="@string/icon_reload"
-            android:textColor="@color/white_alpha"
+            android:textColor="@color/video_overlay_button"
             android:textSize="32sp"
             app:customFont="xikolo.ttf" />
 

@@ -1,11 +1,9 @@
 <de.xikolo.view.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:gravity="top"
-    tools:context="de.xikolo.controller.VideoActivity">
+    android:gravity="top">
 
     <include
         android:id="@+id/toolbar"

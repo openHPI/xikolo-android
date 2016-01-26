@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Locale;
 
 import de.xikolo.R;
-import de.xikolo.controller.dialogs.ModuleDownloadDialog;
 import de.xikolo.controller.helper.ModuleDownloadController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
@@ -112,7 +111,7 @@ public class ModuleListAdapter extends BaseAdapter {
     private void contentAvailable(final Module module, ViewHolder holder) {
         holder.progress.setVisibility(View.GONE);
         holder.moduleNotificationContainer.setVisibility(View.GONE);
-        holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_color));
+        holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_main));
         holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.apptheme_main));
         holder.container.setForeground(mActivity.getResources().getDrawable(R.drawable.bg_tabs));
         holder.container.setOnClickListener(new View.OnClickListener() {
@@ -134,8 +133,8 @@ public class ModuleListAdapter extends BaseAdapter {
     private void contentLocked(Module module, ViewHolder holder) {
         holder.progress.setVisibility(View.GONE);
         holder.moduleNotificationContainer.setVisibility(View.VISIBLE);
-        holder.title.setTextColor(mActivity.getResources().getColor(R.color.gray_light));
-        holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
+        holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_light));
+        holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.text_light));
         holder.container.setClickable(false);
         holder.container.setForeground(null);
         holder.download.setVisibility(View.GONE);
@@ -159,7 +158,7 @@ public class ModuleListAdapter extends BaseAdapter {
     private void contentLoading(Module module, ViewHolder holder) {
         holder.progress.setVisibility(View.VISIBLE);
         holder.moduleNotificationContainer.setVisibility(View.GONE);
-        holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_color));
+        holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_main));
         holder.separator.setBackgroundColor(mActivity.getResources().getColor(R.color.apptheme_main));
         holder.container.setClickable(false);
         holder.container.setForeground(null);
