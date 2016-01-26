@@ -37,6 +37,7 @@
     <color name="video_hd_enabled">@color/apptheme_second</color>
 
     <color name="button_gray">#5a6065</color>
-    <color name="button_gray_dark">#474B4F</color>
+    <!-- 30% white overlay -->
+    <color name="button_gray_light">#8c9094</color>
 
 </resources>

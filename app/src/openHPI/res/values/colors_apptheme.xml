@@ -2,16 +2,17 @@
 <resources>
 
     <color name="apptheme_main">#de6212</color>
-    <!-- 10% darker -->
-    <color name="apptheme_main_dark">#c75810</color>
-    <color name="apptheme_main_light">#ea9965</color>
 
-    <color name="apptheme_main_dark_status">#853b0b</color>
+    <!-- 30% white overlay -->
+    <color name="apptheme_main_light">#e8915a</color>
 
-    <color name="apptheme_main_alpha">#1ade6212</color>
+    <!-- 40% black overlay -->
+    <color name="apptheme_main_dark">#853b0b</color>
 
     <color name="apptheme_second">#b42946</color>
     <color name="apptheme_third">#f5a704</color>
+
+    <color name="apptheme_main_transparent">#1ade6212</color>
 
     <color name="apptheme_second_transparent">#99b42946</color>
     <color name="apptheme_third_transparent">#99f5a704</color>
