@@ -1,16 +1,11 @@
 package de.xikolo.model;
 
-import android.content.Context;
-
 import com.path.android.jobqueue.JobManager;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import de.xikolo.data.database.DatabaseHelper;
-import de.xikolo.data.database.ItemDataAccess;
-import de.xikolo.data.database.ModuleDataAccess;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
 import de.xikolo.model.jobs.RetrieveModulesJob;

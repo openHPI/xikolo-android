@@ -45,7 +45,9 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
             this.mCourse = b.getParcelable(ARG_COURSE);
         }
 
-        setTitle(mCourse.name);
+        if (mCourse != null) {
+            setTitle(mCourse.name);
+        }
 
         String tag = "content";
 

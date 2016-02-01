@@ -56,7 +56,7 @@ public class RetrieveModulesJob extends Job {
                     .getDataAccessFactory().getModuleDataAccess();
             List<Module> localModules = moduleDataAccess.getAllModulesForCourse(course);
             if (includeProgress) {
-                List<Module> deleteList = new ArrayList<Module>();
+                List<Module> deleteList = new ArrayList<>();
                 for (Module module : localModules) {
                     if (module.progress == null) {
                         deleteList.add(module);
@@ -79,6 +79,7 @@ public class RetrieveModulesJob extends Job {
 
                 Object o = request.getResponse();
                 if (o != null) {
+                    @SuppressWarnings("unchecked")
                     List<Module> modules = (List<Module>) o;
                     if (Config.DEBUG) Log.i(TAG, "Modules received (" + modules.size() + ")");
 

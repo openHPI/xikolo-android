@@ -14,7 +14,6 @@ import com.path.android.jobqueue.JobManager;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.controller.dialogs.PermissionsDialog;
-import de.xikolo.util.Config;
 
 public class PermissionsModel extends BaseModel {
 

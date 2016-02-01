@@ -55,7 +55,7 @@ public class ItemDataAccess extends DataAccess {
     }
 
     public List<Item> getAllItems() {
-        List<Item> itemList = new ArrayList<Item>();
+        List<Item> itemList = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + ItemTable.TABLE_NAME;
 
@@ -75,7 +75,7 @@ public class ItemDataAccess extends DataAccess {
     }
 
     public List<Item> getAllItemsForModule(Module module) {
-        List<Item> itemList = new ArrayList<Item>();
+        List<Item> itemList = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + ItemTable.TABLE_NAME + " WHERE " + ItemTable.COLUMN_MODULE_ID + " = \'" + module.id + "\'";
 

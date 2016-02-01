@@ -70,6 +70,7 @@ public class RetrieveItemsJob extends Job {
 
                 Object o = request.getResponse();
                 if (o != null) {
+                    @SuppressWarnings("unchecked")
                     List<Item> items = (List<Item>) o;
                     if (Config.DEBUG) Log.i(TAG, "Items received (" + items.size() + ")");
 

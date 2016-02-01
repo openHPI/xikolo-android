@@ -6,12 +6,10 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
@@ -54,7 +52,6 @@ public class CacheController {
     }
 
     public void readCachedExtras() {
-        Bundle bundle = new Bundle();
         FileInputStream fis;
         ObjectInputStream ois;
         try {
@@ -63,13 +60,7 @@ public class CacheController {
             course = (Course) ois.readObject();
             module = (Module) ois.readObject();
             item = (Item) ois.readObject();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (StreamCorruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

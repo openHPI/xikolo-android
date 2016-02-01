@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -104,7 +105,7 @@ public class VideoActivity extends BaseActivity {
         });
 
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
         }
 
         hideSystemBars();

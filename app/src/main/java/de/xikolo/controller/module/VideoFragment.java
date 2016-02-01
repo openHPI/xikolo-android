@@ -42,7 +42,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     public static final String KEY_MODULE = "key_module";
     public static final String KEY_ITEM = "key_item";
 
-    VideoItemDetail itemDetail;
+    private VideoItemDetail itemDetail;
 
     private TextView mTitle;
     private View mContainer;
@@ -129,7 +129,9 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         Result<Item> result = new Result<Item>() {
             @Override
             protected void onSuccess(Item result, DataSource dataSource) {
-                mItem = result;
+                @SuppressWarnings("unchecked")
+                Item<VideoItemDetail> item = (Item<VideoItemDetail>) result;
+                mItem = item;
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.detail == null) {
                     mNotificationController.setTitle(R.string.notification_no_network);

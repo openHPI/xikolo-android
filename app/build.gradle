@@ -51,6 +51,7 @@ android {
         abortOnError false
         disable 'MissingTranslation'
         disable 'ExtraTranslation'
+        disable 'UnusedAttribute'
     }
 
 }

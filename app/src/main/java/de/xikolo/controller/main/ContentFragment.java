@@ -1,7 +1,6 @@
 package de.xikolo.controller.main;
 
-import android.app.Activity;
-import android.support.v4.app.Fragment;
+import android.content.Context;
 
 import de.xikolo.controller.BaseFragment;
 
@@ -10,12 +9,12 @@ public abstract class ContentFragment extends BaseFragment {
     protected OnFragmentInteractionListener mActivityCallback;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mActivityCallback = (OnFragmentInteractionListener) activity;
+            mActivityCallback = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -28,13 +27,13 @@ public abstract class ContentFragment extends BaseFragment {
 
     public interface OnFragmentInteractionListener {
 
-        public void onFragmentAttached(int id, String title);
+        void onFragmentAttached(int id, String title);
 
-        public boolean isDrawerOpen();
+        boolean isDrawerOpen();
 
-        public void updateDrawer();
+        void updateDrawer();
 
-        public void selectDrawerSection(int pos);
+        void selectDrawerSection(int pos);
 
     }
 

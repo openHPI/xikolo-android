@@ -84,6 +84,7 @@ public class ModuleDownloadController {
                 Result<Item> result = new Result<Item>() {
                     @Override
                     protected void onSuccess(Item result, DataSource dataSource) {
+                        @SuppressWarnings("unchecked")
                         Item<VideoItemDetail> video = (Item<VideoItemDetail>) result;
 
                         if (dataSource == DataSource.NETWORK) {

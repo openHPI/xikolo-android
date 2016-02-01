@@ -40,7 +40,7 @@ public class CourseModel extends BaseModel {
             @Override
             public List<Course> onFilter(List<Course> result, Result.DataSource dataSource) {
                 if (filter == CourseFilter.MY) {
-                    ArrayList<Course> removeList = new ArrayList<Course>();
+                    ArrayList<Course> removeList = new ArrayList<>();
                     for (Course course : result) {
                         if (!course.is_enrolled) {
                             removeList.add(course);

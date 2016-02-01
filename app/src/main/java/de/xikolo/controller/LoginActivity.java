@@ -101,7 +101,7 @@ public class LoginActivity extends BaseActivity {
                 String email = mEditEmail.getText().toString().trim();
                 String password = mEditPassword.getText().toString();
                 if (isEmailValid(email)) {
-                    if (password != null && !password.equals("")) {
+                    if (!password.equals("")) {
                         mUserModel.login(mLoginResult, email, password);
                         dialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
                     } else {

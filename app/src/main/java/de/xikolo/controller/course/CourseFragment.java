@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -102,9 +103,9 @@ public class CourseFragment extends BaseFragment implements UnenrollDialog.Unenr
     public void onEventMainThread(NetworkStateEvent event) {
         if (mPagerSlidingTabStrip != null) {
             if (event.isOnline()) {
-                mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
+                mPagerSlidingTabStrip.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.apptheme_main));
             } else {
-                mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.offline_mode_actionbar));
+                mPagerSlidingTabStrip.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.offline_mode_actionbar));
             }
         }
     }

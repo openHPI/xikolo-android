@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -224,10 +223,12 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
             if (mModules != null && mAdapter != null) {
                 Module oldModule = mModules.get(mModules.indexOf(newModule));
-                for (Item newItem : newModule.items) {
-                    for (Item oldItem : oldModule.items) {
-                        if (oldItem.equals(newItem)) {
-                            oldItem.progress = newItem.progress;
+                if (newModule != null) {
+                    for (Item newItem : newModule.items) {
+                        for (Item oldItem : oldModule.items) {
+                            if (oldItem.equals(newItem)) {
+                                oldItem.progress = newItem.progress;
+                            }
                         }
                     }
                 }

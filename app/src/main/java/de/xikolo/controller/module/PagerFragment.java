@@ -1,7 +1,6 @@
 package de.xikolo.controller.module;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.data.entities.Course;

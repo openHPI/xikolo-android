@@ -5,12 +5,12 @@ import android.provider.BaseColumns;
 
 interface Table {
 
-    public static final String COLUMN_ID = BaseColumns._ID;
+    String COLUMN_ID = BaseColumns._ID;
 
-    public void onCreate(SQLiteDatabase db);
+    void onCreate(SQLiteDatabase db);
 
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
+    void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
 
-    public void deleteTable(SQLiteDatabase db);
+    void deleteTable(SQLiteDatabase db);
 
 }

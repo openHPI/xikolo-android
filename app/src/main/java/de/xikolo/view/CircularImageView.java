@@ -119,7 +119,7 @@ public class CircularImageView extends ImageView {
     }
 
     private int measureWidth(int measureSpec) {
-        int result = 0;
+        int result;
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
 
@@ -138,7 +138,7 @@ public class CircularImageView extends ImageView {
     }
 
     private int measureHeight(int measureSpecHeight) {
-        int result = 0;
+        int result;
         int specMode = MeasureSpec.getMode(measureSpecHeight);
         int specSize = MeasureSpec.getSize(measureSpecHeight);
 

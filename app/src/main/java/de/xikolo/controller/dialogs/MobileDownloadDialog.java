@@ -4,10 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import de.xikolo.R;
-import de.xikolo.util.DisplayUtil;
 
 public class MobileDownloadDialog extends DialogFragment {
 
@@ -27,6 +27,7 @@ public class MobileDownloadDialog extends DialogFragment {
         return fragment;
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -55,7 +56,7 @@ public class MobileDownloadDialog extends DialogFragment {
     }
 
     public interface MobileDownloadDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog);
+        void onDialogPositiveClick(DialogFragment dialog);
     }
 
 }

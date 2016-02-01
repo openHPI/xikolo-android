@@ -16,7 +16,7 @@ public class CustomFontTextView extends TextView {
 
     private static final String TAG = CustomFontTextView.class.getSimpleName();
 
-    private static final Hashtable<String, Typeface> cache = new Hashtable<String, Typeface>();
+    private static final Hashtable<String, Typeface> cache = new Hashtable<>();
 
     public CustomFontTextView(Context context) {
         super(context);

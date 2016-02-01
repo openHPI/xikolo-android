@@ -1,6 +1,7 @@
 package de.xikolo.controller.course.adapter;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class ItemListAdapter extends BaseAdapter {
 
     public ItemListAdapter(Activity activity, Course course, Module module, OnItemButtonClickListener callback) {
         this.mActivity = activity;
-        this.mItems = new ArrayList<Item>();
+        this.mItems = new ArrayList<>();
         this.mCourse = course;
         this.mModule = module;
         this.mCallback = callback;
@@ -103,10 +104,10 @@ public class ItemListAdapter extends BaseAdapter {
         if (!DateUtil.nowIsBetween(mModule.available_from, mModule.available_to)
                 || !DateUtil.nowIsBetween(item.available_from, item.available_to)
                 || item.locked) {
-            holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
+            holder.container.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.transparent));
             holder.container.setForeground(null);
-            holder.title.setTextColor(mActivity.getResources().getColor(R.color.text_light));
-            holder.icon.setTextColor(mActivity.getResources().getColor(R.color.text_light));
+            holder.title.setTextColor(ContextCompat.getColor(mActivity, R.color.text_light));
+            holder.icon.setTextColor(ContextCompat.getColor(mActivity, R.color.text_light));
             holder.unseenIndicator.setVisibility(View.GONE);
             holder.container.setEnabled(false);
         } else {
@@ -123,7 +124,7 @@ public class ItemListAdapter extends BaseAdapter {
 
     public interface OnItemButtonClickListener {
 
-        public void onItemButtonClicked(Course course, Module module, Item item);
+        void onItemButtonClicked(Course course, Module module, Item item);
 
     }
 

@@ -32,7 +32,7 @@ public class DateUtil {
                 return true;
             }
         }
-        return dateNow.after(dateBegin) && dateNow.before(dateEnd);
+        return dateBegin != null && dateEnd != null && dateNow.after(dateBegin) && dateNow.before(dateEnd);
     }
 
     public static boolean nowIsAfter(String date) {

@@ -140,9 +140,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     }
 
-    public static interface OnDeleteButtonClickedListener {
+    public interface OnDeleteButtonClickedListener {
 
-        public void onDeleteButtonClicked(FolderItem item);
+        void onDeleteButtonClicked(FolderItem item);
 
     }
 

@@ -449,9 +449,9 @@ public class VideoController {
 
     public interface ControllerListener {
 
-        public void onControllerShow();
+        void onControllerShow();
 
-        public void onControllerHide();
+        void onControllerHide();
 
     }
 

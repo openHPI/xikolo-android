@@ -66,6 +66,7 @@ public class RetrieveCoursesJob extends Job {
 
                 Object o = request.getResponse();
                 if (o != null) {
+                    @SuppressWarnings("unchecked")
                     List<Course> courses = (List<Course>) o;
 
                     if (Config.DEBUG) Log.i(TAG, "Courses received (" + courses.size() + ")");

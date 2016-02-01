@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.path.android.jobqueue.JobManager;
 
@@ -311,7 +310,7 @@ public class DownloadModel extends BaseModel {
     }
 
     public List<String> getFoldersWithDownloads() {
-        List<String> folders = new ArrayList<String>();
+        List<String> folders = new ArrayList<>();
 
         File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
                 + GlobalApplication.getInstance().getString(R.string.app_name));

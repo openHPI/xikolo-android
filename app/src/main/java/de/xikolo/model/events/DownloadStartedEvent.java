@@ -1,7 +1,5 @@
 package de.xikolo.model.events;
 
-import de.xikolo.data.entities.Download;
-
 public class DownloadStartedEvent extends Event {
 
     private String url;

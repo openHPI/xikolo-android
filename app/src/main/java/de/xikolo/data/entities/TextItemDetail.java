@@ -1,7 +1,6 @@
 package de.xikolo.data.entities;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 

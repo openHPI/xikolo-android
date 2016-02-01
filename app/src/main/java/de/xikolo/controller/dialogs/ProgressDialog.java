@@ -2,6 +2,7 @@ package de.xikolo.controller.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import de.xikolo.GlobalApplication;
@@ -36,6 +37,7 @@ public class ProgressDialog extends DialogFragment {
     }
 
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (getArguments() != null) {
             title = getArguments().getString(KEY_TITLE);

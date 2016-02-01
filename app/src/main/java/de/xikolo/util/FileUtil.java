@@ -37,6 +37,7 @@ public class FileUtil {
         return files;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void delete(File file) {
         if (file.isDirectory()) {
             if (file.list().length == 0) {

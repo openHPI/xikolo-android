@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,12 @@ public class ImageLoaderController {
         ImageLoader.getInstance().loadImage(url, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
-                imageView.setImageDrawable(GlobalApplication.getInstance().getResources().getDrawable(R.drawable.gradient_default_image));
+                imageView.setImageDrawable(ContextCompat.getDrawable(GlobalApplication.getInstance(), R.drawable.gradient_default_image));
             }
 
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                imageView.setImageDrawable(GlobalApplication.getInstance().getResources().getDrawable(R.drawable.gradient_default_image));
+                imageView.setImageDrawable(ContextCompat.getDrawable(GlobalApplication.getInstance(), R.drawable.gradient_default_image));
             }
 
             @Override
@@ -38,7 +39,7 @@ public class ImageLoaderController {
 
             @Override
             public void onLoadingCancelled(String imageUri, View view) {
-                imageView.setImageDrawable(GlobalApplication.getInstance().getResources().getDrawable(R.drawable.gradient_default_image));
+                imageView.setImageDrawable(ContextCompat.getDrawable(GlobalApplication.getInstance(), R.drawable.gradient_default_image));
             }
         });
     }
@@ -47,12 +48,12 @@ public class ImageLoaderController {
         ImageLoader.getInstance().loadImage(url, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
-                imageView.setImageDrawable(GlobalApplication.getInstance().getResources().getDrawable(R.drawable.gradient_default_image));
+                imageView.setImageDrawable(ContextCompat.getDrawable(GlobalApplication.getInstance(), R.drawable.gradient_default_image));
             }
 
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                imageView.setImageDrawable(GlobalApplication.getInstance().getResources().getDrawable(R.drawable.gradient_default_image));
+                imageView.setImageDrawable(ContextCompat.getDrawable(GlobalApplication.getInstance(), R.drawable.gradient_default_image));
             }
 
             @Override
@@ -62,7 +63,7 @@ public class ImageLoaderController {
 
             @Override
             public void onLoadingCancelled(String imageUri, View view) {
-                imageView.setImageDrawable(GlobalApplication.getInstance().getResources().getDrawable(R.drawable.gradient_default_image));
+                imageView.setImageDrawable(ContextCompat.getDrawable(GlobalApplication.getInstance(), R.drawable.gradient_default_image));
             }
         });
     }

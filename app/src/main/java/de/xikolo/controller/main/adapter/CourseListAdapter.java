@@ -1,6 +1,7 @@
 package de.xikolo.controller.main.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -157,7 +158,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (DateUtil.nowIsBetween(course.available_from, course.available_to)) {
                     viewHolder.banner.setVisibility(View.VISIBLE);
                     viewHolder.banner.setText(context.getText(R.string.banner_running));
-                    viewHolder.banner.setBackgroundColor(context.getResources().getColor(R.color.banner_green));
+                    viewHolder.banner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
                 } else {
                     viewHolder.banner.setVisibility(View.GONE);
                 }
@@ -166,11 +167,11 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (DateUtil.nowIsBetween(course.available_from, course.available_to)) {
                     viewHolder.banner.setVisibility(View.VISIBLE);
                     viewHolder.banner.setText(context.getText(R.string.banner_running));
-                    viewHolder.banner.setBackgroundColor(context.getResources().getColor(R.color.banner_green));
+                    viewHolder.banner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
                 } else if (DateUtil.nowIsAfter(course.available_to)) {
                     viewHolder.banner.setVisibility(View.VISIBLE);
                     viewHolder.banner.setText(context.getText(R.string.banner_self_paced));
-                    viewHolder.banner.setBackgroundColor(context.getResources().getColor(R.color.banner_yellow));
+                    viewHolder.banner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_yellow));
                 } else {
                     viewHolder.banner.setVisibility(View.GONE);
                 }
@@ -227,11 +228,11 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public interface OnCourseButtonClickListener {
 
-        public void onEnrollButtonClicked(Course course);
+        void onEnrollButtonClicked(Course course);
 
-        public void onEnterButtonClicked(Course course);
+        void onEnterButtonClicked(Course course);
 
-        public void onDetailButtonClicked(Course course);
+        void onDetailButtonClicked(Course course);
 
     }
 

@@ -61,7 +61,7 @@ public class ModuleDataAccess extends DataAccess {
     }
 
     public List<Module> getAllModules() {
-        List<Module> moduleList = new ArrayList<Module>();
+        List<Module> moduleList = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + ModuleTable.TABLE_NAME;
 
@@ -82,7 +82,7 @@ public class ModuleDataAccess extends DataAccess {
     }
 
     public List<Module> getAllModulesForCourse(Course course) {
-        List<Module> moduleList = new ArrayList<Module>();
+        List<Module> moduleList = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + ModuleTable.TABLE_NAME + " WHERE " + ModuleTable.COLUMN_COURSE_ID + " = \'" + course.id + "\'";
 

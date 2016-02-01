@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import de.xikolo.R;
@@ -45,6 +46,7 @@ public class ModuleDownloadDialog extends DialogFragment {
     }
 
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (getArguments() != null) {
             moduleTitle = getArguments().getString(KEY_MODULE_TITLE);
@@ -110,7 +112,7 @@ public class ModuleDownloadDialog extends DialogFragment {
     }
 
     public interface ModuleDownloadDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog, boolean hdVideo, boolean sdVideo, boolean slides);
+        void onDialogPositiveClick(DialogFragment dialog, boolean hdVideo, boolean sdVideo, boolean slides);
     }
 
 }

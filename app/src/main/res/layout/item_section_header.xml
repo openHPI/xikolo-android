@@ -9,11 +9,11 @@
         android:layout_width="fill_parent"
         android:layout_height="48dp"
         android:background="@android:color/transparent"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:gravity="center_vertical"
         android:textColor="@color/apptheme_second"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif-medium" />
+        android:textSize="14sp" />
 
 </LinearLayout>

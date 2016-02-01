@@ -39,9 +39,7 @@ public class SslCertificateUtil {
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
 
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
     }

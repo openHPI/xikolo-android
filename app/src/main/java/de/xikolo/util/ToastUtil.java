@@ -1,7 +1,6 @@
 package de.xikolo.util;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.widget.Toast;
 
 public class ToastUtil {

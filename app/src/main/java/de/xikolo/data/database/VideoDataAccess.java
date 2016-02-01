@@ -59,7 +59,7 @@ public class VideoDataAccess extends DataAccess {
     }
 
     public List<VideoItemDetail> getAllVideos() {
-        List<VideoItemDetail> videoList = new ArrayList<VideoItemDetail>();
+        List<VideoItemDetail> videoList = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + VideoTable.TABLE_NAME;
 

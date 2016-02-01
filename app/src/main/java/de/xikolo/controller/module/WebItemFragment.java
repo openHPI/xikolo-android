@@ -106,7 +106,9 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
         Result<Item> result = new Result<Item>() {
             @Override
             protected void onSuccess(Item result, DataSource dataSource) {
-                mItem = result;
+                @SuppressWarnings("unchecked")
+                Item<T> item = result;
+                mItem = item;
                 mWebViewController.request(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ITEMS + mItem.id, false);
             }
 

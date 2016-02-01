@@ -25,7 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
-        mTables = new ArrayList<Table>();
+        mTables = new ArrayList<>();
         mTables.add(new OverallProgressTable());
         mTables.add(new CourseTable());
         mTables.add(new ModuleTable());

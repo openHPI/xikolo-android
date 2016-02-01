@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -126,9 +127,9 @@ public class ModuleActivity extends BaseActivity {
 
         if (mPagerSlidingTabStrip != null) {
             if (event.isOnline()) {
-                mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.apptheme_main));
+                mPagerSlidingTabStrip.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_main));
             } else {
-                mPagerSlidingTabStrip.setBackgroundColor(getResources().getColor(R.color.offline_mode_actionbar));
+                mPagerSlidingTabStrip.setBackgroundColor(ContextCompat.getColor(this, R.color.offline_mode_actionbar));
             }
         }
     }
@@ -202,7 +203,7 @@ public class ModuleActivity extends BaseActivity {
             mItems = items;
             mPager = pager;
 
-            List<Item> toRemove = new ArrayList<Item>();
+            List<Item> toRemove = new ArrayList<>();
             for (Item item : items) {
                 if (!DateUtil.nowIsBetween(item.available_from, item.available_to) || item.locked) {
                     toRemove.add(item);

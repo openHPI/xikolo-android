@@ -1,9 +1,11 @@
 package de.xikolo.controller.helper;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Browser;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,6 +14,8 @@ import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -72,8 +76,17 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         mNotificationController.setProgressVisible(true);
 
         mWebView.setWebViewClient(new WebViewClient() {
+
+            @SuppressWarnings("deprecation")
+            @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 ToastUtil.show(mActivity, "An error occurred" + description);
+            }
+
+            @TargetApi(Build.VERSION_CODES.M)
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
+                onReceivedError(view, err.getErrorCode(), err.getDescription().toString(), req.getUrl().toString());
             }
 
             @Override
@@ -136,7 +149,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                         mRefreshLayout.setRefreshing(true);
                     }
                     if (url.contains(Config.HOST)) {
-                        Map<String, String> header = new HashMap<String, String>();
+                        Map<String, String> header = new HashMap<>();
                         header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
                         if (UserModel.isLoggedIn(mActivity)) {
                             header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + UserModel.getToken(mActivity));

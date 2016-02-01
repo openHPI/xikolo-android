@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.http.HttpResponseCache;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -52,8 +53,6 @@ public class GlobalApplication extends Application {
     private DataAccessFactory dataAccessFactory;
 
     private PreferencesFactory preferencesFactory;
-
-    private CookieSyncManager cookieSyncManager;
 
     public GlobalApplication() {
         instance = this;
@@ -102,7 +101,6 @@ public class GlobalApplication extends Application {
     }
 
 
-
     private void configureDefaultSettings() {
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
     }
@@ -148,9 +146,12 @@ public class GlobalApplication extends Application {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void configureWebViewCookies() {
         // Enable WebView Cookies
-        cookieSyncManager = CookieSyncManager.createInstance(this);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            CookieSyncManager.createInstance(this);
+        }
         CookieManager.getInstance().setAcceptCookie(true);
     }
 
@@ -200,21 +201,26 @@ public class GlobalApplication extends Application {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void startCookieSyncManager() {
-        if (cookieSyncManager != null) {
-            cookieSyncManager.startSync();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            CookieSyncManager.getInstance().startSync();
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void stopCookieSyncManager() {
-        if (cookieSyncManager != null) {
-            cookieSyncManager.stopSync();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            CookieSyncManager.getInstance().stopSync();
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void syncCookieSyncManager() {
-        if (cookieSyncManager != null) {
-            cookieSyncManager.sync();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            CookieSyncManager.getInstance().sync();
+        } else {
+            CookieManager.getInstance().flush();
         }
     }
 

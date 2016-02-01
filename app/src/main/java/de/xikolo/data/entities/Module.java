@@ -52,7 +52,7 @@ public class Module implements Parcelable, Serializable {
     }
 
     public Module() {
-        items = new ArrayList<Item>();
+        items = new ArrayList<>();
         progress = new OverallProgress();
     }
 

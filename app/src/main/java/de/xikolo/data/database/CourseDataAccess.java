@@ -66,7 +66,7 @@ public class CourseDataAccess extends DataAccess {
     }
 
     public List<Course> getAllCourses() {
-        List<Course> courseList = new ArrayList<Course>();
+        List<Course> courseList = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + CourseTable.TABLE_NAME;
 

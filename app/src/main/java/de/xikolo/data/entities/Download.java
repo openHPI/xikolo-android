@@ -28,7 +28,7 @@ public class Download {
     
     public String mediaType;
 
-    public Download() {};
+    public Download() {}
     
     public Download(long id, String title, String description, String localFilename, String localUri, String uri, int status, int reason) {
         this.id = id;

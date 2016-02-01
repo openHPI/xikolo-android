@@ -57,7 +57,7 @@ class OverallProgressDataAccess extends DataAccess {
     }
 
     public List<OverallProgress> getAllProgress() {
-        List<OverallProgress> progressList = new ArrayList<OverallProgress>();
+        List<OverallProgress> progressList = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + OverallProgressTable.TABLE_NAME;
 

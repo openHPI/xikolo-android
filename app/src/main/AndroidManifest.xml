@@ -12,9 +12,11 @@
     <application
         android:name=".GlobalApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="false"
         android:theme="@style/AppTheme">
 
         <meta-data
@@ -29,9 +31,8 @@
             android:name=".util.NetworkChangeReceiver"
             android:label="NetworkChangeReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE">
-                    <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                </action>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
 
@@ -71,7 +72,7 @@
             android:parentActivityName=".controller.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="MainActivity" />
+                android:value=".controller.MainActivity" />
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -106,7 +107,7 @@
             android:parentActivityName=".controller.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="MainActivity" />
+                android:value=".controller.MainActivity" />
         </activity>
         <activity
             android:name=".controller.LoginActivity"
@@ -114,7 +115,7 @@
             android:parentActivityName=".controller.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="MainActivity" />
+                android:value=".controller.MainActivity" />
         </activity>
         <activity
             android:name=".controller.ModuleActivity"
@@ -122,7 +123,7 @@
             android:parentActivityName=".controller.CourseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="CourseActivity" />
+                android:value=".controller.CourseActivity" />
         </activity>
         <activity
             android:name=".controller.VideoActivity"
@@ -132,7 +133,7 @@
             android:theme="@style/AppThemeDarkStatusBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ModuleActivity" />
+                android:value=".controller.ModuleActivity" />
         </activity>
         <activity
             android:name=".controller.DownloadsActivity"
@@ -140,7 +141,7 @@
             android:parentActivityName=".controller.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="MainActivity" />
+                android:value=".controller.MainActivity" />
         </activity>
         <activity
             android:name=".controller.SettingsActivity"
@@ -148,18 +149,18 @@
             android:parentActivityName=".controller.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="MainActivity" />
+                android:value=".controller.MainActivity" />
         </activity>
         <activity
             android:name="com.google.android.libraries.cast.companionlibrary.cast.player.VideoCastControllerActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:parentActivityName="de.xikolo.controller.ModuleActivity"
+            android:parentActivityName=".controller.ModuleActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeDarkStatusBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.xikolo.controller.CourseDetailsActivity" />
+                android:value=".controller.CourseDetailsActivity" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

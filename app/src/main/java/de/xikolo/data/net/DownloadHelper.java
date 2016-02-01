@@ -10,7 +10,6 @@ import java.util.Set;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.Download;
-import de.xikolo.data.preferences.AppPreferences;
 
 public class DownloadHelper {
 
@@ -58,7 +57,7 @@ public class DownloadHelper {
     }
 
     public static Set<Download> getAllDownloads() {
-        Set<Download> downloadSet = new HashSet<Download>();
+        Set<Download> downloadSet = new HashSet<>();
         DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
         DownloadManager.Query query = new DownloadManager.Query();
         Cursor c = dm.query(query);
@@ -86,7 +85,7 @@ public class DownloadHelper {
     }
 
     public static Set<Download> getAllDownloadsForIds(long... ids) {
-        Set<Download> downloadSet = new HashSet<Download>();
+        Set<Download> downloadSet = new HashSet<>();
         DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(ids);
@@ -102,7 +101,7 @@ public class DownloadHelper {
     }
 
     public static Set<Download> getAllDownloadsForStatus(int flags) {
-        Set<Download> downloadSet = new HashSet<Download>();
+        Set<Download> downloadSet = new HashSet<>();
         DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterByStatus(flags);
