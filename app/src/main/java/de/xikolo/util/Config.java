@@ -1,5 +1,7 @@
 package de.xikolo.util;
 
+import com.google.android.gms.cast.CastMediaControlIntent;
+
 import de.xikolo.BuildConfig;
 import de.xikolo.data.preferences.UserPreferences;
 
@@ -13,34 +15,39 @@ public class Config {
 
     public static final String PREF_USER = UserPreferences.class.getName();
 
-    public static final String URI_SCHEME_HTTP = "http";
-    public static final String URI_SCHEME_HTTPS = "https";
+    public static final String HTTP = "http";
+    public static final String HTTPS = "https";
 
     public static final String HOST;
     public static final String URI;
     public static final String API;
 
-    static {
+    public static final String CAST_MEDIA_RECEIVER_APPLICATION_ID;
 
+    static {
         switch (BuildConfig.buildFlavor) {
             case OPEN_HPI:
                 FONT_SANS = FONT + "NeoSansStdRegular.ttf";
                 HOST = "open.hpi.de";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
             case OPEN_SAP:
                 FONT_SANS = FONT + "BentonSansRegular.ttf";
                 HOST = "open.sap.com";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
             case OPEN_UNE:
                 FONT_SANS = FONT + "AftaSansThin.ttf";
                 HOST = "openune.cn";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
-            default:
+            default: // MOOC_HOUSE
                 FONT_SANS = FONT + "AftaSansThin.ttf";
                 HOST = "mooc.house";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
         }
-        URI = URI_SCHEME_HTTPS + "://" + HOST + "/";
+        URI = HTTPS + "://" + HOST + "/";
         API = URI + "api/";
     }
 
