@@ -20,6 +20,17 @@ public abstract class ContentFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            mActivityCallback = (OnFragmentInteractionListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mActivityCallback = null;

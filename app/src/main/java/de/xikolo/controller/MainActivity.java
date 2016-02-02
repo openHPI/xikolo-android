@@ -154,6 +154,7 @@ public class MainActivity extends BaseActivity
             transaction.replace(R.id.container, mFragment, tag);
             transaction.addToBackStack(tag);
             transaction.commit();
+            setAppBarExpanded(true);
         } else if (intent != null) {
             startActivity(intent);
         }
@@ -177,6 +178,7 @@ public class MainActivity extends BaseActivity
                 finish();
             } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
                 getSupportFragmentManager().popBackStack();
+                setAppBarExpanded(true);
             } else {
                 finish();
             }

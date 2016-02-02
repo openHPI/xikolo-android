@@ -5,6 +5,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -12,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
@@ -40,11 +41,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
 
+    protected AppBarLayout appBar;
+
     protected VideoCastManager videoCastManager;
 
     private DrawerLayout drawerLayout;
 
-    private FrameLayout contentLayout;
+    private CoordinatorLayout contentLayout;
 
     private MenuItem mediaRouteMenuItem;
 
@@ -108,13 +111,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        contentLayout = (FrameLayout) findViewById(R.id.contentLayout);
+        contentLayout = (CoordinatorLayout) findViewById(R.id.contentLayout);
+        appBar = (AppBarLayout) findViewById(R.id.appbar);
         setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
     }
 
     protected void setActionBarElevation(float elevation) {
         if (actionBar != null && Build.VERSION.SDK_INT >= 21) {
             actionBar.setElevation(elevation);
+        }
+    }
+
+    protected void setAppBarExpanded(boolean expanded) {
+        if (appBar != null) {
+            appBar.setExpanded(expanded, false);
         }
     }
 
