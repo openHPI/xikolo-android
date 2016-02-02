@@ -84,7 +84,6 @@ public class GlobalApplication extends Application {
         super.onCreate();
 
         configureDefaultSettings();
-        configureFontTypefaces();
         configureDatabase();
         configureImageLoader();
         configureHttpResponseCache();
@@ -99,15 +98,8 @@ public class GlobalApplication extends Application {
         }
     }
 
-
     private void configureDefaultSettings() {
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-    }
-
-    private void configureFontTypefaces() {
-        // Set global Typefaces
-        // Doesn't work on Android 5 anymore
-//        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
     }
 
     private void configureDatabase() {

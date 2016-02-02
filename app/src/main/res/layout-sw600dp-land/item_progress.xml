@@ -47,6 +47,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textTitle"
                 android:baselineAligned="false"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -129,6 +130,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_below="@+id/progress2"
                         android:layout_marginBottom="4dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <de.xikolo.view.CustomFontTextView
@@ -187,6 +189,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_below="@+id/progress3"
                         android:layout_marginBottom="4dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <de.xikolo.view.CustomFontTextView
@@ -196,7 +199,7 @@
                             android:paddingRight="6dp"
                             android:text="@string/icon_visited"
                             android:textSize="18sp"
-                            app:customFont="fontawesome.ttf" />
+                            app:customFont="materialdesign.ttf" />
 
                         <TextView
                             android:id="@+id/textCount3"

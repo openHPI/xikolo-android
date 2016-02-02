@@ -10,8 +10,6 @@ public class Config {
     public static final boolean DEBUG = BuildConfig.buildType == BuildType.DEBUG;
 
     public static final String FONT = "fonts/";
-    public static final String FONT_SANS;
-    public static final String FONT_XIKOLO = FONT + "xikolo.ttf";
 
     public static final String PREF_USER = UserPreferences.class.getName();
 
@@ -27,22 +25,18 @@ public class Config {
     static {
         switch (BuildConfig.buildFlavor) {
             case OPEN_HPI:
-                FONT_SANS = FONT + "NeoSansStdRegular.ttf";
                 HOST = "open.hpi.de";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
             case OPEN_SAP:
-                FONT_SANS = FONT + "BentonSansRegular.ttf";
                 HOST = "open.sap.com";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
             case OPEN_UNE:
-                FONT_SANS = FONT + "AftaSansThin.ttf";
                 HOST = "openune.cn";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
             default: // MOOC_HOUSE
-                FONT_SANS = FONT + "AftaSansThin.ttf";
                 HOST = "mooc.house";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
