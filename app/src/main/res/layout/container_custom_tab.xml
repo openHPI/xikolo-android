@@ -1,0 +1,29 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="56dp"
+    android:gravity="center">
+
+    <View
+        android:id="@+id/unseenIndicator"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_gravity="center_horizontal|top"
+        android:background="@drawable/circle_white"
+        android:paddingTop="4dp" />
+
+    <de.xikolo.view.CustomFontTextView
+        android:id="@+id/tabLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:paddingBottom="16dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="16dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:customFont="xikolo.ttf" />
+
+</FrameLayout>

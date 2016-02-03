@@ -243,13 +243,4 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         }
     }
 
-
-    @Override
-    public void pageChanged() {
-    }
-
-    @Override
-    public void pageScrolling(int state) {
-    }
-
 }

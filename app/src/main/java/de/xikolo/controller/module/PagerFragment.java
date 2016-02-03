@@ -41,8 +41,4 @@ public abstract class PagerFragment<T extends ItemDetail> extends BaseFragment {
         }
     }
 
-    public abstract void pageChanged();
-
-    public abstract void pageScrolling(int state);
-
 }

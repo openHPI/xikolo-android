@@ -30,6 +30,8 @@
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
 
+    <color name="tab_text_unfocused">#b3ffffff</color>
+
     <color name="banner_yellow">#F5A704</color>
     <color name="banner_green">#8CB30D</color>
 

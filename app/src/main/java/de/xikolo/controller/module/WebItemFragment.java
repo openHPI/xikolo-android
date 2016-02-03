@@ -162,14 +162,4 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void pageChanged() {
-
-    }
-
-    @Override
-    public void pageScrolling(int state) {
-
-    }
-
 }

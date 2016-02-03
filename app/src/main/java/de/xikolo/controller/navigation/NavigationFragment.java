@@ -145,7 +145,7 @@ public class NavigationFragment extends BaseFragment {
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
     public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
-        mFragmentContainerView = getActivity().findViewById(fragmentId);
+        mFragmentContainerView = (ViewGroup) getActivity().findViewById(fragmentId).getParent();
         mDrawerLayout = drawerLayout;
 
         // set a custom shadow that overlays the webview content when the drawer opens
