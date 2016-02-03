@@ -66,11 +66,11 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         this.mLoadExternalUrlEnabled = loadExt;
     }
 
+    @SuppressWarnings("SetJavaScriptEnabled")
     private void setup() {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
-        mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mWebView.setWebChromeClient(new WebChromeClient());
 
         mNotificationController.setProgressVisible(true);
