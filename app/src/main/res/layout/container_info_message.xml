@@ -8,7 +8,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:padding="24dp"
     android:visibility="gone"
-    app:maxWidth="600dp">
+    app:maxWidthLayout="600dp">
 
     <LinearLayout
         android:id="@+id/linearLayoutCard"

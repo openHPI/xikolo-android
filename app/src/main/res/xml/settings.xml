@@ -1,22 +1,17 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/settings_category_general">
+    <android.support.v7.preference.PreferenceCategory android:title="@string/settings_category_general">
 
-        <CheckBoxPreference
+        <android.support.v7.preference.CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/preference_confirm_delete"
             android:title="@string/settings_title_ask_delete" />
 
-        <!--<de.xikolo.view.StoragePreference-->
-            <!--android:defaultValue="true"-->
-            <!--android:title="@string/settings_title_storage"-->
-            <!--android:key="@string/preference_storage"/>-->
+    </android.support.v7.preference.PreferenceCategory>
 
-    </PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory android:title="@string/settings_category_data_usage">
 
-    <PreferenceCategory android:title="@string/settings_category_data_usage">
-
-        <CheckBoxPreference
+        <android.support.v7.preference.CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/preference_video_quality"
             android:summary="@string/settings_summary_video_quality"
@@ -28,40 +23,40 @@
             android:summary="@string/settings_summary_download_network"
             android:title="@string/settings_title_download_network" />
 
-    </PreferenceCategory>
+    </android.support.v7.preference.PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/settings_category_about">
+    <android.support.v7.preference.PreferenceCategory android:title="@string/settings_category_about">
 
-        <Preference
+        <android.support.v7.preference.Preference
             android:key="copyright"
             android:title="@string/settings_copyright" />
 
-        <Preference
+        <android.support.v7.preference.Preference
             android:key="imprint"
             android:title="@string/settings_imprint" />
 
-        <Preference
+        <android.support.v7.preference.Preference
             android:key="privacy"
             android:title="@string/settings_privacy" />
 
-        <Preference
+        <android.support.v7.preference.Preference
             android:key="open_source_licenses"
             android:summary="@string/settings_summary_licenses"
             android:title="@string/settings_title_licenses" />
 
-        <Preference
+        <android.support.v7.preference.Preference
             android:key="open_source_contributors"
             android:summary="@string/settings_summary_contributors"
             android:title="@string/settings_title_contributors" />
 
-        <Preference
+        <android.support.v7.preference.Preference
             android:key="build_version"
             android:summary="@string/settings_summary_build"
             android:title="@string/settings_title_build" />
 
-        <Preference
+        <android.support.v7.preference.Preference
             android:key="login_out" />
 
-    </PreferenceCategory>
+    </android.support.v7.preference.PreferenceCategory>
 
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>

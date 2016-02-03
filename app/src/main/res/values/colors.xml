@@ -39,4 +39,7 @@
     <!-- 30% white overlay -->
     <color name="button_gray_light">#8c9094</color>
 
+    <!-- this is needed as preference_category_material layout is using this color as the text color -->
+    <color name="preference_fallback_accent_color">@color/apptheme_second</color>
+
 </resources>

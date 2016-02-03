@@ -19,7 +19,7 @@ public class MaxWidthFrameLayout extends FrameLayout {
     public MaxWidthFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.MaxWidthFrameLayout);
-        mMaxWidth = a.getDimensionPixelSize(R.styleable.MaxWidthFrameLayout_maxWidth, Integer.MAX_VALUE);
+        mMaxWidth = a.getDimensionPixelSize(R.styleable.MaxWidthFrameLayout_maxWidthLayout, Integer.MAX_VALUE);
         a.recycle();
     }
 

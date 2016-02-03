@@ -2,7 +2,7 @@
 <resources>
 
     <declare-styleable name="MaxWidthFrameLayout">
-        <attr name="maxWidth" format="dimension" />
+        <attr name="maxWidthLayout" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="CustomFontTextView">

@@ -3,8 +3,10 @@ package de.xikolo.controller.settings;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
+import android.support.v14.preference.PreferenceFragment;
+import android.support.v7.preference.Preference;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import java.util.Calendar;
 
@@ -18,6 +20,7 @@ import de.xikolo.controller.dialogs.LicensesDialog;
 import de.xikolo.model.UserModel;
 import de.xikolo.model.events.LoginEvent;
 import de.xikolo.model.events.LogoutEvent;
+import de.xikolo.view.SettingsDividerItemDecoration;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -37,7 +40,10 @@ public class SettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         EventBus.getDefault().register(this);
+    }
 
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.settings);
 
         Preference copyright = findPreference("copyright");
@@ -168,6 +174,14 @@ public class SettingsFragment extends PreferenceFragment {
             });
         }
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        ((RecyclerView) view.findViewById(R.id.list)).addItemDecoration(
+                new SettingsDividerItemDecoration(getActivity())
+        );
+    }
+
 
     public void onEventMainThread(LoginEvent event) {
         buildLogoutView(login_out);

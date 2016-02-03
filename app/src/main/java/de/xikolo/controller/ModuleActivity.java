@@ -247,7 +247,7 @@ public class ModuleActivity extends BaseActivity {
 
             // Check if this Fragment already exists.
             // Fragment Name is saved by FragmentPagerAdapter implementation.
-            String name = makeFragmentName(R.id.pager, position);
+            String name = makeFragmentName(R.id.viewpager, position);
             Fragment fragment = fragmentManager.findFragmentByTag(name);
             if (fragment == null) {
                 if (item.type.equals(Item.TYPE_TEXT)) {

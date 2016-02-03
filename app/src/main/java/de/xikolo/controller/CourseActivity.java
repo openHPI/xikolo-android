@@ -267,7 +267,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
         public Fragment getItem(int position) {
             // Check if this Fragment already exists.
             // Fragment Name is saved by FragmentPagerAdapter implementation.
-            String name = makeFragmentName(R.id.pager, position);
+            String name = makeFragmentName(R.id.viewpager, position);
             Fragment fragment = mFragmentManager.findFragmentByTag(name);
             if (fragment == null) {
                 switch (position) {
