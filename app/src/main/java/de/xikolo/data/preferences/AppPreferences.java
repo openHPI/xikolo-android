@@ -2,7 +2,7 @@ package de.xikolo.data.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 
 import de.xikolo.R;
 

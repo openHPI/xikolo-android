@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -99,7 +99,6 @@ public class GlobalApplication extends Application {
             SslCertificateUtil.disableSslCertificateChecking();
         }
     }
-
 
     private void configureDefaultSettings() {
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
