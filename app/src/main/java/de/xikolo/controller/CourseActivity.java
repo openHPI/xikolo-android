@@ -47,7 +47,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course);
+        setContentView(R.layout.activity_blank_tabs);
         setupActionBar();
 
         // Initialize the ViewPager and set an adapter

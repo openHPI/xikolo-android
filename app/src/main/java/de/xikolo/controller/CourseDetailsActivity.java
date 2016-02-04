@@ -27,7 +27,7 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coursedetails);
+        setContentView(R.layout.activity_blank);
         setupActionBar();
 
         Bundle b = getIntent().getExtras();

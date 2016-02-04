@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class ModuleActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_module);
+        setContentView(R.layout.activity_blank_tabs);
         setupActionBar();
 
         Bundle b = getIntent().getExtras();
@@ -102,7 +103,7 @@ public class ModuleActivity extends BaseActivity {
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             if (tab != null) {
-                tab.setCustomView(adapter.getCustomTabView(i, tabLayout.getSelectedTabPosition()));
+                tab.setCustomView(adapter.getCustomTabView(i, tabLayout.getSelectedTabPosition(), tabLayout));
             }
         }
 
@@ -192,8 +193,8 @@ public class ModuleActivity extends BaseActivity {
             this.items.removeAll(toRemove);
         }
 
-        public View getCustomTabView(int position, int currentPosition) {
-            final View layout = getLayoutInflater().inflate(R.layout.container_custom_tab, null);
+        public View getCustomTabView(int position, int currentPosition, ViewGroup parent) {
+            final View layout = getLayoutInflater().inflate(R.layout.container_custom_tab, parent, false);
 
             TextView label = (TextView) layout.findViewById(R.id.tabLabel);
             View unseenIndicator = layout.findViewById(R.id.unseenIndicator);

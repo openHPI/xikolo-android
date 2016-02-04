@@ -15,7 +15,7 @@ public class DownloadsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_blank);
         setupActionBar();
 
         setTitle(getString(R.string.title_section_downloads));
