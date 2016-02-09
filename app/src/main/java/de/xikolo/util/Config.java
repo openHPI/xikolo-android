@@ -26,11 +26,11 @@ public class Config {
         switch (BuildConfig.buildFlavor) {
             case OPEN_HPI:
                 HOST = "open.hpi.de";
-                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604";
                 break;
             case OPEN_SAP:
                 HOST = "open.sap.com";
-                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = "2C63C05D";
                 break;
             case OPEN_UNE:
                 HOST = "openune.cn";
