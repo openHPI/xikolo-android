@@ -29,22 +29,22 @@ android {
         openHPI {
             applicationId "de.xikolo.openhpi"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_HPI"
-            manifestPlaceholders = [ webUrl:"open.hpi.de" ]
+            manifestPlaceholders = [webUrl: "open.hpi.de"]
         }
         openSAP {
             applicationId "de.xikolo.opensap"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_SAP"
-            manifestPlaceholders = [ webUrl:"open.sap.com" ]
+            manifestPlaceholders = [webUrl: "open.sap.com"]
         }
         moocHouse {
             applicationId "de.xikolo.moochouse"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.MOOC_HOUSE"
-            manifestPlaceholders = [ webUrl:"mooc.house" ]
+            manifestPlaceholders = [webUrl: "mooc.house"]
         }
         openUNE {
             applicationId "de.xikolo.openune"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_UNE"
-            manifestPlaceholders = [ webUrl:"openune.cn" ]
+            manifestPlaceholders = [webUrl: "openune.cn"]
         }
     }
     lintOptions {
@@ -68,6 +68,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:mediarouter-v7:23.1.1'
     compile 'com.google.android.gms:play-services:8.4.0'
-    compile project(':CastCompanionLibrary')
+    compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.7.4'
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
