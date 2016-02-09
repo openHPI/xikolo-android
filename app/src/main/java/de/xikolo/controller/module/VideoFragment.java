@@ -150,7 +150,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
             @Override
             protected void onError(ErrorCode errorCode) {
-                ToastUtil.show(getActivity(), R.string.error);
+                ToastUtil.show(R.string.error);
                 mNotificationController.setInvisible();
                 mContainer.setVisibility(View.GONE);
             }
@@ -158,7 +158,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             @Override
             protected void onWarning(WarnCode warnCode) {
                 if (warnCode == WarnCode.NO_NETWORK && userRequest) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
+                    NetworkUtil.showNoConnectionToast();
                 }
             }
         };

@@ -239,7 +239,7 @@ public class ModuleActivity extends BaseActivity {
 
                 @Override
                 public void onLongPress(MotionEvent e) {
-                    ToastUtil.show(mContext, item.title, Gravity.CENTER_HORIZONTAL | Gravity.TOP,
+                    ToastUtil.show(item.title, Gravity.CENTER_HORIZONTAL | Gravity.TOP,
                             0, (int) viewGroup.getY() + layout.getHeight() + mPagerSlidingTabStrip.getIndicatorHeight());
                 }
 

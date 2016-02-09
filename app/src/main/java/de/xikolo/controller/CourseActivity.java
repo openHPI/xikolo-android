@@ -96,9 +96,9 @@ public class CourseActivity extends BaseActivity {
                                 String tag = mCourse.name;
 
                                 if (mCourse.locked) {
-                                    ToastUtil.show(getApplicationContext(), R.string.notification_course_locked);
+                                    ToastUtil.show(R.string.notification_course_locked);
                                 } else if (!mCourse.is_enrolled) {
-                                    ToastUtil.show(getApplicationContext(), R.string.notification_not_enrolled);
+                                    ToastUtil.show(R.string.notification_not_enrolled);
                                 }
 
                                 FragmentManager fragmentManager = getSupportFragmentManager();

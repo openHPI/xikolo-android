@@ -164,7 +164,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
             @Override
             protected void onWarning(WarnCode warnCode) {
                 if (warnCode == WarnCode.NO_NETWORK && userRequest) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
+                    NetworkUtil.showNoConnectionToast();
                 }
             }
 
@@ -172,7 +172,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
             protected void onError(ErrorCode errorCode) {
                 mNotificationController.setInvisible();
                 mRefreshLayout.setRefreshing(false);
-                ToastUtil.show(getActivity(), R.string.error);
+                ToastUtil.show(R.string.error);
             }
         };
 

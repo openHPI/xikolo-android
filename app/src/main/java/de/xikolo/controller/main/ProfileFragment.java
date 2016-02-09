@@ -86,7 +86,7 @@ public class ProfileFragment extends ContentFragment {
             @Override
             protected void onError(ErrorCode errorCode) {
                 if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
+                    NetworkUtil.showNoConnectionToast();
                 }
             }
         };
@@ -102,9 +102,9 @@ public class ProfileFragment extends ContentFragment {
             @Override
             protected void onError(ErrorCode errorCode) {
                 if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
+                    NetworkUtil.showNoConnectionToast();
                 } else {
-                    ToastUtil.show(getActivity(), R.string.toast_log_in_failed);
+                    ToastUtil.show(R.string.toast_log_in_failed);
                 }
             }
         };

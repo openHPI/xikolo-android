@@ -177,13 +177,13 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
             @Override
             protected void onWarning(WarnCode warnCode) {
                 if (warnCode == WarnCode.NO_NETWORK && userRequest) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
+                    NetworkUtil.showNoConnectionToast();
                 }
             }
 
             @Override
             protected void onError(ErrorCode errorCode) {
-                ToastUtil.show(getActivity(), R.string.error);
+                ToastUtil.show(R.string.error);
                 mRefreshLayout.setRefreshing(false);
                 mNotificationController.setInvisible();
             }
