@@ -52,6 +52,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     private CustomSizeImageView mVideoThumbnail;
     private ViewGroup mVideoMetadata;
     private View mPlayButton;
+    private TextView mDurationtext;
+
     private ItemModel mItemModel;
 
     private VideoCastManager mCastManager;
@@ -84,12 +86,13 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         mTitle = (TextView) layout.findViewById(R.id.textTitle);
 
         mLinearLayoutDownloads = (LinearLayout) layout.findViewById(R.id.containerDownloads);
-        
+
         mVideoPreview = (ViewGroup) layout.findViewById(R.id.videoPreview);
         mVideoThumbnail = (CustomSizeImageView) layout.findViewById(R.id.videoThumbnail);
         mVideoMetadata = (ViewGroup) layout.findViewById(R.id.videoMetadata);
 
         mPlayButton = layout.findViewById(R.id.playButton);
+        mDurationtext = (TextView) layout.findViewById(R.id.durationText);
 
         mContainer.setVisibility(View.GONE);
 
@@ -185,6 +188,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         mLinearLayoutDownloads.addView(slides.getView());
 //        DownloadViewController transcript = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
 //        mLinearLayoutDownloads.addView(transcript.getView());
+
+        mDurationtext.setText(getString(R.string.duration, Integer.valueOf(mItem.detail.minutes), Integer.valueOf(mItem.detail.seconds)));
 
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
