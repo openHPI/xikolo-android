@@ -209,7 +209,9 @@ public class ProfileFragment extends ContentFragment {
     private void showCoursesProgress(List<Course> courses) {
         mCourses = courses;
         mTextEnrollCounts.setText(String.valueOf(mCourseModel.getEnrollmentsCount()));
-        mActivityCallback.updateDrawer();
+        if (mActivityCallback != null) {
+            mActivityCallback.updateDrawer();
+        }
     }
 
 }
