@@ -16,11 +16,6 @@
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base">
-
-        <item name="android:progressBarStyleHorizontal">@style/ProgressBarAppTheme</item>
-
-        <item name="android:seekBarStyle">@style/SeekBarAppTheme</item>
-
     </style>
 
     <style name="AppThemeDarkStatusBar" parent="AppTheme">

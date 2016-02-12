@@ -1,9 +1,9 @@
 <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
-    style="?android:attr/progressBarStyleHorizontal"
+    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:maxHeight="10dp"
-    android:minHeight="10dp"
+    android:maxHeight="4dp"
+    android:minHeight="4dp"
     android:paddingBottom="2dp"
     android:paddingTop="6dp"
     android:progressDrawable="@drawable/progress_bar_3" />
