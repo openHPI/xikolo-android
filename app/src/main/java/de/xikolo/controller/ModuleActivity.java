@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.helper.CacheController;
 import de.xikolo.controller.helper.ModuleDownloadController;
 import de.xikolo.controller.module.PagerFragment;
@@ -66,20 +65,25 @@ public class ModuleActivity extends BaseActivity {
 
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(ARG_COURSE) || !b.containsKey(ARG_MODULE)) {
-            if (videoCastManager.isConnected()) {
-                CacheController cacheController = new CacheController();
-                cacheController.readCachedExtras();
-                if (cacheController.getCourse() != null) {
-                    mCourse = cacheController.getCourse();
-                }
-                if (cacheController.getModule() != null) {
-                    mModule = cacheController.getModule();
-                }
-                if (cacheController.getItem() != null) {
-                    mItem = cacheController.getItem();
-                }
-            } else {
-                throw new WrongParameterException();
+            CacheController cacheController = new CacheController();
+            cacheController.readCachedExtras();
+            if (cacheController.getCourse() != null) {
+                mCourse = cacheController.getCourse();
+            }
+            if (cacheController.getModule() != null) {
+                mModule = cacheController.getModule();
+            }
+            if (cacheController.getItem() != null) {
+                mItem = cacheController.getItem();
+            }
+            if (mCourse != null && mModule != null && mItem != null) {
+                Bundle restartBundle = new Bundle();
+                restartBundle.putParcelable(ARG_COURSE, mCourse);
+                restartBundle.putParcelable(ARG_MODULE, mModule);
+                restartBundle.putParcelable(ARG_ITEM, mItem);
+                Intent restartIntent = new Intent(ModuleActivity.this, ModuleActivity.class);
+                restartIntent.putExtras(restartBundle);
+                startActivity(restartIntent);
             }
         } else {
             this.mCourse = b.getParcelable(ARG_COURSE);
