@@ -1,11 +1,11 @@
 package de.xikolo.controller.dialogs;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 
 import de.xikolo.R;
 import de.xikolo.util.DisplayUtil;
@@ -42,7 +42,7 @@ public class ConfirmDeleteDialog extends DialogFragment {
             multipleFiles = getArguments().getBoolean(KEY_MULTIPLE_FILES);
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog);
         builder.setMessage(multipleFiles ? R.string.dialog_confirm_delete_message_multi : R.string.dialog_confirm_delete_message)
                 .setTitle(multipleFiles ? R.string.dialog_confirm_delete_title_multi : R.string.dialog_confirm_delete_title)
                 .setPositiveButton(R.string.dialog_confirm_delete_yes, new DialogInterface.OnClickListener() {

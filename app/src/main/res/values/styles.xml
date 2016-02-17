@@ -20,22 +20,4 @@
         <item name="android:background">@drawable/button_main</item>
     </style>
 
-    <style name="ProgressBarAppTheme" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/apptheme_progress_horizontal_holo_light
-        </item>
-        <item name="android:indeterminateDrawable">
-            @drawable/apptheme_progress_indeterminate_horizontal_holo_light
-        </item>
-    </style>
-
-    <style name="SeekBarAppTheme" parent="android:Widget.Holo.Light.SeekBar">
-        <item name="android:progressDrawable">
-            @drawable/apptheme_scrubber_progress_horizontal_holo_light
-        </item>
-        <item name="android:indeterminateDrawable">
-            @drawable/apptheme_scrubber_progress_horizontal_holo_light
-        </item>
-        <item name="android:thumb">@drawable/apptheme_scrubber_control_selector_holo_light</item>
-    </style>
-
 </resources>

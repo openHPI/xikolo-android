@@ -41,8 +41,8 @@ public class NetworkUtil {
         return TYPE_NOT_CONNECTED;
     }
 
-    public static void showNoConnectionToast(Context context) {
-        ToastUtil.show(context, R.string.toast_no_network);
+    public static void showNoConnectionToast() {
+        ToastUtil.show(R.string.toast_no_network);
     }
 
 }

@@ -126,10 +126,10 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
                         }
                     });
                     if (userRequest) {
-                        NetworkUtil.showNoConnectionToast(getActivity());
+                        NetworkUtil.showNoConnectionToast();
                     }
                 } else {
-                    ToastUtil.show(getActivity(), R.string.error);
+                    ToastUtil.show(R.string.error);
                 }
             }
         };

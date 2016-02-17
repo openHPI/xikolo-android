@@ -65,7 +65,7 @@ public class ModuleDownloadController {
                             startModuleDownloads(course, module);
                         }
                     } else {
-                        NetworkUtil.showNoConnectionToast(GlobalApplication.getInstance());
+                        NetworkUtil.showNoConnectionToast();
                     }
                 }
             }

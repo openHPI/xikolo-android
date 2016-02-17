@@ -164,7 +164,7 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
         if (dir.exists()) {
             FileUtil.delete(dir);
         } else {
-            ToastUtil.show(getActivity(), R.string.error);
+            ToastUtil.show(R.string.error);
         }
 
         fetchItems();

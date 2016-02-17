@@ -12,36 +12,58 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <FrameLayout
+            <RelativeLayout
                 android:id="@+id/videoPreview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:background="@color/video_bg"
                 android:gravity="center">
 
-                <de.xikolo.view.CustomSizeImageView
-                    android:id="@+id/videoThumbnail"
+                <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
+                    android:gravity="center">
 
-                <de.xikolo.view.CustomFontTextView
-                    android:id="@+id/playButton"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle_button"
-                    android:elevation="2dp"
-                    android:gravity="center"
-                    android:text="@string/icon_play"
-                    android:textColor="@color/white"
-                    android:textSize="32sp"
-                    app:customFont="xikolo.ttf" />
+                    <de.xikolo.view.CustomSizeImageView
+                        android:id="@+id/videoThumbnail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop" />
 
-            </FrameLayout>
+                    <de.xikolo.view.CustomFontTextView
+                        android:id="@+id/playButton"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle_button"
+                        android:elevation="2dp"
+                        android:gravity="center"
+                        android:text="@string/icon_play"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        app:customFont="xikolo.ttf" />
+
+                    <TextView
+                        android:id="@+id/durationText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="bottom|right"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@color/black"
+                        android:paddingBottom="3dp"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="6dp"
+                        android:paddingTop="3dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                </FrameLayout>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/videoMetadata"

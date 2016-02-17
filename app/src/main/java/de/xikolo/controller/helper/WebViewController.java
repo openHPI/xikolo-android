@@ -80,7 +80,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
             @SuppressWarnings("deprecation")
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                ToastUtil.show(mActivity, "An error occurred" + description);
+                ToastUtil.show("An error occurred" + description);
             }
 
             @TargetApi(Build.VERSION_CODES.M)
@@ -166,7 +166,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                     mNotificationController.setNotificationVisible(true);
 
                     if (userRequest) {
-                        NetworkUtil.showNoConnectionToast(mActivity);
+                        NetworkUtil.showNoConnectionToast();
                     }
                 }
             } else {

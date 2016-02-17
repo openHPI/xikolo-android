@@ -2,8 +2,6 @@
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
 
-        <item name="android:textColor">@color/text_main</item>
-
         <item name="colorPrimary">@color/apptheme_main</item>
         <item name="colorPrimaryDark">@color/apptheme_main_dark</item>
         <item name="colorAccent">@color/apptheme_second</item>
@@ -11,14 +9,13 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
+
+        <item name="android:textViewStyle">@style/TextViewTheme</item>
+
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base">
-
-        <item name="android:progressBarStyleHorizontal">@style/ProgressBarAppTheme</item>
-
-        <item name="android:seekBarStyle">@style/SeekBarAppTheme</item>
-
     </style>
 
     <style name="AppThemeDarkStatusBar" parent="AppTheme">
@@ -28,6 +25,16 @@
     </style>
 
     <style name="AppThemeTranslucentStatus" parent="AppTheme.Base">
+    </style>
+
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/apptheme_main</item>
+        <item name="colorPrimaryDark">@color/apptheme_main_dark</item>
+        <item name="colorAccent">@color/apptheme_second</item>
+    </style>
+
+    <style name="TextViewTheme" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/text_main</item>
     </style>
 
 </resources>

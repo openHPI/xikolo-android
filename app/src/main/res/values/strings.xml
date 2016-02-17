@@ -114,6 +114,7 @@
     <string name="download_all_content">Download contents</string>
     <string name="intro_overlay_text">Touch to cast videos on TV</string>
     <string name="user_name">%1$s %2$s</string>
+    <string name="duration" translatable="false">%1$02d:%2$02d</string>
 
     <string name="self_test_points">%1$s of %2$s self-test points</string>
     <string name="assignments_points">%1$s of %2$s assignment points</string>
