@@ -21,8 +21,6 @@ import de.xikolo.R;
 import de.xikolo.controller.course.CourseLearningsFragment;
 import de.xikolo.controller.course.ProgressFragment;
 import de.xikolo.controller.dialogs.UnenrollDialog;
-import de.xikolo.controller.exceptions.WrongParameterException;
-import de.xikolo.controller.helper.CacheController;
 import de.xikolo.controller.helper.EnrollmentController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
@@ -62,19 +60,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
                 handleDeepLinkIntent(intent);
             } else {
                 Bundle b = getIntent().getExtras();
-                if (b == null || !b.containsKey(ARG_COURSE)) {
-                    if (videoCastManager.isConnected()) {
-                        CacheController cacheController = new CacheController();
-                        cacheController.readCachedExtras();
-                        if (cacheController.getCourse() != null) {
-                            course = cacheController.getCourse();
-                        }
-                    } else {
-                        throw new WrongParameterException();
-                    }
-                } else {
-                    course = b.getParcelable(ARG_COURSE);
-                }
+                this.course = b.getParcelable(ARG_COURSE);
                 setupView(0);
             }
         }
