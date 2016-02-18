@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -80,10 +81,15 @@ public class HttpRequest {
 
     public long getContentLength() {
         try {
-            HttpsURLConnection conn = createConnection();
+            setMethod(Config.HTTP_HEAD);
+            URLConnection conn = createConnection();
             conn.connect();
-            final String contentLengthStr = conn.getHeaderField("content-length");
-            return Long.parseLong(contentLengthStr);
+            long length = conn.getContentLength();
+            if (length < 0) {
+                return 0;
+            } else {
+                return length;
+            }
         } catch (Exception e) {
             if (Config.DEBUG) Log.w(TAG, "Error for URL " + mUrl, e);
         }

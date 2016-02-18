@@ -13,7 +13,6 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
-import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -85,7 +84,6 @@ public class GlobalApplication extends Application {
         super.onCreate();
 
         configureDefaultSettings();
-        configureFontTypefaces();
         configureDatabase();
         configureImageLoader();
         configureHttpResponseCache();
@@ -102,12 +100,6 @@ public class GlobalApplication extends Application {
 
     private void configureDefaultSettings() {
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-    }
-
-    private void configureFontTypefaces() {
-        // Set global Typefaces
-        // Doesn't work on Android 5 anymore
-//        FontsOverride.setDefaultFont(this, "SANS_SERIF", Config.FONT_SANS);
     }
 
     private void configureDatabase() {
@@ -241,7 +233,7 @@ public class GlobalApplication extends Application {
     }
 
     private void configureVideoCastManager() {
-        CastConfiguration options = new CastConfiguration.Builder(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID)
+        CastConfiguration options = new CastConfiguration.Builder(Config.CAST_MEDIA_RECEIVER_APPLICATION_ID)
                 .enableAutoReconnect()
                 .enableDebug()
                 .enableLockScreen()

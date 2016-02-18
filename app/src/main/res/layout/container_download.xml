@@ -42,7 +42,6 @@
 
             <de.xikolo.view.IconButton
                 android:id="@+id/buttonDownloadStart"
-                app:labelText="@string/download"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -50,10 +49,11 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/button_main"
+                android:elevation="1dp"
                 android:minHeight="36dp"
                 android:minWidth="88dp"
-                android:elevation="1dp"
-                android:translationZ="1dp" />
+                android:translationZ="1dp"
+                app:labelText="@string/download" />
 
         </RelativeLayout>
 
@@ -79,7 +79,7 @@
 
             <ProgressBar
                 android:id="@+id/progressDownload"
-                style="?android:attr/progressBarStyleHorizontal"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

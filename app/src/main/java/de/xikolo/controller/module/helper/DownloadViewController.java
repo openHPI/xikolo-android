@@ -106,7 +106,7 @@ public class DownloadViewController {
                         startDownload();
                     }
                 } else {
-                    NetworkUtil.showNoConnectionToast(GlobalApplication.getInstance());
+                    NetworkUtil.showNoConnectionToast();
                 }
             }
         });

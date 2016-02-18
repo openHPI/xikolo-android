@@ -1,6 +1,3 @@
-[submodule "CastCompanionLibrary"]
-	path = CastCompanionLibrary
-	url = https://github.com/googlecast/CastCompanionLibrary-android.git
 [submodule "NestedScrollWebView"]
 	path = NestedScrollWebView
 	url = https://github.com/rhlff/NestedScrollWebView

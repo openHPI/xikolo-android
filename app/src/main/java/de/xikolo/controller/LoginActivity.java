@@ -67,9 +67,9 @@ public class LoginActivity extends BaseActivity {
             protected void onError(ErrorCode errorCode) {
                 dialog.dismiss();
                 if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(LoginActivity.this);
+                    NetworkUtil.showNoConnectionToast();
                 } else {
-                    ToastUtil.show(LoginActivity.this, R.string.toast_log_in_failed);
+                    ToastUtil.show(R.string.toast_log_in_failed);
                 }
                 mUserModel.logout();
             }
@@ -86,9 +86,9 @@ public class LoginActivity extends BaseActivity {
             protected void onError(ErrorCode errorCode) {
                 dialog.dismiss();
                 if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(LoginActivity.this);
+                    NetworkUtil.showNoConnectionToast();
                 } else {
-                    ToastUtil.show(LoginActivity.this, R.string.toast_log_in_failed);
+                    ToastUtil.show(R.string.toast_log_in_failed);
                 }
                 mUserModel.logout();
             }

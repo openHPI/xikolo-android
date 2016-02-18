@@ -1,6 +1,12 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.3
+* Added Google Cast support
+* Reduced data usage
+* UI updates
+* Bugfixes
+
 ## v1.2
 * New course overview with categories and ribbons
 * Added Dashboard to Deep Links

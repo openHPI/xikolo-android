@@ -1,7 +1,4 @@
 include 'app'
 
-include ':CastCompanionLibrary'
-project(':CastCompanionLibrary').projectDir = new File('CastCompanionLibrary/')
-
 include ':NestedScrollWebView:lib'
 project(':NestedScrollWebView').projectDir = new File('/NestedScrollWebView')

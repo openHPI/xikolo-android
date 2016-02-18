@@ -1,11 +1,11 @@
 package de.xikolo.controller.dialogs;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 
 import de.xikolo.R;
 
@@ -63,7 +63,7 @@ public class ModuleDownloadDialog extends DialogFragment {
 
         String title = String.format(getActivity().getString(R.string.dialog_module_downloads_title), moduleTitle);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog);
         builder.setTitle(title)
                 .setMultiChoiceItems(R.array.dialog_module_downloads_array, null, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override

@@ -1,5 +1,7 @@
 package de.xikolo.util;
 
+import com.google.android.gms.cast.CastMediaControlIntent;
+
 import de.xikolo.BuildConfig;
 import de.xikolo.data.preferences.UserPreferences;
 
@@ -8,39 +10,38 @@ public class Config {
     public static final boolean DEBUG = BuildConfig.buildType == BuildType.DEBUG;
 
     public static final String FONT = "fonts/";
-    public static final String FONT_SANS;
-    public static final String FONT_XIKOLO = FONT + "xikolo.ttf";
 
     public static final String PREF_USER = UserPreferences.class.getName();
 
-    public static final String URI_SCHEME_HTTP = "http";
-    public static final String URI_SCHEME_HTTPS = "https";
+    public static final String HTTP = "http";
+    public static final String HTTPS = "https";
 
     public static final String HOST;
     public static final String URI;
     public static final String API;
 
-    static {
+    public static final String CAST_MEDIA_RECEIVER_APPLICATION_ID;
 
+    static {
         switch (BuildConfig.buildFlavor) {
             case OPEN_HPI:
-                FONT_SANS = FONT + "NeoSansStdRegular.ttf";
                 HOST = "open.hpi.de";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604";
                 break;
             case OPEN_SAP:
-                FONT_SANS = FONT + "BentonSansRegular.ttf";
                 HOST = "open.sap.com";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = "2C63C05D";
                 break;
             case OPEN_UNE:
-                FONT_SANS = FONT + "AftaSansThin.ttf";
                 HOST = "openune.cn";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
-            default:
-                FONT_SANS = FONT + "AftaSansThin.ttf";
+            default: // MOOC_HOUSE
                 HOST = "mooc.house";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
         }
-        URI = URI_SCHEME_HTTPS + "://" + HOST + "/";
+        URI = HTTPS + "://" + HOST + "/";
         API = URI + "api/";
     }
 
@@ -58,6 +59,7 @@ public class Config {
     public static final String HTTP_POST = "POST";
     public static final String HTTP_DELETE = "DELETE";
     public static final String HTTP_PUT = "PUT";
+    public static final String HTTP_HEAD = "HEAD";
 
     public static final String NEWS = "news/";
     public static final String LOGIN = "login/";

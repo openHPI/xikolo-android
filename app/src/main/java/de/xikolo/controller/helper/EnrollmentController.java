@@ -30,9 +30,9 @@ public class EnrollmentController {
             protected void onError(ErrorCode errorCode) {
                 progressDialog.dismiss();
                 if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(activity);
+                    NetworkUtil.showNoConnectionToast();
                 } else {
-                    ToastUtil.show(activity, R.string.error);
+                    ToastUtil.show(R.string.error);
                 }
             }
         };

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.CourseActivity;
 import de.xikolo.controller.CourseDetailsActivity;
@@ -118,7 +119,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             @Override
             protected void onWarning(WarnCode warnCode) {
                 if (warnCode == WarnCode.NO_NETWORK && userRequest) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
+                    NetworkUtil.showNoConnectionToast();
                 }
             }
 
@@ -127,10 +128,10 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 mCourses = null;
 
                 if (errorCode == ErrorCode.NO_RESULT) {
-                    ToastUtil.show(getActivity(), getActivity().getString(R.string.toast_no_courses)
-                            + " " + getActivity().getString(R.string.toast_no_network));
+                    ToastUtil.show(GlobalApplication.getInstance().getString(R.string.toast_no_courses)
+                            + " " + GlobalApplication.getInstance().getString(R.string.toast_no_network));
                 } else if (errorCode == ErrorCode.NO_NETWORK && userRequest) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
+                    NetworkUtil.showNoConnectionToast();
                 }
 
                 updateView();
@@ -305,9 +306,9 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             protected void onError(ErrorCode errorCode) {
                 dialog.dismiss();
                 if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast(getActivity());
+                    NetworkUtil.showNoConnectionToast();
                 } else if (errorCode == ErrorCode.NO_AUTH) {
-                    ToastUtil.show(getActivity(), R.string.toast_please_log_in);
+                    ToastUtil.show(R.string.toast_please_log_in);
                     mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                 }
             }
@@ -333,7 +334,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             intent.putExtras(b);
             startActivity(intent);
         } else {
-            ToastUtil.show(getActivity(), R.string.toast_please_log_in);
+            ToastUtil.show(R.string.toast_please_log_in);
             mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
         }
     }

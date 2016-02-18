@@ -190,7 +190,7 @@ public class VideoController {
                 error = true;
                 mVideoProgress.setVisibility(View.GONE);
                 hide();
-                ToastUtil.show(mActivity, R.string.error);
+                ToastUtil.show(R.string.error);
 
                 return true;
             }

@@ -124,9 +124,9 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
                                 setTitle(course.name);
 
                                 if (course.locked) {
-                                    ToastUtil.show(getApplicationContext(), R.string.notification_course_locked);
+                                    ToastUtil.show(R.string.notification_course_locked);
                                 } else if (!course.is_enrolled) {
-                                    ToastUtil.show(getApplicationContext(), R.string.notification_not_enrolled);
+                                    ToastUtil.show(R.string.notification_not_enrolled);
                                 }
 
                                 Intent intent = new Intent(CourseActivity.this, CourseDetailsActivity.class);
