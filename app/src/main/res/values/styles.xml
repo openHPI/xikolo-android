@@ -25,7 +25,7 @@
         <item name="tabIndicatorHeight">2dp</item>
         <item name="tabPaddingStart">12dp</item>
         <item name="tabPaddingEnd">12dp</item>
-        <item name="tabBackground">@drawable/bg_tabs</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
         <item name="tabTextAppearance">@style/TabTextAppearance</item>
         <item name="tabSelectedTextColor">@color/white</item>
     </style>

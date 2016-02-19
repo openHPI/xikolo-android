@@ -120,7 +120,6 @@ public class ModuleActivity extends BaseActivity {
         itemModel.updateProgression(progressionResult, module, module.items.get(index));
     }
 
-    // TODO
     @Override
     public void onEventMainThread(NetworkStateEvent event) {
         super.onEventMainThread(event);

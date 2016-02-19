@@ -182,7 +182,6 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
         return true;
     }
 
-    // TODO
     @Override
     public void onEventMainThread(NetworkStateEvent event) {
         super.onEventMainThread(event);
