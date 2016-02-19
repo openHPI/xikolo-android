@@ -70,6 +70,5 @@ dependencies {
     compile 'com.android.support:preference-v14:23.1.1'
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.7.4'
-    compile project(':NestedScrollWebView:lib')
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
