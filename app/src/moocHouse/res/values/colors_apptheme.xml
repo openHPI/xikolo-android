@@ -9,12 +9,12 @@
     <!-- 40% black overlay -->
     <color name="apptheme_main_dark">#853b0b</color>
 
-    <color name="apptheme_second">#b42946</color>
-    <color name="apptheme_third">#f5a704</color>
+    <color name="apptheme_second">#001C3B</color>
+    <color name="apptheme_third">#596065</color>
 
     <color name="apptheme_main_transparent">#1ade6212</color>
 
-    <color name="apptheme_second_transparent">#99b42946</color>
-    <color name="apptheme_third_transparent">#99f5a704</color>
+    <color name="apptheme_second_transparent">#99001C3B</color>
+    <color name="apptheme_third_transparent">#99596065</color>
 
 </resources>
