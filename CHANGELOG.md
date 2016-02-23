@@ -1,6 +1,10 @@
 Xikolo Android App Changelog
 ============================
 
+## v1.4
+* Implement Design Support Library and Preference Support Library
+* Bugfixes
+
 ## v1.3
 * Added Google Cast support
 * Reduced data usage
