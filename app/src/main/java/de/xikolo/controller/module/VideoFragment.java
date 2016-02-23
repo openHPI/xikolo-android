@@ -172,54 +172,56 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     }
 
     private void setupView() {
-        mNotificationController.setInvisible();
-        mContainer.setVisibility(View.VISIBLE);
+        if (isAdded()) {
+            mNotificationController.setInvisible();
+            mContainer.setVisibility(View.VISIBLE);
 
-        ImageLoaderController.loadImage(mItem.detail.stream.poster, mVideoThumbnail);
+            ImageLoaderController.loadImage(mItem.detail.stream.poster, mVideoThumbnail);
 
-        mTitle.setText(mItem.detail.title);
+            mTitle.setText(mItem.detail.title);
 
-        mLinearLayoutDownloads.removeAllViews();
-        DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
-        mLinearLayoutDownloads.addView(hdVideo.getView());
-        DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
-        mLinearLayoutDownloads.addView(sdVideo.getView());
-        DownloadViewController slides = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
-        mLinearLayoutDownloads.addView(slides.getView());
+            mLinearLayoutDownloads.removeAllViews();
+            DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
+            mLinearLayoutDownloads.addView(hdVideo.getView());
+            DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
+            mLinearLayoutDownloads.addView(sdVideo.getView());
+            DownloadViewController slides = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
+            mLinearLayoutDownloads.addView(slides.getView());
 //        DownloadViewController transcript = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
 //        mLinearLayoutDownloads.addView(transcript.getView());
 
-        mDurationtext.setText(getString(R.string.duration, Integer.valueOf(mItem.detail.minutes), Integer.valueOf(mItem.detail.seconds)));
+            mDurationtext.setText(getString(R.string.duration, Integer.valueOf(mItem.detail.minutes), Integer.valueOf(mItem.detail.seconds)));
 
-        mPlayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCastManager.isConnected()) {
-                    mItemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
-                        @Override
-                        protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
-                            mItem.detail = result;
-                            setCurrentCourse();
-                            mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), result.progress, true);
-                        }
+            mPlayButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mCastManager.isConnected()) {
+                        mItemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
+                            @Override
+                            protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
+                                mItem.detail = result;
+                                setCurrentCourse();
+                                mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), result.progress, true);
+                            }
 
-                        @Override
-                        protected void onError(ErrorCode errorCode) {
-                            setCurrentCourse();
-                            mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), 0, true);
-                        }
-                    }, mItem.detail);
-                } else {
-                    Intent intent = new Intent(getActivity(), VideoActivity.class);
-                    Bundle b = new Bundle();
-                    b.putParcelable(KEY_COURSE, mCourse);
-                    b.putParcelable(KEY_MODULE, mModule);
-                    b.putParcelable(KEY_ITEM, mItem);
-                    intent.putExtras(b);
-                    startActivity(intent);
+                            @Override
+                            protected void onError(ErrorCode errorCode) {
+                                setCurrentCourse();
+                                mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), 0, true);
+                            }
+                        }, mItem.detail);
+                    } else {
+                        Intent intent = new Intent(getActivity(), VideoActivity.class);
+                        Bundle b = new Bundle();
+                        b.putParcelable(KEY_COURSE, mCourse);
+                        b.putParcelable(KEY_MODULE, mModule);
+                        b.putParcelable(KEY_ITEM, mItem);
+                        intent.putExtras(b);
+                        startActivity(intent);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private MediaInfo buildCastMetadata() {
