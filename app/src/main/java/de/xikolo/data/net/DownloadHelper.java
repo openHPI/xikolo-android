@@ -25,8 +25,8 @@ public class DownloadHelper {
         }
 
         request.setDestinationUri(Uri.parse(target));
-        request.setVisibleInDownloadsUi(true);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setVisibleInDownloadsUi(false);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
         request.setTitle(title);
 
         return dm.enqueue(request);

@@ -110,7 +110,7 @@ public class DownloadModel extends BaseModel {
                     createFolderIfNotExists(new File(dlFile.getAbsolutePath().replace(file, "")));
 
                     EventBus.getDefault().post(new DownloadStartedEvent(uri));
-                    return DownloadHelper.request(uri, "file://" + dlFile.getAbsolutePath(), file);
+                    return DownloadHelper.request(uri, "file://" + dlFile.getAbsolutePath(), item.title + " (" + type.toString() + ")");
                 }
             } else {
                 pendingAction = PendingAction.START;
@@ -379,6 +379,22 @@ public class DownloadModel extends BaseModel {
                     return "_video_sd.mp4";
                 case VIDEO_HD:
                     return "_video_hd.mp4";
+                default:
+                    return "";
+            }
+        }
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case SLIDES:
+                    return "Slides";
+                case TRANSCRIPT:
+                    return "Transcript";
+                case VIDEO_SD:
+                    return "SD Video";
+                case VIDEO_HD:
+                    return "HD Video";
                 default:
                     return "";
             }

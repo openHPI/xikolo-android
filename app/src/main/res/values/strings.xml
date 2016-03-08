@@ -79,6 +79,7 @@
     <string name="preference_confirm_delete" translatable="false">confirm_delete</string>
     <string name="preference_download_network" translatable="false">download_network</string>
     <string name="preference_video_quality" translatable="false">video_quality</string>
+    <string name="preference_download_notifications" translatable="false">download_notifications</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -137,6 +138,10 @@
 
     <string name="video_notification_no_offline_video">No network connection or downloaded video file available.</string>
     <string name="module_notification_no_content">No content available</string>
+
+    <!-- -->
+    <string name="notification_download_completed">Download completed</string>
+    <string name="notification_multiple_downloads_completed">%1$d downloads completed</string>
 
     <!-- -->
     <string name="toast_no_courses">No courses received.</string>

@@ -27,10 +27,27 @@
             android:value="@integer/google_play_services_version" />
 
         <receiver
-            android:name=".util.NetworkChangeReceiver"
+            android:name=".model.receiver.NetworkChangeReceiver"
             android:label="NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".model.receiver.DownloadCompletedReceiver"
+            android:label="DownloadCompletedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".model.receiver.NotificationDeletedReceiver"
+            android:exported="false"
+            android:label="NotificationDeletedReceiver">
+            <intent-filter>
+                <action android:name="de.xikolo.intent.action.NOTIFICATION_DELETED" />
             </intent-filter>
         </receiver>
 

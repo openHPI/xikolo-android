@@ -123,6 +123,10 @@
     <string name="module_notification_no_content">Kein Inhalt verfügbar</string>
 
     <!-- -->
+    <string name="notification_download_completed">Download abgeschlossen</string>
+    <string name="notification_multiple_downloads_completed">%1$d Downloads abgeschlossen</string>
+
+    <!-- -->
     <string name="toast_no_courses">Keine Kurse erhalten.</string>
     <string name="toast_no_network">Bitte aktivieren Sie die Netzwerk-Verbindung.</string>
     <string name="toast_please_log_in">Bitte melden Sie sich an.</string>

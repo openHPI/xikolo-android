@@ -1,11 +1,6 @@
 package de.xikolo;
 
 import android.app.Application;
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.support.v7.preference.PreferenceManager;
@@ -27,13 +22,9 @@ import com.path.android.jobqueue.log.CustomLogger;
 import java.io.File;
 import java.io.IOException;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.data.database.DataAccessFactory;
 import de.xikolo.data.database.DatabaseHelper;
-import de.xikolo.data.entities.Download;
-import de.xikolo.data.net.DownloadHelper;
 import de.xikolo.data.preferences.PreferencesFactory;
-import de.xikolo.model.events.DownloadCompletedEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.SslCertificateUtil;
 
@@ -89,7 +80,6 @@ public class GlobalApplication extends Application {
         configureHttpResponseCache();
         configureWebViewCookies();
         configureJobManager();
-        registerDownloadBroadcastReceiver();
         configureVideoCastManager();
 
         // just for debugging, never use for production
@@ -213,23 +203,6 @@ public class GlobalApplication extends Application {
         } else {
             CookieManager.getInstance().flush();
         }
-    }
-
-    private void registerDownloadBroadcastReceiver() {
-        BroadcastReceiver receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
-                    long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-                    Download dl = DownloadHelper.getDownloadForId(downloadId);
-                    if (dl != null) {
-                        EventBus.getDefault().post(new DownloadCompletedEvent(dl));
-                    }
-                }
-            }
-        };
-        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     private void configureVideoCastManager() {

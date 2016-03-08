@@ -11,8 +11,6 @@ public class Config {
 
     public static final String FONT = "fonts/";
 
-    public static final String PREF_USER = UserPreferences.class.getName();
-
     public static final String HTTP = "http";
     public static final String HTTPS = "https";
 

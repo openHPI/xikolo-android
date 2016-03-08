@@ -1,5 +1,6 @@
 package de.xikolo.controller;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,9 +26,12 @@ import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.data.database.DatabaseHelper;
+import de.xikolo.data.preferences.NotificationPreferences;
+import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.model.events.PermissionDeniedEvent;
 import de.xikolo.model.events.PermissionGrantedEvent;
+import de.xikolo.model.receiver.NotificationDeletedReceiver;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -84,6 +88,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         };
         videoCastManager.addVideoCastConsumer(castConsumer);
+
+        handleIntent(getIntent());
     }
 
     private void showOverlay() {
@@ -225,4 +231,24 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        PreferencesFactory preferencesFactory = new PreferencesFactory(this);
+        NotificationPreferences notificationPreferences = preferencesFactory.getNotificationPreferences();
+
+        String title = intent.getStringExtra(NotificationDeletedReceiver.KEY_TITLE);
+        if (title != null) {
+            notificationPreferences.deleteDownloadNotification(title);
+        } else if (intent.getStringExtra(NotificationDeletedReceiver.KEY_ALL) != null) {
+            notificationPreferences.deleteAllDownloadNotifications();
+        }
+    }
+
 }

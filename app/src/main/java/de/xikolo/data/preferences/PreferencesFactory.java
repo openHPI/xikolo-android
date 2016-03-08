@@ -8,6 +8,8 @@ public class PreferencesFactory {
 
     private UserPreferences userPreferences;
 
+    private NotificationPreferences notificationPreferences;
+
     private Context context;
 
     public PreferencesFactory(Context context) {
@@ -27,4 +29,12 @@ public class PreferencesFactory {
         }
         return userPreferences;
     }
+
+    public NotificationPreferences getNotificationPreferences() {
+        if (notificationPreferences == null) {
+            notificationPreferences = new NotificationPreferences(context);
+        }
+        return notificationPreferences;
+    }
+
 }
