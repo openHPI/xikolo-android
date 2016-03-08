@@ -15,8 +15,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controller.course.CourseLearningsFragment;
 import de.xikolo.controller.course.ProgressFragment;
@@ -26,6 +28,7 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.events.NetworkStateEvent;
+import de.xikolo.util.BuildFlavor;
 import de.xikolo.util.Config;
 import de.xikolo.util.DeepLinkingUtil;
 import de.xikolo.util.ToastUtil;
@@ -223,14 +226,22 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
     public class CoursePagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = {
-                getString(R.string.tab_learnings),
-                getString(R.string.tab_discussions),
-                getString(R.string.tab_progress),
-                getString(R.string.tab_rooms),
-                getString(R.string.tab_announcements),
-                getString(R.string.tab_details)
-        };
+        private final List<String> TITLES;
+
+        {
+            TITLES = new ArrayList<>();
+            TITLES.add(getString(R.string.tab_learnings));
+            TITLES.add(getString(R.string.tab_discussions));
+            TITLES.add(getString(R.string.tab_progress));
+            TITLES.add(getString(R.string.tab_rooms));
+            TITLES.add(getString(R.string.tab_announcements));
+            TITLES.add(getString(R.string.tab_details));
+
+            if (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI) {
+                TITLES.add(getString(R.string.tab_quiz_recap));
+            }
+        }
+
         private FragmentManager mFragmentManager;
 
         public CoursePagerAdapter(FragmentManager fm) {
@@ -240,12 +251,12 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return TITLES[position];
+            return TITLES.get(position);
         }
 
         @Override
         public int getCount() {
-            return TITLES.length;
+            return TITLES.size();
         }
 
         @Override
@@ -273,6 +284,9 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
                         break;
                     case 5:
                         fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code, false, false);
+                        break;
+                    case 6:
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.QUIZ_RECAP + course.id, true, false);
                         break;
                 }
             }

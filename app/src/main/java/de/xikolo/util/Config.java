@@ -75,6 +75,7 @@ public class Config {
     public static final String ROOMS = "learning_rooms/";
     public static final String MODULES = "modules/";
     public static final String ITEMS = "items/";
+    public static final String QUIZ_RECAP = "learn?course_id=";
 
     public static final String USER = "users/me/";
     public static final String ENROLLMENTS = "enrollments/";
