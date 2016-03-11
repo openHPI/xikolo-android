@@ -24,7 +24,8 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.DisplayUtil;
-import de.xikolo.view.NonScrollableGridView;
+import de.xikolo.view.AutofitRecyclerView;
+import de.xikolo.view.SpaceItemDecoration;
 
 public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.ModuleViewHolder> {
 
@@ -69,14 +70,36 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
     }
 
     @Override
-    public void onBindViewHolder(ModuleViewHolder holder, int position) {
+    public void onBindViewHolder(final ModuleViewHolder holder, int position) {
         final Module module = mModules.get(position);
 
         holder.title.setText(module.name);
 
-        ItemListAdapter itemAdapter = new ItemListAdapter(mActivity, mCourse, module, mItemCallback);
-        holder.listView.setAdapter(itemAdapter);
-        ViewCompat.setNestedScrollingEnabled(holder.listView, false);
+        final ItemListAdapter itemAdapter = new ItemListAdapter(mActivity, mCourse, module, mItemCallback);
+        holder.recyclerView.setAdapter(itemAdapter);
+        holder.recyclerView.clearItemDecorations();
+        holder.recyclerView.addItemDecoration(new SpaceItemDecoration(
+                mActivity.getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
+                mActivity.getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
+                false,
+                new SpaceItemDecoration.RecyclerViewInfo() {
+                    @Override
+                    public boolean isHeader(int position) {
+                        return false;
+                    }
+
+                    @Override
+                    public int getSpanCount() {
+                        return holder.recyclerView.getSpanCount();
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return itemAdapter.getItemCount();
+                    }
+                }
+        ));
+        ViewCompat.setNestedScrollingEnabled(holder.recyclerView, false);
 
         if ((module.available_from != null && DateUtil.nowIsBefore(module.available_from)) ||
                 module.items == null) {
@@ -149,7 +172,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
 
         FrameLayout container;
         TextView title;
-        NonScrollableGridView listView;
+        AutofitRecyclerView recyclerView;
         ProgressBar progress;
         View separator;
 
@@ -163,7 +186,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
 
             container = (FrameLayout) view.findViewById(R.id.container);
             title = (TextView) view.findViewById(R.id.textTitle);
-            listView = (NonScrollableGridView) view.findViewById(R.id.listView);
+            recyclerView = (AutofitRecyclerView) view.findViewById(R.id.recyclerView);
             progress = (ProgressBar) view.findViewById(R.id.containerProgress);
             separator = view.findViewById(R.id.separator);
             moduleNotificationContainer = view.findViewById(R.id.moduleNotificationContainer);

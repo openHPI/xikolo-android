@@ -63,18 +63,14 @@
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
 
-            <de.xikolo.view.NonScrollableGridView
-                android:id="@+id/listView"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+            <de.xikolo.view.AutofitRecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:columnWidth="300dp"
                 android:gravity="center_horizontal|top"
-                android:horizontalSpacing="@dimen/card_horizontal_margin"
-                android:listSelector="@color/transparent"
-                android:numColumns="auto_fit"
                 android:scrollbarStyle="outsideOverlay"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="@dimen/card_vertical_margin" />
+                android:scrollbars="vertical" />
 
             <ProgressBar
                 android:id="@+id/containerProgress"

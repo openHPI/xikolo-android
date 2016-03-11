@@ -6,9 +6,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+import java.util.ArrayList;
+
 public class AutofitRecyclerView extends RecyclerView {
 
     private GridLayoutManager manager;
+
+    private final ArrayList<ItemDecoration> mItemDecorations = new ArrayList<>();
 
     private int columnWidth = -1;
 
@@ -62,6 +66,29 @@ public class AutofitRecyclerView extends RecyclerView {
 
     public GridLayoutManager.SpanSizeLookup getSpanSizeLookup() {
         return manager.getSpanSizeLookup();
+    }
+
+    @Override
+    public void addItemDecoration(ItemDecoration decor) {
+        super.addItemDecoration(decor);
+        addItemDecoration(decor, -1);
+    }
+
+    @Override
+    public void addItemDecoration(ItemDecoration decor, int index) {
+        super.addItemDecoration(decor, index);
+        if (index < 0) {
+            mItemDecorations.add(decor);
+        } else {
+            mItemDecorations.add(index, decor);
+        }
+    }
+
+    public void clearItemDecorations() {
+        for (ItemDecoration decor : mItemDecorations) {
+            super.removeItemDecoration(decor);
+        }
+        mItemDecorations.clear();
     }
 
 }

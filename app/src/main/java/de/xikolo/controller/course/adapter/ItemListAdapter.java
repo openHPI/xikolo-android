@@ -2,10 +2,10 @@ package de.xikolo.controller.course.adapter;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -19,7 +19,7 @@ import de.xikolo.data.entities.Module;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.ItemTitle;
 
-public class ItemListAdapter extends BaseAdapter {
+public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder> {
 
     public static final String TAG = ItemListAdapter.class.getSimpleName();
 
@@ -45,54 +45,43 @@ public class ItemListAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mItems.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return mItems.get(i);
+    public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_module_item, parent, false);
+        return new ItemViewHolder(view);
     }
 
     @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View rowView = view;
-        if (rowView == null) {
-            LayoutInflater inflater = mActivity.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.item_module_item, null);
-            ViewHolder viewHolder = new ViewHolder();
-            viewHolder.title = (TextView) rowView.findViewById(R.id.textTitle);
-            viewHolder.icon = (TextView) rowView.findViewById(R.id.textIcon);
-            viewHolder.container = (FrameLayout) rowView.findViewById(R.id.container);
-            viewHolder.unseenIndicator = rowView.findViewById(R.id.unseenIndicator);
-            rowView.setTag(viewHolder);
-        }
-        final ViewHolder holder = (ViewHolder) rowView.getTag();
-
-        final Item item = (Item) getItem(i);
+    public void onBindViewHolder(ItemViewHolder holder, int position) {
+        final Item item = mItems.get(position);
 
         holder.title.setText(ItemTitle.format(mModule.name, item.title));
 
-        if (item.type.equals(Item.TYPE_TEXT)) {
-            holder.icon.setText(mActivity.getString(R.string.icon_text));
-        } else if (item.type.equals(Item.TYPE_VIDEO)) {
-            holder.icon.setText(mActivity.getString(R.string.icon_video));
-        } else if (item.type.equals(Item.TYPE_SELFTEST)) {
-            holder.icon.setText(mActivity.getString(R.string.icon_selftest));
-        } else if (item.type.equals(Item.TYPE_ASSIGNMENT)
-                || item.type.equals(Item.TYPE_EXAM)
-                || item.type.equals(Item.TYPE_PEER)) {
-            holder.icon.setText(mActivity.getString(R.string.icon_assignment));
-        } else if (item.type.equals(Item.TYPE_LTI)) {
-            holder.icon.setText(mActivity.getString(R.string.icon_lti));
-        } else {
-            holder.icon.setText(mActivity.getString(R.string.icon_restricted));
-            item.locked = true;
+        switch (item.type) {
+            case Item.TYPE_TEXT:
+                holder.icon.setText(mActivity.getString(R.string.icon_text));
+                break;
+            case Item.TYPE_VIDEO:
+                holder.icon.setText(mActivity.getString(R.string.icon_video));
+                break;
+            case Item.TYPE_SELFTEST:
+                holder.icon.setText(mActivity.getString(R.string.icon_selftest));
+                break;
+            case Item.TYPE_ASSIGNMENT:
+            case Item.TYPE_EXAM:
+            case Item.TYPE_PEER:
+                holder.icon.setText(mActivity.getString(R.string.icon_assignment));
+                break;
+            case Item.TYPE_LTI:
+                holder.icon.setText(mActivity.getString(R.string.icon_lti));
+                break;
+            default:
+                holder.icon.setText(mActivity.getString(R.string.icon_restricted));
+                item.locked = true;
         }
 
         if (!item.progress.visited) {
@@ -118,8 +107,6 @@ public class ItemListAdapter extends BaseAdapter {
                 }
             });
         }
-
-        return rowView;
     }
 
     public interface OnItemButtonClickListener {
@@ -128,13 +115,22 @@ public class ItemListAdapter extends BaseAdapter {
 
     }
 
-    static class ViewHolder {
+    static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView icon;
 
         View unseenIndicator;
 
         FrameLayout container;
+
+        public ItemViewHolder(View view) {
+            super(view);
+
+            title = (TextView) view.findViewById(R.id.textTitle);
+            icon = (TextView) view.findViewById(R.id.textIcon);
+            container = (FrameLayout) view.findViewById(R.id.container);
+            unseenIndicator = view.findViewById(R.id.unseenIndicator);
+        }
     }
 
 }

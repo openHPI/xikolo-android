@@ -2,6 +2,7 @@ package de.xikolo.view;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
@@ -41,7 +42,10 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
                 relativePosition = position;
             }
 
-            int column = relativePosition % spanCount;
+            int column = 0;
+            if (spanCount > 0) {
+                column = relativePosition % spanCount;
+            }
 
             if (includeEdge || column != 0) {
                 outRect.left = horizontalSpacing / 2;
