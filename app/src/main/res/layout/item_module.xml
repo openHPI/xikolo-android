@@ -44,7 +44,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:background="@drawable/button_icon"
+                android:background="@drawable/icon_toggle_bg_white_on_color"
                 android:clickable="true"
                 android:contentDescription="@string/download"
                 android:paddingBottom="8dp"

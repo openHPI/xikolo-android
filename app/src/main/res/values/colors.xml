@@ -4,6 +4,8 @@
     <color name="text_second">#8A000000</color>
     <color name="text_light">#61000000</color>
 
+    <color name="text_light_26">#1f000000</color>
+
     <color name="background_main">#fff3f3f3</color>
 
     <color name="video_overlay_gradient_black">#99000000</color>
@@ -30,7 +32,7 @@
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
 
-    <color name="white30">#4dffffff</color>
+    <color name="white_30">#4dffffff</color>
 
     <color name="tab_text_unfocused">#b3ffffff</color>
 

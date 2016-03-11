@@ -12,9 +12,11 @@
     <color name="apptheme_second">#226CA9</color>
     <color name="apptheme_third">#8AB54E</color>
 
-    <color name="apptheme_main_transparent">#1af0ab00</color>
+    <color name="apptheme_main_10">#1af0ab00</color>
 
-    <color name="apptheme_second_transparent">#99226CA9</color>
-    <color name="apptheme_third_transparent">#998AB54E</color>
+    <color name="apptheme_second_60">#99226CA9</color>
+    <color name="apptheme_third_60">#998AB54E</color>
+
+    <color name="apptheme_second_26">#42226CA9</color>
 
 </resources>
