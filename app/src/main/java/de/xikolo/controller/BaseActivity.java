@@ -59,6 +59,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private boolean offlineModeToolbar;
 
+    private IntroductoryOverlay mOverlay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,29 +78,42 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onCastAvailabilityChanged(boolean castPresent) {
                 if (castPresent) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mediaRouteMenuItem != null && mediaRouteMenuItem.isVisible()) {
-                                showOverlay();
-                            }
-                        }
-                    }, 1000);
+                    showOverlay();
                 }
             }
         };
         videoCastManager.addVideoCastConsumer(castConsumer);
 
+        if (mOverlay == null) {
+            showOverlay();
+        }
+
         handleIntent(getIntent());
     }
 
     private void showOverlay() {
-        IntroductoryOverlay overlay = new IntroductoryOverlay.Builder(this)
-                .setMenuItem(mediaRouteMenuItem)
-                .setTitleText(R.string.intro_overlay_text)
-                .setSingleTime()
-                .build();
-        overlay.show();
+        if (mOverlay != null) {
+            mOverlay.remove();
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mediaRouteMenuItem != null && mediaRouteMenuItem.isVisible()) {
+                    mOverlay = new IntroductoryOverlay.Builder(BaseActivity.this)
+                            .setMenuItem(mediaRouteMenuItem)
+                            .setTitleText(R.string.intro_overlay_text)
+                            .setSingleTime()
+                            .setOnDismissed(new IntroductoryOverlay.OnOverlayDismissedListener() {
+                                @Override
+                                public void onOverlayDismissed() {
+                                    mOverlay = null;
+                                }
+                            })
+                            .build();
+                    mOverlay.show();
+                }
+            }
+        }, 1000);
     }
 
     protected void setupActionBar() {
@@ -178,6 +193,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
 
         globalApplication.startCookieSyncManager();
+        videoCastManager = VideoCastManager.getInstance();
         videoCastManager.incrementUiCounter();
     }
 

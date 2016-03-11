@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
@@ -182,22 +183,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.google.android.libraries.cast.companionlibrary.remotecontrol.VideoIntentReceiver">
-            <intent-filter>
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-                <action android:name="com.google.android.libraries.cast.companionlibrary.action.toggleplayback" />
-                <action android:name="com.google.android.libraries.cast.companionlibrary.action.stop" />
-            </intent-filter>
-        </receiver>
+        <receiver android:name="com.google.android.libraries.cast.companionlibrary.remotecontrol.VideoIntentReceiver" />
 
-        <service
-            android:name="com.google.android.libraries.cast.companionlibrary.notification.VideoCastNotificationService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.libraries.cast.companionlibrary.action.notificationvisibility" />
-            </intent-filter>
-        </service>
+        <service android:name="com.google.android.libraries.cast.companionlibrary.notification.VideoCastNotificationService" />
 
         <service android:name="com.google.android.libraries.cast.companionlibrary.cast.reconnection.ReconnectionService" />
 

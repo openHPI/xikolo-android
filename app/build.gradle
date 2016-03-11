@@ -63,7 +63,7 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
 
     compile 'com.google.code.gson:gson:2.5'
-    compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.7.4'
+    compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.8.2'
     compile 'com.google.android.gms:play-services:8.4.0'
 
     def supportVersion = '23.2.0'
