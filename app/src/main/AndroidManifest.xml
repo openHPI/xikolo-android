@@ -27,6 +27,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <meta-data android:name="de.xikolo.util.GlideConfiguration"
+            android:value="GlideModule"/>
+
         <receiver
             android:name=".model.receiver.NetworkChangeReceiver"
             android:label="NetworkChangeReceiver">

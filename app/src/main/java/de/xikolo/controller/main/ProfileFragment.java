@@ -2,9 +2,7 @@ package de.xikolo.controller.main;
 
 import android.content.res.Configuration;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +10,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
+import de.xikolo.controller.helper.ImageController;
 import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
 import de.xikolo.data.entities.Course;
@@ -28,7 +24,6 @@ import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
-import de.xikolo.view.CircularImageView;
 import de.xikolo.view.CustomSizeImageView;
 
 public class ProfileFragment extends ContentFragment {
@@ -46,7 +41,7 @@ public class ProfileFragment extends ContentFragment {
 
     private TextView mTextName;
     private CustomSizeImageView mImgHeader;
-    private CircularImageView mImgProfile;
+    private CustomSizeImageView mImgProfile;
     private TextView mTextEnrollCounts;
     private TextView mTextEmail;
 
@@ -119,7 +114,7 @@ public class ProfileFragment extends ContentFragment {
 
         mTextName = (TextView) view.findViewById(R.id.textName);
         mImgHeader = (CustomSizeImageView) view.findViewById(R.id.imageHeader);
-        mImgProfile = (CircularImageView) view.findViewById(R.id.imageProfile);
+        mImgProfile = (CustomSizeImageView) view.findViewById(R.id.imageProfile);
         mTextEnrollCounts = (TextView) view.findViewById(R.id.textEnrollCount);
         mTextEmail = (TextView) view.findViewById(R.id.textEmail);
 
@@ -169,25 +164,16 @@ public class ProfileFragment extends ContentFragment {
         }
         mImgHeader.setDimensions(size.x, heightHeader);
         mImgHeader.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.title, mImgHeader);
+
+        ImageController.load(R.drawable.title, mImgHeader);
+
         mImgProfile.setDimensions(heightProfile, heightProfile);
         mImgProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
         if (user.user_visual != null) {
-            Drawable lastImage;
-            if (mImgProfile.getDrawable() != null) {
-                lastImage = mImgProfile.getDrawable();
-            } else {
-                lastImage = ContextCompat.getDrawable(getActivity(), R.drawable.avatar);
-            }
-            DisplayImageOptions options = new DisplayImageOptions.Builder()
-                    .showImageOnLoading(lastImage)
-                    .showImageForEmptyUri(R.drawable.avatar)
-                    .showImageOnFail(R.drawable.avatar)
-                    .build();
-            ImageLoader.getInstance().displayImage(user.user_visual, mImgProfile, options);
+            ImageController.loadRounded(user.user_visual, mImgProfile, R.drawable.avatar, heightProfile, heightProfile );
         } else {
-            ImageLoader.getInstance().displayImage("drawable://" + R.drawable.avatar, mImgProfile);
+            ImageController.loadRounded(R.drawable.avatar, mImgProfile, R.drawable.avatar, heightProfile, heightProfile);
         }
 
         mTextEmail.setText(user.email);

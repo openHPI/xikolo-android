@@ -20,7 +20,7 @@ import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
 import de.xikolo.controller.helper.CacheController;
-import de.xikolo.controller.helper.ImageLoaderController;
+import de.xikolo.controller.helper.ImageController;
 import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.module.helper.DownloadViewController;
 import de.xikolo.data.entities.Course;
@@ -186,7 +186,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                         " and Item " + mItem.title + " (" + mItem.id + ")");
             }
 
-            ImageLoaderController.loadImage(mItem.detail.stream.poster, mVideoThumbnail);
+            ImageController.load(mItem.detail.stream.poster, mVideoThumbnail);
 
             mTitle.setText(mItem.detail.title);
 

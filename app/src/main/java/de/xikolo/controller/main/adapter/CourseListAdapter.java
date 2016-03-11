@@ -17,7 +17,7 @@ import java.util.Locale;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controller.helper.ImageLoaderController;
+import de.xikolo.controller.helper.ImageController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
 import de.xikolo.util.DateUtil;
@@ -177,7 +177,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
 
-            ImageLoaderController.loadCourseImage(course.visual_url, viewHolder.img, viewHolder.container);
+            ImageController.load(course.visual_url, viewHolder.img);
 
             if (course.is_enrolled && DateUtil.nowIsAfter(course.available_from)) {
                 viewHolder.container.setOnClickListener(new View.OnClickListener() {

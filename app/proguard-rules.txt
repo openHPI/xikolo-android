@@ -40,3 +40,10 @@
 
 ##---------------Begin: proguard configuration for Samsung SDK  ----------
 -keep class com.samsung.android.sdk.** { *; }
+
+##---------------Begin: proguard configuration for Glide  ----------
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}

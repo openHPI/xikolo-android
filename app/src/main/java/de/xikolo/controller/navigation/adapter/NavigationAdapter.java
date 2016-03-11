@@ -1,27 +1,24 @@
 package de.xikolo.controller.navigation.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controller.helper.ImageController;
 import de.xikolo.data.entities.User;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.UserModel;
-import de.xikolo.view.CircularImageView;
 
 public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.BaseNavigationViewHolder> {
 
@@ -115,20 +112,9 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 profileViewHolder.email.setText(user.email);
 
                 if (user.user_visual != null) {
-                    Drawable lastImage;
-                    if (profileViewHolder.img.getDrawable() != null) {
-                        lastImage = profileViewHolder.img.getDrawable();
-                    } else {
-                        lastImage = ContextCompat.getDrawable(context, R.drawable.avatar);
-                    }
-                    DisplayImageOptions options = new DisplayImageOptions.Builder()
-                            .showImageOnLoading(lastImage)
-                            .showImageForEmptyUri(R.drawable.avatar)
-                            .showImageOnFail(R.drawable.avatar)
-                            .build();
-                    ImageLoader.getInstance().displayImage(user.user_visual, profileViewHolder.img, options);
+                    ImageController.loadRounded(user.user_visual, profileViewHolder.img, R.drawable.avatar);
                 } else {
-                    ImageLoader.getInstance().displayImage("drawable://" + R.drawable.avatar, profileViewHolder.img);
+                    ImageController.loadRounded(R.drawable.avatar, profileViewHolder.img, R.drawable.avatar);
                 }
             } else {
                 profileViewHolder.containerLogin.setVisibility(View.VISIBLE);
@@ -157,18 +143,12 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
         }
 
         if (position == getCheckedItemPosition()) {
-            if (position == NAV_ID_PROFILE && UserModel.isLoggedIn(context)) {
-                ProfileNavigationViewHolder profileViewHolder = (ProfileNavigationViewHolder) viewHolder;
-                profileViewHolder.img.setBorderColor(ContextCompat.getColor(context, R.color.apptheme_main));
-            } else {
+            if (position != NAV_ID_PROFILE || !UserModel.isLoggedIn(context)) {
                 viewHolder.icon.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
                 viewHolder.label.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
             }
         } else {
-            if (position == NAV_ID_PROFILE && UserModel.isLoggedIn(context)) {
-                ProfileNavigationViewHolder profileViewHolder = (ProfileNavigationViewHolder) viewHolder;
-                profileViewHolder.img.setBorderColor(ContextCompat.getColor(context, R.color.white));
-            } else {
+            if (position != NAV_ID_PROFILE || !UserModel.isLoggedIn(context)) {
                 viewHolder.icon.setTextColor(ContextCompat.getColor(context, R.color.white));
                 viewHolder.label.setTextColor(ContextCompat.getColor(context, R.color.white));
             }
@@ -228,7 +208,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     class ProfileNavigationViewHolder extends BaseNavigationViewHolder {
 
-        CircularImageView img;
+        ImageView img;
         TextView name;
         TextView email;
         View containerLogin;
@@ -241,7 +221,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             containerProfile = view.findViewById(R.id.containerProfile);
             name = (TextView) view.findViewById(R.id.textName);
             email = (TextView) view.findViewById(R.id.textEmail);
-            img = (CircularImageView) view.findViewById(R.id.imgProfile);
+            img = (ImageView) view.findViewById(R.id.imgProfile);
 
             setStatusBarPadding(containerLogin);
             setStatusBarPadding(containerProfile);

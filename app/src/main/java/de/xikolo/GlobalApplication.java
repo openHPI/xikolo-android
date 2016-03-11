@@ -10,11 +10,6 @@ import android.webkit.CookieSyncManager;
 
 import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.config.Configuration;
 import com.path.android.jobqueue.log.CustomLogger;
@@ -76,7 +71,6 @@ public class GlobalApplication extends MultiDexApplication {
 
         configureDefaultSettings();
         configureDatabase();
-        configureImageLoader();
         configureHttpResponseCache();
         configureWebViewCookies();
         configureJobManager();
@@ -94,26 +88,6 @@ public class GlobalApplication extends MultiDexApplication {
 
     private void configureDatabase() {
         databaseHelper = new DatabaseHelper(this);
-    }
-
-    private void configureImageLoader() {
-        // Create ImageLoader configuration
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .resetViewBeforeLoading(false)
-                .showImageOnLoading(R.drawable.gradient_default_image)
-                .showImageForEmptyUri(R.drawable.gradient_default_image)
-                .showImageOnFail(R.drawable.gradient_default_image)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
-                .defaultDisplayImageOptions(defaultOptions)
-                .diskCacheSize(30 * 1024 * 1024) // 30 MB
-                .memoryCache(new LruMemoryCache(10 * 1024 * 1024)) // 10 MB
-                .memoryCacheSize(10 * 1024 * 1024)
-                .build();
-        ImageLoader.getInstance().init(config);
     }
 
     private void configureHttpResponseCache() {
