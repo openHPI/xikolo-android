@@ -22,6 +22,7 @@ import java.util.List;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.helper.CacheController;
 import de.xikolo.controller.helper.ModuleDownloadController;
 import de.xikolo.controller.module.VideoFragment;
@@ -78,12 +79,24 @@ public class ModuleActivity extends BaseActivity {
                 restartBundle.putParcelable(ARG_ITEM, item);
                 Intent restartIntent = new Intent(ModuleActivity.this, ModuleActivity.class);
                 restartIntent.putExtras(restartBundle);
+                finish();
                 startActivity(restartIntent);
             }
         } else {
             this.course = b.getParcelable(ARG_COURSE);
             this.module = b.getParcelable(ARG_MODULE);
             this.item = b.getParcelable(ARG_ITEM);
+        }
+
+        if (course == null) {
+            throw new WrongParameterException("Course is null");
+        }
+        if (module == null) {
+            throw new WrongParameterException("Module is null for Course " + course.name + " (" + course.id + ")");
+        }
+        if (module == null || module.items.size() == 0) {
+            throw new WrongParameterException("Module Items are empty for Course " + course.name + " (" + course.id + ")" +
+                    " and Module " + module.name + " (" + module.id + ")");
         }
 
         itemModel = new ItemModel(jobManager);
