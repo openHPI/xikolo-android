@@ -151,8 +151,20 @@ public class ModuleActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.download, menu);
+        boolean downloadableContent = false;
+        if (module != null && module.items != null) {
+            for (Item item : module.items) {
+                if (item.type.equals(Item.TYPE_VIDEO)) {
+                    downloadableContent = true;
+                    break;
+                }
+            }
+        }
+
+        if (downloadableContent) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.download, menu);
+        }
         super.onCreateOptionsMenu(menu);
         return true;
     }

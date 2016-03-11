@@ -79,6 +79,7 @@ public class ModuleDownloadController {
         final ProgressDialog dialog = ProgressDialog.getInstance();
         dialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);
 
+        boolean downloadStarted = false;
         for (Item item : module.items) {
             if (item.type.equals(Item.TYPE_VIDEO)) {
                 Result<Item> result = new Result<Item>() {
@@ -88,9 +89,7 @@ public class ModuleDownloadController {
                         Item<VideoItemDetail> video = (Item<VideoItemDetail>) result;
 
                         if (dataSource == DataSource.NETWORK) {
-                            if (dialog.isAdded()) {
-                                dialog.dismiss();
-                            }
+                            dialog.dismiss();
                             if (sdVideo) {
                                 startDownload(video.detail.stream.sd_url, DownloadModel.DownloadFileType.VIDEO_SD,
                                         course, module, result);
@@ -107,7 +106,11 @@ public class ModuleDownloadController {
                     }
                 };
                 itemModel.getItemDetail(result, course, module, item, item.type);
+                downloadStarted = true;
             }
+        }
+        if (!downloadStarted) {
+            dialog.dismiss();
         }
 
     }

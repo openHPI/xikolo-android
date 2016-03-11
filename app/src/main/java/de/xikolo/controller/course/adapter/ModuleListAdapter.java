@@ -21,6 +21,7 @@ import java.util.Locale;
 import de.xikolo.R;
 import de.xikolo.controller.helper.ModuleDownloadController;
 import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.util.DateUtil;
 import de.xikolo.util.DisplayUtil;
@@ -127,14 +128,26 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
                 mModuleCallback.onModuleButtonClicked(mCourse, module);
             }
         });
-        holder.download.setVisibility(View.VISIBLE);
-        holder.download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ModuleDownloadController moduleDownloadController = new ModuleDownloadController(mActivity);
-                moduleDownloadController.initModuleDownloads(mCourse, module);
+
+        boolean downloadableContent = false;
+        for (Item item : module.items) {
+            if (item.type.equals(Item.TYPE_VIDEO)) {
+                downloadableContent = true;
+                break;
             }
-        });
+        }
+        if (downloadableContent) {
+            holder.download.setVisibility(View.VISIBLE);
+            holder.download.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ModuleDownloadController moduleDownloadController = new ModuleDownloadController(mActivity);
+                    moduleDownloadController.initModuleDownloads(mCourse, module);
+                }
+            });
+        } else {
+            holder.download.setVisibility(View.GONE);
+        }
     }
 
     private void contentLocked(Module module, ModuleViewHolder holder) {
