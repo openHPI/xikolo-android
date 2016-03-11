@@ -99,8 +99,9 @@ public class ContentWebViewFragment extends ContentFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!mActivityCallback.isDrawerOpen())
+        if (mActivityCallback != null && !mActivityCallback.isDrawerOpen()) {
             inflater.inflate(R.menu.refresh, menu);
+        }
     }
 
     @Override

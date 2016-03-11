@@ -390,8 +390,9 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!mActivityCallback.isDrawerOpen())
+        if (mActivityCallback != null && !mActivityCallback.isDrawerOpen()) {
             inflater.inflate(R.menu.refresh, menu);
+        }
     }
 
     @Override
