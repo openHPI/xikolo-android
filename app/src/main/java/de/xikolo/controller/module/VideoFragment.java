@@ -176,6 +176,16 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             mNotificationController.setInvisible();
             mContainer.setVisibility(View.VISIBLE);
 
+            if (mItem.detail == null) {
+                throw new NullPointerException("Item Detail is null for Course " + mCourse.name + " (" + mCourse.id + ")" +
+                        " and Module " + mModule.name + " (" + mModule.id + ")" +
+                        " and Item " + mItem.title + " (" + mItem.id + ")");
+            } else if (mItem.detail.stream == null) {
+                throw new NullPointerException("Item Stream is null for Course " + mCourse.name + " (" + mCourse.id + ")" +
+                        " and Module " + mModule.name + " (" + mModule.id + ")" +
+                        " and Item " + mItem.title + " (" + mItem.id + ")");
+            }
+
             ImageLoaderController.loadImage(mItem.detail.stream.poster, mVideoThumbnail);
 
             mTitle.setText(mItem.detail.title);
