@@ -112,9 +112,9 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 profileViewHolder.email.setText(user.email);
 
                 if (user.user_visual != null) {
-                    ImageController.loadRounded(user.user_visual, profileViewHolder.img, R.drawable.avatar);
+                    ImageController.loadRounded(user.user_visual, profileViewHolder.img);
                 } else {
-                    ImageController.loadRounded(R.drawable.avatar, profileViewHolder.img, R.drawable.avatar);
+                    ImageController.loadRounded(R.drawable.avatar, profileViewHolder.img);
                 }
             } else {
                 profileViewHolder.containerLogin.setVisibility(View.VISIBLE);

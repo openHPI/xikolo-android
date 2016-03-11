@@ -24,7 +24,14 @@ public class CustomSizeImageView extends ImageView {
     public void setDimensions(int w, int h) {
         this.mForceHeight = h;
         this.mForceWidth = w;
+    }
 
+    public int getForcedHeight() {
+        return mForceHeight;
+    }
+
+    public int getForcedWidth() {
+        return mForceWidth;
     }
 
     @Override

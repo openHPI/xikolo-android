@@ -171,9 +171,9 @@ public class ProfileFragment extends ContentFragment {
         mImgProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
         if (user.user_visual != null) {
-            ImageController.loadRounded(user.user_visual, mImgProfile, R.drawable.avatar, heightProfile, heightProfile );
+            ImageController.loadRounded(user.user_visual, mImgProfile, heightProfile, heightProfile );
         } else {
-            ImageController.loadRounded(R.drawable.avatar, mImgProfile, R.drawable.avatar, heightProfile, heightProfile);
+            ImageController.loadRounded(R.drawable.avatar, mImgProfile, heightProfile, heightProfile);
         }
 
         mTextEmail.setText(user.email);

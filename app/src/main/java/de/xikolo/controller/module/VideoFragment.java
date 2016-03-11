@@ -186,7 +186,9 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                         " and Item " + mItem.title + " (" + mItem.id + ")");
             }
 
-            ImageController.load(mItem.detail.stream.poster, mVideoThumbnail);
+            ImageController.load(mItem.detail.stream.poster, mVideoThumbnail,
+                    ImageController.DEFAULT_PLACEHOLDER,
+                    mVideoThumbnail.getForcedWidth(), mVideoThumbnail.getForcedHeight());
 
             mTitle.setText(mItem.detail.title);
 
