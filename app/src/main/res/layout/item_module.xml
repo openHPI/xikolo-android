@@ -13,53 +13,57 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/downloadBtn"
-            android:paddingBottom="2dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="6dp"
-            android:singleLine="true"
-            android:textSize="24sp" />
-
-        <de.xikolo.view.CustomFontTextView
-            android:id="@+id/downloadBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/textTitle"
-            android:layout_alignParentRight="true"
-            android:clickable="true"
-            android:contentDescription="@string/download"
-            android:paddingBottom="5dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="6dp"
-            android:text="@string/icon_download"
-            android:textColor="@drawable/text_button"
-            android:textSize="22sp"
-            android:visibility="gone"
-            res:customFont="materialdesign.ttf" />
-
-        <View
-            android:id="@+id/separator"
+        <RelativeLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textTitle"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@color/apptheme_main" />
+            android:layout_height="wrap_content"
+            android:background="@color/apptheme_main">
+
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/downloadBtn"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <de.xikolo.view.CustomFontTextView
+                android:id="@+id/downloadBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/button_icon"
+                android:clickable="true"
+                android:contentDescription="@string/download"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/icon_download"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:visibility="gone"
+                res:customFont="materialdesign.ttf" />
+
+        </RelativeLayout>
 
         <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/separator"
+            android:layout_below="@+id/header"
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
 

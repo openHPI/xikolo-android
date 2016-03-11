@@ -80,8 +80,8 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
         holder.recyclerView.setAdapter(itemAdapter);
         holder.recyclerView.clearItemDecorations();
         holder.recyclerView.addItemDecoration(new SpaceItemDecoration(
-                mActivity.getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
-                mActivity.getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
+                mActivity.getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin) / 2,
+                mActivity.getResources().getDimensionPixelSize(R.dimen.card_vertical_margin) / 2,
                 false,
                 new SpaceItemDecoration.RecyclerViewInfo() {
                     @Override
@@ -116,8 +116,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
     private void contentAvailable(final Module module, ModuleViewHolder holder) {
         holder.progress.setVisibility(View.GONE);
         holder.moduleNotificationContainer.setVisibility(View.GONE);
-        holder.title.setTextColor(ContextCompat.getColor(mActivity, R.color.text_main));
-        holder.separator.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.apptheme_main));
+        holder.header.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.apptheme_main));
 
         TypedValue outValue = new TypedValue();
         mActivity.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
@@ -153,8 +152,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
     private void contentLocked(Module module, ModuleViewHolder holder) {
         holder.progress.setVisibility(View.GONE);
         holder.moduleNotificationContainer.setVisibility(View.VISIBLE);
-        holder.title.setTextColor(ContextCompat.getColor(mActivity, R.color.text_light));
-        holder.separator.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.text_light));
+        holder.header.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.text_light));
         holder.container.setClickable(false);
         holder.container.setForeground(null);
         holder.download.setVisibility(View.GONE);
@@ -187,7 +185,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
         TextView title;
         AutofitRecyclerView recyclerView;
         ProgressBar progress;
-        View separator;
+        View header;
 
         View moduleNotificationContainer;
         TextView moduleNotificationLabel;
@@ -201,7 +199,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
             title = (TextView) view.findViewById(R.id.textTitle);
             recyclerView = (AutofitRecyclerView) view.findViewById(R.id.recyclerView);
             progress = (ProgressBar) view.findViewById(R.id.containerProgress);
-            separator = view.findViewById(R.id.separator);
+            header = view.findViewById(R.id.header);
             moduleNotificationContainer = view.findViewById(R.id.moduleNotificationContainer);
             moduleNotificationLabel = (TextView) view.findViewById(R.id.moduleNotificationLabel);
             download = view.findViewById(R.id.downloadBtn);
