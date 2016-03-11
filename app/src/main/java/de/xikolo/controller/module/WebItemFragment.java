@@ -46,19 +46,21 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
     }
 
     public static PagerFragment newInstance(Course course, Module module, Item item) {
-        if (item.type.equals(Item.TYPE_TEXT)) {
-            return PagerFragment.newInstance(new WebItemFragment<TextItemDetail>(), course, module, item);
-        } else if (item.type.equals(Item.TYPE_VIDEO)) {
-            return PagerFragment.newInstance(new WebItemFragment<VideoItemDetail>(), course, module, item);
-        } else if (item.type.equals(Item.TYPE_SELFTEST)
-                || item.type.equals(Item.TYPE_ASSIGNMENT)
-                || item.type.equals(Item.TYPE_EXAM)) {
-            return PagerFragment.newInstance(new WebItemFragment<AssignmentItemDetail>(), course, module, item);
-        } else if (item.type.equals(Item.TYPE_LTI)) {
-            return PagerFragment.newInstance(new WebItemFragment<LtiItemDetail>(), course, module, item);
-        } else if (item.type.equals(Item.TYPE_PEER)) {
-            return PagerFragment.newInstance(new WebItemFragment<PeerAssessmentItemDetail>(), course, module, item);
+        switch (item.type) {
+            case Item.TYPE_TEXT:
+                return PagerFragment.newInstance(new WebItemFragment<TextItemDetail>(), course, module, item);
+            case Item.TYPE_VIDEO:
+                return PagerFragment.newInstance(new WebItemFragment<VideoItemDetail>(), course, module, item);
+            case Item.TYPE_SELFTEST:
+            case Item.TYPE_ASSIGNMENT:
+            case Item.TYPE_EXAM:
+                return PagerFragment.newInstance(new WebItemFragment<AssignmentItemDetail>(), course, module, item);
+            case Item.TYPE_LTI:
+                return PagerFragment.newInstance(new WebItemFragment<LtiItemDetail>(), course, module, item);
+            case Item.TYPE_PEER:
+                return PagerFragment.newInstance(new WebItemFragment<PeerAssessmentItemDetail>(), course, module, item);
         }
+
         return null;
     }
 

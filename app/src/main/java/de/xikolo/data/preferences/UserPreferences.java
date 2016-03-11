@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import de.xikolo.data.entities.AccessToken;
 import de.xikolo.data.entities.User;
-import de.xikolo.util.Config;
 
 public class UserPreferences extends Preferences {
 

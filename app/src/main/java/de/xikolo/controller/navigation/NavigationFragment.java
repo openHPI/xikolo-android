@@ -213,7 +213,7 @@ public class NavigationFragment extends BaseFragment {
             }
         });
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     public void selectItem(int position) {
@@ -294,14 +294,6 @@ public class NavigationFragment extends BaseFragment {
             showGlobalContextActionBar();
         }
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (mDrawerToggle.onOptionsItemSelected(item)) {
-//            return true;
-//        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**

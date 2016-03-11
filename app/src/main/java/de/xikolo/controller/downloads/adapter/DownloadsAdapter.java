@@ -114,11 +114,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-    }
-
     public static class FolderItem {
 
         private String title;

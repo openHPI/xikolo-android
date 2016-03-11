@@ -10,10 +10,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.xikolo.data.entities.AccessToken;
-import de.xikolo.data.entities.User;
-import de.xikolo.util.Config;
-
 public class NotificationPreferences extends Preferences {
 
     public static final String PREF_NOTIFICATIONS = NotificationPreferences.class.getName();

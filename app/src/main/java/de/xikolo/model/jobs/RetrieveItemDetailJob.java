@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.reflect.TypeToken;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
+import com.path.android.jobqueue.RetryConstraint;
 
 import java.lang.reflect.Type;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -69,20 +70,25 @@ public class RetrieveItemDetailJob extends Job {
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
                 Type type = null;
-                if (itemType.equals(Item.TYPE_TEXT)) {
-                    type = new TypeToken<Item<TextItemDetail>>(){}.getType();
-                } else if (itemType.equals(Item.TYPE_VIDEO)) {
-                    type = new TypeToken<Item<VideoItemDetail>>(){}.getType();
-                } else if (itemType.equals(Item.TYPE_SELFTEST)
-                        || itemType.equals(Item.TYPE_ASSIGNMENT)
-                        || itemType.equals(Item.TYPE_EXAM)) {
-                    type = new TypeToken<Item<AssignmentItemDetail>>(){}.getType();
-                } else if (itemType.equals(Item.TYPE_LTI)) {
-                    type = new TypeToken<Item<LtiItemDetail>>() {
-                    }.getType();
-                } else if (itemType.equals(Item.TYPE_PEER)) {
-                    type = new TypeToken<Item<PeerAssessmentItemDetail>>() {
-                    }.getType();
+
+                switch (itemType) {
+                    case Item.TYPE_TEXT:
+                        type = new TypeToken<Item<TextItemDetail>>(){}.getType();
+                        break;
+                    case Item.TYPE_VIDEO:
+                        type = new TypeToken<Item<VideoItemDetail>>(){}.getType();
+                        break;
+                    case Item.TYPE_SELFTEST:
+                    case Item.TYPE_ASSIGNMENT:
+                    case Item.TYPE_EXAM:
+                        type = new TypeToken<Item<AssignmentItemDetail>>(){}.getType();
+                        break;
+                    case Item.TYPE_LTI:
+                        type = new TypeToken<Item<LtiItemDetail>>() {}.getType();
+                        break;
+                    case Item.TYPE_PEER:
+                        type = new TypeToken<Item<PeerAssessmentItemDetail>>() {}.getType();
+                        break;
                 }
 
                 String url = Config.API + Config.COURSES + course.id + "/"
@@ -125,8 +131,8 @@ public class RetrieveItemDetailJob extends Job {
     }
 
     @Override
-    protected boolean shouldReRunOnThrowable(Throwable throwable) {
-        return false;
+    protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
+        return RetryConstraint.CANCEL;
     }
 
 }

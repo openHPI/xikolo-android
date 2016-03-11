@@ -221,11 +221,6 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-    }
-
     public interface OnCourseButtonClickListener {
 
         void onEnrollButtonClicked(Course course);

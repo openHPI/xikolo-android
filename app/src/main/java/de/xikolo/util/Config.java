@@ -3,7 +3,6 @@ package de.xikolo.util;
 import com.google.android.gms.cast.CastMediaControlIntent;
 
 import de.xikolo.BuildConfig;
-import de.xikolo.data.preferences.UserPreferences;
 
 public class Config {
 

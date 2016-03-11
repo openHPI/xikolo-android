@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.reflect.TypeToken;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
+import com.path.android.jobqueue.RetryConstraint;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -92,8 +93,8 @@ public class RetrieveCoursesJob extends Job {
     }
 
     @Override
-    protected boolean shouldReRunOnThrowable(Throwable throwable) {
-        return false;
+    protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
+        return RetryConstraint.CANCEL;
     }
 
 }

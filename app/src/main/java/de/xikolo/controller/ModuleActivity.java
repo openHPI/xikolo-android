@@ -113,14 +113,17 @@ public class ModuleActivity extends BaseActivity {
 
         // Bind the tabs to the ViewPager
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewpager);
+        if (tabLayout != null) {
+            tabLayout.setupWithViewPager(viewpager);
 
-        tabLayout.setOnTabSelectedListener(adapter);
+            tabLayout.setOnTabSelectedListener(adapter);
 
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            if (tab != null) {
-                tab.setCustomView(adapter.getCustomTabView(i, tabLayout.getSelectedTabPosition(), tabLayout));
+
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                if (tab != null) {
+                    tab.setCustomView(adapter.getCustomTabView(i, tabLayout.getSelectedTabPosition(), tabLayout));
+                }
             }
         }
 
@@ -237,19 +240,27 @@ public class ModuleActivity extends BaseActivity {
             Context context = GlobalApplication.getInstance();
             Item item = items.get(position);
             String title = "";
-            if (item.type.equals(Item.TYPE_TEXT)) {
-                title = context.getString(R.string.icon_text);
-            } else if (item.type.equals(Item.TYPE_VIDEO)) {
-                title = context.getString(R.string.icon_video);
-            } else if (item.type.equals(Item.TYPE_SELFTEST)) {
-                title = context.getString(R.string.icon_selftest);
-            } else if (item.type.equals(Item.TYPE_ASSIGNMENT)
-                    || item.type.equals(Item.TYPE_EXAM)
-                    || item.type.equals(Item.TYPE_PEER)) {
-                title = context.getString(R.string.icon_assignment);
-            } else if (item.type.equals(Item.TYPE_LTI)) {
-                title = context.getString(R.string.icon_lti);
+
+            switch (item.type) {
+                case Item.TYPE_TEXT:
+                    title = context.getString(R.string.icon_text);
+                    break;
+                case Item.TYPE_VIDEO:
+                    title = context.getString(R.string.icon_video);
+                    break;
+                case Item.TYPE_SELFTEST:
+                    title = context.getString(R.string.icon_selftest);
+                    break;
+                case Item.TYPE_ASSIGNMENT:
+                case Item.TYPE_EXAM:
+                case Item.TYPE_PEER:
+                    title = context.getString(R.string.icon_assignment);
+                    break;
+                case Item.TYPE_LTI:
+                    title = context.getString(R.string.icon_lti);
+                    break;
             }
+
             return title;
         }
 
@@ -267,18 +278,18 @@ public class ModuleActivity extends BaseActivity {
             String name = makeFragmentName(R.id.viewpager, position);
             Fragment fragment = fragmentManager.findFragmentByTag(name);
             if (fragment == null) {
-                if (item.type.equals(Item.TYPE_TEXT)) {
-                    fragment = WebItemFragment.newInstance(course, module, items.get(position));
-                } else if (item.type.equals(Item.TYPE_VIDEO)) {
-                    fragment = VideoFragment.newInstance(course, module, items.get(position));
-                } else if (item.type.equals(Item.TYPE_SELFTEST)
-                        || item.type.equals(Item.TYPE_ASSIGNMENT)
-                        || item.type.equals(Item.TYPE_EXAM)) {
-                    fragment = WebItemFragment.newInstance(course, module, items.get(position));
-                } else if (item.type.equals(Item.TYPE_LTI)) {
-                    fragment = WebItemFragment.newInstance(course, module, items.get(position));
-                } else if (item.type.equals(Item.TYPE_PEER)) {
-                    fragment = WebItemFragment.newInstance(course, module, items.get(position));
+                switch (item.type) {
+                    case Item.TYPE_TEXT:
+                    case Item.TYPE_SELFTEST:
+                    case Item.TYPE_ASSIGNMENT:
+                    case Item.TYPE_EXAM:
+                    case Item.TYPE_LTI:
+                    case Item.TYPE_PEER:
+                        fragment = WebItemFragment.newInstance(course, module, items.get(position));
+                        break;
+                    case Item.TYPE_VIDEO:
+                        fragment = VideoFragment.newInstance(course, module, items.get(position));
+                        break;
                 }
             }
             return fragment;

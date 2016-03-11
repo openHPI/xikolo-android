@@ -85,14 +85,4 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
         EnrollmentController.unenroll(this, mCourse);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
 }

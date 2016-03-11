@@ -117,7 +117,7 @@ public class VideoActivity extends BaseActivity {
 
     private void updateVideoView(int orientation) {
         View layout = findViewById(R.id.container);
-        if (Build.VERSION.SDK_INT >= 17) {
+        if (Build.VERSION.SDK_INT >= 17 && layout != null) {
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 layout.setFitsSystemWindows(true);
 
@@ -177,7 +177,7 @@ public class VideoActivity extends BaseActivity {
 
                 mVideoMetadataView.setVisibility(View.VISIBLE);
             }
-        } else {
+        } else if (layout != null) {
             layout.setFitsSystemWindows(false);
         }
     }
