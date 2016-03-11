@@ -76,5 +76,7 @@ dependencies {
     compile "com.android.support:design:${supportVersion}"
     compile "com.android.support:preference-v14:${supportVersion}"
 
+    compile 'com.android.support:multidex:1.0.1'
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }

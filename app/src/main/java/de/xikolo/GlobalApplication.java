@@ -1,8 +1,8 @@
 package de.xikolo;
 
-import android.app.Application;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
+import android.support.multidex.MultiDexApplication;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -28,7 +28,7 @@ import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.util.Config;
 import de.xikolo.util.SslCertificateUtil;
 
-public class GlobalApplication extends Application {
+public class GlobalApplication extends MultiDexApplication {
 
     public static final String TAG = GlobalApplication.class.getSimpleName();
 
