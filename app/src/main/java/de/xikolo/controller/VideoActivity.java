@@ -6,7 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
@@ -142,11 +142,13 @@ public class VideoActivity extends BaseActivity {
 
                 int videoOffset = (size.y - size.x / 16 * 9) / 2;
 
-                int systemBarHeight = size.y - getResources().getDisplayMetrics().heightPixels;
+                DisplayMetrics displaymetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+                int systemBarHeight = size.y - displaymetrics.heightPixels;
 
                 mVideoController.getControllerView().setPadding(0,
                         videoOffset > statusBarHeight ? videoOffset : statusBarHeight,
-                        size.x - getResources().getDisplayMetrics().widthPixels,
+                        size.x - displaymetrics.widthPixels,
                         videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
 
                 mVideoMetadataView.setVisibility(View.GONE);
@@ -155,20 +157,21 @@ public class VideoActivity extends BaseActivity {
 
                 actionBar.show();
 
+                DisplayMetrics displaymetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+
                 int actionBarHeight = 0;
                 TypedValue tv = new TypedValue();
                 if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-                    actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+                    actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, displaymetrics);
                 }
 
                 View videoContainer = mVideoController.getVideoContainer();
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) videoContainer.getLayoutParams();
-                params.height = (int) Math.ceil(getResources().getDisplayMetrics().widthPixels / 16. * 9.);
+                params.height = (int) Math.ceil(displaymetrics.widthPixels / 16. * 9.);
                 params.setMargins(0, actionBarHeight, 0, 0);
                 videoContainer.setLayoutParams(params);
                 videoContainer.requestLayout();
-
-                Log.d(TAG, "Toolbar height " + actionBarHeight);
 
                 mVideoController.getControllerView().setPadding(0, 0, 0, 0);
 
@@ -182,7 +185,8 @@ public class VideoActivity extends BaseActivity {
     private void hideSystemBars() {
         View decorView = getWindow().getDecorView();
         int uiOptions;
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        Configuration config = getResources().getConfiguration();
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (Build.VERSION.SDK_INT >= 17) {
                 uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE// API 16
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
@@ -203,7 +207,8 @@ public class VideoActivity extends BaseActivity {
     private void showSystemBars() {
         View decorView = getWindow().getDecorView();
         int uiOptions;
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        Configuration config = getResources().getConfiguration();
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (Build.VERSION.SDK_INT >= 17) {
                 uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE // API 16
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
