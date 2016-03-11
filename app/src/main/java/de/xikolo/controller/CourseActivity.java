@@ -22,7 +22,9 @@ import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controller.course.CourseLearningsFragment;
 import de.xikolo.controller.course.ProgressFragment;
+import de.xikolo.controller.dialogs.ProgressDialog;
 import de.xikolo.controller.dialogs.UnenrollDialog;
+import de.xikolo.controller.helper.CacheController;
 import de.xikolo.controller.helper.EnrollmentController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.CourseModel;
@@ -55,14 +57,27 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        final Intent intent = getIntent();
-        if (intent != null) {
-            String action = intent.getAction();
+        String action = getIntent().getAction();
 
-            if (action != null && action.equals(Intent.ACTION_VIEW)) {
-                handleDeepLinkIntent(intent);
+        if (action != null && action.equals(Intent.ACTION_VIEW)) {
+            handleDeepLinkIntent(getIntent());
+        } else {
+            Bundle b = getIntent().getExtras();
+            if (b == null || !b.containsKey(ARG_COURSE)) {
+                CacheController cacheController = new CacheController();
+                cacheController.readCachedExtras();
+                if (cacheController.getCourse() != null) {
+                    course = cacheController.getCourse();
+                }
+                if (course != null) {
+                    Bundle restartBundle = new Bundle();
+                    restartBundle.putParcelable(ARG_COURSE, course);
+                    Intent restartIntent = new Intent(CourseActivity.this, CourseActivity.class);
+                    restartIntent.putExtras(restartBundle);
+                    finish();
+                    startActivity(restartIntent);
+                }
             } else {
-                Bundle b = getIntent().getExtras();
                 this.course = b.getParcelable(ARG_COURSE);
                 setupView(0);
             }
@@ -99,6 +114,8 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
         final Uri data = intent.getData();
         final String courseIntent = DeepLinkingUtil.getCourseIdentifierFromResumeUri(data);
 
+        final ProgressDialog progressDialog = ProgressDialog.getInstance();
+
         Result<List<Course>> result = new Result<List<Course>>() {
 
             @Override
@@ -108,6 +125,10 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
                 if (dataSource == DataSource.NETWORK) {
                     for (Course fetchedCourse : result) {
                         if (fetchedCourse.course_code.equals(courseIntent)) {
+                            if (progressDialog != null) {
+                                progressDialog.dismiss();
+                            }
+
                             course = fetchedCourse;
                             if (course.locked || !course.is_enrolled) {
                                 setTitle(course.name);
@@ -168,6 +189,11 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
             @Override
             protected void onError(ErrorCode errorCode) {
                 super.onError(errorCode);
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+
+                ToastUtil.show(R.string.error);
 
                 finish();
             }
@@ -175,6 +201,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
         CourseModel courseModel = new CourseModel(jobManager);
         courseModel.getCourses(result, false);
+        progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
     }
 
     @Override
