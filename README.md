@@ -1,11 +1,11 @@
 Xikolo Android App
 ==================
 
-The official Android App for open.hpi.de and open.sap.com
+The official Android App for [openHPI](https://open.hpi.de/) and [openSAP](https://open.sap.com/).
 
 ## Setup
 
-Clone git repository with submodules:
+Clone git repository:
 
 ```
 git clone --recursive https://github.com/openHPI/android-app xikolo-android
@@ -17,17 +17,11 @@ Please use [Android Studio](https://developer.android.com/sdk/) as IDE, since we
 
 ## Building
 
-### Debug
-
-In Android Studio open View -> Tool Windows -> Build Variants and choose a debug build variant. Now just press Run in the IDE.
-
-### Release
-
-See the [Signing](SIGNING.md) tutorial to build a release version.
+In Android Studio open View -> Tool Windows -> Build Variants and choose a debug build variant. Now just _Run_ the _app_ module with Android Studio.
 
 ## Version History
 
-For every released build please provide a [Changelog](CHANGELOG.md) entry and a git tag.
+For every released build please push a git tag.
 
 ## Store links
 
