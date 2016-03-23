@@ -12,24 +12,6 @@ android {
 
         multiDexEnabled true
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.RELEASE"
-            shrinkResources true
-            debuggable false
-        }
-        debug {
-            minifyEnabled false
-            buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.DEBUG"
-            shrinkResources false
-            debuggable true
-
-            applicationIdSuffix '.debug'
-            versionNameSuffix '-DEBUG'
-        }
-    }
     productFlavors {
         openHPI {
             applicationId "de.xikolo.openhpi"
@@ -50,6 +32,62 @@ android {
             applicationId "de.xikolo.openune"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_UNE"
             manifestPlaceholders = [webUrl: "openune.cn"]
+        }
+    }
+    signingConfigs {
+        if (rootProject.file('signing.properties').exists()) {
+            def props = new Properties()
+            props.load(new FileInputStream(rootProject.file('signing.properties')))
+            openHPI {
+                storeFile rootProject.file(props.RELEASE_STORE_FILE)
+                storePassword props.RELEASE_STORE_PASSWORD
+                keyAlias props.RELEASE_KEY_ALIAS_OPENHPI
+                keyPassword props.RELEASE_KEY_PASSWORD_OPENHPI
+            }
+            openSAP {
+                storeFile rootProject.file(props.RELEASE_STORE_FILE)
+                storePassword props.RELEASE_STORE_PASSWORD
+                keyAlias props.RELEASE_KEY_ALIAS_OPENSAP
+                keyPassword props.RELEASE_KEY_PASSWORD_OPENSAP
+            }
+            moocHouse {
+                storeFile rootProject.file(props.RELEASE_STORE_FILE)
+                storePassword props.RELEASE_STORE_PASSWORD
+                keyAlias props.RELEASE_KEY_ALIAS_MOOCHOUSE
+                keyPassword props.RELEASE_KEY_PASSWORD_MOOCHOUSE
+            }
+            openUNE {
+                storeFile rootProject.file(props.RELEASE_STORE_FILE)
+                storePassword props.RELEASE_STORE_PASSWORD
+                keyAlias props.RELEASE_KEY_ALIAS_OPENUNE
+                keyPassword props.RELEASE_KEY_PASSWORD_OPENUNE
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.RELEASE"
+            shrinkResources true
+            debuggable false
+            zipAlignEnabled true
+
+            if (rootProject.file('signing.properties').exists()) {
+                productFlavors.openHPI.signingConfig signingConfigs.openHPI
+                productFlavors.openSAP.signingConfig signingConfigs.openSAP
+                productFlavors.moocHouse.signingConfig signingConfigs.moocHouse
+                productFlavors.openUNE.signingConfig signingConfigs.openUNE
+            }
+        }
+        debug {
+            minifyEnabled false
+            buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.DEBUG"
+            shrinkResources false
+            debuggable true
+
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
         }
     }
     lintOptions {
