@@ -25,6 +25,9 @@ android {
             buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.DEBUG"
             shrinkResources false
             debuggable true
+
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
         }
     }
     productFlavors {
@@ -64,7 +67,7 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.8.2'
-    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.android.gms:play-services-cast:8.4.0'
 
     def supportVersion = '23.2.1'
 
