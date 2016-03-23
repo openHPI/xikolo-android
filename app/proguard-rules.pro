@@ -39,7 +39,9 @@
 
 
 ##---------------Begin: proguard configuration for Samsung SDK  ----------
--keep class com.samsung.android.sdk.** { *; }
+-dontwarn com.samsung.**
+-keep class com.samsung.** { *; }
+
 
 ##---------------Begin: proguard configuration for Glide  ----------
 -keep public class * implements com.bumptech.glide.module.GlideModule
@@ -47,3 +49,7 @@
   **[] $VALUES;
   public *;
 }
+
+
+##---------------Begin: proguard configuration for CastCompanionLibrary  ----------
+-keep class android.support.v7.** { *; }

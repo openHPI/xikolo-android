@@ -9,8 +9,6 @@ android {
         targetSdkVersion 23
         versionName "1.4.1"
         versionCode 20
-
-        multiDexEnabled true
     }
     productFlavors {
         openHPI {
@@ -66,8 +64,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.RELEASE"
             shrinkResources true
             debuggable false
@@ -116,8 +114,6 @@ dependencies {
     compile "com.android.support:mediarouter-v7:${supportVersion}"
     compile "com.android.support:design:${supportVersion}"
     compile "com.android.support:preference-v14:${supportVersion}"
-
-    compile 'com.android.support:multidex:1.0.1'
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
