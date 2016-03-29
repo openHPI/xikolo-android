@@ -1,8 +1,6 @@
 package de.xikolo.data.database;
 
-import android.database.sqlite.SQLiteDatabase;
-
-class ItemTable implements Table {
+class ItemTable extends Table {
 
     public static final String TABLE_NAME = "item";
 
@@ -11,6 +9,7 @@ class ItemTable implements Table {
     public static final String COLUMN_TYPE = "type";
     public static final String COLUMN_AVAILABLE_FROM = "available_from";
     public static final String COLUMN_AVAILABLE_TO = "available_to";
+    public static final String COLUMN_EXERCISE_TYPE = "exercise_type";
     public static final String COLUMN_LOCKED = "locked";
 
     public static final String COLUMN_VISITED = "visited";
@@ -26,6 +25,7 @@ class ItemTable implements Table {
                     COLUMN_TYPE + " text, " +
                     COLUMN_AVAILABLE_FROM + " text, " +
                     COLUMN_AVAILABLE_TO + " text, " +
+                    COLUMN_EXERCISE_TYPE + " text, " +
                     COLUMN_LOCKED + " integer, " +
                     COLUMN_VISITED + " integer, " +
                     COLUMN_COMPLETED + " integer, " +
@@ -34,34 +34,13 @@ class ItemTable implements Table {
                     ");";
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_CREATE);
+    String getTableName() {
+        return TABLE_NAME;
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(oldVersion == 1) {
-
-            switch(newVersion) {
-                case 2:
-                    // keep db
-                    System.out.println("Keeping " + TABLE_NAME);
-                    break;
-                default:
-                    System.out.println("Deleting " + TABLE_NAME);
-                    deleteTable(db);
-                    break;
-            }
-
-        } else {
-            System.out.println("Deleting " + TABLE_NAME);
-            deleteTable(db);
-        }
+    String getTableCreate() {
+        return TABLE_CREATE;
     }
 
-    @Override
-    public void deleteTable(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(db);
-    }
 }

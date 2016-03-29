@@ -17,7 +17,6 @@
     <string name="icon_selftest" translatable="false"></string>
     <string name="icon_assignment" translatable="false"></string>
     <string name="icon_lti" translatable="false">&#xe67a;</string>
-    <string name="icon_bonus" translatable="false"></string>
     <string name="icon_info" translatable="false">&#xe666;</string>
     <string name="icon_play" translatable="false">&#xe652;</string>
     <string name="icon_pause" translatable="false">&#xe651;</string>
@@ -30,6 +29,8 @@
     <string name="icon_cancel" translatable="false">&#xe643;</string>
     <string name="icon_locked" translatable="false">&#xe62b;</string>
     <string name="icon_restricted" translatable="false">&#xe645;</string>
+    <string name="icon_bonus" translatable="false">&#xe671;</string>
+    <string name="icon_survey" translatable="false">&#xe678;</string>
 
     <!-- materialdesign.ttf from https://materialdesignicons.com/ -->
     <string name="icon_download" translatable="false">&#xf262;</string>

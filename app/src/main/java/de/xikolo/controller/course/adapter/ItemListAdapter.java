@@ -61,28 +61,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
         holder.title.setText(ItemTitle.format(mModule.name, item.title));
 
-        switch (item.type) {
-            case Item.TYPE_TEXT:
-                holder.icon.setText(mActivity.getString(R.string.icon_text));
-                break;
-            case Item.TYPE_VIDEO:
-                holder.icon.setText(mActivity.getString(R.string.icon_video));
-                break;
-            case Item.TYPE_SELFTEST:
-                holder.icon.setText(mActivity.getString(R.string.icon_selftest));
-                break;
-            case Item.TYPE_ASSIGNMENT:
-            case Item.TYPE_EXAM:
-            case Item.TYPE_PEER:
-                holder.icon.setText(mActivity.getString(R.string.icon_assignment));
-                break;
-            case Item.TYPE_LTI:
-                holder.icon.setText(mActivity.getString(R.string.icon_lti));
-                break;
-            default:
-                holder.icon.setText(mActivity.getString(R.string.icon_restricted));
-                item.locked = true;
-        }
+        holder.icon.setText(Item.getIcon(mActivity, item.type, item.exercise_type));
 
         if (!item.progress.visited) {
             holder.unseenIndicator.setVisibility(View.VISIBLE);

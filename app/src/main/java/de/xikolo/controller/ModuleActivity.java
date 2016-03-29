@@ -251,29 +251,8 @@ public class ModuleActivity extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             Context context = GlobalApplication.getInstance();
             Item item = items.get(position);
-            String title = "";
 
-            switch (item.type) {
-                case Item.TYPE_TEXT:
-                    title = context.getString(R.string.icon_text);
-                    break;
-                case Item.TYPE_VIDEO:
-                    title = context.getString(R.string.icon_video);
-                    break;
-                case Item.TYPE_SELFTEST:
-                    title = context.getString(R.string.icon_selftest);
-                    break;
-                case Item.TYPE_ASSIGNMENT:
-                case Item.TYPE_EXAM:
-                case Item.TYPE_PEER:
-                    title = context.getString(R.string.icon_assignment);
-                    break;
-                case Item.TYPE_LTI:
-                    title = context.getString(R.string.icon_lti);
-                    break;
-            }
-
-            return title;
+            return Item.getIcon(context, item.type, item.exercise_type);
         }
 
         @Override
@@ -293,8 +272,6 @@ public class ModuleActivity extends BaseActivity {
                 switch (item.type) {
                     case Item.TYPE_TEXT:
                     case Item.TYPE_SELFTEST:
-                    case Item.TYPE_ASSIGNMENT:
-                    case Item.TYPE_EXAM:
                     case Item.TYPE_LTI:
                     case Item.TYPE_PEER:
                         fragment = WebItemFragment.newInstance(course, module, items.get(position));

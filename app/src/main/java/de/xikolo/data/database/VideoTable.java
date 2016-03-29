@@ -2,7 +2,7 @@ package de.xikolo.data.database;
 
 import android.database.sqlite.SQLiteDatabase;
 
-class VideoTable implements Table {
+class VideoTable extends Table {
 
     public static final String TABLE_NAME = "video";
 
@@ -18,7 +18,6 @@ class VideoTable implements Table {
     public static final String COLUMN_SD_URL = "sd_url";
     public static final String COLUMN_VIMEO_ID = "vimeo_id";
     public static final String COLUMN_POSTER_IMAGE_URL = "poster_image_url";
-
 
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_NAME + " (" +
@@ -39,34 +38,22 @@ class VideoTable implements Table {
                     ");";
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_CREATE);
+    String getTableName() {
+        return TABLE_NAME;
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(oldVersion == 1) {
+    String getTableCreate() {
+        return TABLE_CREATE;
+    }
 
-            switch(newVersion) {
-                case 2:
-                    System.out.println("Adding Column " + COLUMN_PROGRESS);
-                    db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COLUMN_PROGRESS + " INTEGER DEFAULT 0");
-                    break;
-                default:
-                    System.out.println("Deleting " + TABLE_NAME);
-                    deleteTable(db);
-                    break;
-            }
-
-        } else {
-            System.out.println("Deleting " + TABLE_NAME);
-            deleteTable(db);
+    @Override
+    protected void upgradeTo(SQLiteDatabase db, int version) {
+        switch (version) {
+            case 2:
+                db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COLUMN_PROGRESS + " INTEGER DEFAULT 0");
+                break;
         }
     }
 
-    @Override
-    public void deleteTable(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(db);
-    }
 }

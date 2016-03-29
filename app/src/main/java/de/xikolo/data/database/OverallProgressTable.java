@@ -1,8 +1,6 @@
 package de.xikolo.data.database;
 
-import android.database.sqlite.SQLiteDatabase;
-
-class OverallProgressTable implements Table {
+class OverallProgressTable extends Table {
 
     public static final String TABLE_NAME = "overall_progress";
 
@@ -37,36 +35,13 @@ class OverallProgressTable implements Table {
                     ");";
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_CREATE);
+    String getTableName() {
+        return TABLE_NAME;
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-       if(oldVersion == 1) {
-
-           switch(newVersion) {
-               case 2:
-                   // keep db
-                   System.out.println("Keeping " + TABLE_NAME);
-                   break;
-               default:
-                   System.out.println("Deleting " + TABLE_NAME);
-                   deleteTable(db);
-                   break;
-           }
-
-       } else {
-           System.out.println("Deleting " + TABLE_NAME);
-           deleteTable(db);
-       }
-
+    String getTableCreate() {
+        return TABLE_CREATE;
     }
 
-    @Override
-    public void deleteTable(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(db);
-    }
 }

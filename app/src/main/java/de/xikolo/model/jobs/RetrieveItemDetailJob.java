@@ -2,7 +2,6 @@ package de.xikolo.model.jobs;
 
 import android.util.Log;
 
-import com.google.gson.reflect.TypeToken;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 import com.path.android.jobqueue.RetryConstraint;
@@ -12,13 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.database.VideoDataAccess;
-import de.xikolo.data.entities.AssignmentItemDetail;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.LtiItemDetail;
 import de.xikolo.data.entities.Module;
-import de.xikolo.data.entities.PeerAssessmentItemDetail;
-import de.xikolo.data.entities.TextItemDetail;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Result;
@@ -53,7 +48,8 @@ public class RetrieveItemDetailJob extends Job {
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG) Log.i(TAG, TAG + " added | course.id " + course.id + " | module.id " + module.id + " | item.id " + item.id + " | itemType " + itemType);
+        if (Config.DEBUG)
+            Log.i(TAG, TAG + " added | course.id " + course.id + " | module.id " + module.id + " | item.id " + item.id + " | itemType " + itemType);
     }
 
     @Override
@@ -69,27 +65,7 @@ public class RetrieveItemDetailJob extends Job {
             }
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                Type type = null;
-
-                switch (itemType) {
-                    case Item.TYPE_TEXT:
-                        type = new TypeToken<Item<TextItemDetail>>(){}.getType();
-                        break;
-                    case Item.TYPE_VIDEO:
-                        type = new TypeToken<Item<VideoItemDetail>>(){}.getType();
-                        break;
-                    case Item.TYPE_SELFTEST:
-                    case Item.TYPE_ASSIGNMENT:
-                    case Item.TYPE_EXAM:
-                        type = new TypeToken<Item<AssignmentItemDetail>>(){}.getType();
-                        break;
-                    case Item.TYPE_LTI:
-                        type = new TypeToken<Item<LtiItemDetail>>() {}.getType();
-                        break;
-                    case Item.TYPE_PEER:
-                        type = new TypeToken<Item<PeerAssessmentItemDetail>>() {}.getType();
-                        break;
-                }
+                Type type = Item.getTypeToken(item.type);
 
                 String url = Config.API + Config.COURSES + course.id + "/"
                         + Config.MODULES + module.id + "/" + Config.ITEMS + item.id;

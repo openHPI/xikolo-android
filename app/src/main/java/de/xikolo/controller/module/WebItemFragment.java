@@ -13,22 +13,17 @@ import android.webkit.WebView;
 import de.xikolo.R;
 import de.xikolo.controller.helper.NotificationController;
 import de.xikolo.controller.helper.WebViewController;
-import de.xikolo.data.entities.AssignmentItemDetail;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.ItemDetail;
-import de.xikolo.data.entities.LtiItemDetail;
 import de.xikolo.data.entities.Module;
-import de.xikolo.data.entities.PeerAssessmentItemDetail;
-import de.xikolo.data.entities.TextItemDetail;
-import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
-public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
+public class WebItemFragment<T extends ItemDetail> extends PagerFragment {
 
     public static final String TAG = WebItemFragment.class.getSimpleName();
 
@@ -46,22 +41,7 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
     }
 
     public static PagerFragment newInstance(Course course, Module module, Item item) {
-        switch (item.type) {
-            case Item.TYPE_TEXT:
-                return PagerFragment.newInstance(new WebItemFragment<TextItemDetail>(), course, module, item);
-            case Item.TYPE_VIDEO:
-                return PagerFragment.newInstance(new WebItemFragment<VideoItemDetail>(), course, module, item);
-            case Item.TYPE_SELFTEST:
-            case Item.TYPE_ASSIGNMENT:
-            case Item.TYPE_EXAM:
-                return PagerFragment.newInstance(new WebItemFragment<AssignmentItemDetail>(), course, module, item);
-            case Item.TYPE_LTI:
-                return PagerFragment.newInstance(new WebItemFragment<LtiItemDetail>(), course, module, item);
-            case Item.TYPE_PEER:
-                return PagerFragment.newInstance(new WebItemFragment<PeerAssessmentItemDetail>(), course, module, item);
-        }
-
-        return null;
+        return PagerFragment.newInstance(new WebItemFragment(), course, module, item);
     }
 
     @Override
@@ -82,17 +62,18 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment<T> {
 
         mWebViewController = new WebViewController(getActivity(), layout);
 
-        if (mItem.type.equals(Item.TYPE_TEXT)
-                || mItem.type.equals(Item.TYPE_VIDEO)
-                || mItem.type.equals(Item.TYPE_LTI)) {
-            mWebViewController.setInAppLinksEnabled(false);
-            mWebViewController.setLoadExternalUrlEnabled(false);
-        } else if (mItem.type.equals(Item.TYPE_SELFTEST)
-                || mItem.type.equals(Item.TYPE_ASSIGNMENT)
-                || mItem.type.equals(Item.TYPE_EXAM)
-                || mItem.type.equals(Item.TYPE_PEER)) {
-            mWebViewController.setInAppLinksEnabled(true);
-            mWebViewController.setLoadExternalUrlEnabled(false);
+        switch (mItem.type) {
+            case Item.TYPE_TEXT:
+            case Item.TYPE_VIDEO:
+            case Item.TYPE_LTI:
+                mWebViewController.setInAppLinksEnabled(false);
+                mWebViewController.setLoadExternalUrlEnabled(false);
+                break;
+            case Item.TYPE_SELFTEST:
+            case Item.TYPE_PEER:
+                mWebViewController.setInAppLinksEnabled(true);
+                mWebViewController.setLoadExternalUrlEnabled(false);
+                break;
         }
 
         if (savedInstanceState != null) {

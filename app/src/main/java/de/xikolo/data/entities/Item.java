@@ -1,21 +1,100 @@
 package de.xikolo.data.entities;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
+
+import de.xikolo.R;
 
 public class Item<T extends ItemDetail> implements Parcelable, Serializable {
 
     public static final String TYPE_TEXT = "text";
     public static final String TYPE_VIDEO = "video";
     public static final String TYPE_SELFTEST = "self test";
-    public static final String TYPE_ASSIGNMENT = "assignment";
-    public static final String TYPE_EXAM = "exam";
     public static final String TYPE_LTI = "lti_exercise";
     public static final String TYPE_PEER = "peer_assessment";
+
+    public static final String EXERCISE_TYPE_SELFTEST = "selftest";
+    public static final String EXERCISE_TYPE_SURVEY = "survey";
+    public static final String EXERCISE_TYPE_ASSIGNMENT = "main";
+    public static final String EXERCISE_TYPE_BONUS = "bonus";
+
+    public static String getIcon(Context context, String itemType, String exerciseType) {
+        if (context == null) {
+            return null;
+        }
+
+        int icon = R.string.icon_text;
+
+        switch (itemType) {
+            case TYPE_TEXT:
+                icon = R.string.icon_text;
+                break;
+            case TYPE_VIDEO:
+                icon = R.string.icon_video;
+                break;
+            case TYPE_SELFTEST:
+                if (exerciseType != null && !exerciseType.equals("")) {
+                    switch (exerciseType) {
+                        case EXERCISE_TYPE_SELFTEST:
+                            icon = R.string.icon_selftest;
+                            break;
+                        case EXERCISE_TYPE_SURVEY:
+                            icon = R.string.icon_survey;
+                            break;
+                        case EXERCISE_TYPE_ASSIGNMENT:
+                            icon = R.string.icon_assignment;
+                            break;
+                        case EXERCISE_TYPE_BONUS:
+                            icon = R.string.icon_bonus;
+                            break;
+                    }
+                } else {
+                    icon = R.string.icon_selftest;
+                }
+                break;
+            case TYPE_PEER:
+                icon = R.string.icon_assignment;
+                break;
+            case TYPE_LTI:
+                icon = R.string.icon_lti;
+                break;
+        }
+
+        return context.getString(icon);
+    }
+
+    public static Type getTypeToken(String itemType) {
+        if (itemType == null) {
+            return null;
+        }
+
+        switch (itemType) {
+            case TYPE_TEXT:
+                return new TypeToken<Item<TextItemDetail>>() {
+                }.getType();
+            case TYPE_VIDEO:
+                return new TypeToken<Item<VideoItemDetail>>() {
+                }.getType();
+            case TYPE_SELFTEST:
+                return new TypeToken<Item<AssignmentItemDetail>>() {
+                }.getType();
+            case TYPE_PEER:
+                return new TypeToken<Item<LtiItemDetail>>() {
+                }.getType();
+            case TYPE_LTI:
+                return new TypeToken<Item<PeerAssessmentItemDetail>>() {
+                }.getType();
+        }
+
+        return null;
+    }
 
     @SerializedName("id")
     public String id;
@@ -38,6 +117,9 @@ public class Item<T extends ItemDetail> implements Parcelable, Serializable {
     @SerializedName("locked")
     public boolean locked;
 
+    @SerializedName("exercise_type")
+    public String exercise_type;
+
     @SerializedName("object")
     public T detail;
 
@@ -57,9 +139,10 @@ public class Item<T extends ItemDetail> implements Parcelable, Serializable {
         parcel.writeString(type);
         parcel.writeString(available_from);
         parcel.writeString(available_to);
-        parcel.writeByte((byte) (locked ? 1 : 0 ));
+        parcel.writeByte((byte) (locked ? 1 : 0));
         parcel.writeParcelable(detail, i);
         parcel.writeParcelable(progress, i);
+        parcel.writeString(exercise_type);
     }
 
     public Item(Parcel in) {
@@ -72,6 +155,7 @@ public class Item<T extends ItemDetail> implements Parcelable, Serializable {
         locked = in.readByte() != 0;
         detail = in.readParcelable(Item.class.getClassLoader());
         progress = in.readParcelable(Item.class.getClassLoader());
+        exercise_type = in.readString();
     }
 
     public Item() {
@@ -128,8 +212,8 @@ public class Item<T extends ItemDetail> implements Parcelable, Serializable {
 
         @Override
         public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeByte((byte) (visited ? 1 : 0 ));
-            parcel.writeByte((byte) (completed ? 1 : 0 ));
+            parcel.writeByte((byte) (visited ? 1 : 0));
+            parcel.writeByte((byte) (completed ? 1 : 0));
         }
 
         public Progress(Parcel in) {
@@ -138,7 +222,7 @@ public class Item<T extends ItemDetail> implements Parcelable, Serializable {
         }
 
         public Progress() {
-            
+
         }
 
         public static final Creator<Progress> CREATOR = new Creator<Progress>() {

@@ -37,6 +37,7 @@ public class ItemDataAccess extends DataAccess {
                         ItemTable.COLUMN_TYPE,
                         ItemTable.COLUMN_AVAILABLE_FROM,
                         ItemTable.COLUMN_AVAILABLE_TO,
+                        ItemTable.COLUMN_EXERCISE_TYPE,
                         ItemTable.COLUMN_LOCKED,
                         ItemTable.COLUMN_VISITED,
                         ItemTable.COLUMN_COMPLETED,
@@ -103,9 +104,10 @@ public class ItemDataAccess extends DataAccess {
         item.type = cursor.getString(3);
         item.available_from = cursor.getString(4);
         item.available_to = cursor.getString(5);
-        item.locked = cursor.getInt(6) != 0;
-        item.progress.visited = cursor.getInt(7) != 0;
-        item.progress.completed = cursor.getInt(8) != 0;
+        item.exercise_type = cursor.getString(6);
+        item.locked = cursor.getInt(7) != 0;
+        item.progress.visited = cursor.getInt(8) != 0;
+        item.progress.completed = cursor.getInt(9) != 0;
 
         return item;
     }
@@ -118,6 +120,7 @@ public class ItemDataAccess extends DataAccess {
         values.put(ItemTable.COLUMN_TYPE, item.type);
         values.put(ItemTable.COLUMN_AVAILABLE_FROM, item.available_from);
         values.put(ItemTable.COLUMN_AVAILABLE_TO, item.available_to);
+        values.put(ItemTable.COLUMN_EXERCISE_TYPE, item.exercise_type);
         values.put(ItemTable.COLUMN_LOCKED, item.locked);
         values.put(ItemTable.COLUMN_VISITED, item.progress.visited);
         values.put(ItemTable.COLUMN_COMPLETED, item.progress.completed);
