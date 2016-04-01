@@ -150,6 +150,11 @@
     <string name="settings_title_download_network">Datennutzung für Downloads beschränken</string>
     <string name="settings_summary_download_network">Downloads nur über WLAN laden</string>
 
+    <string name="settings_category_video">Video</string>
+
+    <string name="settings_title_video_playback_speed">Wiedergabegeschwindigkeit von Videos</string>
+    <string name="settings_summary_video_playback_speed">Standard-Geschwindigkeit: %s</string>
+
     <string name="settings_category_about">Info</string>
 
     <string name="settings_title_licenses">Open-Source-Lizenzen</string>
@@ -160,6 +165,10 @@
 
     <string name="settings_title_build">Build-Version</string>
     <string name="settings_summary_build">Version:</string>
+
+    <string name="settings_imprint">Impressum</string>
+    <string name="settings_privacy">Hinweise zum Datenschutz</string>
+    <string name="settings_terms_of_use">Nutzungsbedingungen</string>
 
     <!-- -->
     <string name="lang_en">Englisch</string>

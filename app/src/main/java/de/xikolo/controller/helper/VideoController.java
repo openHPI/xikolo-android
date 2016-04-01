@@ -1,8 +1,11 @@
 package de.xikolo.controller.helper;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.media.MediaPlayer;
+import android.media.PlaybackParams;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
@@ -21,9 +24,11 @@ import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.preferences.AppPreferences;
+import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import de.xikolo.util.PlaybackSpeed;
 import de.xikolo.util.ToastUtil;
 import de.xikolo.view.CustomFontTextView;
 import de.xikolo.view.CustomSizeVideoView;
@@ -37,48 +42,55 @@ public class VideoController {
     private static final int sDefaultTimeout = 3000;
     private static final int FADE_OUT = 1;
 
-    private DownloadModel mDownloadModel;
+    private static final int PLAYBACK_PARAMS_SDK_LEVEL = 23;
 
-    private Activity mActivity;
+    private DownloadModel downloadModel;
 
-    private View mVideoContainer;
+    private Activity activity;
 
-    private View mVideoProgress;
+    private CustomSizeVideoView videoView;
 
-    private CustomSizeVideoView mVideoView;
-    private View mVideoController;
+    private View videoContainer;
 
-    private View mVideoHeader;
+    private View videoProgress;
 
-    private View mVideoFooter;
-    private SeekBar mSeekBar;
-    private TextView mCurrentTime;
-    private TextView mTotalTime;
-    private CustomFontTextView mHdSwitch;
+    private View videoController;
 
-    private View mVideoWarning;
-    private TextView mVideoWarningText;
-    private TextView mRetryButton;
+    private View videoHeader;
+    private View videoFooter;
 
-    private CustomFontTextView mPlayButton;
+    private CustomFontTextView playButton;
+    private TextView retryButton;
 
+    private SeekBar seekBar;
+    private TextView currentTime;
+    private TextView totalTime;
+    private CustomFontTextView hdSwitch;
+    private TextView playbackSpeed;
     private View mOfflineHint;
 
-    private ControllerListener mControllerListener;
+    private View videoWarning;
+    private TextView videoWarningText;
 
-    private Runnable mSeekBarUpdater;
+    private ControllerListener controllerListener;
 
-    private Handler mHandler = new MessageHandler(this);
+    private Runnable seekBarUpdater;
+
+    private Handler handler = new MessageHandler(this);
 
     private boolean seekBarUpdaterIsRunning = false;
 
-    private boolean mUserIsSeeking = false;
+    private boolean userIsSeeking = false;
 
-    private boolean mIsPlaying = true;
+    private boolean isPlaying = true;
 
-    private Course mCourse;
-    private Module mModule;
-    private Item<VideoItemDetail> mVideoItemDetails;
+    private PlaybackSpeed currentPlaybackSpeed = PlaybackSpeed.x10;
+
+    private Course course;
+    private Module module;
+    private Item<VideoItemDetail> videoItemDetails;
+
+    private MediaPlayer mediaPlayer;
 
     private boolean error = false;
 
@@ -89,31 +101,32 @@ public class VideoController {
     private VideoMode mVideoMode;
 
     public VideoController(Activity activity, View videoContainer) {
-        mActivity = activity;
+        this.activity = activity;
 
-        mVideoContainer = videoContainer;
-        mVideoView = (CustomSizeVideoView) mVideoContainer.findViewById(R.id.videoView);
-        mVideoController = mVideoContainer.findViewById(R.id.videoController);
+        this.videoContainer = videoContainer;
+        videoView = (CustomSizeVideoView) this.videoContainer.findViewById(R.id.videoView);
+        videoController = this.videoContainer.findViewById(R.id.videoController);
 
-        mVideoProgress = mVideoContainer.findViewById(R.id.videoProgress);
+        videoProgress = this.videoContainer.findViewById(R.id.videoProgress);
 
-        mVideoHeader = mVideoContainer.findViewById(R.id.videoHeader);
+        videoHeader = this.videoContainer.findViewById(R.id.videoHeader);
 
-        mVideoFooter = mVideoContainer.findViewById(R.id.videoFooter);
-        mSeekBar = (SeekBar) mVideoContainer.findViewById(R.id.videoSeekBar);
-        mCurrentTime = (TextView) mVideoController.findViewById(R.id.currentTime);
-        mTotalTime = (TextView) mVideoController.findViewById(R.id.totalTime);
-        mHdSwitch = (CustomFontTextView) mVideoController.findViewById(R.id.hdSwitch);
+        videoFooter = this.videoContainer.findViewById(R.id.videoFooter);
+        seekBar = (SeekBar) this.videoContainer.findViewById(R.id.videoSeekBar);
+        currentTime = (TextView) videoController.findViewById(R.id.currentTime);
+        totalTime = (TextView) videoController.findViewById(R.id.totalTime);
+        hdSwitch = (CustomFontTextView) videoController.findViewById(R.id.hdSwitch);
+        playbackSpeed = (TextView) videoController.findViewById(R.id.playbackSpeed);
 
-        mPlayButton = (CustomFontTextView) mVideoContainer.findViewById(R.id.btnPlay);
+        playButton = (CustomFontTextView) this.videoContainer.findViewById(R.id.btnPlay);
 
-        mOfflineHint = mVideoContainer.findViewById(R.id.offlineHint);
+        mOfflineHint = this.videoContainer.findViewById(R.id.offlineHint);
 
-        mVideoWarning = mVideoContainer.findViewById(R.id.videoWarning);
-        mVideoWarningText = (TextView) mVideoContainer.findViewById(R.id.videoWarningText);
-        mRetryButton = (TextView) mVideoContainer.findViewById(R.id.btnRetry);
+        videoWarning = this.videoContainer.findViewById(R.id.videoWarning);
+        videoWarningText = (TextView) this.videoContainer.findViewById(R.id.videoWarningText);
+        retryButton = (TextView) this.videoContainer.findViewById(R.id.btnRetry);
 
-        mVideoContainer.setOnTouchListener(new View.OnTouchListener() {
+        this.videoContainer.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 show();
@@ -121,47 +134,55 @@ public class VideoController {
             }
         });
 
-        mDownloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), activity);
+        downloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), activity);
 
         setupView();
     }
 
     private void setupView() {
-        mVideoView.setKeepScreenOn(true);
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        videoView.setKeepScreenOn(true);
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                mVideoProgress.setVisibility(View.GONE);
-                mSeekBar.setMax(mVideoView.getDuration());
+                mediaPlayer = mp;
+
+                videoProgress.setVisibility(View.GONE);
+                seekBar.setMax(videoView.getDuration());
                 show();
 
-                mTotalTime.setText(getTimeString(mVideoView.getDuration()));
-                mCurrentTime.setText(getTimeString(0));
+                totalTime.setText(getTimeString(videoView.getDuration()));
+                currentTime.setText(getTimeString(0));
 
-                seekTo(mVideoItemDetails.detail.progress);
-                if (mIsPlaying) {
+                seekTo(videoItemDetails.detail.progress);
+                if (isPlaying) {
                     start();
                 }
 
                 mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
                     @Override
                     public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                        mSeekBar.setSecondaryProgress((int) (mSeekBar.getMax() * (percent / 100.)));
+                        seekBar.setSecondaryProgress((int) (seekBar.getMax() * (percent / 100.)));
                     }
                 });
 
-                new Thread(mSeekBarUpdater).start();
+                if (Build.VERSION.SDK_INT >= PLAYBACK_PARAMS_SDK_LEVEL) {
+                    AppPreferences appPreferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
+                    currentPlaybackSpeed = appPreferences.getVideoPlaybackSpeed();
+                    setPlaybackSpeed(currentPlaybackSpeed);
+                }
+
+                new Thread(seekBarUpdater).start();
             }
         });
-        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 pause();
-                mPlayButton.setText(mActivity.getString(R.string.icon_reload));
+                playButton.setText(activity.getString(R.string.icon_reload));
                 show();
             }
         });
-        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+        videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 switch (what) {
@@ -188,7 +209,7 @@ public class VideoController {
                 }
                 // TODO proper error handling
                 error = true;
-                mVideoProgress.setVisibility(View.GONE);
+                videoProgress.setVisibility(View.GONE);
                 hide();
                 ToastUtil.show(R.string.error);
 
@@ -196,32 +217,32 @@ public class VideoController {
             }
         });
 
-        mSeekBarUpdater = new Runnable() {
+        seekBarUpdater = new Runnable() {
             @Override
             public void run() {
                 seekBarUpdaterIsRunning = true;
-                mActivity.runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (!mUserIsSeeking) {
-                            mSeekBar.setProgress(mVideoView.getCurrentPosition());
-                            mCurrentTime.setText(getTimeString(mVideoView.getCurrentPosition()));
+                        if (!userIsSeeking) {
+                            seekBar.setProgress(videoView.getCurrentPosition());
+                            currentTime.setText(getTimeString(videoView.getCurrentPosition()));
                         }
                     }
                 });
-                if (mVideoView.getCurrentPosition() < mVideoView.getDuration()) {
-                    mSeekBar.postDelayed(this, MILLISECONDS);
+                if (videoView.getCurrentPosition() < videoView.getDuration()) {
+                    seekBar.postDelayed(this, MILLISECONDS);
                 } else {
                     seekBarUpdaterIsRunning = false;
                 }
             }
         };
 
-        mPlayButton.setOnClickListener(new View.OnClickListener() {
+        playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 show();
-                if (mVideoView.isPlaying()) {
+                if (videoView.isPlaying()) {
                     pause();
                 } else {
                     start();
@@ -229,7 +250,7 @@ public class VideoController {
             }
         });
 
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             private int progress;
 
             @Override
@@ -237,59 +258,112 @@ public class VideoController {
                 if (fromUser) {
                     show();
                     this.progress = progress;
-                    mCurrentTime.setText(getTimeString(progress));
+                    currentTime.setText(getTimeString(progress));
                 }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                mUserIsSeeking = true;
+                userIsSeeking = true;
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                mUserIsSeeking = false;
+                userIsSeeking = false;
                 seekTo(progress);
             }
         });
 
-        mHdSwitch.setOnClickListener(new View.OnClickListener() {
+        hdSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleHdButton();
             }
         });
 
-        mRetryButton.setOnClickListener(new View.OnClickListener() {
+        if (Build.VERSION.SDK_INT >= PLAYBACK_PARAMS_SDK_LEVEL) {
+            playbackSpeed.setVisibility(View.VISIBLE);
+            playbackSpeed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    togglePlaybackSpeed();
+                }
+            });
+        } else {
+            playbackSpeed.setVisibility(View.GONE);
+            playbackSpeed.setClickable(false);
+        }
+
+        retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateVideo(mCourse, mModule, mVideoItemDetails);
+                updateVideo(course, module, videoItemDetails);
             }
         });
     }
 
     public void start() {
-        mPlayButton.setText(mActivity.getString(R.string.icon_pause));
-        mVideoView.start();
-        mIsPlaying = true;
+        playButton.setText(activity.getString(R.string.icon_pause));
+        videoView.start();
+        isPlaying = true;
         if (!seekBarUpdaterIsRunning) {
-            new Thread(mSeekBarUpdater).start();
+            new Thread(seekBarUpdater).start();
         }
     }
 
     public void pause() {
-        mPlayButton.setText(mActivity.getString(R.string.icon_play));
-        mVideoView.pause();
-        mIsPlaying = false;
+        playButton.setText(activity.getString(R.string.icon_play));
+        videoView.pause();
+        isPlaying = false;
         saveCurrentPosition();
     }
 
     public void seekTo(int progress) {
-        mVideoView.seekTo(progress);
-        mCurrentTime.setText(getTimeString(progress));
-        mSeekBar.setProgress(progress);
+        videoView.seekTo(progress);
+        currentTime.setText(getTimeString(progress));
+        seekBar.setProgress(progress);
         if (!seekBarUpdaterIsRunning) {
-            new Thread(mSeekBarUpdater).start();
+            new Thread(seekBarUpdater).start();
+        }
+    }
+
+    @TargetApi(23)
+    public void togglePlaybackSpeed() {
+        if (mediaPlayer != null) {
+            switch (currentPlaybackSpeed) {
+                case x07:
+                    setPlaybackSpeed(PlaybackSpeed.x10);
+                    break;
+                case x10:
+                    setPlaybackSpeed(PlaybackSpeed.x13);
+                    break;
+                case x13:
+                    setPlaybackSpeed(PlaybackSpeed.x15);
+                    break;
+                case x15:
+                    setPlaybackSpeed(PlaybackSpeed.x18);
+                    break;
+                case x18:
+                    setPlaybackSpeed(PlaybackSpeed.x20);
+                    break;
+                case x20:
+                    setPlaybackSpeed(PlaybackSpeed.x07);
+                    break;
+            }
+        }
+    }
+
+    @TargetApi(23)
+    public void setPlaybackSpeed(PlaybackSpeed speed) {
+        if (mediaPlayer != null) {
+            currentPlaybackSpeed = speed;
+            playbackSpeed.setText(speed.toString());
+            PlaybackParams pp = new PlaybackParams();
+            pp.setSpeed(speed.getSpeed());
+            mediaPlayer.setPlaybackParams(pp);
+            if (!isPlaying) {
+                pause();
+            }
         }
     }
 
@@ -299,23 +373,23 @@ public class VideoController {
 
     public void show(int timeout) {
         if (!error) {
-            mVideoController.setVisibility(View.VISIBLE);
-            if (mControllerListener != null) {
-                mControllerListener.onControllerShow();
+            videoController.setVisibility(View.VISIBLE);
+            if (controllerListener != null) {
+                controllerListener.onControllerShow();
             }
-            Message msg = mHandler.obtainMessage(FADE_OUT);
+            Message msg = handler.obtainMessage(FADE_OUT);
             if (timeout != 0) {
-                mHandler.removeMessages(FADE_OUT);
-                mHandler.sendMessageDelayed(msg, timeout);
+                handler.removeMessages(FADE_OUT);
+                handler.sendMessageDelayed(msg, timeout);
             }
         }
     }
 
     public void hide() {
-        if (mVideoView.isPlaying()) {
-            mVideoController.setVisibility(View.GONE);
-            if (mControllerListener != null) {
-                mControllerListener.onControllerHide();
+        if (videoView.isPlaying()) {
+            videoController.setVisibility(View.GONE);
+            if (controllerListener != null) {
+                controllerListener.onControllerHide();
             }
         } else {
             show();
@@ -330,15 +404,15 @@ public class VideoController {
         }
 
         saveCurrentPosition();
-        updateVideo(mCourse, mModule, mVideoItemDetails);
+        updateVideo(course, module, videoItemDetails);
     }
 
     public void setupVideo(Course course, Module module, Item<VideoItemDetail> video) {
-        mCourse = course;
-        mModule = module;
-        mVideoItemDetails = video;
+        this.course = course;
+        this.module = module;
+        videoItemDetails = video;
 
-        int connectivityStatus = NetworkUtil.getConnectivityStatus(mActivity);
+        int connectivityStatus = NetworkUtil.getConnectivityStatus(activity);
         AppPreferences preferences =  GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
 
         if (connectivityStatus == NetworkUtil.TYPE_MOBILE && preferences.isVideoQualityLimitedOnMobile()) {
@@ -347,14 +421,14 @@ public class VideoController {
             mVideoMode = VideoMode.HD;
         }
 
-        updateVideo(course, module, mVideoItemDetails);
+        updateVideo(course, module, videoItemDetails);
     }
 
     private void updateVideo(Course course, Module module, Item<VideoItemDetail> video) {
         String stream;
         DownloadModel.DownloadFileType fileType;
 
-        mVideoWarning.setVisibility(View.GONE);
+        videoWarning.setVisibility(View.GONE);
 
         if (mVideoMode == VideoMode.HD) {
             stream = video.detail.stream.hd_url;
@@ -366,18 +440,18 @@ public class VideoController {
 
         mOfflineHint.setVisibility(View.GONE);
 
-        if (!mDownloadModel.downloadRunning(fileType, course, module, video)
-                && mDownloadModel.downloadExists(fileType, course, module, video)) {
-            setVideoURI("file://" + mDownloadModel.getDownloadFile(fileType, course, module, video).getAbsolutePath());
+        if (!downloadModel.downloadRunning(fileType, course, module, video)
+                && downloadModel.downloadExists(fileType, course, module, video)) {
+            setVideoURI("file://" + downloadModel.getDownloadFile(fileType, course, module, video).getAbsolutePath());
             mOfflineHint.setVisibility(View.VISIBLE);
-        } else if (NetworkUtil.isOnline(mActivity)) {
+        } else if (NetworkUtil.isOnline(activity)) {
             setVideoURI(stream);
         } else if (mVideoMode == VideoMode.HD) {
             mVideoMode = VideoMode.SD;
             updateVideo(course, module, video);
         } else {
-            mVideoWarning.setVisibility(View.VISIBLE);
-            mVideoWarningText.setText(mActivity.getString(R.string.video_notification_no_offline_video));
+            videoWarning.setVisibility(View.VISIBLE);
+            videoWarningText.setText(activity.getString(R.string.video_notification_no_offline_video));
         }
 
         updateHdSwitchColor();
@@ -387,50 +461,50 @@ public class VideoController {
         if (Config.DEBUG) {
             Log.i(TAG, "Video URI: " + uri);
         }
-        mVideoView.setVideoURI(Uri.parse(uri));
+        videoView.setVideoURI(Uri.parse(uri));
     }
 
     private void updateHdSwitchColor() {
         if (mVideoMode == VideoMode.HD) {
-            mHdSwitch.setTextColor(ContextCompat.getColor(mActivity, R.color.video_hd_enabled));
+            hdSwitch.setTextColor(ContextCompat.getColor(activity, R.color.video_hd_enabled));
         } else {
-            mHdSwitch.setTextColor(ContextCompat.getColor(mActivity, R.color.video_hd_disabled));
+            hdSwitch.setTextColor(ContextCompat.getColor(activity, R.color.video_hd_disabled));
         }
     }
 
     public void saveCurrentPosition() {
-        if (mVideoView != null && mVideoItemDetails != null) {
-            mVideoItemDetails.detail.progress = mVideoView.getCurrentPosition();
+        if (videoView != null && videoItemDetails != null) {
+            videoItemDetails.detail.progress = videoView.getCurrentPosition();
         }
     }
 
     public void setDimensions(int w, int h) {
-        mVideoView.setDimensions(w, h);
+        videoView.setDimensions(w, h);
     }
 
     public void enableHeader() {
-        mVideoHeader.setVisibility(View.VISIBLE);
+        videoHeader.setVisibility(View.VISIBLE);
     }
 
     public void disableHeader() {
-        mVideoHeader.setVisibility(View.GONE);
+        videoHeader.setVisibility(View.GONE);
     }
 
     public View getControllerView() {
-        return mVideoController;
+        return videoController;
     }
 
     public View getVideoView() {
-        return mVideoView;
+        return videoView;
     }
 
     public View getVideoContainer() {
-        return mVideoContainer;
+        return videoContainer;
     }
 
     public VideoItemDetail getVideoItemDetail() {
-        if(mVideoItemDetails != null) {
-            return mVideoItemDetails.detail;
+        if(videoItemDetails != null) {
+            return videoItemDetails.detail;
         }
         return null;
     }
@@ -444,7 +518,7 @@ public class VideoController {
     }
 
     public void setControllerListener(ControllerListener listener) {
-        this.mControllerListener = listener;
+        this.controllerListener = listener;
     }
 
     public interface ControllerListener {

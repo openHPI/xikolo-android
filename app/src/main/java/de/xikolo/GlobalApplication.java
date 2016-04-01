@@ -119,7 +119,6 @@ public class GlobalApplication extends Application {
 
                     @Override
                     public boolean isDebugEnabled() {
-//                        return Config.DEBUG;
                         return false;
                     }
 
@@ -144,10 +143,6 @@ public class GlobalApplication extends Application {
                 .consumerKeepAlive(120) // wait 2 minute
                 .build();
         jobManager = new JobManager(this, configuration);
-
-        if (Config.DEBUG) {
-            Log.i(TAG, "CPU Cores: " + Runtime.getRuntime().availableProcessors());
-        }
     }
 
     public void flushHttpResponseCache() {
@@ -182,7 +177,6 @@ public class GlobalApplication extends Application {
     private void configureVideoCastManager() {
         CastConfiguration options = new CastConfiguration.Builder(Config.CAST_MEDIA_RECEIVER_APPLICATION_ID)
                 .enableAutoReconnect()
-                .enableDebug()
                 .enableLockScreen()
                 .enableWifiReconnection()
                 .enableNotification()

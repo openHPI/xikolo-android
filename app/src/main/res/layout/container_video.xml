@@ -133,6 +133,16 @@
                     android:textSize="24sp"
                     app:customFont="xikolo.ttf" />
 
+                <TextView
+                    android:id="@+id/playbackSpeed"
+                    style="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
             </LinearLayout>
 
         </RelativeLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="settings_copyright">&#169; 2013 &#8211; %d Copyright SAP</string>
+
+    <string name="settings_imprint">Impressum</string>
+    <string name="settings_privacy">Datenschutz</string>
+    <string name="settings_terms_of_use">Nutzungsbedingungen</string>
+
+</resources>

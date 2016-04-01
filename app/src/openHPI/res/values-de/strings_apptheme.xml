@@ -2,7 +2,5 @@
 <resources>
 
     <string name="settings_copyright">&#169; 2012 &#8211; %d Hasso-Plattner-Institut</string>
-    <string name="settings_imprint">Impressum</string>
-    <string name="settings_privacy">Hinweise zum Datenschutz</string>
 
 </resources>

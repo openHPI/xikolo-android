@@ -17,24 +17,45 @@ public class Config {
     public static final String URI;
     public static final String API;
 
+    public static final String COPYRIGHT_URL;
+    public static final String IMPRINT_URL;
+    public static final String PRIVACY_URL;
+    public static final String TERMS_OF_USE_URL;
+
     public static final String CAST_MEDIA_RECEIVER_APPLICATION_ID;
 
     static {
         switch (BuildConfig.buildFlavor) {
             case OPEN_HPI:
                 HOST = "open.hpi.de";
+                COPYRIGHT_URL = "https://hpi.de/";
+                IMPRINT_URL = "https://open.hpi.de/pages/imprint";
+                PRIVACY_URL = "https://open.hpi.de/pages/privacy";
+                TERMS_OF_USE_URL = "";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604";
                 break;
             case OPEN_SAP:
                 HOST = "open.sap.com";
+                COPYRIGHT_URL = "http://go.sap.com/corporate/en/legal/copyright.html";
+                IMPRINT_URL = "http://go.sap.com/corporate/en/legal/impressum.html";
+                PRIVACY_URL = "http://go.sap.com/corporate/en/legal/privacy.html";
+                TERMS_OF_USE_URL = "http://go.sap.com/corporate/en/legal/terms-of-use.html";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "2C63C05D";
                 break;
             case OPEN_UNE:
                 HOST = "openune.cn";
+                COPYRIGHT_URL = "http://www.guofudata.com/";
+                IMPRINT_URL = "https://openune.cn/pages/imprint";
+                PRIVACY_URL = "https://openune.cn/pages/privacy";
+                TERMS_OF_USE_URL = "";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
             default: // MOOC_HOUSE
                 HOST = "mooc.house";
+                COPYRIGHT_URL = "https://hpi.de/";
+                IMPRINT_URL = "https://mooc.house/pages/imprint";
+                PRIVACY_URL = "https://mooc.house/pages/privacy";
+                TERMS_OF_USE_URL = "";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
         }

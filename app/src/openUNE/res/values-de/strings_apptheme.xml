@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="settings_imprint">Impressum</string>
-    <string name="settings_privacy">Hinweise zum Datenschutz</string>
+    <string name="settings_copyright">&#169; 2012 &#8211; %d Copyright Guofudata</string>
 
 </resources>

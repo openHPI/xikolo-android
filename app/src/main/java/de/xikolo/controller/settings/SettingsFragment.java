@@ -2,9 +2,12 @@ package de.xikolo.controller.settings;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v14.preference.PreferenceFragment;
 import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -20,11 +23,14 @@ import de.xikolo.controller.dialogs.LicensesDialog;
 import de.xikolo.model.UserModel;
 import de.xikolo.model.events.LoginEvent;
 import de.xikolo.model.events.LogoutEvent;
+import de.xikolo.util.BuildFlavor;
+import de.xikolo.util.Config;
 import de.xikolo.view.SettingsDividerItemDecoration;
 
 public class SettingsFragment extends PreferenceFragment {
 
     public static final String TAG = SettingsFragment.class.getSimpleName();
+
     private Preference login_out;
 
     public SettingsFragment() {
@@ -46,79 +52,63 @@ public class SettingsFragment extends PreferenceFragment {
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.settings);
 
-        Preference copyright = findPreference("copyright");
+
+        if (Build.VERSION.SDK_INT < 23) {
+            PreferenceScreen screen = (PreferenceScreen) findPreference(getString(R.string.preference_screen));
+            PreferenceCategory video = (PreferenceCategory) findPreference(getString(R.string.preference_category_video_playback_speed));
+            Preference videoPlaybackSpeed = findPreference(getString(R.string.preference_video_playback_speed));
+            video.removePreference(videoPlaybackSpeed);
+            screen.removePreference(video);
+        }
+
+        Preference copyright = findPreference(getString(R.string.preference_copyright));
         copyright.setTitle(String.format(String.valueOf(copyright.getTitle()), Calendar.getInstance().get(Calendar.YEAR)));
         copyright.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
-                switch (BuildConfig.buildFlavor) {
-                    case OPEN_SAP:
-                        openUrl("http://www.sap.com/corporate-en/about/legal/copyright/index.html");
-                        break;
-                    case OPEN_UNE:
-                        openUrl("http://www.guofudata.com");
-                        break;
-                    default:
-                        openUrl("https://hpi.de");
-                }
-
+                openUrl(Config.COPYRIGHT_URL);
                 return true;
             }
         });
 
-        Preference imprint = findPreference("imprint");
+        Preference imprint = findPreference(getString(R.string.preference_imprint));
         imprint.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
-                switch (BuildConfig.buildFlavor) {
-                    case OPEN_SAP:
-                        openUrl("http://www.sap.com/corporate-en/about/legal/impressum.html");
-                        break;
-                    case MOOC_HOUSE:
-                        openUrl("https://mooc.house/pages/imprint");
-                        break;
-                    case OPEN_UNE:
-                        openUrl("https://openune.cn/pages/imprint");
-                        break;
-                    default:
-                        openUrl("https://open.hpi.de/pages/imprint");
-                }
-
+                openUrl(Config.IMPRINT_URL);
                 return true;
             }
         });
 
-        Preference privacy = findPreference("privacy");
+        Preference privacy = findPreference(getString(R.string.preference_privacy));
         privacy.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
-                switch (BuildConfig.buildFlavor) {
-                    case OPEN_SAP:
-                        openUrl("http://www.sap.com/corporate-en/about/legal/privacy.html");
-                        break;
-                    case MOOC_HOUSE:
-                        openUrl("https://mooc.house/pages/privacy");
-                        break;
-                    case OPEN_UNE:
-                        openUrl("https://openune.cn/pages/privacy");
-                        break;
-                    default:
-                        openUrl("https://open.hpi.de/pages/privacy");
-                }
-
+                openUrl(Config.PRIVACY_URL);
                 return true;
             }
         });
 
-        Preference build_version = findPreference("build_version");
+        Preference termsOfUse = findPreference(getString(R.string.preference_terms_of_use));
+        if (BuildConfig.buildFlavor == BuildFlavor.OPEN_SAP) {
+            termsOfUse.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    openUrl(Config.TERMS_OF_USE_URL);
+                    return true;
+                }
+            });
+        } else {
+            PreferenceCategory info = (PreferenceCategory) findPreference(getString(R.string.preference_category_info));
+            info.removePreference(termsOfUse);
+        }
+
+        Preference build_version = findPreference(getString(R.string.preference_build_version));
         build_version.setSummary(build_version.getSummary()
                 + " "
                 + BuildConfig.VERSION_NAME);
 
-        Preference licenses = findPreference("open_source_licenses");
+        Preference licenses = findPreference(getString(R.string.preference_open_source_licenses));
         licenses.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -128,7 +118,7 @@ public class SettingsFragment extends PreferenceFragment {
             }
         });
 
-        Preference contributors = findPreference("open_source_contributors");
+        Preference contributors = findPreference(getString(R.string.preference_open_source_contributors));
         contributors.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -138,7 +128,7 @@ public class SettingsFragment extends PreferenceFragment {
             }
         });
 
-        login_out = findPreference("login_out");
+        login_out = findPreference(getString(R.string.preference_login_out));
         if (UserModel.isLoggedIn(getActivity())) {
             buildLogoutView(login_out);
         } else {

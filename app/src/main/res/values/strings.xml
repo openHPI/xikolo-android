@@ -75,11 +75,23 @@
     </string-array>
 
     <!-- preferences keys -->
+    <string name="preference_screen">preference_screen</string>
     <string name="preference_storage" translatable="false">storage</string>
     <string name="preference_confirm_delete" translatable="false">confirm_delete</string>
-    <string name="preference_download_network" translatable="false">download_network</string>
     <string name="preference_video_quality" translatable="false">video_quality</string>
-    <string name="preference_download_notifications" translatable="false">download_notifications</string>
+    <string name="preference_download_network" translatable="false">download_network</string>
+    <string name="preference_video_playback_speed" translatable="false">video_playback_speed</string>
+    <string name="preference_copyright" translatable="false">copyright</string>
+    <string name="preference_imprint" translatable="false">imprint</string>
+    <string name="preference_privacy" translatable="false">privacy</string>
+    <string name="preference_terms_of_use" translatable="false">terms_of_use</string>
+    <string name="preference_open_source_licenses" translatable="false">open_source_licenses</string>
+    <string name="preference_open_source_contributors" translatable="false">open_source_contributors</string>
+    <string name="preference_build_version" translatable="false">build_version</string>
+    <string name="preference_login_out" translatable="false">login_out</string>
+
+    <string name="preference_category_video_playback_speed" translatable="false">category_video_playback_speed</string>
+    <string name="preference_category_info" translatable="false">category_info</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -171,6 +183,20 @@
     <string name="settings_title_download_network">Limit data usage for downloads</string>
     <string name="settings_summary_download_network">Only download files on Wi-Fi</string>
 
+    <string name="settings_category_video">Video</string>
+
+    <string name="settings_title_video_playback_speed">Video playback speed</string>
+    <string name="settings_summary_video_playback_speed">Default speed: %s</string>
+    <string name="settings_default_value_video_playback_speed" translatable="false">x1.0</string>
+    <string-array name="settings_values_video_playback_speed" translatable="false">
+        <item>x0.7</item>
+        <item>@string/settings_default_value_video_playback_speed</item>
+        <item>x1.3</item>
+        <item>x1.5</item>
+        <item>x1.8</item>
+        <item>x2.0</item>
+    </string-array>
+
     <string name="settings_category_about">About</string>
 
     <string name="settings_title_licenses">Open source licenses</string>
@@ -186,6 +212,10 @@
     <string name="settings_title_storage_internal">Internal</string>
     <string name="settings_title_storage_external">SD Card</string>
     <string name="settings_summary_storage">%1$s free</string>
+
+    <string name="settings_imprint">Imprint</string>
+    <string name="settings_privacy">Data Protection</string>
+    <string name="settings_terms_of_use">Terms of Use</string>
 
     <!-- -->
     <string name="lang_en">English</string>

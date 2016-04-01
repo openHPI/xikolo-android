@@ -3,6 +3,5 @@
     <string name="app_name" translatable="false">mooc.house</string>
 
     <string name="settings_copyright">&#169; 2012 &#8211; %d Hasso Plattner Institute</string>
-    <string name="settings_imprint">Imprint</string>
-    <string name="settings_privacy">Data Protection</string>
+
 </resources>
