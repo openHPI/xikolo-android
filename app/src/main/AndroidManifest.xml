@@ -175,7 +175,6 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:parentActivityName=".controller.ModuleActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppThemeDarkStatusBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
