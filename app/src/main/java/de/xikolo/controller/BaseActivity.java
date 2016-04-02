@@ -25,7 +25,6 @@ import com.path.android.jobqueue.JobManager;
 import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.data.preferences.NotificationPreferences;
 import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.model.events.NetworkStateEvent;
@@ -38,8 +37,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected GlobalApplication globalApplication;
 
     protected JobManager jobManager;
-
-    protected DatabaseHelper databaseHelper;
 
     protected ActionBar actionBar;
 
@@ -55,11 +52,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private MenuItem mediaRouteMenuItem;
 
-    private VideoCastConsumerImpl castConsumer;
-
     private boolean offlineModeToolbar;
 
-    private IntroductoryOverlay mOverlay;
+    private IntroductoryOverlay overlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         videoCastManager = VideoCastManager.getInstance();
 
-        castConsumer = new VideoCastConsumerImpl() {
+        VideoCastConsumerImpl castConsumer = new VideoCastConsumerImpl() {
             @Override
             public void onCastAvailabilityChanged(boolean castPresent) {
                 if (castPresent) {
@@ -84,7 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         };
         videoCastManager.addVideoCastConsumer(castConsumer);
 
-        if (mOverlay == null) {
+        if (overlay == null) {
             showOverlay();
         }
 
@@ -92,25 +87,25 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void showOverlay() {
-        if (mOverlay != null) {
-            mOverlay.remove();
+        if (overlay != null) {
+            overlay.remove();
         }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (mediaRouteMenuItem != null && mediaRouteMenuItem.isVisible()) {
-                    mOverlay = new IntroductoryOverlay.Builder(BaseActivity.this)
+                    overlay = new IntroductoryOverlay.Builder(BaseActivity.this)
                             .setMenuItem(mediaRouteMenuItem)
                             .setTitleText(R.string.intro_overlay_text)
                             .setSingleTime()
                             .setOnDismissed(new IntroductoryOverlay.OnOverlayDismissedListener() {
                                 @Override
                                 public void onOverlayDismissed() {
-                                    mOverlay = null;
+                                    overlay = null;
                                 }
                             })
                             .build();
-                    mOverlay.show();
+                    overlay.show();
                 }
             }
         }, 1000);
@@ -137,6 +132,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
     }
 
+    @SuppressWarnings("unused")
     protected void setActionBarElevation(float elevation) {
         if (actionBar != null && Build.VERSION.SDK_INT >= 21) {
             actionBar.setElevation(elevation);
@@ -229,6 +225,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("unused")
     protected void enableCastMediaRouterButton(boolean enable) {
         if (mediaRouteMenuItem != null) {
             mediaRouteMenuItem.setVisible(enable);

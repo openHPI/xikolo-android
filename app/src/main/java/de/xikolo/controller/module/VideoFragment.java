@@ -3,7 +3,6 @@ package de.xikolo.controller.module;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -12,9 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.cast.MediaInfo;
-import com.google.android.gms.cast.MediaMetadata;
-import com.google.android.gms.common.images.WebImage;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 
 import de.xikolo.R;
@@ -30,6 +26,7 @@ import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
+import de.xikolo.util.CastUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 import de.xikolo.view.CustomSizeImageView;
@@ -42,21 +39,19 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     public static final String KEY_MODULE = "key_module";
     public static final String KEY_ITEM = "key_item";
 
-    private VideoItemDetail itemDetail;
+    private TextView title;
+    private TextView duration;
+    private CustomSizeImageView videoThumbnail;
+    private LinearLayout linearLayoutDownloads;
+    private View container;
+    private View playButton;
 
-    private TextView mTitle;
-    private View mContainer;
-    private NotificationController mNotificationController;
-    private LinearLayout mLinearLayoutDownloads;
-    private ViewGroup mVideoPreview;
-    private CustomSizeImageView mVideoThumbnail;
-    private ViewGroup mVideoMetadata;
-    private View mPlayButton;
-    private TextView mDurationtext;
+    private NotificationController notificationController;
 
-    private ItemModel mItemModel;
+    private ItemModel itemModel;
 
-    private VideoCastManager mCastManager;
+    private VideoCastManager castManager;
+
     public VideoFragment() {
 
     }
@@ -69,9 +64,9 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemModel = new ItemModel(jobManager);
+        itemModel = new ItemModel(jobManager);
 
-        mCastManager = VideoCastManager.getInstance();
+        castManager = VideoCastManager.getInstance();
     }
 
     @Override
@@ -79,37 +74,38 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_video, container, false);
 
-        mContainer = layout.findViewById(R.id.container);
+        this.container = layout.findViewById(R.id.container);
 
-        mNotificationController = new NotificationController(layout);
+        notificationController = new NotificationController(layout);
 
-        mTitle = (TextView) layout.findViewById(R.id.textTitle);
+        title = (TextView) layout.findViewById(R.id.textTitle);
 
-        mLinearLayoutDownloads = (LinearLayout) layout.findViewById(R.id.containerDownloads);
+        linearLayoutDownloads = (LinearLayout) layout.findViewById(R.id.containerDownloads);
 
-        mVideoPreview = (ViewGroup) layout.findViewById(R.id.videoPreview);
-        mVideoThumbnail = (CustomSizeImageView) layout.findViewById(R.id.videoThumbnail);
-        mVideoMetadata = (ViewGroup) layout.findViewById(R.id.videoMetadata);
+        videoThumbnail = (CustomSizeImageView) layout.findViewById(R.id.videoThumbnail);
 
-        mPlayButton = layout.findViewById(R.id.playButton);
-        mDurationtext = (TextView) layout.findViewById(R.id.durationText);
+        ViewGroup videoMetadata;
+        videoMetadata = (ViewGroup) layout.findViewById(R.id.videoMetadata);
 
-        mContainer.setVisibility(View.GONE);
+        playButton = layout.findViewById(R.id.playButton);
+        duration = (TextView) layout.findViewById(R.id.durationText);
+
+        this.container.setVisibility(View.GONE);
 
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             Display display = getActivity().getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            mVideoThumbnail.setDimensions(size.x, size.x / 16 * 9);
+            videoThumbnail.setDimensions(size.x, size.x / 16 * 9);
         } else {
             Display display = getActivity().getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            mVideoThumbnail.setDimensions((int) (size.x * 0.6), (int) (size.x * 0.6 / 16 * 9));
+            videoThumbnail.setDimensions((int) (size.x * 0.6), (int) (size.x * 0.6 / 16 * 9));
 
-            ViewGroup.LayoutParams params_meta = mVideoMetadata.getLayoutParams();
+            ViewGroup.LayoutParams params_meta = videoMetadata.getLayoutParams();
             params_meta.width = (int) (size.x * 0.6);
-            mVideoMetadata.setLayoutParams(params_meta);
+            videoMetadata.setLayoutParams(params_meta);
         }
 
         if (savedInstanceState != null) {
@@ -137,10 +133,10 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                 mItem = item;
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.detail == null) {
-                    mNotificationController.setTitle(R.string.notification_no_network);
-                    mNotificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
-                    mNotificationController.setNotificationVisible(true);
-                    mNotificationController.setOnClickListener(new View.OnClickListener() {
+                    notificationController.setTitle(R.string.notification_no_network);
+                    notificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
+                    notificationController.setNotificationVisible(true);
+                    notificationController.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             requestVideoDetails(true);
@@ -154,8 +150,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             @Override
             protected void onError(ErrorCode errorCode) {
                 ToastUtil.show(R.string.error);
-                mNotificationController.setInvisible();
-                mContainer.setVisibility(View.GONE);
+                notificationController.setInvisible();
+                container.setVisibility(View.GONE);
             }
 
             @Override
@@ -166,15 +162,15 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             }
         };
 
-        mContainer.setVisibility(View.GONE);
-        mNotificationController.setProgressVisible(true);
-        mItemModel.getItemDetail(result, mCourse, mModule, mItem, Item.TYPE_VIDEO);
+        container.setVisibility(View.GONE);
+        notificationController.setProgressVisible(true);
+        itemModel.getItemDetail(result, mCourse, mModule, mItem, Item.TYPE_VIDEO);
     }
 
     private void setupView() {
         if (isAdded()) {
-            mNotificationController.setInvisible();
-            mContainer.setVisibility(View.VISIBLE);
+            notificationController.setInvisible();
+            container.setVisibility(View.VISIBLE);
 
             if (mItem.detail == null) {
                 throw new NullPointerException("Item Detail is null for Course " + mCourse.name + " (" + mCourse.id + ")" +
@@ -186,40 +182,40 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                         " and Item " + mItem.title + " (" + mItem.id + ")");
             }
 
-            ImageController.load(mItem.detail.stream.poster, mVideoThumbnail,
+            ImageController.load(mItem.detail.stream.poster, videoThumbnail,
                     ImageController.DEFAULT_PLACEHOLDER,
-                    mVideoThumbnail.getForcedWidth(), mVideoThumbnail.getForcedHeight());
+                    videoThumbnail.getForcedWidth(), videoThumbnail.getForcedHeight());
 
-            mTitle.setText(mItem.detail.title);
+            title.setText(mItem.detail.title);
 
-            mLinearLayoutDownloads.removeAllViews();
+            linearLayoutDownloads.removeAllViews();
             DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
-            mLinearLayoutDownloads.addView(hdVideo.getView());
+            linearLayoutDownloads.addView(hdVideo.getView());
             DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
-            mLinearLayoutDownloads.addView(sdVideo.getView());
+            linearLayoutDownloads.addView(sdVideo.getView());
             DownloadViewController slides = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
-            mLinearLayoutDownloads.addView(slides.getView());
+            linearLayoutDownloads.addView(slides.getView());
 //        DownloadViewController transcript = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
-//        mLinearLayoutDownloads.addView(transcript.getView());
+//        linearLayoutDownloads.addView(transcript.getView());
 
-            mDurationtext.setText(getString(R.string.duration, Integer.valueOf(mItem.detail.minutes), Integer.valueOf(mItem.detail.seconds)));
+            duration.setText(getString(R.string.duration, Integer.valueOf(mItem.detail.minutes), Integer.valueOf(mItem.detail.seconds)));
 
-            mPlayButton.setOnClickListener(new View.OnClickListener() {
+            playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mCastManager.isConnected()) {
-                        mItemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
+                    if (castManager.isConnected()) {
+                        itemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
                             @Override
                             protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
                                 mItem.detail = result;
                                 setCurrentCourse();
-                                mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), result.progress, true);
+                                castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(mItem), result.progress, true);
                             }
 
                             @Override
                             protected void onError(ErrorCode errorCode) {
                                 setCurrentCourse();
-                                mCastManager.startVideoCastControllerActivity(getActivity(), buildCastMetadata(), 0, true);
+                                castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(mItem), 0, true);
                             }
                         }, mItem.detail);
                     } else {
@@ -234,23 +230,6 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                 }
             });
         }
-    }
-
-    private MediaInfo buildCastMetadata() {
-        MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
-        mediaMetadata.putString(MediaMetadata.KEY_TITLE, mItem.title);
-        WebImage image = new WebImage(Uri.parse(mItem.detail.stream.poster));
-        // small size image used for notification, mini­controller and Lock Screen on JellyBean
-        mediaMetadata.addImage(image);
-        // large image, used on the Cast Player page and Lock Screen on KitKat
-        mediaMetadata.addImage(image);
-        MediaInfo mediaInfo = new MediaInfo.Builder(
-                mItem.detail.stream.hd_url)
-                .setContentType("video/mp4")
-                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-                .setMetadata(mediaMetadata)
-                .build();
-        return mediaInfo;
     }
 
     private void setCurrentCourse() {

@@ -22,9 +22,8 @@
             android:layout_height="52dp"
             android:layout_alignParentTop="true"
             android:background="@drawable/gradient_black_transparent_top"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:paddingTop="4dp">
 
             <RelativeLayout
@@ -62,6 +61,20 @@
 
             </RelativeLayout>
 
+            <android.support.v7.app.MediaRouteButton
+                android:id="@+id/video_media_route_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="6dp"
+                android:mediaRouteTypes="user"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:padding="0dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark"
+                android:visibility="gone" />
+
         </RelativeLayout>
 
         <de.xikolo.view.CustomFontTextView
@@ -83,9 +96,8 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/gradient_black_transparent_bottom"
             android:paddingBottom="4dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin">
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <LinearLayout
                 android:layout_width="fill_parent"

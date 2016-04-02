@@ -6,15 +6,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.MediaRouteButton;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
+
+import com.google.android.gms.cast.ApplicationMetadata;
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
 
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
@@ -26,19 +30,21 @@ import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
+import de.xikolo.util.CastUtil;
 
 public class VideoActivity extends BaseActivity {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
 
-    private VideoController mVideoController;
-    private Course mCourse;
-    private Module mModule;
-    private Item<VideoItemDetail> mItem;
+    private VideoController videoController;
+
+    private Item<VideoItemDetail> item;
+
     private ItemModel itemModel;
 
-    private View mVideoMetadataView;
-    private TextView mVideoTitleText;
+    private View videoMetadataView;
+
+    private MediaRouteButton mediaRouteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +61,11 @@ public class VideoActivity extends BaseActivity {
 
         itemModel = new ItemModel(jobManager);
 
-        mVideoMetadataView = findViewById(R.id.videoMetadata);
-        mVideoTitleText = (TextView) findViewById(R.id.textTitle);
+        videoMetadataView = findViewById(R.id.videoMetadata);
+        TextView videoTitleText = (TextView) findViewById(R.id.textTitle);
 
-        mVideoController = new VideoController(this, videoContainer);
-        mVideoController.setControllerListener(new VideoController.ControllerListener() {
+        videoController = new VideoController(this, videoContainer);
+        videoController.setControllerListener(new VideoController.ControllerListener() {
             @Override
             public void onControllerShow() {
                 showSystemBars();
@@ -71,22 +77,27 @@ public class VideoActivity extends BaseActivity {
             }
         });
 
+        Course course;
+        Module module;
+
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(VideoFragment.KEY_COURSE) || !b.containsKey(VideoFragment.KEY_MODULE) || !b.containsKey(VideoFragment.KEY_ITEM)) {
             throw new WrongParameterException();
         } else {
-            mCourse = getIntent().getExtras().getParcelable(VideoFragment.KEY_COURSE);
-            mModule = getIntent().getExtras().getParcelable(VideoFragment.KEY_MODULE);
-            mItem = getIntent().getExtras().getParcelable(VideoFragment.KEY_ITEM);
+            course = getIntent().getExtras().getParcelable(VideoFragment.KEY_COURSE);
+            module = getIntent().getExtras().getParcelable(VideoFragment.KEY_MODULE);
+            item = getIntent().getExtras().getParcelable(VideoFragment.KEY_ITEM);
 
             itemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
                 @Override
                 protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
-                    mItem.detail = result;
+                    item.detail = result;
                 }
-            }, mItem.detail);
+            }, item.detail);
 
-            mVideoTitleText.setText(mItem.detail.title);
+            if (videoTitleText != null) {
+                videoTitleText.setText(item.detail.title);
+            }
         }
 
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
@@ -94,11 +105,11 @@ public class VideoActivity extends BaseActivity {
             public void onSystemUiVisibilityChange(int visibility) {
                 if (Build.VERSION.SDK_INT >= 17) {
                     if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                        mVideoController.show();
+                        videoController.show();
                     }
                 } else {
                     if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
-                        mVideoController.show();
+                        videoController.show();
                     }
                 }
             }
@@ -108,11 +119,43 @@ public class VideoActivity extends BaseActivity {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
         }
 
+        mediaRouteButton = (MediaRouteButton) findViewById(R.id.video_media_route_button);
+        if (mediaRouteButton != null) {
+            VideoCastManager.getInstance().addMediaRouterButton(mediaRouteButton);
+            Configuration config = getResources().getConfiguration();
+            mediaRouteButton.setVisibility(VideoCastManager.getInstance().isAnyRouteAvailable()
+                    && config.orientation == Configuration.ORIENTATION_LANDSCAPE
+                    ? View.VISIBLE : View.GONE);
+        }
+
+        VideoCastConsumerImpl castConsumer = new VideoCastConsumerImpl() {
+            @Override
+            public void onApplicationConnected(ApplicationMetadata appMetadata, String sessionId, boolean wasLaunched) {
+                if (videoController != null) {
+                    videoController.pause();
+                    VideoCastManager.getInstance()
+                            .startVideoCastControllerActivity(VideoActivity.this, CastUtil.buildCastMetadata(item), item.detail.progress, true);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCastAvailabilityChanged(boolean castPresent) {
+                if (mediaRouteButton != null) {
+                    Configuration config = getResources().getConfiguration();
+                    mediaRouteButton.setVisibility(castPresent
+                            && config.orientation == Configuration.ORIENTATION_LANDSCAPE
+                            ? View.VISIBLE : View.GONE);
+                }
+            }
+        };
+        videoCastManager.addVideoCastConsumer(castConsumer);
+
         hideSystemBars();
 
         updateVideoView(getResources().getConfiguration().orientation);
 
-        mVideoController.setupVideo(mCourse, mModule, mItem);
+        videoController.setupVideo(course, module, item);
     }
 
     private void updateVideoView(int orientation) {
@@ -123,11 +166,16 @@ public class VideoActivity extends BaseActivity {
 
                 actionBar.hide();
 
+                if (mediaRouteButton != null) {
+                    mediaRouteButton.setVisibility(VideoCastManager.getInstance().isAnyRouteAvailable()
+                            ? View.VISIBLE : View.GONE);
+                }
+
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
                 display.getRealSize(size); // API 17
 
-                View videoContainer = mVideoController.getVideoContainer();
+                View videoContainer = videoController.getVideoContainer();
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) videoContainer.getLayoutParams();
                 params.height = size.y;
                 params.setMargins(0, 0, 0, 0);
@@ -146,16 +194,20 @@ public class VideoActivity extends BaseActivity {
                 getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
                 int systemBarHeight = size.y - displaymetrics.heightPixels;
 
-                mVideoController.getControllerView().setPadding(0,
+                videoController.getControllerView().setPadding(0,
                         videoOffset > statusBarHeight ? videoOffset : statusBarHeight,
                         size.x - displaymetrics.widthPixels,
                         videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
 
-                mVideoMetadataView.setVisibility(View.GONE);
-            } else {
+                videoMetadataView.setVisibility(View.GONE);
+            } else { // Portrait
                 layout.setFitsSystemWindows(false);
 
                 actionBar.show();
+
+                if (mediaRouteButton != null) {
+                    mediaRouteButton.setVisibility(View.GONE);
+                }
 
                 DisplayMetrics displaymetrics = new DisplayMetrics();
                 getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -166,16 +218,16 @@ public class VideoActivity extends BaseActivity {
                     actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, displaymetrics);
                 }
 
-                View videoContainer = mVideoController.getVideoContainer();
+                View videoContainer = videoController.getVideoContainer();
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) videoContainer.getLayoutParams();
                 params.height = (int) Math.ceil(displaymetrics.widthPixels / 16. * 9.);
                 params.setMargins(0, actionBarHeight, 0, 0);
                 videoContainer.setLayoutParams(params);
                 videoContainer.requestLayout();
 
-                mVideoController.getControllerView().setPadding(0, 0, 0, 0);
+                videoController.getControllerView().setPadding(0, 0, 0, 0);
 
-                mVideoMetadataView.setVisibility(View.VISIBLE);
+                videoMetadataView.setVisibility(View.VISIBLE);
             }
         } else if (layout != null) {
             layout.setFitsSystemWindows(false);
@@ -223,13 +275,6 @@ public class VideoActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        enableCastMediaRouterButton(false);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar module clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -251,9 +296,9 @@ public class VideoActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
 
-        if (mVideoController != null) {
-            mVideoController.pause();
-            VideoItemDetail itemDetail = mVideoController.getVideoItemDetail();
+        if (videoController != null) {
+            videoController.pause();
+            VideoItemDetail itemDetail = videoController.getVideoItemDetail();
             if (itemDetail != null) {
                 itemModel.updateLocalVideoProgress(new Result<Void>() {
                 }, itemDetail);
@@ -265,7 +310,7 @@ public class VideoActivity extends BaseActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        mVideoController.show();
+        videoController.show();
 
         updateVideoView(newConfig.orientation);
     }
