@@ -187,27 +187,28 @@ public class VideoController {
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 switch (what) {
                     case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_UNKNOWN appeared");
+                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_UNKNOWN appeared (" + MediaPlayer.MEDIA_ERROR_UNKNOWN + ")");
                         break;
                     case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_SERVER_DIED appeared");
+                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_SERVER_DIED appeared (" + MediaPlayer.MEDIA_ERROR_SERVER_DIED + ")");
                         break;
                 }
-                switch (extra) {
-                    case MediaPlayer.MEDIA_ERROR_IO:
-                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_IO appeared");
-                        break;
-                    case MediaPlayer.MEDIA_ERROR_MALFORMED:
-                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_MALFORMED appeared");
-                        break;
-                    case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
-                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_UNSUPPORTED appeared");
-                        break;
-                    case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
-                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_TIMED_OUT appeared");
-                        break;
+                if (Build.VERSION.SDK_INT >= 17) {
+                    switch (extra) {
+                        case MediaPlayer.MEDIA_ERROR_IO:
+                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_IO appeared (" + MediaPlayer.MEDIA_ERROR_IO + ")");
+                            break;
+                        case MediaPlayer.MEDIA_ERROR_MALFORMED:
+                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_MALFORMED appeared (" + MediaPlayer.MEDIA_ERROR_MALFORMED + ")");
+                            break;
+                        case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
+                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_UNSUPPORTED appeared (" + MediaPlayer.MEDIA_ERROR_UNSUPPORTED + ")");
+                            break;
+                        case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
+                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_TIMED_OUT appeared (" + MediaPlayer.MEDIA_ERROR_TIMED_OUT + ")");
+                            break;
+                    }
                 }
-                // TODO proper error handling
                 error = true;
                 videoProgress.setVisibility(View.GONE);
                 hide();
@@ -216,6 +217,44 @@ public class VideoController {
                 return true;
             }
         });
+        if (Build.VERSION.SDK_INT >= 17) {
+            videoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                @Override
+                public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                    switch (what) {
+                        case MediaPlayer.MEDIA_INFO_UNKNOWN:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_UNKNOWN notified (" + MediaPlayer.MEDIA_INFO_UNKNOWN + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING notified (" + MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START notified (" + MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_BUFFERING_START notified (" + MediaPlayer.MEDIA_INFO_BUFFERING_START + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_BUFFERING_END notified (" + MediaPlayer.MEDIA_INFO_BUFFERING_END + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING notified (" + MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_NOT_SEEKABLE:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_NOT_SEEKABLE notified (" + MediaPlayer.MEDIA_INFO_NOT_SEEKABLE + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_METADATA_UPDATE:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_METADATA_UPDATE notified (" + MediaPlayer.MEDIA_INFO_METADATA_UPDATE + ")");
+                            break;
+                    }
+                    if (extra != 0) {
+                        Log.i(TAG, "MediaPlayer Info Extra " + extra + " notified");
+                    }
+
+                    return true;
+                }
+            });
+        }
 
         seekBarUpdater = new Runnable() {
             @Override
@@ -413,7 +452,7 @@ public class VideoController {
         videoItemDetails = video;
 
         int connectivityStatus = NetworkUtil.getConnectivityStatus(activity);
-        AppPreferences preferences =  GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
+        AppPreferences preferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
 
         if (connectivityStatus == NetworkUtil.TYPE_MOBILE && preferences.isVideoQualityLimitedOnMobile()) {
             mVideoMode = VideoMode.SD;
@@ -503,7 +542,7 @@ public class VideoController {
     }
 
     public VideoItemDetail getVideoItemDetail() {
-        if(videoItemDetails != null) {
+        if (videoItemDetails != null) {
             return videoItemDetails.detail;
         }
         return null;
