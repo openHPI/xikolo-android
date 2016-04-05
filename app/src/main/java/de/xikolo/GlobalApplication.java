@@ -52,15 +52,19 @@ public class GlobalApplication extends Application {
     }
 
     public DataAccessFactory getDataAccessFactory() {
-        if (dataAccessFactory == null) {
-            dataAccessFactory = new DataAccessFactory(databaseHelper);
+        synchronized (GlobalApplication.class) {
+            if (dataAccessFactory == null) {
+                dataAccessFactory = new DataAccessFactory(databaseHelper);
+            }
         }
         return dataAccessFactory;
     }
 
     public PreferencesFactory getPreferencesFactory() {
-        if (preferencesFactory == null) {
-            preferencesFactory = new PreferencesFactory(this);
+        synchronized (GlobalApplication.class) {
+            if (preferencesFactory == null) {
+                preferencesFactory = new PreferencesFactory(this);
+            }
         }
         return preferencesFactory;
     }

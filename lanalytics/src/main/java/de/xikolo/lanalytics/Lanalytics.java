@@ -3,10 +3,40 @@ package de.xikolo.lanalytics;
 import android.content.Context;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import de.xikolo.lanalytics.util.ContextUtil;
+
 public class Lanalytics {
+
+    private static Lanalytics instance;
+
+    private Context context;
+
+    private Tracker defaultTracker;
+
+    public Lanalytics getInstance(Context context) {
+        synchronized (Lanalytics.class) {
+            if (instance == null) {
+                instance = new Lanalytics(context);
+            }
+        }
+        return instance;
+    }
+
+    private Lanalytics(Context context) {
+        this.context = context;
+    }
+
+    public Tracker getDefaultTracker() {
+        synchronized (Lanalytics.class) {
+            if (defaultTracker == null) {
+                defaultTracker = new Tracker();
+            }
+        }
+        return defaultTracker;
+    }
 
     public static class Event {
 
@@ -22,6 +52,8 @@ public class Lanalytics {
 
         private final String timestamp;
 
+        private final boolean onlyWifi;
+
         private Event(Builder builder) {
             userId = builder.userId;
             verb = builder.verb;
@@ -29,6 +61,7 @@ public class Lanalytics {
             result = Collections.unmodifiableMap(builder.resultMap);
             context = Collections.unmodifiableMap(builder.contextMap);
             timestamp = builder.timestamp;
+            onlyWifi = builder.onlyWifi;
         }
 
         public String getUser() {
@@ -69,9 +102,16 @@ public class Lanalytics {
 
             private String timestamp;
 
+            private boolean onlyWifi;
+
             public Builder(Context context) {
-                resultMap = new HashMap<>();
-                contextMap = new HashMap<>();
+                resultMap = new LinkedHashMap<>();
+                contextMap = new LinkedHashMap<>();
+
+                // TODO set timestamp
+                timestamp = "";
+
+                contextMap.putAll(ContextUtil.getDefaultContextData(context));
             }
 
             public Builder setUser(String id) {
@@ -109,8 +149,8 @@ public class Lanalytics {
                 return this;
             }
 
-            public Builder setTimestamp(String timestamp) {
-                this.timestamp = timestamp;
+            public Builder setOnlyWifi(boolean onlyWifi) {
+                this.onlyWifi = onlyWifi;
                 return this;
             }
 

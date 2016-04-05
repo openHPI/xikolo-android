@@ -115,5 +115,7 @@ dependencies {
     compile "com.android.support:design:${supportVersion}"
     compile "com.android.support:preference-v14:${supportVersion}"
 
+    compile project(":lanalytics")
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
