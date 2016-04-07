@@ -98,6 +98,8 @@
 
     <!-- -->
     <string name="error">An error occurred, please try again later.</string>
+    <string name="error_plain">An error occurred.</string>
+    <string name="trying_reconnect">Trying to reconnect&#8230;</string>
     <string name="error_email">Please insert valid Email address.</string>
     <string name="error_password">Please insert valid Password.</string>
     <string name="login">Log in</string>

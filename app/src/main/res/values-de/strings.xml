@@ -70,7 +70,9 @@
     <string name="title_activity_module">Module</string>
 
     <!-- -->
-    <string name="error">An error occurred, please try again later.</string>
+    <string name="error">Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.</string>
+    <string name="error_plain">Ein Fehler ist aufgetreten.</string>
+    <string name="trying_reconnect">Verbindung wird wiederhergestellt&#8230;</string>
     <string name="error_email">Bitte geben Sie eine E-Mail-Adresse ein.</string>
     <string name="error_password">Bitte geben Sie ein Passwort ein.</string>
     <string name="login">Anmelden</string>

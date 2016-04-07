@@ -24,7 +24,6 @@ import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.preferences.AppPreferences;
-import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
@@ -55,9 +54,6 @@ public class VideoController {
     private View videoProgress;
 
     private View videoController;
-
-    private View videoHeader;
-    private View videoFooter;
 
     private CustomFontTextView playButton;
     private TextView retryButton;
@@ -92,8 +88,6 @@ public class VideoController {
 
     private MediaPlayer mediaPlayer;
 
-    private boolean error = false;
-
     private enum VideoMode {
         SD, HD
     }
@@ -109,9 +103,6 @@ public class VideoController {
 
         videoProgress = this.videoContainer.findViewById(R.id.videoProgress);
 
-        videoHeader = this.videoContainer.findViewById(R.id.videoHeader);
-
-        videoFooter = this.videoContainer.findViewById(R.id.videoFooter);
         seekBar = (SeekBar) this.videoContainer.findViewById(R.id.videoSeekBar);
         currentTime = (TextView) videoController.findViewById(R.id.currentTime);
         totalTime = (TextView) videoController.findViewById(R.id.totalTime);
@@ -147,6 +138,7 @@ public class VideoController {
                 mediaPlayer = mp;
 
                 videoProgress.setVisibility(View.GONE);
+                videoWarning.setVisibility(View.GONE);
                 seekBar.setMax(videoView.getDuration());
                 show();
 
@@ -209,10 +201,16 @@ public class VideoController {
                             break;
                     }
                 }
-                error = true;
-                videoProgress.setVisibility(View.GONE);
-                hide();
-                ToastUtil.show(R.string.error);
+
+                saveCurrentPosition(mp.getCurrentPosition());
+                if (extra == MediaPlayer.MEDIA_ERROR_IO) {
+                    videoProgress.setVisibility(View.VISIBLE);
+                    ToastUtil.show(R.string.trying_reconnect);
+                    updateVideo(course, module, videoItemDetails);
+                } else {
+                    videoWarning.setVisibility(View.VISIBLE);
+                    videoWarningText.setText(activity.getString(R.string.error_plain));
+                }
 
                 return true;
             }
@@ -411,16 +409,14 @@ public class VideoController {
     }
 
     public void show(int timeout) {
-        if (!error) {
-            videoController.setVisibility(View.VISIBLE);
-            if (controllerListener != null) {
-                controllerListener.onControllerShow();
-            }
-            Message msg = handler.obtainMessage(FADE_OUT);
-            if (timeout != 0) {
-                handler.removeMessages(FADE_OUT);
-                handler.sendMessageDelayed(msg, timeout);
-            }
+        videoController.setVisibility(View.VISIBLE);
+        if (controllerListener != null) {
+            controllerListener.onControllerShow();
+        }
+        Message msg = handler.obtainMessage(FADE_OUT);
+        if (timeout != 0) {
+            handler.removeMessages(FADE_OUT);
+            handler.sendMessageDelayed(msg, timeout);
         }
     }
 
@@ -517,24 +513,14 @@ public class VideoController {
         }
     }
 
-    public void setDimensions(int w, int h) {
-        videoView.setDimensions(w, h);
-    }
-
-    public void enableHeader() {
-        videoHeader.setVisibility(View.VISIBLE);
-    }
-
-    public void disableHeader() {
-        videoHeader.setVisibility(View.GONE);
+    public void saveCurrentPosition(int position) {
+        if (videoItemDetails != null) {
+            videoItemDetails.detail.progress = position;
+        }
     }
 
     public View getControllerView() {
         return videoController;
-    }
-
-    public View getVideoView() {
-        return videoView;
     }
 
     public View getVideoContainer() {
