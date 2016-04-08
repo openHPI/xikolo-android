@@ -1,2 +1,2 @@
-include ':lanalytics'
 include 'app'
+include ':lanalytics'
