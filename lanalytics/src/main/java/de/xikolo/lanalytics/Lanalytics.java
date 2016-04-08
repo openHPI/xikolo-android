@@ -1,13 +1,25 @@
 package de.xikolo.lanalytics;
 
 import android.content.Context;
+import android.database.Cursor;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
+import de.xikolo.lanalytics.database.DatabaseHelper;
+import de.xikolo.lanalytics.database.Entity;
 import de.xikolo.lanalytics.util.ContextUtil;
+import de.xikolo.lanalytics.util.DateUtil;
 
+@SuppressWarnings("unused")
 public class Lanalytics {
 
     private static Lanalytics instance;
@@ -15,6 +27,8 @@ public class Lanalytics {
     private Context context;
 
     private Tracker defaultTracker;
+
+    private DatabaseHelper databaseHelper;
 
     public Lanalytics getInstance(Context context) {
         synchronized (Lanalytics.class) {
@@ -27,34 +41,38 @@ public class Lanalytics {
 
     private Lanalytics(Context context) {
         this.context = context;
+        this.databaseHelper = new DatabaseHelper(context);
     }
 
     public Tracker getDefaultTracker() {
         synchronized (Lanalytics.class) {
             if (defaultTracker == null) {
-                defaultTracker = new Tracker();
+                defaultTracker = new Tracker(databaseHelper);
             }
         }
         return defaultTracker;
     }
 
-    public static class Event {
+    public static class Event implements Entity {
 
-        private final String userId;
+        public final String id;
 
-        private final String verb;
+        public final String userId;
 
-        private final String resourceId;
+        public final String verb;
 
-        private final Map<String, String> result;
+        public final String resourceId;
 
-        private final Map<String, String> context;
+        public final Map<String, String> result;
 
-        private final String timestamp;
+        public final Map<String, String> context;
 
-        private final boolean onlyWifi;
+        public final String timestamp;
+
+        public final boolean onlyWifi;
 
         private Event(Builder builder) {
+            id = builder.id;
             userId = builder.userId;
             verb = builder.verb;
             resourceId = builder.resourceId;
@@ -64,31 +82,14 @@ public class Lanalytics {
             onlyWifi = builder.onlyWifi;
         }
 
-        public String getUser() {
-            return userId;
-        }
-
-        public String getVerb() {
-            return verb;
-        }
-
-        public String getResource() {
-            return resourceId;
-        }
-
-        public Map<String, String> getResult() {
-            return result;
-        }
-
-        public Map<String, String> getContext() {
-            return context;
-        }
-
-        public String getTimestamp() {
-            return timestamp;
+        @Override
+        public String getId() {
+            return id;
         }
 
         public static class Builder {
+
+            private String id;
 
             private String userId;
 
@@ -104,12 +105,28 @@ public class Lanalytics {
 
             private boolean onlyWifi;
 
+            public Builder(Cursor cursor) {
+                Type typeOfHashMap = new TypeToken<LinkedHashMap<String, String>>() {}.getType();
+                Gson gson = new GsonBuilder().create();
+
+                int i = 0;
+                id = cursor.getString(i++);
+                userId = cursor.getString(i++);
+                verb = cursor.getString(i++);
+                resourceId = cursor.getString(i++);
+                resultMap = gson.fromJson(cursor.getString(i++), typeOfHashMap);
+                contextMap = gson.fromJson(cursor.getString(i++), typeOfHashMap);
+                timestamp = cursor.getString(i++);
+                onlyWifi = cursor.getInt(i) != 0;
+            }
+
             public Builder(Context context) {
                 resultMap = new LinkedHashMap<>();
                 contextMap = new LinkedHashMap<>();
 
-                // TODO set timestamp
-                timestamp = "";
+                id = UUID.randomUUID().toString();
+
+                timestamp = DateUtil.format(new Date());
 
                 contextMap.putAll(ContextUtil.getDefaultContextData(context));
             }
@@ -146,6 +163,11 @@ public class Lanalytics {
 
             public Builder putAllContexts(Map<String, String> results) {
                 this.contextMap.putAll(results);
+                return this;
+            }
+
+            public Builder setTimestamp(String timestamp) {
+                this.timestamp = timestamp;
                 return this;
             }
 
