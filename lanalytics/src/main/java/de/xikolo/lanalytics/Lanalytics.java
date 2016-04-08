@@ -22,6 +22,8 @@ import de.xikolo.lanalytics.util.DateUtil;
 @SuppressWarnings("unused")
 public class Lanalytics {
 
+    public static final String TAG = Lanalytics.class.getSimpleName();
+
     private static Lanalytics instance;
 
     private Context context;
@@ -30,7 +32,7 @@ public class Lanalytics {
 
     private DatabaseHelper databaseHelper;
 
-    public Lanalytics getInstance(Context context) {
+    public static Lanalytics getInstance(Context context) {
         synchronized (Lanalytics.class) {
             if (instance == null) {
                 instance = new Lanalytics(context);
@@ -47,7 +49,7 @@ public class Lanalytics {
     public Tracker getDefaultTracker() {
         synchronized (Lanalytics.class) {
             if (defaultTracker == null) {
-                defaultTracker = new Tracker(databaseHelper);
+                defaultTracker = new Tracker(context, databaseHelper);
             }
         }
         return defaultTracker;
@@ -89,7 +91,7 @@ public class Lanalytics {
 
         public static class Builder {
 
-            private String id;
+            private transient String id;
 
             private String userId;
 
@@ -103,7 +105,7 @@ public class Lanalytics {
 
             private String timestamp;
 
-            private boolean onlyWifi;
+            private transient boolean onlyWifi;
 
             public Builder(Cursor cursor) {
                 Type typeOfHashMap = new TypeToken<LinkedHashMap<String, String>>() {}.getType();
@@ -129,6 +131,8 @@ public class Lanalytics {
                 timestamp = DateUtil.format(new Date());
 
                 contextMap.putAll(ContextUtil.getDefaultContextData(context));
+
+                onlyWifi = false;
             }
 
             public Builder setUser(String id) {

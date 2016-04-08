@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
 import de.xikolo.controller.helper.CacheController;
@@ -23,10 +24,12 @@ import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
+import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.CastUtil;
+import de.xikolo.util.LanalyticsUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 import de.xikolo.view.CustomSizeImageView;
@@ -219,6 +222,11 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                             }
                         }, mItem.detail);
                     } else {
+                        LanalyticsUtil.track(LanalyticsUtil.newBuilder(GlobalApplication.getInstance())
+                                .setVerb(LanalyticsUtil.VERB_VIDEO_PLAY)
+                                .setResource(mItem.id)
+                                .build());
+
                         Intent intent = new Intent(getActivity(), VideoActivity.class);
                         Bundle b = new Bundle();
                         b.putParcelable(KEY_COURSE, mCourse);

@@ -8,7 +8,7 @@ import java.util.Locale;
 @SuppressWarnings("unused")
 public class DateUtil {
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
+    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
     public static Date parse(String date) {
         SimpleDateFormat dateFm = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
