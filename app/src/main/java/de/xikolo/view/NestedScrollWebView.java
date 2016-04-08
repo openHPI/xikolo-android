@@ -39,16 +39,21 @@ public class NestedScrollWebView extends WebView implements NestedScrollingChild
     private NestedScrollingChildHelper mChildHelper;
 
     public NestedScrollWebView(Context context) {
-        this(context, null);
+        super(context);
+        init();
     }
 
     public NestedScrollWebView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        init();
     }
 
     public NestedScrollWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
+    }
 
+    private void init() {
         mChildHelper = new NestedScrollingChildHelper(this);
         setNestedScrollingEnabled(true);
     }
@@ -99,6 +104,7 @@ public class NestedScrollWebView extends WebView implements NestedScrollingChild
                 trackedEvent.recycle();
                 result = super.onTouchEvent(trackedEvent);
                 break;
+            case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 stopNestedScroll();

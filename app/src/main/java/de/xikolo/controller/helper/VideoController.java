@@ -24,7 +24,6 @@ import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.preferences.AppPreferences;
-import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
@@ -55,9 +54,6 @@ public class VideoController {
     private View videoProgress;
 
     private View videoController;
-
-    private View videoHeader;
-    private View videoFooter;
 
     private CustomFontTextView playButton;
     private TextView retryButton;
@@ -92,8 +88,6 @@ public class VideoController {
 
     private MediaPlayer mediaPlayer;
 
-    private boolean error = false;
-
     private enum VideoMode {
         SD, HD
     }
@@ -109,9 +103,6 @@ public class VideoController {
 
         videoProgress = this.videoContainer.findViewById(R.id.videoProgress);
 
-        videoHeader = this.videoContainer.findViewById(R.id.videoHeader);
-
-        videoFooter = this.videoContainer.findViewById(R.id.videoFooter);
         seekBar = (SeekBar) this.videoContainer.findViewById(R.id.videoSeekBar);
         currentTime = (TextView) videoController.findViewById(R.id.currentTime);
         totalTime = (TextView) videoController.findViewById(R.id.totalTime);
@@ -147,6 +138,7 @@ public class VideoController {
                 mediaPlayer = mp;
 
                 videoProgress.setVisibility(View.GONE);
+                videoWarning.setVisibility(View.GONE);
                 seekBar.setMax(videoView.getDuration());
                 show();
 
@@ -187,35 +179,80 @@ public class VideoController {
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 switch (what) {
                     case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_UNKNOWN appeared");
+                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_UNKNOWN appeared (" + MediaPlayer.MEDIA_ERROR_UNKNOWN + ")");
                         break;
                     case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_SERVER_DIED appeared");
+                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_SERVER_DIED appeared (" + MediaPlayer.MEDIA_ERROR_SERVER_DIED + ")");
                         break;
                 }
-                switch (extra) {
-                    case MediaPlayer.MEDIA_ERROR_IO:
-                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_IO appeared");
-                        break;
-                    case MediaPlayer.MEDIA_ERROR_MALFORMED:
-                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_MALFORMED appeared");
-                        break;
-                    case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
-                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_UNSUPPORTED appeared");
-                        break;
-                    case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
-                        Log.w(TAG, "MediaPlayer.MEDIA_ERROR_TIMED_OUT appeared");
-                        break;
+                if (Build.VERSION.SDK_INT >= 17) {
+                    switch (extra) {
+                        case MediaPlayer.MEDIA_ERROR_IO:
+                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_IO appeared (" + MediaPlayer.MEDIA_ERROR_IO + ")");
+                            break;
+                        case MediaPlayer.MEDIA_ERROR_MALFORMED:
+                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_MALFORMED appeared (" + MediaPlayer.MEDIA_ERROR_MALFORMED + ")");
+                            break;
+                        case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
+                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_UNSUPPORTED appeared (" + MediaPlayer.MEDIA_ERROR_UNSUPPORTED + ")");
+                            break;
+                        case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
+                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_TIMED_OUT appeared (" + MediaPlayer.MEDIA_ERROR_TIMED_OUT + ")");
+                            break;
+                    }
                 }
-                // TODO proper error handling
-                error = true;
-                videoProgress.setVisibility(View.GONE);
-                hide();
-                ToastUtil.show(R.string.error);
+
+                saveCurrentPosition(mp.getCurrentPosition());
+                if (extra == MediaPlayer.MEDIA_ERROR_IO) {
+                    videoProgress.setVisibility(View.VISIBLE);
+                    ToastUtil.show(R.string.trying_reconnect);
+                    updateVideo(course, module, videoItemDetails);
+                } else {
+                    videoWarning.setVisibility(View.VISIBLE);
+                    videoWarningText.setText(activity.getString(R.string.error_plain));
+                }
 
                 return true;
             }
         });
+        if (Build.VERSION.SDK_INT >= 17) {
+            videoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                @Override
+                public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                    switch (what) {
+                        case MediaPlayer.MEDIA_INFO_UNKNOWN:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_UNKNOWN notified (" + MediaPlayer.MEDIA_INFO_UNKNOWN + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING notified (" + MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START notified (" + MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_BUFFERING_START notified (" + MediaPlayer.MEDIA_INFO_BUFFERING_START + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_BUFFERING_END notified (" + MediaPlayer.MEDIA_INFO_BUFFERING_END + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING notified (" + MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_NOT_SEEKABLE:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_NOT_SEEKABLE notified (" + MediaPlayer.MEDIA_INFO_NOT_SEEKABLE + ")");
+                            break;
+                        case MediaPlayer.MEDIA_INFO_METADATA_UPDATE:
+                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_METADATA_UPDATE notified (" + MediaPlayer.MEDIA_INFO_METADATA_UPDATE + ")");
+                            break;
+                    }
+                    if (extra != 0) {
+                        Log.i(TAG, "MediaPlayer Info Extra " + extra + " notified");
+                    }
+
+                    return true;
+                }
+            });
+        }
 
         seekBarUpdater = new Runnable() {
             @Override
@@ -372,16 +409,14 @@ public class VideoController {
     }
 
     public void show(int timeout) {
-        if (!error) {
-            videoController.setVisibility(View.VISIBLE);
-            if (controllerListener != null) {
-                controllerListener.onControllerShow();
-            }
-            Message msg = handler.obtainMessage(FADE_OUT);
-            if (timeout != 0) {
-                handler.removeMessages(FADE_OUT);
-                handler.sendMessageDelayed(msg, timeout);
-            }
+        videoController.setVisibility(View.VISIBLE);
+        if (controllerListener != null) {
+            controllerListener.onControllerShow();
+        }
+        Message msg = handler.obtainMessage(FADE_OUT);
+        if (timeout != 0) {
+            handler.removeMessages(FADE_OUT);
+            handler.sendMessageDelayed(msg, timeout);
         }
     }
 
@@ -413,7 +448,7 @@ public class VideoController {
         videoItemDetails = video;
 
         int connectivityStatus = NetworkUtil.getConnectivityStatus(activity);
-        AppPreferences preferences =  GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
+        AppPreferences preferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
 
         if (connectivityStatus == NetworkUtil.TYPE_MOBILE && preferences.isVideoQualityLimitedOnMobile()) {
             mVideoMode = VideoMode.SD;
@@ -478,24 +513,14 @@ public class VideoController {
         }
     }
 
-    public void setDimensions(int w, int h) {
-        videoView.setDimensions(w, h);
-    }
-
-    public void enableHeader() {
-        videoHeader.setVisibility(View.VISIBLE);
-    }
-
-    public void disableHeader() {
-        videoHeader.setVisibility(View.GONE);
+    public void saveCurrentPosition(int position) {
+        if (videoItemDetails != null) {
+            videoItemDetails.detail.progress = position;
+        }
     }
 
     public View getControllerView() {
         return videoController;
-    }
-
-    public View getVideoView() {
-        return videoView;
     }
 
     public View getVideoContainer() {
@@ -503,7 +528,7 @@ public class VideoController {
     }
 
     public VideoItemDetail getVideoItemDetail() {
-        if(videoItemDetails != null) {
+        if (videoItemDetails != null) {
             return videoItemDetails.detail;
         }
         return null;
