@@ -3,21 +3,15 @@ package de.xikolo.lanalytics;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.IOException;
 import java.util.List;
 
 import de.xikolo.lanalytics.database.DatabaseHelper;
 import de.xikolo.lanalytics.database.access.EventDataAccess;
-import de.xikolo.lanalytics.util.EventSerializer;
+import de.xikolo.lanalytics.network.NetworkCall;
+import de.xikolo.lanalytics.parser.Parser;
 import de.xikolo.lanalytics.util.Logger;
 import de.xikolo.lanalytics.util.NetworkUtil;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Tracker {
@@ -26,17 +20,20 @@ public class Tracker {
 
     private EventDataAccess eventDataAccess;
 
-    private OkHttpClient httpClient;
+    private Thread networkRunner;
 
-    private Thread networker;
+    private volatile boolean sending;
+
+    private String token;
 
     Tracker(Context context, DatabaseHelper databaseHelper) {
         this.context = context;
         this.eventDataAccess = (EventDataAccess) databaseHelper.getDataAccess(DatabaseHelper.DataAccessType.EVENT);
-        this.httpClient = new OkHttpClient();
     }
 
-    public void track(final Lanalytics.Event event) {
+    public void track(final Lanalytics.Event event, String token) {
+        this.token = token;
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -44,38 +41,72 @@ public class Tracker {
 
                 eventDataAccess.add(event);
 
-                if (networker == null || !networker.isAlive()) {
-                    networker = new Thread(new Networker());
-                    networker.start();
-
-                    Logger.d(Lanalytics.TAG, "Start networker...");
-                }
+                startSending();
             }
         }).start();
     }
 
-    private class Networker implements Runnable {
+    public void startSending() {
+        Logger.d(Lanalytics.TAG, "Trying to start NetworkRunner...");
+
+        if (networkRunner == null || !networkRunner.isAlive()) {
+            sending = true;
+
+            networkRunner = new Thread(new NetworkRunner());
+            networkRunner.start();
+        } else {
+            Logger.d(Lanalytics.TAG, "NetworkRunner already started");
+        }
+    }
+
+    public void stopSending() {
+        Logger.d(Lanalytics.TAG, "Trying to stop NetworkRunner...");
+
+        if (networkRunner != null && networkRunner.isAlive()) {
+            sending = false;
+
+            try {
+                networkRunner.join();
+                Logger.d(Lanalytics.TAG, "NetworkRunner stopped");
+            } catch (InterruptedException e) {
+                Logger.d(Lanalytics.TAG, "NetworkRunner interrupted");
+            }
+        } else {
+            Logger.d(Lanalytics.TAG, "NetworkRunner already stopped");
+        }
+    }
+
+    private class NetworkRunner implements Runnable {
 
         @Override
         public void run() {
             try {
-                while (eventDataAccess.getCount() > 0 && NetworkUtil.isOnline(context)) {
-                    Logger.d(Lanalytics.TAG, "Networker started");
+                while (sending && eventDataAccess.getCount() > 0 && NetworkUtil.isOnline(context)) {
+                    Logger.d(Lanalytics.TAG, "NetworkRunner started");
 
-                    List<Lanalytics.Event> eventList = eventDataAccess.getTop(50);
+                    List<Lanalytics.Event> eventList;
+                    if (NetworkUtil.getConnectivityStatus(context) == NetworkUtil.NetworkConnection.MOBILE) {
+                        eventList = eventDataAccess.getTopExcludeWifiOnly(50);
+                    } else {
+                        eventList = eventDataAccess.getTop(50);
+                    }
+
+                    if (eventList.size() <= 0) {
+                        break;
+                    }
 
                     Logger.d(Lanalytics.TAG, "Fetched events: " + eventList.size());
 
-                    Gson gson = new GsonBuilder()
-                            .registerTypeAdapter(Lanalytics.Event.class, new EventSerializer())
-                            .setPrettyPrinting()
-                            .create();
-                    String json = gson.toJson(eventList);
+                    String json = Parser.toJson(eventList);
 
                     Logger.d(Lanalytics.TAG, "JSON of events: " + json);
 
                     String url = "http://192.168.1.34:9000";
-                    Response response = post(url, json);
+
+                    Response response = new NetworkCall(url)
+                            .authorize(token)
+                            .postJson(json)
+                            .execute();
                     if (!response.isSuccessful()) {
                         throw new IOException("Post Request on " + url + " was not successful. Status Code " + response.code());
                     }
@@ -92,23 +123,6 @@ public class Tracker {
             }
         }
 
-    }
-
-    public static final MediaType JSON
-            = MediaType.parse("application/json; charset=utf-8");
-
-    private Response post(String url, String json) throws IOException {
-        RequestBody body = RequestBody.create(JSON, json);
-
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("Accept", "application/vnd.xikolo.v1, application/json")
-                .addHeader("Authorization", "Token token=")
-                .addHeader("User-Platform", "android")
-                .post(body)
-                .build();
-
-        return httpClient.newCall(request).execute();
     }
 
 }

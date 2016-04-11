@@ -1,4 +1,4 @@
-package de.xikolo.lanalytics.util;
+package de.xikolo.lanalytics.parser;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

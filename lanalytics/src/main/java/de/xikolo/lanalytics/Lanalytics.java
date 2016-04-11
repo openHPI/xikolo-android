@@ -1,7 +1,11 @@
 package de.xikolo.lanalytics;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,6 +22,7 @@ import de.xikolo.lanalytics.database.DatabaseHelper;
 import de.xikolo.lanalytics.database.Entity;
 import de.xikolo.lanalytics.util.ContextUtil;
 import de.xikolo.lanalytics.util.DateUtil;
+import de.xikolo.lanalytics.util.NetworkUtil;
 
 @SuppressWarnings("unused")
 public class Lanalytics {
@@ -44,6 +49,15 @@ public class Lanalytics {
     private Lanalytics(Context context) {
         this.context = context;
         this.databaseHelper = new DatabaseHelper(context);
+
+        context.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (NetworkUtil.isOnline(context)) {
+                    getDefaultTracker().startSending();
+                }
+            }
+        }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     public Tracker getDefaultTracker() {
@@ -53,6 +67,16 @@ public class Lanalytics {
             }
         }
         return defaultTracker;
+    }
+
+    public void deleteData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getDefaultTracker().stopSending();
+                databaseHelper.deleteDatabase();
+            }
+        }).start();
     }
 
     public static class Event implements Entity {

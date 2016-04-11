@@ -4,9 +4,11 @@ import android.content.Context;
 
 import com.path.android.jobqueue.JobManager;
 
+import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.User;
 import de.xikolo.data.preferences.UserPreferences;
+import de.xikolo.model.events.LogoutEvent;
 import de.xikolo.model.jobs.CreateAccessTokenJob;
 import de.xikolo.model.jobs.RetrieveUserJob;
 
@@ -37,12 +39,13 @@ public class UserModel extends BaseModel {
     }
 
     public void logout() {
-        GlobalApplication app = GlobalApplication.getInstance();
+        GlobalApplication application = GlobalApplication.getInstance();
 
-        UserPreferences prefs = app.getPreferencesFactory().getUserPreferences();
-        prefs.deleteUser();
+        application.getPreferencesFactory().getUserPreferences().deleteUser();
+        application.getDataAccessFactory().getDatabaseHelper().deleteDatabase();
+        application.getLanalytics().deleteData();
 
-        app.getDataAccessFactory().getDatabaseHelper().deleteDatabase();
+        EventBus.getDefault().post(new LogoutEvent());
     }
 
     public void login(Result<Void> result, String email, String password) {

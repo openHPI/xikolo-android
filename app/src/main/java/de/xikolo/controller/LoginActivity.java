@@ -13,13 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.ProgressDialog;
 import de.xikolo.data.entities.User;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
-import de.xikolo.model.events.LoginEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
@@ -77,7 +75,6 @@ public class LoginActivity extends BaseActivity {
         mUserResult = new Result<User>() {
             @Override
             protected void onSuccess(User result, DataSource dataSource) {
-                EventBus.getDefault().post(new LoginEvent());
                 dialog.dismiss();
                 LoginActivity.this.finish();
             }

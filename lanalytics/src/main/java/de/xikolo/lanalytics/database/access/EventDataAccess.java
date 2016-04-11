@@ -44,4 +44,8 @@ public class EventDataAccess extends DataAccess<Lanalytics.Event> {
         return getAll("SELECT * FROM " + table.getTableName() + " LIMIT " + limit);
     }
 
+    public List<Lanalytics.Event> getTopExcludeWifiOnly(int limit) {
+        return getAll("SELECT * FROM " + table.getTableName() + " WHERE " + EventTable.COLUMN_WIFI_ONLY + " = 0 LIMIT " + limit);
+    }
+
 }
