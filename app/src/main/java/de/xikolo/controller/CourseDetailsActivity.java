@@ -20,7 +20,7 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
 
     public static final String ARG_COURSE = "arg_course";
 
-    private Course mCourse;
+    private Course course;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +34,17 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
                 CacheController cacheController = new CacheController();
                 cacheController.readCachedExtras();
                 if (cacheController.getCourse() != null) {
-                    mCourse = cacheController.getCourse();
+                    course = cacheController.getCourse();
                 }
             } else {
                 throw new WrongParameterException();
             }
         } else {*/
-            this.mCourse = b.getParcelable(ARG_COURSE);
+            this.course = b.getParcelable(ARG_COURSE);
         //}
 
-        if (mCourse != null) {
-            setTitle(mCourse.name);
+        if (course != null) {
+            setTitle(course.name);
         }
 
         String tag = "content";
@@ -52,14 +52,14 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, WebViewFragment.newInstance(Config.URI + Config.COURSES + mCourse.course_code, false, false), tag);
+            transaction.replace(R.id.content, WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code, false, false), tag);
             transaction.commit();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (mCourse != null && mCourse.is_enrolled) {
+        if (course != null && course.is_enrolled) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.unenroll, menu);
         }
@@ -82,7 +82,7 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        EnrollmentController.unenroll(this, mCourse);
+        EnrollmentController.unenroll(this, course);
     }
 
 }

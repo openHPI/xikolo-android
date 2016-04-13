@@ -62,7 +62,7 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment {
 
         mWebViewController = new WebViewController(getActivity(), layout);
 
-        switch (mItem.type) {
+        switch (item.type) {
             case Item.TYPE_TEXT:
             case Item.TYPE_VIDEO:
             case Item.TYPE_LTI:
@@ -91,8 +91,8 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment {
             protected void onSuccess(Item result, DataSource dataSource) {
                 @SuppressWarnings("unchecked")
                 Item<T> item = result;
-                mItem = item;
-                mWebViewController.request(Config.URI + Config.COURSES + mCourse.course_code + "/" + Config.ITEMS + mItem.id, false);
+                WebItemFragment.this.item = item;
+                mWebViewController.request(Config.URI + Config.COURSES + course.course_code + "/" + Config.ITEMS + WebItemFragment.this.item.id, false);
             }
 
             @Override
@@ -118,7 +118,7 @@ public class WebItemFragment<T extends ItemDetail> extends PagerFragment {
         };
 
         mNotificationController.setProgressVisible(true);
-        mItemModel.getItemDetail(result, mCourse, mModule, mItem, mItem.type);
+        mItemModel.getItemDetail(result, course, module, item, item.type);
     }
 
     @Override

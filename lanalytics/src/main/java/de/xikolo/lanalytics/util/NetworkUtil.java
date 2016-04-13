@@ -3,15 +3,6 @@ package de.xikolo.lanalytics.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.util.Log;
-
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Collections;
-import java.util.List;
-
-import de.xikolo.lanalytics.Lanalytics;
 
 public class NetworkUtil {
 
@@ -47,35 +38,6 @@ public class NetworkUtil {
                 return NetworkConnection.MOBILE;
         }
         return NetworkConnection.NOT_CONNECTED;
-    }
-
-    public static String getIpAddress(Context context) {
-        String ip = null; // no network
-
-        switch (getConnectivityStatus(context)) {
-            case WIFI:
-                WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-                int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-                ip = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff), (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
-                break;
-            case MOBILE:
-                try {
-                    List<NetworkInterface> interfaceList = Collections.list(NetworkInterface.getNetworkInterfaces());
-                    for (NetworkInterface networkInterface : interfaceList) {
-                        List<InetAddress> internetAddressList = Collections.list(networkInterface.getInetAddresses());
-                        for (InetAddress internetAddress : internetAddressList) {
-                            if (!internetAddress.isLoopbackAddress()) {
-                                ip = internetAddress.getHostAddress();
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.e(Lanalytics.class.getSimpleName(), "Unable to fetch mobile network IP address", e);
-                }
-                break;
-        }
-
-        return ip;
     }
 
 }

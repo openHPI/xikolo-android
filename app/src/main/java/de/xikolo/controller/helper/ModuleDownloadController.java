@@ -15,6 +15,7 @@ import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
+import de.xikolo.util.LanalyticsUtil;
 import de.xikolo.util.NetworkUtil;
 
 public class ModuleDownloadController {
@@ -27,14 +28,14 @@ public class ModuleDownloadController {
 
     private boolean slides;
 
-    private GlobalApplication app;
+    private GlobalApplication application;
 
     private DownloadModel downloadModel;
 
     public ModuleDownloadController(FragmentActivity activity) {
-        this.app = GlobalApplication.getInstance();
+        this.application = GlobalApplication.getInstance();
         this.activity = activity;
-        this.downloadModel = new DownloadModel(app.getJobManager(), activity);
+        this.downloadModel = new DownloadModel(application.getJobManager(), activity);
     }
 
     public void initModuleDownloads(final Course course, final Module module) {
@@ -50,7 +51,7 @@ public class ModuleDownloadController {
 
                 if (hdVideo || sdVideo || slides) {
                     if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                        if (NetworkUtil.getConnectivityStatus(app) == NetworkUtil.TYPE_MOBILE &&
+                        if (NetworkUtil.getConnectivityStatus(application) == NetworkUtil.TYPE_MOBILE &&
                                 appPreferences.isDownloadNetworkLimitedOnMobile()) {
                             MobileDownloadDialog permissionDialog = MobileDownloadDialog.getInstance();
                             permissionDialog.setMobileDownloadDialogListener(new MobileDownloadDialog.MobileDownloadDialogListener() {
@@ -74,7 +75,9 @@ public class ModuleDownloadController {
     }
     
     private void startModuleDownloads(final Course course, final Module module) {
-        ItemModel itemModel = new ItemModel(app.getJobManager());
+        ItemModel itemModel = new ItemModel(application.getJobManager());
+
+        LanalyticsUtil.trackDownloadedSection(module.id, course.id, hdVideo, sdVideo, slides);
 
         final ProgressDialog dialog = ProgressDialog.getInstance();
         dialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);

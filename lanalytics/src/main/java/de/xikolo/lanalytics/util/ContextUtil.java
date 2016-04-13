@@ -11,7 +11,6 @@ import android.view.WindowManager;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import de.xikolo.lanalytics.BuildConfig;
 import de.xikolo.lanalytics.Lanalytics;
 
 public class ContextUtil {
@@ -62,10 +61,6 @@ public class ContextUtil {
                 break;
         }
         contextMap.put("network", network);
-        String ip = NetworkUtil.getIpAddress(context);
-        if (ip != null) {
-            contextMap.put("user_ip", ip);
-        }
 
         return contextMap;
     }

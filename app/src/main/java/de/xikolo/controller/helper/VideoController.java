@@ -26,6 +26,7 @@ import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.util.Config;
+import de.xikolo.util.LanalyticsUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.PlaybackSpeed;
 import de.xikolo.util.ToastUtil;
@@ -92,7 +93,7 @@ public class VideoController {
         SD, HD
     }
 
-    private VideoMode mVideoMode;
+    private VideoMode videoMode;
 
     public VideoController(Activity activity, View videoContainer) {
         this.activity = activity;
@@ -147,7 +148,7 @@ public class VideoController {
 
                 seekTo(videoItemDetails.detail.progress);
                 if (isPlaying) {
-                    start();
+                    play();
                 }
 
                 mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
@@ -281,8 +282,20 @@ public class VideoController {
                 show();
                 if (videoView.isPlaying()) {
                     pause();
+
+                    LanalyticsUtil.trackVideoPause(videoItemDetails.id,
+                            course.id, module.id,
+                            mediaPlayer.getCurrentPosition(),
+                            currentPlaybackSpeed.getSpeed(),
+                            activity.getResources().getConfiguration().orientation);
                 } else {
-                    start();
+                    play();
+
+                    LanalyticsUtil.trackVideoPlay(videoItemDetails.id,
+                            course.id, module.id,
+                            mediaPlayer.getCurrentPosition(),
+                            currentPlaybackSpeed.getSpeed(),
+                            activity.getResources().getConfiguration().orientation);
                 }
             }
         });
@@ -306,6 +319,13 @@ public class VideoController {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                LanalyticsUtil.trackVideoSeek(videoItemDetails.id,
+                        course.id, module.id,
+                        mediaPlayer.getCurrentPosition(),
+                        progress,
+                        currentPlaybackSpeed.getSpeed(),
+                        activity.getResources().getConfiguration().orientation);
+
                 userIsSeeking = false;
                 seekTo(progress);
             }
@@ -323,7 +343,16 @@ public class VideoController {
             playbackSpeed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    PlaybackSpeed oldSpeed = currentPlaybackSpeed;
+
                     togglePlaybackSpeed();
+
+                    LanalyticsUtil.trackVideoChangeSpeed(videoItemDetails.id,
+                            course.id, module.id,
+                            mediaPlayer.getCurrentPosition(),
+                            oldSpeed.getSpeed(),
+                            currentPlaybackSpeed.getSpeed(),
+                            activity.getResources().getConfiguration().orientation);
                 }
             });
         } else {
@@ -339,7 +368,7 @@ public class VideoController {
         });
     }
 
-    public void start() {
+    public void play() {
         playButton.setText(activity.getString(R.string.icon_pause));
         videoView.start();
         isPlaying = true;
@@ -432,14 +461,22 @@ public class VideoController {
     }
 
     private void toggleHdButton() {
-        if (mVideoMode == VideoMode.HD) {
-            mVideoMode = VideoMode.SD;
+        if (videoMode == VideoMode.HD) {
+            videoMode = VideoMode.SD;
         } else {
-            mVideoMode = VideoMode.HD;
+            videoMode = VideoMode.HD;
         }
 
         saveCurrentPosition();
         updateVideo(course, module, videoItemDetails);
+    }
+
+    public PlaybackSpeed getCurrentPlaybackSpeed() {
+        return currentPlaybackSpeed;
+    }
+
+    public int getCurrentPosition() {
+        return mediaPlayer.getCurrentPosition();
     }
 
     public void setupVideo(Course course, Module module, Item<VideoItemDetail> video) {
@@ -451,9 +488,9 @@ public class VideoController {
         AppPreferences preferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
 
         if (connectivityStatus == NetworkUtil.TYPE_MOBILE && preferences.isVideoQualityLimitedOnMobile()) {
-            mVideoMode = VideoMode.SD;
+            videoMode = VideoMode.SD;
         } else {
-            mVideoMode = VideoMode.HD;
+            videoMode = VideoMode.HD;
         }
 
         updateVideo(course, module, videoItemDetails);
@@ -465,7 +502,7 @@ public class VideoController {
 
         videoWarning.setVisibility(View.GONE);
 
-        if (mVideoMode == VideoMode.HD) {
+        if (videoMode == VideoMode.HD) {
             stream = video.detail.stream.hd_url;
             fileType = DownloadModel.DownloadFileType.VIDEO_HD;
         } else {
@@ -481,8 +518,8 @@ public class VideoController {
             mOfflineHint.setVisibility(View.VISIBLE);
         } else if (NetworkUtil.isOnline(activity)) {
             setVideoURI(stream);
-        } else if (mVideoMode == VideoMode.HD) {
-            mVideoMode = VideoMode.SD;
+        } else if (videoMode == VideoMode.HD) {
+            videoMode = VideoMode.SD;
             updateVideo(course, module, video);
         } else {
             videoWarning.setVisibility(View.VISIBLE);
@@ -500,7 +537,7 @@ public class VideoController {
     }
 
     private void updateHdSwitchColor() {
-        if (mVideoMode == VideoMode.HD) {
+        if (videoMode == VideoMode.HD) {
             hdSwitch.setTextColor(ContextCompat.getColor(activity, R.color.video_hd_enabled));
         } else {
             hdSwitch.setTextColor(ContextCompat.getColor(activity, R.color.video_hd_disabled));

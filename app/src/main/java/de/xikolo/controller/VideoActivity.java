@@ -31,6 +31,7 @@ import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.CastUtil;
+import de.xikolo.util.LanalyticsUtil;
 
 public class VideoActivity extends BaseActivity {
 
@@ -38,6 +39,8 @@ public class VideoActivity extends BaseActivity {
 
     private VideoController videoController;
 
+    private Course course;
+    private Module module;
     private Item<VideoItemDetail> item;
 
     private ItemModel itemModel;
@@ -76,9 +79,6 @@ public class VideoActivity extends BaseActivity {
                 hideSystemBars();
             }
         });
-
-        Course course;
-        Module module;
 
         Bundle b = getIntent().getExtras();
         if (b == null || !b.containsKey(VideoFragment.KEY_COURSE) || !b.containsKey(VideoFragment.KEY_MODULE) || !b.containsKey(VideoFragment.KEY_ITEM)) {
@@ -132,6 +132,8 @@ public class VideoActivity extends BaseActivity {
             @Override
             public void onApplicationConnected(ApplicationMetadata appMetadata, String sessionId, boolean wasLaunched) {
                 if (videoController != null) {
+                    LanalyticsUtil.trackVideoStartCast(item.id, course.id, module.id, item.detail.progress);
+
                     videoController.pause();
                     VideoCastManager.getInstance()
                             .startVideoCastControllerActivity(VideoActivity.this, CastUtil.buildCastMetadata(item), item.detail.progress, true);
@@ -313,6 +315,10 @@ public class VideoActivity extends BaseActivity {
         videoController.show();
 
         updateVideoView(newConfig.orientation);
+
+        LanalyticsUtil.trackVideoChangeOrientation(item.id, course.id, module.id,
+                videoController.getCurrentPosition(), videoController.getCurrentPlaybackSpeed().getSpeed(),
+                newConfig.orientation);
     }
 
 }

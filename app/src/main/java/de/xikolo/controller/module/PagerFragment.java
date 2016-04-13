@@ -14,9 +14,9 @@ public abstract class PagerFragment<T extends ItemDetail> extends BaseFragment {
     public static final String ARG_MODULE = "arg_module";
     public static final String ARG_ITEM = "arg_item";
 
-    protected Course mCourse;
-    protected Module mModule;
-    protected Item<T> mItem;
+    protected Course course;
+    protected Module module;
+    protected Item<T> item;
 
     public PagerFragment() {
         // Required empty public constructor
@@ -35,9 +35,9 @@ public abstract class PagerFragment<T extends ItemDetail> extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCourse = getArguments().getParcelable(ARG_COURSE);
-            mModule = getArguments().getParcelable(ARG_MODULE);
-            mItem = getArguments().getParcelable(ARG_ITEM);
+            course = getArguments().getParcelable(ARG_COURSE);
+            module = getArguments().getParcelable(ARG_MODULE);
+            item = getArguments().getParcelable(ARG_ITEM);
         }
     }
 
