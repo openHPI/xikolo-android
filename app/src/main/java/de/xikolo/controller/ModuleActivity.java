@@ -109,7 +109,7 @@ public class ModuleActivity extends BaseActivity {
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), module.items);
         viewpager.setAdapter(adapter);
-        viewpager.setOffscreenPageLimit(3);
+        viewpager.setOffscreenPageLimit(2);
 
         // Bind the tabs to the ViewPager
         tabLayout = (TabLayout) findViewById(R.id.tabs);

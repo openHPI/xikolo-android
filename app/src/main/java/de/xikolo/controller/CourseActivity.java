@@ -89,7 +89,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
         adapter = new CoursePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(adapter.getCount() - 1);
+        viewPager.setOffscreenPageLimit(2);
 
         // Bind the tabs to the ViewPager
         tabLayout.setupWithViewPager(viewPager);
