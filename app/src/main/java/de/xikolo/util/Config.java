@@ -63,8 +63,8 @@ public class Config {
         API = URI + "api/";
     }
 
-    public static final String HEADER_ACCEPT = "ACCEPT";
-    public static final String HEADER_AUTHORIZATION = "AUTHORIZATION";
+    public static final String HEADER_ACCEPT = "Accept";
+    public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String HEADER_USER_PLATFORM = "User-Platform";
     public static final String HEADER_CACHE_CONTROL = "Cache-Control";
 

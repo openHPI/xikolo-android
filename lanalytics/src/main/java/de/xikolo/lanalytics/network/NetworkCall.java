@@ -30,7 +30,7 @@ public class NetworkCall {
         builder = new Request.Builder()
                 .url(url)
                 .addHeader("Accept", "application/vnd.xikolo.v1, application/json")
-                .addHeader("User-Platform", "android");
+                .addHeader("User-Platform", "Android");
     }
 
     public NetworkCall authorize(String token) {

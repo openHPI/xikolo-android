@@ -26,6 +26,7 @@ public class LanalyticsUtil {
     public static final String VERB_VIDEO_START_CAST = "VIDEO_START_CAST";
     public static final String VERB_VIDEO_CHANGE_LANDSCAPE = "VIDEO_LANDSCAPE";
     public static final String VERB_VIDEO_CHANGE_PORTRAIT = "VIDEO_PORTRAIT";
+    public static final String VERB_VIDEO_CHANGE_QUALITY = "VIDEO_CHANGE_QUALITY";
     public static final String VERB_DOWNLOADED_SECTION = "DOWNLOADED_SECTION";
 
     public static final String CONTEXT_COURSE_ID = "course_id";
@@ -43,8 +44,18 @@ public class LanalyticsUtil {
     public static final String CONTEXT_CURRENT_ORIENTATION = "current_orientation";
     public static final String CONTEXT_LANDSCAPE = "landscape";
     public static final String CONTEXT_PORTRAIT = "portrait";
+    public static final String CONTEXT_QUALITY = "current_quality";
+    public static final String CONTEXT_SOURCE = "current_source";
+    public static final String CONTEXT_OLD_QUALITY = "old_quality";
+    public static final String CONTEXT_NEW_QUALITY = "new_quality";
+    public static final String CONTEXT_OLD_SOURCE = "old_source";
+    public static final String CONTEXT_NEW_SOURCE = "new_source";
+    public static final String CONTEXT_ONLINE = "online";
+    public static final String CONTEXT_OFFLINE = "offline";
 
-    public static void trackVideoPlay(String resourceId, String courseId, String sectionId, int currentTime, Float currentSpeed, int currentOrientation) {
+
+    public static void trackVideoPlay(String resourceId, String courseId, String sectionId,
+                                      int currentTime, Float currentSpeed, int currentOrientation, String quality, String source) {
         track(newEventBuilder()
                 .setResource(resourceId)
                 .setVerb(VERB_VIDEO_PLAY)
@@ -54,10 +65,13 @@ public class LanalyticsUtil {
                 .putContext(CONTEXT_CURRENT_SPEED, currentSpeed.toString())
                 .putContext(CONTEXT_CURRENT_ORIENTATION,
                         currentOrientation == Configuration.ORIENTATION_PORTRAIT ? CONTEXT_PORTRAIT : CONTEXT_LANDSCAPE)
+                .putContext(CONTEXT_QUALITY, quality)
+                .putContext(CONTEXT_SOURCE, source)
                 .build());
     }
 
-    public static void trackVideoPause(String resourceId, String courseId, String sectionId, int currentTime, Float currentSpeed, int currentOrientation) {
+    public static void trackVideoPause(String resourceId, String courseId, String sectionId,
+                                       int currentTime, Float currentSpeed, int currentOrientation, String quality, String source) {
         track(newEventBuilder()
                 .setResource(resourceId)
                 .setVerb(VERB_VIDEO_PAUSE)
@@ -67,13 +81,16 @@ public class LanalyticsUtil {
                 .putContext(CONTEXT_CURRENT_SPEED, currentSpeed.toString())
                 .putContext(CONTEXT_CURRENT_ORIENTATION,
                         currentOrientation == Configuration.ORIENTATION_PORTRAIT ? CONTEXT_PORTRAIT : CONTEXT_LANDSCAPE)
+                .putContext(CONTEXT_QUALITY, quality)
+                .putContext(CONTEXT_SOURCE, source)
                 .build());
     }
 
-    public static void trackVideoChangeSpeed(String resourceId, String courseId, String sectionId, int currentTime, Float oldSpeed, Float newSpeed, int currentOrientation) {
+    public static void trackVideoChangeSpeed(String resourceId, String courseId, String sectionId,
+                                             int currentTime, Float oldSpeed, Float newSpeed, int currentOrientation, String quality, String source) {
         track(newEventBuilder()
                 .setResource(resourceId)
-                .setVerb(VERB_VIDEO_SEEK)
+                .setVerb(VERB_VIDEO_CHANGE_SPEED)
                 .putContext(CONTEXT_COURSE_ID, courseId)
                 .putContext(CONTEXT_SECTION_ID, sectionId)
                 .putContext(CONTEXT_CURRENT_TIME, formatTime(currentTime))
@@ -81,13 +98,16 @@ public class LanalyticsUtil {
                 .putContext(CONTEXT_NEW_SPEED, newSpeed.toString())
                 .putContext(CONTEXT_CURRENT_ORIENTATION,
                         currentOrientation == Configuration.ORIENTATION_PORTRAIT ? CONTEXT_PORTRAIT : CONTEXT_LANDSCAPE)
+                .putContext(CONTEXT_QUALITY, quality)
+                .putContext(CONTEXT_SOURCE, source)
                 .build());
     }
 
-    public static void trackVideoSeek(String resourceId, String courseId, String sectionId, int oldCurrentTime, int newCurrentTime, Float currentSpeed, int currentOrientation) {
+    public static void trackVideoSeek(String resourceId, String courseId, String sectionId,
+                                      int oldCurrentTime, int newCurrentTime, Float currentSpeed, int currentOrientation, String quality, String source) {
         track(newEventBuilder()
                 .setResource(resourceId)
-                .setVerb(VERB_VIDEO_CHANGE_SPEED)
+                .setVerb(VERB_VIDEO_SEEK)
                 .putContext(CONTEXT_COURSE_ID, courseId)
                 .putContext(CONTEXT_SECTION_ID, sectionId)
                 .putContext(CONTEXT_OLD_CURRENT_TIME, formatTime(oldCurrentTime))
@@ -95,6 +115,8 @@ public class LanalyticsUtil {
                 .putContext(CONTEXT_CURRENT_SPEED, currentSpeed.toString())
                 .putContext(CONTEXT_CURRENT_ORIENTATION,
                         currentOrientation == Configuration.ORIENTATION_PORTRAIT ? CONTEXT_PORTRAIT : CONTEXT_LANDSCAPE)
+                .putContext(CONTEXT_QUALITY, quality)
+                .putContext(CONTEXT_SOURCE, source)
                 .build());
     }
 
@@ -125,7 +147,8 @@ public class LanalyticsUtil {
                 .build());
     }
 
-    public static void trackVideoChangeOrientation(String resourceId, String courseId, String sectionId, int currentTime, Float currentSpeed, int newOrientation) {
+    public static void trackVideoChangeOrientation(String resourceId, String courseId, String sectionId,
+                                                   int currentTime, Float currentSpeed, int newOrientation, String quality, String source) {
         track(newEventBuilder()
                 .setResource(resourceId)
                 .setVerb(newOrientation == Configuration.ORIENTATION_PORTRAIT ? VERB_VIDEO_CHANGE_PORTRAIT : VERB_VIDEO_CHANGE_LANDSCAPE)
@@ -133,6 +156,26 @@ public class LanalyticsUtil {
                 .putContext(CONTEXT_SECTION_ID, sectionId)
                 .putContext(CONTEXT_CURRENT_TIME, formatTime(currentTime))
                 .putContext(CONTEXT_CURRENT_SPEED, currentSpeed.toString())
+                .putContext(CONTEXT_QUALITY, quality)
+                .putContext(CONTEXT_SOURCE, source)
+                .build());
+    }
+
+    public static void trackVideoChangeQuality(String resourceId, String courseId, String sectionId,
+                                               int currentTime, Float currentSpeed, int currentOrientation, String oldQuality, String newQuality, String oldSource, String newSource) {
+        track(newEventBuilder()
+                .setResource(resourceId)
+                .setVerb(VERB_VIDEO_CHANGE_QUALITY)
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .putContext(CONTEXT_CURRENT_TIME, formatTime(currentTime))
+                .putContext(CONTEXT_CURRENT_SPEED, currentSpeed.toString())
+                .putContext(CONTEXT_CURRENT_ORIENTATION,
+                        currentOrientation == Configuration.ORIENTATION_PORTRAIT ? CONTEXT_PORTRAIT : CONTEXT_LANDSCAPE)
+                .putContext(CONTEXT_OLD_QUALITY, oldQuality)
+                .putContext(CONTEXT_NEW_QUALITY, newQuality)
+                .putContext(CONTEXT_OLD_SOURCE, oldSource)
+                .putContext(CONTEXT_NEW_SOURCE, newSource)
                 .build());
     }
 

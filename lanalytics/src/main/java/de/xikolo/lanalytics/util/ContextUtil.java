@@ -19,7 +19,7 @@ public class ContextUtil {
         Map<String, String> contextMap = new LinkedHashMap<>();
 
         // os details
-        contextMap.put("platform", "android");
+        contextMap.put("platform", "Android");
         contextMap.put("os_version", Build.VERSION.RELEASE);
         contextMap.put("api_level", String.valueOf(Build.VERSION.SDK_INT));
 

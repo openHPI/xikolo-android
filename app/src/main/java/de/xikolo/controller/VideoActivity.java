@@ -158,6 +158,14 @@ public class VideoActivity extends BaseActivity {
         updateVideoView(getResources().getConfiguration().orientation);
 
         videoController.setupVideo(course, module, item);
+
+        LanalyticsUtil.trackVideoPlay(item.id,
+                course.id, module.id,
+                item.detail.progress,
+                videoController.getCurrentPlaybackSpeed().getSpeed(),
+                getResources().getConfiguration().orientation,
+                videoController.getQualityString(),
+                videoController.getSourceString());
     }
 
     private void updateVideoView(int orientation) {
@@ -317,8 +325,11 @@ public class VideoActivity extends BaseActivity {
         updateVideoView(newConfig.orientation);
 
         LanalyticsUtil.trackVideoChangeOrientation(item.id, course.id, module.id,
-                videoController.getCurrentPosition(), videoController.getCurrentPlaybackSpeed().getSpeed(),
-                newConfig.orientation);
+                videoController.getCurrentPosition(),
+                videoController.getCurrentPlaybackSpeed().getSpeed(),
+                newConfig.orientation,
+                videoController.getQualityString(),
+                videoController.getSourceString());
     }
 
 }

@@ -10,6 +10,7 @@ import de.xikolo.lanalytics.database.DatabaseHelper;
 import de.xikolo.lanalytics.database.access.EventDataAccess;
 import de.xikolo.lanalytics.network.NetworkCall;
 import de.xikolo.lanalytics.parser.Parser;
+import de.xikolo.lanalytics.util.Config;
 import de.xikolo.lanalytics.util.Logger;
 import de.xikolo.lanalytics.util.NetworkUtil;
 import okhttp3.Response;
@@ -17,6 +18,8 @@ import okhttp3.Response;
 public class Tracker {
 
     private Context context;
+
+    private String endpoint;
 
     private EventDataAccess eventDataAccess;
 
@@ -26,9 +29,14 @@ public class Tracker {
 
     private String token;
 
-    Tracker(Context context, DatabaseHelper databaseHelper) {
+    Tracker(Context context, String endpoint, DatabaseHelper databaseHelper) {
         this.context = context;
+        this.endpoint = endpoint;
         this.eventDataAccess = (EventDataAccess) databaseHelper.getDataAccess(DatabaseHelper.DataAccessType.EVENT);
+
+        if (Config.DEBUG) {
+            this.endpoint = "http://192.168.1.34:9000";
+        }
     }
 
     public void track(final Lanalytics.Event event, String token) {
@@ -95,30 +103,23 @@ public class Tracker {
                         break;
                     }
 
-                    Logger.d(Lanalytics.TAG, "Fetched events: " + eventList.size());
-
                     String json = Parser.toJson(eventList);
 
-                    Logger.d(Lanalytics.TAG, "JSON of events: " + json);
-
-                    String url = "http://192.168.1.34:9000";
-
-                    Response response = new NetworkCall(url)
+                    Response response = new NetworkCall(endpoint)
                             .authorize(token)
                             .postJson(json)
                             .execute();
                     if (!response.isSuccessful()) {
-                        throw new IOException("Post Request on " + url + " was not successful. Status Code " + response.code());
+                        response.body().close();
+                        throw new IOException("Post Request on " + endpoint + " was not successful. Status Code " + response.code());
                     }
                     response.body().close();
-
-                    Logger.d(Lanalytics.TAG, "Events successfully transferred");
 
                     for (Lanalytics.Event event : eventList) {
                         eventDataAccess.delete(event);
                     }
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Log.e(Lanalytics.TAG, e.getMessage(), e);
             }
         }

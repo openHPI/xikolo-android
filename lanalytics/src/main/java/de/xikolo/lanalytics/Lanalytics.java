@@ -37,17 +37,20 @@ public class Lanalytics {
 
     private DatabaseHelper databaseHelper;
 
-    public static Lanalytics getInstance(Context context) {
+    private String endpoint;
+
+    public static Lanalytics getInstance(Context context, String endpoint) {
         synchronized (Lanalytics.class) {
             if (instance == null) {
-                instance = new Lanalytics(context);
+                instance = new Lanalytics(context, endpoint);
             }
         }
         return instance;
     }
 
-    private Lanalytics(Context context) {
+    private Lanalytics(Context context, String endpoint) {
         this.context = context;
+        this.endpoint = endpoint;
         this.databaseHelper = new DatabaseHelper(context);
 
         context.registerReceiver(new BroadcastReceiver() {
@@ -63,7 +66,7 @@ public class Lanalytics {
     public Tracker getDefaultTracker() {
         synchronized (Lanalytics.class) {
             if (defaultTracker == null) {
-                defaultTracker = new Tracker(context, databaseHelper);
+                defaultTracker = new Tracker(context, endpoint, databaseHelper);
             }
         }
         return defaultTracker;

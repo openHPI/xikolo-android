@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
 import de.xikolo.controller.helper.CacheController;
@@ -225,13 +224,6 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                             }
                         }, item.detail);
                     } else {
-                        LanalyticsUtil.trackVideoPlay(item.id,
-                                course.id, module.id,
-                                item.detail.progress,
-                                GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences()
-                                        .getVideoPlaybackSpeed().getSpeed(),
-                                getActivity().getResources().getConfiguration().orientation);
-
                         Intent intent = new Intent(getActivity(), VideoActivity.class);
                         Bundle b = new Bundle();
                         b.putParcelable(KEY_COURSE, course);
