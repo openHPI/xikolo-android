@@ -1,5 +1,6 @@
 package de.xikolo.controller.main;
 
+import android.content.MutableContextWrapper;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
@@ -8,8 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.helper.WebViewController;
 
@@ -20,19 +21,21 @@ public class ContentWebViewFragment extends ContentFragment {
     // the fragment initialization parameters
     private static final String ARG_URL = "arg_url";
     private static final String ARG_TITLE = "arg_title";
-    private static final String ARG_INAPP_LINKS = "arg_inapp_links";
+    private static final String ARG_IN_APP_LINKS = "arg_in_app_links";
     private static final String ARG_EXTERNAL_LINKS = "arg_external_links";
     private static final String ARG_ID = "arg_id";
 
-    private String mUrl;
-    private String mTitle;
-    private boolean mInAppLinksEnabled;
-    private boolean mExternalLinksEnabled;
+    private String url;
+    private String title;
+    private boolean inAppLinksEnabled;
+    private boolean externalLinksEnabled;
     private int id;
 
-    private WebView mWebView;
+    private View layout;
 
-    private WebViewController mWebViewController;
+    private WebViewController webViewController;
+
+    private MutableContextWrapper mutableContextWrapper;
 
     public ContentWebViewFragment() {
         // Required empty public constructor
@@ -43,7 +46,7 @@ public class ContentWebViewFragment extends ContentFragment {
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
         args.putString(ARG_TITLE, title);
-        args.putBoolean(ARG_INAPP_LINKS, inAppLinksEnabled);
+        args.putBoolean(ARG_IN_APP_LINKS, inAppLinksEnabled);
         args.putBoolean(ARG_EXTERNAL_LINKS, externalLinksEnabled);
         args.putInt(ARG_ID, id);
         fragment.setArguments(args);
@@ -54,30 +57,33 @@ public class ContentWebViewFragment extends ContentFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mUrl = getArguments().getString(ARG_URL);
-            mTitle = getArguments().getString(ARG_TITLE);
-            mInAppLinksEnabled = getArguments().getBoolean(ARG_INAPP_LINKS);
-            mExternalLinksEnabled = getArguments().getBoolean(ARG_EXTERNAL_LINKS);
+            url = getArguments().getString(ARG_URL);
+            title = getArguments().getString(ARG_TITLE);
+            inAppLinksEnabled = getArguments().getBoolean(ARG_IN_APP_LINKS);
+            externalLinksEnabled = getArguments().getBoolean(ARG_EXTERNAL_LINKS);
             id = getArguments().getInt(ARG_ID);
         }
-
         setHasOptionsMenu(true);
+
+        setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_webview, container, false);
-        mWebView = (WebView) layout.findViewById(R.id.webView);
+        if (layout == null) {
+            mutableContextWrapper = new MutableContextWrapper(getActivity());
 
-        mWebViewController = new WebViewController(getActivity(), layout);
-        mWebViewController.setInAppLinksEnabled(mInAppLinksEnabled);
-        mWebViewController.setLoadExternalUrlEnabled(mExternalLinksEnabled);
+            layout = LayoutInflater.from(mutableContextWrapper)
+                    .inflate(R.layout.fragment_webview, container, false);
 
-        if (savedInstanceState != null) {
-            mWebViewController.restoreState(savedInstanceState);
+            webViewController = new WebViewController(mutableContextWrapper, layout);
+            webViewController.setInAppLinksEnabled(inAppLinksEnabled);
+            webViewController.setLoadExternalUrlEnabled(externalLinksEnabled);
+
+            webViewController.request(url, false);
         } else {
-            mWebViewController.request(mUrl, false);
+            mutableContextWrapper.setBaseContext(getActivity());
         }
 
         return layout;
@@ -86,20 +92,22 @@ public class ContentWebViewFragment extends ContentFragment {
     @Override
     public void onStart() {
         super.onStart();
-        mActivityCallback.onFragmentAttached(id, mTitle);
+        activityCallback.onFragmentAttached(id, title);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (mWebViewController != null) {
-            mWebViewController.saveState(outState);
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (getRetainInstance() && layout.getParent() instanceof ViewGroup) {
+            ((ViewGroup) layout.getParent()).removeView(layout);
+            mutableContextWrapper.setBaseContext(GlobalApplication.getInstance());
         }
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (mActivityCallback != null && !mActivityCallback.isDrawerOpen()) {
+        if (activityCallback != null && !activityCallback.isDrawerOpen()) {
             inflater.inflate(R.menu.refresh, menu);
         }
     }
@@ -112,7 +120,7 @@ public class ContentWebViewFragment extends ContentFragment {
                 NavUtils.navigateUpFromSameTask(getActivity());
                 return true;
             case R.id.action_refresh:
-                mWebViewController.onRefresh();
+                webViewController.onRefresh();
                 return true;
         }
         return super.onOptionsItemSelected(item);

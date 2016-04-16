@@ -146,7 +146,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             mNotificationController.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
+                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                 }
             });
             mNotificationController.setNotificationVisible(true);
@@ -230,9 +230,9 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         super.onStart();
 
         if (mFilter.equals(FILTER_ALL)) {
-            mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
+            activityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
         } else if (mFilter.equals(FILTER_MY)) {
-            mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
+            activityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
         }
 
         if (mCourses != null && mCourses.size() > 0) {
@@ -252,7 +252,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 mNotificationController.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
+                        activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                     }
                 });
                 mNotificationController.setNotificationVisible(true);
@@ -262,7 +262,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 mNotificationController.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_ALL_COURSES);
+                        activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_ALL_COURSES);
                     }
                 });
                 mNotificationController.setNotificationVisible(true);
@@ -273,7 +273,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             } else {
                 mCourseListAdapter.clear();
             }
-            mActivityCallback.updateDrawer();
+            activityCallback.updateDrawer();
         }
     }
 
@@ -309,7 +309,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     NetworkUtil.showNoConnectionToast();
                 } else if (errorCode == ErrorCode.NO_AUTH) {
                     ToastUtil.show(R.string.toast_please_log_in);
-                    mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
+                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                 }
             }
         };
@@ -335,7 +335,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             startActivity(intent);
         } else {
             ToastUtil.show(R.string.toast_please_log_in);
-            mActivityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
+            activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
         }
     }
 
@@ -390,7 +390,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (mActivityCallback != null && !mActivityCallback.isDrawerOpen()) {
+        if (activityCallback != null && !activityCallback.isDrawerOpen()) {
             inflater.inflate(R.menu.refresh, menu);
         }
     }

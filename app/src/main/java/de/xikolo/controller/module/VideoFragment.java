@@ -109,7 +109,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         }
 
         if (savedInstanceState != null) {
-            mItem = savedInstanceState.getParcelable(KEY_ITEM);
+            item = savedInstanceState.getParcelable(KEY_ITEM);
             setupView();
         } else {
             requestVideoDetails(false);
@@ -121,7 +121,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(KEY_ITEM, mItem);
+        outState.putParcelable(KEY_ITEM, item);
     }
 
     private void requestVideoDetails(final boolean userRequest) {
@@ -130,7 +130,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             protected void onSuccess(Item result, DataSource dataSource) {
                 @SuppressWarnings("unchecked")
                 Item<VideoItemDetail> item = (Item<VideoItemDetail>) result;
-                mItem = item;
+                VideoFragment.this.item = item;
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.detail == null) {
                     notificationController.setTitle(R.string.notification_no_network);
@@ -164,7 +164,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
         container.setVisibility(View.GONE);
         notificationController.setProgressVisible(true);
-        itemModel.getItemDetail(result, mCourse, mModule, mItem, Item.TYPE_VIDEO);
+        itemModel.getItemDetail(result, course, module, item, Item.TYPE_VIDEO);
     }
 
     private void setupView() {
@@ -172,33 +172,33 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             notificationController.setInvisible();
             container.setVisibility(View.VISIBLE);
 
-            if (mItem.detail == null) {
-                throw new NullPointerException("Item Detail is null for Course " + mCourse.name + " (" + mCourse.id + ")" +
-                        " and Module " + mModule.name + " (" + mModule.id + ")" +
-                        " and Item " + mItem.title + " (" + mItem.id + ")");
-            } else if (mItem.detail.stream == null) {
-                throw new NullPointerException("Item Stream is null for Course " + mCourse.name + " (" + mCourse.id + ")" +
-                        " and Module " + mModule.name + " (" + mModule.id + ")" +
-                        " and Item " + mItem.title + " (" + mItem.id + ")");
+            if (item.detail == null) {
+                throw new NullPointerException("Item Detail is null for Course " + course.name + " (" + course.id + ")" +
+                        " and Module " + module.name + " (" + module.id + ")" +
+                        " and Item " + item.title + " (" + item.id + ")");
+            } else if (item.detail.stream == null) {
+                throw new NullPointerException("Item Stream is null for Course " + course.name + " (" + course.id + ")" +
+                        " and Module " + module.name + " (" + module.id + ")" +
+                        " and Item " + item.title + " (" + item.id + ")");
             }
 
-            ImageController.load(mItem.detail.stream.poster, videoThumbnail,
+            ImageController.load(item.detail.stream.poster, videoThumbnail,
                     ImageController.DEFAULT_PLACEHOLDER,
                     videoThumbnail.getForcedWidth(), videoThumbnail.getForcedHeight());
 
-            title.setText(mItem.detail.title);
+            title.setText(item.detail.title);
 
             linearLayoutDownloads.removeAllViews();
-            DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_HD, mCourse, mModule, mItem);
+            DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_HD, course, module, item);
             linearLayoutDownloads.addView(hdVideo.getView());
-            DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_SD, mCourse, mModule, mItem);
+            DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_SD, course, module, item);
             linearLayoutDownloads.addView(sdVideo.getView());
-            DownloadViewController slides = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.SLIDES, mCourse, mModule, mItem);
+            DownloadViewController slides = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.SLIDES, course, module, item);
             linearLayoutDownloads.addView(slides.getView());
-//        DownloadViewController transcript = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.TRANSCRIPT, mCourse, mModule, mItem);
+//        DownloadViewController transcript = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.TRANSCRIPT, course, module, item);
 //        linearLayoutDownloads.addView(transcript.getView());
 
-            duration.setText(getString(R.string.duration, Integer.valueOf(mItem.detail.minutes), Integer.valueOf(mItem.detail.seconds)));
+            duration.setText(getString(R.string.duration, Integer.valueOf(item.detail.minutes), Integer.valueOf(item.detail.seconds)));
 
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -207,23 +207,23 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                         itemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
                             @Override
                             protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
-                                mItem.detail = result;
+                                item.detail = result;
                                 setCurrentCourse();
-                                castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(mItem), result.progress, true);
+                                castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), result.progress, true);
                             }
 
                             @Override
                             protected void onError(ErrorCode errorCode) {
                                 setCurrentCourse();
-                                castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(mItem), 0, true);
+                                castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), 0, true);
                             }
-                        }, mItem.detail);
+                        }, item.detail);
                     } else {
                         Intent intent = new Intent(getActivity(), VideoActivity.class);
                         Bundle b = new Bundle();
-                        b.putParcelable(KEY_COURSE, mCourse);
-                        b.putParcelable(KEY_MODULE, mModule);
-                        b.putParcelable(KEY_ITEM, mItem);
+                        b.putParcelable(KEY_COURSE, course);
+                        b.putParcelable(KEY_MODULE, module);
+                        b.putParcelable(KEY_ITEM, item);
                         intent.putExtras(b);
                         startActivity(intent);
                     }

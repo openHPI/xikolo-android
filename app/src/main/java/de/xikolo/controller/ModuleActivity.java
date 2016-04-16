@@ -26,7 +26,7 @@ import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.helper.CacheController;
 import de.xikolo.controller.helper.ModuleDownloadController;
 import de.xikolo.controller.module.VideoFragment;
-import de.xikolo.controller.module.WebItemFragment;
+import de.xikolo.controller.module.ItemWebViewFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
@@ -109,7 +109,7 @@ public class ModuleActivity extends BaseActivity {
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), module.items);
         viewpager.setAdapter(adapter);
-        viewpager.setOffscreenPageLimit(3);
+        viewpager.setOffscreenPageLimit(2);
 
         // Bind the tabs to the ViewPager
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -274,7 +274,7 @@ public class ModuleActivity extends BaseActivity {
                     case Item.TYPE_SELFTEST:
                     case Item.TYPE_LTI:
                     case Item.TYPE_PEER:
-                        fragment = WebItemFragment.newInstance(course, module, items.get(position));
+                        fragment = ItemWebViewFragment.newInstance(course, module, items.get(position));
                         break;
                     case Item.TYPE_VIDEO:
                         fragment = VideoFragment.newInstance(course, module, items.get(position));

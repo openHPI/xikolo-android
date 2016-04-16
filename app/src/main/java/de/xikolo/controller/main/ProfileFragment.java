@@ -91,7 +91,7 @@ public class ProfileFragment extends ContentFragment {
             @Override
             protected void onSuccess(User result, DataSource dataSource) {
                 updateLayout();
-                mActivityCallback.updateDrawer();
+                activityCallback.updateDrawer();
             }
 
             @Override
@@ -189,14 +189,14 @@ public class ProfileFragment extends ContentFragment {
 
     private void showHeader() {
         User user = UserModel.getSavedUser(getActivity());
-        mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
+        activityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
     }
 
     private void showCoursesProgress(List<Course> courses) {
         mCourses = courses;
         mTextEnrollCounts.setText(String.valueOf(mCourseModel.getEnrollmentsCount()));
-        if (mActivityCallback != null) {
-            mActivityCallback.updateDrawer();
+        if (activityCallback != null) {
+            activityCallback.updateDrawer();
         }
     }
 

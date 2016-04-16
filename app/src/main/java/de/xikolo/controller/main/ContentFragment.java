@@ -6,13 +6,13 @@ import de.xikolo.controller.BaseFragment;
 
 public abstract class ContentFragment extends BaseFragment {
 
-    protected OnFragmentInteractionListener mActivityCallback;
+    protected OnFragmentInteractionListener activityCallback;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mActivityCallback = (OnFragmentInteractionListener) context;
+            activityCallback = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -23,7 +23,7 @@ public abstract class ContentFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         try {
-            mActivityCallback = (OnFragmentInteractionListener) getActivity();
+            activityCallback = (OnFragmentInteractionListener) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString()
                     + " must implement OnFragmentInteractionListener");
@@ -33,7 +33,7 @@ public abstract class ContentFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivityCallback = null;
+        activityCallback = null;
     }
 
     public interface OnFragmentInteractionListener {
