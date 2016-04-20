@@ -65,13 +65,14 @@ public class Config {
 
     public static final String HEADER_ACCEPT = "Accept";
     public static final String HEADER_AUTHORIZATION = "Authorization";
-    public static final String HEADER_USER_PLATFORM = "User-Platform";
     public static final String HEADER_CACHE_CONTROL = "Cache-Control";
+    public static final String HEADER_USER_PLATFORM = "X-User-Platform";
+    public static final String HEADER_LANALYTICS_CONTEXT = "X-Lanalytics-Context";
 
     public static final String HEADER_ACCEPT_VALUE = "application/vnd.xikolo.v1, application/json";
-    public static final String HEADER_AUTHORIZATION_VALUE_SCHEMA = "Token token=";
-    public static final String HEADER_USER_PLATFORM_VALUE = "Android";
+    public static final String HEADER_AUTHORIZATION_PREFIX = "Token token=";
     public static final String HEADER_CACHE_CONTROL_VALUE = "no-cache";
+    public static final String HEADER_USER_PLATFORM_VALUE = "Android";
 
     public static final String HTTP_GET = "GET";
     public static final String HTTP_POST = "POST";

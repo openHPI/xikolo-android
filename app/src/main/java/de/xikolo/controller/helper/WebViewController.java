@@ -23,6 +23,7 @@ import android.webkit.WebViewClient;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
@@ -114,7 +115,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     if (url.contains(Config.HOST) && UserModel.isLoggedIn(mActivity)) {
                         Bundle headers = new Bundle();
-                        headers.putString(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + UserModel.getToken(mActivity));
+                        headers.putString(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserModel.getToken(mActivity));
                         i.putExtra(Browser.EXTRA_HEADERS, headers);
                     }
                     mActivity.startActivity(i);
@@ -151,8 +152,10 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                     if (url.contains(Config.HOST)) {
                         Map<String, String> header = new HashMap<>();
                         header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
+                        header.put(Config.HEADER_LANALYTICS_CONTEXT, GlobalApplication.getInstance()
+                                .getLanalytics().getDefaultContextPayload());
                         if (UserModel.isLoggedIn(mActivity)) {
-                            header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + UserModel.getToken(mActivity));
+                            header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserModel.getToken(mActivity));
                         }
                         mWebView.loadUrl(mUrl, header);
                     } else {

@@ -20,6 +20,7 @@ import java.util.UUID;
 
 import de.xikolo.lanalytics.database.DatabaseHelper;
 import de.xikolo.lanalytics.database.Entity;
+import de.xikolo.lanalytics.parser.Parser;
 import de.xikolo.lanalytics.util.ContextUtil;
 import de.xikolo.lanalytics.util.DateUtil;
 import de.xikolo.lanalytics.util.NetworkUtil;
@@ -82,6 +83,10 @@ public class Lanalytics {
         }).start();
     }
 
+    public String getDefaultContextPayload() {
+        return Parser.toJson(ContextUtil.getDefaultContextData(context));
+    }
+
     public static class Event implements Entity {
 
         public final String id;
@@ -135,7 +140,8 @@ public class Lanalytics {
             private transient boolean onlyWifi;
 
             public Builder(Cursor cursor) {
-                Type typeOfHashMap = new TypeToken<LinkedHashMap<String, String>>() {}.getType();
+                Type typeOfHashMap = new TypeToken<LinkedHashMap<String, String>>() {
+                }.getType();
                 Gson gson = new GsonBuilder().create();
 
                 int i = 0;
