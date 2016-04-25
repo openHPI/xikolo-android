@@ -48,19 +48,19 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public static final String FILTER_ALL = "filter_all";
     public static final String FILTER_MY = "filter_my";
 
-    private static final String KEY_COURSES = "courses";
+    private static final String ARG_COURSES = "arg_courses";
 
-    private String mFilter;
-    private SwipeRefreshLayout mRefreshLayout;
+    private String filter;
+    private SwipeRefreshLayout refreshLayout;
 
-    private AutofitRecyclerView mRecyclerView;
-    private CourseListAdapter mCourseListAdapter;
+    private AutofitRecyclerView recyclerView;
+    private CourseListAdapter courseListAdapter;
 
-    private NotificationController mNotificationController;
+    private NotificationController notificationController;
 
-    private List<Course> mCourses;
+    private List<Course> courses;
 
-    private CourseModel mCourseModel;
+    private CourseModel courseModel;
 
     public CourseListFragment() {
         // Required empty public constructor
@@ -79,14 +79,14 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mFilter = getArguments().getString(ARG_FILTER);
+            filter = getArguments().getString(ARG_FILTER);
         }
         if (savedInstanceState != null) {
-            mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
+            courses = savedInstanceState.getParcelableArrayList(ARG_COURSES);
         }
         setHasOptionsMenu(true);
 
-        mCourseModel = new CourseModel(jobManager);
+        courseModel = new CourseModel(jobManager);
 
         EventBus.getDefault().register(this);
     }
@@ -96,21 +96,21 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             @Override
             protected void onSuccess(List<Course> result, DataSource dataSource) {
                 if (result.size() > 0) {
-                    mNotificationController.setInvisible();
+                    notificationController.setInvisible();
                 }
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) ||
                         dataSource.equals(DataSource.NETWORK)) {
-                    mRefreshLayout.setRefreshing(false);
+                    refreshLayout.setRefreshing(false);
                 }
 
-                mCourses = result;
+                courses = result;
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
-                    mNotificationController.setTitle(R.string.notification_no_network);
-                    mNotificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
-                    mNotificationController.setNotificationVisible(true);
-                    mRefreshLayout.setRefreshing(false);
-                    mCourseListAdapter.clear();
+                    notificationController.setTitle(R.string.notification_no_network);
+                    notificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
+                    notificationController.setNotificationVisible(true);
+                    refreshLayout.setRefreshing(false);
+                    courseListAdapter.clear();
                 } else {
                     updateView();
                 }
@@ -125,7 +125,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
             @Override
             protected void onError(ErrorCode errorCode) {
-                mCourses = null;
+                courses = null;
 
                 if (errorCode == ErrorCode.NO_RESULT) {
                     ToastUtil.show(GlobalApplication.getInstance().getString(R.string.toast_no_courses)
@@ -139,36 +139,36 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         };
 
         if (isMyCoursesFilter() && !UserModel.isLoggedIn(getActivity())) {
-            mCourses = null;
+            courses = null;
 
-            mNotificationController.setTitle(R.string.notification_please_login);
-            mNotificationController.setSummary(R.string.notification_please_login_summary);
-            mNotificationController.setOnClickListener(new View.OnClickListener() {
+            notificationController.setTitle(R.string.notification_please_login);
+            notificationController.setSummary(R.string.notification_please_login_summary);
+            notificationController.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                 }
             });
-            mNotificationController.setNotificationVisible(true);
-            mRefreshLayout.setRefreshing(false);
+            notificationController.setNotificationVisible(true);
+            refreshLayout.setRefreshing(false);
         } else {
-            if (mCourses == null || mCourses.size() == 0) {
-                mNotificationController.setProgressVisible(true);
+            if (courses == null || courses.size() == 0) {
+                notificationController.setProgressVisible(true);
             } else {
-                mRefreshLayout.setRefreshing(true);
+                refreshLayout.setRefreshing(true);
             }
             if (isMyCoursesFilter()) {
-                mCourseModel.getCourses(result, includeProgress, CourseModel.CourseFilter.MY);
+                courseModel.getCourses(result, includeProgress, CourseModel.CourseFilter.MY);
             } else {
-                mCourseModel.getCourses(result, includeProgress);
+                courseModel.getCourses(result, includeProgress);
             }
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mCourses != null) {
-            outState.putParcelableArrayList(KEY_COURSES, (ArrayList<Course>) mCourses);
+        if (courses != null) {
+            outState.putParcelableArrayList(ARG_COURSES, (ArrayList<Course>) courses);
         }
         super.onSaveInstanceState(outState);
     }
@@ -178,49 +178,49 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_course_list, container, false);
 
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
-        RefeshLayoutController.setup(mRefreshLayout, this);
+        refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        RefeshLayoutController.setup(refreshLayout, this);
 
         if (isAllCoursesFilter()) {
-            mCourseListAdapter = new CourseListAdapter(this, CourseModel.CourseFilter.ALL);
+            courseListAdapter = new CourseListAdapter(this, CourseModel.CourseFilter.ALL);
         } else if (isMyCoursesFilter()) {
-            mCourseListAdapter = new CourseListAdapter(this, CourseModel.CourseFilter.MY);
+            courseListAdapter = new CourseListAdapter(this, CourseModel.CourseFilter.MY);
         }
 
-        mRecyclerView = (AutofitRecyclerView) layout.findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mCourseListAdapter);
+        recyclerView = (AutofitRecyclerView) layout.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(courseListAdapter);
 
-        mRecyclerView.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        recyclerView.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return mCourseListAdapter.isHeader(position) ? mRecyclerView.getSpanCount() : 1;
+                return courseListAdapter.isHeader(position) ? recyclerView.getSpanCount() : 1;
             }
         });
 
-        mRecyclerView.addItemDecoration(new SpaceItemDecoration(
+        recyclerView.addItemDecoration(new SpaceItemDecoration(
                 getActivity().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
                 getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
                 false,
                 new SpaceItemDecoration.RecyclerViewInfo() {
                     @Override
                     public boolean isHeader(int position) {
-                        return mCourseListAdapter.isHeader(position);
+                        return courseListAdapter.isHeader(position);
                     }
 
                     @Override
                     public int getSpanCount() {
-                        return mRecyclerView.getSpanCount();
+                        return recyclerView.getSpanCount();
                     }
 
                     @Override
                     public int getItemCount() {
-                        return mCourseListAdapter.getItemCount();
+                        return courseListAdapter.getItemCount();
                     }
                 }));
 
-        mNotificationController = new NotificationController(layout);
-        mNotificationController.setInvisible();
+        notificationController = new NotificationController(layout);
+        notificationController.setInvisible();
 
         return layout;
     }
@@ -229,13 +229,13 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public void onStart() {
         super.onStart();
 
-        if (mFilter.equals(FILTER_ALL)) {
+        if (filter.equals(FILTER_ALL)) {
             activityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
-        } else if (mFilter.equals(FILTER_MY)) {
+        } else if (filter.equals(FILTER_MY)) {
             activityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
         }
 
-        if (mCourses != null && mCourses.size() > 0) {
+        if (courses != null && courses.size() > 0) {
             updateView();
         } else {
             requestCourses(false, false);
@@ -245,33 +245,33 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     private void updateView() {
         if (isAdded()) {
             if (isMyCoursesFilter() && !UserModel.isLoggedIn(getActivity())) {
-                mCourses = null;
+                courses = null;
 
-                mNotificationController.setTitle(R.string.notification_please_login);
-                mNotificationController.setSummary(R.string.notification_please_login_summary);
-                mNotificationController.setOnClickListener(new View.OnClickListener() {
+                notificationController.setTitle(R.string.notification_please_login);
+                notificationController.setSummary(R.string.notification_please_login_summary);
+                notificationController.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
                     }
                 });
-                mNotificationController.setNotificationVisible(true);
-            } else if (isMyCoursesFilter() && (mCourses == null || mCourses.size() == 0)) {
-                mNotificationController.setTitle(R.string.notification_no_enrollments);
-                mNotificationController.setSummary(R.string.notification_no_enrollments_summary);
-                mNotificationController.setOnClickListener(new View.OnClickListener() {
+                notificationController.setNotificationVisible(true);
+            } else if (isMyCoursesFilter() && (courses == null || courses.size() == 0)) {
+                notificationController.setTitle(R.string.notification_no_enrollments);
+                notificationController.setSummary(R.string.notification_no_enrollments_summary);
+                notificationController.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_ALL_COURSES);
                     }
                 });
-                mNotificationController.setNotificationVisible(true);
+                notificationController.setNotificationVisible(true);
             }
 
-            if (mCourses != null) {
-                mCourseListAdapter.updateCourses(mCourses);
+            if (courses != null) {
+                courseListAdapter.updateCourses(courses);
             } else {
-                mCourseListAdapter.clear();
+                courseListAdapter.clear();
             }
             activityCallback.updateDrawer();
         }
@@ -314,15 +314,15 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             }
         };
         dialog.show(getChildFragmentManager(), ProgressDialog.TAG);
-        mCourseModel.addEnrollment(result, course);
+        courseModel.addEnrollment(result, course);
     }
 
     private boolean isMyCoursesFilter() {
-        return mFilter.equals(CourseListFragment.FILTER_MY);
+        return filter.equals(CourseListFragment.FILTER_MY);
     }
 
     private boolean isAllCoursesFilter() {
-        return mFilter.equals(CourseListFragment.FILTER_ALL);
+        return filter.equals(CourseListFragment.FILTER_ALL);
     }
 
     @Override
@@ -343,47 +343,51 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public void onDetailButtonClicked(Course course) {
         Intent intent = new Intent(getActivity(), CourseDetailsActivity.class);
         Bundle b = new Bundle();
-        b.putParcelable(CourseActivity.ARG_COURSE, course);
+        b.putParcelable(CourseDetailsActivity.ARG_COURSE, course);
         intent.putExtras(b);
         startActivity(intent);
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(UnenrollEvent event) {
-        if (mCourses != null && mCourses.contains(event.getCourse())) {
+        if (courses != null && courses.contains(event.getCourse())) {
             if (isMyCoursesFilter()) {
-                mCourses.remove(event.getCourse());
+                courses.remove(event.getCourse());
             } else {
-                mCourses.set(mCourses.indexOf(event.getCourse()), event.getCourse());
+                courses.set(courses.indexOf(event.getCourse()), event.getCourse());
             }
         }
         updateView();
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(EnrollEvent event) {
         if (isMyCoursesFilter()) {
-            if (mCourses != null && !mCourses.contains(event.getCourse())) {
-                mCourses.add(event.getCourse());
+            if (courses != null && !courses.contains(event.getCourse())) {
+                courses.add(event.getCourse());
             }
         } else {
-            if (mCourses != null && mCourses.contains(event.getCourse())) {
-                mCourses.set(mCourses.indexOf(event.getCourse()), event.getCourse());
+            if (courses != null && courses.contains(event.getCourse())) {
+                courses.set(courses.indexOf(event.getCourse()), event.getCourse());
             }
         }
         updateView();
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(LoginEvent event) {
-        mCourses = null;
-        if (mCourseListAdapter != null) {
-            mCourseListAdapter.clear();
+        courses = null;
+        if (courseListAdapter != null) {
+            courseListAdapter.clear();
         }
         requestCourses(false, false);
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(LogoutEvent event) {
-        mCourses = null;
-        if (mCourseListAdapter != null) {
-            mCourseListAdapter.clear();
+        courses = null;
+        if (courseListAdapter != null) {
+            courseListAdapter.clear();
         }
         requestCourses(false, false);
     }

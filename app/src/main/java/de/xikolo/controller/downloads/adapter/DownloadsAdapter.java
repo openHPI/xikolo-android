@@ -61,17 +61,16 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_section_header, parent, false);
             view.setEnabled(false);
             view.setOnClickListener(null);
-            HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
-            return headerViewHolder;
+            return new HeaderViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_download, parent, false);
             view.setEnabled(false);
             view.setOnClickListener(null);
-            FolderViewHolder folderViewHolder = new FolderViewHolder(view);
-            return folderViewHolder;
+            return new FolderViewHolder(view);
         }
     }
 
+    @SuppressWarnings("SetTextI18n")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof HeaderViewHolder) {
@@ -86,11 +85,11 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             Context context = GlobalApplication.getInstance();
 
             File dir = new File(folderItem.getPath());
-            viewHolder.title.setText(folderItem.getTitle().replaceAll("_", " "));
+            viewHolder.textTitle.setText(folderItem.getTitle().replaceAll("_", " "));
 
             long numberOfFiles = FileUtil.folderFileNumber(dir);
 
-            viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+            viewHolder.textButtonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     callback.onDeleteButtonClicked(folderItem);
@@ -98,18 +97,18 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             });
 
             if (numberOfFiles > 0) {
-                viewHolder.subTitle.setText(numberOfFiles + " " + context.getString(R.string.files) + ": "
+                viewHolder.textSubTitle.setText(numberOfFiles + " " + context.getString(R.string.files) + ": "
                         + FileUtil.getFormattedFileSize(FileUtil.folderSize(dir)));
-                viewHolder.delete.setVisibility(View.VISIBLE);
+                viewHolder.textButtonDelete.setVisibility(View.VISIBLE);
             } else {
-                viewHolder.subTitle.setText(numberOfFiles + " " + context.getString(R.string.files));
-                viewHolder.delete.setVisibility(View.GONE);
+                viewHolder.textSubTitle.setText(numberOfFiles + " " + context.getString(R.string.files));
+                viewHolder.textButtonDelete.setVisibility(View.GONE);
             }
 
             if (position == getItemCount() - 1 || headerAndSectionsList.isHeader(position + 1)) {
-                viewHolder.divider.setVisibility(View.INVISIBLE);
+                viewHolder.viewDivider.setVisibility(View.INVISIBLE);
             } else {
-                viewHolder.divider.setVisibility(View.VISIBLE);
+                viewHolder.viewDivider.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -142,17 +141,18 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     static class FolderViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView subTitle;
-        TextView delete;
-        View divider;
+
+        TextView textTitle;
+        TextView textSubTitle;
+        TextView textButtonDelete;
+        View viewDivider;
 
         public FolderViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.textTitle);
-            subTitle = (TextView) itemView.findViewById(R.id.textSubTitle);
-            delete = (TextView) itemView.findViewById(R.id.buttonDelete);
-            divider = itemView.findViewById(R.id.divider);
+            textTitle = (TextView) itemView.findViewById(R.id.textTitle);
+            textSubTitle = (TextView) itemView.findViewById(R.id.textSubTitle);
+            textButtonDelete = (TextView) itemView.findViewById(R.id.buttonDelete);
+            viewDivider = itemView.findViewById(R.id.divider);
         }
 
     }

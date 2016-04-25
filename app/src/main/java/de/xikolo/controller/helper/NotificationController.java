@@ -9,95 +9,96 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.view.CustomFontTextView;
 
+@SuppressWarnings("unused")
 public class NotificationController {
 
-    private FrameLayout notificationView;
-    private ProgressBar progressView;
+    private FrameLayout viewNotification;
+    private ProgressBar progressBar;
 
-    private CustomFontTextView symbolTextView;
-    private TextView titleTextView;
-    private TextView summaryTextView;
+    private CustomFontTextView textIcon;
+    private TextView textTitle;
+    private TextView textSummary;
 
     public NotificationController(View layout) {
-        notificationView = (FrameLayout) layout.findViewById(R.id.containerNotification);
-        progressView = (ProgressBar) layout.findViewById(R.id.containerProgress);
+        viewNotification = (FrameLayout) layout.findViewById(R.id.containerNotification);
+        progressBar = (ProgressBar) layout.findViewById(R.id.containerProgress);
 
-        if (notificationView == null) {
+        if (viewNotification == null) {
             throw new IllegalArgumentException("Layout does not contain Notification view");
         }
-        if (progressView == null) {
+        if (progressBar == null) {
             throw new IllegalArgumentException("Layout does not contain ProgressBar view");
         }
 
-        symbolTextView = (CustomFontTextView) notificationView.findViewById(R.id.textNotificationSymbol);
-        titleTextView = (TextView) notificationView.findViewById(R.id.textNotificationHeader);
-        summaryTextView = (TextView) notificationView.findViewById(R.id.textNotificationSummary);
+        textIcon = (CustomFontTextView) viewNotification.findViewById(R.id.textNotificationSymbol);
+        textTitle = (TextView) viewNotification.findViewById(R.id.textNotificationHeader);
+        textSummary = (TextView) viewNotification.findViewById(R.id.textNotificationSummary);
     }
 
     public void setProgressVisible(Boolean visible) {
         if (visible) {
-            progressView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
             setNotificationVisible(false);
         } else {
-            progressView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     public void setNotificationVisible(Boolean visible) {
         if (visible) {
-            notificationView.setVisibility(View.VISIBLE);
+            viewNotification.setVisibility(View.VISIBLE);
             setProgressVisible(false);
         } else {
-            notificationView.setVisibility(View.GONE);
+            viewNotification.setVisibility(View.GONE);
         }
     }
 
     public Boolean isNotificationVisible() {
-        return notificationView.getVisibility() == View.VISIBLE;
+        return viewNotification.getVisibility() == View.VISIBLE;
     }
 
     public Boolean isProgressVisible() {
-        return progressView.getVisibility() == View.VISIBLE;
+        return progressBar.getVisibility() == View.VISIBLE;
     }
 
     public void setOnClickListener(View.OnClickListener listener) {
-        notificationView.setOnClickListener(listener);
+        viewNotification.setOnClickListener(listener);
     }
 
     public CharSequence getSymbol() {
-        return symbolTextView.getText();
+        return textIcon.getText();
     }
 
     public void setSymbol(String symbol) {
-        symbolTextView.setText(symbol);
+        textIcon.setText(symbol);
     }
 
     public void setSymbol(int title) {
-        symbolTextView.setText(GlobalApplication.getInstance().getResources().getString(title));
+        textIcon.setText(GlobalApplication.getInstance().getResources().getString(title));
     }
 
     public CharSequence getTitle() {
-        return titleTextView.getText();
+        return textTitle.getText();
     }
 
     public void setTitle(String title) {
-        titleTextView.setText(title);
+        textTitle.setText(title);
     }
 
     public void setTitle(int title) {
-        titleTextView.setText(GlobalApplication.getInstance().getResources().getString(title));
+        textTitle.setText(GlobalApplication.getInstance().getResources().getString(title));
     }
 
     public CharSequence getSummary() {
-        return summaryTextView.getText();
+        return textSummary.getText();
     }
 
     public void setSummary(String summary) {
-        summaryTextView.setText(summary);
+        textSummary.setText(summary);
     }
 
     public void setSummary(int summary) {
-        summaryTextView.setText(GlobalApplication.getInstance().getResources().getString(summary));
+        textSummary.setText(GlobalApplication.getInstance().getResources().getString(summary));
     }
 
     public void setInvisible() {

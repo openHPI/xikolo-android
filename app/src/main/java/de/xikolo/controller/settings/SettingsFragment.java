@@ -31,7 +31,7 @@ public class SettingsFragment extends PreferenceFragment {
 
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
-    private Preference login_out;
+    private Preference loginOut;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -103,8 +103,8 @@ public class SettingsFragment extends PreferenceFragment {
             info.removePreference(termsOfUse);
         }
 
-        Preference build_version = findPreference(getString(R.string.preference_build_version));
-        build_version.setSummary(build_version.getSummary()
+        Preference buildVersion = findPreference(getString(R.string.preference_build_version));
+        buildVersion.setSummary(buildVersion.getSummary()
                 + " "
                 + BuildConfig.VERSION_NAME);
 
@@ -128,11 +128,11 @@ public class SettingsFragment extends PreferenceFragment {
             }
         });
 
-        login_out = findPreference(getString(R.string.preference_login_out));
+        loginOut = findPreference(getString(R.string.preference_login_out));
         if (UserModel.isLoggedIn(getActivity())) {
-            buildLogoutView(login_out);
+            buildLogoutView(loginOut);
         } else {
-            buildLoginView(login_out);
+            buildLoginView(loginOut);
         }
     }
 
@@ -172,13 +172,14 @@ public class SettingsFragment extends PreferenceFragment {
         );
     }
 
-
+    @SuppressWarnings("unused")
     public void onEventMainThread(LoginEvent event) {
-        buildLogoutView(login_out);
+        buildLogoutView(loginOut);
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(LogoutEvent event) {
-        buildLoginView(login_out);
+        buildLoginView(loginOut);
     }
 
     private void openUrl(String url) {

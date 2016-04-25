@@ -38,7 +38,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     private int checkedItem = -1;
 
-    OnItemClickListener mItemClickListener;
+    OnItemClickListener itemClickListener;
 
     public NavigationAdapter(CourseModel courseModel) {
         final Context context = GlobalApplication.getInstance();
@@ -97,60 +97,60 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
         Context context = GlobalApplication.getInstance();
 
-        viewHolder.icon.setText(element.icon);
+        viewHolder.textIcon.setText(element.icon);
 
         if (position == NAV_ID_PROFILE) {
             ProfileNavigationViewHolder profileViewHolder = (ProfileNavigationViewHolder) viewHolder;
 
             if (UserModel.isLoggedIn(context)) {
-                profileViewHolder.containerLogin.setVisibility(View.GONE);
-                profileViewHolder.containerProfile.setVisibility(View.VISIBLE);
+                profileViewHolder.viewLogin.setVisibility(View.GONE);
+                profileViewHolder.viewProfile.setVisibility(View.VISIBLE);
 
                 User user = UserModel.getSavedUser(context);
-                profileViewHolder.name.setText(String.format(context.getResources().getString(R.string.user_name),
+                profileViewHolder.textName.setText(String.format(context.getResources().getString(R.string.user_name),
                         user.first_name, user.last_name));
-                profileViewHolder.email.setText(user.email);
+                profileViewHolder.textEmail.setText(user.email);
 
                 if (user.user_visual != null) {
-                    ImageController.loadRounded(user.user_visual, profileViewHolder.img);
+                    ImageController.loadRounded(user.user_visual, profileViewHolder.imageProfile);
                 } else {
-                    ImageController.loadRounded(R.drawable.avatar, profileViewHolder.img);
+                    ImageController.loadRounded(R.drawable.avatar, profileViewHolder.imageProfile);
                 }
             } else {
-                profileViewHolder.containerLogin.setVisibility(View.VISIBLE);
-                profileViewHolder.containerProfile.setVisibility(View.GONE);
-                profileViewHolder.label.setText(element.label);
+                profileViewHolder.viewLogin.setVisibility(View.VISIBLE);
+                profileViewHolder.viewProfile.setVisibility(View.GONE);
+                profileViewHolder.textLabel.setText(element.label);
             }
         } else if (position == NAV_ID_MY_COURSES) {
             CounterNavigationViewHolder counterViewHolder = (CounterNavigationViewHolder) viewHolder;
 
-            viewHolder.label.setText(element.label);
+            viewHolder.textLabel.setText(element.label);
 
             if (UserModel.isLoggedIn(context)) {
                 int size = courseModel.getEnrollmentsCount();
-                counterViewHolder.counter.setText(String.valueOf(size));
+                counterViewHolder.textEnrollmentCounter.setText(String.valueOf(size));
                 if (size > 0) {
-                    counterViewHolder.counter.setVisibility(View.VISIBLE);
+                    counterViewHolder.textEnrollmentCounter.setVisibility(View.VISIBLE);
                 } else {
-                    counterViewHolder.counter.setVisibility(View.GONE);
+                    counterViewHolder.textEnrollmentCounter.setVisibility(View.GONE);
                 }
             } else {
-                counterViewHolder.counter.setText(String.valueOf(0));
-                counterViewHolder.counter.setVisibility(View.GONE);
+                counterViewHolder.textEnrollmentCounter.setText(String.valueOf(0));
+                counterViewHolder.textEnrollmentCounter.setVisibility(View.GONE);
             }
         } else {
-            viewHolder.label.setText(element.label);
+            viewHolder.textLabel.setText(element.label);
         }
 
         if (position == getCheckedItemPosition()) {
             if (position != NAV_ID_PROFILE || !UserModel.isLoggedIn(context)) {
-                viewHolder.icon.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
-                viewHolder.label.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
+                viewHolder.textIcon.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
+                viewHolder.textLabel.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
             }
         } else {
             if (position != NAV_ID_PROFILE || !UserModel.isLoggedIn(context)) {
-                viewHolder.icon.setTextColor(ContextCompat.getColor(context, R.color.white));
-                viewHolder.label.setTextColor(ContextCompat.getColor(context, R.color.white));
+                viewHolder.textIcon.setTextColor(ContextCompat.getColor(context, R.color.white));
+                viewHolder.textLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
             }
         }
     }
@@ -176,7 +176,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
+        this.itemClickListener = mItemClickListener;
     }
 
     public interface OnItemClickListener {
@@ -185,22 +185,22 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     class BaseNavigationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView icon;
-        TextView label;
+        TextView textIcon;
+        TextView textLabel;
 
         public BaseNavigationViewHolder(View view) {
             super(view);
 
-            icon = (TextView) view.findViewById(R.id.textIcon);
-            label = (TextView) view.findViewById(R.id.textLabel);
+            textIcon = (TextView) view.findViewById(R.id.textIcon);
+            textLabel = (TextView) view.findViewById(R.id.textLabel);
 
             view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(view, getAdapterPosition());
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(view, getAdapterPosition());
             }
         }
 
@@ -208,23 +208,23 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     class ProfileNavigationViewHolder extends BaseNavigationViewHolder {
 
-        ImageView img;
-        TextView name;
-        TextView email;
-        View containerLogin;
-        View containerProfile;
+        ImageView imageProfile;
+        TextView textName;
+        TextView textEmail;
+        View viewLogin;
+        View viewProfile;
 
         public ProfileNavigationViewHolder(View view) {
             super(view);
 
-            containerLogin = view.findViewById(R.id.containerLogin);
-            containerProfile = view.findViewById(R.id.containerProfile);
-            name = (TextView) view.findViewById(R.id.textName);
-            email = (TextView) view.findViewById(R.id.textEmail);
-            img = (ImageView) view.findViewById(R.id.imgProfile);
+            viewLogin = view.findViewById(R.id.containerLogin);
+            viewProfile = view.findViewById(R.id.containerProfile);
+            textName = (TextView) view.findViewById(R.id.textName);
+            textEmail = (TextView) view.findViewById(R.id.textEmail);
+            imageProfile = (ImageView) view.findViewById(R.id.imgProfile);
 
-            setStatusBarPadding(containerLogin);
-            setStatusBarPadding(containerProfile);
+            setStatusBarPadding(viewLogin);
+            setStatusBarPadding(viewProfile);
         }
 
         private void setStatusBarPadding(View view) {
@@ -252,12 +252,12 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     class CounterNavigationViewHolder extends BaseNavigationViewHolder {
 
-        TextView counter;
+        TextView textEnrollmentCounter;
 
         public CounterNavigationViewHolder(View view) {
             super(view);
 
-            counter = (TextView) view.findViewById(R.id.textCounter);
+            textEnrollmentCounter = (TextView) view.findViewById(R.id.textCounter);
         }
 
     }

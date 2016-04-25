@@ -32,36 +32,36 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
 
     public static final String TAG = ModuleListAdapter.class.getSimpleName();
 
-    private List<Module> mModules;
+    private List<Module> modules;
 
-    private FragmentActivity mActivity;
-    private Course mCourse;
+    private FragmentActivity activity;
+    private Course course;
 
-    private ItemListAdapter.OnItemButtonClickListener mItemCallback;
-    private OnModuleButtonClickListener mModuleCallback;
+    private ItemListAdapter.OnItemButtonClickListener itemButtonClickListener;
+    private OnModuleButtonClickListener moduleButtonClickListener;
 
     public ModuleListAdapter(FragmentActivity activity, Course course, OnModuleButtonClickListener moduleCallback,
                              ItemListAdapter.OnItemButtonClickListener itemCallback) {
-        this.mActivity = activity;
-        this.mModules = new ArrayList<>();
-        this.mCourse = course;
-        this.mModuleCallback = moduleCallback;
-        this.mItemCallback = itemCallback;
+        this.activity = activity;
+        this.modules = new ArrayList<>();
+        this.course = course;
+        this.moduleButtonClickListener = moduleCallback;
+        this.itemButtonClickListener = itemCallback;
     }
 
     public void updateModules(List<Module> modules) {
-        this.mModules = modules;
+        this.modules = modules;
         this.notifyDataSetChanged();
     }
 
     public void clear() {
-        this.mModules.clear();
+        this.modules.clear();
         this.notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mModules.size();
+        return modules.size();
     }
 
     @Override
@@ -72,16 +72,16 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
 
     @Override
     public void onBindViewHolder(final ModuleViewHolder holder, int position) {
-        final Module module = mModules.get(position);
+        final Module module = modules.get(position);
 
-        holder.title.setText(module.name);
+        holder.textTitle.setText(module.name);
 
-        final ItemListAdapter itemAdapter = new ItemListAdapter(mActivity, mCourse, module, mItemCallback);
+        final ItemListAdapter itemAdapter = new ItemListAdapter(activity, course, module, itemButtonClickListener);
         holder.recyclerView.setAdapter(itemAdapter);
         holder.recyclerView.clearItemDecorations();
         holder.recyclerView.addItemDecoration(new SpaceItemDecoration(
-                mActivity.getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin) / 2,
-                mActivity.getResources().getDimensionPixelSize(R.dimen.card_vertical_margin) / 2,
+                activity.getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin) / 2,
+                activity.getResources().getDimensionPixelSize(R.dimen.card_vertical_margin) / 2,
                 false,
                 new SpaceItemDecoration.RecyclerViewInfo() {
                     @Override
@@ -114,17 +114,17 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
     }
 
     private void contentAvailable(final Module module, ModuleViewHolder holder) {
-        holder.progress.setVisibility(View.GONE);
-        holder.moduleNotificationContainer.setVisibility(View.GONE);
-        holder.header.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.apptheme_main));
+        holder.progressBar.setVisibility(View.GONE);
+        holder.viewModuleNotification.setVisibility(View.GONE);
+        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.apptheme_main));
 
         TypedValue outValue = new TypedValue();
-        mActivity.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-        holder.container.setForeground(ContextCompat.getDrawable(mActivity, outValue.resourceId));
-        holder.container.setOnClickListener(new View.OnClickListener() {
+        activity.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+        holder.layout.setForeground(ContextCompat.getDrawable(activity, outValue.resourceId));
+        holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mModuleCallback.onModuleButtonClicked(mCourse, module);
+                moduleButtonClickListener.onModuleButtonClicked(course, module);
             }
         });
 
@@ -136,29 +136,29 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
             }
         }
         if (downloadableContent) {
-            holder.download.setVisibility(View.VISIBLE);
-            holder.download.setOnClickListener(new View.OnClickListener() {
+            holder.viewDownloadButton.setVisibility(View.VISIBLE);
+            holder.viewDownloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ModuleDownloadController moduleDownloadController = new ModuleDownloadController(mActivity);
-                    moduleDownloadController.initModuleDownloads(mCourse, module);
+                    ModuleDownloadController moduleDownloadController = new ModuleDownloadController(activity);
+                    moduleDownloadController.initModuleDownloads(course, module);
                 }
             });
         } else {
-            holder.download.setVisibility(View.GONE);
+            holder.viewDownloadButton.setVisibility(View.GONE);
         }
     }
 
     private void contentLocked(Module module, ModuleViewHolder holder) {
-        holder.progress.setVisibility(View.GONE);
-        holder.moduleNotificationContainer.setVisibility(View.VISIBLE);
-        holder.header.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.text_light));
-        holder.container.setClickable(false);
-        holder.container.setForeground(null);
-        holder.download.setVisibility(View.GONE);
+        holder.progressBar.setVisibility(View.GONE);
+        holder.viewModuleNotification.setVisibility(View.VISIBLE);
+        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.text_light));
+        holder.layout.setClickable(false);
+        holder.layout.setForeground(null);
+        holder.viewDownloadButton.setVisibility(View.GONE);
         if (module.available_from != null && DateUtil.nowIsBefore(module.available_from)) {
             DateFormat dateOut;
-            if (DisplayUtil.is7inchTablet(mActivity)) {
+            if (DisplayUtil.is7inchTablet(activity)) {
                 dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault());
             } else {
                 dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault());
@@ -166,10 +166,10 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
 
             Date date = DateUtil.parse(module.available_from);
 
-            holder.moduleNotificationLabel.setText(String.format(mActivity.getString(R.string.available_at),
+            holder.textModuleNotification.setText(String.format(activity.getString(R.string.available_at),
                     dateOut.format(date)));
         } else {
-            holder.moduleNotificationLabel.setText(mActivity.getString(R.string.module_notification_no_content));
+            holder.textModuleNotification.setText(activity.getString(R.string.module_notification_no_content));
         }
     }
 
@@ -181,28 +181,28 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
 
     static class ModuleViewHolder extends RecyclerView.ViewHolder {
 
-        FrameLayout container;
-        TextView title;
+        FrameLayout layout;
+        TextView textTitle;
         AutofitRecyclerView recyclerView;
-        ProgressBar progress;
-        View header;
+        ProgressBar progressBar;
+        View viewHeader;
 
-        View moduleNotificationContainer;
-        TextView moduleNotificationLabel;
+        View viewModuleNotification;
+        TextView textModuleNotification;
 
-        View download;
+        View viewDownloadButton;
 
         public ModuleViewHolder(View view) {
             super(view);
 
-            container = (FrameLayout) view.findViewById(R.id.container);
-            title = (TextView) view.findViewById(R.id.textTitle);
+            layout = (FrameLayout) view.findViewById(R.id.container);
+            textTitle = (TextView) view.findViewById(R.id.textTitle);
             recyclerView = (AutofitRecyclerView) view.findViewById(R.id.recyclerView);
-            progress = (ProgressBar) view.findViewById(R.id.containerProgress);
-            header = view.findViewById(R.id.header);
-            moduleNotificationContainer = view.findViewById(R.id.moduleNotificationContainer);
-            moduleNotificationLabel = (TextView) view.findViewById(R.id.moduleNotificationLabel);
-            download = view.findViewById(R.id.downloadBtn);
+            progressBar = (ProgressBar) view.findViewById(R.id.containerProgress);
+            viewHeader = view.findViewById(R.id.header);
+            viewModuleNotification = view.findViewById(R.id.moduleNotificationContainer);
+            textModuleNotification = (TextView) view.findViewById(R.id.moduleNotificationLabel);
+            viewDownloadButton = view.findViewById(R.id.downloadBtn);
         }
 
     }

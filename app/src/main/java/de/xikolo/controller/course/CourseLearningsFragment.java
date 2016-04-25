@@ -26,7 +26,6 @@ import de.xikolo.controller.helper.RefeshLayoutController;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
-import de.xikolo.model.ItemModel;
 import de.xikolo.model.ModuleModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.NetworkUtil;
@@ -39,22 +38,19 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     public final static String TAG = CourseLearningsFragment.class.getSimpleName();
 
     private static final String ARG_COURSE = "arg_course";
-
-    private static final String KEY_MODULES = "key_modules";
+    private static final String ARG_MODULES = "arg_modules";
 
     private static final int REQUEST_CODE_MODULES = 1;
 
-    private RecyclerView mRecyclerView;
-    private SwipeRefreshLayout mRefreshLayout;
+    private SwipeRefreshLayout refreshLayout;
 
-    private ModuleModel mModuleModel;
-    private ItemModel mItemModel;
-    private ModuleListAdapter mAdapter;
+    private ModuleModel moduleModel;
+    private ModuleListAdapter adapter;
 
-    private NotificationController mNotificationController;
+    private NotificationController notificationController;
 
-    private Course mCourse;
-    private List<Module> mModules;
+    private Course course;
+    private List<Module> modules;
 
     public CourseLearningsFragment() {
         // Required empty public constructor
@@ -70,8 +66,8 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mModules != null) {
-            outState.putParcelableArrayList(KEY_MODULES, (ArrayList<Module>) mModules);
+        if (modules != null) {
+            outState.putParcelableArrayList(ARG_MODULES, (ArrayList<Module>) modules);
         }
         super.onSaveInstanceState(outState);
     }
@@ -80,15 +76,14 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCourse = getArguments().getParcelable(ARG_COURSE);
+            course = getArguments().getParcelable(ARG_COURSE);
         }
         if (savedInstanceState != null) {
-            mModules = savedInstanceState.getParcelableArrayList(KEY_MODULES);
+            modules = savedInstanceState.getParcelableArrayList(ARG_MODULES);
         }
         setHasOptionsMenu(true);
 
-        mModuleModel = new ModuleModel(jobManager);
-        mItemModel = new ItemModel(jobManager);
+        moduleModel = new ModuleModel(jobManager);
     }
 
     @Override
@@ -96,17 +91,17 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_learnings, container, false);
 
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
-        RefeshLayoutController.setup(mRefreshLayout, this);
+        refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        RefeshLayoutController.setup(refreshLayout, this);
 
-        mRecyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
-        mAdapter = new ModuleListAdapter(getActivity(), mCourse, this, this);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
+        adapter = new ModuleListAdapter(getActivity(), course, this, this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
-        mRecyclerView.addItemDecoration(new SpaceItemDecoration(
+        recyclerView.addItemDecoration(new SpaceItemDecoration(
                 0,
                 getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
                 false,
@@ -123,12 +118,12 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
                     @Override
                     public int getItemCount() {
-                        return mAdapter.getItemCount();
+                        return adapter.getItemCount();
                     }
                 }
         ));
 
-        mNotificationController = new NotificationController(layout);
+        notificationController = new NotificationController(layout);
 
         return layout;
     }
@@ -137,11 +132,11 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     public void onStart() {
         super.onStart();
 
-        if (mModules == null) {
-            mNotificationController.setProgressVisible(true);
+        if (modules == null) {
+            notificationController.setProgressVisible(true);
             requestModulesWithItems(false, false);
         } else {
-            mAdapter.updateModules(mModules);
+            adapter.updateModules(modules);
         }
     }
 
@@ -155,22 +150,22 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
             @Override
             protected void onSuccess(List<Module> result, DataSource dataSource) {
                 if (result.size() > 0) {
-                    mNotificationController.setInvisible();
+                    notificationController.setInvisible();
                 }
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) ||
                         dataSource.equals(DataSource.NETWORK)) {
-                    mRefreshLayout.setRefreshing(false);
+                    refreshLayout.setRefreshing(false);
                 }
 
-                mModules = result;
+                modules = result;
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
-                    mAdapter.clear();
-                    mNotificationController.setTitle(R.string.notification_no_network);
-                    mNotificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
-                    mNotificationController.setNotificationVisible(true);
+                    adapter.clear();
+                    notificationController.setTitle(R.string.notification_no_network);
+                    notificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
+                    notificationController.setNotificationVisible(true);
                 } else {
-                    mAdapter.updateModules(mModules);
+                    adapter.updateModules(modules);
                 }
             }
 
@@ -184,16 +179,16 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
             @Override
             protected void onError(ErrorCode errorCode) {
                 ToastUtil.show(R.string.error);
-                mRefreshLayout.setRefreshing(false);
-                mNotificationController.setInvisible();
+                refreshLayout.setRefreshing(false);
+                notificationController.setInvisible();
             }
         };
 
-        if (!mNotificationController.isProgressVisible()) {
-            mRefreshLayout.setRefreshing(true);
+        if (!notificationController.isProgressVisible()) {
+            refreshLayout.setRefreshing(true);
         }
 
-        mModuleModel.getModulesWithItems(result, mCourse, includeProgress);
+        moduleModel.getModulesWithItems(result, course, includeProgress);
     }
 
     @Override
@@ -213,7 +208,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         b.putParcelable(ModuleActivity.ARG_MODULE, module);
         b.putParcelable(ModuleActivity.ARG_ITEM, item);
         intent.putExtras(b);
-        startActivityForResult(intent, REQUEST_CODE_MODULES);
+        getActivity().startActivityForResult(intent, REQUEST_CODE_MODULES);
     }
 
     @Override
@@ -221,8 +216,8 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         if (requestCode == REQUEST_CODE_MODULES && resultCode == Activity.RESULT_OK) {
             Module newModule = data.getExtras().getParcelable(ModuleActivity.ARG_MODULE);
 
-            if (mModules != null && mAdapter != null) {
-                Module oldModule = mModules.get(mModules.indexOf(newModule));
+            if (modules != null && adapter != null) {
+                Module oldModule = modules.get(modules.indexOf(newModule));
                 if (newModule != null) {
                     for (Item newItem : newModule.items) {
                         for (Item oldItem : oldModule.items) {
@@ -232,7 +227,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
                         }
                     }
                 }
-                mAdapter.updateModules(mModules);
+                adapter.updateModules(modules);
             }
         }
     }

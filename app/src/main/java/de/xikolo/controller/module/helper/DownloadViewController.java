@@ -40,7 +40,6 @@ public class DownloadViewController {
     public static final String TAG = DownloadViewController.class.getSimpleName();
     private static final int MILLISECONDS = 250;
 
-
     private DownloadModel.DownloadFileType type;
 
     private Course course;
@@ -49,45 +48,43 @@ public class DownloadViewController {
 
     private DownloadModel downloadModel;
 
-    private View view;
-    private TextView fileNameText;
-    private TextView fileSizeText;
-    private View downloadStartContainer;
-    private IconButton downloadStartButton;
-    private View downloadRunningContainer;
-    private TextView downloadCancelButton;
-    private ProgressBar downloadProgress;
-    private View downloadEndContainer;
-    private Button downloadOpenButton;
-    private Button downloadDeleteButton;
+    private View layout;
+    private TextView textFileName;
+    private TextView textFileSize;
+    private View viewDownloadStart;
+    private IconButton buttonDownloadStart;
+    private View viewDownloadRunning;
+    private TextView buttonDownloadCancel;
+    private ProgressBar progressBarDownload;
+    private View viewDownloadEnd;
+    private Button buttonOpenDownload;
+    private Button buttonDeleteDownload;
 
     private String uri;
 
     private Runnable progressBarUpdater;
     private boolean progressBarUpdaterRunning = false;
 
-    private FragmentActivity activity;
-
+    @SuppressWarnings("SetTextI18n")
     public DownloadViewController(final FragmentActivity activity, final DownloadModel.DownloadFileType type, final Course course, final Module module, final Item<VideoItemDetail> item) {
         this.type = type;
         this.course = course;
         this.module = module;
         this.item = item;
-        this.activity = activity;
 
         this.downloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), activity);
 
         LayoutInflater inflater = LayoutInflater.from(GlobalApplication.getInstance());
-        view = inflater.inflate(R.layout.container_download, null);
+        layout = inflater.inflate(R.layout.container_download, null);
 
-        fileSizeText = (TextView) view.findViewById(R.id.textFileSize);
-        fileNameText = (TextView) view.findViewById(R.id.textFileName);
+        textFileSize = (TextView) layout.findViewById(R.id.textFileSize);
+        textFileName = (TextView) layout.findViewById(R.id.textFileName);
 
         final AppPreferences appPreferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
 
-        downloadStartContainer = view.findViewById(R.id.downloadStartContainer);
-        downloadStartButton = (IconButton) view.findViewById(R.id.buttonDownloadStart);
-        downloadStartButton.setOnClickListener(new View.OnClickListener() {
+        viewDownloadStart = layout.findViewById(R.id.downloadStartContainer);
+        buttonDownloadStart = (IconButton) layout.findViewById(R.id.buttonDownloadStart);
+        buttonDownloadStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
@@ -111,10 +108,10 @@ public class DownloadViewController {
             }
         });
 
-        downloadRunningContainer = view.findViewById(R.id.downloadRunningContainer);
-        downloadProgress = (ProgressBar) view.findViewById(R.id.progressDownload);
-        downloadCancelButton = (TextView) view.findViewById(R.id.buttonDownloadCancel);
-        downloadCancelButton.setOnClickListener(new View.OnClickListener() {
+        viewDownloadRunning = layout.findViewById(R.id.downloadRunningContainer);
+        progressBarDownload = (ProgressBar) layout.findViewById(R.id.progressDownload);
+        buttonDownloadCancel = (TextView) layout.findViewById(R.id.buttonDownloadCancel);
+        buttonDownloadCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 downloadModel.cancelDownload(
@@ -127,10 +124,10 @@ public class DownloadViewController {
             }
         });
 
-        downloadEndContainer = view.findViewById(R.id.downloadEndContainer);
-        downloadOpenButton = (Button) view.findViewById(R.id.buttonDownloadOpen);
-        downloadDeleteButton = (Button) view.findViewById(R.id.buttonDownloadDelete);
-        downloadDeleteButton.setOnClickListener(new View.OnClickListener() {
+        viewDownloadEnd = layout.findViewById(R.id.downloadEndContainer);
+        buttonOpenDownload = (Button) layout.findViewById(R.id.buttonDownloadOpen);
+        buttonDeleteDownload = (Button) layout.findViewById(R.id.buttonDownloadDelete);
+        buttonDeleteDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (appPreferences.confirmBeforeDeleting()) {
@@ -157,32 +154,32 @@ public class DownloadViewController {
         switch (type) {
             case SLIDES:
                 uri = item.detail.slides_url;
-                fileNameText.setText(GlobalApplication.getInstance().getText(R.string.slides_as_pdf));
-                downloadStartButton.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_pdf));
+                textFileName.setText(GlobalApplication.getInstance().getText(R.string.slides_as_pdf));
+                buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_pdf));
                 openFileAsPdf();
                 break;
             case TRANSCRIPT:
                 uri = item.detail.transcript_url;
-                fileNameText.setText(GlobalApplication.getInstance().getText(R.string.transcript_as_pdf));
-                downloadStartButton.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_pdf));
+                textFileName.setText(GlobalApplication.getInstance().getText(R.string.transcript_as_pdf));
+                buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_pdf));
                 openFileAsPdf();
                 break;
             case VIDEO_HD:
                 uri = item.detail.stream.hd_url;
-                fileNameText.setText(GlobalApplication.getInstance().getText(R.string.video_hd_as_mp4));
-                downloadStartButton.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_video));
-                downloadOpenButton.setVisibility(View.GONE);
+                textFileName.setText(GlobalApplication.getInstance().getText(R.string.video_hd_as_mp4));
+                buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_video));
+                buttonOpenDownload.setVisibility(View.GONE);
                 break;
             case VIDEO_SD:
                 uri = item.detail.stream.sd_url;
-                fileNameText.setText(GlobalApplication.getInstance().getText(R.string.video_sd_as_mp4));
-                downloadStartButton.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_video));
-                downloadOpenButton.setVisibility(View.GONE);
+                textFileName.setText(GlobalApplication.getInstance().getText(R.string.video_sd_as_mp4));
+                buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_video));
+                buttonOpenDownload.setVisibility(View.GONE);
                 break;
         }
 
         if (uri == null) {
-            view.setVisibility(View.GONE);
+            layout.setVisibility(View.GONE);
         }
 
         EventBus.getDefault().register(this);
@@ -197,9 +194,9 @@ public class DownloadViewController {
                         @Override
                         public void run() {
                             if (progressBarUpdaterRunning) {
-                                downloadProgress.setIndeterminate(false);
-                                downloadProgress.setProgress((int) (dl.bytesDownloadedSoFar * 100 / dl.totalSizeBytes));
-                                fileSizeText.setText(FileUtil.getFormattedFileSize(dl.bytesDownloadedSoFar) + " / "
+                                progressBarDownload.setIndeterminate(false);
+                                progressBarDownload.setProgress((int) (dl.bytesDownloadedSoFar * 100 / dl.totalSizeBytes));
+                                textFileSize.setText(FileUtil.getFormattedFileSize(dl.bytesDownloadedSoFar) + " / "
                                         + FileUtil.getFormattedFileSize(dl.totalSizeBytes));
                             }
                         }
@@ -207,9 +204,9 @@ public class DownloadViewController {
                 }
 
                 if (progressBarUpdaterRunning) {
-                    downloadProgress.postDelayed(this, MILLISECONDS);
+                    progressBarDownload.postDelayed(this, MILLISECONDS);
                 } else {
-                    fileSizeText.setText(FileUtil.getFormattedFileSize(downloadModel.getDownloadFileSize(type, course, module, item)));
+                    textFileSize.setText(FileUtil.getFormattedFileSize(downloadModel.getDownloadFileSize(type, course, module, item)));
                 }
             }
         };
@@ -245,44 +242,44 @@ public class DownloadViewController {
         }
     }
 
-    public View getView() {
-        return view;
+    public View getLayout() {
+        return layout;
     }
 
     private void showStartState() {
-        if (downloadStartContainer != null) {
-            downloadStartContainer.setVisibility(View.VISIBLE);
+        if (viewDownloadStart != null) {
+            viewDownloadStart.setVisibility(View.VISIBLE);
         }
-        if (downloadRunningContainer != null) {
-            downloadRunningContainer.setVisibility(View.INVISIBLE);
+        if (viewDownloadRunning != null) {
+            viewDownloadRunning.setVisibility(View.INVISIBLE);
         }
-        if (downloadEndContainer != null) {
-            downloadEndContainer.setVisibility(View.INVISIBLE);
+        if (viewDownloadEnd != null) {
+            viewDownloadEnd.setVisibility(View.INVISIBLE);
         }
 
         if (uri != null) {
             downloadModel.getRemoteDownloadFileSize(new Result<Long>() {
                 @Override
                 protected void onSuccess(Long result, DataSource dataSource) {
-                    fileSizeText.setText(FileUtil.getFormattedFileSize(result));
+                    textFileSize.setText(FileUtil.getFormattedFileSize(result));
                 }
             }, uri);
         }
 
-        downloadProgress.setProgress(0);
-        downloadProgress.setIndeterminate(true);
+        progressBarDownload.setProgress(0);
+        progressBarDownload.setIndeterminate(true);
         progressBarUpdaterRunning = false;
     }
 
     private void showRunningState() {
-        if (downloadStartContainer != null) {
-            downloadStartContainer.setVisibility(View.INVISIBLE);
+        if (viewDownloadStart != null) {
+            viewDownloadStart.setVisibility(View.INVISIBLE);
         }
-        if (downloadRunningContainer != null) {
-            downloadRunningContainer.setVisibility(View.VISIBLE);
+        if (viewDownloadRunning != null) {
+            viewDownloadRunning.setVisibility(View.VISIBLE);
         }
-        if (downloadEndContainer != null) {
-            downloadEndContainer.setVisibility(View.INVISIBLE);
+        if (viewDownloadEnd != null) {
+            viewDownloadEnd.setVisibility(View.INVISIBLE);
         }
 
         progressBarUpdaterRunning = true;
@@ -290,35 +287,37 @@ public class DownloadViewController {
     }
 
     private void showEndState() {
-        if (downloadStartContainer != null) {
-            downloadStartContainer.setVisibility(View.INVISIBLE);
+        if (viewDownloadStart != null) {
+            viewDownloadStart.setVisibility(View.INVISIBLE);
         }
-        if (downloadRunningContainer != null) {
-            downloadRunningContainer.setVisibility(View.INVISIBLE);
+        if (viewDownloadRunning != null) {
+            viewDownloadRunning.setVisibility(View.INVISIBLE);
         }
-        if (downloadEndContainer != null) {
-            downloadEndContainer.setVisibility(View.VISIBLE);
+        if (viewDownloadEnd != null) {
+            viewDownloadEnd.setVisibility(View.VISIBLE);
         }
 
-        fileSizeText.setText(FileUtil.getFormattedFileSize(downloadModel.getDownloadFileSize(type, course, module, item)));
+        textFileSize.setText(FileUtil.getFormattedFileSize(downloadModel.getDownloadFileSize(type, course, module, item)));
 
         progressBarUpdaterRunning = false;
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent event) {
         if (event.getDownload().localUri.contains(item.id)
                 && DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri) == type) {
-//            String suffix = DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri).getFileSuffix();
             showEndState();
         }
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(DownloadStartedEvent event) {
         if (event.getUrl().equals(uri) && !progressBarUpdaterRunning) {
             showRunningState();
         }
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(DownloadDeletedEvent event) {
         if (event.getItem().id.equals(item.id) && progressBarUpdaterRunning) {
             showStartState();
@@ -326,8 +325,8 @@ public class DownloadViewController {
     }
 
     public void openFileAsPdf() {
-        downloadOpenButton.setText(GlobalApplication.getInstance().getResources().getText(R.string.open));
-        downloadOpenButton.setOnClickListener(new View.OnClickListener() {
+        buttonOpenDownload.setText(GlobalApplication.getInstance().getResources().getText(R.string.open));
+        buttonOpenDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 File pdf = downloadModel.getDownloadFile(type, course, module, item);

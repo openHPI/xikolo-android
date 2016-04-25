@@ -141,7 +141,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
                                 Intent intent = new Intent(CourseActivity.this, CourseDetailsActivity.class);
                                 Bundle b = new Bundle();
-                                b.putParcelable(CourseActivity.ARG_COURSE, course);
+                                b.putParcelable(CourseDetailsActivity.ARG_COURSE, course);
                                 intent.putExtras(b);
                                 startActivity(intent);
                                 finish();

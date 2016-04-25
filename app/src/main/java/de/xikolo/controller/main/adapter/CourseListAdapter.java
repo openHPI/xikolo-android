@@ -107,15 +107,14 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ITEM_VIEW_TYPE_HEADER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
-            HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
-            return headerViewHolder;
+            return new HeaderViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_list, parent, false);
-            CourseViewHolder courseViewHolder = new CourseViewHolder(view);
-            return courseViewHolder;
+            return new CourseViewHolder(view);
         }
     }
 
+    @SuppressWarnings("SetTextI18n")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof HeaderViewHolder) {
@@ -140,68 +139,68 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             if (dateBegin != null && dateEnd != null) {
-                viewHolder.date.setText(dateOut.format(dateBegin) + " - " + dateOut.format(dateEnd));
+                viewHolder.textDate.setText(dateOut.format(dateBegin) + " - " + dateOut.format(dateEnd));
             } else if (dateBegin != null) {
-                viewHolder.date.setText(dateOut.format(dateBegin));
+                viewHolder.textDate.setText(dateOut.format(dateBegin));
             } else {
-                viewHolder.date.setText("");
+                viewHolder.textDate.setText("");
             }
 
-            viewHolder.title.setText(course.name);
-            viewHolder.teacher.setText(course.lecturer);
-            viewHolder.language.setText(LanguageUtil.languageForCode(context, course.language));
+            viewHolder.textTitle.setText(course.name);
+            viewHolder.textTeacher.setText(course.lecturer);
+            viewHolder.textLanguage.setText(LanguageUtil.languageForCode(context, course.language));
 
             if (courseFilter == CourseModel.CourseFilter.ALL) {
-                viewHolder.description.setText(course.description);
-                viewHolder.description.setVisibility(View.VISIBLE);
+                viewHolder.textDescription.setText(course.description);
+                viewHolder.textDescription.setVisibility(View.VISIBLE);
 
                 if (DateUtil.nowIsBetween(course.available_from, course.available_to)) {
-                    viewHolder.banner.setVisibility(View.VISIBLE);
-                    viewHolder.banner.setText(context.getText(R.string.banner_running));
-                    viewHolder.banner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
+                    viewHolder.textBanner.setVisibility(View.VISIBLE);
+                    viewHolder.textBanner.setText(context.getText(R.string.banner_running));
+                    viewHolder.textBanner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
                 } else {
-                    viewHolder.banner.setVisibility(View.GONE);
+                    viewHolder.textBanner.setVisibility(View.GONE);
                 }
             } else {
-                viewHolder.description.setVisibility(View.GONE);
+                viewHolder.textDescription.setVisibility(View.GONE);
                 if (DateUtil.nowIsBetween(course.available_from, course.available_to)) {
-                    viewHolder.banner.setVisibility(View.VISIBLE);
-                    viewHolder.banner.setText(context.getText(R.string.banner_running));
-                    viewHolder.banner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
+                    viewHolder.textBanner.setVisibility(View.VISIBLE);
+                    viewHolder.textBanner.setText(context.getText(R.string.banner_running));
+                    viewHolder.textBanner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
                 } else if (DateUtil.nowIsAfter(course.available_to)) {
-                    viewHolder.banner.setVisibility(View.VISIBLE);
-                    viewHolder.banner.setText(context.getText(R.string.banner_self_paced));
-                    viewHolder.banner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_yellow));
+                    viewHolder.textBanner.setVisibility(View.VISIBLE);
+                    viewHolder.textBanner.setText(context.getText(R.string.banner_self_paced));
+                    viewHolder.textBanner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_yellow));
                 } else {
-                    viewHolder.banner.setVisibility(View.GONE);
+                    viewHolder.textBanner.setVisibility(View.GONE);
                 }
             }
 
-            ImageController.load(course.visual_url, viewHolder.img);
+            ImageController.load(course.visual_url, viewHolder.image);
 
             if (course.is_enrolled && DateUtil.nowIsAfter(course.available_from)) {
-                viewHolder.container.setOnClickListener(new View.OnClickListener() {
+                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         callback.onEnterButtonClicked(course);
                     }
                 });
-                viewHolder.enroll.setText(context.getString(R.string.btn_enter_course));
-                viewHolder.enroll.setOnClickListener(new View.OnClickListener() {
+                viewHolder.buttonEnroll.setText(context.getString(R.string.btn_enter_course));
+                viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         callback.onEnterButtonClicked(course);
                     }
                 });
             } else {
-                viewHolder.container.setOnClickListener(new View.OnClickListener() {
+                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         callback.onDetailButtonClicked(course);
                     }
                 });
-                viewHolder.enroll.setText(context.getString(R.string.btn_enroll_me));
-                viewHolder.enroll.setOnClickListener(new View.OnClickListener() {
+                viewHolder.buttonEnroll.setText(context.getString(R.string.btn_enroll_me));
+                viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         callback.onEnrollButtonClicked(course);
@@ -210,8 +209,8 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             if (course.is_enrolled && !DateUtil.nowIsAfter(course.available_from)) {
-                viewHolder.enroll.setText(context.getString(R.string.btn_starts_soon));
-                viewHolder.enroll.setOnClickListener(new View.OnClickListener() {
+                viewHolder.buttonEnroll.setText(context.getString(R.string.btn_starts_soon));
+                viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         callback.onDetailButtonClicked(course);
@@ -232,27 +231,28 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     static class CourseViewHolder extends RecyclerView.ViewHolder {
-        ViewGroup container;
-        TextView title;
-        TextView teacher;
-        TextView date;
-        TextView language;
-        TextView description;
-        ImageView img;
-        Button enroll;
-        TextView banner;
+
+        ViewGroup layout;
+        TextView textTitle;
+        TextView textTeacher;
+        TextView textDate;
+        TextView textLanguage;
+        TextView textDescription;
+        ImageView image;
+        Button buttonEnroll;
+        TextView textBanner;
 
         public CourseViewHolder(View itemView) {
             super(itemView);
-            container = (ViewGroup) itemView.findViewById(R.id.container);
-            title = (TextView) itemView.findViewById(R.id.textTitle);
-            teacher = (TextView) itemView.findViewById(R.id.textTeacher);
-            date = (TextView) itemView.findViewById(R.id.textDate);
-            language = (TextView) itemView.findViewById(R.id.textLanguage);
-            description = (TextView) itemView.findViewById(R.id.textDescription);
-            img = (ImageView) itemView.findViewById(R.id.imageView);
-            enroll = (Button) itemView.findViewById(R.id.btnEnroll);
-            banner = (TextView) itemView.findViewById(R.id.textBanner);
+            layout = (ViewGroup) itemView.findViewById(R.id.container);
+            textTitle = (TextView) itemView.findViewById(R.id.textTitle);
+            textTeacher = (TextView) itemView.findViewById(R.id.textTeacher);
+            textDate = (TextView) itemView.findViewById(R.id.textDate);
+            textLanguage = (TextView) itemView.findViewById(R.id.textLanguage);
+            textDescription = (TextView) itemView.findViewById(R.id.textDescription);
+            image = (ImageView) itemView.findViewById(R.id.imageView);
+            buttonEnroll = (Button) itemView.findViewById(R.id.btnEnroll);
+            textBanner = (TextView) itemView.findViewById(R.id.textBanner);
         }
 
     }

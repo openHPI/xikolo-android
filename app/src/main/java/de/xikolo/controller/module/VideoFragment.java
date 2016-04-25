@@ -35,16 +35,12 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
     public static final String TAG = VideoFragment.class.getSimpleName();
 
-    public static final String KEY_COURSE = "key_course";
-    public static final String KEY_MODULE = "key_module";
-    public static final String KEY_ITEM = "key_item";
-
-    private TextView title;
-    private TextView duration;
-    private CustomSizeImageView videoThumbnail;
+    private TextView textTitle;
+    private TextView textDuration;
+    private CustomSizeImageView imageVideoThumbnail;
     private LinearLayout linearLayoutDownloads;
-    private View container;
-    private View playButton;
+    private View viewContainer;
+    private View viewPlay;
 
     private NotificationController notificationController;
 
@@ -74,43 +70,47 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_video, container, false);
 
-        this.container = layout.findViewById(R.id.container);
+        this.viewContainer = layout.findViewById(R.id.container);
 
         notificationController = new NotificationController(layout);
 
-        title = (TextView) layout.findViewById(R.id.textTitle);
+        textTitle = (TextView) layout.findViewById(R.id.textTitle);
 
         linearLayoutDownloads = (LinearLayout) layout.findViewById(R.id.containerDownloads);
 
-        videoThumbnail = (CustomSizeImageView) layout.findViewById(R.id.videoThumbnail);
+        imageVideoThumbnail = (CustomSizeImageView) layout.findViewById(R.id.videoThumbnail);
 
         ViewGroup videoMetadata;
         videoMetadata = (ViewGroup) layout.findViewById(R.id.videoMetadata);
 
-        playButton = layout.findViewById(R.id.playButton);
-        duration = (TextView) layout.findViewById(R.id.durationText);
+        viewPlay = layout.findViewById(R.id.playButton);
+        textDuration = (TextView) layout.findViewById(R.id.durationText);
 
-        this.container.setVisibility(View.GONE);
+        this.viewContainer.setVisibility(View.GONE);
 
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             Display display = getActivity().getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            videoThumbnail.setDimensions(size.x, size.x / 16 * 9);
+            imageVideoThumbnail.setDimensions(size.x, size.x / 16 * 9);
         } else {
             Display display = getActivity().getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            videoThumbnail.setDimensions((int) (size.x * 0.6), (int) (size.x * 0.6 / 16 * 9));
+            imageVideoThumbnail.setDimensions((int) (size.x * 0.6), (int) (size.x * 0.6 / 16 * 9));
 
             ViewGroup.LayoutParams params_meta = videoMetadata.getLayoutParams();
             params_meta.width = (int) (size.x * 0.6);
             videoMetadata.setLayoutParams(params_meta);
         }
 
-        if (savedInstanceState != null) {
-            item = savedInstanceState.getParcelable(KEY_ITEM);
-            setupView();
+        if (savedInstanceState != null && savedInstanceState.containsKey(ARG_ITEM)) {
+            item = savedInstanceState.getParcelable(ARG_ITEM);
+            if (item != null && item.detail != null) {
+                setupView();
+            } else {
+                requestVideoDetails(false);
+            }
         } else {
             requestVideoDetails(false);
         }
@@ -120,17 +120,21 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        if (item.detail != null) {
+            outState.putParcelable(ARG_ITEM, item);
+        }
         super.onSaveInstanceState(outState);
-        outState.putParcelable(KEY_ITEM, item);
     }
 
     private void requestVideoDetails(final boolean userRequest) {
         Result<Item> result = new Result<Item>() {
             @Override
             protected void onSuccess(Item result, DataSource dataSource) {
-                @SuppressWarnings("unchecked")
-                Item<VideoItemDetail> item = (Item<VideoItemDetail>) result;
-                VideoFragment.this.item = item;
+                if (result.detail != null) {
+                    @SuppressWarnings("unchecked")
+                    Item<VideoItemDetail> item = (Item<VideoItemDetail>) result;
+                    VideoFragment.this.item = item;
+                }
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.detail == null) {
                     notificationController.setTitle(R.string.notification_no_network);
@@ -151,7 +155,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             protected void onError(ErrorCode errorCode) {
                 ToastUtil.show(R.string.error);
                 notificationController.setInvisible();
-                container.setVisibility(View.GONE);
+                viewContainer.setVisibility(View.GONE);
             }
 
             @Override
@@ -162,7 +166,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             }
         };
 
-        container.setVisibility(View.GONE);
+        viewContainer.setVisibility(View.GONE);
         notificationController.setProgressVisible(true);
         itemModel.getItemDetail(result, course, module, item, Item.TYPE_VIDEO);
     }
@@ -170,7 +174,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     private void setupView() {
         if (isAdded()) {
             notificationController.setInvisible();
-            container.setVisibility(View.VISIBLE);
+            viewContainer.setVisibility(View.VISIBLE);
 
             if (item.detail == null) {
                 throw new NullPointerException("Item Detail is null for Course " + course.name + " (" + course.id + ")" +
@@ -182,25 +186,25 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                         " and Item " + item.title + " (" + item.id + ")");
             }
 
-            ImageController.load(item.detail.stream.poster, videoThumbnail,
+            ImageController.load(item.detail.stream.poster, imageVideoThumbnail,
                     ImageController.DEFAULT_PLACEHOLDER,
-                    videoThumbnail.getForcedWidth(), videoThumbnail.getForcedHeight());
+                    imageVideoThumbnail.getForcedWidth(), imageVideoThumbnail.getForcedHeight());
 
-            title.setText(item.detail.title);
+            textTitle.setText(item.detail.title);
 
             linearLayoutDownloads.removeAllViews();
             DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_HD, course, module, item);
-            linearLayoutDownloads.addView(hdVideo.getView());
+            linearLayoutDownloads.addView(hdVideo.getLayout());
             DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.VIDEO_SD, course, module, item);
-            linearLayoutDownloads.addView(sdVideo.getView());
+            linearLayoutDownloads.addView(sdVideo.getLayout());
             DownloadViewController slides = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.SLIDES, course, module, item);
-            linearLayoutDownloads.addView(slides.getView());
+            linearLayoutDownloads.addView(slides.getLayout());
 //        DownloadViewController transcript = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.TRANSCRIPT, course, module, item);
-//        linearLayoutDownloads.addView(transcript.getView());
+//        linearLayoutDownloads.addView(transcript.getLayout());
 
-            duration.setText(getString(R.string.duration, Integer.valueOf(item.detail.minutes), Integer.valueOf(item.detail.seconds)));
+            textDuration.setText(getString(R.string.duration, Integer.valueOf(item.detail.minutes), Integer.valueOf(item.detail.seconds)));
 
-            playButton.setOnClickListener(new View.OnClickListener() {
+            viewPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (castManager.isConnected()) {
@@ -221,9 +225,9 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                     } else {
                         Intent intent = new Intent(getActivity(), VideoActivity.class);
                         Bundle b = new Bundle();
-                        b.putParcelable(KEY_COURSE, course);
-                        b.putParcelable(KEY_MODULE, module);
-                        b.putParcelable(KEY_ITEM, item);
+                        b.putParcelable(VideoActivity.ARG_COURSE, course);
+                        b.putParcelable(VideoActivity.ARG_MODULE, module);
+                        b.putParcelable(VideoActivity.ARG_ITEM, item);
                         intent.putExtras(b);
                         startActivity(intent);
                     }

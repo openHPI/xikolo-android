@@ -28,17 +28,14 @@ public class LoginActivity extends BaseActivity {
 
     public static final String TAG = LoginActivity.class.getSimpleName();
 
-    private UserModel mUserModel;
-    private Result<Void> mLoginResult;
-    private Result<User> mUserResult;
+    private UserModel userModel;
+    private Result<Void> loginResult;
+    private Result<User> userResult;
 
-    private EditText mEditEmail;
-    private EditText mEditPassword;
-    private Button mBtnLogin;
-    private Button mBtnNew;
-    private TextView mTextReset;
+    private EditText editTextEmail;
+    private EditText editTextPassword;
 
-    private ProgressDialog dialog;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,85 +45,92 @@ public class LoginActivity extends BaseActivity {
 
         setTitle(getString(R.string.title_section_login));
 
-        mEditEmail = (EditText) findViewById(R.id.editEmail);
-        mEditPassword = (EditText) findViewById(R.id.editPassword);
-        mBtnLogin = (Button) findViewById(R.id.btnLogin);
-        mBtnNew = (Button) findViewById(R.id.btnNew);
-        mTextReset = (TextView) findViewById(R.id.textForgotPw);
+        editTextEmail = (EditText) findViewById(R.id.editEmail);
+        editTextPassword = (EditText) findViewById(R.id.editPassword);
+        Button buttonLogin = (Button) findViewById(R.id.btnLogin);
+        Button buttonNew = (Button) findViewById(R.id.btnNew);
+        TextView textReset = (TextView) findViewById(R.id.textForgotPw);
 
-        dialog = ProgressDialog.getInstance();
+        progressDialog = ProgressDialog.getInstance();
 
-        mUserModel = new UserModel(jobManager);
-        mLoginResult = new Result<Void>() {
+        userModel = new UserModel(jobManager);
+        loginResult = new Result<Void>() {
             @Override
             protected void onSuccess(Void result, DataSource dataSource) {
-                mUserModel.getUser(mUserResult);
+                userModel.getUser(userResult);
             }
 
             @Override
             protected void onError(ErrorCode errorCode) {
-                dialog.dismiss();
+                progressDialog.dismiss();
                 if (errorCode == ErrorCode.NO_NETWORK) {
                     NetworkUtil.showNoConnectionToast();
                 } else {
                     ToastUtil.show(R.string.toast_log_in_failed);
                 }
-                mUserModel.logout();
+                userModel.logout();
             }
         };
-        mUserResult = new Result<User>() {
+        userResult = new Result<User>() {
             @Override
             protected void onSuccess(User result, DataSource dataSource) {
                 EventBus.getDefault().post(new LoginEvent());
-                dialog.dismiss();
+                progressDialog.dismiss();
                 LoginActivity.this.finish();
             }
 
             @Override
             protected void onError(ErrorCode errorCode) {
-                dialog.dismiss();
+                progressDialog.dismiss();
                 if (errorCode == ErrorCode.NO_NETWORK) {
                     NetworkUtil.showNoConnectionToast();
                 } else {
                     ToastUtil.show(R.string.toast_log_in_failed);
                 }
-                mUserModel.logout();
+                userModel.logout();
             }
         };
 
-        mBtnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hideKeyboard(view);
-                String email = mEditEmail.getText().toString().trim();
-                String password = mEditPassword.getText().toString();
-                if (isEmailValid(email)) {
-                    if (!password.equals("")) {
-                        mUserModel.login(mLoginResult, email, password);
-                        dialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
+        if (buttonLogin != null) {
+            buttonLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hideKeyboard(view);
+                    String email = editTextEmail.getText().toString().trim();
+                    String password = editTextPassword.getText().toString();
+                    if (isEmailValid(email)) {
+                        if (!password.equals("")) {
+                            userModel.login(loginResult, email, password);
+                            progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
+                        } else {
+                            editTextPassword.setError(getString(R.string.error_password));
+                        }
                     } else {
-                        mEditPassword.setError(getString(R.string.error_password));
+                        editTextEmail.setError(getString(R.string.error_email));
                     }
-                } else {
-                    mEditEmail.setError(getString(R.string.error_email));
                 }
-            }
-        });
-        mBtnNew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hideKeyboard(view);
-                startUrlIntent(Config.URI + Config.ACCOUNT + Config.NEW);
-            }
-        });
-        mTextReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hideKeyboard(view);
-                startUrlIntent(Config.URI + Config.ACCOUNT + Config.RESET);
-            }
-        });
+            });
+        }
 
+        if (buttonNew != null) {
+            buttonNew.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hideKeyboard(view);
+                    startUrlIntent(Config.URI + Config.ACCOUNT + Config.NEW);
+                }
+            });
+        }
+
+        if (textReset != null) {
+            textReset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hideKeyboard(view);
+                    startUrlIntent(Config.URI + Config.ACCOUNT + Config.RESET);
+                }
+            });
+        }
     }
 
     @Override

@@ -1,6 +1,6 @@
 package de.xikolo.controller.course.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,30 +23,30 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
     public static final String TAG = ItemListAdapter.class.getSimpleName();
 
-    private List<Item> mItems;
+    private List<Item> items;
 
-    private Activity mActivity;
-    private Course mCourse;
-    private Module mModule;
+    private Context context;
+    private Course course;
+    private Module module;
 
-    private OnItemButtonClickListener mCallback;
+    private OnItemButtonClickListener callback;
 
-    public ItemListAdapter(Activity activity, Course course, Module module, OnItemButtonClickListener callback) {
-        this.mActivity = activity;
-        this.mItems = new ArrayList<>();
-        this.mCourse = course;
-        this.mModule = module;
-        this.mCallback = callback;
+    public ItemListAdapter(Context context, Course course, Module module, OnItemButtonClickListener callback) {
+        this.context = context;
+        this.items = new ArrayList<>();
+        this.course = course;
+        this.module = module;
+        this.callback = callback;
     }
 
     public void updateItems(List<Item> items) {
-        this.mItems = items;
+        this.items = items;
         this.notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return items.size();
     }
 
     @Override
@@ -57,32 +57,32 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        final Item item = mItems.get(position);
+        final Item item = items.get(position);
 
-        holder.title.setText(ItemTitle.format(mModule.name, item.title));
+        holder.textTitle.setText(ItemTitle.format(module.name, item.title));
 
-        holder.icon.setText(Item.getIcon(mActivity, item.type, item.exercise_type));
+        holder.textIcon.setText(Item.getIcon(context, item.type, item.exercise_type));
 
         if (!item.progress.visited) {
-            holder.unseenIndicator.setVisibility(View.VISIBLE);
+            holder.viewUnseenIndicator.setVisibility(View.VISIBLE);
         } else {
-            holder.unseenIndicator.setVisibility(View.GONE);
+            holder.viewUnseenIndicator.setVisibility(View.GONE);
         }
 
-        if (!DateUtil.nowIsBetween(mModule.available_from, mModule.available_to)
+        if (!DateUtil.nowIsBetween(module.available_from, module.available_to)
                 || !DateUtil.nowIsBetween(item.available_from, item.available_to)
                 || item.locked) {
-            holder.container.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.transparent));
-            holder.container.setForeground(null);
-            holder.title.setTextColor(ContextCompat.getColor(mActivity, R.color.text_light));
-            holder.icon.setTextColor(ContextCompat.getColor(mActivity, R.color.text_light));
-            holder.unseenIndicator.setVisibility(View.GONE);
-            holder.container.setEnabled(false);
+            holder.layout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+            holder.layout.setForeground(null);
+            holder.textTitle.setTextColor(ContextCompat.getColor(context, R.color.text_light));
+            holder.textIcon.setTextColor(ContextCompat.getColor(context, R.color.text_light));
+            holder.viewUnseenIndicator.setVisibility(View.GONE);
+            holder.layout.setEnabled(false);
         } else {
-            holder.container.setOnClickListener(new View.OnClickListener() {
+            holder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mCallback.onItemButtonClicked(mCourse, mModule, item);
+                    callback.onItemButtonClicked(course, module, item);
                 }
             });
         }
@@ -95,20 +95,21 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
     }
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView icon;
 
-        View unseenIndicator;
+        TextView textTitle;
+        TextView textIcon;
 
-        FrameLayout container;
+        View viewUnseenIndicator;
+
+        FrameLayout layout;
 
         public ItemViewHolder(View view) {
             super(view);
 
-            title = (TextView) view.findViewById(R.id.textTitle);
-            icon = (TextView) view.findViewById(R.id.textIcon);
-            container = (FrameLayout) view.findViewById(R.id.container);
-            unseenIndicator = view.findViewById(R.id.unseenIndicator);
+            textTitle = (TextView) view.findViewById(R.id.textTitle);
+            textIcon = (TextView) view.findViewById(R.id.textIcon);
+            layout = (FrameLayout) view.findViewById(R.id.container);
+            viewUnseenIndicator = view.findViewById(R.id.unseenIndicator);
         }
     }
 
