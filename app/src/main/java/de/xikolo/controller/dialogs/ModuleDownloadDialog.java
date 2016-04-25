@@ -13,7 +13,7 @@ public class ModuleDownloadDialog extends DialogFragment {
 
     public static final String TAG = ModuleDownloadDialog.class.getSimpleName();
 
-    private ModuleDownloadDialogListener mListener;
+    private ModuleDownloadDialogListener listener;
 
     private boolean hdVideo;
 
@@ -42,7 +42,7 @@ public class ModuleDownloadDialog extends DialogFragment {
     }
 
     public void setModuleDownloadDialogListener(ModuleDownloadDialogListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     @Override
@@ -84,8 +84,8 @@ public class ModuleDownloadDialog extends DialogFragment {
                 .setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (mListener != null) {
-                            mListener.onDialogPositiveClick(ModuleDownloadDialog.this, hdVideo, sdVideo, slides);
+                        if (listener != null) {
+                            listener.onDialogPositiveClick(ModuleDownloadDialog.this, hdVideo, sdVideo, slides);
                         }
                     }
                 })

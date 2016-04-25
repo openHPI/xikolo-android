@@ -23,7 +23,6 @@ import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCa
 import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.helper.VideoController;
-import de.xikolo.controller.module.VideoFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
@@ -36,6 +35,10 @@ import de.xikolo.util.LanalyticsUtil;
 public class VideoActivity extends BaseActivity {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
+
+    public static final String ARG_COURSE = "arg_course";
+    public static final String ARG_MODULE = "arg_module";
+    public static final String ARG_ITEM = "arg_item";
 
     private VideoController videoController;
 
@@ -81,12 +84,12 @@ public class VideoActivity extends BaseActivity {
         });
 
         Bundle b = getIntent().getExtras();
-        if (b == null || !b.containsKey(VideoFragment.KEY_COURSE) || !b.containsKey(VideoFragment.KEY_MODULE) || !b.containsKey(VideoFragment.KEY_ITEM)) {
+        if (b == null || !b.containsKey(ARG_COURSE) || !b.containsKey(ARG_MODULE) || !b.containsKey(ARG_ITEM)) {
             throw new WrongParameterException();
         } else {
-            course = getIntent().getExtras().getParcelable(VideoFragment.KEY_COURSE);
-            module = getIntent().getExtras().getParcelable(VideoFragment.KEY_MODULE);
-            item = getIntent().getExtras().getParcelable(VideoFragment.KEY_ITEM);
+            course = getIntent().getExtras().getParcelable(ARG_COURSE);
+            module = getIntent().getExtras().getParcelable(ARG_MODULE);
+            item = getIntent().getExtras().getParcelable(ARG_ITEM);
 
             itemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
                 @Override

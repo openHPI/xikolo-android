@@ -13,18 +13,17 @@ public class MobileDownloadDialog extends DialogFragment {
 
     public static final String TAG = MobileDownloadDialog.class.getSimpleName();
 
-    private MobileDownloadDialogListener mListener;
+    private MobileDownloadDialogListener listener;
 
     public void setMobileDownloadDialogListener(MobileDownloadDialogListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     public MobileDownloadDialog() {
     }
 
     public static MobileDownloadDialog getInstance() {
-        MobileDownloadDialog fragment = new MobileDownloadDialog();
-        return fragment;
+        return new MobileDownloadDialog();
     }
 
     @NonNull
@@ -36,8 +35,8 @@ public class MobileDownloadDialog extends DialogFragment {
                 .setPositiveButton(R.string.dialog_mobile_download_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (mListener != null) {
-                            mListener.onDialogPositiveClick(MobileDownloadDialog.this);
+                        if (listener != null) {
+                            listener.onDialogPositiveClick(MobileDownloadDialog.this);
                         }
                     }
                 })

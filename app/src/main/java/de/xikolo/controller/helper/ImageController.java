@@ -15,6 +15,7 @@ import com.bumptech.glide.request.target.Target;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 
+@SuppressWarnings("unused")
 public class ImageController {
 
     public final static int DEFAULT_PLACEHOLDER = R.drawable.gradient_default_image;

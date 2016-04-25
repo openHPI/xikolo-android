@@ -1,7 +1,7 @@
 package de.xikolo.controller.helper;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -34,49 +34,49 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = WebViewController.class.getSimpleName();
 
-    private Activity mActivity;
-    private WebView mWebView;
-    private NotificationController mNotificationController;
+    private Context context;
+    private WebView webView;
+    private NotificationController notificationController;
 
-    private SwipeRefreshLayout mRefreshLayout;
+    private SwipeRefreshLayout refreshLayout;
 
-    private String mUrl;
+    private String url;
 
-    private boolean mInAppLinksEnabled;
-    private boolean mLoadExternalUrlEnabled;
+    private boolean inAppLinksEnabled;
+    private boolean loadExternalUrlEnabled;
 
-    public WebViewController(Activity activity, View layout) {
-        mActivity = activity;
-        mWebView = (WebView) layout.findViewById(R.id.webView);
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
-        mNotificationController = new NotificationController(layout);
+    public WebViewController(Context context, View layout) {
+        this.context = context;
+        webView = (WebView) layout.findViewById(R.id.webView);
+        refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        notificationController = new NotificationController(layout);
 
-        mInAppLinksEnabled = true;
-        mLoadExternalUrlEnabled = false;
+        inAppLinksEnabled = true;
+        loadExternalUrlEnabled = false;
 
         setup();
 
-        RefeshLayoutController.setup(mRefreshLayout, this);
+        RefeshLayoutController.setup(refreshLayout, this);
     }
 
     public void setInAppLinksEnabled(boolean enabled) {
-        mInAppLinksEnabled = enabled;
+        inAppLinksEnabled = enabled;
     }
 
     public void setLoadExternalUrlEnabled(boolean loadExt) {
-        this.mLoadExternalUrlEnabled = loadExt;
+        this.loadExternalUrlEnabled = loadExt;
     }
 
     @SuppressWarnings("SetJavaScriptEnabled")
     private void setup() {
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
-        mWebView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient());
 
-        mNotificationController.setProgressVisible(true);
+        notificationController.setProgressVisible(true);
 
-        mWebView.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new WebViewClient() {
 
             @SuppressWarnings("deprecation")
             @Override
@@ -92,44 +92,44 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                if (!mNotificationController.isProgressVisible()) {
-                    mRefreshLayout.setRefreshing(true);
+                if (!notificationController.isProgressVisible()) {
+                    refreshLayout.setRefreshing(true);
                 }
-                mWebView.setVisibility(View.GONE);
+                webView.setVisibility(View.GONE);
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                mNotificationController.setInvisible();
-                mRefreshLayout.setRefreshing(false);
-                mWebView.setVisibility(View.VISIBLE);
+                notificationController.setInvisible();
+                refreshLayout.setRefreshing(false);
+                webView.setVisibility(View.VISIBLE);
                 super.onPageFinished(view, url);
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Config.HOST) && mInAppLinksEnabled || mLoadExternalUrlEnabled) {
+                if (url.contains(Config.HOST) && inAppLinksEnabled || loadExternalUrlEnabled) {
                     request(url, true);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    if (url.contains(Config.HOST) && UserModel.isLoggedIn(mActivity)) {
+                    if (url.contains(Config.HOST) && UserModel.isLoggedIn(context)) {
                         Bundle headers = new Bundle();
-                        headers.putString(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserModel.getToken(mActivity));
+                        headers.putString(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserModel.getToken(context));
                         i.putExtra(Browser.EXTRA_HEADERS, headers);
                     }
-                    mActivity.startActivity(i);
+                    context.startActivity(i);
                 }
                 return true;
             }
 
         });
 
-        mWebView.setOnKeyListener(new View.OnKeyListener() {
+        webView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if ((i == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
-                    mWebView.goBack();
+                if ((i == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+                    webView.goBack();
                     return true;
                 }
                 return false;
@@ -142,58 +142,45 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
             Log.i(TAG, "Request URL: " + url);
         }
         if (url != null) {
-            mUrl = url;
+            this.url = url;
 
-            if (!mLoadExternalUrlEnabled || Patterns.WEB_URL.matcher(mUrl).matches()) {
-                if (NetworkUtil.isOnline(mActivity)) {
-                    if (!mNotificationController.isProgressVisible()) {
-                        mRefreshLayout.setRefreshing(true);
+            if (!loadExternalUrlEnabled || Patterns.WEB_URL.matcher(this.url).matches()) {
+                if (NetworkUtil.isOnline(context)) {
+                    if (!notificationController.isProgressVisible()) {
+                        refreshLayout.setRefreshing(true);
                     }
                     if (url.contains(Config.HOST)) {
                         Map<String, String> header = new HashMap<>();
                         header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
                         header.put(Config.HEADER_LANALYTICS_CONTEXT, GlobalApplication.getInstance()
                                 .getLanalytics().getDefaultContextPayload());
-                        if (UserModel.isLoggedIn(mActivity)) {
-                            header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserModel.getToken(mActivity));
+                        if (UserModel.isLoggedIn(context)) {
+                            header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserModel.getToken(context));
                         }
-                        mWebView.loadUrl(mUrl, header);
+                        webView.loadUrl(this.url, header);
                     } else {
-                        mWebView.loadUrl(mUrl, null);
+                        webView.loadUrl(this.url, null);
                     }
                 } else {
-                    mRefreshLayout.setRefreshing(false);
+                    refreshLayout.setRefreshing(false);
 
-                    mNotificationController.setTitle(R.string.notification_no_network);
-                    mNotificationController.setSummary(R.string.notification_no_network_summary);
-                    mNotificationController.setNotificationVisible(true);
+                    notificationController.setTitle(R.string.notification_no_network);
+                    notificationController.setSummary(R.string.notification_no_network_summary);
+                    notificationController.setNotificationVisible(true);
 
                     if (userRequest) {
                         NetworkUtil.showNoConnectionToast();
                     }
                 }
             } else {
-                mNotificationController.setTitle(R.string.notification_url_invalid);
+                notificationController.setTitle(R.string.notification_url_invalid);
             }
         }
     }
 
     @Override
     public void onRefresh() {
-        request(mUrl, true);
-    }
-
-    public void saveState(Bundle outState) {
-        if (mWebView != null) {
-            mWebView.saveState(outState);
-        }
-    }
-
-    public void restoreState(Bundle savedInstanceState) {
-        if (mWebView != null) {
-            mWebView.restoreState(savedInstanceState);
-            mUrl = mWebView.getUrl();
-        }
+        request(url, true);
     }
 
 }

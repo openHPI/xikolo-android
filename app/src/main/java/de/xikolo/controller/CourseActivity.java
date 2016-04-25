@@ -141,7 +141,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
                                 Intent intent = new Intent(CourseActivity.this, CourseDetailsActivity.class);
                                 Bundle b = new Bundle();
-                                b.putParcelable(CourseActivity.ARG_COURSE, course);
+                                b.putParcelable(CourseDetailsActivity.ARG_COURSE, course);
                                 intent.putExtras(b);
                                 startActivity(intent);
                                 finish();
@@ -261,8 +261,8 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
             TITLES.add(getString(R.string.tab_discussions));
             TITLES.add(getString(R.string.tab_progress));
             TITLES.add(getString(R.string.tab_rooms));
-            TITLES.add(getString(R.string.tab_announcements));
             TITLES.add(getString(R.string.tab_details));
+            TITLES.add(getString(R.string.tab_announcements));
 
             if (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI) {
                 TITLES.add(getString(R.string.tab_quiz_recap));
@@ -307,10 +307,10 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
                         fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code + "/" + Config.ROOMS, true, false);
                         break;
                     case 4:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code + "/" + Config.ANNOUNCEMENTS, false, false);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code, false, false);
                         break;
                     case 5:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code, false, false);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code + "/" + Config.ANNOUNCEMENTS, false, false);
                         break;
                     case 6:
                         fragment = WebViewFragment.newInstance(Config.URI + Config.QUIZ_RECAP + course.id, true, false);

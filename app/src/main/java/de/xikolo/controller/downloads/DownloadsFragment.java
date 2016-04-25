@@ -31,22 +31,20 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
 
     public static final String TAG = DownloadsFragment.class.getSimpleName();
 
-    private RecyclerView recyclerView;
     private DownloadsAdapter adapter;
 
     private DownloadModel downloadModel;
 
     private PermissionsModel permissionsModel;
 
-    private NotificationController mNotificationController;
+    private NotificationController notificationController;
 
     public DownloadsFragment() {
         // Required empty public constructor
     }
 
     public static DownloadsFragment newInstance() {
-        DownloadsFragment fragment = new DownloadsFragment();
-        return fragment;
+        return new DownloadsFragment();
     }
 
     @Override
@@ -66,14 +64,13 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_downloads, container, false);
 
-        recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
-        mNotificationController = new NotificationController(layout);
-        mNotificationController.setInvisible();
+        notificationController = new NotificationController(layout);
+        notificationController.setInvisible();
 
         return layout;
     }
@@ -85,12 +82,14 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
         fetchItems();
     }
 
+    @SuppressWarnings("unused")
     public void onEvent(PermissionGrantedEvent permissionGrantedEvent) {
         if (permissionGrantedEvent.getRequestCode() == PermissionsModel.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
             fetchItems();
         }
     }
 
+    @SuppressWarnings("unused")
     public void onEvent(PermissionDeniedEvent permissionDeniedEvent) {
         if (permissionDeniedEvent.getRequestCode() == PermissionsModel.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
             fetchItems();
@@ -99,7 +98,7 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
 
     private void fetchItems() {
         if (permissionsModel.requestPermission(PermissionsModel.WRITE_EXTERNAL_STORAGE) == 1) {
-            mNotificationController.setInvisible();
+            notificationController.setInvisible();
 
             adapter.clear();
 
@@ -122,15 +121,15 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
                 adapter.addItem(getString(R.string.courses), list);
             }
         } else {
-            mNotificationController.setTitle(R.string.dialog_title_permissions);
-            mNotificationController.setSummary(R.string.dialog_permissions);
-            mNotificationController.setOnClickListener(new View.OnClickListener() {
+            notificationController.setTitle(R.string.dialog_title_permissions);
+            notificationController.setSummary(R.string.dialog_permissions);
+            notificationController.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PermissionsModel.startAppInfo(getActivity());
                 }
             });
-            mNotificationController.setNotificationVisible(true);
+            notificationController.setNotificationVisible(true);
         }
     }
 

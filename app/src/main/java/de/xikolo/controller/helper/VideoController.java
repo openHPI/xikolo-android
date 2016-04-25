@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import de.xikolo.GlobalApplication;
@@ -39,7 +40,7 @@ public class VideoController {
 
     private static final int MILLISECONDS = 100;
 
-    private static final int sDefaultTimeout = 3000;
+    private static final int DEFAULT_TIMEOUT = 3000;
     private static final int FADE_OUT = 1;
 
     private static final int PLAYBACK_PARAMS_SDK_LEVEL = 23;
@@ -56,18 +57,18 @@ public class VideoController {
 
     private View videoController;
 
-    private CustomFontTextView playButton;
-    private TextView retryButton;
+    private CustomFontTextView buttonPlay;
+    private TextView buttonRetry;
 
     private SeekBar seekBar;
-    private TextView currentTime;
-    private TextView totalTime;
-    private CustomFontTextView hdSwitch;
-    private TextView playbackSpeed;
-    private View offlineHint;
+    private TextView textCurrentTime;
+    private TextView textTotalTime;
+    private CustomFontTextView textHdSwitch;
+    private TextView textPlaybackSpeed;
+    private View viewOfflineHint;
 
-    private View videoWarning;
-    private TextView videoWarningText;
+    private View viewVideoWarning;
+    private TextView textVideoWarning;
 
     private ControllerListener controllerListener;
 
@@ -105,18 +106,18 @@ public class VideoController {
         videoProgress = this.videoContainer.findViewById(R.id.videoProgress);
 
         seekBar = (SeekBar) this.videoContainer.findViewById(R.id.videoSeekBar);
-        currentTime = (TextView) videoController.findViewById(R.id.currentTime);
-        totalTime = (TextView) videoController.findViewById(R.id.totalTime);
-        hdSwitch = (CustomFontTextView) videoController.findViewById(R.id.hdSwitch);
-        playbackSpeed = (TextView) videoController.findViewById(R.id.playbackSpeed);
+        textCurrentTime = (TextView) videoController.findViewById(R.id.currentTime);
+        textTotalTime = (TextView) videoController.findViewById(R.id.totalTime);
+        textHdSwitch = (CustomFontTextView) videoController.findViewById(R.id.hdSwitch);
+        textPlaybackSpeed = (TextView) videoController.findViewById(R.id.playbackSpeed);
 
-        playButton = (CustomFontTextView) this.videoContainer.findViewById(R.id.btnPlay);
+        buttonPlay = (CustomFontTextView) this.videoContainer.findViewById(R.id.btnPlay);
 
-        offlineHint = this.videoContainer.findViewById(R.id.offlineHint);
+        viewOfflineHint = this.videoContainer.findViewById(R.id.offlineHint);
 
-        videoWarning = this.videoContainer.findViewById(R.id.videoWarning);
-        videoWarningText = (TextView) this.videoContainer.findViewById(R.id.videoWarningText);
-        retryButton = (TextView) this.videoContainer.findViewById(R.id.btnRetry);
+        viewVideoWarning = this.videoContainer.findViewById(R.id.videoWarning);
+        textVideoWarning = (TextView) this.videoContainer.findViewById(R.id.videoWarningText);
+        buttonRetry = (TextView) this.videoContainer.findViewById(R.id.btnRetry);
 
         this.videoContainer.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -139,12 +140,12 @@ public class VideoController {
                 mediaPlayer = mp;
 
                 videoProgress.setVisibility(View.GONE);
-                videoWarning.setVisibility(View.GONE);
+                viewVideoWarning.setVisibility(View.GONE);
                 seekBar.setMax(videoView.getDuration());
                 show();
 
-                totalTime.setText(getTimeString(videoView.getDuration()));
-                currentTime.setText(getTimeString(0));
+                textTotalTime.setText(getTimeString(videoView.getDuration()));
+                textCurrentTime.setText(getTimeString(0));
 
                 seekTo(videoItemDetails.detail.progress);
 
@@ -170,7 +171,7 @@ public class VideoController {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 pause();
-                playButton.setText(activity.getString(R.string.icon_reload));
+                buttonPlay.setText(activity.getString(R.string.icon_reload));
                 show();
             }
         });
@@ -208,8 +209,8 @@ public class VideoController {
                     ToastUtil.show(R.string.trying_reconnect);
                     updateVideo(course, module, videoItemDetails);
                 } else {
-                    videoWarning.setVisibility(View.VISIBLE);
-                    videoWarningText.setText(activity.getString(R.string.error_plain));
+                    viewVideoWarning.setVisibility(View.VISIBLE);
+                    textVideoWarning.setText(activity.getString(R.string.error_plain));
                 }
 
                 return true;
@@ -227,7 +228,9 @@ public class VideoController {
                             Log.i(TAG, "MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING notified (" + MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING + ")");
                             break;
                         case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START notified (" + MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START + ")");
+                            if (Build.VERSION.SDK_INT >= 17) {
+                                Log.i(TAG, "MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START notified (" + MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START + ")");
+                            }
                             break;
                         case MediaPlayer.MEDIA_INFO_BUFFERING_START:
                             Log.i(TAG, "MediaPlayer.MEDIA_INFO_BUFFERING_START notified (" + MediaPlayer.MEDIA_INFO_BUFFERING_START + ")");
@@ -263,7 +266,7 @@ public class VideoController {
                     public void run() {
                         if (!userIsSeeking) {
                             seekBar.setProgress(videoView.getCurrentPosition());
-                            currentTime.setText(getTimeString(videoView.getCurrentPosition()));
+                            textCurrentTime.setText(getTimeString(videoView.getCurrentPosition()));
                         }
                     }
                 });
@@ -275,7 +278,7 @@ public class VideoController {
             }
         };
 
-        playButton.setOnClickListener(new View.OnClickListener() {
+        buttonPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 show();
@@ -311,7 +314,7 @@ public class VideoController {
                 if (fromUser) {
                     show();
                     this.progress = progress;
-                    currentTime.setText(getTimeString(progress));
+                    textCurrentTime.setText(getTimeString(progress));
                 }
             }
 
@@ -336,7 +339,7 @@ public class VideoController {
             }
         });
 
-        hdSwitch.setOnClickListener(new View.OnClickListener() {
+        textHdSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String oldQuality = getQualityString();
@@ -358,8 +361,8 @@ public class VideoController {
         });
 
         if (Build.VERSION.SDK_INT >= PLAYBACK_PARAMS_SDK_LEVEL) {
-            playbackSpeed.setVisibility(View.VISIBLE);
-            playbackSpeed.setOnClickListener(new View.OnClickListener() {
+            textPlaybackSpeed.setVisibility(View.VISIBLE);
+            textPlaybackSpeed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PlaybackSpeed oldSpeed = currentPlaybackSpeed;
@@ -377,11 +380,11 @@ public class VideoController {
                 }
             });
         } else {
-            playbackSpeed.setVisibility(View.GONE);
-            playbackSpeed.setClickable(false);
+            textPlaybackSpeed.setVisibility(View.GONE);
+            textPlaybackSpeed.setClickable(false);
         }
 
-        retryButton.setOnClickListener(new View.OnClickListener() {
+        buttonRetry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateVideo(course, module, videoItemDetails);
@@ -390,7 +393,7 @@ public class VideoController {
     }
 
     public void play() {
-        playButton.setText(activity.getString(R.string.icon_pause));
+        buttonPlay.setText(activity.getString(R.string.icon_pause));
         videoView.start();
         isPlaying = true;
         if (!seekBarUpdaterIsRunning) {
@@ -399,7 +402,7 @@ public class VideoController {
     }
 
     public void pause() {
-        playButton.setText(activity.getString(R.string.icon_play));
+        buttonPlay.setText(activity.getString(R.string.icon_play));
         videoView.pause();
         isPlaying = false;
         saveCurrentPosition();
@@ -407,7 +410,7 @@ public class VideoController {
 
     public void seekTo(int progress) {
         videoView.seekTo(progress);
-        currentTime.setText(getTimeString(progress));
+        textCurrentTime.setText(getTimeString(progress));
         seekBar.setProgress(progress);
         if (!seekBarUpdaterIsRunning) {
             new Thread(seekBarUpdater).start();
@@ -444,7 +447,7 @@ public class VideoController {
     public void setPlaybackSpeed(PlaybackSpeed speed) {
         if (mediaPlayer != null) {
             currentPlaybackSpeed = speed;
-            playbackSpeed.setText(speed.toString());
+            textPlaybackSpeed.setText(speed.toString());
             PlaybackParams pp = new PlaybackParams();
             pp.setSpeed(speed.getSpeed());
             mediaPlayer.setPlaybackParams(pp);
@@ -455,7 +458,7 @@ public class VideoController {
     }
 
     public void show() {
-        show(sDefaultTimeout);
+        show(DEFAULT_TIMEOUT);
     }
 
     public void show(int timeout) {
@@ -515,8 +518,7 @@ public class VideoController {
         }
 
         if (Build.VERSION.SDK_INT >= PLAYBACK_PARAMS_SDK_LEVEL) {
-            AppPreferences appPreferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
-            currentPlaybackSpeed = appPreferences.getVideoPlaybackSpeed();
+            currentPlaybackSpeed = preferences.getVideoPlaybackSpeed();
         }
 
         updateVideo(course, module, videoItemDetails);
@@ -526,7 +528,7 @@ public class VideoController {
         String stream;
         DownloadModel.DownloadFileType fileType;
 
-        videoWarning.setVisibility(View.GONE);
+        viewVideoWarning.setVisibility(View.GONE);
 
         if (videoMode == VideoMode.HD) {
             stream = video.detail.stream.hd_url;
@@ -536,20 +538,20 @@ public class VideoController {
             fileType = DownloadModel.DownloadFileType.VIDEO_SD;
         }
 
-        offlineHint.setVisibility(View.GONE);
+        viewOfflineHint.setVisibility(View.GONE);
 
         if (!downloadModel.downloadRunning(fileType, course, module, video)
                 && downloadModel.downloadExists(fileType, course, module, video)) {
-            offlineHint.setVisibility(View.VISIBLE);
             setVideoURI("file://" + downloadModel.getDownloadFile(fileType, course, module, video).getAbsolutePath());
+            viewOfflineHint.setVisibility(View.VISIBLE);
         } else if (NetworkUtil.isOnline(activity)) {
             setVideoURI(stream);
         } else if (videoMode == VideoMode.HD) {
             videoMode = VideoMode.SD;
             updateVideo(course, module, video);
         } else {
-            videoWarning.setVisibility(View.VISIBLE);
-            videoWarningText.setText(activity.getString(R.string.video_notification_no_offline_video));
+            viewVideoWarning.setVisibility(View.VISIBLE);
+            textVideoWarning.setText(activity.getString(R.string.video_notification_no_offline_video));
         }
 
         updateHdSwitchColor();
@@ -564,9 +566,9 @@ public class VideoController {
 
     private void updateHdSwitchColor() {
         if (videoMode == VideoMode.HD) {
-            hdSwitch.setTextColor(ContextCompat.getColor(activity, R.color.video_hd_enabled));
+            textHdSwitch.setTextColor(ContextCompat.getColor(activity, R.color.video_hd_enabled));
         } else {
-            hdSwitch.setTextColor(ContextCompat.getColor(activity, R.color.video_hd_disabled));
+            textHdSwitch.setTextColor(ContextCompat.getColor(activity, R.color.video_hd_disabled));
         }
     }
 
@@ -598,7 +600,7 @@ public class VideoController {
     }
 
     private String getTimeString(int millis) {
-        return String.format("%02d:%02d",
+        return String.format(Locale.US, "%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(millis),
                 TimeUnit.MILLISECONDS.toSeconds(millis) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
@@ -606,8 +608,8 @@ public class VideoController {
     }
 
     public String getSourceString() {
-        if (offlineHint != null) {
-            return offlineHint.getVisibility() == View.VISIBLE ? LanalyticsUtil.CONTEXT_OFFLINE : LanalyticsUtil.CONTEXT_ONLINE;
+        if (viewOfflineHint != null) {
+            return viewOfflineHint.getVisibility() == View.VISIBLE ? LanalyticsUtil.CONTEXT_OFFLINE : LanalyticsUtil.CONTEXT_ONLINE;
         } else return null;
     }
 

@@ -29,19 +29,7 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
         setupActionBar();
 
         Bundle b = getIntent().getExtras();
-        /*if (b == null || !b.containsKey(ARG_COURSE)) {
-            if (videoCastManager.isConnected()) {
-                CacheController cacheController = new CacheController();
-                cacheController.readCachedExtras();
-                if (cacheController.getCourse() != null) {
-                    course = cacheController.getCourse();
-                }
-            } else {
-                throw new WrongParameterException();
-            }
-        } else {*/
-            this.course = b.getParcelable(ARG_COURSE);
-        //}
+        this.course = b.getParcelable(ARG_COURSE);
 
         if (course != null) {
             setTitle(course.name);

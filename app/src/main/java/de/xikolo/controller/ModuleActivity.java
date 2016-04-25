@@ -25,8 +25,8 @@ import de.xikolo.R;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.controller.helper.CacheController;
 import de.xikolo.controller.helper.ModuleDownloadController;
+import de.xikolo.controller.module.ItemWebViewFragment;
 import de.xikolo.controller.module.VideoFragment;
-import de.xikolo.controller.module.WebItemFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
@@ -105,6 +105,13 @@ public class ModuleActivity extends BaseActivity {
 
         setTitle(module.name);
 
+        int index = 0;
+        if (item != null) {
+            index = module.items.indexOf(item);
+        }
+        module.items.get(index).progress.visited = true;
+        itemModel.updateProgression(progressionResult, module, module.items.get(index));
+
         // Initialize the ViewPager and set an adapter
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), module.items);
@@ -127,13 +134,7 @@ public class ModuleActivity extends BaseActivity {
             }
         }
 
-        int index = 0;
-        if (item != null) {
-            index = module.items.indexOf(item);
-        }
         viewpager.setCurrentItem(index, false);
-        module.items.get(index).progress.visited = true;
-        itemModel.updateProgression(progressionResult, module, module.items.get(index));
     }
 
     @Override
@@ -274,7 +275,7 @@ public class ModuleActivity extends BaseActivity {
                     case Item.TYPE_SELFTEST:
                     case Item.TYPE_LTI:
                     case Item.TYPE_PEER:
-                        fragment = WebItemFragment.newInstance(course, module, items.get(position));
+                        fragment = ItemWebViewFragment.newInstance(course, module, items.get(position));
                         break;
                     case Item.TYPE_VIDEO:
                         fragment = VideoFragment.newInstance(course, module, items.get(position));

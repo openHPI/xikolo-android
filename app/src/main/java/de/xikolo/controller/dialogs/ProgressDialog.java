@@ -12,8 +12,8 @@ public class ProgressDialog extends DialogFragment {
 
     public static final String TAG = ProgressDialog.class.getSimpleName();
 
-    public static final String KEY_TITLE = "multiple_title";
-    public static final String KEY_MESSAGE = "multiple_message";
+    public static final String ARG_TITLE = "multiple_title";
+    public static final String ARG_MESSAGE = "multiple_message";
 
     private String title;
 
@@ -30,8 +30,8 @@ public class ProgressDialog extends DialogFragment {
     public static ProgressDialog getInstance(String title, String message) {
         ProgressDialog fragment = new ProgressDialog();
         Bundle args = new Bundle();
-        args.putString(KEY_TITLE, title);
-        args.putString(KEY_MESSAGE, message);
+        args.putString(ARG_TITLE, title);
+        args.putString(ARG_MESSAGE, message);
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,8 +40,8 @@ public class ProgressDialog extends DialogFragment {
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (getArguments() != null) {
-            title = getArguments().getString(KEY_TITLE);
-            message = getArguments().getString(KEY_MESSAGE);
+            title = getArguments().getString(ARG_TITLE);
+            message = getArguments().getString(ARG_MESSAGE);
         }
 
         android.app.ProgressDialog dialog = new android.app.ProgressDialog(getActivity());

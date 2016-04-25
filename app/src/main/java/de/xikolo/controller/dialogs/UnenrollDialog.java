@@ -13,10 +13,10 @@ public class UnenrollDialog extends DialogFragment {
 
     public static final String TAG = UnenrollDialog.class.getSimpleName();
 
-    private UnenrollDialogListener mListener;
+    private UnenrollDialogListener listener;
 
     public void setUnenrollDialogListener(UnenrollDialogListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     @Override
@@ -28,8 +28,8 @@ public class UnenrollDialog extends DialogFragment {
                 .setPositiveButton(R.string.dialog_unenroll_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (mListener != null) {
-                            mListener.onDialogPositiveClick(UnenrollDialog.this);
+                        if (listener != null) {
+                            listener.onDialogPositiveClick(UnenrollDialog.this);
                         }
                     }
                 })

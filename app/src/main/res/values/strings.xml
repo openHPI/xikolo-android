@@ -34,7 +34,7 @@
     <string name="tab_details">Course details</string>
     <string name="tab_announcements">Announcements</string>
     <string name="tab_rooms">Collab Space</string>
-    <string name="tab_quiz_recap" translatable="false">Quiz Recap</string>
+    <string name="tab_quiz_recap" translatable="false">Recap</string>
 
     <!-- -->
     <string name="btn_enroll_me">Enroll me for this course</string>

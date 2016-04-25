@@ -21,18 +21,18 @@ import de.xikolo.data.entities.Module;
 public class CacheController {
 
     public static final String TAG = CacheController.class.getSimpleName();
+
     public final String FILENAME;
-    private String filename;
-    private Context context;
+
     private File file;
     private Course course;
     private Module module;
     private Item item;
 
     public CacheController() {
-        context = GlobalApplication.getInstance();
+        Context context = GlobalApplication.getInstance();
         FILENAME = GlobalApplication.getInstance().getResources().getString(R.string.filename_cache_lastcourse);
-        filename = context.getCacheDir().getAbsolutePath() + File.separator + FILENAME;
+        String filename = context.getCacheDir().getAbsolutePath() + File.separator + FILENAME;
         file = new File(filename);
         createFolderIfNotExists(new File(file.getAbsolutePath().replace(FILENAME, "")));
     }

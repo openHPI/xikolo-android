@@ -32,20 +32,18 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     public static final String TAG = ProgressFragment.class.getSimpleName();
 
     private static final String ARG_COURSE = "arg_course";
+    private static final String ARG_MODULES = "arg_modules";
 
-    private static final String KEY_MODULES = "key_modules";
+    private Course course;
+    private List<Module> modules;
 
-    private Course mCourse;
-    private List<Module> mModules;
+    private ModuleModel moduleModel;
 
-    private ModuleModel mModuleModel;
+    private ProgressListAdapter adapter;
 
-    private ProgressListAdapter mAdapter;
+    private SwipeRefreshLayout refreshLayout;
 
-    private SwipeRefreshLayout mRefreshLayout;
-    private RecyclerView mRecyclerView;
-
-    private NotificationController mNotificationController;
+    private NotificationController notificationController;
 
     public ProgressFragment() {
         // Required empty public constructor
@@ -61,8 +59,8 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mModules != null) {
-            outState.putParcelableArrayList(KEY_MODULES, (ArrayList<Module>) mModules);
+        if (modules != null) {
+            outState.putParcelableArrayList(ARG_MODULES, (ArrayList<Module>) modules);
         }
         super.onSaveInstanceState(outState);
     }
@@ -71,14 +69,14 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCourse = getArguments().getParcelable(ARG_COURSE);
+            course = getArguments().getParcelable(ARG_COURSE);
         }
         if (savedInstanceState != null) {
-            mModules = savedInstanceState.getParcelableArrayList(KEY_MODULES);
+            modules = savedInstanceState.getParcelableArrayList(ARG_MODULES);
         }
         setHasOptionsMenu(true);
 
-        mModuleModel = new ModuleModel(jobManager);
+        moduleModel = new ModuleModel(jobManager);
     }
 
     @Override
@@ -86,15 +84,15 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_progress, container, false);
 
-        mRecyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
 
-        mAdapter = new ProgressListAdapter(getActivity());
+        adapter = new ProgressListAdapter(getActivity());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
-        mRecyclerView.addItemDecoration(new SpaceItemDecoration(
+        recyclerView.addItemDecoration(new SpaceItemDecoration(
                 0,
                 getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
                 false,
@@ -111,15 +109,15 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
 
                     @Override
                     public int getItemCount() {
-                        return mAdapter.getItemCount();
+                        return adapter.getItemCount();
                     }
                 }
         ));
 
-        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
-        RefeshLayoutController.setup(mRefreshLayout, this);
+        refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        RefeshLayoutController.setup(refreshLayout, this);
 
-        mNotificationController = new NotificationController(layout);
+        notificationController = new NotificationController(layout);
 
         return layout;
     }
@@ -128,11 +126,11 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     public void onStart() {
         super.onStart();
 
-        if (mModules == null) {
-            mNotificationController.setProgressVisible(true);
+        if (modules == null) {
+            notificationController.setProgressVisible(true);
             requestProgress(false);
         } else {
-            mAdapter.updateModules(mModules);
+            adapter.updateModules(modules);
         }
     }
 
@@ -141,23 +139,23 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
             @Override
             protected void onSuccess(List<Module> result, DataSource dataSource) {
                 if (result.size() > 0) {
-                    mNotificationController.setInvisible();
+                    notificationController.setInvisible();
                 }
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) ||
                         dataSource.equals(DataSource.NETWORK)) {
-                    mRefreshLayout.setRefreshing(false);
+                    refreshLayout.setRefreshing(false);
                 }
 
-                mModules = result;
+                modules = result;
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
-                    mAdapter.clear();
-                    mRefreshLayout.setRefreshing(false);
-                    mNotificationController.setTitle(R.string.notification_no_network);
-                    mNotificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
-                    mNotificationController.setNotificationVisible(true);
-                } else if (mModules != null && mModules.size() > 0) {
-                    mAdapter.updateModules(mModules);
+                    adapter.clear();
+                    refreshLayout.setRefreshing(false);
+                    notificationController.setTitle(R.string.notification_no_network);
+                    notificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
+                    notificationController.setNotificationVisible(true);
+                } else if (modules != null && modules.size() > 0) {
+                    adapter.updateModules(modules);
                 }
             }
 
@@ -170,17 +168,17 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
 
             @Override
             protected void onError(ErrorCode errorCode) {
-                mNotificationController.setInvisible();
-                mRefreshLayout.setRefreshing(false);
+                notificationController.setInvisible();
+                refreshLayout.setRefreshing(false);
                 ToastUtil.show(R.string.error);
             }
         };
 
-        if (!mNotificationController.isProgressVisible()) {
-            mRefreshLayout.setRefreshing(true);
+        if (!notificationController.isProgressVisible()) {
+            refreshLayout.setRefreshing(true);
         }
 
-        mModuleModel.getModules(result, mCourse, true);
+        moduleModel.getModules(result, course, true);
     }
 
     @Override
@@ -201,7 +199,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        mRefreshLayout.setRefreshing(true);
+        refreshLayout.setRefreshing(true);
         requestProgress(true);
     }
 

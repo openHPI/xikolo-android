@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
 
@@ -34,14 +33,12 @@ public class MainActivity extends BaseActivity
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationFragment mNavigationFragment;
+    private NavigationFragment navigationFragment;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;
-
-    private ContentFragment mFragment;
+    private CharSequence texTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +47,11 @@ public class MainActivity extends BaseActivity
         BaseCastManager.checkGooglePlayServices(this);
         setupActionBar();
 
-        mNavigationFragment = (NavigationFragment)
+        navigationFragment = (NavigationFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         // Set up the drawer.
-        mNavigationFragment.setUp(
+        navigationFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout),
                 toolbar);
@@ -86,13 +83,13 @@ public class MainActivity extends BaseActivity
                 if (type != null) {
                     switch (type) {
                         case ALL_COURSES:
-                            mNavigationFragment.selectItem(NavigationAdapter.NAV_ID_ALL_COURSES);
+                            navigationFragment.selectItem(NavigationAdapter.NAV_ID_ALL_COURSES);
                             break;
                         case NEWS:
-                            mNavigationFragment.selectItem(NavigationAdapter.NAV_ID_NEWS);
+                            navigationFragment.selectItem(NavigationAdapter.NAV_ID_NEWS);
                             break;
                         case MY_COURSES:
-                            mNavigationFragment.selectItem(NavigationAdapter.NAV_ID_MY_COURSES);
+                            navigationFragment.selectItem(NavigationAdapter.NAV_ID_MY_COURSES);
                             break;
                         default:
                             break;
@@ -105,8 +102,8 @@ public class MainActivity extends BaseActivity
     @Override
     public void onFragmentAttached(int id, String title) {
         setTitle(title);
-        mNavigationFragment.markItem(id);
-        mNavigationFragment.setDrawerIndicatorEnabled(true);
+        navigationFragment.markItem(id);
+        navigationFragment.setDrawerIndicatorEnabled(true);
     }
 
     @Override
@@ -145,13 +142,12 @@ public class MainActivity extends BaseActivity
         }
         if (tag != null) {
             ContentFragment oldFragment = (ContentFragment) fragmentManager.findFragmentByTag(tag);
-            if (oldFragment == null) {
-                mFragment = newFragment;
-            } else {
-                mFragment = oldFragment;
-            }
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.container, mFragment, tag);
+            if (oldFragment == null) {
+                transaction.replace(R.id.container, newFragment, tag);
+            } else {
+                transaction.replace(R.id.container, oldFragment, tag);
+            }
             transaction.addToBackStack(tag);
             transaction.commit();
             setAppBarExpanded(true);
@@ -161,20 +157,20 @@ public class MainActivity extends BaseActivity
     }
 
     private void setTitle(String title) {
-        mTitle = title;
+        texTitle = title;
         if (actionBar != null) {
-            actionBar.setTitle(mTitle);
+            actionBar.setTitle(texTitle);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (!mNavigationFragment.isDrawerOpen()) {
+        if (!navigationFragment.isDrawerOpen()) {
             if (UserModel.isLoggedIn(this)
-                    && mNavigationFragment.getItem() == NavigationAdapter.NAV_ID_MY_COURSES) {
+                    && navigationFragment.getItem() == NavigationAdapter.NAV_ID_MY_COURSES) {
                 finish();
             } else if (!UserModel.isLoggedIn(this)
-                    && mNavigationFragment.getItem() == NavigationAdapter.NAV_ID_ALL_COURSES) {
+                    && navigationFragment.getItem() == NavigationAdapter.NAV_ID_ALL_COURSES) {
                 finish();
             } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
                 getSupportFragmentManager().popBackStack();
@@ -183,24 +179,25 @@ public class MainActivity extends BaseActivity
                 finish();
             }
         } else {
-            mNavigationFragment.closeDrawer();
+            navigationFragment.closeDrawer();
         }
     }
 
+    @SuppressWarnings("unused")
     public NavigationFragment getNavigationDrawer() {
-        return this.mNavigationFragment;
+        return this.navigationFragment;
     }
 
     public void restoreActionBar() {
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(mTitle);
+            actionBar.setTitle(texTitle);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationFragment.isDrawerOpen()) {
+        if (!navigationFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -212,36 +209,28 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean isDrawerOpen() {
-        return this.mNavigationFragment.isDrawerOpen();
+        return this.navigationFragment.isDrawerOpen();
     }
 
     @Override
     public void updateDrawer() {
-        this.mNavigationFragment.updateDrawer();
+        this.navigationFragment.updateDrawer();
     }
 
     @Override
     public void selectDrawerSection(int pos) {
-        this.mNavigationFragment.selectItem(pos);
+        this.navigationFragment.selectItem(pos);
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(LoginEvent event) {
         updateDrawer();
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(LogoutEvent event) {
         updateDrawer();
     }
-
 
 }

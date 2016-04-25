@@ -30,22 +30,22 @@ public class ProfileFragment extends ContentFragment {
 
     public static final String TAG = ProfileFragment.class.getSimpleName();
 
-    private static final String KEY_COURSES = "key_courses";
+    private static final String ARG_COURSES = "arg_courses";
 
-    private UserModel mUserModel;
-    private CourseModel mCourseModel;
-    private Result<List<Course>> mCoursesResult;
-    private Result<User> mUserResult;
+    private UserModel userModel;
+    private CourseModel courseModel;
+    private Result<List<Course>> coursesResult;
+    private Result<User> userResult;
 
-    private NotificationController mNotificationController;
+    private NotificationController notificationController;
 
-    private TextView mTextName;
-    private CustomSizeImageView mImgHeader;
-    private CustomSizeImageView mImgProfile;
-    private TextView mTextEnrollCounts;
-    private TextView mTextEmail;
+    private TextView textName;
+    private CustomSizeImageView imageHeader;
+    private CustomSizeImageView imageProfile;
+    private TextView textEnrollCounts;
+    private TextView textEmail;
 
-    private List<Course> mCourses;
+    private List<Course> courses;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -57,8 +57,8 @@ public class ProfileFragment extends ContentFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mCourses != null) {
-            outState.putParcelableArrayList(KEY_COURSES, (ArrayList<Course>) mCourses);
+        if (courses != null) {
+            outState.putParcelableArrayList(ARG_COURSES, (ArrayList<Course>) courses);
         }
         super.onSaveInstanceState(outState);
     }
@@ -68,11 +68,11 @@ public class ProfileFragment extends ContentFragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mCourses = savedInstanceState.getParcelableArrayList(KEY_COURSES);
+            courses = savedInstanceState.getParcelableArrayList(ARG_COURSES);
         }
 
-        mCourseModel = new CourseModel(jobManager);
-        mCoursesResult = new Result<List<Course>>() {
+        courseModel = new CourseModel(jobManager);
+        coursesResult = new Result<List<Course>>() {
             @Override
             protected void onSuccess(List<Course> result, DataSource dataSource) {
                 showCoursesProgress(result);
@@ -86,12 +86,12 @@ public class ProfileFragment extends ContentFragment {
             }
         };
 
-        mUserModel = new UserModel(jobManager);
-        mUserResult = new Result<User>() {
+        userModel = new UserModel(jobManager);
+        userResult = new Result<User>() {
             @Override
             protected void onSuccess(User result, DataSource dataSource) {
                 updateLayout();
-                mActivityCallback.updateDrawer();
+                activityCallback.updateDrawer();
             }
 
             @Override
@@ -110,13 +110,13 @@ public class ProfileFragment extends ContentFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        mNotificationController = new NotificationController(view);
+        notificationController = new NotificationController(view);
 
-        mTextName = (TextView) view.findViewById(R.id.textName);
-        mImgHeader = (CustomSizeImageView) view.findViewById(R.id.imageHeader);
-        mImgProfile = (CustomSizeImageView) view.findViewById(R.id.imageProfile);
-        mTextEnrollCounts = (TextView) view.findViewById(R.id.textEnrollCount);
-        mTextEmail = (TextView) view.findViewById(R.id.textEmail);
+        textName = (TextView) view.findViewById(R.id.textName);
+        imageHeader = (CustomSizeImageView) view.findViewById(R.id.imageHeader);
+        imageProfile = (CustomSizeImageView) view.findViewById(R.id.imageProfile);
+        textEnrollCounts = (TextView) view.findViewById(R.id.textEnrollCount);
+        textEmail = (TextView) view.findViewById(R.id.textEmail);
 
         updateLayout();
 
@@ -129,11 +129,11 @@ public class ProfileFragment extends ContentFragment {
 
         if (UserModel.isLoggedIn(getActivity())) {
             showHeader();
-            if (mCourses == null) {
-                mUserModel.getUser(mUserResult);
-                mCourseModel.getCourses(mCoursesResult, false);
+            if (courses == null) {
+                userModel.getUser(userResult);
+                courseModel.getCourses(coursesResult, false);
             } else {
-                showCoursesProgress(mCourses);
+                showCoursesProgress(courses);
             }
         } else {
             getActivity().getSupportFragmentManager().popBackStack();
@@ -141,14 +141,14 @@ public class ProfileFragment extends ContentFragment {
     }
 
     private void updateLayout() {
-        mNotificationController.setProgressVisible(false);
+        notificationController.setProgressVisible(false);
         showHeader();
         showUser(UserModel.getSavedUser(getActivity()));
         setProfilePicMargin();
     }
 
     private void showUser(User user) {
-        mTextName.setText(String.format(getString(R.string.user_name), user.first_name, user.last_name));
+        textName.setText(String.format(getString(R.string.user_name), user.first_name, user.last_name));
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -162,41 +162,41 @@ public class ProfileFragment extends ContentFragment {
             heightHeader = (int) (size.y * 0.35);
             heightProfile = (int) (size.y * 0.2);
         }
-        mImgHeader.setDimensions(size.x, heightHeader);
-        mImgHeader.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        imageHeader.setDimensions(size.x, heightHeader);
+        imageHeader.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
-        ImageController.load(R.drawable.title, mImgHeader);
+        ImageController.load(R.drawable.title, imageHeader);
 
-        mImgProfile.setDimensions(heightProfile, heightProfile);
-        mImgProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        imageProfile.setDimensions(heightProfile, heightProfile);
+        imageProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
         if (user.user_visual != null) {
-            ImageController.loadRounded(user.user_visual, mImgProfile, heightProfile, heightProfile );
+            ImageController.loadRounded(user.user_visual, imageProfile, heightProfile, heightProfile);
         } else {
-            ImageController.loadRounded(R.drawable.avatar, mImgProfile, heightProfile, heightProfile);
+            ImageController.loadRounded(R.drawable.avatar, imageProfile, heightProfile, heightProfile);
         }
 
-        mTextEmail.setText(user.email);
+        textEmail.setText(user.email);
 
-        mTextEnrollCounts.setText(String.valueOf(mCourseModel.getEnrollmentsCount()));
+        textEnrollCounts.setText(String.valueOf(courseModel.getEnrollmentsCount()));
     }
 
     private void setProfilePicMargin() {
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImgProfile.getLayoutParams();
-        layoutParams.setMargins(0, mImgHeader.getMeasuredHeight() - (mImgProfile.getMeasuredHeight() / 2), 0, 0);
-        mImgProfile.setLayoutParams(layoutParams);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageProfile.getLayoutParams();
+        layoutParams.setMargins(0, imageHeader.getMeasuredHeight() - (imageProfile.getMeasuredHeight() / 2), 0, 0);
+        imageProfile.setLayoutParams(layoutParams);
     }
 
     private void showHeader() {
         User user = UserModel.getSavedUser(getActivity());
-        mActivityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
+        activityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
     }
 
     private void showCoursesProgress(List<Course> courses) {
-        mCourses = courses;
-        mTextEnrollCounts.setText(String.valueOf(mCourseModel.getEnrollmentsCount()));
-        if (mActivityCallback != null) {
-            mActivityCallback.updateDrawer();
+        this.courses = courses;
+        textEnrollCounts.setText(String.valueOf(courseModel.getEnrollmentsCount()));
+        if (activityCallback != null) {
+            activityCallback.updateDrawer();
         }
     }
 

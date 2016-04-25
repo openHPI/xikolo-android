@@ -14,14 +14,14 @@ public class ConfirmDeleteDialog extends DialogFragment {
 
     public static final String TAG = ConfirmDeleteDialog.class.getSimpleName();
 
-    private ConfirmDeleteDialogListener mListener;
+    private ConfirmDeleteDialogListener listener;
 
-    public static final String KEY_MULTIPLE_FILES = "multiple_files";
+    public static final String ARG_MULTIPLE_FILES = "multiple_files";
 
     private boolean multipleFiles;
 
     public void setConfirmDeleteDialogListener(ConfirmDeleteDialogListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     public ConfirmDeleteDialog() {
@@ -30,7 +30,7 @@ public class ConfirmDeleteDialog extends DialogFragment {
     public static ConfirmDeleteDialog getInstance(boolean multipleFiles) {
         ConfirmDeleteDialog fragment = new ConfirmDeleteDialog();
         Bundle args = new Bundle();
-        args.putBoolean(KEY_MULTIPLE_FILES, multipleFiles);
+        args.putBoolean(ARG_MULTIPLE_FILES, multipleFiles);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,7 +39,7 @@ public class ConfirmDeleteDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (getArguments() != null) {
-            multipleFiles = getArguments().getBoolean(KEY_MULTIPLE_FILES);
+            multipleFiles = getArguments().getBoolean(ARG_MULTIPLE_FILES);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog);
@@ -48,8 +48,8 @@ public class ConfirmDeleteDialog extends DialogFragment {
                 .setPositiveButton(R.string.dialog_confirm_delete_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (mListener != null) {
-                            mListener.onDialogPositiveClick(ConfirmDeleteDialog.this);
+                        if (listener != null) {
+                            listener.onDialogPositiveClick(ConfirmDeleteDialog.this);
                         }
                     }
                 })
@@ -65,8 +65,8 @@ public class ConfirmDeleteDialog extends DialogFragment {
             builder.setNeutralButton(R.string.dialog_confirm_delete_yes_always, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (mListener != null) {
-                        mListener.onDialogPositiveAndAlwaysClick(ConfirmDeleteDialog.this);
+                    if (listener != null) {
+                        listener.onDialogPositiveAndAlwaysClick(ConfirmDeleteDialog.this);
                     }
                 }
             });
