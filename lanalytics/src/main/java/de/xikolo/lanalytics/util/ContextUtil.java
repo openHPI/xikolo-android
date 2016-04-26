@@ -20,8 +20,10 @@ public class ContextUtil {
 
         // os details
         contextMap.put("platform", "Android");
-        contextMap.put("os_version", Build.VERSION.RELEASE);
-        contextMap.put("api_level", String.valueOf(Build.VERSION.SDK_INT));
+        contextMap.put("platform_version", Build.VERSION.RELEASE);
+        contextMap.put("runtime", "Android");
+        contextMap.put("runtime_version", Build.VERSION.RELEASE);
+        contextMap.put("runtime_api_level", String.valueOf(Build.VERSION.SDK_INT));
 
         // device details
         contextMap.put("device", DeviceUtil.getDeviceName());
@@ -29,8 +31,8 @@ public class ContextUtil {
         // app details
         try {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            contextMap.put("app_version_name", String.valueOf(pi.versionName));
-            contextMap.put("app_version_code", String.valueOf(pi.versionCode));
+            contextMap.put("build_version", String.valueOf(pi.versionCode));
+            contextMap.put("build_version_name", String.valueOf(pi.versionName));
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(Lanalytics.class.getSimpleName(), "Could not get package info for " + context.getPackageName(), e);
         }
