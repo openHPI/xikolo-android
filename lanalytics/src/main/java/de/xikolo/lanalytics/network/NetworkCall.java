@@ -23,8 +23,8 @@ public class NetworkCall {
         return httpClient;
     }
 
-    private static final MediaType JSON
-            = MediaType.parse("application/json; charset=utf-8");
+    private static final MediaType JSON_API
+            = MediaType.parse("application/vnd.api+json");
 
     public NetworkCall(String url) {
         builder = new Request.Builder()
@@ -43,8 +43,8 @@ public class NetworkCall {
         return this;
     }
 
-    public NetworkCall postJson(String json) {
-        RequestBody body = RequestBody.create(JSON, json);
+    public NetworkCall postJsonApi(String json) {
+        RequestBody body = RequestBody.create(JSON_API, json);
         builder.post(body);
         return this;
     }

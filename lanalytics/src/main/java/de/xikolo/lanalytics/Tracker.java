@@ -112,7 +112,7 @@ public class Tracker {
 
                     Response response = new NetworkCall(endpoint)
                             .authorize(token)
-                            .postJson(json)
+                            .postJsonApi(json)
                             .execute();
                     if (!response.isSuccessful()) {
                         response.body().close();
