@@ -35,7 +35,7 @@ public class Tracker {
         this.eventDataAccess = (EventDataAccess) databaseHelper.getDataAccess(DatabaseHelper.DataAccessType.EVENT);
 
         if (Config.DEBUG) {
-            this.endpoint = "http://192.168.1.34:9000";
+            this.endpoint = "http://192.168.1.38:9000/";
         }
     }
 
@@ -103,7 +103,12 @@ public class Tracker {
                         break;
                     }
 
-                    String json = Parser.toJson(eventList);
+                    String json;
+                    if (eventList.size() == 1) {
+                        json = Parser.toJson(eventList.get(0));
+                    } else {
+                        json = Parser.toJson(eventList);
+                    }
 
                     Response response = new NetworkCall(endpoint)
                             .authorize(token)

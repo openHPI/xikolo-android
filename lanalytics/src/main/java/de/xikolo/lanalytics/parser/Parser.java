@@ -9,13 +9,14 @@ public class Parser {
 
     private static Gson getGson() {
         return new GsonBuilder()
+                .registerTypeAdapter(JsonApiWrapper.class, new JsonApiSerializer())
                 .registerTypeAdapter(Lanalytics.Event.class, new EventSerializer())
                 .setPrettyPrinting()
                 .create();
     }
 
     public static String toJson(Object src) {
-        return getGson().toJson(src);
+        return getGson().toJson(new JsonApiWrapper(src));
     }
 
 }
