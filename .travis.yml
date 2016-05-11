@@ -12,4 +12,4 @@ env:
   - FLAVOR="openHPI"
 
 script:
-   - ./gradlew assemble${FLAVOR} test${FLAVOR}ReleaseUnitTest connected${FLAVOR}DebugAndroidTest
+   - ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest connected${FLAVOR}DebugAndroidTest
