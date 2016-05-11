@@ -9,4 +9,4 @@ android:
     - extra-google-m2repository
 
 script:
-   - ./gradlew build connectedCheck
+   - ./gradlew assembleRelease test connectedCheck
