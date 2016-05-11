@@ -8,5 +8,8 @@ android:
     - extra-android-m2repository
     - extra-google-m2repository
 
+env:
+  - FLAVOR="openHPI"
+
 script:
-   - ./gradlew assembleOpenHPIRelease test connectedCheck
+   - ./gradlew assemble${FLAVOR} test${FLAVOR}ReleaseUnitTest connected${FLAVOR}DebugAndroidTest
