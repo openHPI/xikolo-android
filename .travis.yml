@@ -1,0 +1,19 @@
+language: android
+android:
+  components:
+    - platform-tools
+    - tools
+    - build-tools-23.0.3
+    - android-23
+    - extra-android-m2repository
+    - extra-google-m2repository
+
+env:
+  - FLAVOR="openHPI"
+  - FLAVOR="openSAP"
+  - FLAVOR="moocHouse"
+
+script:
+   - >
+       ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest connected${FLAVOR}DebugAndroidTest
+       && ./gradlew assemble${FLAVOR}Release test${FLAVOR}ReleaseUnitTest

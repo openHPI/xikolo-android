@@ -36,3 +36,5 @@ build/
 *.jks
 *.keystore
 signing.properties
+
+!gradle-wrapper.jar
