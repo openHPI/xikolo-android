@@ -13,6 +13,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -152,11 +153,13 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                     if (url.contains(Config.HOST)) {
                         Map<String, String> header = new HashMap<>();
                         header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
-                        header.put(Config.HEADER_LANALYTICS_CONTEXT, GlobalApplication.getInstance()
-                                .getLanalytics().getDefaultContextPayload());
                         if (UserModel.isLoggedIn(context)) {
                             header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserModel.getToken(context));
                         }
+
+                        CookieManager.getInstance().setCookie(Config.URI, Config.COOKIE_LANALYTICS_CONTEXT + "=" + GlobalApplication.getInstance()
+                                .getLanalytics().getDefaultContextPayload() + "; Domain=" + Config.URI);
+
                         webView.loadUrl(this.url, header);
                     } else {
                         webView.loadUrl(this.url, null);

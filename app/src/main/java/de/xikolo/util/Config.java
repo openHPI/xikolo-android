@@ -67,7 +67,8 @@ public class Config {
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String HEADER_CACHE_CONTROL = "Cache-Control";
     public static final String HEADER_USER_PLATFORM = "X-User-Platform";
-    public static final String HEADER_LANALYTICS_CONTEXT = "X-Lanalytics-Context";
+
+    public static final String COOKIE_LANALYTICS_CONTEXT = "lanalytics-context";
 
     public static final String HEADER_ACCEPT_VALUE = "application/vnd.xikolo.v1, application/json";
     public static final String HEADER_AUTHORIZATION_PREFIX = "Token token=";
