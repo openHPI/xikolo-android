@@ -34,7 +34,7 @@
     <string name="tab_details">Course details</string>
     <string name="tab_announcements">Announcements</string>
     <string name="tab_rooms">Collab Space</string>
-    <string name="tab_quiz_recap" translatable="false">Recap</string>
+    <string name="tab_quiz_recap">Recap</string>
 
     <!-- -->
     <string name="btn_enroll_me">Enroll me for this course</string>
@@ -67,31 +67,6 @@
 
     <string name="dialog_title_permissions">External storage access required</string>
     <string name="dialog_permissions">Please allow this app to access your external storage in order to use this functionality.</string>
-
-    <string-array name="dialog_module_downloads_array" translatable="false">
-        <item>@string/video_hd_as_mp4</item>
-        <item>@string/video_sd_as_mp4</item>
-        <item>@string/slides_as_pdf</item>
-    </string-array>
-
-    <!-- preferences keys -->
-    <string name="preference_screen">preference_screen</string>
-    <string name="preference_storage" translatable="false">storage</string>
-    <string name="preference_confirm_delete" translatable="false">confirm_delete</string>
-    <string name="preference_video_quality" translatable="false">video_quality</string>
-    <string name="preference_download_network" translatable="false">download_network</string>
-    <string name="preference_video_playback_speed" translatable="false">video_playback_speed</string>
-    <string name="preference_copyright" translatable="false">copyright</string>
-    <string name="preference_imprint" translatable="false">imprint</string>
-    <string name="preference_privacy" translatable="false">privacy</string>
-    <string name="preference_terms_of_use" translatable="false">terms_of_use</string>
-    <string name="preference_open_source_licenses" translatable="false">open_source_licenses</string>
-    <string name="preference_open_source_contributors" translatable="false">open_source_contributors</string>
-    <string name="preference_build_version" translatable="false">build_version</string>
-    <string name="preference_login_out" translatable="false">login_out</string>
-
-    <string name="preference_category_video_playback_speed" translatable="false">category_video_playback_speed</string>
-    <string name="preference_category_info" translatable="false">category_info</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -130,13 +105,10 @@
     <string name="download_all_content">Download contents</string>
     <string name="intro_overlay_text">Touch to cast videos on TV</string>
     <string name="user_name">%1$s %2$s</string>
-    <string name="duration" translatable="false">%1$02d:%2$02d</string>
 
     <string name="self_test_points">%1$s of %2$s self-test points</string>
     <string name="assignments_points">%1$s of %2$s assignment points</string>
     <string name="items_visited">%1$s of %2$s visited</string>
-
-    <string name="percentage" translatable="false">%1$s%%</string>
 
     <!-- -->
     <string name="notification_no_network">Please enable network connection</string>
@@ -167,7 +139,7 @@
 
     <!-- -->
     <string name="offline_mode">Offline Mode</string>
-    <string name="offline" translatable="false">Offline</string>
+    <string name="offline">Offline</string>
 
     <!-- -->
     <string name="media_route_menu_title">CAST</string>
@@ -189,15 +161,6 @@
 
     <string name="settings_title_video_playback_speed">Video playback speed</string>
     <string name="settings_summary_video_playback_speed">Default speed: %s</string>
-    <string name="settings_default_value_video_playback_speed" translatable="false">x1.0</string>
-    <string-array name="settings_values_video_playback_speed" translatable="false">
-        <item>x0.7</item>
-        <item>@string/settings_default_value_video_playback_speed</item>
-        <item>x1.3</item>
-        <item>x1.5</item>
-        <item>x1.8</item>
-        <item>x2.0</item>
-    </string-array>
 
     <string name="settings_category_about">About</string>
 
@@ -223,8 +186,5 @@
     <string name="lang_en">English</string>
     <string name="lang_de">German</string>
     <string name="lang_zh">Chinese</string>
-
-    <!-- -->
-    <string name="filename_cache_lastcourse">lastCourseExtras</string>
 
 </resources>

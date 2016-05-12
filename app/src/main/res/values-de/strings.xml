@@ -138,6 +138,7 @@
 
     <!-- -->
     <string name="offline_mode">Offline-Modus</string>
+    <string name="offline">Offline</string>
 
     <!-- -->
     <string name="settings_category_general">Allgemein</string>

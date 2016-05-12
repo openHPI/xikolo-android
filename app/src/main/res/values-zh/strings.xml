@@ -71,25 +71,6 @@
         <item>@string/slides_as_pdf</item>
     </string-array>
 
-    <!-- preferences keys -->
-    <string name="preference_screen">选项</string>
-    <string name="preference_storage" translatable="false">存储</string>
-    <string name="preference_confirm_delete" translatable="false">删除需确认</string>
-    <string name="preference_video_quality" translatable="false">视频质量</string>
-    <string name="preference_download_network" translatable="false">下载网络</string>
-    <string name="preference_video_playback_speed" translatable="false">视频播放速度</string>
-    <string name="preference_copyright" translatable="false">版权</string>
-    <string name="preference_imprint" translatable="false">法律信息</string>
-    <string name="preference_privacy" translatable="false">隐私保护</string>
-    <string name="preference_terms_of_use" translatable="false">服务条款</string>
-    <string name="preference_open_source_licenses" translatable="false">开源许可</string>
-    <string name="preference_open_source_contributors" translatable="false">开源贡献者</string>
-    <string name="preference_build_version" translatable="false">编译版本</string>
-    <string name="preference_login_out" translatable="false">退出</string>
-
-    <string name="preference_category_video_playback_speed" translatable="false">视频播放速度分类</string>
-    <string name="preference_category_info" translatable="false">分类信息</string>
-
     <!-- -->
     <string name="title_activity_module">模块</string>
 
@@ -127,13 +108,10 @@
     <string name="download_all_content">下载课程内容</string>
     <string name="intro_overlay_text">点击以将视频推送至电视播放</string>
     <string name="user_name">%1$s %2$s</string>
-    <string name="duration" translatable="false">%1$02d:%2$02d</string>
 
     <string name="self_test_points">自我测试总分 %2$s 分，您取得了 %1$s 分</string>
     <string name="assignments_points">作业总分 %2$s 分，您取得了 %1$s 分</string>
     <string name="items_visited">已访问 %2$s 中的 %1$s 项</string>
-
-    <string name="percentage" translatable="false">%1$s%%</string>
 
     <!-- -->
     <string name="notification_no_network">请打开网络连接</string>
@@ -164,7 +142,7 @@
 
     <!-- -->
     <string name="offline_mode">离线模式</string>
-    <string name="offline" translatable="false">离线</string>
+    <string name="offline">离线</string>
 
     <!-- -->
     <string name="media_route_menu_title">推送</string>
@@ -186,15 +164,6 @@
 
     <string name="settings_title_video_playback_speed">视频播放速度</string>
     <string name="settings_summary_video_playback_speed">默认速度： %s</string>
-    <string name="settings_default_value_video_playback_speed" translatable="false">x1.0</string>
-    <string-array name="settings_values_video_playback_speed" translatable="false">
-        <item>x0.7</item>
-        <item>@string/settings_default_value_video_playback_speed</item>
-        <item>x1.3</item>
-        <item>x1.5</item>
-        <item>x1.8</item>
-        <item>x2.0</item>
-    </string-array>
 
     <string name="settings_category_about">关于</string>
 
@@ -220,7 +189,5 @@
     <string name="lang_en">English</string>
     <string name="lang_de">German</string>
     <string name="lang_zh">中文</string>
-    <!-- -->
-    <string name="filename_cache_lastcourse">lastCourseExtras</string>
 
 </resources>
