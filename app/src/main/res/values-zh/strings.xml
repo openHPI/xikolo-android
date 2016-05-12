@@ -7,10 +7,17 @@
     <string name="title_section_logout">退出</string>
     <string name="title_section_all_courses">所有课程</string>
     <string name="title_section_news">新闻</string>
-    <string name="title_section_quiz">自我测试演示版</string>
     <string name="title_section_downloads">下载</string>
     <string name="title_section_settings">设置</string>
     <string name="title_section_my_courses">我的课程</string>
+
+    <!-- -->
+    <string name="header_current_courses">当前和即将开始的课程</string>
+    <string name="header_self_paced_courses">自学课程</string>
+    <string name="header_my_current_courses">我的当前课程</string>
+    <string name="header_my_future_courses">我的即将开始的课程</string>
+    <string name="banner_running">正在进行中</string>
+    <string name="banner_self_paced">自学</string>
 
     <!-- -->
     <string name="navigation_drawer_open">显示导航</string>
@@ -54,7 +61,9 @@
     <string name="dialog_progress_title">请等待</string>
     <string name="dialog_progress_message">载入中&#8230;</string>
 
-    <string name="dialog_module_downloads_title">下载 %1$s 所有视频?</string>
+    <string name="dialog_module_downloads_title">下载 %1$s 的所有视频?</string>
+    <string name="dialog_title_permissions">需要访问外部存储</string>
+    <string name="dialog_permissions">为了使用此功能，请允许本应用访问您的外部存储。</string>
 
     <string-array name="dialog_module_downloads_array" translatable="false">
         <item>@string/video_hd_as_mp4</item>
@@ -67,6 +76,8 @@
 
     <!-- -->
     <string name="error">发生错误，请稍后重试。</string>
+    <string name="error_plain">发生错误。</string>
+    <string name="trying_reconnect">尝试重连&#8230;</string>
     <string name="error_email">请输入有效的邮件地址。</string>
     <string name="error_password">请输入有效的密码。</string>
     <string name="login">登录</string>
@@ -95,7 +106,12 @@
     <string name="courses">我的课程</string>
     <string name="available_at">开始于%1$s</string>
     <string name="download_all_content">下载课程内容</string>
+    <string name="intro_overlay_text">点击以将视频推送至电视播放</string>
     <string name="user_name">%1$s %2$s</string>
+
+    <string name="self_test_points">自我测试总分 %2$s 分，您取得了 %1$s 分</string>
+    <string name="assignments_points">作业总分 %2$s 分，您取得了 %1$s 分</string>
+    <string name="items_visited">已访问 %2$s 中的 %1$s 项</string>
 
     <!-- -->
     <string name="notification_no_network">请打开网络连接</string>
@@ -113,6 +129,10 @@
     <string name="module_notification_no_content">无可用内容</string>
 
     <!-- -->
+    <string name="notification_download_completed">下载已完成</string>
+    <string name="notification_multiple_downloads_completed">已下载 %1$d</string>
+
+    <!-- -->
     <string name="toast_no_courses">未收到任何课程。</string>
     <string name="toast_no_network">请开启网络连接。</string>
     <string name="toast_please_log_in">请登录。</string>
@@ -122,6 +142,10 @@
 
     <!-- -->
     <string name="offline_mode">离线模式</string>
+    <string name="offline">离线</string>
+
+    <!-- -->
+    <string name="media_route_menu_title">推送</string>
 
     <!-- -->
     <string name="settings_category_general">通用</string>
@@ -136,13 +160,30 @@
     <string name="settings_title_download_network">限制下载数据流量</string>
     <string name="settings_summary_download_network">仅在使用无线网络时下载视频</string>
 
+    <string name="settings_category_video">视频</string>
+
+    <string name="settings_title_video_playback_speed">视频播放速度</string>
+    <string name="settings_summary_video_playback_speed">默认速度： %s</string>
+
     <string name="settings_category_about">关于</string>
 
     <string name="settings_title_licenses">开放源代码许可</string>
     <string name="settings_summary_licenses">开原软件许可细节</string>
 
+    <string name="settings_title_contributors">贡献者</string>
+    <string name="settings_summary_contributors">贡献者列表</string>
+
     <string name="settings_title_build">编译版本</string>
     <string name="settings_summary_build">版本：</string>
+
+    <string name="settings_title_storage">请选择存储位置</string>
+    <string name="settings_title_storage_internal">内置存储器</string>
+    <string name="settings_title_storage_external">SD卡</string>
+    <string name="settings_summary_storage">可用空间 %1$s </string>
+
+    <string name="settings_imprint">法律声明</string>
+    <string name="settings_privacy">隐私和数据保护</string>
+    <string name="settings_terms_of_use">服务条款</string>
 
     <!-- -->
     <string name="lang_en">English</string>

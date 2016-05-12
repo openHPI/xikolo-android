@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="dialog_module_downloads_array" translatable="false">
+        <item>@string/video_hd_as_mp4</item>
+        <item>@string/video_sd_as_mp4</item>
+        <item>@string/slides_as_pdf</item>
+    </string-array>
+
+    <!-- preferences keys -->
+    <string name="preference_screen" translatable="false">preference_screen</string>
+    <string name="preference_storage" translatable="false">storage</string>
+    <string name="preference_confirm_delete" translatable="false">confirm_delete</string>
+    <string name="preference_video_quality" translatable="false">video_quality</string>
+    <string name="preference_download_network" translatable="false">download_network</string>
+    <string name="preference_video_playback_speed" translatable="false">video_playback_speed</string>
+    <string name="preference_copyright" translatable="false">copyright</string>
+    <string name="preference_imprint" translatable="false">imprint</string>
+    <string name="preference_privacy" translatable="false">privacy</string>
+    <string name="preference_terms_of_use" translatable="false">terms_of_use</string>
+    <string name="preference_open_source_licenses" translatable="false">open_source_licenses</string>
+    <string name="preference_open_source_contributors" translatable="false">open_source_contributors</string>
+    <string name="preference_build_version" translatable="false">build_version</string>
+    <string name="preference_login_out" translatable="false">login_out</string>
+
+    <string name="preference_category_video_playback_speed" translatable="false">category_video_playback_speed</string>
+    <string name="preference_category_info" translatable="false">category_info</string>
+
+    <string name="duration" translatable="false">%1$02d:%2$02d</string>
+
+    <string name="percentage" translatable="false">%1$s%%</string>
+
+    <string name="settings_default_value_video_playback_speed" translatable="false">x1.0</string>
+    <string-array name="settings_values_video_playback_speed" translatable="false">
+        <item>x0.7</item>
+        <item>@string/settings_default_value_video_playback_speed</item>
+        <item>x1.3</item>
+        <item>x1.5</item>
+        <item>x1.8</item>
+        <item>x2.0</item>
+    </string-array>
+
+    <!-- -->
+    <string name="filename_cache_lastcourse" translatable="false">lastCourseExtras</string>
+
+</resources>
