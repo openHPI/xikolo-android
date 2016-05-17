@@ -34,6 +34,14 @@ public class Config {
                 TERMS_OF_USE_URL = "";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604";
                 break;
+            case OPEN_HPI_CN:
+                HOST = "openhpi.cn";
+                COPYRIGHT_URL = "https://hpi.de/";
+                IMPRINT_URL = "https://openhpi.cn/pages/imprint?locale=cn";
+                PRIVACY_URL = "https://openhpi.cn/pages/privacy?locale=cn";
+                TERMS_OF_USE_URL = "";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604";
+                break;
             case OPEN_SAP:
                 HOST = "open.sap.com";
                 COPYRIGHT_URL = "http://go.sap.com/corporate/en/legal/copyright.html";

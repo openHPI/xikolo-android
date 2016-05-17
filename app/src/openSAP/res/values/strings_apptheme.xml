@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name" translatable="false">openSAP</string>
-
     <string name="settings_copyright">&#169; 2013 &#8211; %d Copyright SAP</string>
 
     <string name="settings_imprint">Legal Disclosure</string>
