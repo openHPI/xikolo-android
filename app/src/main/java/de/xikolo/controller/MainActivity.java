@@ -24,6 +24,7 @@ import de.xikolo.model.events.LoginEvent;
 import de.xikolo.model.events.LogoutEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.DeepLinkingUtil;
+import de.xikolo.util.LanalyticsUtil;
 
 public class MainActivity extends BaseActivity
         implements NavigationFragment.NavigationDrawerCallbacks, ContentFragment.OnFragmentInteractionListener {
@@ -117,6 +118,8 @@ public class MainActivity extends BaseActivity
                 if (UserModel.isLoggedIn(this)) {
                     newFragment = ProfileFragment.newInstance();
                     tag = "profile";
+
+                    LanalyticsUtil.trackVisitedProfile(UserModel.getSavedUser(this).id);
                 } else {
                     intent = new Intent(MainActivity.this, LoginActivity.class);
                 }
@@ -135,9 +138,13 @@ public class MainActivity extends BaseActivity
                 break;
             case NavigationAdapter.NAV_ID_DOWNLOADS:
                 intent = new Intent(MainActivity.this, DownloadsActivity.class);
+
+                LanalyticsUtil.trackVisitedDownloads(UserModel.getSavedUser(this).id);
                 break;
             case NavigationAdapter.NAV_ID_SETTINGS:
                 intent = new Intent(MainActivity.this, SettingsActivity.class);
+
+                LanalyticsUtil.trackVisitedPreferences(UserModel.getSavedUser(this).id);
                 break;
         }
         if (tag != null) {

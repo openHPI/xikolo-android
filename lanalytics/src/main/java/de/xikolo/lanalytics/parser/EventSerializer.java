@@ -19,13 +19,16 @@ public class EventSerializer implements JsonSerializer<Lanalytics.Event> {
         JsonObject attributes = new JsonObject();
 
         JsonObject user = new JsonObject();
-        user.addProperty("resource_uuid", src.userId);
+        user.addProperty("uuid", src.userId);
         attributes.add("user", user);
 
-        attributes.addProperty("verb", src.verb);
+        JsonObject verb = new JsonObject();
+        verb.addProperty("type", src.verb);
+        attributes.add("verb", verb);
 
         JsonObject resource = new JsonObject();
-        resource.addProperty("resource_uuid", src.resourceId);
+        resource.addProperty("uuid", src.resourceId);
+        resource.addProperty("type", src.resourceType);
         attributes.add("resource", resource);
 
         attributes.addProperty("timestamp", src.timestamp);

@@ -97,6 +97,8 @@ public class Lanalytics {
 
         public final String resourceId;
 
+        public final String resourceType;
+
         public final Map<String, String> result;
 
         public final Map<String, String> context;
@@ -110,6 +112,7 @@ public class Lanalytics {
             userId = builder.userId;
             verb = builder.verb;
             resourceId = builder.resourceId;
+            resourceType = builder.resourceType;
             result = Collections.unmodifiableMap(builder.resultMap);
             context = Collections.unmodifiableMap(builder.contextMap);
             timestamp = builder.timestamp;
@@ -131,6 +134,8 @@ public class Lanalytics {
 
             private String resourceId;
 
+            private String resourceType;
+
             private Map<String, String> resultMap;
 
             private Map<String, String> contextMap;
@@ -149,6 +154,7 @@ public class Lanalytics {
                 userId = cursor.getString(i++);
                 verb = cursor.getString(i++);
                 resourceId = cursor.getString(i++);
+                resourceType = cursor.getString(i++);
                 resultMap = gson.fromJson(cursor.getString(i++), typeOfHashMap);
                 contextMap = gson.fromJson(cursor.getString(i++), typeOfHashMap);
                 timestamp = cursor.getString(i++);
@@ -178,8 +184,9 @@ public class Lanalytics {
                 return this;
             }
 
-            public Builder setResource(String id) {
+            public Builder setResource(String id, String type) {
                 this.resourceId = id;
+                this.resourceType = type;
                 return this;
             }
 

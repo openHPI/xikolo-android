@@ -33,6 +33,7 @@ import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.util.BuildFlavor;
 import de.xikolo.util.Config;
 import de.xikolo.util.DeepLinkingUtil;
+import de.xikolo.util.LanalyticsUtil;
 import de.xikolo.util.ToastUtil;
 
 public class CourseActivity extends BaseActivity implements UnenrollDialog.UnenrollDialogListener {
@@ -93,6 +94,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
         // Bind the tabs to the ViewPager
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setOnTabSelectedListener(adapter);
 
         viewPager.setCurrentItem(firstItem);
     }
@@ -251,7 +253,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
         adapter.getItem(viewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
     }
 
-    public class CoursePagerAdapter extends FragmentPagerAdapter {
+    public class CoursePagerAdapter extends FragmentPagerAdapter implements TabLayout.OnTabSelectedListener {
 
         private final List<String> TITLES;
 
@@ -324,6 +326,37 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
             return "android:switcher:" + viewId + ":" + index;
         }
 
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            viewPager.setCurrentItem(tabLayout.getSelectedTabPosition(), true);
+            switch (tabLayout.getSelectedTabPosition()) {
+                case 1:
+                    LanalyticsUtil.trackVisitedPinboard(course.id);
+                    break;
+                case 2:
+                    LanalyticsUtil.trackVisitedProgress(course.id);
+                    break;
+                case 3:
+                    LanalyticsUtil.trackVisitedLearningRooms(course.id);
+                    break;
+                case 5:
+                    LanalyticsUtil.trackVisitedAnnouncements(course.id);
+                    break;
+                case 6:
+                    LanalyticsUtil.trackVisitedRecap(course.id);
+                    break;
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
     }
 
 }

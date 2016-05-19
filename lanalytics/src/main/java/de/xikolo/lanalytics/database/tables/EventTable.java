@@ -6,7 +6,8 @@ public class EventTable extends Table {
 
     public static final String COLUMN_USER = "user";
     public static final String COLUMN_VERB = "verb";
-    public static final String COLUMN_RESOURCE = "resource";
+    public static final String COLUMN_RESOURCE_ID = "resource_id";
+    public static final String COLUMN_RESOURCE_TYPE = "resource_type";
     public static final String COLUMN_RESULT = "result";
     public static final String COLUMN_CONTEXT = "context";
     public static final String COLUMN_TIMESTAMP = "timestamp";
@@ -17,7 +18,8 @@ public class EventTable extends Table {
                     COLUMN_ID + " text primary key, " +
                     COLUMN_USER + " text, " +
                     COLUMN_VERB + " text, " +
-                    COLUMN_RESOURCE + " text, " +
+                    COLUMN_RESOURCE_ID + " text, " +
+                    COLUMN_RESOURCE_TYPE + " text, " +
                     COLUMN_RESULT + " text, " +
                     COLUMN_CONTEXT + " text, " +
                     COLUMN_TIMESTAMP + " text, " +

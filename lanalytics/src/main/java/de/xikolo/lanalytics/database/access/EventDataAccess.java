@@ -31,7 +31,8 @@ public class EventDataAccess extends DataAccess<Lanalytics.Event> {
         values.put(EventTable.COLUMN_ID, event.id);
         values.put(EventTable.COLUMN_USER, event.userId);
         values.put(EventTable.COLUMN_VERB, event.verb);
-        values.put(EventTable.COLUMN_RESOURCE, event.resourceId);
+        values.put(EventTable.COLUMN_RESOURCE_ID, event.resourceId);
+        values.put(EventTable.COLUMN_RESOURCE_TYPE, event.resourceType);
         values.put(EventTable.COLUMN_RESULT, gson.toJson(event.result));
         values.put(EventTable.COLUMN_CONTEXT, gson.toJson(event.context));
         values.put(EventTable.COLUMN_TIMESTAMP, event.timestamp);
