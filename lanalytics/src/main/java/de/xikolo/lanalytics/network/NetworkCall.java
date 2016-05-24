@@ -34,7 +34,7 @@ public class NetworkCall {
     }
 
     public NetworkCall authorize(String token) {
-        builder.addHeader("Authorization", "Token token=" + token);
+        builder.addHeader("Authorization", "Legacy-Token token=" + token);
         return this;
     }
 
