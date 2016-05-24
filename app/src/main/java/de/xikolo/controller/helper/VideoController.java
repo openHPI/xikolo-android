@@ -453,10 +453,14 @@ public class VideoController {
         int connectivityStatus = NetworkUtil.getConnectivityStatus(activity);
         AppPreferences preferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
 
-        if (connectivityStatus == NetworkUtil.TYPE_MOBILE && preferences.isVideoQualityLimitedOnMobile()) {
-            videoMode = VideoMode.SD;
-        } else {
+        if (videoDownloadPresent(DownloadModel.DownloadFileType.VIDEO_HD, course, module, video)) { // hd video download available
             videoMode = VideoMode.HD;
+        } else if (videoDownloadPresent(DownloadModel.DownloadFileType.VIDEO_SD, course, module, video)) { // sd video download available
+            videoMode = VideoMode.SD;
+        } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !preferences.isVideoQualityLimitedOnMobile()) {
+            videoMode = VideoMode.HD;
+        } else {
+            videoMode = VideoMode.SD;
         }
 
         updateVideo(course, module, videoItemDetails);
@@ -478,10 +482,8 @@ public class VideoController {
 
         viewOfflineHint.setVisibility(View.GONE);
 
-        if (!downloadModel.downloadRunning(fileType, course, module, video)
-                && downloadModel.downloadExists(fileType, course, module, video)) {
-            setVideoURI("file://" + downloadModel.getDownloadFile(fileType, course, module, video).getAbsolutePath());
-            viewOfflineHint.setVisibility(View.VISIBLE);
+        if (videoDownloadPresent(fileType, course, module, video)) {
+            setLocalVideoURI(fileType, course, module, video);
         } else if (NetworkUtil.isOnline(activity)) {
             setVideoURI(stream);
         } else if (videoMode == VideoMode.HD) {
@@ -493,6 +495,16 @@ public class VideoController {
         }
 
         updateHdSwitchColor();
+    }
+
+    private boolean videoDownloadPresent(DownloadModel.DownloadFileType fileType, Course course, Module module, Item<VideoItemDetail> video) {
+        return !downloadModel.downloadRunning(fileType, course, module, video)
+                && downloadModel.downloadExists(fileType, course, module, video);
+    }
+
+    private void setLocalVideoURI(DownloadModel.DownloadFileType fileType, Course course, Module module, Item<VideoItemDetail> video) {
+        setVideoURI("file://" + downloadModel.getDownloadFile(fileType, course, module, video).getAbsolutePath());
+        viewOfflineHint.setVisibility(View.VISIBLE);
     }
 
     private void setVideoURI(String uri) {
