@@ -27,6 +27,7 @@ import de.xikolo.model.DownloadModel;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.CastUtil;
+import de.xikolo.util.LanalyticsUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 import de.xikolo.view.CustomSizeImageView;
@@ -211,6 +212,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                         itemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
                             @Override
                             protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
+                                LanalyticsUtil.trackVideoStartCast(item.id, course.id, module.id, result.progress);
+
                                 item.detail = result;
                                 setCurrentCourse();
                                 castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), result.progress, true);
@@ -218,6 +221,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
                             @Override
                             protected void onError(ErrorCode errorCode) {
+                                LanalyticsUtil.trackVideoStartCast(item.id, course.id, module.id, 0);
+
                                 setCurrentCourse();
                                 castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), 0, true);
                             }

@@ -27,6 +27,7 @@ import de.xikolo.model.events.PermissionGrantedEvent;
 import de.xikolo.model.jobs.RetrieveContentLengthJob;
 import de.xikolo.util.Config;
 import de.xikolo.util.ExternalStorageUtil;
+import de.xikolo.util.LanalyticsUtil;
 import de.xikolo.util.ToastUtil;
 
 public class DownloadModel extends BaseModel {
@@ -104,6 +105,7 @@ public class DownloadModel extends BaseModel {
                 if (downloadExists(filename)) {
                     ToastUtil.show(R.string.toast_file_already_downloaded);
                 } else {
+                    LanalyticsUtil.trackDownloadedFile(item.id, course.id, module.id, type);
 
                     File dlFile = new File(filename);
 

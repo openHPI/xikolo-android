@@ -20,6 +20,7 @@ import java.io.IOException;
 import de.xikolo.data.database.DataAccessFactory;
 import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.data.preferences.PreferencesFactory;
+import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.util.Config;
 import de.xikolo.util.SslCertificateUtil;
 
@@ -39,6 +40,8 @@ public class GlobalApplication extends Application {
 
     private PreferencesFactory preferencesFactory;
 
+    private Lanalytics lanalytics;
+
     public GlobalApplication() {
         instance = this;
     }
@@ -52,17 +55,30 @@ public class GlobalApplication extends Application {
     }
 
     public DataAccessFactory getDataAccessFactory() {
-        if (dataAccessFactory == null) {
-            dataAccessFactory = new DataAccessFactory(databaseHelper);
+        synchronized (GlobalApplication.class) {
+            if (dataAccessFactory == null) {
+                dataAccessFactory = new DataAccessFactory(databaseHelper);
+            }
         }
         return dataAccessFactory;
     }
 
     public PreferencesFactory getPreferencesFactory() {
-        if (preferencesFactory == null) {
-            preferencesFactory = new PreferencesFactory(this);
+        synchronized (GlobalApplication.class) {
+            if (preferencesFactory == null) {
+                preferencesFactory = new PreferencesFactory(this);
+            }
         }
         return preferencesFactory;
+    }
+
+    public Lanalytics getLanalytics() {
+        synchronized (GlobalApplication.class) {
+            if (lanalytics == null) {
+                lanalytics = Lanalytics.getInstance(this, Config.API_V2 + Config.LANALYTICS);
+            }
+        }
+        return lanalytics;
     }
 
     @Override

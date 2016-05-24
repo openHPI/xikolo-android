@@ -158,7 +158,6 @@ public class SettingsFragment extends PreferenceFragment {
                 public boolean onPreferenceClick(Preference preference) {
                     UserModel userModel = new UserModel(GlobalApplication.getInstance().getJobManager());
                     userModel.logout();
-                    EventBus.getDefault().post(new LogoutEvent());
                     return true;
                 }
             });

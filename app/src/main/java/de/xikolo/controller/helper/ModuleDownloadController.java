@@ -15,6 +15,7 @@ import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.model.DownloadModel;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
+import de.xikolo.util.LanalyticsUtil;
 import de.xikolo.util.NetworkUtil;
 
 public class ModuleDownloadController {
@@ -75,6 +76,8 @@ public class ModuleDownloadController {
     
     private void startModuleDownloads(final Course course, final Module module) {
         ItemModel itemModel = new ItemModel(application.getJobManager());
+
+        LanalyticsUtil.trackDownloadedSection(module.id, course.id, hdVideo, sdVideo, slides);
 
         final ProgressDialog dialog = ProgressDialog.getInstance();
         dialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);

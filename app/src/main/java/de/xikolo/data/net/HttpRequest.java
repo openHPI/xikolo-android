@@ -62,7 +62,7 @@ public class HttpRequest {
                 urlConnection.addRequestProperty(Config.HEADER_CACHE_CONTROL, Config.HEADER_CACHE_CONTROL_VALUE);
             }
             if (mToken != null) {
-                urlConnection.addRequestProperty(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + mToken);
+                urlConnection.addRequestProperty(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + mToken);
             }
 
             final int statusCode = urlConnection.getResponseCode();

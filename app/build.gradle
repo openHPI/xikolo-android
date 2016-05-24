@@ -86,9 +86,9 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "de.xikolo.util.BuildType", "buildType", "de.xikolo.util.BuildType.RELEASE"
-            shrinkResources true
             debuggable false
             zipAlignEnabled true
 
@@ -147,6 +147,8 @@ dependencies {
     compile "com.android.support:mediarouter-v7:${supportVersion}"
     compile "com.android.support:design:${supportVersion}"
     compile "com.android.support:preference-v14:${supportVersion}"
+
+    compile project(":lanalytics")
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }

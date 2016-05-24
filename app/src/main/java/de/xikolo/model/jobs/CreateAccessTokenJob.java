@@ -11,11 +11,13 @@ import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.AccessToken;
 import de.xikolo.data.net.JsonRequest;
 import de.xikolo.data.preferences.UserPreferences;
 import de.xikolo.model.Result;
+import de.xikolo.model.events.LoginEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
 
@@ -69,6 +71,8 @@ public class CreateAccessTokenJob extends Job {
                         .getPreferencesFactory().getUserPreferences();
                 userPreferences.saveAccessToken(token);
                 result.success(null, Result.DataSource.NETWORK);
+
+                EventBus.getDefault().post(new LoginEvent());
             } else {
                 if (Config.DEBUG) Log.w(TAG, "AccessToken not created");
                 result.error(Result.ErrorCode.NO_RESULT);

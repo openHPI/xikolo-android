@@ -16,6 +16,7 @@ public class Config {
     public static final String HOST;
     public static final String URI;
     public static final String API;
+    public static final String API_V2;
 
     public static final String COPYRIGHT_URL;
     public static final String IMPRINT_URL;
@@ -69,17 +70,20 @@ public class Config {
         }
         URI = HTTPS + "://" + HOST + "/";
         API = URI + "api/";
+        API_V2 = API + "v2/";
     }
 
-    public static final String HEADER_ACCEPT = "ACCEPT";
-    public static final String HEADER_AUTHORIZATION = "AUTHORIZATION";
-    public static final String HEADER_USER_PLATFORM = "User-Platform";
+    public static final String HEADER_ACCEPT = "Accept";
+    public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String HEADER_CACHE_CONTROL = "Cache-Control";
+    public static final String HEADER_USER_PLATFORM = "X-User-Platform";
+
+    public static final String COOKIE_LANALYTICS_CONTEXT = "lanalytics-context";
 
     public static final String HEADER_ACCEPT_VALUE = "application/vnd.xikolo.v1, application/json";
-    public static final String HEADER_AUTHORIZATION_VALUE_SCHEMA = "Token token=";
-    public static final String HEADER_USER_PLATFORM_VALUE = "Android";
+    public static final String HEADER_AUTHORIZATION_PREFIX = "Token token=";
     public static final String HEADER_CACHE_CONTROL_VALUE = "no-cache";
+    public static final String HEADER_USER_PLATFORM_VALUE = "Android";
 
     public static final String HTTP_GET = "GET";
     public static final String HTTP_POST = "POST";
@@ -106,5 +110,7 @@ public class Config {
     public static final String USER = "users/me/";
     public static final String ENROLLMENTS = "enrollments/";
     public static final String PROGRESSIONS = "progressions/";
+
+    public static final String LANALYTICS = "tracking-events/";
 
 }

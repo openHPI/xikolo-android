@@ -13,6 +13,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -23,6 +24,7 @@ import android.webkit.WebViewClient;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
@@ -114,7 +116,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     if (url.contains(Config.HOST) && UserModel.isLoggedIn(context)) {
                         Bundle headers = new Bundle();
-                        headers.putString(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + UserModel.getToken(context));
+                        headers.putString(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserModel.getToken(context));
                         i.putExtra(Browser.EXTRA_HEADERS, headers);
                     }
                     context.startActivity(i);
@@ -152,8 +154,12 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                         Map<String, String> header = new HashMap<>();
                         header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
                         if (UserModel.isLoggedIn(context)) {
-                            header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_VALUE_SCHEMA + UserModel.getToken(context));
+                            header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserModel.getToken(context));
                         }
+
+                        CookieManager.getInstance().setCookie(Config.URI, Config.COOKIE_LANALYTICS_CONTEXT + "=" + GlobalApplication.getInstance()
+                                .getLanalytics().getDefaultContextPayload() + "; Domain=" + Config.URI);
+
                         webView.loadUrl(this.url, header);
                     } else {
                         webView.loadUrl(this.url, null);

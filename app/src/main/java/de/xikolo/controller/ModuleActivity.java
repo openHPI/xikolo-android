@@ -34,6 +34,7 @@ import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.util.DateUtil;
+import de.xikolo.util.LanalyticsUtil;
 
 public class ModuleActivity extends BaseActivity {
 
@@ -111,6 +112,10 @@ public class ModuleActivity extends BaseActivity {
         }
         module.items.get(index).progress.visited = true;
         itemModel.updateProgression(progressionResult, module, module.items.get(index));
+
+        if (index == 0) {
+            LanalyticsUtil.trackVisitedItem(module.items.get(0).id, course.id, module.id);
+        }
 
         // Initialize the ViewPager and set an adapter
         viewpager = (ViewPager) findViewById(R.id.viewpager);
@@ -301,8 +306,11 @@ public class ModuleActivity extends BaseActivity {
                 ViewCompat.setAlpha(unseenIndicator, opaque);
 
                 unseenIndicator.setVisibility(View.GONE);
-                items.get(tabLayout.getSelectedTabPosition()).progress.visited = true;
-                itemModel.updateProgression(progressionResult, module, items.get(tabLayout.getSelectedTabPosition()));
+                Item item = items.get(tabLayout.getSelectedTabPosition());
+                item.progress.visited = true;
+                itemModel.updateProgression(progressionResult, module, item);
+
+                LanalyticsUtil.trackVisitedItem(item.id, course.id, module.id);
             }
         }
 
