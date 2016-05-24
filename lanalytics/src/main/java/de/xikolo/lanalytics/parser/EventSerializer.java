@@ -14,7 +14,7 @@ public class EventSerializer implements JsonSerializer<Lanalytics.Event> {
     @Override
     public JsonElement serialize(Lanalytics.Event src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject event = new JsonObject();
-        event.addProperty("type", "lanalytics-event");
+        event.addProperty("type", "tracking-events");
 
         JsonObject attributes = new JsonObject();
 
@@ -33,9 +33,9 @@ public class EventSerializer implements JsonSerializer<Lanalytics.Event> {
 
         attributes.addProperty("timestamp", src.timestamp);
 
-        attributes.add("with_result", context.serialize(src.result));
+        attributes.add("result", context.serialize(src.result));
 
-        attributes.add("in_context", context.serialize(src.context));
+        attributes.add("context", context.serialize(src.context));
 
         event.add("attributes", attributes);
 
