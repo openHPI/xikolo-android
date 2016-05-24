@@ -10,7 +10,6 @@ import de.xikolo.lanalytics.database.DatabaseHelper;
 import de.xikolo.lanalytics.database.access.EventDataAccess;
 import de.xikolo.lanalytics.network.NetworkCall;
 import de.xikolo.lanalytics.parser.Parser;
-import de.xikolo.lanalytics.util.Config;
 import de.xikolo.lanalytics.util.Logger;
 import de.xikolo.lanalytics.util.NetworkUtil;
 import okhttp3.Response;
@@ -33,10 +32,6 @@ public class Tracker {
         this.context = context;
         this.endpoint = endpoint;
         this.eventDataAccess = (EventDataAccess) databaseHelper.getDataAccess(DatabaseHelper.DataAccessType.EVENT);
-
-        if (Config.DEBUG) {
-            this.endpoint = "http://192.168.1.38:9000/";
-        }
     }
 
     public void track(final Lanalytics.Event event, String token) {

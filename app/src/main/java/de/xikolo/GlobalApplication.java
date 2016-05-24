@@ -75,7 +75,7 @@ public class GlobalApplication extends Application {
     public Lanalytics getLanalytics() {
         synchronized (GlobalApplication.class) {
             if (lanalytics == null) {
-                lanalytics = Lanalytics.getInstance(this, Config.API);
+                lanalytics = Lanalytics.getInstance(this, Config.API_V2 + Config.LANALYTICS);
             }
         }
         return lanalytics;

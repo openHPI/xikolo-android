@@ -16,6 +16,7 @@ public class Config {
     public static final String HOST;
     public static final String URI;
     public static final String API;
+    public static final String API_V2;
 
     public static final String COPYRIGHT_URL;
     public static final String IMPRINT_URL;
@@ -61,6 +62,7 @@ public class Config {
         }
         URI = HTTPS + "://" + HOST + "/";
         API = URI + "api/";
+        API_V2 = API + "v2/";
     }
 
     public static final String HEADER_ACCEPT = "Accept";
@@ -100,5 +102,7 @@ public class Config {
     public static final String USER = "users/me/";
     public static final String ENROLLMENTS = "enrollments/";
     public static final String PROGRESSIONS = "progressions/";
+
+    public static final String LANALYTICS = "tracking-events/";
 
 }
