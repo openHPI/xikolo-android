@@ -7,6 +7,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebView;
 
 import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
@@ -88,7 +89,7 @@ public class GlobalApplication extends Application {
         configureDefaultSettings();
         configureDatabase();
         configureHttpResponseCache();
-        configureWebViewCookies();
+        configureWebView();
         configureJobManager();
         configureVideoCastManager();
 
@@ -118,12 +119,16 @@ public class GlobalApplication extends Application {
     }
 
     @SuppressWarnings("deprecation")
-    private void configureWebViewCookies() {
+    private void configureWebView() {
         // Enable WebView Cookies
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             CookieSyncManager.createInstance(this);
         }
         CookieManager.getInstance().setAcceptCookie(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Config.DEBUG) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
     }
 
     private void configureJobManager() {
