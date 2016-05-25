@@ -100,9 +100,9 @@ public class Tracker {
 
                     String json;
                     if (eventList.size() == 1) {
-                        json = Parser.toJson(eventList.get(0));
+                        json = Parser.toJsonApi(eventList.get(0));
                     } else {
-                        json = Parser.toJson(eventList);
+                        json = Parser.toJsonApi(eventList);
                     }
 
                     Response response = new NetworkCall(endpoint)

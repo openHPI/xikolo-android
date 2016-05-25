@@ -157,8 +157,9 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                             header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserModel.getToken(context));
                         }
 
-                        CookieManager.getInstance().setCookie(Config.URI, Config.COOKIE_LANALYTICS_CONTEXT + "=" + GlobalApplication.getInstance()
-                                .getLanalytics().getDefaultContextPayload() + "; Domain=" + Config.URI);
+                        // lanalytics context data cookie
+                        String lanalyticsContextPayload = GlobalApplication.getInstance().getLanalytics().getDefaultContextPayload();
+                        CookieManager.getInstance().setCookie(Config.URI, Config.COOKIE_LANALYTICS_CONTEXT + "=" + lanalyticsContextPayload);
 
                         webView.loadUrl(this.url, header);
                     } else {

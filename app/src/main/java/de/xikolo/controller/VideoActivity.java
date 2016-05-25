@@ -135,7 +135,8 @@ public class VideoActivity extends BaseActivity {
             @Override
             public void onApplicationConnected(ApplicationMetadata appMetadata, String sessionId, boolean wasLaunched) {
                 if (videoController != null) {
-                    LanalyticsUtil.trackVideoStartCast(item.id, course.id, module.id, item.detail.progress);
+                    LanalyticsUtil.trackVideoPlay(item.id, course.id, module.id, item.detail.progress, 1.0f,
+                            Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
 
                     videoController.pause();
                     VideoCastManager.getInstance()

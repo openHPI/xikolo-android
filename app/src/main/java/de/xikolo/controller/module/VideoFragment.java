@@ -212,7 +212,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                         itemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
                             @Override
                             protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
-                                LanalyticsUtil.trackVideoStartCast(item.id, course.id, module.id, result.progress);
+                                LanalyticsUtil.trackVideoPlay(item.id, course.id, module.id, result.progress, 1.0f,
+                                        Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
 
                                 item.detail = result;
                                 setCurrentCourse();
@@ -221,7 +222,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
                             @Override
                             protected void onError(ErrorCode errorCode) {
-                                LanalyticsUtil.trackVideoStartCast(item.id, course.id, module.id, 0);
+                                LanalyticsUtil.trackVideoPlay(item.id, course.id, module.id, 0, 1.0f,
+                                        Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
 
                                 setCurrentCourse();
                                 castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), 0, true);

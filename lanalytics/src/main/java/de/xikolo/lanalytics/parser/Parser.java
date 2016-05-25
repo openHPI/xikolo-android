@@ -11,11 +11,14 @@ public class Parser {
         return new GsonBuilder()
                 .registerTypeAdapter(JsonApiWrapper.class, new JsonApiSerializer())
                 .registerTypeAdapter(Lanalytics.Event.class, new EventSerializer())
-                .setPrettyPrinting()
                 .create();
     }
 
     public static String toJson(Object src) {
+        return getGson().toJson(src);
+    }
+
+    public static String toJsonApi(Object src) {
         return getGson().toJson(new JsonApiWrapper(src));
     }
 

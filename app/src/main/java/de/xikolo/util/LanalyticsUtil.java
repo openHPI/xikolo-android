@@ -38,7 +38,7 @@ public class LanalyticsUtil {
     public static final String CONTEXT_NEW_SOURCE = "new_source";
     public static final String CONTEXT_ONLINE = "online";
     public static final String CONTEXT_OFFLINE = "offline";
-
+    public static final String CONTEXT_CAST = "cast";
 
     public static void trackVideoPlay(String videoId, String courseId, String sectionId,
                                       int currentTime, Float currentSpeed, int currentOrientation, String quality, String source) {
@@ -120,16 +120,6 @@ public class LanalyticsUtil {
                 .setVerb(verb)
                 .putContext(CONTEXT_COURSE_ID, courseId)
                 .putContext(CONTEXT_SECTION_ID, sectionId)
-                .build());
-    }
-
-    public static void trackVideoStartCast(String videoId, String courseId, String sectionId, int currentTime) {
-        track(newEventBuilder()
-                .setResource(videoId, "video")
-                .setVerb("VIDEO_START_CAST")
-                .putContext(CONTEXT_COURSE_ID, courseId)
-                .putContext(CONTEXT_SECTION_ID, sectionId)
-                .putContext(CONTEXT_CURRENT_TIME, formatTime(currentTime))
                 .build());
     }
 
@@ -263,7 +253,8 @@ public class LanalyticsUtil {
     }
 
     private static boolean isTrackingEnabled() {
-        return BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI || BuildConfig.buildFlavor == BuildFlavor.OPEN_SAP;
+        return BuildConfig.buildType == BuildType.RELEASE
+                && (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI || BuildConfig.buildFlavor == BuildFlavor.OPEN_SAP);
     }
 
     public static Lanalytics.Event.Builder newEventBuilder() {
