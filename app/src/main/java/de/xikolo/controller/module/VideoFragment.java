@@ -203,7 +203,11 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 //        DownloadViewController transcript = new DownloadViewController(getActivity(), DownloadModel.DownloadFileType.TRANSCRIPT, course, module, item);
 //        linearLayoutDownloads.addView(transcript.getLayout());
 
-            textDuration.setText(getString(R.string.duration, Integer.valueOf(item.detail.minutes), Integer.valueOf(item.detail.seconds)));
+            if (item.detail.minutes != null && item.detail.seconds != null) {
+                textDuration.setText(getString(R.string.duration, Integer.valueOf(item.detail.minutes), Integer.valueOf(item.detail.seconds)));
+            } else {
+                textDuration.setText("--:--");
+            }
 
             viewPlay.setOnClickListener(new View.OnClickListener() {
                 @Override

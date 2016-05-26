@@ -261,7 +261,11 @@ public class DownloadViewController {
             downloadModel.getRemoteDownloadFileSize(new Result<Long>() {
                 @Override
                 protected void onSuccess(Long result, DataSource dataSource) {
-                    textFileSize.setText(FileUtil.getFormattedFileSize(result));
+                    if (result > 0) {
+                        textFileSize.setText(FileUtil.getFormattedFileSize(result));
+                    } else {
+                        textFileSize.setText("--");
+                    }
                 }
             }, uri);
         }
