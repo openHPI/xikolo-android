@@ -9,8 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 
-import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
-
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controller.main.ContentFragment;
@@ -45,7 +43,6 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BaseCastManager.checkGooglePlayServices(this);
         setupActionBar();
 
         navigationFragment = (NavigationFragment)

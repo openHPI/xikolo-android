@@ -17,7 +17,6 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.google.android.gms.cast.ApplicationMetadata;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
 
 import de.xikolo.R;
@@ -124,9 +123,9 @@ public class VideoActivity extends BaseActivity {
 
         mediaRouteButton = (MediaRouteButton) findViewById(R.id.video_media_route_button);
         if (mediaRouteButton != null) {
-            VideoCastManager.getInstance().addMediaRouterButton(mediaRouteButton);
+            videoCastManager.addMediaRouterButton(mediaRouteButton);
             Configuration config = getResources().getConfiguration();
-            mediaRouteButton.setVisibility(VideoCastManager.getInstance().isAnyRouteAvailable()
+            mediaRouteButton.setVisibility(videoCastManager.isAnyRouteAvailable()
                     && config.orientation == Configuration.ORIENTATION_LANDSCAPE
                     ? View.VISIBLE : View.GONE);
         }
@@ -139,8 +138,7 @@ public class VideoActivity extends BaseActivity {
                             Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
 
                     videoController.pause();
-                    VideoCastManager.getInstance()
-                            .startVideoCastControllerActivity(VideoActivity.this, CastUtil.buildCastMetadata(item), item.detail.progress, true);
+                    videoCastManager.startVideoCastControllerActivity(VideoActivity.this, CastUtil.buildCastMetadata(item), item.detail.progress, true);
                     finish();
                 }
             }
@@ -181,7 +179,7 @@ public class VideoActivity extends BaseActivity {
                 actionBar.hide();
 
                 if (mediaRouteButton != null) {
-                    mediaRouteButton.setVisibility(VideoCastManager.getInstance().isAnyRouteAvailable()
+                    mediaRouteButton.setVisibility(videoCastManager.isAnyRouteAvailable()
                             ? View.VISIBLE : View.GONE);
                 }
 

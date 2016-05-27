@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-
 import de.xikolo.R;
 import de.xikolo.controller.VideoActivity;
 import de.xikolo.controller.helper.CacheController;
@@ -47,8 +45,6 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
     private ItemModel itemModel;
 
-    private VideoCastManager castManager;
-
     public VideoFragment() {
 
     }
@@ -62,8 +58,6 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         super.onCreate(savedInstanceState);
 
         itemModel = new ItemModel(jobManager);
-
-        castManager = VideoCastManager.getInstance();
     }
 
     @Override
@@ -212,7 +206,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             viewPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (castManager.isConnected()) {
+                    if (videoCastManager.isConnected()) {
                         itemModel.getLocalVideoProgress(new Result<VideoItemDetail>() {
                             @Override
                             protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
@@ -221,7 +215,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
                                 item.detail = result;
                                 setCurrentCourse();
-                                castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), result.progress, true);
+                                videoCastManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), result.progress, true);
                             }
 
                             @Override
@@ -230,7 +224,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                                         Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
 
                                 setCurrentCourse();
-                                castManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), 0, true);
+                                videoCastManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), 0, true);
                             }
                         }, item.detail);
                     } else {

@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
 import com.google.android.libraries.cast.companionlibrary.widgets.IntroductoryOverlay;
@@ -31,6 +30,7 @@ import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.model.events.PermissionDeniedEvent;
 import de.xikolo.model.events.PermissionGrantedEvent;
 import de.xikolo.model.receiver.NotificationDeletedReceiver;
+import de.xikolo.util.PlayServicesUtil;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -65,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         offlineModeToolbar = true;
 
-        BaseCastManager.checkGooglePlayServices(this);
+        PlayServicesUtil.checkPlayServices(this);
 
         videoCastManager = VideoCastManager.getInstance();
 
