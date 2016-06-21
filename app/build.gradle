@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "24.0.0"
 
     defaultConfig {
         minSdkVersion 15
@@ -136,7 +136,7 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.8.4'
-    compile 'com.google.android.gms:play-services-cast:9.0.0'
+    compile 'com.google.android.gms:play-services-cast:9.0.2'
 
     def supportVersion = '23.4.0'
 
