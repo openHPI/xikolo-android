@@ -22,7 +22,7 @@ android {
             manifestPlaceholders = [webUrl: "open.hpi.de"]
             appName = "openHPI"
         }
-        openHPIcn {
+        openHPI_CN {
             applicationId "de.xikolo.openhpi.cn"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_HPI_CN"
             manifestPlaceholders = [webUrl: "openhpi.cn"]
@@ -39,6 +39,12 @@ android {
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.MOOC_HOUSE"
             manifestPlaceholders = [webUrl: "mooc.house"]
             appName = "mooc.house"
+        }
+        moocHouse_CN {
+            applicationId "de.xikolo.moochouse.cn"
+            buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.MOOC_HOUSE_CN"
+            manifestPlaceholders = [webUrl: "cnmooc.house"]
+            appName = "cnmooc.house"
         }
         openUNE {
             applicationId "de.xikolo.openune"
@@ -57,7 +63,7 @@ android {
                 keyAlias props.RELEASE_KEY_ALIAS_OPENHPI
                 keyPassword props.RELEASE_KEY_PASSWORD_OPENHPI
             }
-            openHPIcn {
+            openHPI_CN {
                 storeFile rootProject.file(props.RELEASE_STORE_FILE)
                 storePassword props.RELEASE_STORE_PASSWORD
                 keyAlias props.RELEASE_KEY_ALIAS_OPENHPI_CN
@@ -74,6 +80,12 @@ android {
                 storePassword props.RELEASE_STORE_PASSWORD
                 keyAlias props.RELEASE_KEY_ALIAS_MOOCHOUSE
                 keyPassword props.RELEASE_KEY_PASSWORD_MOOCHOUSE
+            }
+            moocHouse_CN {
+                storeFile rootProject.file(props.RELEASE_STORE_FILE)
+                storePassword props.RELEASE_STORE_PASSWORD
+                keyAlias props.RELEASE_KEY_ALIAS_MOOCHOUSE_CN
+                keyPassword props.RELEASE_KEY_PASSWORD_MOOCHOUSE_CN
             }
             openUNE {
                 storeFile rootProject.file(props.RELEASE_STORE_FILE)
@@ -94,9 +106,10 @@ android {
 
             if (rootProject.file('signing.properties').exists()) {
                 productFlavors.openHPI.signingConfig signingConfigs.openHPI
-                productFlavors.openHPIcn.signingConfig signingConfigs.openHPIcn
+                productFlavors.openHPI_CN.signingConfig signingConfigs.openHPI_CN
                 productFlavors.openSAP.signingConfig signingConfigs.openSAP
                 productFlavors.moocHouse.signingConfig signingConfigs.moocHouse
+                productFlavors.moocHouse_CN.signingConfig signingConfigs.moocHouse_CN
                 productFlavors.openUNE.signingConfig signingConfigs.openUNE
             }
         }

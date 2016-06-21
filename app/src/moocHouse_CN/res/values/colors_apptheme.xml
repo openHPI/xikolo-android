@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="apptheme_main">#abb324</color>
+
+    <!-- 30% white overlay -->
+    <color name="apptheme_main_light">#c4ca67</color>
+
+    <!-- 40% black overlay -->
+    <color name="apptheme_main_dark">#676b16</color>
+
+    <color name="apptheme_second">#b42946</color>
+    <color name="apptheme_third">#de6212</color>
+
+    <color name="apptheme_main_10">#1aabb324</color>
+
+    <color name="apptheme_second_60">#99b42946</color>
+    <color name="apptheme_third_60">#99abb324</color>
+
+    <color name="apptheme_second_26">#42b42946</color>
+
+</resources>

@@ -59,6 +59,14 @@ public class Config {
                 TERMS_OF_USE_URL = "";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
+            case MOOC_HOUSE_CN:
+                HOST = "cnmooc.house";
+                COPYRIGHT_URL = "http://www.guofudata.com/";
+                IMPRINT_URL = "https://cnmooc.house/pages/imprint?locale=cn";
+                PRIVACY_URL = "https://cnmooc.house/pages/privacy?locale=cn";
+                TERMS_OF_USE_URL = "";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
+                break;
             default: // MOOC_HOUSE
                 HOST = "mooc.house";
                 COPYRIGHT_URL = "https://hpi.de/";
