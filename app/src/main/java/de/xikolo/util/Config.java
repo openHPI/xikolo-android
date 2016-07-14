@@ -3,6 +3,8 @@ package de.xikolo.util;
 import com.google.android.gms.cast.CastMediaControlIntent;
 
 import de.xikolo.BuildConfig;
+import de.xikolo.GlobalApplication;
+import de.xikolo.R;
 
 public class Config {
 
@@ -28,7 +30,6 @@ public class Config {
     static {
         switch (BuildConfig.buildFlavor) {
             case OPEN_HPI:
-                HOST = "open.hpi.de";
                 COPYRIGHT_URL = "https://hpi.de/";
                 IMPRINT_URL = "https://open.hpi.de/pages/imprint";
                 PRIVACY_URL = "https://open.hpi.de/pages/privacy";
@@ -36,7 +37,6 @@ public class Config {
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604";
                 break;
             case OPEN_HPI_CN:
-                HOST = "openhpi.cn";
                 COPYRIGHT_URL = "https://hpi.de/";
                 IMPRINT_URL = "https://openhpi.cn/pages/imprint?locale=cn";
                 PRIVACY_URL = "https://openhpi.cn/pages/privacy?locale=cn";
@@ -44,7 +44,6 @@ public class Config {
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604";
                 break;
             case OPEN_SAP:
-                HOST = "open.sap.com";
                 COPYRIGHT_URL = "http://go.sap.com/corporate/en/legal/copyright.html";
                 IMPRINT_URL = "http://go.sap.com/corporate/en/legal/impressum.html";
                 PRIVACY_URL = "http://go.sap.com/corporate/en/legal/privacy.html";
@@ -52,7 +51,6 @@ public class Config {
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "2C63C05D";
                 break;
             case OPEN_UNE:
-                HOST = "openune.cn";
                 COPYRIGHT_URL = "http://www.guofudata.com/";
                 IMPRINT_URL = "https://openune.cn/pages/imprint";
                 PRIVACY_URL = "https://openune.cn/pages/privacy";
@@ -60,7 +58,6 @@ public class Config {
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
             case MOOC_HOUSE_CN:
-                HOST = "cnmooc.house";
                 COPYRIGHT_URL = "http://www.guofudata.com/";
                 IMPRINT_URL = "https://cnmooc.house/pages/imprint?locale=cn";
                 PRIVACY_URL = "https://cnmooc.house/pages/privacy?locale=cn";
@@ -68,7 +65,6 @@ public class Config {
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
             default: // MOOC_HOUSE
-                HOST = "mooc.house";
                 COPYRIGHT_URL = "https://hpi.de/";
                 IMPRINT_URL = "https://mooc.house/pages/imprint";
                 PRIVACY_URL = "https://mooc.house/pages/privacy";
@@ -76,6 +72,7 @@ public class Config {
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
         }
+        HOST = GlobalApplication.getInstance().getString(R.string.app_host);
         URI = HTTPS + "://" + HOST + "/";
         API = URI + "api/";
         API_V2 = API + "v2/";

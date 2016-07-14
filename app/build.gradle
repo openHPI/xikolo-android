@@ -13,44 +13,45 @@ android {
 
     productFlavors.all {
         ext.appName = null
+        ext.appHost = null
     }
 
     productFlavors {
         openHPI {
             applicationId "de.xikolo.openhpi"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_HPI"
-            manifestPlaceholders = [webUrl: "open.hpi.de"]
             appName = "openHPI"
+            appHost = "open.hpi.de"
         }
         openHPI_CN {
             applicationId "de.xikolo.openhpi.cn"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_HPI_CN"
-            manifestPlaceholders = [webUrl: "openhpi.cn"]
             appName = "openHPI CN"
+            appHost = "openhpi.cn"
         }
         openSAP {
             applicationId "de.xikolo.opensap"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_SAP"
-            manifestPlaceholders = [webUrl: "open.sap.com"]
             appName = "openSAP"
+            appHost = "open.sap.com"
         }
         moocHouse {
             applicationId "de.xikolo.moochouse"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.MOOC_HOUSE"
-            manifestPlaceholders = [webUrl: "mooc.house"]
             appName = "mooc.house"
+            appHost = "mooc.house"
         }
         moocHouse_CN {
             applicationId "de.xikolo.moochouse.cn"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.MOOC_HOUSE_CN"
-            manifestPlaceholders = [webUrl: "cnmooc.house"]
             appName = "cnmooc.house"
+            appHost = "cnmooc.house"
         }
         openUNE {
             applicationId "de.xikolo.openune"
             buildConfigField "de.xikolo.util.BuildFlavor", "buildFlavor", "de.xikolo.util.BuildFlavor.OPEN_UNE"
-            manifestPlaceholders = [webUrl: "openune.cn"]
             appName = "openUNE"
+            appHost = "openune.cn"
         }
     }
     signingConfigs {
@@ -125,10 +126,12 @@ android {
     }
     applicationVariants.all { variant ->
         def name = variant.productFlavors.get(0).ext.appName
+        def host = variant.productFlavors.get(0).ext.appHost
         if (variant.buildType.name == "debug") {
             name += " Debug"
         }
         variant.resValue "string", "app_name", name
+        variant.resValue "string", "app_host", host
     }
     lintOptions {
         abortOnError false
