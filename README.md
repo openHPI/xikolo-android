@@ -1,36 +1,33 @@
 Xikolo Android App
 ==================
 
-The official Android App for [openHPI](https://open.hpi.de/) and [openSAP](https://open.sap.com/).
+The official Android App for [openHPI](https://open.hpi.de/), [openSAP](https://open.sap.com/) and [mooc.house](https://mooc.house/).
 
 ## Setup
 
 Clone git repository:
 
 ```
-git clone --recursive https://github.com/openHPI/android-app xikolo-android
+git clone --recursive https://github.com/openHPI/xikolo-android
 ```
 
 ## Development
 
-Please use [Android Studio](https://developer.android.com/sdk/) as IDE, since we use the Gradle Build System.
-
-## Building
-
-In Android Studio open View -> Tool Windows -> Build Variants and choose a debug build variant. Now just _Run_ the _app_ module with Android Studio.
+Please use the [Android Studio](https://developer.android.com/sdk/) IDE, since we rely on the Gradle build system.
 
 ## Version History
 
-For every released build please push a git tag.
+Please push a git tag for every released build.
 
 ## Store links
 
-openHPI Version on Google Play: https://play.google.com/store/apps/details?id=de.xikolo.openhpi  
-openSAP Version on Google Play: https://play.google.com/store/apps/details?id=de.xikolo.opensap
+openHPI on [Google Play](https://play.google.com/store/apps/details?id=de.xikolo.openhpi)
+openSAP on [Google Play](https://play.google.com/store/apps/details?id=de.xikolo.opensap)
+mooc.house on [Google Play](https://play.google.com/store/apps/details?id=de.xikolo.moochouse)
 
 ## Contributing
 
-Please feel free to help us with the ongoing development of this app. See open issues to get some inspiration and pull a Merge Request as soon as you are ready to go.
+Please feel free to help us with the ongoing development of this app. See open issues to get some inspiration and open a Merge Request as soon as you are ready to go.
 
 ### Contributors
 
@@ -38,3 +35,7 @@ Please feel free to help us with the ongoing development of this app. See open i
 - Tobias Rohloff
 - Jonas Müller
 - Bjarne Sievers
+
+### Chinese Localization
+
+- Sheng Luo
