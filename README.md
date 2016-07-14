@@ -21,9 +21,9 @@ Please push a git tag for every released build.
 
 ## Store links
 
-openHPI on [Google Play](https://play.google.com/store/apps/details?id=de.xikolo.openhpi)
-openSAP on [Google Play](https://play.google.com/store/apps/details?id=de.xikolo.opensap)
-mooc.house on [Google Play](https://play.google.com/store/apps/details?id=de.xikolo.moochouse)
+- openHPI on [Google Play](https://play.google.com/store/apps/details?id=de.xikolo.openhpi)
+- openSAP on [Google Play](https://play.google.com/store/apps/details?id=de.xikolo.opensap)
+- mooc.house on [Google Play](https://play.google.com/store/apps/details?id=de.xikolo.moochouse)
 
 ## Contributing
 
