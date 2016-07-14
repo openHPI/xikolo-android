@@ -15,6 +15,8 @@ public class LanalyticsUtil {
 
     public static final String TAG = LanalyticsUtil.class.getSimpleName();
 
+    public static final String CONTEXT_CLIENT_ID = "client_id";
+
     public static final String CONTEXT_COURSE_ID = "course_id";
     public static final String CONTEXT_CURRENT_TIME = "current_time";
     public static final String CONTEXT_CURRENT_SPEED = "current_speed";
@@ -265,6 +267,8 @@ public class LanalyticsUtil {
             UserPreferences userPreferences = application.getPreferencesFactory().getUserPreferences();
             builder.setUser(userPreferences.getUser().id);
         }
+
+        builder.putContext(CONTEXT_CLIENT_ID, application.getClientId());
 
         return builder;
     }
