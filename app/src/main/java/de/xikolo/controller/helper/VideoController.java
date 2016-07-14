@@ -203,7 +203,7 @@ public class VideoController {
                     }
                 }
 
-                saveCurrentPosition(mp.getCurrentPosition());
+                saveCurrentPosition();
                 if (extra == MediaPlayer.MEDIA_ERROR_IO) {
                     videoProgress.setVisibility(View.VISIBLE);
                     ToastUtil.show(R.string.trying_reconnect);
@@ -265,12 +265,12 @@ public class VideoController {
                     @Override
                     public void run() {
                         if (!userIsSeeking) {
-                            seekBar.setProgress(videoView.getCurrentPosition());
-                            textCurrentTime.setText(getTimeString(videoView.getCurrentPosition()));
+                            seekBar.setProgress(getCurrentPosition());
+                            textCurrentTime.setText(getTimeString(getCurrentPosition()));
                         }
                     }
                 });
-                if (videoView.getCurrentPosition() < videoView.getDuration()) {
+                if (getCurrentPosition() < getDuration()) {
                     seekBar.postDelayed(this, MILLISECONDS);
                 } else {
                     seekBarUpdaterIsRunning = false;
@@ -287,7 +287,7 @@ public class VideoController {
 
                     LanalyticsUtil.trackVideoPause(videoItemDetails.id,
                             course.id, module.id,
-                            mediaPlayer.getCurrentPosition(),
+                            getCurrentPosition(),
                             currentPlaybackSpeed.getSpeed(),
                             activity.getResources().getConfiguration().orientation,
                             getQualityString(),
@@ -297,7 +297,7 @@ public class VideoController {
 
                     LanalyticsUtil.trackVideoPlay(videoItemDetails.id,
                             course.id, module.id,
-                            mediaPlayer.getCurrentPosition(),
+                            getCurrentPosition(),
                             currentPlaybackSpeed.getSpeed(),
                             activity.getResources().getConfiguration().orientation,
                             getQualityString(),
@@ -327,7 +327,7 @@ public class VideoController {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 LanalyticsUtil.trackVideoSeek(videoItemDetails.id,
                         course.id, module.id,
-                        mediaPlayer.getCurrentPosition(),
+                        getCurrentPosition(),
                         progress,
                         currentPlaybackSpeed.getSpeed(),
                         activity.getResources().getConfiguration().orientation,
@@ -344,7 +344,7 @@ public class VideoController {
             public void onClick(View v) {
                 String oldQuality = getQualityString();
                 String oldSource = getSourceString();
-                int position = mediaPlayer.getCurrentPosition();
+                int position = getCurrentPosition();
 
                 toggleHdButton();
 
@@ -371,7 +371,7 @@ public class VideoController {
 
                     LanalyticsUtil.trackVideoChangeSpeed(videoItemDetails.id,
                             course.id, module.id,
-                            mediaPlayer.getCurrentPosition(),
+                            getCurrentPosition(),
                             oldSpeed.getSpeed(),
                             currentPlaybackSpeed.getSpeed(),
                             activity.getResources().getConfiguration().orientation,
@@ -500,7 +500,29 @@ public class VideoController {
     }
 
     public int getCurrentPosition() {
-        return mediaPlayer.getCurrentPosition();
+        if (mediaPlayer != null) {
+            try {
+                return mediaPlayer.getCurrentPosition();
+            } catch (IllegalStateException e) {
+                Log.e(TAG, e.getMessage(), e);
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public int getDuration() {
+        if (mediaPlayer != null) {
+            try {
+                return mediaPlayer.getDuration();
+            } catch (IllegalStateException e) {
+                Log.e(TAG, e.getMessage(), e);
+                return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 
     public void setupVideo(Course course, Module module, Item<VideoItemDetail> video) {
@@ -585,9 +607,7 @@ public class VideoController {
     }
 
     public void saveCurrentPosition() {
-        if (videoView != null && videoItemDetails != null) {
-            videoItemDetails.detail.progress = videoView.getCurrentPosition();
-        }
+        saveCurrentPosition(getCurrentPosition());
     }
 
     public void saveCurrentPosition(int position) {
