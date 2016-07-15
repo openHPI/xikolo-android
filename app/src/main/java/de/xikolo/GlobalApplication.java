@@ -18,6 +18,7 @@ import com.path.android.jobqueue.log.CustomLogger;
 import java.io.File;
 import java.io.IOException;
 
+import de.xikolo.controller.helper.WebSocketController;
 import de.xikolo.data.database.DataAccessFactory;
 import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.data.preferences.PreferencesFactory;
@@ -42,6 +43,8 @@ public class GlobalApplication extends Application {
     private PreferencesFactory preferencesFactory;
 
     private Lanalytics lanalytics;
+
+    private WebSocketController webSocketController;
 
     public GlobalApplication() {
         instance = this;
@@ -80,6 +83,15 @@ public class GlobalApplication extends Application {
             }
         }
         return lanalytics;
+    }
+
+    public WebSocketController getWebSocketController() {
+        synchronized (GlobalApplication.class) {
+            if (webSocketController == null) {
+                webSocketController = new WebSocketController(Config.WEBSOCKET);
+            }
+        }
+        return webSocketController;
     }
 
     @Override
