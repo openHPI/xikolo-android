@@ -3,6 +3,10 @@ package de.xikolo.util;
 import android.content.res.Configuration;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import java.util.Map;
+
 import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.preferences.UserPreferences;
@@ -275,6 +279,16 @@ public class LanalyticsUtil {
 
     private static String formatTime(int millis) {
         return String.valueOf(millis / 1000.);
+    }
+
+    public static String getContextDataJson() {
+        GlobalApplication application = GlobalApplication.getInstance();
+
+        Map<String, String> contextData = application.getLanalytics().getDefaultContextData();
+        contextData.put(CONTEXT_CLIENT_ID, application.getClientId());
+
+        Gson gson = new Gson();
+        return gson.toJson(contextData);
     }
 
 }

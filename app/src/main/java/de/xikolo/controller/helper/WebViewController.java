@@ -24,10 +24,10 @@ import android.webkit.WebViewClient;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
+import de.xikolo.util.LanalyticsUtil;
 import de.xikolo.util.NetworkUtil;
 import de.xikolo.util.ToastUtil;
 
@@ -158,8 +158,8 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                         }
 
                         // lanalytics context data cookie
-                        String lanalyticsContextPayload = GlobalApplication.getInstance().getLanalytics().getDefaultContextPayload();
-                        CookieManager.getInstance().setCookie(Config.URI, Config.COOKIE_LANALYTICS_CONTEXT + "=" + lanalyticsContextPayload);
+                        String lanalyticsContextDataJson = LanalyticsUtil.getContextDataJson();
+                        CookieManager.getInstance().setCookie(Config.URI, Config.COOKIE_LANALYTICS_CONTEXT + "=" + lanalyticsContextDataJson);
 
                         webView.loadUrl(this.url, header);
                     } else {
