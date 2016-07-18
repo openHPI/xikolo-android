@@ -23,6 +23,7 @@ import de.xikolo.data.database.DataAccessFactory;
 import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.lanalytics.Lanalytics;
+import de.xikolo.util.ClientUtil;
 import de.xikolo.util.Config;
 import de.xikolo.util.SslCertificateUtil;
 
@@ -92,6 +93,10 @@ public class GlobalApplication extends Application {
             }
         }
         return webSocketController;
+    }
+
+    public String getClientId() {
+        return ClientUtil.id(this);
     }
 
     @Override
