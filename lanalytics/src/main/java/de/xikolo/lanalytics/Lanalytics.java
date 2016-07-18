@@ -83,8 +83,12 @@ public class Lanalytics {
         }).start();
     }
 
-    public String getDefaultContextPayload() {
+    public String getDefaultContextDataJson() {
         return Parser.toJson(ContextUtil.getDefaultContextData(context));
+    }
+
+    public Map<String, String> getDefaultContextData() {
+        return ContextUtil.getDefaultContextData(context);
     }
 
     public static class Event implements Entity {
