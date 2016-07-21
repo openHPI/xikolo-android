@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import de.xikolo.R;
 import de.xikolo.controller.BaseFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
-import de.xikolo.model.CourseModel;
 import de.xikolo.model.UserModel;
 import de.xikolo.view.DividerItemDecoration;
 
@@ -81,14 +80,14 @@ public class NavigationFragment extends BaseFragment {
             currentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             fromSavedInstanceState = true;
         } else {
-            currentSelectedPosition = NavigationAdapter.NAV_ID_LOW_LEVEL_CONTENT;
+            currentSelectedPosition = -1;
         }
 
         if (!fromSavedInstanceState) {
             if (UserModel.isLoggedIn(getActivity())) {
-                selectItem(NavigationAdapter.NAV_ID_MY_COURSES);
+                selectItem(NavigationAdapter.NAV_MY_COURSES.getPosition());
             } else {
-                selectItem(NavigationAdapter.NAV_ID_ALL_COURSES);
+                selectItem(NavigationAdapter.NAV_ALL_COURSES.getPosition());
             }
         }
     }
@@ -103,7 +102,7 @@ public class NavigationFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        adapter = new NavigationAdapter(new CourseModel(jobManager));
+        adapter = new NavigationAdapter();
 
         adapter.setOnItemClickListener(new NavigationAdapter.OnItemClickListener() {
             @Override

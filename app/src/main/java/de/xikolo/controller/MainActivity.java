@@ -81,13 +81,13 @@ public class MainActivity extends BaseActivity
                 if (type != null) {
                     switch (type) {
                         case ALL_COURSES:
-                            navigationFragment.selectItem(NavigationAdapter.NAV_ID_ALL_COURSES);
+                            navigationFragment.selectItem(NavigationAdapter.NAV_ALL_COURSES.getPosition());
                             break;
                         case NEWS:
-                            navigationFragment.selectItem(NavigationAdapter.NAV_ID_NEWS);
+                            navigationFragment.selectItem(NavigationAdapter.NAV_NEWS.getPosition());
                             break;
                         case MY_COURSES:
-                            navigationFragment.selectItem(NavigationAdapter.NAV_ID_MY_COURSES);
+                            navigationFragment.selectItem(NavigationAdapter.NAV_MY_COURSES.getPosition());
                             break;
                         default:
                             break;
@@ -110,39 +110,37 @@ public class MainActivity extends BaseActivity
         String tag = null;
         Intent intent = null;
         ContentFragment newFragment = null;
-        switch (position) {
-            case NavigationAdapter.NAV_ID_PROFILE:
-                if (UserModel.isLoggedIn(this)) {
-                    newFragment = ProfileFragment.newInstance();
-                    tag = "profile";
+        if (position == NavigationAdapter.NAV_PROFILE.getPosition()) {
+            if (UserModel.isLoggedIn(this)) {
+                newFragment = ProfileFragment.newInstance();
+                tag = "profile";
 
-                    LanalyticsUtil.trackVisitedProfile(UserModel.getSavedUser(this).id);
-                } else {
-                    intent = new Intent(MainActivity.this, LoginActivity.class);
-                }
-                break;
-            case NavigationAdapter.NAV_ID_ALL_COURSES:
-                newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_ALL);
-                tag = "all_courses";
-                break;
-            case NavigationAdapter.NAV_ID_MY_COURSES:
-                newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_MY);
-                tag = "my_courses";
-                break;
-            case NavigationAdapter.NAV_ID_NEWS:
-                newFragment = ContentWebViewFragment.newInstance(NavigationAdapter.NAV_ID_NEWS, Config.URI + Config.NEWS, getString(R.string.title_section_news), false, false);
-                tag = "news";
-                break;
-            case NavigationAdapter.NAV_ID_DOWNLOADS:
-                intent = new Intent(MainActivity.this, DownloadsActivity.class);
+                LanalyticsUtil.trackVisitedProfile(UserModel.getSavedUser(this).id);
+            } else {
+                intent = new Intent(MainActivity.this, LoginActivity.class);
+            }
+        }
+        if (position == NavigationAdapter.NAV_ALL_COURSES.getPosition()) {
+            newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_ALL);
+            tag = "all_courses";
+        }
+        if (position == NavigationAdapter.NAV_MY_COURSES.getPosition()) {
+            newFragment = CourseListFragment.newInstance(CourseListFragment.FILTER_MY);
+            tag = "my_courses";
+        }
+        if (position == NavigationAdapter.NAV_NEWS.getPosition()) {
+            newFragment = ContentWebViewFragment.newInstance(NavigationAdapter.NAV_NEWS.getPosition(), Config.URI + Config.NEWS, getString(R.string.title_section_news), false, false);
+            tag = "news";
+        }
+        if (position == NavigationAdapter.NAV_DOWNLOADS.getPosition()) {
+            intent = new Intent(MainActivity.this, DownloadsActivity.class);
 
-                LanalyticsUtil.trackVisitedDownloads(UserModel.getSavedUser(this).id);
-                break;
-            case NavigationAdapter.NAV_ID_SETTINGS:
-                intent = new Intent(MainActivity.this, SettingsActivity.class);
+            LanalyticsUtil.trackVisitedDownloads(UserModel.getSavedUser(this).id);
+        }
+        if (position == NavigationAdapter.NAV_SETTINGS.getPosition()) {
+            intent = new Intent(MainActivity.this, SettingsActivity.class);
 
-                LanalyticsUtil.trackVisitedPreferences(UserModel.getSavedUser(this).id);
-                break;
+            LanalyticsUtil.trackVisitedPreferences(UserModel.getSavedUser(this).id);
         }
         if (tag != null) {
             ContentFragment oldFragment = (ContentFragment) fragmentManager.findFragmentByTag(tag);
@@ -171,10 +169,10 @@ public class MainActivity extends BaseActivity
     public void onBackPressed() {
         if (!navigationFragment.isDrawerOpen()) {
             if (UserModel.isLoggedIn(this)
-                    && navigationFragment.getItem() == NavigationAdapter.NAV_ID_MY_COURSES) {
+                    && navigationFragment.getItem() == NavigationAdapter.NAV_MY_COURSES.getPosition()) {
                 finish();
             } else if (!UserModel.isLoggedIn(this)
-                    && navigationFragment.getItem() == NavigationAdapter.NAV_ID_ALL_COURSES) {
+                    && navigationFragment.getItem() == NavigationAdapter.NAV_ALL_COURSES.getPosition()) {
                 finish();
             } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
                 getSupportFragmentManager().popBackStack();

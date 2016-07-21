@@ -146,7 +146,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             notificationController.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
+                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
                 }
             });
             notificationController.setNotificationVisible(true);
@@ -230,9 +230,9 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         super.onStart();
 
         if (filter.equals(FILTER_ALL)) {
-            activityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_ALL_COURSES, getString(R.string.title_section_all_courses));
+            activityCallback.onFragmentAttached(NavigationAdapter.NAV_ALL_COURSES.getPosition(), getString(R.string.title_section_all_courses));
         } else if (filter.equals(FILTER_MY)) {
-            activityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_MY_COURSES, getString(R.string.title_section_my_courses));
+            activityCallback.onFragmentAttached(NavigationAdapter.NAV_MY_COURSES.getPosition(), getString(R.string.title_section_my_courses));
         }
 
         if (courses != null && courses.size() > 0) {
@@ -252,7 +252,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 notificationController.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
+                        activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
                     }
                 });
                 notificationController.setNotificationVisible(true);
@@ -262,7 +262,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 notificationController.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_ALL_COURSES);
+                        activityCallback.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.getPosition());
                     }
                 });
                 notificationController.setNotificationVisible(true);
@@ -309,7 +309,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     NetworkUtil.showNoConnectionToast();
                 } else if (errorCode == ErrorCode.NO_AUTH) {
                     ToastUtil.show(R.string.toast_please_log_in);
-                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
+                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
                 }
             }
         };
@@ -335,7 +335,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             startActivity(intent);
         } else {
             ToastUtil.show(R.string.toast_please_log_in);
-            activityCallback.selectDrawerSection(NavigationAdapter.NAV_ID_PROFILE);
+            activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
         }
     }
 

@@ -189,7 +189,7 @@ public class ProfileFragment extends ContentFragment {
 
     private void showHeader() {
         User user = UserModel.getSavedUser(getActivity());
-        activityCallback.onFragmentAttached(NavigationAdapter.NAV_ID_PROFILE, user.first_name + " " + user.last_name);
+        activityCallback.onFragmentAttached(NavigationAdapter.NAV_PROFILE.getPosition(), user.first_name + " " + user.last_name);
     }
 
     private void showCoursesProgress(List<Course> courses) {
