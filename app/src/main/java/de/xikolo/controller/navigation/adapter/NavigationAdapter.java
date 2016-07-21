@@ -24,53 +24,53 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     public static final String TAG = NavigationAdapter.class.getSimpleName();
 
-    public static final NavigationElement NAV_PROFILE;
-    public static final NavigationElement NAV_ALL_COURSES;
-    public static final NavigationElement NAV_MY_COURSES;
-    public static final NavigationElement NAV_NEWS;
-    public static final NavigationElement NAV_DOWNLOADS;
-    public static final NavigationElement NAV_SETTINGS;
+    public static final NavigationItem NAV_PROFILE;
+    public static final NavigationItem NAV_ALL_COURSES;
+    public static final NavigationItem NAV_MY_COURSES;
+    public static final NavigationItem NAV_NEWS;
+    public static final NavigationItem NAV_DOWNLOADS;
+    public static final NavigationItem NAV_SETTINGS;
 
-    public static final List<NavigationElement> NAV_ELEMENTS;
+    public static final List<NavigationItem> NAV_ITEMS;
 
     static {
-        NAV_ELEMENTS = new ArrayList<>();
+        NAV_ITEMS = new ArrayList<>();
 
-        NAV_ELEMENTS.add(NAV_PROFILE = new NavigationElement(
+        NAV_ITEMS.add(NAV_PROFILE = new NavigationItem(
                 R.string.icon_profile,
                 R.string.title_section_login,
-                NavigationElement.ViewType.PROFILE,
-                NAV_ELEMENTS.size()));
+                NavigationItem.ViewType.PROFILE,
+                NAV_ITEMS.size()));
 
-        NAV_ELEMENTS.add(NAV_ALL_COURSES = new NavigationElement(
+        NAV_ITEMS.add(NAV_ALL_COURSES = new NavigationItem(
                 R.string.icon_courses,
                 R.string.title_section_all_courses,
-                NavigationElement.ViewType.MAIN,
-                NAV_ELEMENTS.size()));
+                NavigationItem.ViewType.MAIN,
+                NAV_ITEMS.size()));
 
-        NAV_ELEMENTS.add(NAV_MY_COURSES = new NavigationElement(
+        NAV_ITEMS.add(NAV_MY_COURSES = new NavigationItem(
                 R.string.icon_course,
                 R.string.title_section_my_courses,
-                NavigationElement.ViewType.MAIN,
-                NAV_ELEMENTS.size()));
+                NavigationItem.ViewType.MAIN,
+                NAV_ITEMS.size()));
 
-        NAV_ELEMENTS.add(NAV_NEWS = new NavigationElement(
+        NAV_ITEMS.add(NAV_NEWS = new NavigationItem(
                 R.string.icon_news,
                 R.string.title_section_news,
-                NavigationElement.ViewType.MAIN,
-                NAV_ELEMENTS.size()));
+                NavigationItem.ViewType.MAIN,
+                NAV_ITEMS.size()));
 
-        NAV_ELEMENTS.add(NAV_DOWNLOADS = new NavigationElement(
+        NAV_ITEMS.add(NAV_DOWNLOADS = new NavigationItem(
                 R.string.icon_downloads,
                 R.string.title_section_downloads,
-                NavigationElement.ViewType.SUB,
-                NAV_ELEMENTS.size()));
+                NavigationItem.ViewType.SUB,
+                NAV_ITEMS.size()));
 
-        NAV_ELEMENTS.add(NAV_SETTINGS = new NavigationElement(
+        NAV_ITEMS.add(NAV_SETTINGS = new NavigationItem(
                 R.string.icon_settings,
                 R.string.title_section_settings,
-                NavigationElement.ViewType.SUB,
-                NAV_ELEMENTS.size()));
+                NavigationItem.ViewType.SUB,
+                NAV_ITEMS.size()));
     }
 
     private CourseModel courseModel;
@@ -85,23 +85,23 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     @Override
     public int getItemCount() {
-        return NAV_ELEMENTS.size();
+        return NAV_ITEMS.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return NAV_ELEMENTS.get(position).getViewType().toInteger();
+        return NAV_ITEMS.get(position).getViewType().toInteger();
     }
 
     @Override
     public BaseNavigationViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View itemView;
-        if (viewType == NavigationElement.ViewType.PROFILE.toInteger()) {
+        if (viewType == NavigationItem.ViewType.PROFILE.toInteger()) {
             itemView = LayoutInflater.
                     from(viewGroup.getContext()).
                     inflate(R.layout.item_navi_profile, viewGroup, false);
             return new ProfileNavigationViewHolder(itemView);
-        } else if (viewType == NavigationElement.ViewType.MAIN.toInteger()) {
+        } else if (viewType == NavigationItem.ViewType.MAIN.toInteger()) {
             itemView = LayoutInflater.
                     from(viewGroup.getContext()).
                     inflate(R.layout.item_navi_main, viewGroup, false);
@@ -116,11 +116,11 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     @Override
     public void onBindViewHolder(BaseNavigationViewHolder viewHolder, int position) {
-        NavigationElement navigationElement = NAV_ELEMENTS.get(position);
+        NavigationItem navigationItem = NAV_ITEMS.get(position);
 
         Context context = GlobalApplication.getInstance();
 
-        viewHolder.textIcon.setText(navigationElement.getIcon(context));
+        viewHolder.textIcon.setText(navigationItem.getIcon(context));
 
         if (position == NAV_PROFILE.getPosition()) {
             ProfileNavigationViewHolder profileViewHolder = (ProfileNavigationViewHolder) viewHolder;
@@ -142,12 +142,12 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             } else {
                 profileViewHolder.viewLogin.setVisibility(View.VISIBLE);
                 profileViewHolder.viewProfile.setVisibility(View.GONE);
-                profileViewHolder.textTitle.setText(navigationElement.getTitle(context));
+                profileViewHolder.textTitle.setText(navigationItem.getTitle(context));
             }
         } else if (position == NAV_MY_COURSES.getPosition()) {
             CounterNavigationViewHolder counterViewHolder = (CounterNavigationViewHolder) viewHolder;
 
-            viewHolder.textTitle.setText(navigationElement.getTitle(context));
+            viewHolder.textTitle.setText(navigationItem.getTitle(context));
 
             if (UserModel.isLoggedIn(context)) {
                 int size = courseModel.getEnrollmentsCount();
@@ -162,7 +162,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 counterViewHolder.textCounter.setVisibility(View.GONE);
             }
         } else {
-            viewHolder.textTitle.setText(navigationElement.getTitle(context));
+            viewHolder.textTitle.setText(navigationItem.getTitle(context));
         }
 
         if (position == getCheckedItemPosition()) {

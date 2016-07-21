@@ -55,8 +55,8 @@ public class MainActivity extends BaseActivity
                 toolbar);
 
         if (Config.DEBUG) {
-            Log.i(TAG, "Build Type: " + BuildConfig.buildType);
-            Log.i(TAG, "Build Flavor: " + BuildConfig.buildFlavor);
+            Log.i(TAG, "Build Type: " + BuildConfig.X_TYPE);
+            Log.i(TAG, "Build Flavor: " + BuildConfig.X_FLAVOR);
         }
 
         handleIntent(getIntent());

@@ -259,8 +259,8 @@ public class LanalyticsUtil {
     }
 
     private static boolean isTrackingEnabled() {
-        return BuildConfig.buildType == BuildType.RELEASE
-                && (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI || BuildConfig.buildFlavor == BuildFlavor.OPEN_SAP);
+        return BuildConfig.X_TYPE == BuildType.RELEASE
+                && (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP);
     }
 
     public static Lanalytics.Event.Builder newEventBuilder() {

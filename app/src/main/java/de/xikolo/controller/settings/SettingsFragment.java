@@ -90,7 +90,7 @@ public class SettingsFragment extends PreferenceFragment {
         });
 
         Preference termsOfUse = findPreference(getString(R.string.preference_terms_of_use));
-        if (BuildConfig.buildFlavor == BuildFlavor.OPEN_SAP) {
+        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP) {
             termsOfUse.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {

@@ -8,7 +8,7 @@ import de.xikolo.R;
 
 public class Config {
 
-    public static final boolean DEBUG = BuildConfig.buildType == BuildType.DEBUG;
+    public static final boolean DEBUG = BuildConfig.X_TYPE == BuildType.DEBUG;
 
     public static final String FONT = "fonts/";
 
@@ -28,7 +28,7 @@ public class Config {
     public static final String CAST_MEDIA_RECEIVER_APPLICATION_ID;
 
     static {
-        switch (BuildConfig.buildFlavor) {
+        switch (BuildConfig.X_FLAVOR) {
             case OPEN_HPI:
                 COPYRIGHT_URL = "https://hpi.de/";
                 IMPRINT_URL = "https://open.hpi.de/pages/imprint";
