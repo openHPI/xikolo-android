@@ -129,6 +129,14 @@
                 android:value=".controller.MainActivity" />
         </activity>
         <activity
+            android:name=".controller.SecondScreenActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controller.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controller.MainActivity" />
+        </activity>
+        <activity
             android:name=".controller.LoginActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controller.MainActivity">

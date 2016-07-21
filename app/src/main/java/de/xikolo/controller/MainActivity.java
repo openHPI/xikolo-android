@@ -132,6 +132,9 @@ public class MainActivity extends BaseActivity
             newFragment = ContentWebViewFragment.newInstance(NavigationAdapter.NAV_NEWS.getPosition(), Config.URI + Config.NEWS, getString(R.string.title_section_news), false, false);
             tag = "news";
         }
+        if (position == NavigationAdapter.NAV_SECOND_SCREEN.getPosition()) {
+            intent = new Intent(MainActivity.this, SecondScreenActivity.class);
+        }
         if (position == NavigationAdapter.NAV_DOWNLOADS.getPosition()) {
             intent = new Intent(MainActivity.this, DownloadsActivity.class);
 

@@ -12,6 +12,10 @@ public class Config {
 
     public static final String FONT = "fonts/";
 
+    public static final String FONT_XIKOLO = "xikolo.ttf";
+
+    public static final String FONT_MATERIAL = "materialdesign.ttf";
+
     public static final String HTTP = "http";
     public static final String HTTPS = "https";
 

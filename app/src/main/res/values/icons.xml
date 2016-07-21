@@ -36,5 +36,6 @@
     <string name="icon_download" translatable="false">&#xf262;</string>
     <string name="icon_delete" translatable="false">&#xf24a;</string>
     <string name="icon_visited" translatable="false">&#xf1e2;</string>
+    <string name="icon_second_screen" translatable="false">&#xf1d1;</string>
 
 </resources>

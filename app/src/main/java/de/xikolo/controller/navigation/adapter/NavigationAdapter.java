@@ -1,6 +1,7 @@
 package de.xikolo.controller.navigation.adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,13 +13,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.helper.ImageController;
 import de.xikolo.data.entities.User;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.UserModel;
+import de.xikolo.util.BuildFlavor;
+import de.xikolo.util.Config;
 import de.xikolo.util.StatusBarUtil;
+import de.xikolo.view.CustomFontTextView;
 
 public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.BaseNavigationViewHolder> {
 
@@ -30,6 +35,8 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
     public static final NavigationItem NAV_NEWS;
     public static final NavigationItem NAV_DOWNLOADS;
     public static final NavigationItem NAV_SETTINGS;
+
+    public static final NavigationItem NAV_SECOND_SCREEN;
 
     public static final List<NavigationItem> NAV_ITEMS;
 
@@ -59,6 +66,20 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 R.string.title_section_news,
                 NavigationItem.ViewType.MAIN,
                 NAV_ITEMS.size()));
+
+        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            NAV_ITEMS.add(NAV_SECOND_SCREEN = new NavigationItem(
+                    R.string.icon_second_screen,
+                    R.string.title_section_second_screen,
+                    NavigationItem.ViewType.MAIN,
+                    NAV_ITEMS.size()));
+        } else {
+            NAV_SECOND_SCREEN = new NavigationItem(
+                    R.string.icon_second_screen,
+                    R.string.title_section_second_screen,
+                    NavigationItem.ViewType.MAIN,
+                    -99);
+        }
 
         NAV_ITEMS.add(NAV_DOWNLOADS = new NavigationItem(
                 R.string.icon_downloads,
@@ -165,6 +186,12 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
         }
 
+        if (position == NAV_SECOND_SCREEN.getPosition()) {
+            viewHolder.textIcon.setCustomFont(context, Config.FONT_MATERIAL);
+        } else {
+            viewHolder.textIcon.setCustomFont(context, Config.FONT_XIKOLO);
+        }
+
         if (position == getCheckedItemPosition()) {
             if (position != NAV_PROFILE.getPosition() || !UserModel.isLoggedIn(context)) {
                 viewHolder.textIcon.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
@@ -196,13 +223,13 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     class BaseNavigationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView textIcon;
+        CustomFontTextView textIcon;
         TextView textTitle;
 
         public BaseNavigationViewHolder(View view) {
             super(view);
 
-            textIcon = (TextView) view.findViewById(R.id.textIcon);
+            textIcon = (CustomFontTextView) view.findViewById(R.id.textIcon);
             textTitle = (TextView) view.findViewById(R.id.textLabel);
 
             view.setOnClickListener(this);
