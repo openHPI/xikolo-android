@@ -37,5 +37,7 @@
     <string name="icon_delete" translatable="false">&#xf24a;</string>
     <string name="icon_visited" translatable="false">&#xf1e2;</string>
     <string name="icon_second_screen" translatable="false">&#xf1d1;</string>
+    <string name="icon_arrow_left_bold_circle" translatable="false">&#xf13e;</string>
+    <string name="icon_arrow_right_bold_circle" translatable="false">&#xf143;</string>
 
 </resources>

@@ -12,6 +12,8 @@
     <string name="title_section_my_courses">Meine Kurse</string>
     <string name="title_section_second_screen">Second Screen</string>
 
+    <string name="title_section_beta">Beta</string>
+
     <!-- -->
     <string name="header_current_courses">Aktuelle und zukünftige Kurse</string>
     <string name="header_self_paced_courses">Kurse im Selbststudium</string>

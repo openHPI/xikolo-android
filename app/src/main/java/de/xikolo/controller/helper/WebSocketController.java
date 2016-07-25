@@ -46,7 +46,6 @@ public class WebSocketController {
                 public void onOpen(ServerHandshake serverHandshake) {
                     Log.i(TAG, "WebSocket opened");
                     EventBus.getDefault().post(new WebSocketConnectedEvent());
-                    send("{\"message\": \"Hello from Android!\"}");
                 }
 
                 @Override

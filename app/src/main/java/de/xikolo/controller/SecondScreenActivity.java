@@ -15,10 +15,10 @@ public class SecondScreenActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_blank);
+        setContentView(R.layout.activity_blank_no_scroll);
         setupActionBar();
 
-        setTitle(getString(R.string.title_section_second_screen));
+        setTitle(getString(R.string.title_section_second_screen) + " (" + getString(R.string.title_section_beta) + ")");
 
         String tag = "second_screen";
 
