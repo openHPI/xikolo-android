@@ -1,4 +1,4 @@
-package de.xikolo.controller.helper;
+package de.xikolo.managers;
 
 import android.util.Log;
 
@@ -17,15 +17,15 @@ import de.xikolo.model.events.Event;
 import de.xikolo.util.Config;
 
 
-public class WebSocketController {
+public class WebSocketManager {
 
-    public static final String TAG = WebSocketController.class.getSimpleName();
+    public static final String TAG = WebSocketManager.class.getSimpleName();
 
     private WebSocketClient webSocketClient;
 
     private URI uri;
 
-    public WebSocketController(String uri) {
+    public WebSocketManager(String uri) {
         try {
             this.uri = new URI(uri);
         } catch (URISyntaxException e) {

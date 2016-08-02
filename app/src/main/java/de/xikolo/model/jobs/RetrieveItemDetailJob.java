@@ -10,6 +10,8 @@ import java.lang.reflect.Type;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
+import de.xikolo.controller.exceptions.WrongParameterException;
+import de.xikolo.data.database.ItemDataAccess;
 import de.xikolo.data.database.VideoDataAccess;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
@@ -30,36 +32,74 @@ public class RetrieveItemDetailJob extends Job {
     private final int id;
 
     private Result<Item> result;
+
     private Course course;
     private Module module;
     private Item item;
+
+    private String courseId;
+    private String moduleId;
+    private String itemId;
+
     private String itemType;
 
     public RetrieveItemDetailJob(Result<Item> result, Course course, Module module, Item item, String itemType) {
         super(new Params(Priority.HIGH));
         id = jobCounter.incrementAndGet();
 
+        if (course == null || module == null || item == null) {
+            throw new WrongParameterException();
+        }
+
         this.result = result;
+
         this.course = course;
         this.module = module;
         this.item = item;
+
+        this.itemType = itemType;
+    }
+
+    public RetrieveItemDetailJob(Result<Item> result, String courseId, String moduleId, String itemId, String itemType) {
+        super(new Params(Priority.HIGH));
+        id = jobCounter.incrementAndGet();
+
+        if (courseId == null || moduleId == null || itemId == null) {
+            throw new WrongParameterException();
+        }
+
+        this.result = result;
+        this.courseId = courseId;
+        this.moduleId = moduleId;
+        this.itemId = itemId;
+
         this.itemType = itemType;
     }
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG)
-            Log.i(TAG, TAG + " added | course.id " + course.id + " | module.id " + module.id + " | item.id " + item.id + " | itemType " + itemType);
+        if (Config.DEBUG) {
+            if (course != null) {
+                Log.i(TAG, TAG + " added | course.id " + course.id + " | module.id " + module.id + " | item.id " + item.id + " | itemType " + itemType);
+            } else if (courseId != null) {
+                Log.i(TAG, TAG + " added | course.id " + courseId + " | module.id " + moduleId + " | item.id " + itemId + " | itemType " + itemType);
+            }
+        }
     }
 
     @Override
     public void onRun() throws Throwable {
-        if (!UserModel.isLoggedIn(GlobalApplication.getInstance()) || !course.is_enrolled) {
+        if (!UserModel.isLoggedIn(GlobalApplication.getInstance())) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
             VideoDataAccess videoDataAccess = GlobalApplication.getInstance()
                     .getDataAccessFactory().getVideoDataAccess();
+            ItemDataAccess itemDataAccess = GlobalApplication.getInstance()
+                    .getDataAccessFactory().getItemDataAccess();
             if (itemType.equals(Item.TYPE_VIDEO)) {
+                if (item == null) {
+                    item = itemDataAccess.getItem(itemId);
+                }
                 item.detail = videoDataAccess.getVideo(item.id);
                 result.success(item, Result.DataSource.LOCAL);
             }
@@ -67,8 +107,14 @@ public class RetrieveItemDetailJob extends Job {
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
                 Type type = Item.getTypeToken(item.type);
 
-                String url = Config.API + Config.COURSES + course.id + "/"
-                        + Config.MODULES + module.id + "/" + Config.ITEMS + item.id;
+                String url = null;
+                if (course != null) {
+                    url = Config.API + Config.COURSES + course.id + "/"
+                            + Config.MODULES + module.id + "/" + Config.ITEMS + item.id;
+                } else if (courseId != null) {
+                    url = Config.API + Config.COURSES + courseId + "/"
+                            + Config.MODULES + moduleId + "/" + Config.ITEMS + itemId;
+                }
 
                 JsonRequest request = new JsonRequest(url, type);
                 request.setCache(false);

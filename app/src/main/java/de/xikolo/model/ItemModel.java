@@ -40,6 +40,10 @@ public class ItemModel extends BaseModel {
         mJobManager.addJobInBackground(new RetrieveItemDetailJob(result, course, module, item, itemType));
     }
 
+    public void getItemDetail(Result<Item> result, String courseId, String moduleId, String itemId, String itemType) {
+        mJobManager.addJobInBackground(new RetrieveItemDetailJob(result, courseId, moduleId, itemId, itemType));
+    }
+
     public void updateProgression(Result<Void> result, Module module, Item item) {
         mJobManager.addJobInBackground(new UpdateProgressionJob(result, module, item));
     }

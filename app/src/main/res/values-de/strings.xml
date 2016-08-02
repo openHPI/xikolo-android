@@ -130,6 +130,7 @@
     <!-- -->
     <string name="notification_download_completed">Download abgeschlossen</string>
     <string name="notification_multiple_downloads_completed">%1$d Downloads abgeschlossen</string>
+    <string name="notification_start_second_screen">Starte Second Screen</string>
 
     <!-- -->
     <string name="toast_no_courses">Keine Kurse erhalten.</string>

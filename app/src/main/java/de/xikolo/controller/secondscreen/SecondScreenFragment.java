@@ -23,18 +23,14 @@ import java.io.File;
 import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controller.helper.WebSocketController;
-import de.xikolo.model.UserModel;
+import de.xikolo.managers.WebSocketManager;
 import de.xikolo.util.ToastUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SecondScreenFragment extends Fragment {
 
     public static final String TAG = SecondScreenFragment.class.getSimpleName();
-
-    private WebSocketController webSocketController;
 
     private PdfRenderer renderer;
 
@@ -57,12 +53,6 @@ public class SecondScreenFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        webSocketController = GlobalApplication.getInstance().getWebSocketController();
-
-        if (UserModel.isLoggedIn(getContext())) {
-            webSocketController.initConnection(UserModel.getToken(getContext()));
-        }
     }
 
     @Override
@@ -178,16 +168,15 @@ public class SecondScreenFragment extends Fragment {
         renderer.close();
     }
 
-    public void onEventMainThread(WebSocketController.WebSocketConnectedEvent event) {
+    public void onEventMainThread(WebSocketManager.WebSocketConnectedEvent event) {
 //        text.append("WebSocket connected\n");
-        webSocketController.send("{\"message\": \"Hello from Android!\"}");
     }
 
-    public void onEventMainThread(WebSocketController.WebSocketClosedEvent event) {
+    public void onEventMainThread(WebSocketManager.WebSocketClosedEvent event) {
 //        text.append("WebSocket closed\n");
     }
 
-    public void onEventMainThread(WebSocketController.WebSocketMessageEvent event) {
+    public void onEventMainThread(WebSocketManager.WebSocketMessageEvent event) {
 //        text.append(event.getMessage() + "\n");
     }
 

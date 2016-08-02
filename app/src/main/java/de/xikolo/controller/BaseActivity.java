@@ -26,6 +26,7 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.data.preferences.NotificationPreferences;
 import de.xikolo.data.preferences.PreferencesFactory;
+import de.xikolo.model.UserModel;
 import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.model.events.PermissionDeniedEvent;
 import de.xikolo.model.events.PermissionGrantedEvent;
@@ -182,6 +183,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onStart();
 
         EventBus.getDefault().registerSticky(this);
+
+        if (UserModel.isLoggedIn(this)) {
+            globalApplication.getWebSocketManager().initConnection(UserModel.getToken(this));
+        }
     }
 
     @Override
