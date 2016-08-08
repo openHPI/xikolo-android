@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import de.xikolo.data.entities.WebSocketMessage;
+import de.xikolo.data.parser.GsonHelper;
 import de.xikolo.model.events.Event;
 import de.xikolo.util.Config;
 
@@ -100,10 +102,21 @@ public class WebSocketManager {
 
     public static class WebSocketMessageEvent extends Event {
 
+        private WebSocketMessage webSocketMessage;
+
         public WebSocketMessageEvent(String message) {
-            super(message);
+            super();
+            this.webSocketMessage = GsonHelper.create().fromJson(message, WebSocketMessage.class);
         }
 
+        public WebSocketMessageEvent(WebSocketMessage message) {
+            super();
+            this.webSocketMessage = message;
+        }
+
+        public WebSocketMessage getWebSocketMessage() {
+            return this.webSocketMessage;
+        }
     }
 
 }

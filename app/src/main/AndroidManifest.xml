@@ -179,6 +179,15 @@
                 android:value=".controller.MainActivity" />
         </activity>
         <activity
+            android:name=".controller.secondscreen.WebViewActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controller.SecondScreenActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controller.SecondScreenActivity" />
+        </activity>
+
+        <activity
             android:name="com.google.android.libraries.cast.companionlibrary.cast.player.VideoCastControllerActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"

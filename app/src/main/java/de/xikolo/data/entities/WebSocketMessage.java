@@ -12,23 +12,20 @@ import java.util.Map;
 @AutoValue
 public abstract class WebSocketMessage implements Parcelable {
 
-    @SerializedName("resource_id")
-    public abstract String resourceId();
-
-    @SerializedName("resource_type")
-    public abstract String resourceType();
-
-    @SerializedName("verb")
-    public abstract String verb();
+    @SerializedName("platform")
+    public abstract String platform();
 
     @SerializedName("client_id")
     public abstract String clientId();
 
+    @SerializedName("action")
+    public abstract String action();
+
     @SerializedName("payload")
     public abstract Map<String, String> payload();
 
-    public static WebSocketMessage create(String resourceId, String resourceType, String verb, String clientId, Map<String, String> payload) {
-        return new AutoValue_WebSocketMessage(resourceId, resourceType, verb, clientId, payload);
+    public static WebSocketMessage create(String client, String clientId, String action, Map<String, String> payload) {
+        return new AutoValue_WebSocketMessage(client, clientId, action, payload);
     }
 
     public static TypeAdapter<WebSocketMessage> typeAdapter(Gson gson) {

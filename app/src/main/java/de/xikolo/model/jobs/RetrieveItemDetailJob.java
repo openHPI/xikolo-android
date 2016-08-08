@@ -13,9 +13,7 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.data.database.ItemDataAccess;
 import de.xikolo.data.database.VideoDataAccess;
-import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Result;
@@ -33,32 +31,11 @@ public class RetrieveItemDetailJob extends Job {
 
     private Result<Item> result;
 
-    private Course course;
-    private Module module;
-    private Item item;
-
     private String courseId;
     private String moduleId;
     private String itemId;
 
     private String itemType;
-
-    public RetrieveItemDetailJob(Result<Item> result, Course course, Module module, Item item, String itemType) {
-        super(new Params(Priority.HIGH));
-        id = jobCounter.incrementAndGet();
-
-        if (course == null || module == null || item == null) {
-            throw new WrongParameterException();
-        }
-
-        this.result = result;
-
-        this.course = course;
-        this.module = module;
-        this.item = item;
-
-        this.itemType = itemType;
-    }
 
     public RetrieveItemDetailJob(Result<Item> result, String courseId, String moduleId, String itemId, String itemType) {
         super(new Params(Priority.HIGH));
@@ -79,11 +56,7 @@ public class RetrieveItemDetailJob extends Job {
     @Override
     public void onAdded() {
         if (Config.DEBUG) {
-            if (course != null) {
-                Log.i(TAG, TAG + " added | course.id " + course.id + " | module.id " + module.id + " | item.id " + item.id + " | itemType " + itemType);
-            } else if (courseId != null) {
-                Log.i(TAG, TAG + " added | course.id " + courseId + " | module.id " + moduleId + " | item.id " + itemId + " | itemType " + itemType);
-            }
+            Log.i(TAG, TAG + " added | course.id " + courseId + " | module.id " + moduleId + " | item.id " + itemId + " | itemType " + itemType);
         }
     }
 
@@ -97,24 +70,16 @@ public class RetrieveItemDetailJob extends Job {
             ItemDataAccess itemDataAccess = GlobalApplication.getInstance()
                     .getDataAccessFactory().getItemDataAccess();
             if (itemType.equals(Item.TYPE_VIDEO)) {
-                if (item == null) {
-                    item = itemDataAccess.getItem(itemId);
-                }
+                Item item = itemDataAccess.getItem(itemId);
                 item.detail = videoDataAccess.getVideo(item.id);
                 result.success(item, Result.DataSource.LOCAL);
             }
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                Type type = Item.getTypeToken(item.type);
+                Type type = Item.getTypeToken(itemType);
 
-                String url = null;
-                if (course != null) {
-                    url = Config.API + Config.COURSES + course.id + "/"
-                            + Config.MODULES + module.id + "/" + Config.ITEMS + item.id;
-                } else if (courseId != null) {
-                    url = Config.API + Config.COURSES + courseId + "/"
+                String url = Config.API + Config.COURSES + courseId + "/"
                             + Config.MODULES + moduleId + "/" + Config.ITEMS + itemId;
-                }
 
                 JsonRequest request = new JsonRequest(url, type);
                 request.setCache(false);
