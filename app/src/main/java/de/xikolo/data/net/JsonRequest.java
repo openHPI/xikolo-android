@@ -10,8 +10,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 
-import javax.net.ssl.HttpsURLConnection;
-
+import de.xikolo.data.parser.GsonHelper;
 import de.xikolo.util.Config;
 
 public class JsonRequest extends HttpRequest {
@@ -31,7 +30,7 @@ public class JsonRequest extends HttpRequest {
             HttpsURLConnection conn = createConnection();
             InputStream in = new BufferedInputStream(conn.getInputStream());
 
-            Gson gson = new Gson();
+            Gson gson = GsonHelper.create();
             Reader reader = new InputStreamReader(in);
 
             Object o = gson.fromJson(reader, mType);

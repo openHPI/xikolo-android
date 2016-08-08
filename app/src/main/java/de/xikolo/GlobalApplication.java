@@ -98,15 +98,6 @@ public class GlobalApplication extends Application {
         return webSocketManager;
     }
 
-    public SecondScreenManager getSecondScreenManager() {
-        synchronized (GlobalApplication.class) {
-            if (secondScreenManager == null) {
-                secondScreenManager = new SecondScreenManager();
-            }
-        }
-        return secondScreenManager;
-    }
-
     public String getClientId() {
         return ClientUtil.id(this);
     }
@@ -122,7 +113,7 @@ public class GlobalApplication extends Application {
         configureJobManager();
         configureVideoCastManager();
 
-        getSecondScreenManager();
+        configureSecondScreenManager();
 
         // just for debugging, never use for production
         if (Config.DEBUG) {
@@ -238,6 +229,14 @@ public class GlobalApplication extends Application {
                 .setCastControllerImmersive(false)
                 .build();
         VideoCastManager.initialize(this, options);
+    }
+
+    public void configureSecondScreenManager() {
+        synchronized (GlobalApplication.class) {
+            if (secondScreenManager == null) {
+                secondScreenManager = new SecondScreenManager();
+            }
+        }
     }
 
 }
