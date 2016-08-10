@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -17,15 +18,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.helper.ImageController;
+import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.Subtitle;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.entities.WebSocketMessage;
@@ -33,6 +35,7 @@ import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.Config;
+import de.xikolo.util.TimeUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SecondScreenFragment extends Fragment {
@@ -51,8 +54,14 @@ public class SecondScreenFragment extends Fragment {
 
     private LinearLayout layoutVideoActions;
 
+    private static final String KEY_COURSE = "course";
+    private static final String KEY_MODULE = "module";
+    private static final String KEY_ITEM = "item";
+    private static final String KEY_SUBTITLES = "subtitles";
+
+    private Course course;
+    private Module module;
     private Item<VideoItemDetail> item;
-    private List<Item> moduleItems;
     private List<Subtitle> subtitleList;
 
     public SecondScreenFragment() {
@@ -66,6 +75,21 @@ public class SecondScreenFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_COURSE)) {
+                course = savedInstanceState.getParcelable(KEY_COURSE);
+            }
+            if (savedInstanceState.containsKey(KEY_MODULE)) {
+                module = savedInstanceState.getParcelable(KEY_MODULE);
+            }
+            if (savedInstanceState.containsKey(KEY_ITEM)) {
+                item = savedInstanceState.getParcelable(KEY_ITEM);
+            }
+            if (savedInstanceState.containsKey(KEY_SUBTITLES)) {
+                subtitleList = savedInstanceState.getParcelableArrayList(KEY_SUBTITLES);
+            }
+        }
     }
 
     @Override
@@ -89,13 +113,17 @@ public class SecondScreenFragment extends Fragment {
     }
 
     public void onEventMainThread(SecondScreenManager.SecondScreenNewVideoEvent event) {
+        if (item == null || !item.equals(event.getItem())) {
+            subtitleList = null;
+        }
+
+        course = event.getCourse();
+        module = event.getModule();
         item = event.getItem();
+
         Log.d(TAG, "New SecondScreenNewVideoEvent for " + item.title);
 
         if (cardVideo != null) {
-            moduleItems = null;
-            subtitleList = null;
-
             if (cardVideo.getVisibility() == View.VISIBLE) {
                 // for animation
                 cardVideo.setVisibility(View.GONE);
@@ -103,7 +131,7 @@ public class SecondScreenFragment extends Fragment {
             cardVideo.setVisibility(View.VISIBLE);
             textVideoTitle.setText(item.title);
 
-            textVideoTime.setText(getTimeString(item.detail.minutes, item.detail.seconds));
+            textVideoTime.setText(TimeUtil.getTimeString(item.detail.minutes, item.detail.seconds));
 
             ImageController.load(item.detail.stream.poster, imageVideoPoster);
 
@@ -128,13 +156,12 @@ public class SecondScreenFragment extends Fragment {
             final View viewQuiz = addQuizAction();
             final View viewPinboard = addPinboardAction();
 
+            ItemModel itemModel = new ItemModel(GlobalApplication.getInstance().getJobManager());
 
             // pdf
             if (!"".equals(item.detail.slides_url)) {
                 viewPdf.setVisibility(View.VISIBLE);
             }
-
-            ItemModel itemModel = new ItemModel(GlobalApplication.getInstance().getJobManager());
 
             // transcript
             if (subtitleList == null) {
@@ -156,35 +183,29 @@ public class SecondScreenFragment extends Fragment {
             }
 
             // quiz
-            if (moduleItems == null) {
-                Result<List<Item>> result = new Result<List<Item>>() {
-                    @Override
-                    protected void onSuccess(List<Item> result, DataSource dataSource) {
-                        moduleItems = result;
-                        int itemIndex = moduleItems.indexOf(item);
+            if (module != null && module.items != null) {
+                int itemIndex = module.items.indexOf(item);
 
-                        Item nextItem = null;
-                        if (itemIndex + 1 < moduleItems.size()) {
-                            nextItem = moduleItems.get(itemIndex + 1);
-                        }
-
-                        if (nextItem != null && Item.EXERCISE_TYPE_SELFTEST.equals(nextItem.exercise_type)) {
-                            viewQuiz.setVisibility(View.VISIBLE);
-                        }
-                    }
-                };
-
-                itemModel.getItems(result, message.payload().get("course_id"), message.payload().get("section_id"));
-            } else {
-                int itemIndex = moduleItems.indexOf(item);
-
-                Item nextItem = null;
-                if (itemIndex + 1 < moduleItems.size()) {
-                    nextItem = moduleItems.get(itemIndex + 1);
+                final Item nextItem;
+                if (itemIndex + 1 < module.items.size()) {
+                    nextItem = module.items.get(itemIndex + 1);
+                } else {
+                    nextItem = null;
                 }
 
                 if (nextItem != null && Item.EXERCISE_TYPE_SELFTEST.equals(nextItem.exercise_type)) {
                     viewQuiz.setVisibility(View.VISIBLE);
+                    viewQuiz.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                            intent.putExtra(WebViewActivity.ARG_URL, Config.URI + "go/items/" + nextItem.id);
+                            intent.putExtra(WebViewActivity.ARG_TITLE, item.title);
+                            intent.putExtra(WebViewActivity.ARG_IN_APP_LINKS, true);
+                            intent.putExtra(WebViewActivity.ARG_EXTERNAL_LINKS, false);
+                            startActivity(intent);
+                        }
+                    });
                 }
             }
 
@@ -204,11 +225,10 @@ public class SecondScreenFragment extends Fragment {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra(WebViewActivity.ARG_URL, Config.URI + "go/items/" + item.id);
-                intent.putExtra(WebViewActivity.ARG_TITLE, item.title);
-                intent.putExtra(WebViewActivity.ARG_IN_APP_LINKS, true);
-                intent.putExtra(WebViewActivity.ARG_EXTERNAL_LINKS, false);
+                Intent intent = new Intent(getActivity(), SlideViewerActivity.class);
+                intent.putExtra(SlideViewerActivity.ARG_COURSE, (Parcelable) course);
+                intent.putExtra(SlideViewerActivity.ARG_MODULE, (Parcelable) module);
+                intent.putExtra(SlideViewerActivity.ARG_ITEM, (Parcelable) item);
                 startActivity(intent);
             }
         });
@@ -227,11 +247,9 @@ public class SecondScreenFragment extends Fragment {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra(WebViewActivity.ARG_URL, Config.URI + "go/items/" + item.id);
-                intent.putExtra(WebViewActivity.ARG_TITLE, item.title);
-                intent.putExtra(WebViewActivity.ARG_IN_APP_LINKS, true);
-                intent.putExtra(WebViewActivity.ARG_EXTERNAL_LINKS, false);
+                Intent intent = new Intent(getActivity(), TranscriptViewerActivity.class);
+                intent.putExtra(TranscriptViewerActivity.ARG_ITEM, (Parcelable) item);
+                intent.putParcelableArrayListExtra(TranscriptViewerActivity.ARG_SUBTITLES, (ArrayList<? extends Parcelable>) subtitleList);
                 startActivity(intent);
             }
         });
@@ -246,18 +264,6 @@ public class SecondScreenFragment extends Fragment {
                 R.string.icon_selftest);
         view.setVisibility(View.GONE);
         layoutVideoActions.addView(view);
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra(WebViewActivity.ARG_URL, Config.URI + "go/items/" + item.id);
-                intent.putExtra(WebViewActivity.ARG_TITLE, item.title);
-                intent.putExtra(WebViewActivity.ARG_IN_APP_LINKS, true);
-                intent.putExtra(WebViewActivity.ARG_EXTERNAL_LINKS, false);
-                startActivity(intent);
-            }
-        });
 
         return view;
     }
@@ -308,17 +314,18 @@ public class SecondScreenFragment extends Fragment {
 
         if (event.getWebSocketMessage().payload().containsKey("current_time")) {
             textVideoTime.setText(
-                    getTimeStringForSeconds((int) Float.parseFloat(event.getWebSocketMessage().payload().get("current_time"))) +
-                            " / " +
-                            getTimeString(item.detail.minutes, item.detail.seconds)
+                    TimeUtil.getTimeString(TimeUtil.secondsToMillis(event.getWebSocketMessage().payload().get("current_time"))) +
+                    " / " +
+                    TimeUtil.getTimeString(item.detail.minutes, item.detail.seconds)
             );
         }
 
         if (cardVideo != null && event.getWebSocketMessage().action().equals("video_close")) {
             cardVideo.setVisibility(View.GONE);
 
+            course = null;
+            module = null;
             item = null;
-            moduleItems = null;
             subtitleList = null;
         }
     }
@@ -337,31 +344,21 @@ public class SecondScreenFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    private String getTimeStringForMillis(int millis) {
-        return String.format(Locale.US, "%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(millis),
-                TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-        );
-    }
-
-    private String getTimeString(String minutes, String seconds) {
-        try {
-            return String.format(Locale.US, "%02d:%02d",
-                    Integer.valueOf(minutes),
-                    Integer.valueOf(seconds)
-            );
-        } catch (Exception e) {
-            return "--:--";
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (course != null) {
+            outState.putParcelable(KEY_COURSE, course);
         }
-    }
-
-    private String getTimeStringForSeconds(int seconds) {
-        return String.format(Locale.US, "%02d:%02d",
-                TimeUnit.SECONDS.toMinutes(seconds),
-                TimeUnit.SECONDS.toSeconds(seconds) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(seconds))
-        );
+        if (module != null) {
+            outState.putParcelable(KEY_MODULE, module);
+        }
+        if (item != null) {
+            outState.putParcelable(KEY_ITEM, item);
+        }
+        if (subtitleList != null) {
+            outState.putParcelableArrayList(KEY_SUBTITLES, (ArrayList<Subtitle>) subtitleList);
+        }
+        super.onSaveInstanceState(outState);
     }
 
 }

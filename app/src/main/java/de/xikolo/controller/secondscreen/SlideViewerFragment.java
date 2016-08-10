@@ -23,8 +23,13 @@ import java.io.File;
 import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.Module;
 import de.xikolo.managers.WebSocketManager;
+import de.xikolo.model.DownloadModel;
 import de.xikolo.util.ToastUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -42,83 +47,107 @@ public class SlideViewerFragment extends Fragment {
 
     private ViewPager viewPager;
 
+    private DownloadModel downloadModel;
+
+    private Course course;
+    private Module module;
+    private Item item;
+
+    public static final String ARG_COURSE = "arg_course";
+    public static final String ARG_MODULE = "arg_module";
+    public static final String ARG_ITEM = "arg_item";
+
     public SlideViewerFragment() {
         // Required empty public constructor
     }
 
-    public static SlideViewerFragment newInstance() {
-        return new SlideViewerFragment();
+    public static SlideViewerFragment newInstance(Course course, Module module, Item item) {
+        SlideViewerFragment fragment = new SlideViewerFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_COURSE, course);
+        args.putParcelable(ARG_MODULE, module);
+        args.putParcelable(ARG_ITEM, item);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            course = getArguments().getParcelable(ARG_COURSE);
+            module = getArguments().getParcelable(ARG_MODULE);
+            item = getArguments().getParcelable(ARG_ITEM);
+        }
+
+        downloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_second_screen, container, false);
+        return inflater.inflate(R.layout.fragment_slide_viewer, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        buttonPrev = view.findViewById(R.id.buttonPrev);
-        buttonNext = view.findViewById(R.id.buttonNext);
+//        buttonPrev = view.findViewById(R.id.buttonPrev);
+//        buttonNext = view.findViewById(R.id.buttonNext);
+//
+//        textPage = (TextView) view.findViewById(R.id.textPage);
+//
+//        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+//        viewPager.setAdapter(new PdfSlidesPagerAdapter(getContext(), renderer));
 
-        textPage = (TextView) view.findViewById(R.id.textPage);
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                textPage.setText((position + 1) + "/" + renderer.getPageCount());
+//                if (position == 0) {
+//                    buttonPrev.setVisibility(View.GONE);
+//                } else {
+//                    buttonPrev.setVisibility(View.VISIBLE);
+//                }
+//                if (position == renderer.getPageCount() - 1) {
+//                    buttonNext.setVisibility(View.GONE);
+//                } else {
+//                    buttonNext.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
 
-        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        viewPager.setAdapter(new PdfSlidesPagerAdapter(getContext(), renderer));
+//        textPage.setText((viewPager.getCurrentItem() + 1) + "/" + renderer.getPageCount());
+//        buttonPrev.setVisibility(View.GONE);
+//
+//        buttonPrev.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (viewPager.getCurrentItem() > 0) {
+//                    viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+//                }
+//            }
+//        });
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                textPage.setText((position + 1) + "/" + renderer.getPageCount());
-                if (position == 0) {
-                    buttonPrev.setVisibility(View.GONE);
-                } else {
-                    buttonPrev.setVisibility(View.VISIBLE);
-                }
-                if (position == renderer.getPageCount() - 1) {
-                    buttonNext.setVisibility(View.GONE);
-                } else {
-                    buttonNext.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        textPage.setText((viewPager.getCurrentItem() + 1) + "/" + renderer.getPageCount());
-        buttonPrev.setVisibility(View.GONE);
-
-        buttonPrev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (viewPager.getCurrentItem() > 0) {
-                    viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-                }
-            }
-        });
-
-        buttonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (viewPager.getCurrentItem() < renderer.getPageCount()) {
-                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-                }
-            }
-        });
+//        buttonNext.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (viewPager.getCurrentItem() < renderer.getPageCount()) {
+//                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+//                }
+//            }
+//        });
 
     }
 

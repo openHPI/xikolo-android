@@ -232,9 +232,11 @@ public class GlobalApplication extends Application {
     }
 
     public void configureSecondScreenManager() {
-        synchronized (GlobalApplication.class) {
-            if (secondScreenManager == null) {
-                secondScreenManager = new SecondScreenManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            synchronized (GlobalApplication.class) {
+                if (secondScreenManager == null) {
+                    secondScreenManager = new SecondScreenManager();
+                }
             }
         }
     }

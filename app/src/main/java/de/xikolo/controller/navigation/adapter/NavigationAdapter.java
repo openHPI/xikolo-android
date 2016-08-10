@@ -22,7 +22,7 @@ import de.xikolo.model.CourseModel;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.BuildFlavor;
 import de.xikolo.util.Config;
-import de.xikolo.util.StatusBarUtil;
+import de.xikolo.util.AndroidDimenUtil;
 import de.xikolo.view.CustomFontTextView;
 
 public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.BaseNavigationViewHolder> {
@@ -267,7 +267,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
         private void setStatusBarPadding(View view) {
             view.setPadding(view.getPaddingLeft(),
-                    StatusBarUtil.getHeight() + view.getPaddingTop(),
+                    AndroidDimenUtil.getStatusBarHeight() + view.getPaddingTop(),
                     view.getPaddingRight(),
                     view.getPaddingBottom());
         }

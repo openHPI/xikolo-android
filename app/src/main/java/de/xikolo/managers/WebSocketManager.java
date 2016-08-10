@@ -1,5 +1,7 @@
 package de.xikolo.managers;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.util.Log;
 
 import org.java_websocket.WebSocket;
@@ -13,12 +15,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.WebSocketMessage;
 import de.xikolo.data.parser.GsonHelper;
+import de.xikolo.model.UserModel;
 import de.xikolo.model.events.Event;
+import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.util.Config;
 
-
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class WebSocketManager {
 
     public static final String TAG = WebSocketManager.class.getSimpleName();
@@ -30,6 +35,8 @@ public class WebSocketManager {
     public WebSocketManager(String uri) {
         try {
             this.uri = new URI(uri);
+
+            EventBus.getDefault().register(this);
         } catch (URISyntaxException e) {
             Log.e(TAG, e.getMessage(), e);
         }
@@ -94,6 +101,12 @@ public class WebSocketManager {
 
     private boolean isConnecting() {
         return webSocketClient != null && webSocketClient.getReadyState() == WebSocket.READYSTATE.CONNECTING;
+    }
+
+    public void onEvent(NetworkStateEvent event) {
+        if (event.isOnline() && UserModel.isLoggedIn(GlobalApplication.getInstance())) {
+            initConnection(UserModel.getToken(GlobalApplication.getInstance()));
+        }
     }
 
     public static class WebSocketConnectedEvent extends Event {}

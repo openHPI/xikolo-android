@@ -90,7 +90,7 @@ public class RetrieveModulesWithItemsJob extends Job {
                     if (Config.DEBUG) Log.i(TAG, "Modules received (" + modules.size() + ")");
 
                     for (Module module : modules) {
-                        moduleDataAccess.addOrUpdateModule(course, module, includeProgress);
+                        moduleDataAccess.addOrUpdateModule(course.id, module, includeProgress);
                     }
 
                     for (Module module : modules) {

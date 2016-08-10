@@ -8,6 +8,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @AutoValue
 public abstract class Subtitle implements Parcelable {
@@ -24,6 +25,16 @@ public abstract class Subtitle implements Parcelable {
 
     public static TypeAdapter<Subtitle> typeAdapter(Gson gson) {
         return new AutoValue_Subtitle.GsonTypeAdapter(gson);
+    }
+
+    public int getTextPosition(long millis) {
+        for (int i = 0; i < textList().size(); i++) {
+            Text text = textList().get(i);
+            if (text.startAsMillis() <= millis && millis < text.endAsMillis()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @AutoValue
@@ -50,6 +61,27 @@ public abstract class Subtitle implements Parcelable {
 
         public static TypeAdapter<Text> typeAdapter(Gson gson) {
             return new AutoValue_Subtitle_Text.GsonTypeAdapter(gson);
+        }
+
+        public long startAsMillis() {
+            return convertToMillis(start());
+        }
+
+        public long endAsMillis() {
+            return convertToMillis(end());
+        }
+
+        private long convertToMillis(String time) {
+            String[] timeUnits = time.split("[:\\.]");
+
+            long millis = 0;
+
+            millis += TimeUnit.HOURS.toMillis(Long.parseLong(timeUnits[0]));
+            millis += TimeUnit.MINUTES.toMillis(Long.parseLong(timeUnits[1]));
+            millis += TimeUnit.SECONDS.toMillis(Long.parseLong(timeUnits[2]));
+            millis += TimeUnit.MILLISECONDS.toMillis(Long.parseLong(timeUnits[3]));
+
+            return millis;
         }
 
     }

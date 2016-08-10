@@ -7,6 +7,7 @@
     <color name="text_light_26">#1f000000</color>
 
     <color name="background_main">#fff3f3f3</color>
+    <color name="background_light_gray">#cacaca</color>
 
     <color name="video_overlay_gradient_black">#99000000</color>
     <color name="video_overlay_button">#ccffffff</color>

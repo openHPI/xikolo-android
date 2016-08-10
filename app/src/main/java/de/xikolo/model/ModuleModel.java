@@ -8,6 +8,7 @@ import java.util.List;
 
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
+import de.xikolo.model.jobs.RetrieveModuleWithItemsJob;
 import de.xikolo.model.jobs.RetrieveModulesJob;
 import de.xikolo.model.jobs.RetrieveModulesWithItemsJob;
 
@@ -44,6 +45,18 @@ public class ModuleModel extends BaseModel {
         });
 
         mJobManager.addJobInBackground(new RetrieveModulesWithItemsJob(result, course, includeProgress));
+    }
+
+    public void getModuleWithItems(Result<Module> result, String courseId, String moduleId) {
+        result.setResultFilter(result.new ResultFilter() {
+            @Override
+            public Module onFilter(Module result, Result.DataSource dataSource) {
+                ItemModel.sortItems(result.items);
+                return result;
+            }
+        });
+
+        mJobManager.addJobInBackground(new RetrieveModuleWithItemsJob(result, courseId, moduleId));
     }
 
     public static void sortModules(List<Module> modules) {

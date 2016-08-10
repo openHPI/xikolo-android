@@ -15,7 +15,7 @@ public class LanguageUtil {
             case "cn":
                 return context.getString(R.string.lang_zh);
             default:
-                return null;
+                return code;
         }
     }
 

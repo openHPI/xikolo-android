@@ -186,6 +186,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.SecondScreenActivity" />
         </activity>
+        <activity
+            android:name=".controller.secondscreen.SlideViewerActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controller.SecondScreenActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controller.SecondScreenActivity" />
+        </activity>
+        <activity
+            android:name=".controller.secondscreen.TranscriptViewerActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controller.SecondScreenActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controller.SecondScreenActivity" />
+        </activity>
 
         <activity
             android:name="com.google.android.libraries.cast.companionlibrary.cast.player.VideoCastControllerActivity"

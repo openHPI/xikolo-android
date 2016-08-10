@@ -29,6 +29,7 @@
     <!-- -->
     <string name="action_refresh">Refresh</string>
     <string name="action_unenroll">Un-enroll</string>
+    <string name="action_language">Change language</string>
 
     <!-- -->
     <string name="tab_learnings">Learnings</string>
@@ -201,6 +202,9 @@
 
     <string name="second_screen_survey_title">Survey</string>
     <string name="second_screen_survey_text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+
+    <string name="second_screen_slides">Slides</string>
+    <string name="second_screen_transcript">Transcript</string>
 
     <!-- -->
     <string name="lang_en">English</string>

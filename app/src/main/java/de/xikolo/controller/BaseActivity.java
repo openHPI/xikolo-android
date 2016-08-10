@@ -184,7 +184,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         EventBus.getDefault().registerSticky(this);
 
-        if (UserModel.isLoggedIn(this)) {
+        if (UserModel.isLoggedIn(this) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             globalApplication.getWebSocketManager().initConnection(UserModel.getToken(this));
         }
     }
