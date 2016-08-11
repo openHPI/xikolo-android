@@ -71,8 +71,12 @@ public class RetrieveItemDetailJob extends Job {
                     .getDataAccessFactory().getItemDataAccess();
             if (itemType.equals(Item.TYPE_VIDEO)) {
                 Item item = itemDataAccess.getItem(itemId);
-                item.detail = videoDataAccess.getVideo(item.id);
-                result.success(item, Result.DataSource.LOCAL);
+                if (item != null) {
+                    item.detail = videoDataAccess.getVideo(itemId);
+                    if (item.detail != null) {
+                        result.success(item, Result.DataSource.LOCAL);
+                    }
+                }
             }
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
@@ -92,6 +96,7 @@ public class RetrieveItemDetailJob extends Job {
                     if (Config.DEBUG) Log.i(TAG, "ItemDetail received");
 
                     if (itemType.equals(Item.TYPE_VIDEO)) {
+                        itemDataAccess.addOrUpdateItem(moduleId, item);
                         videoDataAccess.addOrUpdateVideo((VideoItemDetail) item.detail);
                         // get local video progress, if available
                         item.detail = videoDataAccess.getVideo(item.id);

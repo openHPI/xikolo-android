@@ -59,9 +59,13 @@ public class RetrieveModuleWithItemsJob extends Job {
             ItemDataAccess itemDataAccess = dataAccessFactory.getItemDataAccess();
 
             Module localModule = moduleDataAccess.getModule(moduleId);
-            localModule.items = itemDataAccess.getAllItemsForModule(moduleId);
+            if (localModule != null) {
+                localModule.items = itemDataAccess.getAllItemsForModule(moduleId);
+            }
 
-            result.success(localModule, Result.DataSource.LOCAL);
+            if (localModule != null && localModule.items != null) {
+                result.success(localModule, Result.DataSource.LOCAL);
+            }
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
                 Type type = new TypeToken<Module>(){}.getType();

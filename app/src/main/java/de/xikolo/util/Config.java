@@ -124,6 +124,6 @@ public class Config {
 
     public static final String LANALYTICS = "tracking-events/";
 
-    public static final String WEBSOCKET = null;
+    public static final String WEBSOCKET = "wss://" + HOST + "/ws";
 
 }

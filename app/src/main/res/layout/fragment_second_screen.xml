@@ -51,7 +51,7 @@
                         android:maxLines="1"
                         android:text="@string/second_screen_introduction_title"
                         android:textColor="@color/white"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
 
                     <de.xikolo.view.CustomFontTextView
                         android:id="@+id/text_second_screen_icon"
@@ -62,7 +62,7 @@
                         android:paddingLeft="@dimen/activity_vertical_margin"
                         android:text="@string/icon_second_screen"
                         android:textColor="@color/white"
-                        android:textSize="26sp"
+                        android:textSize="24sp"
                         app:customFont="materialdesign.ttf" />
 
                 </RelativeLayout>
@@ -103,67 +103,56 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <FrameLayout
-                    android:id="@+id/layout_video_poster"
+                <ImageView
+                    android:id="@+id/image_video_poster"
+                    android:layout_width="fill_parent"
+                    android:layout_height="160dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center_horizontal|top"
+                    android:background="@drawable/gradient_default_image"
+                    android:scaleType="centerCrop" />
+
+                <RelativeLayout
+                    android:id="@+id/layout_video_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true">
+                    android:layout_below="@+id/image_video_poster">
 
-                    <ImageView
-                        android:id="@+id/image_video_poster"
-                        android:layout_width="fill_parent"
-                        android:layout_height="160dp"
-                        android:layout_gravity="center_horizontal|top"
-                        android:background="@drawable/gradient_default_image"
-                        android:scaleType="centerCrop" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:layout_gravity="bottom"
-                        android:background="@drawable/gradient_black_transparent_bottom" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/text_video_title"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom">
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/text_video_time"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingBottom="@dimen/activity_horizontal_margin"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:paddingTop="@dimen/activity_horizontal_margin"
+                        android:textColor="@color/apptheme_second"
+                        android:textSize="20sp" />
 
-                        <TextView
-                            android:id="@+id/text_video_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentLeft="true"
-                            android:layout_toLeftOf="@+id/text_video_time"
-                            android:ellipsize="end"
-                            android:fontFamily="sans-serif-medium"
-                            android:maxLines="1"
-                            android:paddingBottom="8dp"
-                            android:paddingLeft="@dimen/activity_vertical_margin"
-                            android:textColor="@color/white"
-                            android:textSize="20sp" />
+                    <TextView
+                        android:id="@+id/text_video_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:paddingBottom="@dimen/activity_horizontal_margin"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:paddingRight="@dimen/activity_vertical_margin"
+                        android:paddingTop="@dimen/activity_horizontal_margin"
+                        android:textColor="@color/apptheme_second"
+                        android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/text_video_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentRight="true"
-                            android:paddingBottom="8dp"
-                            android:paddingLeft="@dimen/activity_vertical_margin"
-                            android:paddingRight="@dimen/activity_vertical_margin"
-                            android:textColor="@color/white"
-                            android:textSize="16sp" />
-
-                    </RelativeLayout>
-
-                </FrameLayout>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_video_actions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/layout_video_poster"
+                    android:layout_below="@+id/layout_video_title"
                     android:animateLayoutChanges="true"
                     android:divider="@drawable/list_divider"
                     android:orientation="vertical"
@@ -214,7 +203,7 @@
                         android:maxLines="1"
                         android:text="@string/second_screen_survey_title"
                         android:textColor="@color/white"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
 
                     <de.xikolo.view.CustomFontTextView
                         android:id="@+id/text_survey_icon"
@@ -225,7 +214,7 @@
                         android:paddingLeft="@dimen/activity_vertical_margin"
                         android:text="@string/icon_survey"
                         android:textColor="@color/white"
-                        android:textSize="26sp"
+                        android:textSize="24sp"
                         app:customFont="xikolo.ttf" />
 
                 </RelativeLayout>

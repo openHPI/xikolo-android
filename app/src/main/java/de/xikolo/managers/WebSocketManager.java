@@ -4,7 +4,10 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.util.Log;
 
+import com.google.gson.JsonSyntaxException;
+
 import org.java_websocket.WebSocket;
+import org.java_websocket.client.DefaultSSLWebSocketClientFactory;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.handshake.ServerHandshake;
@@ -14,14 +17,19 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.net.ssl.SSLContext;
+
 import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.WebSocketMessage;
 import de.xikolo.data.parser.GsonHelper;
 import de.xikolo.model.UserModel;
 import de.xikolo.model.events.Event;
+import de.xikolo.model.events.LoginEvent;
+import de.xikolo.model.events.LogoutEvent;
 import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.util.Config;
+import de.xikolo.util.NetworkUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class WebSocketManager {
@@ -60,9 +68,13 @@ public class WebSocketManager {
                 @Override
                 public void onMessage(String message) {
                     if (Config.DEBUG) {
-                        Log.d(TAG, "WebSocket received message: " + message);
+//                        Log.d(TAG, "WebSocket received message: " + message);
                     }
-                    EventBus.getDefault().post(new WebSocketMessageEvent(message));
+                    try {
+                        EventBus.getDefault().post(new WebSocketMessageEvent(message));
+                    } catch (JsonSyntaxException e) {
+                        Log.e(TAG, "Couldn't parse WebSocket message: " + e.getMessage());
+                    }
                 }
 
                 @Override
@@ -77,7 +89,21 @@ public class WebSocketManager {
                     EventBus.getDefault().post(new WebSocketClosedEvent());
                 }
             };
-            webSocketClient.connect();
+
+            try {
+                SSLContext sc = SSLContext.getInstance("TLS");
+                sc.init(null, null, null);
+                webSocketClient.setWebSocketFactory(new DefaultSSLWebSocketClientFactory(sc));
+                webSocketClient.connect();
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        }
+    }
+
+    public void closeConnection() {
+        if (isConnected()) {
+            webSocketClient.close();
         }
     }
 
@@ -107,6 +133,16 @@ public class WebSocketManager {
         if (event.isOnline() && UserModel.isLoggedIn(GlobalApplication.getInstance())) {
             initConnection(UserModel.getToken(GlobalApplication.getInstance()));
         }
+    }
+
+    public void onEvent(LoginEvent event) {
+        if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+            initConnection(UserModel.getToken(GlobalApplication.getInstance()));
+        }
+    }
+
+    public void onEvent(LogoutEvent event) {
+        closeConnection();
     }
 
     public static class WebSocketConnectedEvent extends Event {}

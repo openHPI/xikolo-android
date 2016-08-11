@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,12 +24,15 @@ import java.io.IOException;
 import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controller.dialogs.DownloadSlidesDialog;
+import de.xikolo.controller.dialogs.ProgressDialog;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
-import de.xikolo.managers.WebSocketManager;
+import de.xikolo.data.entities.VideoItemDetail;
+import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.model.DownloadModel;
-import de.xikolo.util.ToastUtil;
+import de.xikolo.model.events.DownloadCompletedEvent;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SlideViewerFragment extends Fragment {
@@ -49,9 +51,11 @@ public class SlideViewerFragment extends Fragment {
 
     private DownloadModel downloadModel;
 
+    private ProgressDialog progressDialog;
+
     private Course course;
     private Module module;
-    private Item item;
+    private Item<VideoItemDetail> item;
 
     public static final String ARG_COURSE = "arg_course";
     public static final String ARG_MODULE = "arg_module";
@@ -93,62 +97,91 @@ public class SlideViewerFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        buttonPrev = view.findViewById(R.id.buttonPrev);
-//        buttonNext = view.findViewById(R.id.buttonNext);
-//
-//        textPage = (TextView) view.findViewById(R.id.textPage);
-//
-//        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-//        viewPager.setAdapter(new PdfSlidesPagerAdapter(getContext(), renderer));
+        buttonPrev = view.findViewById(R.id.buttonPrev);
+        buttonNext = view.findViewById(R.id.buttonNext);
 
-//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                textPage.setText((position + 1) + "/" + renderer.getPageCount());
-//                if (position == 0) {
-//                    buttonPrev.setVisibility(View.GONE);
-//                } else {
-//                    buttonPrev.setVisibility(View.VISIBLE);
-//                }
-//                if (position == renderer.getPageCount() - 1) {
-//                    buttonNext.setVisibility(View.GONE);
-//                } else {
-//                    buttonNext.setVisibility(View.VISIBLE);
-//                }
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
+        textPage = (TextView) view.findViewById(R.id.textPage);
 
-//        textPage.setText((viewPager.getCurrentItem() + 1) + "/" + renderer.getPageCount());
-//        buttonPrev.setVisibility(View.GONE);
-//
-//        buttonPrev.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (viewPager.getCurrentItem() > 0) {
-//                    viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-//                }
-//            }
-//        });
+        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
-//        buttonNext.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (viewPager.getCurrentItem() < renderer.getPageCount()) {
-//                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-//                }
-//            }
-//        });
+        if (downloadModel.downloadExists(DownloadModel.DownloadFileType.SLIDES, course, module, item)) {
+            initSlidesViewer();
+        } else {
+            DownloadSlidesDialog dialog = DownloadSlidesDialog.getInstance();
+            dialog.setListener(new DownloadSlidesDialog.DownloadSlidesDialogListener() {
+                @Override
+                public void onDialogPositiveClick() {
+                    downloadModel.startDownload(item.detail.slides_url, DownloadModel.DownloadFileType.SLIDES, course, module, item);
+                    progressDialog = ProgressDialog.getInstance();
+                    progressDialog.show(getFragmentManager(), ProgressDialog.TAG);
+                }
 
+                @Override
+                public void onDialogNegativeClick() {
+                    SlideViewerFragment.this.getActivity().finish();
+                }
+            });
+            dialog.show(getFragmentManager(), DownloadSlidesDialog.TAG);
+        }
+    }
+
+    private void initSlidesViewer() {
+        try {
+            openRenderer();
+            viewPager.setAdapter(new PdfSlidesPagerAdapter(getContext(), renderer));
+
+            textPage.setText((viewPager.getCurrentItem() + 1) + "/" + renderer.getPageCount());
+
+            buttonPrev.setVisibility(View.GONE);
+
+            viewPager.clearOnPageChangeListeners();
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    textPage.setText((position + 1) + "/" + renderer.getPageCount());
+                    if (position == 0) {
+                        buttonPrev.setVisibility(View.GONE);
+                    } else {
+                        buttonPrev.setVisibility(View.VISIBLE);
+                    }
+                    if (position == renderer.getPageCount() - 1) {
+                        buttonNext.setVisibility(View.GONE);
+                    } else {
+                        buttonNext.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+            buttonPrev.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (viewPager.getCurrentItem() > 0) {
+                        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+                    }
+                }
+            });
+
+            buttonNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (viewPager.getCurrentItem() < renderer.getPageCount()) {
+                        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+                    }
+                }
+            });
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
     }
 
     @Override
@@ -164,8 +197,7 @@ public class SlideViewerFragment extends Fragment {
         try {
             openRenderer();
         } catch (IOException e) {
-            e.printStackTrace();
-            ToastUtil.show("Error! " + e.getMessage());
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -174,7 +206,7 @@ public class SlideViewerFragment extends Fragment {
         try {
             closeRenderer();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
         }
         super.onDetach();
     }
@@ -187,26 +219,40 @@ public class SlideViewerFragment extends Fragment {
     }
 
     private void openRenderer() throws IOException {
-        String path = Environment.getExternalStorageDirectory().getPath() + "/Download/test.pdf";
-        Log.d(TAG, "PDF test file path: " + path);
-        File file = new File(path);
-        renderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY));
+        if (downloadModel != null && downloadModel.downloadExists(DownloadModel.DownloadFileType.SLIDES, course, module, item)) {
+            File file = downloadModel.getDownloadFile(DownloadModel.DownloadFileType.SLIDES, course, module, item);
+            renderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY));
+        }
     }
 
     private void closeRenderer() throws IOException {
-        renderer.close();
+        if (renderer != null) {
+            renderer.close();
+        }
     }
 
-    public void onEventMainThread(WebSocketManager.WebSocketConnectedEvent event) {
-//        text.append("WebSocket connected\n");
+    @SuppressWarnings("unused")
+    public void onEventMainThread(SecondScreenManager.SecondScreenUpdateVideoEvent event) {
+        if (event.getItem().equals(item)) {
+            if (event.getWebSocketMessage().payload().containsKey("slide_number")) {
+                try {
+                    int number = Integer.parseInt(event.getWebSocketMessage().payload().get("slide_number"));
+                } catch (Exception e) {
+                    Log.e(TAG, "Couldn't parse Integer from " + event.getWebSocketMessage().payload().get("slide_number") + ": " + e.getMessage());
+                }
+            }
+        }
     }
 
-    public void onEventMainThread(WebSocketManager.WebSocketClosedEvent event) {
-//        text.append("WebSocket closed\n");
-    }
-
-    public void onEventMainThread(WebSocketManager.WebSocketMessageEvent event) {
-//        text.append(event.getMessage() + "\n");
+    @SuppressWarnings("unused")
+    public void onEventMainThread(DownloadCompletedEvent event) {
+        if (event.getDownload().localUri.contains(item.id)
+                && DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri) == DownloadModel.DownloadFileType.SLIDES) {
+            if (progressDialog != null && progressDialog.getDialog().isShowing()) {
+                progressDialog.getDialog().cancel();
+            }
+            initSlidesViewer();
+        }
     }
 
     static class PdfSlidesPagerAdapter extends PagerAdapter {

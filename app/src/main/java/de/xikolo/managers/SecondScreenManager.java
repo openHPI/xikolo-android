@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
@@ -53,6 +52,8 @@ public class SecondScreenManager {
         itemModel = new ItemModel(GlobalApplication.getInstance().getJobManager());
 
         EventBus.getDefault().register(this);
+
+        isRequesting = false;
     }
 
     public void onEventBackgroundThread(WebSocketManager.WebSocketMessageEvent event) {
@@ -106,7 +107,7 @@ public class SecondScreenManager {
         final Result<Module> moduleResult = new Result<Module>() {
             @Override
             protected void onSuccess(Module module, DataSource dataSource) {
-                if (module != null && !module.equals(SecondScreenManager.this.module) && module.items != null) {
+                if (module != null && !module.equals(SecondScreenManager.this.module) && module.items != null && module.items.size() > 0) {
                     SecondScreenManager.this.module = module;
                     itemModel.getItemDetail(itemResult, course.id, module.id, message.payload().get("item_id"), Item.TYPE_VIDEO);
                 }
@@ -133,26 +134,25 @@ public class SecondScreenManager {
             }
         };
 
-        isRequesting = false;
-
-        if (item == null || !item.id.equals(message.payload().get("item_id")) && !isRequesting) {
-            // new video detected
-            Log.d(TAG, "new video detected");
-            course = null;
-            module = null;
-            courseModel.getCourse(courseResult, message.payload().get("course_id"));
-            isRequesting = true;
-        } else if (item != null && item.id.equals(message.payload().get("item_id"))) {
-            // post video updated event
-            EventBus.getDefault().post(new SecondScreenUpdateVideoEvent(course, module, item, message));
-
-            if (message.action().equals("video_close")) {
-                NotificationManager notificationManager = (NotificationManager) GlobalApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(NOTIFICATION_ID);
-
+        synchronized (GlobalApplication.class) {
+            if (!isRequesting && (item == null || !item.id.equals(message.payload().get("item_id")))) {
+                // new video detected
+                isRequesting = true;
                 course = null;
                 module = null;
-                item = null;
+                courseModel.getCourse(courseResult, message.payload().get("course_id"));
+            } else if (item != null && item.id.equals(message.payload().get("item_id"))) {
+                // post video updated event
+                EventBus.getDefault().post(new SecondScreenUpdateVideoEvent(course, module, item, message));
+
+                if (message.action().equals("video_close")) {
+                    NotificationManager notificationManager = (NotificationManager) GlobalApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(NOTIFICATION_ID);
+
+                    course = null;
+                    module = null;
+                    item = null;
+                }
             }
         }
     }

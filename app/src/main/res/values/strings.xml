@@ -72,6 +72,10 @@
     <string name="dialog_title_permissions">External storage access required</string>
     <string name="dialog_permissions">Please allow this app to access your external storage in order to use this functionality.</string>
 
+    <string name="dialog_download_slides_title">Download slides?</string>
+    <string name="dialog_download_slides_message">The slides file will be downloaded.</string>
+    <string name="dialog_download_slides_yes">Download</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -188,19 +192,19 @@
     <string name="settings_terms_of_use">Terms of Use</string>
 
     <!-- -->
-    <string name="second_screen_introduction_title">Try Second Screen</string>
+    <string name="second_screen_introduction_title">Try the new Second Screen!</string>
     <string name="second_screen_introduction_text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
 
-    <string name="second_screen_action_title_pdf_viewer">PDF Viewer</string>
-    <string name="second_screen_action_description_pdf_viewer">PDF Viewer Text</string>
+    <string name="second_screen_action_title_pdf_viewer">Slides Reader</string>
+    <string name="second_screen_action_description_pdf_viewer">Browse the lecture\'s slides</string>
     <string name="second_screen_action_title_quiz">Quiz</string>
-    <string name="second_screen_action_description_quiz">Quiz Text</string>
-    <string name="second_screen_action_title_pinboard">Pinboard</string>
-    <string name="second_screen_action_description_pinboard">Pinboard Text</string>
-    <string name="second_screen_action_title_transcript">Transcript</string>
-    <string name="second_screen_action_description_transcript">Transcript Text</string>
+    <string name="second_screen_action_description_quiz">Test your knowledge from this lecture</string>
+    <string name="second_screen_action_title_pinboard">Questions and Discussion</string>
+    <string name="second_screen_action_description_pinboard">Discover questions and discussions about this video</string>
+    <string name="second_screen_action_title_transcript">Interactive Transcript</string>
+    <string name="second_screen_action_description_transcript">Follow the speaker with interactive subtitles</string>
 
-    <string name="second_screen_survey_title">Survey</string>
+    <string name="second_screen_survey_title">How do you liked it?</string>
     <string name="second_screen_survey_text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
 
     <string name="second_screen_slides">Slides</string>

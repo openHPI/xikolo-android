@@ -20,8 +20,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:textColor="@color/apptheme_second"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:customFont="xikolo.ttf" />
 
     <TextView

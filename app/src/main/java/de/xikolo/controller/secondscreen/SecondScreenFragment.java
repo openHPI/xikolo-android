@@ -10,7 +10,6 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,8 +100,6 @@ public class SecondScreenFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Log.d(TAG, "onViewCreated");
-
         cardVideo = view.findViewById(R.id.card_video);
         textVideoTitle = (TextView) view.findViewById(R.id.text_video_title);
         textVideoTime = (TextView) view.findViewById(R.id.text_video_time);
@@ -121,29 +118,30 @@ public class SecondScreenFragment extends Fragment {
         module = event.getModule();
         item = event.getItem();
 
-        Log.d(TAG, "New SecondScreenNewVideoEvent for " + item.title);
+        if (course != null && module != null && item != null) {
 
-        if (cardVideo != null) {
-            if (cardVideo.getVisibility() == View.VISIBLE) {
-                // for animation
-                cardVideo.setVisibility(View.GONE);
+            if (cardVideo != null) {
+                if (cardVideo.getVisibility() == View.VISIBLE) {
+                    // for animation
+                    cardVideo.setVisibility(View.GONE);
+                }
+                cardVideo.setVisibility(View.VISIBLE);
+                textVideoTitle.setText(item.title);
+
+                textVideoTime.setText(TimeUtil.getTimeString(item.detail.minutes, item.detail.seconds));
+
+                ImageController.load(item.detail.stream.poster, imageVideoPoster);
+
+                initSeconScreenActions(event.getWebSocketMessage());
+
+                // clear notification, user is already here
+                NotificationManager notificationManager = (NotificationManager) GlobalApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(SecondScreenManager.NOTIFICATION_ID);
             }
-            cardVideo.setVisibility(View.VISIBLE);
-            textVideoTitle.setText(item.title);
 
-            textVideoTime.setText(TimeUtil.getTimeString(item.detail.minutes, item.detail.seconds));
-
-            ImageController.load(item.detail.stream.poster, imageVideoPoster);
-
-            initSeconScreenActions(event.getWebSocketMessage());
-
-            // clear notification, user is already here
-            NotificationManager notificationManager = (NotificationManager) GlobalApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(SecondScreenManager.NOTIFICATION_ID);
-        }
-
-        if (cardSurvey != null) {
-            cardSurvey.setVisibility(View.VISIBLE);
+            if (cardSurvey != null) {
+                cardSurvey.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -308,8 +306,6 @@ public class SecondScreenFragment extends Fragment {
     }
 
     public void onEventMainThread(SecondScreenManager.SecondScreenUpdateVideoEvent event) {
-        Log.d(TAG, "Update SecondScreenNewVideoEvent for " + event.getWebSocketMessage().action());
-
         item = event.getItem();
 
         if (event.getWebSocketMessage().payload().containsKey("current_time")) {
