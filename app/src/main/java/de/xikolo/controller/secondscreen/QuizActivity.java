@@ -4,25 +4,31 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import java.util.List;
-
 import de.xikolo.R;
 import de.xikolo.controller.BaseActivity;
+import de.xikolo.controller.WebViewFragment;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
-import de.xikolo.data.entities.Subtitle;
 import de.xikolo.util.LanalyticsUtil;
 
-public class TranscriptViewerActivity extends BaseActivity {
+public class QuizActivity extends BaseActivity {
 
-    public static final String TAG = TranscriptViewerActivity.class.getSimpleName();
+    public static final String TAG = QuizActivity.class.getSimpleName();
+
+    public static final String ARG_TITLE = "arg_title";
+    public static final String ARG_URL = "arg_url";
+    public static final String ARG_IN_APP_LINKS = "arg_in_app_links";
+    public static final String ARG_EXTERNAL_LINKS = "arg_external_links";
+
+    private String title;
+    private String url;
+    private boolean inAppLinksEnabled;
+    private boolean externalLinksEnabled;
 
     public static final String ARG_COURSE = "arg_course";
     public static final String ARG_MODULE = "arg_module";
     public static final String ARG_ITEM = "arg_item";
-
-    public static final String ARG_SUBTITLES = "arg_subtitles";
 
     private Course course;
     private Module module;
@@ -31,23 +37,26 @@ public class TranscriptViewerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transcript);
+        setContentView(R.layout.activity_blank);
         setupActionBar();
 
         Bundle b = getIntent().getExtras();
-        course = b.getParcelable(ARG_COURSE);
-        module = b.getParcelable(ARG_MODULE);
-        item = b.getParcelable(ARG_ITEM);
-        List<Subtitle> subtitleList = b.getParcelableArrayList(ARG_SUBTITLES);
+        this.title = b.getString(ARG_TITLE);
+        this.url = b.getString(ARG_URL);
+        this.inAppLinksEnabled = b.getBoolean(ARG_IN_APP_LINKS);
+        this.externalLinksEnabled = b.getBoolean(ARG_EXTERNAL_LINKS);
+        this.course = b.getParcelable(ARG_COURSE);
+        this.module = b.getParcelable(ARG_MODULE);
+        this.item = b.getParcelable(ARG_ITEM);
 
-        setTitle(item.title + " - " + getString(R.string.second_screen_transcript));
+        setTitle(title);
 
         String tag = "content";
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, TranscriptViewerFragment.newInstance(item, subtitleList), tag);
+            transaction.replace(R.id.content, WebViewFragment.newInstance(url, inAppLinksEnabled, externalLinksEnabled), tag);
             transaction.commit();
         }
     }
@@ -57,7 +66,7 @@ public class TranscriptViewerActivity extends BaseActivity {
         super.onResume();
 
         if (course != null && module != null && item != null) {
-            LanalyticsUtil.trackSecondScreenTranscriptStart(item.id, course.id, module.id);
+            LanalyticsUtil.trackSecondScreenQuizStart(item.id, course.id, module.id);
         }
     }
 
@@ -66,7 +75,7 @@ public class TranscriptViewerActivity extends BaseActivity {
         super.onPause();
 
         if (course != null && module != null && item != null) {
-            LanalyticsUtil.trackSecondScreenTranscriptStop(item.id, course.id, module.id);
+            LanalyticsUtil.trackSecondScreenQuizStop(item.id, course.id, module.id);
         }
     }
 

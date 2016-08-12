@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -35,6 +36,7 @@ import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.Config;
+import de.xikolo.util.LanalyticsUtil;
 import de.xikolo.util.TimeUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -117,6 +119,16 @@ public class SecondScreenFragment extends Fragment {
 
         cardSurvey = view.findViewById(R.id.card_survey);
 
+        cardSurvey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                // TODO: set survey url
+                intent.setData(Uri.parse(Config.URI));
+                startActivity(intent);
+            }
+        });
+
         if (appPreferences.usedSecondScreen()) {
             cardSurvey.setVisibility(View.VISIBLE);
         }
@@ -166,7 +178,7 @@ public class SecondScreenFragment extends Fragment {
         if (layoutVideoActions != null) {
             layoutVideoActions.removeAllViews();
 
-            final View viewPdf = addPdfAction();
+            final View viewSlides = addSlidesAction();
             final View viewTranscript = addTranscriptAction();
             final View viewQuiz = addQuizAction();
             final View viewPinboard = addPinboardAction();
@@ -175,7 +187,7 @@ public class SecondScreenFragment extends Fragment {
 
             // pdf
             if (!"".equals(item.detail.slides_url)) {
-                viewPdf.setVisibility(View.VISIBLE);
+                viewSlides.setVisibility(View.VISIBLE);
             }
 
             // transcript
@@ -199,7 +211,7 @@ public class SecondScreenFragment extends Fragment {
 
             // quiz
             if (module != null && module.items != null) {
-                int itemIndex = module.items.indexOf(item);
+                final int itemIndex = module.items.indexOf(item);
 
                 final Item nextItem;
                 if (itemIndex + 1 < module.items.size()) {
@@ -213,12 +225,19 @@ public class SecondScreenFragment extends Fragment {
                     viewQuiz.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                            intent.putExtra(WebViewActivity.ARG_URL, Config.URI + "go/items/" + nextItem.id);
-                            intent.putExtra(WebViewActivity.ARG_TITLE, item.title + " - " + getString(R.string.second_screen_action_title_quiz));
-                            intent.putExtra(WebViewActivity.ARG_IN_APP_LINKS, true);
-                            intent.putExtra(WebViewActivity.ARG_EXTERNAL_LINKS, false);
+                            Intent intent = new Intent(getActivity(), QuizActivity.class);
+                            intent.putExtra(QuizActivity.ARG_URL, Config.URI + "go/items/" + nextItem.id);
+                            intent.putExtra(QuizActivity.ARG_TITLE, item.title + " - " + getString(R.string.second_screen_action_title_quiz));
+                            intent.putExtra(QuizActivity.ARG_IN_APP_LINKS, true);
+                            intent.putExtra(QuizActivity.ARG_EXTERNAL_LINKS, false);
+                            intent.putExtra(QuizActivity.ARG_ITEM, (Parcelable) item);
+                            intent.putExtra(QuizActivity.ARG_COURSE, (Parcelable) course);
+                            intent.putExtra(QuizActivity.ARG_MODULE, (Parcelable) module);
                             startActivity(intent);
+
+                            if (item != null && module != null && course != null) {
+                                LanalyticsUtil.trackVisitedSecondScreenQuiz(item.id, course.id, module.id);
+                            }
                         }
                     });
                 }
@@ -229,7 +248,7 @@ public class SecondScreenFragment extends Fragment {
         }
     }
 
-    private View addPdfAction() {
+    private View addSlidesAction() {
         View view = inflateSeconScreenAction(
                 R.string.second_screen_action_title_pdf_viewer,
                 R.string.second_screen_action_description_pdf_viewer,
@@ -245,6 +264,10 @@ public class SecondScreenFragment extends Fragment {
                 intent.putExtra(SlideViewerActivity.ARG_MODULE, (Parcelable) module);
                 intent.putExtra(SlideViewerActivity.ARG_ITEM, (Parcelable) item);
                 startActivity(intent);
+
+                if (item != null && module != null && course != null) {
+                    LanalyticsUtil.trackVisitedSecondScreenSlides(item.id, course.id, module.id);
+                }
             }
         });
 
@@ -264,8 +287,14 @@ public class SecondScreenFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), TranscriptViewerActivity.class);
                 intent.putExtra(TranscriptViewerActivity.ARG_ITEM, (Parcelable) item);
+                intent.putExtra(TranscriptViewerActivity.ARG_COURSE, (Parcelable) course);
+                intent.putExtra(TranscriptViewerActivity.ARG_MODULE, (Parcelable) module);
                 intent.putParcelableArrayListExtra(TranscriptViewerActivity.ARG_SUBTITLES, (ArrayList<? extends Parcelable>) subtitleList);
                 startActivity(intent);
+
+                if (item != null && module != null && course != null) {
+                    LanalyticsUtil.trackVisitedSecondScreenTranscript(item.id, course.id, module.id);
+                }
             }
         });
 
@@ -294,12 +323,19 @@ public class SecondScreenFragment extends Fragment {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra(WebViewActivity.ARG_URL, Config.URI + "go/items/" + item.id + "/pinboard");
-                intent.putExtra(WebViewActivity.ARG_TITLE, item.title + " - " + getString(R.string.tab_discussions));
-                intent.putExtra(WebViewActivity.ARG_IN_APP_LINKS, true);
-                intent.putExtra(WebViewActivity.ARG_EXTERNAL_LINKS, false);
+                Intent intent = new Intent(getActivity(), PinboardActivity.class);
+                intent.putExtra(QuizActivity.ARG_URL, Config.URI + "go/items/" + item.id + "/pinboard");
+                intent.putExtra(QuizActivity.ARG_TITLE, item.title + " - " + getString(R.string.tab_discussions));
+                intent.putExtra(QuizActivity.ARG_IN_APP_LINKS, true);
+                intent.putExtra(QuizActivity.ARG_EXTERNAL_LINKS, false);
+                intent.putExtra(QuizActivity.ARG_ITEM, (Parcelable) item);
+                intent.putExtra(QuizActivity.ARG_COURSE, (Parcelable) course);
+                intent.putExtra(QuizActivity.ARG_MODULE, (Parcelable) module);
                 startActivity(intent);
+
+                if (item != null && module != null && course != null) {
+                    LanalyticsUtil.trackVisitedSecondScreenPinboard(item.id, course.id, module.id);
+                }
             }
         });
 

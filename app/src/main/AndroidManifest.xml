@@ -179,7 +179,15 @@
                 android:value=".controller.MainActivity" />
         </activity>
         <activity
-            android:name=".controller.secondscreen.WebViewActivity"
+            android:name=".controller.secondscreen.QuizActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controller.SecondScreenActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controller.SecondScreenActivity" />
+        </activity>
+        <activity
+            android:name=".controller.secondscreen.PinboardActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controller.SecondScreenActivity">
             <meta-data

@@ -7,10 +7,14 @@ import android.support.v4.app.FragmentTransaction;
 import de.xikolo.R;
 import de.xikolo.controller.BaseActivity;
 import de.xikolo.controller.WebViewFragment;
+import de.xikolo.data.entities.Course;
+import de.xikolo.data.entities.Item;
+import de.xikolo.data.entities.Module;
+import de.xikolo.util.LanalyticsUtil;
 
-public class WebViewActivity extends BaseActivity {
+public class PinboardActivity extends BaseActivity {
 
-    public static final String TAG = WebViewActivity.class.getSimpleName();
+    public static final String TAG = PinboardActivity.class.getSimpleName();
 
     public static final String ARG_TITLE = "arg_title";
     public static final String ARG_URL = "arg_url";
@@ -21,6 +25,14 @@ public class WebViewActivity extends BaseActivity {
     private String url;
     private boolean inAppLinksEnabled;
     private boolean externalLinksEnabled;
+
+    public static final String ARG_COURSE = "arg_course";
+    public static final String ARG_MODULE = "arg_module";
+    public static final String ARG_ITEM = "arg_item";
+
+    private Course course;
+    private Module module;
+    private Item item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +45,9 @@ public class WebViewActivity extends BaseActivity {
         this.url = b.getString(ARG_URL);
         this.inAppLinksEnabled = b.getBoolean(ARG_IN_APP_LINKS);
         this.externalLinksEnabled = b.getBoolean(ARG_EXTERNAL_LINKS);
+        this.course = b.getParcelable(ARG_COURSE);
+        this.module = b.getParcelable(ARG_MODULE);
+        this.item = b.getParcelable(ARG_ITEM);
 
         setTitle(title);
 
@@ -43,6 +58,24 @@ public class WebViewActivity extends BaseActivity {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.content, WebViewFragment.newInstance(url, inAppLinksEnabled, externalLinksEnabled), tag);
             transaction.commit();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (course != null && module != null && item != null) {
+            LanalyticsUtil.trackSecondScreenPinboardStart(item.id, course.id, module.id);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (course != null && module != null && item != null) {
+            LanalyticsUtil.trackSecondScreenPinboardStop(item.id, course.id, module.id);
         }
     }
 

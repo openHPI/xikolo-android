@@ -246,6 +246,124 @@ public class LanalyticsUtil {
                 .build());
     }
 
+    public static void trackSecondScreenSlidesStart(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("SECOND_SCREEN_SLIDES_START")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
+
+    public static void trackSecondScreenSlidesStop(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("SECOND_SCREEN_SLIDES_STOP")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
+
+    public static void trackSecondScreenTranscriptStart(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("SECOND_SCREEN_TRANSCRIPT_START")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
+
+    public static void trackSecondScreenTranscriptStop(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("SECOND_SCREEN_TRANSCRIPT_STOP")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
+
+    public static void trackSecondScreenPinboardStart(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("SECOND_SCREEN_PINBOARD_START")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
+
+    public static void trackSecondScreenPinboardStop(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("SECOND_SCREEN_PINBOARD_STOP")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
+
+    public static void trackSecondScreenQuizStart(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("SECOND_SCREEN_QUIZ_START")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
+
+    public static void trackSecondScreenQuizStop(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("SECOND_SCREEN_QUIZ_STOP")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
+
+    public static void trackVisitedSecondScreenSlides(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("VISITED_SECOND_SCREEN_SLIDES")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
+
+    public static void trackVisitedSecondScreenTranscript(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("VISITED_SECOND_SCREEN_TRANSCRIPT")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .build());
+    }
+
+    public static void trackVisitedSecondScreenQuiz(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("VISITED_SECOND_SCREEN_QUIZ")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .build());
+    }
+
+    public static void trackVisitedSecondScreenPinboard(String videoId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(videoId, "video")
+                .setVerb("VISITED_SECOND_SCREEN_PINBOARD")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .build());
+    }
+
+
     public static void track(Lanalytics.Event event) {
         GlobalApplication application = GlobalApplication.getInstance();
         if (UserModel.isLoggedIn(application) && isTrackingEnabled()) {
