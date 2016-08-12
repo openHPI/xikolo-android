@@ -198,17 +198,21 @@
     <string name="second_screen_action_title_pdf_viewer">Slides Reader</string>
     <string name="second_screen_action_description_pdf_viewer">Browse the lecture\'s slides</string>
     <string name="second_screen_action_title_quiz">Quiz</string>
-    <string name="second_screen_action_description_quiz">Test your knowledge from this lecture</string>
+    <string name="second_screen_action_description_quiz">Test your knowledge from the lecture</string>
     <string name="second_screen_action_title_pinboard">Questions and Discussion</string>
-    <string name="second_screen_action_description_pinboard">Discover questions and discussions about this video</string>
+    <string name="second_screen_action_description_pinboard">Discover questions and discussions about the lecture</string>
     <string name="second_screen_action_title_transcript">Interactive Transcript</string>
-    <string name="second_screen_action_description_transcript">Follow the speaker with interactive subtitles</string>
+    <string name="second_screen_action_description_transcript">Follow the speaker with synchronized subtitles</string>
 
     <string name="second_screen_survey_title">How do you liked it?</string>
     <string name="second_screen_survey_text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
 
     <string name="second_screen_slides">Slides</string>
     <string name="second_screen_transcript">Transcript</string>
+
+    <string name="second_screen_no_video">No playing video discovered.</string>
+
+    <string name="second_screen_pdf_pager">Current Slide: %1$d</string>
 
     <!-- -->
     <string name="lang_en">English</string>

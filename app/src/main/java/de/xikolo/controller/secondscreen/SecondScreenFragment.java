@@ -30,6 +30,7 @@ import de.xikolo.data.entities.Module;
 import de.xikolo.data.entities.Subtitle;
 import de.xikolo.data.entities.VideoItemDetail;
 import de.xikolo.data.entities.WebSocketMessage;
+import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
@@ -44,6 +45,7 @@ public class SecondScreenFragment extends Fragment {
     private TextView textVideoTitle;
 
     private View cardVideo;
+    private View cardNoVideo;
 
     private ImageView imageVideoPoster;
 
@@ -62,6 +64,8 @@ public class SecondScreenFragment extends Fragment {
     private Module module;
     private Item<VideoItemDetail> item;
     private List<Subtitle> subtitleList;
+
+    private AppPreferences appPreferences;
 
     public SecondScreenFragment() {
         // Required empty public constructor
@@ -89,6 +93,8 @@ public class SecondScreenFragment extends Fragment {
                 subtitleList = savedInstanceState.getParcelableArrayList(KEY_SUBTITLES);
             }
         }
+
+        appPreferences = GlobalApplication.getInstance().getPreferencesFactory().getAppPreferences();
     }
 
     @Override
@@ -106,7 +112,14 @@ public class SecondScreenFragment extends Fragment {
         imageVideoPoster = (ImageView) view.findViewById(R.id.image_video_poster);
         layoutVideoActions = (LinearLayout) view.findViewById(R.id.layout_video_actions);
 
+        cardNoVideo = view.findViewById(R.id.card_no_video);
+        cardNoVideo.setVisibility(View.VISIBLE);
+
         cardSurvey = view.findViewById(R.id.card_survey);
+
+        if (appPreferences.usedSecondScreen()) {
+            cardSurvey.setVisibility(View.VISIBLE);
+        }
     }
 
     public void onEventMainThread(SecondScreenManager.SecondScreenNewVideoEvent event) {
@@ -125,6 +138,7 @@ public class SecondScreenFragment extends Fragment {
                     // for animation
                     cardVideo.setVisibility(View.GONE);
                 }
+                cardNoVideo.setVisibility(View.GONE);
                 cardVideo.setVisibility(View.VISIBLE);
                 textVideoTitle.setText(item.title);
 
@@ -141,6 +155,9 @@ public class SecondScreenFragment extends Fragment {
 
             if (cardSurvey != null) {
                 cardSurvey.setVisibility(View.VISIBLE);
+            }
+            if (appPreferences != null) {
+                appPreferences.setUsedSecondScreen(true);
             }
         }
     }
@@ -198,7 +215,7 @@ public class SecondScreenFragment extends Fragment {
                         public void onClick(View v) {
                             Intent intent = new Intent(getActivity(), WebViewActivity.class);
                             intent.putExtra(WebViewActivity.ARG_URL, Config.URI + "go/items/" + nextItem.id);
-                            intent.putExtra(WebViewActivity.ARG_TITLE, item.title);
+                            intent.putExtra(WebViewActivity.ARG_TITLE, item.title + " - " + getString(R.string.second_screen_action_title_quiz));
                             intent.putExtra(WebViewActivity.ARG_IN_APP_LINKS, true);
                             intent.putExtra(WebViewActivity.ARG_EXTERNAL_LINKS, false);
                             startActivity(intent);
@@ -279,7 +296,7 @@ public class SecondScreenFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), WebViewActivity.class);
                 intent.putExtra(WebViewActivity.ARG_URL, Config.URI + "go/items/" + item.id + "/pinboard");
-                intent.putExtra(WebViewActivity.ARG_TITLE, item.title + " " + getString(R.string.tab_discussions));
+                intent.putExtra(WebViewActivity.ARG_TITLE, item.title + " - " + getString(R.string.tab_discussions));
                 intent.putExtra(WebViewActivity.ARG_IN_APP_LINKS, true);
                 intent.putExtra(WebViewActivity.ARG_EXTERNAL_LINKS, false);
                 startActivity(intent);
@@ -318,6 +335,7 @@ public class SecondScreenFragment extends Fragment {
 
         if (cardVideo != null && event.getWebSocketMessage().action().equals("video_close")) {
             cardVideo.setVisibility(View.GONE);
+            cardNoVideo.setVisibility(View.VISIBLE);
 
             course = null;
             module = null;

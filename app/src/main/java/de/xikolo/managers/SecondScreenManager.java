@@ -149,6 +149,8 @@ public class SecondScreenManager {
                     NotificationManager notificationManager = (NotificationManager) GlobalApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(NOTIFICATION_ID);
 
+                    EventBus.getDefault().removeStickyEvent(SecondScreenNewVideoEvent.class);
+
                     course = null;
                     module = null;
                     item = null;

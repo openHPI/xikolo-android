@@ -1,25 +1,23 @@
 package de.xikolo.controller.secondscreen;
 
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.ScrollBar;
+import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
+import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
+
 import java.io.File;
-import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
@@ -35,23 +33,18 @@ import de.xikolo.model.DownloadModel;
 import de.xikolo.model.events.DownloadCompletedEvent;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class SlideViewerFragment extends Fragment {
+public class SlideViewerFragment extends Fragment implements OnLoadCompleteListener, OnPageChangeListener {
 
     public static final String TAG = SlideViewerFragment.class.getSimpleName();
 
-    private PdfRenderer renderer;
-
-    private View buttonPrev;
-
-    private View buttonNext;
-
-    private TextView textPage;
-
-    private ViewPager viewPager;
+    private PDFView pdfView;
 
     private DownloadModel downloadModel;
 
     private ProgressDialog progressDialog;
+
+    private FloatingActionButton fab;
+    private TextView textCurrentPage;
 
     private Course course;
     private Module module;
@@ -60,6 +53,10 @@ public class SlideViewerFragment extends Fragment {
     public static final String ARG_COURSE = "arg_course";
     public static final String ARG_MODULE = "arg_module";
     public static final String ARG_ITEM = "arg_item";
+
+    private final static String KEY_CURRENT_PAGE = "current_page";
+
+    private int currentPage;
 
     public SlideViewerFragment() {
         // Required empty public constructor
@@ -85,6 +82,12 @@ public class SlideViewerFragment extends Fragment {
             item = getArguments().getParcelable(ARG_ITEM);
         }
 
+        if (savedInstanceState != null) {
+            currentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
+        } else {
+            currentPage = 0;
+        }
+
         downloadModel = new DownloadModel(GlobalApplication.getInstance().getJobManager(), getActivity());
     }
 
@@ -97,12 +100,24 @@ public class SlideViewerFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        buttonPrev = view.findViewById(R.id.buttonPrev);
-        buttonNext = view.findViewById(R.id.buttonNext);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        textCurrentPage = (TextView) view.findViewById(R.id.text_current_page);
 
-        textPage = (TextView) view.findViewById(R.id.textPage);
+        pdfView = (PDFView) view.findViewById(R.id.pdf_view);
 
-        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        ScrollBar scrollBar = (ScrollBar) view.findViewById(R.id.scroll_bar);
+        pdfView.setScrollBar(scrollBar);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fab.hide();
+                textCurrentPage.setVisibility(View.GONE);
+                if (currentPage > 0) {
+                    pdfView.jumpTo(currentPage);
+                }
+            }
+        });
 
         if (downloadModel.downloadExists(DownloadModel.DownloadFileType.SLIDES, course, module, item)) {
             initSlidesViewer();
@@ -126,61 +141,33 @@ public class SlideViewerFragment extends Fragment {
     }
 
     private void initSlidesViewer() {
-        try {
-            openRenderer();
-            viewPager.setAdapter(new PdfSlidesPagerAdapter(getContext(), renderer));
+        if (downloadModel != null && downloadModel.downloadExists(DownloadModel.DownloadFileType.SLIDES, course, module, item)) {
+            File file = downloadModel.getDownloadFile(DownloadModel.DownloadFileType.SLIDES, course, module, item);
+            pdfView.fromFile(file)
+                    .swipeVertical(true)
+                    .enableAnnotationRendering(true)
+                    .onLoad(this)
+                    .onPageChange(this)
+                    .load();
+        }
+    }
 
-            textPage.setText((viewPager.getCurrentItem() + 1) + "/" + renderer.getPageCount());
+    @Override
+    public void onPageChanged(int page, int pageCount) {
+        if (currentPage > 0 && page != currentPage) {
+            fab.show();
+            textCurrentPage.setVisibility(View.VISIBLE);
+        }
+    }
 
-            buttonPrev.setVisibility(View.GONE);
-
-            viewPager.clearOnPageChangeListeners();
-            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    textPage.setText((position + 1) + "/" + renderer.getPageCount());
-                    if (position == 0) {
-                        buttonPrev.setVisibility(View.GONE);
-                    } else {
-                        buttonPrev.setVisibility(View.VISIBLE);
-                    }
-                    if (position == renderer.getPageCount() - 1) {
-                        buttonNext.setVisibility(View.GONE);
-                    } else {
-                        buttonNext.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-
-            buttonPrev.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (viewPager.getCurrentItem() > 0) {
-                        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-                    }
-                }
-            });
-
-            buttonNext.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (viewPager.getCurrentItem() < renderer.getPageCount()) {
-                        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-                    }
-                }
-            });
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage(), e);
+    @Override
+    public void loadComplete(int nbPages) {
+        if (currentPage > 0) {
+            pdfView.jumpTo(currentPage);
+            if (fab != null) {
+                fab.hide();
+                textCurrentPage.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -192,43 +179,16 @@ public class SlideViewerFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            openRenderer();
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        try {
-            closeRenderer();
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
-        super.onDetach();
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
 
         EventBus.getDefault().unregister(this);
     }
 
-    private void openRenderer() throws IOException {
-        if (downloadModel != null && downloadModel.downloadExists(DownloadModel.DownloadFileType.SLIDES, course, module, item)) {
-            File file = downloadModel.getDownloadFile(DownloadModel.DownloadFileType.SLIDES, course, module, item);
-            renderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY));
-        }
-    }
-
-    private void closeRenderer() throws IOException {
-        if (renderer != null) {
-            renderer.close();
-        }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_CURRENT_PAGE, currentPage);
+        super.onSaveInstanceState(outState);
     }
 
     @SuppressWarnings("unused")
@@ -236,7 +196,14 @@ public class SlideViewerFragment extends Fragment {
         if (event.getItem().equals(item)) {
             if (event.getWebSocketMessage().payload().containsKey("slide_number")) {
                 try {
-                    int number = Integer.parseInt(event.getWebSocketMessage().payload().get("slide_number"));
+                    int page = Integer.parseInt(event.getWebSocketMessage().payload().get("slide_number"));
+                    if (pdfView != null) {
+                        currentPage = page + 1;
+                        if (currentPage != pdfView.getCurrentPage() && fab != null && !fab.isShown()) {
+                            textCurrentPage.setText(String.format(getString(R.string.second_screen_pdf_pager), currentPage));
+                            pdfView.jumpTo(currentPage);
+                        }
+                    }
                 } catch (Exception e) {
                     Log.e(TAG, "Couldn't parse Integer from " + event.getWebSocketMessage().payload().get("slide_number") + ": " + e.getMessage());
                 }
@@ -253,60 +220,6 @@ public class SlideViewerFragment extends Fragment {
             }
             initSlidesViewer();
         }
-    }
-
-    static class PdfSlidesPagerAdapter extends PagerAdapter {
-
-        Context context;
-
-        PdfRenderer renderer;
-
-        public PdfSlidesPagerAdapter(Context context, PdfRenderer renderer) {
-            this.context = context;
-            this.renderer = renderer;
-        }
-
-        @Override
-        public int getCount() {
-            return renderer.getPageCount();
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup parent, int position) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.item_pdf_image, parent, false);
-
-            ImageView image = (ImageView) layout.findViewById(R.id.image);
-
-            PdfRenderer.Page currentPage = renderer.openPage(position);
-
-            Bitmap bitmap = Bitmap.createBitmap(
-//                    context.getResources().getDisplayMetrics().densityDpi / 72 * currentPage.getWidth(),
-//                    context.getResources().getDisplayMetrics().densityDpi / 72 * currentPage.getHeight(),
-                    currentPage.getWidth(),
-                    currentPage.getHeight(),
-                    Bitmap.Config.ARGB_8888);
-
-            currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-            currentPage.close();
-
-            image.setImageBitmap(bitmap);
-            image.invalidate();
-
-            parent.addView(layout);
-            return layout;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup parent, int position, Object view) {
-            parent.removeView((View) view);
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
     }
 
 }

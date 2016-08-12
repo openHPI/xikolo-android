@@ -70,6 +70,10 @@
     <string name="dialog_title_permissions">Zugriff auf Speicher benötigt</string>
     <string name="dialog_permissions">Bitte erlaube dieser App den Zugriff auf den externen Speicher, um diese Funktionalität zu nutzen.</string>
 
+    <string name="dialog_download_slides_title">Slides herunterladen?</string>
+    <string name="dialog_download_slides_message">Die Slides-Datei wird heruntergeladen.</string>
+    <string name="dialog_download_slides_yes">Herunterladen</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -177,6 +181,30 @@
     <string name="settings_imprint">Impressum</string>
     <string name="settings_privacy">Hinweise zum Datenschutz</string>
     <string name="settings_terms_of_use">Nutzungsbedingungen</string>
+
+    <!-- -->
+    <string name="second_screen_introduction_title">Probieren Sie Second Screen aus!</string>
+    <string name="second_screen_introduction_text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+
+    <string name="second_screen_action_title_pdf_viewer">Slides Reader</string>
+    <string name="second_screen_action_description_pdf_viewer">Lesen Sie die Slides der Lektion</string>
+    <string name="second_screen_action_title_quiz">Quiz</string>
+    <string name="second_screen_action_description_quiz">Testen Sie Ihr Wissen über die Lektion</string>
+    <string name="second_screen_action_title_pinboard">Fragen und Diskussionen</string>
+    <string name="second_screen_action_description_pinboard">Entdecken Sie Fragen und Diskussionen zum Video</string>
+    <string name="second_screen_action_title_transcript">Interaktives Transkript</string>
+    <string name="second_screen_action_description_transcript">Folgen Sie dem Redner mit synchronisierten Untertiteln</string>
+
+    <string name="second_screen_survey_title">Wie hat es Ihnen gefallen?</string>
+    <string name="second_screen_survey_text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+
+    <string name="second_screen_slides">Slides</string>
+    <string name="second_screen_transcript">Transkript</string>
+
+    <string name="second_screen_no_video">Kein wiedergegebenes Video erkannt.</string>
+
+    <string name="second_screen_pdf_pager">Aktuelle Slide: %1$d</string>
+
 
     <!-- -->
     <string name="lang_en">Englisch</string>

@@ -21,7 +21,7 @@ public class SlideViewerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_blank);
+        setContentView(R.layout.activity_blank_no_scroll);
         setupActionBar();
 
         Bundle b = getIntent().getExtras();
@@ -29,7 +29,7 @@ public class SlideViewerActivity extends BaseActivity {
         Module module = b.getParcelable(ARG_MODULE);
         Item item = b.getParcelable(ARG_ITEM);
 
-        setTitle(item.title + " " + getString(R.string.second_screen_slides));
+        setTitle(item.title + " - " + getString(R.string.second_screen_slides));
 
         String tag = "content";
 
