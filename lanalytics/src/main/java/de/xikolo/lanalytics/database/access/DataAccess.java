@@ -86,7 +86,10 @@ public abstract class DataAccess<E extends Entity> {
     protected abstract ContentValues buildContentValues(E entity);
 
     public int getCount() {
-        String countQuery = "SELECT * FROM " + table.getTableName();
+        return getCount("SELECT * FROM " + table.getTableName());
+    }
+
+    public int getCount(String countQuery) {
         Cursor cursor = openDatabase().rawQuery(countQuery, null);
 
         int count = cursor.getCount();

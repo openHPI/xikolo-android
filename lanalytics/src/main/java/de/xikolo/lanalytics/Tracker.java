@@ -84,7 +84,7 @@ public class Tracker {
         @Override
         public void run() {
             try {
-                while (sending && eventDataAccess.getCount() > 0 && NetworkUtil.isOnline(context)) {
+                while (sending && getCountBasedOnNetwork() > 0 && NetworkUtil.isOnline(context)) {
                     Logger.d(Lanalytics.TAG, "NetworkRunner started");
 
                     List<Lanalytics.Event> eventList;
@@ -121,6 +121,14 @@ public class Tracker {
                 }
             } catch (Exception e) {
                 Log.e(Lanalytics.TAG, e.getMessage(), e);
+            }
+        }
+
+        private int getCountBasedOnNetwork() {
+            if (NetworkUtil.getConnectivityStatus(context) == NetworkUtil.NetworkConnection.MOBILE) {
+                return eventDataAccess.getCountExcludeWifiOnly();
+            } else {
+                return eventDataAccess.getCount();
             }
         }
 

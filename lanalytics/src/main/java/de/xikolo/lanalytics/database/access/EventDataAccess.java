@@ -49,4 +49,8 @@ public class EventDataAccess extends DataAccess<Lanalytics.Event> {
         return getAll("SELECT * FROM " + table.getTableName() + " WHERE " + EventTable.COLUMN_WIFI_ONLY + " = 0 LIMIT " + limit);
     }
 
+    public int getCountExcludeWifiOnly() {
+        return getCount("SELECT * FROM " + table.getTableName() + " WHERE " + EventTable.COLUMN_WIFI_ONLY + " = 0");
+    }
+
 }
