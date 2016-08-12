@@ -184,7 +184,7 @@
 
     <!-- -->
     <string name="second_screen_introduction_title">Probieren Sie Second Screen aus!</string>
-    <string name="second_screen_introduction_text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+    <string name="second_screen_introduction_text">Der Second Screen Modus ist eine neue Beta-Funktionalität, die es Ihnen ermöglicht zusätzliche Inhalte auf ihren mobilen Gerät zu entdecken, während Sie Video-Lektionen auf Ihrem Computer schauen. Um zu starten, spielen Sie einfach eine Video-Lektion in dem Browser Ihres Computers ab. Verfügbare Inhalte und Funktionen werden dann hier erscheinen.</string>
 
     <string name="second_screen_action_title_pdf_viewer">Slides Reader</string>
     <string name="second_screen_action_description_pdf_viewer">Lesen Sie die Slides der Lektion</string>
@@ -196,7 +196,7 @@
     <string name="second_screen_action_description_transcript">Folgen Sie dem Redner mit synchronisierten Untertiteln</string>
 
     <string name="second_screen_survey_title">Wie hat es Ihnen gefallen?</string>
-    <string name="second_screen_survey_text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+    <string name="second_screen_survey_text">Helfen Sie uns bei unserer Forschung und fortlaufenden Verbesserung der Platform und der Apps: Wir sind gespannt, wie Ihnen diese neue Funktionalität gefallen hat. Bitte klicken Sie hier und erzählen Sie uns in einer kurzen Umfrage, wie Ihre Nutzungererfahrung war.</string>
 
     <string name="second_screen_slides">Slides</string>
     <string name="second_screen_transcript">Transkript</string>
