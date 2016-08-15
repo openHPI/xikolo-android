@@ -368,7 +368,7 @@ public class LanalyticsUtil {
         GlobalApplication application = GlobalApplication.getInstance();
         if (UserModel.isLoggedIn(application) && isTrackingEnabled()) {
             Tracker tracker = application.getLanalytics().getDefaultTracker();
-            tracker.track(event, UserModel.getToken(GlobalApplication.getInstance()));
+            tracker.send(event, UserModel.getToken(GlobalApplication.getInstance()));
         } else {
             if (Config.DEBUG) {
                 Log.i(TAG, "Couldn't track event " + event.verb + ". No user login found or tracking is disabled for this build.");

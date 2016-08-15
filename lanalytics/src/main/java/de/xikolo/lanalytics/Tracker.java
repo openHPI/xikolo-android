@@ -34,7 +34,7 @@ public class Tracker {
         this.eventDataAccess = (EventDataAccess) databaseHelper.getDataAccess(DatabaseHelper.DataAccessType.EVENT);
     }
 
-    public void track(final Lanalytics.Event event, String token) {
+    public void send(final Lanalytics.Event event, String token) {
         this.token = token;
 
         new Thread(new Runnable() {
