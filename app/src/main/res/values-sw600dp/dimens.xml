@@ -3,9 +3,15 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="activity_horizontal_large_margin">64dp</dimen>
+
     <dimen name="card_horizontal_margin">6dp</dimen>
     <dimen name="card_vertical_margin">6dp</dimen>
 
     <dimen name="navigation_drawer_width">320dp</dimen>
+
+    <dimen name="fab_margin">24dp</dimen>
+
+    <dimen name="fab_height_with_margin">88dp</dimen>
 
 </resources>

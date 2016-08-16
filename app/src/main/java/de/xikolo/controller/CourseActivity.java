@@ -266,7 +266,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
             TITLES.add(getString(R.string.tab_details));
             TITLES.add(getString(R.string.tab_announcements));
 
-            if (BuildConfig.buildFlavor == BuildFlavor.OPEN_HPI) {
+            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI) {
                 TITLES.add(getString(R.string.tab_quiz_recap));
             }
         }

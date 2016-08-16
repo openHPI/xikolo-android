@@ -19,8 +19,8 @@ public class ModuleDataAccess extends DataAccess {
         this.progressDataAccess = new OverallProgressDataAccess(databaseHelper);
     }
 
-    public void addModule(Course course, Module module, boolean includeProgress) {
-        openDatabase().insert(ModuleTable.TABLE_NAME, null, buildContentValues(course, module));
+    public void addModule(String courseId, Module module, boolean includeProgress) {
+        openDatabase().insert(ModuleTable.TABLE_NAME, null, buildContentValues(courseId, module));
 
         if (includeProgress) {
             progressDataAccess.addOrUpdateProgress(module.id, module.progress);
@@ -29,9 +29,9 @@ public class ModuleDataAccess extends DataAccess {
         closeDatabase();
     }
 
-    public void addOrUpdateModule(Course course, Module module, boolean includeProgress) {
-        if (updateModule(course, module, includeProgress) < 1) {
-            addModule(course, module, includeProgress);
+    public void addOrUpdateModule(String courseId, Module module, boolean includeProgress) {
+        if (updateModule(courseId, module, includeProgress) < 1) {
+            addModule(courseId, module, includeProgress);
         }
     }
 
@@ -115,7 +115,7 @@ public class ModuleDataAccess extends DataAccess {
         return module;
     }
 
-    private ContentValues buildContentValues(Course course, Module module) {
+    private ContentValues buildContentValues(String courseId, Module module) {
         ContentValues values = new ContentValues();
         values.put(ModuleTable.COLUMN_ID, module.id);
         values.put(ModuleTable.COLUMN_POSITION, module.position);
@@ -123,7 +123,7 @@ public class ModuleDataAccess extends DataAccess {
         values.put(ModuleTable.COLUMN_AVAILABLE_FROM, module.available_from);
         values.put(ModuleTable.COLUMN_AVAILABLE_TO, module.available_to);
         values.put(ModuleTable.COLUMN_LOCKED, module.locked);
-        values.put(ModuleTable.COLUMN_COURSE_ID, course.id);
+        values.put(ModuleTable.COLUMN_COURSE_ID, courseId);
 
         return values;
     }
@@ -140,10 +140,10 @@ public class ModuleDataAccess extends DataAccess {
         return count;
     }
 
-    public int updateModule(Course course, Module module, boolean includeProgress) {
+    public int updateModule(String courseId, Module module, boolean includeProgress) {
         int affected = openDatabase().update(
                 ModuleTable.TABLE_NAME,
-                buildContentValues(course, module),
+                buildContentValues(courseId, module),
                 ModuleTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(module.id)});
 

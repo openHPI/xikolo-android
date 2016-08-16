@@ -22,6 +22,8 @@ import de.xikolo.data.database.DataAccessFactory;
 import de.xikolo.data.database.DatabaseHelper;
 import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.lanalytics.Lanalytics;
+import de.xikolo.managers.SecondScreenManager;
+import de.xikolo.managers.WebSocketManager;
 import de.xikolo.util.ClientUtil;
 import de.xikolo.util.Config;
 import de.xikolo.util.SslCertificateUtil;
@@ -43,6 +45,10 @@ public class GlobalApplication extends Application {
     private PreferencesFactory preferencesFactory;
 
     private Lanalytics lanalytics;
+
+    private WebSocketManager webSocketManager;
+
+    private SecondScreenManager secondScreenManager;
 
     public GlobalApplication() {
         instance = this;
@@ -83,6 +89,15 @@ public class GlobalApplication extends Application {
         return lanalytics;
     }
 
+    public WebSocketManager getWebSocketManager() {
+        synchronized (GlobalApplication.class) {
+            if (webSocketManager == null) {
+                webSocketManager = new WebSocketManager(Config.WEBSOCKET);
+            }
+        }
+        return webSocketManager;
+    }
+
     public String getClientId() {
         return ClientUtil.id(this);
     }
@@ -97,6 +112,8 @@ public class GlobalApplication extends Application {
         configureWebView();
         configureJobManager();
         configureVideoCastManager();
+
+        configureSecondScreenManager();
 
         // just for debugging, never use for production
         if (Config.DEBUG) {
@@ -212,6 +229,16 @@ public class GlobalApplication extends Application {
                 .setCastControllerImmersive(false)
                 .build();
         VideoCastManager.initialize(this, options);
+    }
+
+    public void configureSecondScreenManager() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            synchronized (GlobalApplication.class) {
+                if (secondScreenManager == null) {
+                    secondScreenManager = new SecondScreenManager();
+                }
+            }
+        }
     }
 
 }

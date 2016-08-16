@@ -85,7 +85,7 @@ public class RetrieveModulesJob extends Job {
                     if (Config.DEBUG) Log.i(TAG, "Modules received (" + modules.size() + ")");
 
                     for (Module module : modules) {
-                        moduleDataAccess.addOrUpdateModule(course, module, includeProgress);
+                        moduleDataAccess.addOrUpdateModule(course.id, module, includeProgress);
                     }
 
                     result.success(modules, Result.DataSource.NETWORK);

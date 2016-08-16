@@ -10,6 +10,9 @@
     <string name="title_section_downloads">Downloads</string>
     <string name="title_section_settings">Settings</string>
     <string name="title_section_my_courses">My Courses</string>
+    <string name="title_section_second_screen">Second Screen</string>
+
+    <string name="title_section_beta">Beta</string>
 
     <!-- -->
     <string name="header_current_courses">Current and upcoming courses</string>
@@ -26,6 +29,7 @@
     <!-- -->
     <string name="action_refresh">Refresh</string>
     <string name="action_unenroll">Un-enroll</string>
+    <string name="action_language">Change language</string>
 
     <!-- -->
     <string name="tab_learnings">Learnings</string>
@@ -67,6 +71,10 @@
 
     <string name="dialog_title_permissions">External storage access required</string>
     <string name="dialog_permissions">Please allow this app to access your external storage in order to use this functionality.</string>
+
+    <string name="dialog_download_slides_title">Download slides?</string>
+    <string name="dialog_download_slides_message">The slides file will be downloaded.</string>
+    <string name="dialog_download_slides_yes">Download</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -128,6 +136,7 @@
     <!-- -->
     <string name="notification_download_completed">Download completed</string>
     <string name="notification_multiple_downloads_completed">%1$d downloads completed</string>
+    <string name="notification_start_second_screen">Start Second Screen</string>
 
     <!-- -->
     <string name="toast_no_courses">No courses received.</string>
@@ -181,6 +190,31 @@
     <string name="settings_imprint">Imprint</string>
     <string name="settings_privacy">Data Protection</string>
     <string name="settings_terms_of_use">Terms of Use</string>
+
+    <!-- -->
+    <string name="second_screen_introduction_title">Try the new Second Screen!</string>
+    <string name="second_screen_introduction_text">The Second Screen mode is a new beta function, that allows you to discover additional content on your mobile device, while watching video lectures on your computer. To start, simply play a video lecture on your computer\'s browser and available content and functions will appear here.</string>
+
+    <string name="second_screen_action_title_pdf_viewer">Slides Reader</string>
+    <string name="second_screen_action_description_pdf_viewer">Browse the lecture\'s slides</string>
+    <string name="second_screen_action_title_quiz">Quiz</string>
+    <string name="second_screen_action_description_quiz">Test your knowledge from the lecture</string>
+    <string name="second_screen_action_title_pinboard">Questions and Discussion</string>
+    <string name="second_screen_action_description_pinboard">Discover questions and discussions about the lecture</string>
+    <string name="second_screen_action_title_transcript">Interactive Transcript</string>
+    <string name="second_screen_action_description_transcript">Follow the speaker with synchronized subtitles</string>
+
+    <string name="second_screen_survey_title">How do you liked it?</string>
+    <string name="second_screen_survey_text">Help us with our research and ongoing improvement of the platform and the apps: we are curious about how do you liked that new functionality. Please click here and tell us in a short survey, how your experience was.</string>
+
+    <string name="second_screen_slides">Slides</string>
+    <string name="second_screen_transcript">Transcript</string>
+
+    <string name="second_screen_no_video">No playing video discovered.</string>
+
+    <string name="second_screen_pdf_pager">Current Slide: %1$d</string>
+
+    <string name="second_screen_survey_url">https://tools.openhpi.de/survey/index.php?r=survey/index&amp;sid=374459&amp;newtest=Y&amp;lang=en</string>
 
     <!-- -->
     <string name="lang_en">English</string>

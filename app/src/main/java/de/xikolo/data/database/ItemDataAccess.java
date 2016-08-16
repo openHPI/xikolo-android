@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.Module;
 
 public class ItemDataAccess extends DataAccess {
 
@@ -15,15 +14,15 @@ public class ItemDataAccess extends DataAccess {
         super(databaseHelper);
     }
 
-    public void addItem(Module module, Item item) {
-        openDatabase().insert(ItemTable.TABLE_NAME, null, buildContentValues(module, item));
+    public void addItem(String moduleId, Item item) {
+        openDatabase().insert(ItemTable.TABLE_NAME, null, buildContentValues(moduleId, item));
 
         closeDatabase();
     }
 
-    public void addOrUpdateItem(Module module, Item item) {
-        if (updateItem(module, item) < 1) {
-            addItem(module, item);
+    public void addOrUpdateItem(String moduleId, Item item) {
+        if (updateItem(moduleId, item) < 1) {
+            addItem(moduleId, item);
         }
     }
 
@@ -75,10 +74,10 @@ public class ItemDataAccess extends DataAccess {
         return itemList;
     }
 
-    public List<Item> getAllItemsForModule(Module module) {
+    public List<Item> getAllItemsForModule(String moduleId) {
         List<Item> itemList = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + ItemTable.TABLE_NAME + " WHERE " + ItemTable.COLUMN_MODULE_ID + " = \'" + module.id + "\'";
+        String selectQuery = "SELECT * FROM " + ItemTable.TABLE_NAME + " WHERE " + ItemTable.COLUMN_MODULE_ID + " = \'" + moduleId + "\'";
 
         Cursor cursor = openDatabase().rawQuery(selectQuery, null);
 
@@ -112,7 +111,7 @@ public class ItemDataAccess extends DataAccess {
         return item;
     }
 
-    private ContentValues buildContentValues(Module module, Item item) {
+    private ContentValues buildContentValues(String moduleId, Item item) {
         ContentValues values = new ContentValues();
         values.put(ItemTable.COLUMN_ID, item.id);
         values.put(ItemTable.COLUMN_POSITION, item.position);
@@ -124,7 +123,7 @@ public class ItemDataAccess extends DataAccess {
         values.put(ItemTable.COLUMN_LOCKED, item.locked);
         values.put(ItemTable.COLUMN_VISITED, item.progress.visited);
         values.put(ItemTable.COLUMN_COMPLETED, item.progress.completed);
-        values.put(ItemTable.COLUMN_MODULE_ID, module.id);
+        values.put(ItemTable.COLUMN_MODULE_ID, moduleId);
 
         return values;
     }
@@ -141,10 +140,10 @@ public class ItemDataAccess extends DataAccess {
         return count;
     }
 
-    public int updateItem(Module module, Item item) {
+    public int updateItem(String moduleId, Item item) {
         int affected = openDatabase().update(
                 ItemTable.TABLE_NAME,
-                buildContentValues(module, item),
+                buildContentValues(moduleId, item),
                 ItemTable.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(item.id)});
 

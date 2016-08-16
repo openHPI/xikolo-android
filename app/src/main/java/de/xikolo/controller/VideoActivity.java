@@ -30,6 +30,7 @@ import de.xikolo.model.ItemModel;
 import de.xikolo.model.Result;
 import de.xikolo.util.CastUtil;
 import de.xikolo.util.LanalyticsUtil;
+import de.xikolo.util.AndroidDimenUtil;
 
 public class VideoActivity extends BaseActivity {
 
@@ -194,11 +195,7 @@ public class VideoActivity extends BaseActivity {
                 videoContainer.setLayoutParams(params);
                 videoContainer.requestLayout();
 
-                int statusBarHeight = 0;
-                int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-                if (resourceId > 0) {
-                    statusBarHeight = getResources().getDimensionPixelSize(resourceId);
-                }
+                int statusBarHeight = AndroidDimenUtil.getStatusBarHeight();
 
                 int videoOffset = (size.y - size.x / 16 * 9) / 2;
 

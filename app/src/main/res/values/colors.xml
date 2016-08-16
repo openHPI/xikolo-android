@@ -7,6 +7,7 @@
     <color name="text_light_26">#1f000000</color>
 
     <color name="background_main">#fff3f3f3</color>
+    <color name="background_light_gray">#cacaca</color>
 
     <color name="video_overlay_gradient_black">#99000000</color>
     <color name="video_overlay_button">#ccffffff</color>
@@ -45,5 +46,7 @@
 
     <!-- this is needed as preference_category_material layout is using this color as the text color -->
     <color name="preference_fallback_accent_color">@color/apptheme_second</color>
+
+    <color name="bg_pdf_pager">#805a6065</color>
 
 </resources>

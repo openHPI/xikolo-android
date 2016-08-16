@@ -131,6 +131,7 @@
     <!-- -->
     <string name="notification_download_completed">下载已完成</string>
     <string name="notification_multiple_downloads_completed">已下载 %1$d</string>
+    <string name="notification_start_second_screen">Start Second Screen</string>
 
     <!-- -->
     <string name="toast_no_courses">未收到任何课程。</string>

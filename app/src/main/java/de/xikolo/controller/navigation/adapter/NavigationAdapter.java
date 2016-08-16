@@ -13,93 +13,138 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.helper.ImageController;
 import de.xikolo.data.entities.User;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.UserModel;
+import de.xikolo.util.BuildFlavor;
+import de.xikolo.util.Config;
+import de.xikolo.util.AndroidDimenUtil;
+import de.xikolo.view.CustomFontTextView;
 
 public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.BaseNavigationViewHolder> {
 
     public static final String TAG = NavigationAdapter.class.getSimpleName();
 
-    public static final int NAV_ID_LOW_LEVEL_CONTENT = -1;
-    public static final int NAV_ID_PROFILE = 0;
-    public static final int NAV_ID_ALL_COURSES = 1;
-    public static final int NAV_ID_MY_COURSES = 2;
-    public static final int NAV_ID_NEWS = 3;
-    public static final int NAV_ID_DOWNLOADS = 4;
-    public static final int NAV_ID_SETTINGS = 5;
+    public static final NavigationItem NAV_PROFILE;
+    public static final NavigationItem NAV_ALL_COURSES;
+    public static final NavigationItem NAV_MY_COURSES;
+    public static final NavigationItem NAV_NEWS;
+    public static final NavigationItem NAV_DOWNLOADS;
+    public static final NavigationItem NAV_SETTINGS;
 
-    private List<Element> elements;
+    public static final NavigationItem NAV_SECOND_SCREEN;
+
+    public static final List<NavigationItem> NAV_ITEMS;
+
+    static {
+        NAV_ITEMS = new ArrayList<>();
+
+        NAV_ITEMS.add(NAV_PROFILE = new NavigationItem(
+                R.string.icon_profile,
+                R.string.title_section_login,
+                NavigationItem.ViewType.PROFILE,
+                NAV_ITEMS.size()));
+
+        NAV_ITEMS.add(NAV_ALL_COURSES = new NavigationItem(
+                R.string.icon_courses,
+                R.string.title_section_all_courses,
+                NavigationItem.ViewType.MAIN,
+                NAV_ITEMS.size()));
+
+        NAV_ITEMS.add(NAV_MY_COURSES = new NavigationItem(
+                R.string.icon_course,
+                R.string.title_section_my_courses,
+                NavigationItem.ViewType.MAIN,
+                NAV_ITEMS.size()));
+
+        NAV_ITEMS.add(NAV_NEWS = new NavigationItem(
+                R.string.icon_news,
+                R.string.title_section_news,
+                NavigationItem.ViewType.MAIN,
+                NAV_ITEMS.size()));
+
+        if ((BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP)
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            NAV_ITEMS.add(NAV_SECOND_SCREEN = new NavigationItem(
+                    R.string.icon_second_screen,
+                    R.string.title_section_second_screen,
+                    NavigationItem.ViewType.MAIN,
+                    NAV_ITEMS.size()));
+        } else {
+            NAV_SECOND_SCREEN = new NavigationItem(
+                    R.string.icon_second_screen,
+                    R.string.title_section_second_screen,
+                    NavigationItem.ViewType.MAIN,
+                    -99);
+        }
+
+        NAV_ITEMS.add(NAV_DOWNLOADS = new NavigationItem(
+                R.string.icon_downloads,
+                R.string.title_section_downloads,
+                NavigationItem.ViewType.SUB,
+                NAV_ITEMS.size()));
+
+        NAV_ITEMS.add(NAV_SETTINGS = new NavigationItem(
+                R.string.icon_settings,
+                R.string.title_section_settings,
+                NavigationItem.ViewType.SUB,
+                NAV_ITEMS.size()));
+    }
 
     private CourseModel courseModel;
 
     private int checkedItem = -1;
 
-    OnItemClickListener itemClickListener;
+    private OnItemClickListener itemClickListener;
 
-    public NavigationAdapter(CourseModel courseModel) {
-        final Context context = GlobalApplication.getInstance();
-
-        this.courseModel = courseModel;
-        elements = new ArrayList<Element>() {{
-            add(new Element(context.getString(R.string.icon_profile),
-                    context.getString(R.string.title_section_login)));
-            add(new Element(context.getString(R.string.icon_courses),
-                    context.getString(R.string.title_section_all_courses)));
-            add(new Element(context.getString(R.string.icon_course),
-                    context.getString(R.string.title_section_my_courses)));
-            add(new Element(context.getString(R.string.icon_news),
-                    context.getString(R.string.title_section_news)));
-            add(new Element(context.getString(R.string.icon_downloads),
-                    context.getString(R.string.title_section_downloads)));
-            add(new Element(context.getString(R.string.icon_settings),
-                    context.getString(R.string.title_section_settings)));
-        }};
+    public NavigationAdapter() {
+        this.courseModel = new CourseModel(GlobalApplication.getInstance().getJobManager());
     }
 
     @Override
     public int getItemCount() {
-        return elements.size();
+        return NAV_ITEMS.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position;
+        return NAV_ITEMS.get(position).getViewType().toInteger();
     }
 
     @Override
     public BaseNavigationViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View itemView;
-        if (viewType == NAV_ID_PROFILE) {
+        if (viewType == NavigationItem.ViewType.PROFILE.toInteger()) {
             itemView = LayoutInflater.
                     from(viewGroup.getContext()).
                     inflate(R.layout.item_navi_profile, viewGroup, false);
             return new ProfileNavigationViewHolder(itemView);
-        } else if (viewType == NAV_ID_SETTINGS || viewType == NAV_ID_DOWNLOADS) {
-            itemView = LayoutInflater.
-                    from(viewGroup.getContext()).
-                    inflate(R.layout.item_navi_sub, viewGroup, false);
-            return new BaseNavigationViewHolder(itemView);
-        } else {
+        } else if (viewType == NavigationItem.ViewType.MAIN.toInteger()) {
             itemView = LayoutInflater.
                     from(viewGroup.getContext()).
                     inflate(R.layout.item_navi_main, viewGroup, false);
             return new CounterNavigationViewHolder(itemView);
+        } else {
+            itemView = LayoutInflater.
+                    from(viewGroup.getContext()).
+                    inflate(R.layout.item_navi_sub, viewGroup, false);
+            return new BaseNavigationViewHolder(itemView);
         }
     }
 
     @Override
     public void onBindViewHolder(BaseNavigationViewHolder viewHolder, int position) {
-        Element element = elements.get(position);
+        NavigationItem navigationItem = NAV_ITEMS.get(position);
 
         Context context = GlobalApplication.getInstance();
 
-        viewHolder.textIcon.setText(element.icon);
+        viewHolder.textIcon.setText(navigationItem.getIcon(context));
 
-        if (position == NAV_ID_PROFILE) {
+        if (position == NAV_PROFILE.getPosition()) {
             ProfileNavigationViewHolder profileViewHolder = (ProfileNavigationViewHolder) viewHolder;
 
             if (UserModel.isLoggedIn(context)) {
@@ -119,38 +164,44 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             } else {
                 profileViewHolder.viewLogin.setVisibility(View.VISIBLE);
                 profileViewHolder.viewProfile.setVisibility(View.GONE);
-                profileViewHolder.textLabel.setText(element.label);
+                profileViewHolder.textTitle.setText(navigationItem.getTitle(context));
             }
-        } else if (position == NAV_ID_MY_COURSES) {
+        } else if (position == NAV_MY_COURSES.getPosition()) {
             CounterNavigationViewHolder counterViewHolder = (CounterNavigationViewHolder) viewHolder;
 
-            viewHolder.textLabel.setText(element.label);
+            viewHolder.textTitle.setText(navigationItem.getTitle(context));
 
             if (UserModel.isLoggedIn(context)) {
                 int size = courseModel.getEnrollmentsCount();
-                counterViewHolder.textEnrollmentCounter.setText(String.valueOf(size));
+                counterViewHolder.textCounter.setText(String.valueOf(size));
                 if (size > 0) {
-                    counterViewHolder.textEnrollmentCounter.setVisibility(View.VISIBLE);
+                    counterViewHolder.textCounter.setVisibility(View.VISIBLE);
                 } else {
-                    counterViewHolder.textEnrollmentCounter.setVisibility(View.GONE);
+                    counterViewHolder.textCounter.setVisibility(View.GONE);
                 }
             } else {
-                counterViewHolder.textEnrollmentCounter.setText(String.valueOf(0));
-                counterViewHolder.textEnrollmentCounter.setVisibility(View.GONE);
+                counterViewHolder.textCounter.setText(String.valueOf(0));
+                counterViewHolder.textCounter.setVisibility(View.GONE);
             }
         } else {
-            viewHolder.textLabel.setText(element.label);
+            viewHolder.textTitle.setText(navigationItem.getTitle(context));
+        }
+
+        if (position == NAV_SECOND_SCREEN.getPosition()) {
+            viewHolder.textIcon.setCustomFont(context, Config.FONT_MATERIAL);
+        } else {
+            viewHolder.textIcon.setCustomFont(context, Config.FONT_XIKOLO);
         }
 
         if (position == getCheckedItemPosition()) {
-            if (position != NAV_ID_PROFILE || !UserModel.isLoggedIn(context)) {
+            if (position != NAV_PROFILE.getPosition() || !UserModel.isLoggedIn(context)) {
                 viewHolder.textIcon.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
-                viewHolder.textLabel.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
+                viewHolder.textTitle.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
             }
         } else {
-            if (position != NAV_ID_PROFILE || !UserModel.isLoggedIn(context)) {
+            if (position != NAV_PROFILE.getPosition() || !UserModel.isLoggedIn(context)) {
                 viewHolder.textIcon.setTextColor(ContextCompat.getColor(context, R.color.white));
-                viewHolder.textLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
+                viewHolder.textTitle.setTextColor(ContextCompat.getColor(context, R.color.white));
             }
         }
     }
@@ -163,20 +214,8 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
         return checkedItem;
     }
 
-    static class Element {
-
-        public String icon;
-        public String label;
-
-        public Element(String icon, String text) {
-            this.icon = icon;
-            this.label = text;
-        }
-
-    }
-
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.itemClickListener = mItemClickListener;
+    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
     public interface OnItemClickListener {
@@ -185,14 +224,14 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     class BaseNavigationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView textIcon;
-        TextView textLabel;
+        CustomFontTextView textIcon;
+        TextView textTitle;
 
         public BaseNavigationViewHolder(View view) {
             super(view);
 
-            textIcon = (TextView) view.findViewById(R.id.textIcon);
-            textLabel = (TextView) view.findViewById(R.id.textLabel);
+            textIcon = (CustomFontTextView) view.findViewById(R.id.textIcon);
+            textTitle = (TextView) view.findViewById(R.id.textLabel);
 
             view.setOnClickListener(this);
         }
@@ -229,35 +268,21 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
         private void setStatusBarPadding(View view) {
             view.setPadding(view.getPaddingLeft(),
-                    getStatusBarHeight() + view.getPaddingTop(),
+                    AndroidDimenUtil.getStatusBarHeight() + view.getPaddingTop(),
                     view.getPaddingRight(),
                     view.getPaddingBottom());
-        }
-
-        private int getStatusBarHeight() {
-            int result = 0;
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                return result;
-            }
-
-            int resourceId = GlobalApplication.getInstance().getResources().getIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                result = GlobalApplication.getInstance().getResources().getDimensionPixelSize(resourceId);
-            }
-            return result;
         }
 
     }
 
     class CounterNavigationViewHolder extends BaseNavigationViewHolder {
 
-        TextView textEnrollmentCounter;
+        TextView textCounter;
 
         public CounterNavigationViewHolder(View view) {
             super(view);
 
-            textEnrollmentCounter = (TextView) view.findViewById(R.id.textCounter);
+            textCounter = (TextView) view.findViewById(R.id.textCounter);
         }
 
     }

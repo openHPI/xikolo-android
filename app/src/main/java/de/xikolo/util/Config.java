@@ -8,9 +8,13 @@ import de.xikolo.R;
 
 public class Config {
 
-    public static final boolean DEBUG = BuildConfig.buildType == BuildType.DEBUG;
+    public static final boolean DEBUG = BuildConfig.X_TYPE == BuildType.DEBUG;
 
     public static final String FONT = "fonts/";
+
+    public static final String FONT_XIKOLO = "xikolo.ttf";
+
+    public static final String FONT_MATERIAL = "materialdesign.ttf";
 
     public static final String HTTP = "http";
     public static final String HTTPS = "https";
@@ -28,7 +32,7 @@ public class Config {
     public static final String CAST_MEDIA_RECEIVER_APPLICATION_ID;
 
     static {
-        switch (BuildConfig.buildFlavor) {
+        switch (BuildConfig.X_FLAVOR) {
             case OPEN_HPI:
                 COPYRIGHT_URL = "https://hpi.de/";
                 IMPRINT_URL = "https://open.hpi.de/pages/imprint";
@@ -112,10 +116,14 @@ public class Config {
     public static final String ITEMS = "items/";
     public static final String QUIZ_RECAP = "learn?course_id=";
 
+    public static final String SUBTITLES = "subtitles/";
+
     public static final String USER = "users/me/";
     public static final String ENROLLMENTS = "enrollments/";
     public static final String PROGRESSIONS = "progressions/";
 
     public static final String LANALYTICS = "tracking-events/";
+
+    public static final String WEBSOCKET = "wss://" + HOST + "/ws";
 
 }

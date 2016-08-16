@@ -13,9 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.database.ItemDataAccess;
-import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.Module;
 import de.xikolo.data.net.JsonRequest;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
@@ -31,38 +29,38 @@ public class RetrieveItemsJob extends Job {
     private final int id;
 
     private Result<List<Item>> result;
-    private Course course;
-    private Module module;
+    private String courseId;
+    private String moduleId;
 
-    public RetrieveItemsJob(Result<List<Item>> result, Course course, Module module) {
+    public RetrieveItemsJob(Result<List<Item>> result, String courseId, String moduleId) {
         super(new Params(Priority.MID));
         id = jobCounter.incrementAndGet();
 
         this.result = result;
-        this.course = course;
-        this.module = module;
+        this.courseId = courseId;
+        this.moduleId = moduleId;
     }
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG) Log.i(TAG, TAG + " added | course.id " + course.id + " | module.id " + module.id);
+        if (Config.DEBUG) Log.i(TAG, TAG + " added | course.id " + courseId + " | module.id " + moduleId);
     }
 
     @Override
     public void onRun() throws Throwable {
-        if (!UserModel.isLoggedIn(GlobalApplication.getInstance()) || !course.is_enrolled) {
+        if (!UserModel.isLoggedIn(GlobalApplication.getInstance())) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
             ItemDataAccess itemDataAccess = GlobalApplication.getInstance()
                     .getDataAccessFactory().getItemDataAccess();
-            result.success(itemDataAccess.getAllItemsForModule(module), Result.DataSource.LOCAL);
+            result.success(itemDataAccess.getAllItemsForModule(moduleId), Result.DataSource.LOCAL);
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
                 Type type = new TypeToken<List<Item>>() {
                 }.getType();
 
-                String url = Config.API + Config.COURSES + course.id + "/"
-                        + Config.MODULES + module.id + "/" + Config.ITEMS;
+                String url = Config.API + Config.COURSES + courseId + "/"
+                        + Config.MODULES + moduleId + "/" + Config.ITEMS;
 
                 JsonRequest request = new JsonRequest(url, type);
                 request.setCache(false);
@@ -76,7 +74,7 @@ public class RetrieveItemsJob extends Job {
                     if (Config.DEBUG) Log.i(TAG, "Items received (" + items.size() + ")");
 
                     for (Item item : items) {
-                        itemDataAccess.addOrUpdateItem(module, item);
+                        itemDataAccess.addOrUpdateItem(moduleId, item);
                     }
 
                     result.success(items, Result.DataSource.NETWORK);

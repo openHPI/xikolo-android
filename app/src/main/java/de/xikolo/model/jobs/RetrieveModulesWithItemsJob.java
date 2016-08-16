@@ -66,7 +66,7 @@ public class RetrieveModulesWithItemsJob extends Job {
                 if (includeProgress && module.progress == null) {
                     deleteList.add(module);
                 } else {
-                    module.items = itemDataAccess.getAllItemsForModule(module);
+                    module.items = itemDataAccess.getAllItemsForModule(module.id);
                 }
             }
             localModules.removeAll(deleteList);
@@ -90,7 +90,7 @@ public class RetrieveModulesWithItemsJob extends Job {
                     if (Config.DEBUG) Log.i(TAG, "Modules received (" + modules.size() + ")");
 
                     for (Module module : modules) {
-                        moduleDataAccess.addOrUpdateModule(course, module, includeProgress);
+                        moduleDataAccess.addOrUpdateModule(course.id, module, includeProgress);
                     }
 
                     for (Module module : modules) {
@@ -112,7 +112,7 @@ public class RetrieveModulesWithItemsJob extends Job {
                             if (Config.DEBUG) Log.i(TAG, "Items received (" + items.size() + ")");
 
                             for (Item item : items) {
-                                itemDataAccess.addOrUpdateItem(module, item);
+                                itemDataAccess.addOrUpdateItem(module.id, item);
                             }
 
                             module.items = items;

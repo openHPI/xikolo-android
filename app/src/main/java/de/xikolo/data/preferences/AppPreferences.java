@@ -14,8 +14,12 @@ public class AppPreferences extends Preferences {
     }
 
     private boolean getBoolean(String key) {
+        return getBoolean(key, true);
+    }
+
+    private boolean getBoolean(String key, boolean defValue) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return preferences.getBoolean(key, true);
+        return preferences.getBoolean(key, defValue);
     }
 
     private void putBoolean(boolean value, String key) {
@@ -70,6 +74,14 @@ public class AppPreferences extends Preferences {
         editor.putString(mContext.getString(R.string.preference_video_playback_speed),
                 speed.toString());
         editor.apply();
+    }
+
+    public boolean usedSecondScreen() {
+        return getBoolean(mContext.getString(R.string.preference_used_second_screen), false);
+    }
+
+    public void setUsedSecondScreen(boolean used) {
+        putBoolean(used, mContext.getString(R.string.preference_used_second_screen));
     }
 
 }

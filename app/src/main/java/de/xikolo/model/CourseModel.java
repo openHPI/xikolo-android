@@ -11,6 +11,7 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.Course;
 import de.xikolo.model.jobs.CreateEnrollmentJob;
 import de.xikolo.model.jobs.DeleteEnrollmentJob;
+import de.xikolo.model.jobs.RetrieveCourseJob;
 import de.xikolo.model.jobs.RetrieveCoursesJob;
 import de.xikolo.util.DateUtil;
 
@@ -29,6 +30,10 @@ public class CourseModel extends BaseModel {
     public int getEnrollmentsCount() {
         return GlobalApplication.getInstance()
                 .getDataAccessFactory().getCourseDataAccess().getEnrollmentsCount();
+    }
+
+    public void getCourse(Result<Course> result, String courseId) {
+        mJobManager.addJobInBackground(new RetrieveCourseJob(result, courseId));
     }
 
     public void getCourses(Result<List<Course>> result, boolean includeProgress) {

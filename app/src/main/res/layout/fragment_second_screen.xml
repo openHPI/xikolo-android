@@ -1,0 +1,287 @@
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_large_margin"
+    android:paddingRight="@dimen/activity_horizontal_large_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_second_screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            app:cardCornerRadius="2dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/layout_second_screen_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/gradient_default_image"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/text_second_screen_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/text_second_screen_icon"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/second_screen_introduction_title"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <de.xikolo.view.CustomFontTextView
+                        android:id="@+id/text_second_screen_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:text="@string/icon_second_screen"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+                        app:customFont="materialdesign.ttf" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/text_second_screen_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/layout_second_screen_header"
+                    android:paddingBottom="@dimen/card_horizontal_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingTop="@dimen/card_horizontal_margin"
+                    android:text="@string/second_screen_introduction_text"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_vertical_margin"
+            android:background="@color/transparent" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:visibility="gone"
+            app:cardCornerRadius="2dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/image_video_poster"
+                    android:layout_width="fill_parent"
+                    android:layout_height="160dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center_horizontal|top"
+                    android:background="@drawable/gradient_default_image"
+                    android:scaleType="centerCrop" />
+
+                <RelativeLayout
+                    android:id="@+id/layout_video_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/image_video_poster">
+
+                    <TextView
+                        android:id="@+id/text_video_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/text_video_time"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingBottom="@dimen/activity_horizontal_margin"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:paddingTop="@dimen/activity_horizontal_margin"
+                        android:textColor="@color/apptheme_second"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/text_video_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:paddingBottom="@dimen/activity_horizontal_margin"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:paddingRight="@dimen/activity_vertical_margin"
+                        android:paddingTop="@dimen/activity_horizontal_margin"
+                        android:textColor="@color/apptheme_second"
+                        android:textSize="18sp" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_video_actions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_video_title"
+                    android:animateLayoutChanges="true"
+                    android:divider="@drawable/list_divider"
+                    android:orientation="vertical"
+                    android:showDividers="middle" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_no_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:visibility="gone"
+            app:cardCornerRadius="2dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_no_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/text_icon_no_video"
+                    android:paddingBottom="@dimen/activity_horizontal_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin"
+                    android:text="@string/second_screen_no_video"
+                    android:textSize="20sp" />
+
+                <de.xikolo.view.CustomFontTextView
+                    android:id="@+id/text_icon_no_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:paddingBottom="@dimen/activity_horizontal_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin"
+                    android:text="@string/icon_second_screen_disabled"
+                    android:textSize="24sp"
+                    app:customFont="materialdesign.ttf" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_vertical_margin"
+            android:background="@color/transparent" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_survey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:visibility="gone"
+            app:cardCornerRadius="2dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/layout_survey_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/gradient_default_image"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/text_survey_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/text_survey_icon"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/second_screen_survey_title"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <de.xikolo.view.CustomFontTextView
+                        android:id="@+id/text_survey_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:text="@string/icon_survey"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+                        app:customFont="xikolo.ttf" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/text_survey_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/layout_survey_header"
+                    android:paddingBottom="@dimen/card_horizontal_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingTop="@dimen/card_horizontal_margin"
+                    android:text="@string/second_screen_survey_text"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

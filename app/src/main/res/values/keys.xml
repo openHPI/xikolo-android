@@ -26,6 +26,8 @@
     <string name="preference_category_video_playback_speed" translatable="false">category_video_playback_speed</string>
     <string name="preference_category_info" translatable="false">category_info</string>
 
+    <string name="preference_used_second_screen" translatable="false">used_second_screen</string>
+
     <string name="duration" translatable="false">%1$02d:%2$02d</string>
 
     <string name="percentage" translatable="false">%1$s%%</string>

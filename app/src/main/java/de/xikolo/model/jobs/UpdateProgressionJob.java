@@ -47,7 +47,7 @@ public class UpdateProgressionJob extends Job {
                 .getDataAccessFactory().getItemDataAccess();
 
         item.progress.visited = true;
-        itemDataAccess.updateItem(module, item);
+        itemDataAccess.updateItem(module.id, item);
         result.success(null, Result.DataSource.LOCAL);
     }
 

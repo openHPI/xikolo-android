@@ -8,6 +8,9 @@ android:
     - extra-android-m2repository
     - extra-google-m2repository
 
+jdk:
+  - oraclejdk8
+
 env:
   - FLAVOR="openHPI"
   - FLAVOR="openSAP"
