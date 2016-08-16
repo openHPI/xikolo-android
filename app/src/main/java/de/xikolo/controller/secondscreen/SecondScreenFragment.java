@@ -123,8 +123,7 @@ public class SecondScreenFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                // TODO: set survey url
-                intent.setData(Uri.parse(Config.URI));
+                intent.setData(Uri.parse(getString(R.string.second_screen_survey_url)));
                 startActivity(intent);
             }
         });

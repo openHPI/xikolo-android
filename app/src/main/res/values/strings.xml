@@ -214,6 +214,8 @@
 
     <string name="second_screen_pdf_pager">Current Slide: %1$d</string>
 
+    <string name="second_screen_survey_url">https://tools.openhpi.de/survey/index.php?r=survey/index&amp;sid=374459&amp;newtest=Y&amp;lang=en</string>
+
     <!-- -->
     <string name="lang_en">English</string>
     <string name="lang_de">German</string>
