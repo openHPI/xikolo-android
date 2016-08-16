@@ -3,6 +3,7 @@ package de.xikolo.controller.secondscreen;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.WindowManager;
 
 import java.util.List;
 
@@ -33,6 +34,8 @@ public class TranscriptViewerActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transcript);
         setupActionBar();
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Bundle b = getIntent().getExtras();
         course = b.getParcelable(ARG_COURSE);
