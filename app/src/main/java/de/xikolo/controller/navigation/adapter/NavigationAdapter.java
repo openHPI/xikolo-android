@@ -67,7 +67,8 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 NavigationItem.ViewType.MAIN,
                 NAV_ITEMS.size()));
 
-        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if ((BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP)
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             NAV_ITEMS.add(NAV_SECOND_SCREEN = new NavigationItem(
                     R.string.icon_second_screen,
                     R.string.title_section_second_screen,
