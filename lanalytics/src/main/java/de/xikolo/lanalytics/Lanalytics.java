@@ -4,14 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -148,26 +142,8 @@ public class Lanalytics {
 
             private transient boolean onlyWifi;
 
-            public Builder(Cursor cursor) {
-                Type typeOfHashMap = new TypeToken<LinkedHashMap<String, String>>() {
-                }.getType();
-                Gson gson = new GsonBuilder().create();
-
-                int i = 0;
-                id = cursor.getString(i++);
-                userId = cursor.getString(i++);
-                verb = cursor.getString(i++);
-                resourceId = cursor.getString(i++);
-                resourceType = cursor.getString(i++);
-                resultMap = gson.fromJson(cursor.getString(i++), typeOfHashMap);
-                contextMap = gson.fromJson(cursor.getString(i++), typeOfHashMap);
-                timestamp = cursor.getString(i++);
-                onlyWifi = cursor.getInt(i) != 0;
-            }
-
             public Builder(Context context) {
-                resultMap = new LinkedHashMap<>();
-                contextMap = new LinkedHashMap<>();
+                this();
 
                 id = UUID.randomUUID().toString();
 
@@ -176,6 +152,20 @@ public class Lanalytics {
                 contextMap.putAll(ContextUtil.getDefaultContextData(context));
 
                 onlyWifi = false;
+            }
+
+            private Builder() {
+                resultMap = new LinkedHashMap<>();
+                contextMap = new LinkedHashMap<>();
+            }
+
+            public static Builder createEmptyBuilder() {
+                return new Builder();
+            }
+
+            public Builder setId(String id) {
+                this.id = id;
+                return this;
             }
 
             public Builder setUser(String id) {

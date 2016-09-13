@@ -5,8 +5,12 @@ import android.database.Cursor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.lanalytics.database.DatabaseHelper;
@@ -20,8 +24,23 @@ public class EventDataAccess extends DataAccess<Lanalytics.Event> {
         super(databaseHelper, table);
     }
 
+    @SuppressWarnings("unchecked")
     protected Lanalytics.Event buildEntity(Cursor cursor) {
-        return new Lanalytics.Event.Builder(cursor).build();
+        Type typeOfHashMap = new TypeToken<LinkedHashMap<String, String>>() {}.getType();
+        Gson gson = new GsonBuilder().create();
+
+        int i = 0;
+
+        return Lanalytics.Event.Builder.createEmptyBuilder()
+                .setId(cursor.getString(i++))
+                .setUser(cursor.getString(i++))
+                .setVerb(cursor.getString(i++))
+                .setResource(cursor.getString(i++), cursor.getString(i++))
+                .putAllResults((Map<String, String>) gson.fromJson(cursor.getString(i++), typeOfHashMap))
+                .putAllContexts((Map<String, String>) gson.fromJson(cursor.getString(i++), typeOfHashMap))
+                .setTimestamp(cursor.getString(i++))
+                .setOnlyWifi(cursor.getInt(i) != 0)
+                .build();
     }
 
     protected ContentValues buildContentValues(Lanalytics.Event event) {
