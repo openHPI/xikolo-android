@@ -26,6 +26,7 @@ import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
 import de.xikolo.util.ClientUtil;
 import de.xikolo.util.Config;
+import de.xikolo.util.FeatureToggle;
 import de.xikolo.util.SslCertificateUtil;
 
 public class GlobalApplication extends Application {
@@ -232,7 +233,7 @@ public class GlobalApplication extends Application {
     }
 
     public void configureSecondScreenManager() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (FeatureToggle.secondScreen()) {
             synchronized (GlobalApplication.class) {
                 if (secondScreenManager == null) {
                     secondScreenManager = new SecondScreenManager();

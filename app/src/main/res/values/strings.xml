@@ -76,6 +76,10 @@
     <string name="dialog_download_slides_message">The slides file will be downloaded.</string>
     <string name="dialog_download_slides_yes">Download</string>
 
+    <string name="dialog_second_screen_title">Try the new Second Screen!</string>
+    <string name="dialog_second_screen_message">Discover additional content on your mobile device, while watching video lectures on your computer. To start, simply play a video lecture on your computer\'s browser.</string>
+    <string name="dialog_second_screen_yes">Open</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 

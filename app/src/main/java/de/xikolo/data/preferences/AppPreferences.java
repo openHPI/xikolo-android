@@ -84,4 +84,12 @@ public class AppPreferences extends Preferences {
         putBoolean(used, mContext.getString(R.string.preference_used_second_screen));
     }
 
+    public boolean showedSecondScreenDialog() {
+        return getBoolean(mContext.getString(R.string.preference_dialog_second_screen), false);
+    }
+
+    public void setShowedSecondScreenDialog(boolean showed) {
+        putBoolean(showed, mContext.getString(R.string.preference_dialog_second_screen));
+    }
+
 }

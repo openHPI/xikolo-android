@@ -11,17 +11,20 @@ import android.view.Menu;
 
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.controller.dialogs.SecondScreenDialog;
 import de.xikolo.controller.main.ContentFragment;
 import de.xikolo.controller.main.ContentWebViewFragment;
 import de.xikolo.controller.main.CourseListFragment;
 import de.xikolo.controller.main.ProfileFragment;
 import de.xikolo.controller.navigation.NavigationFragment;
 import de.xikolo.controller.navigation.adapter.NavigationAdapter;
+import de.xikolo.data.preferences.AppPreferences;
 import de.xikolo.model.UserModel;
 import de.xikolo.model.events.LoginEvent;
 import de.xikolo.model.events.LogoutEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.DeepLinkingUtil;
+import de.xikolo.util.FeatureToggle;
 import de.xikolo.util.LanalyticsUtil;
 
 public class MainActivity extends BaseActivity
@@ -60,6 +63,16 @@ public class MainActivity extends BaseActivity
         }
 
         handleIntent(getIntent());
+
+        if (FeatureToggle.secondScreen()) {
+            // show second screen promotion dialog
+            AppPreferences appPreferences = globalApplication.getPreferencesFactory().getAppPreferences();
+            if (!appPreferences.showedSecondScreenDialog() && UserModel.isLoggedIn(this)) {
+                SecondScreenDialog dialog = new SecondScreenDialog();
+                dialog.show(getSupportFragmentManager(), SecondScreenDialog.TAG);
+                appPreferences.setShowedSecondScreenDialog(true);
+            }
+        }
     }
 
     @Override

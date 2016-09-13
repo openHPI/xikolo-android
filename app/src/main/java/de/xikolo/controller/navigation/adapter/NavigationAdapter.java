@@ -1,7 +1,6 @@
 package de.xikolo.controller.navigation.adapter;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,16 +12,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.helper.ImageController;
 import de.xikolo.data.entities.User;
 import de.xikolo.model.CourseModel;
 import de.xikolo.model.UserModel;
-import de.xikolo.util.BuildFlavor;
-import de.xikolo.util.Config;
 import de.xikolo.util.AndroidDimenUtil;
+import de.xikolo.util.Config;
+import de.xikolo.util.FeatureToggle;
 import de.xikolo.view.CustomFontTextView;
 
 public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.BaseNavigationViewHolder> {
@@ -67,8 +65,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 NavigationItem.ViewType.MAIN,
                 NAV_ITEMS.size()));
 
-        if ((BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP)
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (FeatureToggle.secondScreen()) {
             NAV_ITEMS.add(NAV_SECOND_SCREEN = new NavigationItem(
                     R.string.icon_second_screen,
                     R.string.title_section_second_screen,

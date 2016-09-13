@@ -31,6 +31,7 @@ import de.xikolo.model.events.NetworkStateEvent;
 import de.xikolo.model.events.PermissionDeniedEvent;
 import de.xikolo.model.events.PermissionGrantedEvent;
 import de.xikolo.model.receiver.NotificationDeletedReceiver;
+import de.xikolo.util.FeatureToggle;
 import de.xikolo.util.PlayServicesUtil;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -184,7 +185,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         EventBus.getDefault().registerSticky(this);
 
-        if (UserModel.isLoggedIn(this) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (UserModel.isLoggedIn(this) && FeatureToggle.secondScreen()) {
             globalApplication.getWebSocketManager().initConnection(UserModel.getToken(this));
         }
     }

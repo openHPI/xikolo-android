@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionName "1.5"
-        versionCode 25
+        versionName "1.5.1"
+        versionCode 26
     }
 
     productFlavors.all {

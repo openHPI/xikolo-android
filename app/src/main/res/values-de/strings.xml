@@ -74,6 +74,10 @@
     <string name="dialog_download_slides_message">Die Slides-Datei wird heruntergeladen.</string>
     <string name="dialog_download_slides_yes">Herunterladen</string>
 
+    <string name="dialog_second_screen_title">Probieren Sie Second Screen aus!</string>
+    <string name="dialog_second_screen_message">Entdecken Sie zusätzliche Inhalte auf ihrem mobilen Gerät, während Sie Video-Lektionen auf Ihrem Computer schauen. Um zu starten, spielen Sie einfach eine Video-Lektion in dem Browser Ihres Computers ab.</string>
+    <string name="dialog_second_screen_yes">Öffnen</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -184,7 +188,7 @@
 
     <!-- -->
     <string name="second_screen_introduction_title">Probieren Sie Second Screen aus!</string>
-    <string name="second_screen_introduction_text">Der Second Screen Modus ist eine neue Beta-Funktionalität, die es Ihnen ermöglicht zusätzliche Inhalte auf ihren mobilen Gerät zu entdecken, während Sie Video-Lektionen auf Ihrem Computer schauen. Um zu starten, spielen Sie einfach eine Video-Lektion in dem Browser Ihres Computers ab. Verfügbare Inhalte und Funktionen werden dann hier erscheinen.</string>
+    <string name="second_screen_introduction_text">Der Second Screen Modus ist eine neue Beta-Funktionalität, die es Ihnen ermöglicht zusätzliche Inhalte auf ihrem mobilen Gerät zu entdecken, während Sie Video-Lektionen auf Ihrem Computer schauen. Um zu starten, spielen Sie einfach eine Video-Lektion in dem Browser Ihres Computers ab. Verfügbare Inhalte und Funktionen werden dann hier erscheinen.</string>
 
     <string name="second_screen_action_title_pdf_viewer">Slides Reader</string>
     <string name="second_screen_action_description_pdf_viewer">Lesen Sie die Slides der Lektion</string>
