@@ -4,7 +4,8 @@ import android.content.Context;
 
 import com.path.android.jobqueue.JobManager;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.User;
 import de.xikolo.data.preferences.UserPreferences;

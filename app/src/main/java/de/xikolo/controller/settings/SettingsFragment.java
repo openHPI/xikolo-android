@@ -8,12 +8,13 @@ import android.support.v14.preference.PreferenceFragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Calendar;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
@@ -25,7 +26,6 @@ import de.xikolo.model.events.LoginEvent;
 import de.xikolo.model.events.LogoutEvent;
 import de.xikolo.util.BuildFlavor;
 import de.xikolo.util.Config;
-import de.xikolo.view.SettingsDividerItemDecoration;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -164,20 +164,15 @@ public class SettingsFragment extends PreferenceFragment {
         }
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        ((RecyclerView) view.findViewById(R.id.list)).addItemDecoration(
-                new SettingsDividerItemDecoration(getActivity())
-        );
-    }
-
     @SuppressWarnings("unused")
-    public void onEventMainThread(LoginEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginEvent(LoginEvent event) {
         buildLogoutView(loginOut);
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(LogoutEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogoutEvent(LogoutEvent event) {
         buildLoginView(loginOut);
     }
 

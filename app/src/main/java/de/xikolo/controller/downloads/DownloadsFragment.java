@@ -9,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.ConfirmDeleteDialog;
@@ -83,14 +85,16 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
     }
 
     @SuppressWarnings("unused")
-    public void onEvent(PermissionGrantedEvent permissionGrantedEvent) {
+    @Subscribe
+    public void onPermissionGrantedEvent(PermissionGrantedEvent permissionGrantedEvent) {
         if (permissionGrantedEvent.getRequestCode() == PermissionsModel.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
             fetchItems();
         }
     }
 
     @SuppressWarnings("unused")
-    public void onEvent(PermissionDeniedEvent permissionDeniedEvent) {
+    @Subscribe
+    public void onPermissionDeniedEvent(PermissionDeniedEvent permissionDeniedEvent) {
         if (permissionDeniedEvent.getRequestCode() == PermissionsModel.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
             fetchItems();
         }

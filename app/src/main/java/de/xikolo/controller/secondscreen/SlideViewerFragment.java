@@ -17,9 +17,12 @@ import com.github.barteksc.pdfviewer.ScrollBar;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.DownloadSlidesDialog;
@@ -192,7 +195,8 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(SecondScreenManager.SecondScreenUpdateVideoEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSecondScreenUpdateVideoEvent(SecondScreenManager.SecondScreenUpdateVideoEvent event) {
         if (event.getItem().equals(item)) {
             if (event.getWebSocketMessage().payload().containsKey("slide_number")) {
                 try {
@@ -212,7 +216,8 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(DownloadCompletedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDownloadCompletedEvent(DownloadCompletedEvent event) {
         if (event.getDownload().localUri.contains(item.id)
                 && DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri) == DownloadModel.DownloadFileType.SLIDES) {
             if (progressDialog != null && progressDialog.getDialog().isShowing()) {

@@ -11,9 +11,10 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.R;
 import de.xikolo.controller.DownloadsActivity;
 import de.xikolo.data.entities.Download;

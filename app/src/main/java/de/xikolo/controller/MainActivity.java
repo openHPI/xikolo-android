@@ -9,6 +9,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.SecondScreenDialog;
@@ -242,12 +245,14 @@ public class MainActivity extends BaseActivity
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(LoginEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginEvent(LoginEvent event) {
         updateDrawer();
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(LogoutEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogoutEvent(LogoutEvent event) {
         updateDrawer();
     }
 

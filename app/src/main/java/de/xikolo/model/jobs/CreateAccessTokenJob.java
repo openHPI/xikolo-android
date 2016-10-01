@@ -7,11 +7,12 @@ import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 import com.path.android.jobqueue.RetryConstraint;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.AccessToken;
 import de.xikolo.data.net.JsonRequest;

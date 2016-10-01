@@ -21,7 +21,10 @@ import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCa
 import com.google.android.libraries.cast.companionlibrary.widgets.IntroductoryOverlay;
 import com.path.android.jobqueue.JobManager;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.data.preferences.NotificationPreferences;
@@ -151,18 +154,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         this.offlineModeToolbar = enable;
     }
 
-    public void onEventMainThread(NetworkStateEvent event) {
-        if (toolbar != null && offlineModeToolbar) {
-            if (event.isOnline()) {
-                toolbar.setSubtitle("");
-                setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
-            } else {
-                toolbar.setSubtitle(getString(R.string.offline_mode));
-                setColorScheme(R.color.offline_mode_actionbar, R.color.offline_mode_statusbar);
-            }
-        }
-    }
-
     protected void setColorScheme(int color, int darkColor) {
         if (toolbar != null) {
             toolbar.setBackgroundColor(ContextCompat.getColor(this, color));
@@ -179,11 +170,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onNetworkEvent(NetworkStateEvent event) {
+        if (toolbar != null && offlineModeToolbar) {
+            if (event.isOnline()) {
+                toolbar.setSubtitle("");
+                setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
+            } else {
+                toolbar.setSubtitle(getString(R.string.offline_mode));
+                setColorScheme(R.color.offline_mode_actionbar, R.color.offline_mode_statusbar);
+            }
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
 
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
 
         if (UserModel.isLoggedIn(this) && FeatureToggle.secondScreen()) {
             globalApplication.getWebSocketManager().initConnection(UserModel.getToken(this));

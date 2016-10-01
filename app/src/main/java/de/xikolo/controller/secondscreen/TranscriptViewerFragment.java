@@ -17,10 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.ChooseLanguageDialog;
 import de.xikolo.controller.secondscreen.adapter.TranscriptViewerAdapter;
@@ -169,7 +172,9 @@ public class TranscriptViewerFragment extends Fragment implements ChooseLanguage
         }
     }
 
-    public void onEventMainThread(SecondScreenManager.SecondScreenUpdateVideoEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSecondScreenUpdateVideoEvent(SecondScreenManager.SecondScreenUpdateVideoEvent event) {
         if (event.getItem().equals(item)) {
             if (event.getWebSocketMessage().payload().containsKey("current_time")) {
                 String time = event.getWebSocketMessage().payload().get("current_time");

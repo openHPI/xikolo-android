@@ -17,6 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,8 +146,10 @@ public class ModuleActivity extends BaseActivity {
     }
 
     @Override
-    public void onEventMainThread(NetworkStateEvent event) {
-        super.onEventMainThread(event);
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onNetworkEvent(NetworkStateEvent event) {
+        super.onNetworkEvent(event);
 
         if (tabLayout != null) {
             if (event.isOnline()) {

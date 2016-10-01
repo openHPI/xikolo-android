@@ -8,8 +8,6 @@ public class Download {
     
     public String description;
 
-    public String localFilename;
-
     public String localUri;
 
     public String uri;
@@ -30,22 +28,20 @@ public class Download {
 
     public Download() {}
     
-    public Download(long id, String title, String description, String localFilename, String localUri, String uri, int status, int reason) {
+    public Download(long id, String title, String description, String localUri, String uri, int status, int reason) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.localFilename = localFilename;
         this.localUri = localUri;
         this.uri = uri;
         this.status = status;
         this.reason = reason;
     }
 
-    public Download(long id, String title, String description, String localFilename, String localUri, String uri, int status, int reason, long totalSizeBytes, long bytesDownloadedSoFar, long lastModifiedTimestamp, String mediaproviderUri, String mediaType) {
+    public Download(long id, String title, String description, String localUri, String uri, int status, int reason, long totalSizeBytes, long bytesDownloadedSoFar, long lastModifiedTimestamp, String mediaproviderUri, String mediaType) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.localFilename = localFilename;
         this.localUri = localUri;
         this.uri = uri;
         this.status = status;
@@ -64,7 +60,7 @@ public class Download {
 
         Download download = (Download) o;
 
-        if (localFilename != null ? !localFilename.equals(download.localFilename) : download.localFilename != null)
+        if (localUri != null ? !localUri.equals(download.localUri) : download.localUri != null)
             return false;
 
         return true;
@@ -72,7 +68,7 @@ public class Download {
 
     @Override
     public int hashCode() {
-        return localFilename != null ? localFilename.hashCode() : 0;
+        return localUri != null ? localUri.hashCode() : 0;
     }
     
 }

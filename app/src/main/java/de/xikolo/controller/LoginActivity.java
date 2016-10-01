@@ -13,7 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.ProgressDialog;
 import de.xikolo.data.entities.User;

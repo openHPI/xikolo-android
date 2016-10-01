@@ -2,7 +2,8 @@ package de.xikolo.controller.helper;
 
 import android.support.v4.app.FragmentActivity;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.ProgressDialog;

@@ -3,7 +3,8 @@ package de.xikolo.model;
 import android.os.Handler;
 import android.os.Looper;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+
 import de.xikolo.model.events.NetworkStateEvent;
 
 public abstract class Result<T> {

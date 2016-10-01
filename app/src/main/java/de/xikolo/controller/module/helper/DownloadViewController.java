@@ -13,9 +13,12 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.dialogs.ConfirmDeleteDialog;
@@ -307,7 +310,8 @@ public class DownloadViewController {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(DownloadCompletedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDownloadCompletedEvent(DownloadCompletedEvent event) {
         if (event.getDownload().localUri.contains(item.id)
                 && DownloadModel.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri) == type) {
             showEndState();
@@ -315,20 +319,22 @@ public class DownloadViewController {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(DownloadStartedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDownloadStartedEvent(DownloadStartedEvent event) {
         if (event.getUrl().equals(uri) && !progressBarUpdaterRunning) {
             showRunningState();
         }
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(DownloadDeletedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDownloadDeletedEvent(DownloadDeletedEvent event) {
         if (event.getItem().id.equals(item.id) && progressBarUpdaterRunning) {
             showStartState();
         }
     }
 
-    public void openFileAsPdf() {
+    private void openFileAsPdf() {
         buttonOpenDownload.setText(GlobalApplication.getInstance().getResources().getText(R.string.open));
         buttonOpenDownload.setOnClickListener(new View.OnClickListener() {
             @Override

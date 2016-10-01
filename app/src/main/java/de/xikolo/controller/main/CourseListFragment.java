@@ -11,10 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.CourseActivity;
@@ -349,7 +352,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(UnenrollEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUnenrollEvent(UnenrollEvent event) {
         if (courses != null && courses.contains(event.getCourse())) {
             if (isMyCoursesFilter()) {
                 courses.remove(event.getCourse());
@@ -361,7 +365,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(EnrollEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEnrollEvent(EnrollEvent event) {
         if (isMyCoursesFilter()) {
             if (courses != null && !courses.contains(event.getCourse())) {
                 courses.add(event.getCourse());
@@ -375,7 +380,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(LoginEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginEvent(LoginEvent event) {
         courses = null;
         if (courseListAdapter != null) {
             courseListAdapter.clear();
@@ -384,7 +390,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(LogoutEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogoutEvent(LogoutEvent event) {
         courses = null;
         if (courseListAdapter != null) {
             courseListAdapter.clear();

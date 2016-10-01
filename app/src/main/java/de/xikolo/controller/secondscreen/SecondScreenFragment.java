@@ -18,10 +18,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.helper.ImageController;
@@ -133,7 +136,9 @@ public class SecondScreenFragment extends Fragment {
         }
     }
 
-    public void onEventMainThread(SecondScreenManager.SecondScreenNewVideoEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onSecondScreenNewVideoEvent(SecondScreenManager.SecondScreenNewVideoEvent event) {
         if (item == null || !item.equals(event.getItem())) {
             subtitleList = null;
         }
@@ -357,7 +362,9 @@ public class SecondScreenFragment extends Fragment {
         return layout;
     }
 
-    public void onEventMainThread(SecondScreenManager.SecondScreenUpdateVideoEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSecondScreenUpdateVideoEvent(SecondScreenManager.SecondScreenUpdateVideoEvent event) {
         item = event.getItem();
 
         if (event.getWebSocketMessage().payload().containsKey("current_time")) {
@@ -383,7 +390,7 @@ public class SecondScreenFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override

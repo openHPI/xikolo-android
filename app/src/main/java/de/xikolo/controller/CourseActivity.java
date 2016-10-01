@@ -15,6 +15,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -215,8 +218,10 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
     }
 
     @Override
-    public void onEventMainThread(NetworkStateEvent event) {
-        super.onEventMainThread(event);
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onNetworkEvent(NetworkStateEvent event) {
+        super.onNetworkEvent(event);
 
         if (tabLayout != null) {
             if (event.isOnline()) {

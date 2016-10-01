@@ -10,7 +10,10 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controller.SecondScreenActivity;
@@ -56,7 +59,9 @@ public class SecondScreenManager {
         isRequesting = false;
     }
 
-    public void onEventBackgroundThread(WebSocketManager.WebSocketMessageEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void onWebSocketMessageEvent(WebSocketManager.WebSocketMessageEvent event) {
         final WebSocketMessage message = event.getWebSocketMessage();
 
         if (!message.platform().equals("web") || !message.action().startsWith("video_")) {

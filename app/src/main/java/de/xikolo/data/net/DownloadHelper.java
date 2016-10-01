@@ -41,7 +41,6 @@ public class DownloadHelper {
         long id = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID));
         String title = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
         String description = c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
-        String localFilename = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
         String localUri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
         String uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
         int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
@@ -52,7 +51,7 @@ public class DownloadHelper {
         String mediaproviderUri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_MEDIAPROVIDER_URI));
         String mediaType = c.getString(c.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
 
-        return new Download(id, title, description, localFilename, localUri, uri, status, reason,
+        return new Download(id, title, description, localUri, uri, status, reason,
                 totalSizeBytes, bytesDownloadedSoFar, lastModifiedTimestamp, mediaproviderUri, mediaType);
     }
 

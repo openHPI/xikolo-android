@@ -2,17 +2,20 @@ package de.xikolo.model;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
 import com.path.android.jobqueue.JobManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.data.entities.Course;
@@ -100,14 +103,14 @@ public class DownloadModel extends BaseModel {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionsModel.requestPermission(PermissionsModel.WRITE_EXTERNAL_STORAGE) == 1) {
                 String file =  this.escapeFilename(item.title) + type.getFileSuffix();
-                String filename = buildDownloadFilename(type, course, module, item);
+                Uri downloadUri = buildDownloadUri(type, course, module, item);
 
-                if (downloadExists(filename)) {
+                if (downloadExists(downloadUri)) {
                     ToastUtil.show(R.string.toast_file_already_downloaded);
                 } else {
                     LanalyticsUtil.trackDownloadedFile(item.id, course.id, module.id, type);
 
-                    File dlFile = new File(filename);
+                    File dlFile = new File(downloadUri.getPath());
 
                     createFolderIfNotExists(new File(dlFile.getAbsolutePath().replace(file, "")));
 
@@ -128,23 +131,22 @@ public class DownloadModel extends BaseModel {
     public boolean deleteDownload(DownloadFileType type, Course course, Module module, Item item) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionsModel.requestPermission(PermissionsModel.WRITE_EXTERNAL_STORAGE) == 1) {
-                String filename = buildDownloadFilename(type, course, module, item);
+                Uri downloadUri = buildDownloadUri(type, course, module, item);
 
                 if (Config.DEBUG) {
-                    Log.d(TAG, "Delete download " + filename);
+                    Log.d(TAG, "Delete download " + downloadUri.toString());
                 }
 
-                if (!downloadExists(filename)) {
+                if (!downloadExists(downloadUri)) {
                     return false;
                 } else {
-                    File dlFile = new File(filename);
+                    EventBus.getDefault().post(new DownloadDeletedEvent(item));
+                    File dlFile = new File(downloadUri.getPath());
                     return dlFile.delete();
                 }
             } else {
                 pendingAction = PendingAction.DELETE;
                 pendingAction.savePayload(null, type, course, module, item);
-
-                EventBus.getDefault().post(new DownloadDeletedEvent(item));
                 return false;
             }
         } else {
@@ -157,22 +159,27 @@ public class DownloadModel extends BaseModel {
     public boolean cancelDownload(DownloadFileType type, Course course, Module module, Item item) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionsModel.requestPermission(PermissionsModel.WRITE_EXTERNAL_STORAGE) == 1) {
-                String filename = buildDownloadFilename(type, course, module, item);
+                Uri downloadUri = buildDownloadUri(type, course, module, item);
                 Download dl = new Download();
-                dl.localFilename = filename;
+                dl.localUri = downloadUri.toString();
 
                 if (Config.DEBUG) {
-                    Log.d(TAG, "Cancel download " + filename);
+                    Log.d(TAG, "Cancel download " + downloadUri.toString());
                 }
 
+                int id = 0;
                 Set<Download> dlSet = DownloadHelper.getAllDownloads();
                 for (Download download : dlSet) {
                     if (download.equals(dl)) {
-                        DownloadHelper.remove(download.id);
+                        id = DownloadHelper.remove(download.id);
                     }
                 }
+                if (id > 0) {
+                    EventBus.getDefault().post(new DownloadDeletedEvent(item));
+                    return true;
+                }
 
-                return deleteDownload(type, course, module, item);
+                return false;
             } else {
                 pendingAction = PendingAction.CANCEL;
                 pendingAction.savePayload(null, type, course, module, item);
@@ -185,7 +192,9 @@ public class DownloadModel extends BaseModel {
         }
     }
 
-    public void onEvent(PermissionGrantedEvent permissionGrantedEvent) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onPermissionGrantedEvent(PermissionGrantedEvent permissionGrantedEvent) {
         if (permissionGrantedEvent.getRequestCode() == PermissionsModel.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
             if (pendingAction != null) {
                 switch (pendingAction) {
@@ -209,19 +218,21 @@ public class DownloadModel extends BaseModel {
         }
     }
 
-    public void onEvent(PermissionDeniedEvent permissionDeniedEvent) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onPermissionDeniedEvent(PermissionDeniedEvent permissionDeniedEvent) {
         if (permissionDeniedEvent.getRequestCode() == PermissionsModel.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
             pendingAction = null;
         }
     }
 
     public Download getDownload(DownloadFileType type, Course course, Module module, Item item) {
-        String filename = buildDownloadFilename(type, course, module, item);
+        Uri downloadUri = buildDownloadUri(type, course, module, item);
         Download dl = new Download();
-        dl.localFilename = filename;
+        dl.localUri = downloadUri.toString();
 
         if (Config.DEBUG) {
-            Log.d(TAG, "Get download " + filename);
+            Log.d(TAG, "Get download " + downloadUri.toString());
         }
 
         Set<Download> dlSet = DownloadHelper.getAllDownloads();
@@ -235,9 +246,9 @@ public class DownloadModel extends BaseModel {
     }
 
     public boolean downloadRunning(DownloadFileType type, Course course, Module module, Item item) {
-        String dlFilename = buildDownloadFilename(type, course, module, item);
+        Uri downloadUri = buildDownloadUri(type, course, module, item);
         Download dl = new Download();
-        dl.localFilename = dlFilename;
+        dl.localUri = downloadUri.toString();
 
         int flags = DownloadManager.STATUS_PAUSED | DownloadManager.STATUS_PENDING | DownloadManager.STATUS_RUNNING;
         Set<Download> dlSet = DownloadHelper.getAllDownloadsForStatus(flags);
@@ -246,17 +257,17 @@ public class DownloadModel extends BaseModel {
     }
 
     public boolean downloadExists(DownloadFileType type, Course course, Module module, Item item) {
-        File file = new File(buildDownloadFilename(type, course, module, item));
+        File file = new File(buildDownloadUri(type, course, module, item).getPath());
         return file.isFile() && file.exists();
     }
 
-    private boolean downloadExists(String filename) {
-        File file = new File(filename);
+    private boolean downloadExists(Uri downloadUri) {
+        File file = new File(downloadUri.getPath());
         return file.isFile() && file.exists();
     }
 
     public File getDownloadFile(DownloadFileType type, Course course, Module module, Item item) {
-        File file = new File(buildDownloadFilename(type, course, module, item));
+        File file = new File(buildDownloadUri(type, course, module, item).getPath());
         if (file.isFile() && file.exists()) {
             return file;
         }
@@ -264,24 +275,24 @@ public class DownloadModel extends BaseModel {
     }
 
     public long getDownloadFileSize(DownloadFileType type, Course course, Module module, Item item) {
-        File file = new File(buildDownloadFilename(type, course, module, item));
+        File file = new File(buildDownloadUri(type, course, module, item).getPath());
         if (file.isFile() && file.exists()) {
             return file.length();
         }
         return 0;
     }
 
-    private String buildDownloadFilename(DownloadFileType type, Course course, Module module, Item item) {
+    private Uri buildDownloadUri(DownloadFileType type, Course course, Module module, Item item) {
         File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
                 + GlobalApplication.getInstance().getString(R.string.app_name));
 
         String file = this.escapeFilename(item.title) + type.getFileSuffix();
 
-        return publicAppFolder.getAbsolutePath() + File.separator
+        return Uri.fromFile(new File(publicAppFolder.getAbsolutePath() + File.separator
                 + escapeFilename(course.name) + "_" + course.id + File.separator
                 + escapeFilename(module.name) + "_" + module.id + File.separator
                 + escapeFilename(item.title) + "_" + item.id + File.separator
-                + file;
+                + file));
     }
 
     private String escapeFilename(String filename) {
