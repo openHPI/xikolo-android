@@ -2,25 +2,26 @@ package de.xikolo.model.jobs;
 
 import android.util.Log;
 
-import com.google.gson.reflect.TypeToken;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 import com.path.android.jobqueue.RetryConstraint;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.lang.reflect.Type;
-import java.net.URLEncoder;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.AccessToken;
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.net.ApiRequest;
+import de.xikolo.data.parser.ApiParser;
 import de.xikolo.data.preferences.UserPreferences;
 import de.xikolo.model.Result;
 import de.xikolo.model.events.LoginEvent;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class CreateAccessTokenJob extends Job {
 
@@ -55,17 +56,21 @@ public class CreateAccessTokenJob extends Job {
         if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
             result.error(Result.ErrorCode.NO_NETWORK);
         } else {
-            Type type = new TypeToken<AccessToken>(){}.getType();
+            String url = Config.API + Config.AUTHENTICATE;
 
-            String url = Config.API + Config.AUTHENTICATE + "?email=" + email + "&password=" + URLEncoder.encode(password, "UTF-8");
+            RequestBody body = new FormBody.Builder()
+                    .add("email", email)
+                    .add("password", password)
+                    .build();
 
-            JsonRequest request = new JsonRequest(url, type);
-            request.setMethod(Config.HTTP_POST);
-            request.setCache(false);
+            Response response = new ApiRequest(url)
+                    .post(body)
+                    .execute();
 
-            Object o = request.getResponse();
-            if (o != null) {
-                AccessToken token = (AccessToken) o;
+            if (response.isSuccessful()) {
+                AccessToken token = ApiParser.parse(response, AccessToken.class);
+                response.close();
+
                 if (Config.DEBUG) Log.i(TAG, "AccessToken created");
 
                 UserPreferences userPreferences = GlobalApplication.getInstance()

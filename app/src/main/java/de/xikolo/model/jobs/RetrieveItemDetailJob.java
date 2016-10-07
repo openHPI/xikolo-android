@@ -15,11 +15,13 @@ import de.xikolo.data.database.ItemDataAccess;
 import de.xikolo.data.database.VideoDataAccess;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.VideoItemDetail;
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.net.ApiRequest;
+import de.xikolo.data.parser.ApiParser;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.Response;
 
 public class RetrieveItemDetailJob extends Job {
 
@@ -80,19 +82,15 @@ public class RetrieveItemDetailJob extends Job {
             }
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                Type type = Item.getTypeToken(itemType);
-
                 String url = Config.API + Config.COURSES + courseId + "/"
                             + Config.MODULES + moduleId + "/" + Config.ITEMS + itemId;
 
-                JsonRequest request = new JsonRequest(url, type);
-                request.setCache(false);
+                Response response = new ApiRequest(url).execute();
+                if (response.isSuccessful()) {
+                    Type type = Item.getTypeToken(itemType);
+                    Item item = ApiParser.parse(response, type);
+                    response.close();
 
-                request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-
-                Object o = request.getResponse();
-                if (o != null) {
-                    Item item = (Item) o;
                     if (Config.DEBUG) Log.i(TAG, "ItemDetail received");
 
                     if (itemType.equals(Item.TYPE_VIDEO)) {

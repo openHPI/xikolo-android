@@ -2,22 +2,21 @@ package de.xikolo.model.jobs;
 
 import android.util.Log;
 
-import com.google.gson.reflect.TypeToken;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 import com.path.android.jobqueue.RetryConstraint;
 
-import java.lang.reflect.Type;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.database.CourseDataAccess;
 import de.xikolo.data.entities.Course;
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.net.ApiRequest;
+import de.xikolo.data.parser.ApiParser;
 import de.xikolo.model.Result;
-import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.Response;
 
 public class RetrieveCourseJob extends Job {
 
@@ -52,22 +51,12 @@ public class RetrieveCourseJob extends Job {
         result.success(courseDataAccess.getCourse(courseId), Result.DataSource.LOCAL);
 
         if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-            Type type = new TypeToken<Course>(){}.getType();
-
             String url = Config.API + Config.COURSES + courseId;
 
-            JsonRequest request = new JsonRequest(url, type);
-            request.setCache(false);
-
-            if (UserModel.isLoggedIn(GlobalApplication.getInstance())) {
-                String token = UserModel.getToken(GlobalApplication.getInstance());
-                request.setToken(token);
-            }
-
-            Object o = request.getResponse();
-            if (o != null) {
-                @SuppressWarnings("unchecked")
-                Course course = (Course) o;
+            Response response = new ApiRequest(url).execute();
+            if (response.isSuccessful()) {
+                Course course = ApiParser.parse(response, Course.class);
+                response.close();
 
                 if (Config.DEBUG) Log.i(TAG, "Course received (" + course.id + ")");
 

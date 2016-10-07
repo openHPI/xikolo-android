@@ -14,11 +14,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.database.CourseDataAccess;
 import de.xikolo.data.entities.Course;
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.net.ApiRequest;
+import de.xikolo.data.parser.ApiParser;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.Response;
 
 public class RetrieveCoursesJob extends Job {
 
@@ -55,20 +57,13 @@ public class RetrieveCoursesJob extends Job {
             result.success(courseDataAccess.getAllCourses(), Result.DataSource.LOCAL);
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                Type type = new TypeToken<List<Course>>(){}.getType();
-
                 String url = Config.API + Config.COURSES + "?include_progress=" + includeProgress;
 
-                JsonRequest request = new JsonRequest(url, type);
-                request.setCache(false);
-
-                String token = UserModel.getToken(GlobalApplication.getInstance());
-                request.setToken(token);
-
-                Object o = request.getResponse();
-                if (o != null) {
-                    @SuppressWarnings("unchecked")
-                    List<Course> courses = (List<Course>) o;
+                Response response = new ApiRequest(url).execute();
+                if (response.isSuccessful()) {
+                    Type type = new TypeToken<List<Course>>(){}.getType();
+                    List<Course> courses = ApiParser.parse(response, type);
+                    response.close();
 
                     if (Config.DEBUG) Log.i(TAG, "Courses received (" + courses.size() + ")");
 

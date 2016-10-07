@@ -24,7 +24,7 @@ import javax.net.ssl.SSLContext;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.WebSocketMessage;
-import de.xikolo.data.parser.GsonHelper;
+import de.xikolo.data.parser.ApiParser;
 import de.xikolo.model.UserModel;
 import de.xikolo.model.events.Event;
 import de.xikolo.model.events.LoginEvent;
@@ -163,7 +163,7 @@ public class WebSocketManager {
 
         WebSocketMessageEvent(String message) {
             super();
-            this.webSocketMessage = GsonHelper.create().fromJson(message, WebSocketMessage.class);
+            this.webSocketMessage = ApiParser.parse(message, WebSocketMessage.class);
         }
 
         public WebSocketMessageEvent(WebSocketMessage message) {

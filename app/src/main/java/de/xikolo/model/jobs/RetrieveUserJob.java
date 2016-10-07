@@ -2,22 +2,22 @@ package de.xikolo.model.jobs;
 
 import android.util.Log;
 
-import com.google.gson.reflect.TypeToken;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 import com.path.android.jobqueue.RetryConstraint;
 
-import java.lang.reflect.Type;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.entities.User;
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.net.ApiRequest;
+import de.xikolo.data.parser.ApiParser;
 import de.xikolo.data.preferences.UserPreferences;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.Response;
 
 public class RetrieveUserJob extends Job {
 
@@ -52,19 +52,15 @@ public class RetrieveUserJob extends Job {
             result.success(userPreferences.getUser(), Result.DataSource.LOCAL);
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                Type type = new TypeToken<User>(){}.getType();
-
                 String url = Config.API + Config.USER;
 
-                JsonRequest request = new JsonRequest(url, type);
-                request.setCache(false);
+                Response response = new ApiRequest(url).execute();
+                if (response.isSuccessful()) {
+                    User user = ApiParser.parse(response, User.class);
+                    response.close();
 
-                request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-
-                Object o = request.getResponse();
-                if (o != null) {
-                    User user = (User) o;
                     if (Config.DEBUG) Log.i(TAG, "User received: " + user.first_name);
+
                     userPreferences.saveUser(user);
                     result.success(user, Result.DataSource.NETWORK);
                 } else {

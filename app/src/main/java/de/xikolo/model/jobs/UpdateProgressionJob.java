@@ -12,10 +12,11 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.data.database.ItemDataAccess;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
-import de.xikolo.data.net.HttpRequest;
+import de.xikolo.data.net.ApiRequest;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
+import okhttp3.Response;
 
 public class UpdateProgressionJob extends Job {
 
@@ -58,13 +59,10 @@ public class UpdateProgressionJob extends Job {
         } else {
             String url = Config.API + Config.USER + Config.PROGRESSIONS + item.id;
 
-            HttpRequest request = new HttpRequest(url);
-            request.setMethod(Config.HTTP_PUT);
-            request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-            request.setCache(false);
+            Response response = new ApiRequest(url).execute();
+            if (response.isSuccessful()) {
+                response.close();
 
-            Object o = request.getResponse();
-            if (o != null) {
                 if (Config.DEBUG) Log.i(TAG, "Progression updated");
                 if (result != null) {
                     result.success(null, Result.DataSource.NETWORK);

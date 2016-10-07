@@ -14,11 +14,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.xikolo.GlobalApplication;
 import de.xikolo.controller.exceptions.WrongParameterException;
 import de.xikolo.data.entities.Subtitle;
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.net.ApiRequest;
+import de.xikolo.data.parser.ApiParser;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.Response;
 
 public class RetrieveVideoSubtitlesJob extends Job {
 
@@ -61,21 +63,15 @@ public class RetrieveVideoSubtitlesJob extends Job {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-
                 String url = Config.API + Config.COURSES + courseId + "/"
                             + Config.MODULES + moduleId + "/" + Config.ITEMS + videoId + "/" + Config.SUBTITLES;
 
-                Type type = new TypeToken<List<Subtitle>>(){}.getType();
+                Response response = new ApiRequest(url).execute();
+                if (response.isSuccessful()) {
+                    Type type = new TypeToken<List<Subtitle>>(){}.getType();
+                    List<Subtitle> subtitleList = ApiParser.parse(response, type);
+                    response.close();
 
-                JsonRequest request = new JsonRequest(url, type);
-                request.setCache(false);
-
-                request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-
-                Object o = request.getResponse();
-                if (o != null) {
-                    @SuppressWarnings("unchecked")
-                    List<Subtitle> subtitleList = (List<Subtitle>) o;
                     if (Config.DEBUG) Log.i(TAG, "Subtitles received");
 
                     result.success(subtitleList, Result.DataSource.NETWORK);

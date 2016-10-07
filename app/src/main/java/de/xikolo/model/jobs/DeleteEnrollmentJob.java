@@ -13,11 +13,12 @@ import de.xikolo.data.database.DataAccessFactory;
 import de.xikolo.data.database.ModuleDataAccess;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Module;
-import de.xikolo.data.net.HttpRequest;
+import de.xikolo.data.net.ApiRequest;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.Response;
 
 public class DeleteEnrollmentJob extends Job {
 
@@ -52,13 +53,13 @@ public class DeleteEnrollmentJob extends Job {
         } else {
             String url = Config.API + Config.USER + Config.ENROLLMENTS + course.id;
 
-            HttpRequest request = new HttpRequest(url);
-            request.setMethod(Config.HTTP_DELETE);
-            request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-            request.setCache(false);
+            Response response = new ApiRequest(url)
+                    .delete()
+                    .execute();
 
-            Object o = request.getResponse();
-            if (o != null) {
+            if (response.isSuccessful()) {
+                response.close();
+
                 if (Config.DEBUG) Log.i(TAG, "Enrollment deleted");
 
                 course.is_enrolled = false;

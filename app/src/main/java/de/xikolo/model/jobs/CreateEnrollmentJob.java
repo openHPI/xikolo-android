@@ -11,11 +11,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.database.CourseDataAccess;
 import de.xikolo.data.entities.Course;
-import de.xikolo.data.net.HttpRequest;
+import de.xikolo.data.net.ApiRequest;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class CreateEnrollmentJob extends Job {
 
@@ -48,16 +51,21 @@ public class CreateEnrollmentJob extends Job {
         } else if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
             result.error(Result.ErrorCode.NO_NETWORK);
         } else {
-            String url = Config.API + Config.USER + Config.ENROLLMENTS + "?course_id=" + course.id;
+            String url = Config.API + Config.USER + Config.ENROLLMENTS;
 
-            HttpRequest request = new HttpRequest(url);
-            request.setMethod(Config.HTTP_POST);
-            request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-            request.setCache(false);
+            RequestBody body = new FormBody.Builder()
+                    .add("course_id", course.id)
+                    .build();
 
-            Object o = request.getResponse();
-            if (o != null) {
+            Response response = new ApiRequest(url)
+                    .post(body)
+                    .execute();
+
+            if (response.isSuccessful()) {
+                response.close();
+
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
+
                 course.is_enrolled = true;
                 CourseDataAccess courseDataAccess = GlobalApplication.getInstance()
                         .getDataAccessFactory().getCourseDataAccess();

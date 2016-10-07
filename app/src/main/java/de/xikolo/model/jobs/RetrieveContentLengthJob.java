@@ -9,10 +9,11 @@ import com.path.android.jobqueue.RetryConstraint;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
-import de.xikolo.data.net.HttpRequest;
+import de.xikolo.data.net.ApiRequest;
 import de.xikolo.model.Result;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.Response;
 
 public class RetrieveContentLengthJob extends Job {
 
@@ -40,14 +41,20 @@ public class RetrieveContentLengthJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-            result.error(Result.ErrorCode.NO_NETWORK);
-        } else {
-            HttpRequest request = new HttpRequest(url);
-            request.setCache(false);
+        if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+            Response response = new ApiRequest(url)
+                    .head()
+                    .execute();
+            if (response.isSuccessful()) {
+                Long length = Long.parseLong(response.header("Content-Length", "0"));
+                response.close();
 
-            Long length = request.getContentLength();
-            result.success(length, Result.DataSource.NETWORK);
+                result.success(length, Result.DataSource.NETWORK);
+            } else {
+                result.error(Result.ErrorCode.NO_RESULT);
+            }
+        } else {
+            result.error(Result.ErrorCode.NO_NETWORK);
         }
     }
 

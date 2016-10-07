@@ -17,11 +17,13 @@ import de.xikolo.data.database.ItemDataAccess;
 import de.xikolo.data.database.ModuleDataAccess;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.net.ApiRequest;
+import de.xikolo.data.parser.ApiParser;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.Response;
 
 public class RetrieveModuleWithItemsJob extends Job {
 
@@ -68,38 +70,27 @@ public class RetrieveModuleWithItemsJob extends Job {
             }
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                Type type = new TypeToken<Module>(){}.getType();
-
                 String url = Config.API + Config.COURSES + courseId + "/"
                         + Config.MODULES + "/" + moduleId;
 
-                JsonRequest request = new JsonRequest(url, type);
-                request.setCache(false);
+                Response response = new ApiRequest(url).execute();
+                if (response.isSuccessful()) {
+                    Module module = ApiParser.parse(response, Module.class);
+                    response.close();
 
-                request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-
-                Object o = request.getResponse();
-                if (o != null) {
-                    @SuppressWarnings("unchecked")
-                    Module module = (Module) o;
                     if (Config.DEBUG) Log.i(TAG, "Module received (" + module.id + ")");
 
                     moduleDataAccess.addOrUpdateModule(courseId, module, false);
 
-                    Type typeItemList = new TypeToken<List<Item>>() {}.getType();
-
-                    String urlItemList = Config.API + Config.COURSES + courseId + "/"
+                    String itemListUrl = Config.API + Config.COURSES + courseId + "/"
                             + Config.MODULES + moduleId + "/" + Config.ITEMS;
 
-                    JsonRequest requestItemList = new JsonRequest(urlItemList, typeItemList);
-                    requestItemList.setCache(false);
+                    response = new ApiRequest(itemListUrl).execute();
+                    if (response.isSuccessful()) {
+                        Type type = new TypeToken<List<Item>>() {}.getType();
+                        List<Item> items = ApiParser.parse(response, type);
+                        response.close();
 
-                    requestItemList.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-
-                    Object oItemList = requestItemList.getResponse();
-                    if (oItemList != null) {
-                        @SuppressWarnings("unchecked")
-                        List<Item> items = (List<Item>) oItemList;
                         if (Config.DEBUG) Log.i(TAG, "Items received (" + items.size() + ")");
 
                         for (Item item : items) {

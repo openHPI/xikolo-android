@@ -14,11 +14,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.xikolo.GlobalApplication;
 import de.xikolo.data.database.ItemDataAccess;
 import de.xikolo.data.entities.Item;
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.net.ApiRequest;
+import de.xikolo.data.parser.ApiParser;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.Response;
 
 public class RetrieveItemsJob extends Job {
 
@@ -56,21 +58,15 @@ public class RetrieveItemsJob extends Job {
             result.success(itemDataAccess.getAllItemsForModule(moduleId), Result.DataSource.LOCAL);
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                Type type = new TypeToken<List<Item>>() {
-                }.getType();
-
                 String url = Config.API + Config.COURSES + courseId + "/"
                         + Config.MODULES + moduleId + "/" + Config.ITEMS;
 
-                JsonRequest request = new JsonRequest(url, type);
-                request.setCache(false);
+                Response response = new ApiRequest(url).execute();
+                if (response.isSuccessful()) {
+                    Type type = new TypeToken<List<Item>>() {}.getType();
+                    List<Item> items = ApiParser.parse(response, type);
+                    response.close();
 
-                request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-
-                Object o = request.getResponse();
-                if (o != null) {
-                    @SuppressWarnings("unchecked")
-                    List<Item> items = (List<Item>) o;
                     if (Config.DEBUG) Log.i(TAG, "Items received (" + items.size() + ")");
 
                     for (Item item : items) {

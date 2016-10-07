@@ -19,11 +19,13 @@ import de.xikolo.data.database.ModuleDataAccess;
 import de.xikolo.data.entities.Course;
 import de.xikolo.data.entities.Item;
 import de.xikolo.data.entities.Module;
-import de.xikolo.data.net.JsonRequest;
+import de.xikolo.data.net.ApiRequest;
+import de.xikolo.data.parser.ApiParser;
 import de.xikolo.model.Result;
 import de.xikolo.model.UserModel;
 import de.xikolo.util.Config;
 import de.xikolo.util.NetworkUtil;
+import okhttp3.Response;
 
 public class RetrieveModulesWithItemsJob extends Job {
 
@@ -73,20 +75,15 @@ public class RetrieveModulesWithItemsJob extends Job {
             result.success(localModules, Result.DataSource.LOCAL);
 
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                Type type = new TypeToken<List<Module>>(){}.getType();
-
                 String url = Config.API + Config.COURSES + course.id + "/"
                         + Config.MODULES + "?include_progress=" + includeProgress;
 
-                JsonRequest request = new JsonRequest(url, type);
-                request.setCache(false);
+                Response response = new ApiRequest(url).execute();
+                if (response.isSuccessful()) {
+                    Type type = new TypeToken<List<Module>>(){}.getType();
+                    List<Module> modules = ApiParser.parse(response, type);
+                    response.close();
 
-                request.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-
-                Object o = request.getResponse();
-                if (o != null) {
-                    @SuppressWarnings("unchecked")
-                    List<Module> modules = (List<Module>) o;
                     if (Config.DEBUG) Log.i(TAG, "Modules received (" + modules.size() + ")");
 
                     for (Module module : modules) {
@@ -94,21 +91,15 @@ public class RetrieveModulesWithItemsJob extends Job {
                     }
 
                     for (Module module : modules) {
-                        Type typeItemList = new TypeToken<List<Item>>() {
-                        }.getType();
-
-                        String urlItemList = Config.API + Config.COURSES + course.id + "/"
+                        String itemListUrl = Config.API + Config.COURSES + course.id + "/"
                                 + Config.MODULES + module.id + "/" + Config.ITEMS;
 
-                        JsonRequest requestItemList = new JsonRequest(urlItemList, typeItemList);
-                        requestItemList.setCache(false);
+                        response = new ApiRequest(itemListUrl).execute();
+                        if (response.isSuccessful()) {
+                            Type itemListType = new TypeToken<List<Item>>() {}.getType();
+                            List<Item> items = ApiParser.parse(response, itemListType);
+                            response.close();
 
-                        requestItemList.setToken(UserModel.getToken(GlobalApplication.getInstance()));
-
-                        Object oItemList = requestItemList.getResponse();
-                        if (oItemList != null) {
-                            @SuppressWarnings("unchecked")
-                            List<Item> items = (List<Item>) oItemList;
                             if (Config.DEBUG) Log.i(TAG, "Items received (" + items.size() + ")");
 
                             for (Item item : items) {
