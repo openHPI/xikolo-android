@@ -6,7 +6,7 @@
     android:background="@drawable/bg_item_navi_main"
     android:padding="16dp">
 
-    <de.xikolo.view.CustomFontTextView
+    <de.xikolo.views.CustomFontTextView
         android:id="@+id/textIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

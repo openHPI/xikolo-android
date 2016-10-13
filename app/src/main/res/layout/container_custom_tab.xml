@@ -12,7 +12,7 @@
         android:layout_marginBottom="4dp"
         android:background="@drawable/circle_white" />
 
-    <de.xikolo.view.CustomFontTextView
+    <de.xikolo.views.CustomFontTextView
         android:id="@+id/tabLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

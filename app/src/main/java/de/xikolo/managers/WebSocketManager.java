@@ -23,15 +23,14 @@ import java.util.Map;
 import javax.net.ssl.SSLContext;
 
 import de.xikolo.GlobalApplication;
-import de.xikolo.data.entities.WebSocketMessage;
-import de.xikolo.data.parser.ApiParser;
-import de.xikolo.model.UserModel;
-import de.xikolo.model.events.Event;
-import de.xikolo.model.events.LoginEvent;
-import de.xikolo.model.events.LogoutEvent;
-import de.xikolo.model.events.NetworkStateEvent;
-import de.xikolo.util.Config;
-import de.xikolo.util.NetworkUtil;
+import de.xikolo.models.WebSocketMessage;
+import de.xikolo.network.parser.ApiParser;
+import de.xikolo.events.Event;
+import de.xikolo.events.LoginEvent;
+import de.xikolo.events.LogoutEvent;
+import de.xikolo.events.NetworkStateEvent;
+import de.xikolo.utils.Config;
+import de.xikolo.utils.NetworkUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class WebSocketManager {
@@ -134,8 +133,8 @@ public class WebSocketManager {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onNetworkEvent(NetworkStateEvent event) {
-        if (event.isOnline() && UserModel.isLoggedIn(GlobalApplication.getInstance())) {
-            initConnection(UserModel.getToken(GlobalApplication.getInstance()));
+        if (event.isOnline() && UserManager.isLoggedIn()) {
+            initConnection(UserManager.getToken());
         }
     }
 
@@ -143,7 +142,7 @@ public class WebSocketManager {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onLoginEvent(LoginEvent event) {
         if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-            initConnection(UserModel.getToken(GlobalApplication.getInstance()));
+            initConnection(UserManager.getToken());
         }
     }
 

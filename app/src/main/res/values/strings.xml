@@ -101,6 +101,7 @@
     <string name="button_new">Create new account</string>
     <string name="enrollments">enrollments</string>
     <string name="total">Total</string>
+    <string name="points">Points</string>
     <string name="scan_qr">Please scan the QR Code</string>
     <string name="slides_as_pdf">Presentation slides as PDF</string>
     <string name="transcript_as_pdf">Transcript as PDF</string>

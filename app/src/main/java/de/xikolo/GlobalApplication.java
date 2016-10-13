@@ -1,7 +1,6 @@
 package de.xikolo;
 
 import android.app.Application;
-import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
@@ -15,19 +14,19 @@ import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.config.Configuration;
 import com.path.android.jobqueue.log.CustomLogger;
 
-import java.io.File;
-import java.io.IOException;
-
-import de.xikolo.data.database.DataAccessFactory;
-import de.xikolo.data.database.DatabaseHelper;
-import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
-import de.xikolo.util.ClientUtil;
-import de.xikolo.util.Config;
-import de.xikolo.util.FeatureToggle;
-import de.xikolo.util.SslCertificateUtil;
+import de.xikolo.storages.databases.DataType;
+import de.xikolo.storages.databases.DatabaseHelper;
+import de.xikolo.storages.databases.adapters.DataAdapter;
+import de.xikolo.storages.preferences.KeyValueStorage;
+import de.xikolo.storages.preferences.StorageHelper;
+import de.xikolo.storages.preferences.StorageType;
+import de.xikolo.utils.ClientUtil;
+import de.xikolo.utils.Config;
+import de.xikolo.utils.FeatureToggle;
+import de.xikolo.utils.SslCertificateUtil;
 
 public class GlobalApplication extends Application {
 
@@ -37,13 +36,9 @@ public class GlobalApplication extends Application {
 
     private JobManager jobManager;
 
-    private HttpResponseCache httpResponseCache;
-
     private DatabaseHelper databaseHelper;
 
-    private DataAccessFactory dataAccessFactory;
-
-    private PreferencesFactory preferencesFactory;
+    private StorageHelper storageHelper;
 
     private Lanalytics lanalytics;
 
@@ -61,24 +56,6 @@ public class GlobalApplication extends Application {
 
     public JobManager getJobManager() {
         return jobManager;
-    }
-
-    public DataAccessFactory getDataAccessFactory() {
-        synchronized (GlobalApplication.class) {
-            if (dataAccessFactory == null) {
-                dataAccessFactory = new DataAccessFactory(databaseHelper);
-            }
-        }
-        return dataAccessFactory;
-    }
-
-    public PreferencesFactory getPreferencesFactory() {
-        synchronized (GlobalApplication.class) {
-            if (preferencesFactory == null) {
-                preferencesFactory = new PreferencesFactory(this);
-            }
-        }
-        return preferencesFactory;
     }
 
     public Lanalytics getLanalytics() {
@@ -99,6 +76,32 @@ public class GlobalApplication extends Application {
         return webSocketManager;
     }
 
+    public static DataAdapter getDataAdapter(DataType type) {
+        return getInstance().getDatabaseHelper().getDataAdapter(type);
+    }
+
+    public DatabaseHelper getDatabaseHelper() {
+        synchronized (GlobalApplication.class) {
+            if (databaseHelper == null) {
+                databaseHelper = new DatabaseHelper(this);
+            }
+        }
+        return databaseHelper;
+    }
+
+    public static KeyValueStorage getStorage(StorageType type) {
+        return getInstance().getStorageHelper().getStorage(type);
+    }
+
+    public StorageHelper getStorageHelper() {
+        synchronized (GlobalApplication.class) {
+            if (storageHelper == null) {
+                storageHelper = new StorageHelper(this);
+            }
+        }
+        return storageHelper;
+    }
+
     public String getClientId() {
         return ClientUtil.id(this);
     }
@@ -108,8 +111,6 @@ public class GlobalApplication extends Application {
         super.onCreate();
 
         configureDefaultSettings();
-        configureDatabase();
-        configureHttpResponseCache();
         configureWebView();
         configureJobManager();
         configureVideoCastManager();
@@ -124,21 +125,6 @@ public class GlobalApplication extends Application {
 
     private void configureDefaultSettings() {
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-    }
-
-    private void configureDatabase() {
-        databaseHelper = new DatabaseHelper(this);
-    }
-
-    private void configureHttpResponseCache() {
-        // Create HTTP Response Cache
-        try {
-            File httpCacheDir = new File(this.getCacheDir(), "http");
-            long httpCacheSize = 20 * 1024 * 1024; // 20 MiB
-            httpResponseCache = HttpResponseCache.install(httpCacheDir, httpCacheSize);
-        } catch (IOException e) {
-            Log.i(TAG, "HTTP Response Cache installation failed:" + e);
-        }
     }
 
     @SuppressWarnings("deprecation")
@@ -187,12 +173,6 @@ public class GlobalApplication extends Application {
                 .consumerKeepAlive(120) // wait 2 minute
                 .build();
         jobManager = new JobManager(this, configuration);
-    }
-
-    public void flushHttpResponseCache() {
-        if (httpResponseCache != null) {
-            httpResponseCache.flush();
-        }
     }
 
     @SuppressWarnings("deprecation")

@@ -31,7 +31,7 @@
 -keep class com.google.gson.stream.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson
--keep class de.xikolo.data.entities.** { *; }
+-keep class de.xikolo.entities.** { *; }
 
 
 ##---------------Begin: proguard configuration for Samsung SDK  ----------

@@ -1,0 +1,64 @@
+package de.xikolo.managers.jobs;
+
+import android.util.Log;
+
+import com.path.android.jobqueue.Job;
+import com.path.android.jobqueue.Params;
+import com.path.android.jobqueue.RetryConstraint;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import de.xikolo.GlobalApplication;
+import de.xikolo.managers.UserManager;
+import de.xikolo.storages.databases.DataType;
+import de.xikolo.storages.databases.adapters.VideoDataAdapter;
+import de.xikolo.models.VideoItemDetail;
+import de.xikolo.managers.Result;
+import de.xikolo.utils.Config;
+
+public class UpdateLocalVideoJob extends Job {
+
+    public static final String TAG = UpdateLocalVideoJob.class.getSimpleName();
+
+    private static final AtomicInteger jobCounter = new AtomicInteger(0);
+
+    private final int id;
+
+    private Result<Void> result;
+    private VideoItemDetail videoItemDetail;
+
+    public UpdateLocalVideoJob(Result<Void> result, VideoItemDetail videoItemDetail) {
+        super(new Params(Priority.MID));
+        id = jobCounter.incrementAndGet();
+
+        this.result = result;
+        this.videoItemDetail = videoItemDetail;
+    }
+
+    @Override
+    public void onAdded() {
+        if (Config.DEBUG) Log.i(TAG, TAG + " added");
+    }
+
+    @Override
+    public void onRun() throws Throwable {
+        if (!UserManager.isLoggedIn()) {
+            result.error(Result.ErrorCode.NO_AUTH);
+        } else {
+            VideoDataAdapter videoDataAdapter = (VideoDataAdapter) GlobalApplication.getDataAdapter(DataType.VIDEO);
+            videoDataAdapter.addOrUpdate(videoItemDetail);
+            result.success(null, Result.DataSource.LOCAL);
+        }
+    }
+
+    @Override
+    protected void onCancel() {
+        result.error(Result.ErrorCode.ERROR);
+    }
+
+    @Override
+    protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
+        return RetryConstraint.CANCEL;
+    }
+
+}

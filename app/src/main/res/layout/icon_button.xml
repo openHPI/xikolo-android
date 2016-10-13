@@ -7,7 +7,7 @@
     android:elevation="1dp"
     android:translationZ="1dp">
 
-    <de.xikolo.view.CustomFontTextView
+    <de.xikolo.views.CustomFontTextView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
