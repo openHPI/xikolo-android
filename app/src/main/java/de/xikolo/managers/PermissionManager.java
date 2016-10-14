@@ -10,7 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.path.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.JobManager;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.controllers.dialogs.PermissionsDialog;

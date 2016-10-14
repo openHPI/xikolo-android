@@ -1,23 +1,23 @@
 package de.xikolo.managers.jobs;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.Params;
+import com.birbit.android.jobqueue.RetryConstraint;
 import com.google.gson.reflect.TypeToken;
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
-import com.path.android.jobqueue.RetryConstraint;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.controllers.exceptions.WrongParameterException;
+import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Subtitle;
 import de.xikolo.network.ApiRequest;
 import de.xikolo.network.parser.ApiParser;
-import de.xikolo.managers.Result;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 import okhttp3.Response;
@@ -26,19 +26,13 @@ public class RetrieveVideoSubtitlesJob extends Job {
 
     public static final String TAG = RetrieveVideoSubtitlesJob.class.getSimpleName();
 
-    private static final AtomicInteger jobCounter = new AtomicInteger(0);
-
-    private final int id;
-
-    private Result<List<Subtitle>> result;
-
     private String courseId;
     private String moduleId;
     private String videoId;
+    private Result<List<Subtitle>> result;
 
     public RetrieveVideoSubtitlesJob(Result<List<Subtitle>> result, String courseId, String moduleId, String videoId) {
         super(new Params(Priority.HIGH));
-        id = jobCounter.incrementAndGet();
 
         if (courseId == null || moduleId == null || videoId == null) {
             throw new WrongParameterException();
@@ -86,7 +80,7 @@ public class RetrieveVideoSubtitlesJob extends Job {
     }
 
     @Override
-    protected void onCancel() {
+    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         result.error(Result.ErrorCode.ERROR);
     }
 

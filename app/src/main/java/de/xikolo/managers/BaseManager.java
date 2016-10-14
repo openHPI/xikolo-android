@@ -1,6 +1,6 @@
 package de.xikolo.managers;
 
-import com.path.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.JobManager;
 
 public abstract class BaseManager {
 

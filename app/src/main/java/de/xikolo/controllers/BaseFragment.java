@@ -3,8 +3,8 @@ package de.xikolo.controllers;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.birbit.android.jobqueue.JobManager;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.path.android.jobqueue.JobManager;
 
 import de.xikolo.GlobalApplication;
 

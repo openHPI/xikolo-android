@@ -46,7 +46,7 @@ public class VideoController {
 
     private static final int PLAYBACK_PARAMS_SDK_LEVEL = 23;
 
-    private DownloadManager downloadModel;
+    private DownloadManager downloadManager;
 
     private Activity activity;
 
@@ -128,7 +128,7 @@ public class VideoController {
             }
         });
 
-        downloadModel = new DownloadManager(GlobalApplication.getInstance().getJobManager(), activity);
+        downloadManager = new DownloadManager(GlobalApplication.getInstance().getJobManager(), activity);
 
         setupView();
     }
@@ -583,12 +583,12 @@ public class VideoController {
     }
 
     private boolean videoDownloadPresent(DownloadManager.DownloadFileType fileType, Course course, Module module, Item<VideoItemDetail> video) {
-        return !downloadModel.downloadRunning(fileType, course, module, video)
-                && downloadModel.downloadExists(fileType, course, module, video);
+        return !downloadManager.downloadRunning(fileType, course, module, video)
+                && downloadManager.downloadExists(fileType, course, module, video);
     }
 
     private void setLocalVideoURI(DownloadManager.DownloadFileType fileType, Course course, Module module, Item<VideoItemDetail> video) {
-        setVideoURI("file://" + downloadModel.getDownloadFile(fileType, course, module, video).getAbsolutePath());
+        setVideoURI("file://" + downloadManager.getDownloadFile(fileType, course, module, video).getAbsolutePath());
         viewOfflineHint.setVisibility(View.VISIBLE);
     }
 

@@ -1,12 +1,11 @@
 package de.xikolo.managers.jobs;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
-import com.path.android.jobqueue.RetryConstraint;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.Params;
+import com.birbit.android.jobqueue.RetryConstraint;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.controllers.exceptions.WrongParameterException;
@@ -27,21 +26,14 @@ public class RetrieveItemDetailJob extends Job {
 
     public static final String TAG = RetrieveItemDetailJob.class.getSimpleName();
 
-    private static final AtomicInteger jobCounter = new AtomicInteger(0);
-
-    private final int id;
-
-    private Result<Item> result;
-
     private String courseId;
     private String moduleId;
     private String itemId;
-
     private String itemType;
+    private Result<Item> result;
 
     public RetrieveItemDetailJob(Result<Item> result, String courseId, String moduleId, String itemId, String itemType) {
         super(new Params(Priority.HIGH));
-        id = jobCounter.incrementAndGet();
 
         if (courseId == null || moduleId == null || itemId == null) {
             throw new WrongParameterException();
@@ -117,7 +109,7 @@ public class RetrieveItemDetailJob extends Job {
     }
 
     @Override
-    protected void onCancel() {
+    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         result.error(Result.ErrorCode.ERROR);
     }
 

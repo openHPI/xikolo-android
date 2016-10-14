@@ -1,20 +1,19 @@
 package de.xikolo.managers.jobs;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
-import com.path.android.jobqueue.RetryConstraint;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.Params;
+import com.birbit.android.jobqueue.RetryConstraint;
 
 import de.xikolo.GlobalApplication;
+import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
-import de.xikolo.storages.databases.DataType;
-import de.xikolo.storages.databases.adapters.CourseDataAdapter;
 import de.xikolo.models.Course;
 import de.xikolo.network.ApiRequest;
-import de.xikolo.managers.Result;
+import de.xikolo.storages.databases.DataType;
+import de.xikolo.storages.databases.adapters.CourseDataAdapter;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 import okhttp3.FormBody;
@@ -25,16 +24,11 @@ public class CreateEnrollmentJob extends Job {
 
     public static final String TAG = CreateEnrollmentJob.class.getSimpleName();
 
-    private static final AtomicInteger jobCounter = new AtomicInteger(0);
-
-    private final int id;
-
     private Course course;
     private Result<Course> result;
 
     public CreateEnrollmentJob(Result<Course> result, Course course) {
         super(new Params(Priority.HIGH));
-        id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.course = course;
@@ -80,7 +74,7 @@ public class CreateEnrollmentJob extends Job {
     }
 
     @Override
-    protected void onCancel() {
+    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         result.error(Result.ErrorCode.ERROR);
     }
 

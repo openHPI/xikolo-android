@@ -188,7 +188,7 @@ public class SecondScreenFragment extends Fragment {
             final View viewQuiz = addQuizAction();
             final View viewPinboard = addPinboardAction();
 
-            ItemManager itemModel = new ItemManager(GlobalApplication.getInstance().getJobManager());
+            ItemManager itemManager = new ItemManager(GlobalApplication.getInstance().getJobManager());
 
             // pdf
             if (!"".equals(item.detail.slides_url)) {
@@ -207,7 +207,7 @@ public class SecondScreenFragment extends Fragment {
                     }
                 };
 
-                itemModel.getVideoSubtitles(result, message.payload().get("course_id"), message.payload().get("section_id"), item.id);
+                itemManager.getVideoSubtitles(result, message.payload().get("course_id"), message.payload().get("section_id"), item.id);
             } else {
                 if (subtitleList.size() > 0) {
                     viewTranscript.setVisibility(View.VISIBLE);

@@ -1,12 +1,11 @@
 package de.xikolo.managers.jobs;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
-import com.path.android.jobqueue.RetryConstraint;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.Params;
+import com.birbit.android.jobqueue.RetryConstraint;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.managers.Result;
@@ -22,16 +21,11 @@ public class UpdateProgressionJob extends Job {
 
     public static final String TAG = UpdateProgressionJob.class.getSimpleName();
 
-    private static final AtomicInteger jobCounter = new AtomicInteger(0);
-
-    private final int id;
-
-    private transient Result<Void> result;
     private Item item;
+    private transient Result<Void> result;
 
     public UpdateProgressionJob(Result<Void> result, Item item) {
         super(new Params(Priority.LOW).requireNetwork().persist());
-        id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.item = item;
@@ -74,7 +68,7 @@ public class UpdateProgressionJob extends Job {
     }
 
     @Override
-    protected void onCancel() {
+    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         result.error(Result.ErrorCode.ERROR);
     }
 

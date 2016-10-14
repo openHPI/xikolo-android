@@ -1,21 +1,20 @@
 package de.xikolo.managers.jobs;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
-import com.path.android.jobqueue.RetryConstraint;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.Params;
+import com.birbit.android.jobqueue.RetryConstraint;
 
 import de.xikolo.GlobalApplication;
+import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.User;
 import de.xikolo.network.ApiRequest;
 import de.xikolo.network.parser.ApiParser;
 import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.storages.preferences.UserStorage;
-import de.xikolo.managers.Result;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 import okhttp3.Response;
@@ -24,15 +23,10 @@ public class RetrieveUserJob extends Job {
 
     public static final String TAG = RetrieveUserJob.class.getSimpleName();
 
-    private static final AtomicInteger jobCounter = new AtomicInteger(0);
-
-    private final int id;
-
     private Result<User> result;
 
     public RetrieveUserJob(Result<User> result) {
         super(new Params(Priority.HIGH));
-        id = jobCounter.incrementAndGet();
 
         this.result = result;
     }
@@ -74,7 +68,7 @@ public class RetrieveUserJob extends Job {
     }
 
     @Override
-    protected void onCancel() {
+    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         result.error(Result.ErrorCode.ERROR);
     }
 

@@ -1,26 +1,26 @@
 package de.xikolo.managers.jobs;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.Params;
+import com.birbit.android.jobqueue.RetryConstraint;
 import com.google.gson.reflect.TypeToken;
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
-import com.path.android.jobqueue.RetryConstraint;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
-import de.xikolo.storages.databases.DataType;
-import de.xikolo.storages.databases.adapters.ItemDataAdapter;
-import de.xikolo.storages.databases.adapters.ModuleDataAdapter;
+import de.xikolo.managers.Result;
+import de.xikolo.managers.UserManager;
 import de.xikolo.models.Item;
 import de.xikolo.models.Module;
 import de.xikolo.network.ApiRequest;
 import de.xikolo.network.parser.ApiParser;
-import de.xikolo.managers.Result;
-import de.xikolo.managers.UserManager;
+import de.xikolo.storages.databases.DataType;
+import de.xikolo.storages.databases.adapters.ItemDataAdapter;
+import de.xikolo.storages.databases.adapters.ModuleDataAdapter;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 import okhttp3.Response;
@@ -29,17 +29,12 @@ public class RetrieveModuleWithItemListJob extends Job {
 
     public static final String TAG = RetrieveModuleWithItemListJob.class.getSimpleName();
 
-    private static final AtomicInteger jobCounter = new AtomicInteger(0);
-
-    private final int id;
-
-    private Result<Module> result;
     private String courseId;
     private String moduleId;
+    private Result<Module> result;
 
     public RetrieveModuleWithItemListJob(Result<Module> result, String courseId, String moduleId) {
         super(new Params(Priority.MID));
-        id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.courseId = courseId;
@@ -118,7 +113,7 @@ public class RetrieveModuleWithItemListJob extends Job {
     }
 
     @Override
-    protected void onCancel() {
+    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         result.error(Result.ErrorCode.ERROR);
     }
 

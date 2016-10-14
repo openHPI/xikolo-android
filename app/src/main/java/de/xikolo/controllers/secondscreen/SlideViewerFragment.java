@@ -42,7 +42,7 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
 
     private PDFView pdfView;
 
-    private DownloadManager downloadModel;
+    private DownloadManager downloadManager;
 
     private ProgressDialog progressDialog;
 
@@ -91,7 +91,7 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
             currentPage = 0;
         }
 
-        downloadModel = new DownloadManager(GlobalApplication.getInstance().getJobManager(), getActivity());
+        downloadManager = new DownloadManager(GlobalApplication.getInstance().getJobManager(), getActivity());
     }
 
     @Override
@@ -122,14 +122,14 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
             }
         });
 
-        if (downloadModel.downloadExists(DownloadManager.DownloadFileType.SLIDES, course, module, item)) {
+        if (downloadManager.downloadExists(DownloadManager.DownloadFileType.SLIDES, course, module, item)) {
             initSlidesViewer();
         } else {
             DownloadSlidesDialog dialog = DownloadSlidesDialog.getInstance();
             dialog.setListener(new DownloadSlidesDialog.DownloadSlidesDialogListener() {
                 @Override
                 public void onDialogPositiveClick() {
-                    downloadModel.startDownload(item.detail.slides_url, DownloadManager.DownloadFileType.SLIDES, course, module, item);
+                    downloadManager.startDownload(item.detail.slides_url, DownloadManager.DownloadFileType.SLIDES, course, module, item);
                     progressDialog = ProgressDialog.getInstance();
                     progressDialog.show(getFragmentManager(), ProgressDialog.TAG);
                 }
@@ -144,8 +144,8 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
     }
 
     private void initSlidesViewer() {
-        if (downloadModel != null && downloadModel.downloadExists(DownloadManager.DownloadFileType.SLIDES, course, module, item)) {
-            File file = downloadModel.getDownloadFile(DownloadManager.DownloadFileType.SLIDES, course, module, item);
+        if (downloadManager != null && downloadManager.downloadExists(DownloadManager.DownloadFileType.SLIDES, course, module, item)) {
+            File file = downloadManager.getDownloadFile(DownloadManager.DownloadFileType.SLIDES, course, module, item);
             pdfView.fromFile(file)
                     .swipeVertical(true)
                     .enableAnnotationRendering(true)

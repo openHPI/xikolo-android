@@ -1,35 +1,29 @@
 package de.xikolo.managers.jobs;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
-import com.path.android.jobqueue.RetryConstraint;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.Params;
+import com.birbit.android.jobqueue.RetryConstraint;
 
 import de.xikolo.GlobalApplication;
+import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
+import de.xikolo.models.VideoItemDetail;
 import de.xikolo.storages.databases.DataType;
 import de.xikolo.storages.databases.adapters.VideoDataAdapter;
-import de.xikolo.models.VideoItemDetail;
-import de.xikolo.managers.Result;
 import de.xikolo.utils.Config;
 
 public class UpdateLocalVideoJob extends Job {
 
     public static final String TAG = UpdateLocalVideoJob.class.getSimpleName();
 
-    private static final AtomicInteger jobCounter = new AtomicInteger(0);
-
-    private final int id;
-
-    private Result<Void> result;
     private VideoItemDetail videoItemDetail;
+    private Result<Void> result;
 
     public UpdateLocalVideoJob(Result<Void> result, VideoItemDetail videoItemDetail) {
         super(new Params(Priority.MID));
-        id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.videoItemDetail = videoItemDetail;
@@ -52,7 +46,7 @@ public class UpdateLocalVideoJob extends Job {
     }
 
     @Override
-    protected void onCancel() {
+    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         result.error(Result.ErrorCode.ERROR);
     }
 

@@ -1,16 +1,15 @@
 package de.xikolo.managers.jobs;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
-import com.path.android.jobqueue.RetryConstraint;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.Params;
+import com.birbit.android.jobqueue.RetryConstraint;
 
 import de.xikolo.GlobalApplication;
-import de.xikolo.network.ApiRequest;
 import de.xikolo.managers.Result;
+import de.xikolo.network.ApiRequest;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 import okhttp3.Response;
@@ -19,16 +18,11 @@ public class RetrieveContentLengthJob extends Job {
 
     public static final String TAG = RetrieveContentLengthJob.class.getSimpleName();
 
-    private static final AtomicInteger jobCounter = new AtomicInteger(0);
-
-    private final int id;
-
-    private Result<Long> result;
     private String url;
+    private Result<Long> result;
 
     public RetrieveContentLengthJob(Result<Long> result, String url) {
         super(new Params(Priority.LOW));
-        id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.url = url;
@@ -59,7 +53,7 @@ public class RetrieveContentLengthJob extends Job {
     }
 
     @Override
-    protected void onCancel() {
+    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         result.error(Result.ErrorCode.ERROR);
     }
 

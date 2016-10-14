@@ -1,16 +1,16 @@
 package de.xikolo.managers.jobs;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.Params;
+import com.birbit.android.jobqueue.RetryConstraint;
 import com.google.gson.reflect.TypeToken;
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
-import com.path.android.jobqueue.RetryConstraint;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.managers.Result;
@@ -28,17 +28,12 @@ public class RetrieveModuleListJob extends Job {
 
     public static final String TAG = RetrieveModuleListJob.class.getSimpleName();
 
-    private static final AtomicInteger jobCounter = new AtomicInteger(0);
-
-    private final int id;
-
     private String courseId;
     private boolean includeProgress;
     private Result<List<Module>> result;
 
     public RetrieveModuleListJob(Result<List<Module>> result, String courseId, boolean includeProgress) {
         super(new Params(Priority.MID));
-        id = jobCounter.incrementAndGet();
 
         this.result = result;
         this.courseId = courseId;
@@ -99,7 +94,7 @@ public class RetrieveModuleListJob extends Job {
     }
 
     @Override
-    protected void onCancel() {
+    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         result.error(Result.ErrorCode.ERROR);
     }
 

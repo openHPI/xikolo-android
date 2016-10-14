@@ -1,16 +1,16 @@
 package de.xikolo.managers;
 
-import com.path.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.JobManager;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import de.xikolo.models.Course;
-import de.xikolo.models.Module;
-import de.xikolo.managers.jobs.RetrieveModuleWithItemListJob;
 import de.xikolo.managers.jobs.RetrieveModuleListJob;
 import de.xikolo.managers.jobs.RetrieveModuleListWithItemListJob;
+import de.xikolo.managers.jobs.RetrieveModuleWithItemListJob;
+import de.xikolo.models.Course;
+import de.xikolo.models.Module;
 
 public class ModuleManager extends BaseManager {
 

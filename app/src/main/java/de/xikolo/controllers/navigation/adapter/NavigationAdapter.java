@@ -92,14 +92,14 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 NAV_ITEMS.size()));
     }
 
-    private CourseManager courseModel;
+    private CourseManager courseManager;
 
     private int checkedItem = -1;
 
     private OnItemClickListener itemClickListener;
 
     public NavigationAdapter() {
-        this.courseModel = new CourseManager(GlobalApplication.getInstance().getJobManager());
+        this.courseManager = new CourseManager(GlobalApplication.getInstance().getJobManager());
     }
 
     @Override
@@ -169,7 +169,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
 
             if (UserManager.isLoggedIn()) {
-                int size = courseModel.getEnrollmentsCount();
+                int size = courseManager.getEnrollmentsCount();
                 counterViewHolder.textCounter.setText(String.valueOf(size));
                 if (size > 0) {
                     counterViewHolder.textCounter.setVisibility(View.VISIBLE);

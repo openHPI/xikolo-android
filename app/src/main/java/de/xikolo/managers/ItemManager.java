@@ -1,22 +1,22 @@
 package de.xikolo.managers;
 
-import com.path.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.JobManager;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.xikolo.managers.jobs.RetrieveItemDetailJob;
+import de.xikolo.managers.jobs.RetrieveItemListJob;
+import de.xikolo.managers.jobs.RetrieveLocalVideoJob;
+import de.xikolo.managers.jobs.RetrieveVideoSubtitlesJob;
+import de.xikolo.managers.jobs.UpdateLocalVideoJob;
+import de.xikolo.managers.jobs.UpdateProgressionJob;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Module;
 import de.xikolo.models.Subtitle;
 import de.xikolo.models.VideoItemDetail;
-import de.xikolo.managers.jobs.RetrieveItemDetailJob;
-import de.xikolo.managers.jobs.RetrieveItemListJob;
-import de.xikolo.managers.jobs.RetrieveLocalVideoJob;
-import de.xikolo.managers.jobs.RetrieveVideoSubtitlesJob;
-import de.xikolo.managers.jobs.UpdateProgressionJob;
-import de.xikolo.managers.jobs.UpdateLocalVideoJob;
 
 public class ItemManager extends BaseManager {
 

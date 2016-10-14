@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
-import com.path.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.JobManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -17,16 +17,16 @@ import java.util.Set;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.models.Course;
-import de.xikolo.models.Download;
-import de.xikolo.models.Item;
-import de.xikolo.models.Module;
-import de.xikolo.network.DownloadHelper;
 import de.xikolo.events.DownloadDeletedEvent;
 import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
 import de.xikolo.managers.jobs.RetrieveContentLengthJob;
+import de.xikolo.models.Course;
+import de.xikolo.models.Download;
+import de.xikolo.models.Item;
+import de.xikolo.models.Module;
+import de.xikolo.network.DownloadHelper;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.ExternalStorageUtil;
 import de.xikolo.utils.LanalyticsUtil;
@@ -36,9 +36,7 @@ public class DownloadManager extends BaseManager {
 
     public static final String TAG = DownloadManager.class.getSimpleName();
 
-    private Activity activity;
-
-    private PermissionManager permissionsModel;
+    private PermissionManager permissionManager;
 
     public enum PendingAction {
             START, DELETE, CANCEL;
@@ -82,10 +80,8 @@ public class DownloadManager extends BaseManager {
 
     public DownloadManager(JobManager jobManager, Activity activity) {
         super(jobManager);
-        this.activity = activity;
 
-        this.permissionsModel = new PermissionManager(jobManager, activity);
-
+        this.permissionManager = new PermissionManager(jobManager, activity);
         this.pendingAction = null;
 
         EventBus.getDefault().register(this);
@@ -100,7 +96,7 @@ public class DownloadManager extends BaseManager {
             Log.d(TAG, "Start download for " + uri);
         }
         if (ExternalStorageUtil.isExternalStorageWritable()) {
-            if (permissionsModel.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
+            if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 String file =  this.escapeFilename(item.title) + type.getFileSuffix();
                 Uri downloadUri = buildDownloadUri(type, course, module, item);
 
@@ -129,7 +125,7 @@ public class DownloadManager extends BaseManager {
 
     public boolean deleteDownload(DownloadFileType type, Course course, Module module, Item item) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
-            if (permissionsModel.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
+            if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 Uri downloadUri = buildDownloadUri(type, course, module, item);
 
                 if (Config.DEBUG) {
@@ -157,7 +153,7 @@ public class DownloadManager extends BaseManager {
 
     public boolean cancelDownload(DownloadFileType type, Course course, Module module, Item item) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
-            if (permissionsModel.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
+            if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 Uri downloadUri = buildDownloadUri(type, course, module, item);
                 Download dl = new Download();
                 dl.localUri = downloadUri.toString();

@@ -8,11 +8,11 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 
+import com.birbit.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.config.Configuration;
+import com.birbit.android.jobqueue.log.CustomLogger;
 import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.path.android.jobqueue.JobManager;
-import com.path.android.jobqueue.config.Configuration;
-import com.path.android.jobqueue.log.CustomLogger;
 
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
@@ -145,16 +145,21 @@ public class GlobalApplication extends Application {
 
         Configuration configuration = new Configuration.Builder(this)
                 .customLogger(new CustomLogger() {
-                    private static final String TAG = "JOBS";
+                    private final String TAG = JobManager.class.getSimpleName();
 
                     @Override
                     public boolean isDebugEnabled() {
-                        return false;
+                        return Config.DEBUG;
+                    }
+
+                    @Override
+                    public void v(String text, Object... args) {
+                        if (Config.DEBUG) Log.v(TAG, String.format(text, args));
                     }
 
                     @Override
                     public void d(String text, Object... args) {
-                        Log.d(TAG, String.format(text, args));
+                        if (Config.DEBUG) Log.d(TAG, String.format(text, args));
                     }
 
                     @Override
@@ -172,7 +177,7 @@ public class GlobalApplication extends Application {
                 .loadFactor(2) // jobs per consumer
                 .consumerKeepAlive(120) // wait 2 minute
                 .build();
-        jobManager = new JobManager(this, configuration);
+        jobManager = new JobManager(configuration);
     }
 
     @SuppressWarnings("deprecation")

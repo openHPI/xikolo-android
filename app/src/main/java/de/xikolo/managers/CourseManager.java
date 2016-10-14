@@ -1,6 +1,6 @@
 package de.xikolo.managers;
 
-import com.path.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.JobManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,11 +8,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.xikolo.GlobalApplication;
-import de.xikolo.models.Course;
 import de.xikolo.managers.jobs.CreateEnrollmentJob;
 import de.xikolo.managers.jobs.DeleteEnrollmentJob;
 import de.xikolo.managers.jobs.RetrieveCourseJob;
 import de.xikolo.managers.jobs.RetrieveCourseListJob;
+import de.xikolo.models.Course;
 import de.xikolo.storages.databases.DataType;
 import de.xikolo.storages.databases.adapters.CourseDataAdapter;
 import de.xikolo.utils.DateUtil;

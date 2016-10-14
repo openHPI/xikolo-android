@@ -76,7 +76,7 @@ public class ModuleDownloadController {
     }
     
     private void startModuleDownloads(final Course course, final Module module) {
-        ItemManager itemModel = new ItemManager(application.getJobManager());
+        ItemManager itemManager = new ItemManager(application.getJobManager());
 
         LanalyticsUtil.trackDownloadedSection(module.id, course.id, hdVideo, sdVideo, slides);
 
@@ -109,7 +109,7 @@ public class ModuleDownloadController {
                         }
                     }
                 };
-                itemModel.getItemDetail(result, course, module, item, item.type);
+                itemManager.getItemDetail(result, course, module, item, item.type);
                 downloadStarted = true;
             }
         }
