@@ -99,8 +99,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "de.xikolo.utils.BuildType", "X_TYPE", "de.xikolo.utils.BuildType.RELEASE"
             debuggable false
