@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.ScrollBar;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
+import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -27,13 +27,13 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.DownloadSlidesDialog;
 import de.xikolo.controllers.dialogs.ProgressDialog;
+import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.managers.DownloadManager;
+import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Module;
 import de.xikolo.models.VideoItemDetail;
-import de.xikolo.managers.SecondScreenManager;
-import de.xikolo.events.DownloadCompletedEvent;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SlideViewerFragment extends Fragment implements OnLoadCompleteListener, OnPageChangeListener {
@@ -88,7 +88,7 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
         if (savedInstanceState != null) {
             currentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
         } else {
-            currentPage = 0;
+            currentPage = -1;
         }
 
         downloadManager = new DownloadManager(GlobalApplication.getInstance().getJobManager(), getActivity());
@@ -108,15 +108,12 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
 
         pdfView = (PDFView) view.findViewById(R.id.pdf_view);
 
-        ScrollBar scrollBar = (ScrollBar) view.findViewById(R.id.scroll_bar);
-        pdfView.setScrollBar(scrollBar);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fab.hide();
                 textCurrentPage.setVisibility(View.GONE);
-                if (currentPage > 0) {
+                if (currentPage >= 0) {
                     pdfView.jumpTo(currentPage);
                 }
             }
@@ -147,17 +144,17 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
         if (downloadManager != null && downloadManager.downloadExists(DownloadManager.DownloadFileType.SLIDES, course, module, item)) {
             File file = downloadManager.getDownloadFile(DownloadManager.DownloadFileType.SLIDES, course, module, item);
             pdfView.fromFile(file)
-                    .swipeVertical(true)
                     .enableAnnotationRendering(true)
                     .onLoad(this)
                     .onPageChange(this)
+                    .scrollHandle(new DefaultScrollHandle(getActivity()))
                     .load();
         }
     }
 
     @Override
     public void onPageChanged(int page, int pageCount) {
-        if (currentPage > 0 && page != currentPage) {
+        if (currentPage >= 0 && page != currentPage) {
             fab.show();
             textCurrentPage.setVisibility(View.VISIBLE);
         }
@@ -165,7 +162,7 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
 
     @Override
     public void loadComplete(int nbPages) {
-        if (currentPage > 0) {
+        if (currentPage >= 0) {
             pdfView.jumpTo(currentPage);
             if (fab != null) {
                 fab.hide();
@@ -202,9 +199,9 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
                 try {
                     int page = Integer.parseInt(event.getWebSocketMessage().payload().get("slide_number"));
                     if (pdfView != null) {
-                        currentPage = page + 1;
+                        currentPage = page;
                         if (currentPage != pdfView.getCurrentPage() && fab != null && !fab.isShown()) {
-                            textCurrentPage.setText(String.format(getString(R.string.second_screen_pdf_pager), currentPage));
+                            textCurrentPage.setText(String.format(getString(R.string.second_screen_pdf_pager), currentPage + 1));
                             pdfView.jumpTo(currentPage);
                         }
                     }

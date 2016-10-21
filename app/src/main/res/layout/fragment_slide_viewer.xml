@@ -6,19 +6,7 @@
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdf_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toLeftOf="@+id/scroll_bar" />
-
-    <com.github.barteksc.pdfviewer.ScrollBar
-        android:id="@+id/scroll_bar"
-        android:layout_width="8dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@color/background_main"
-        app:sb_handlerColor="@color/apptheme_second"
-        app:sb_indicatorColor="@color/apptheme_second"
-        app:sb_indicatorTextColor="@color/white" />
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:layout_width="wrap_content"
