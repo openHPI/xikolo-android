@@ -15,6 +15,8 @@
 
         <item name="android:textViewStyle">@style/TextViewTheme</item>
 
+        <item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="castExpandedControllerStyle">@style/CustomCastExpandedController</item>
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base">
@@ -38,5 +40,16 @@
     <style name="TextViewTheme" parent="android:Widget.TextView">
         <item name="android:textColor">@color/text_main</item>
     </style>
+
+    <style name="CustomCastExpandedController" parent="CastExpandedController">
+        <item name="castControlButtons">@array/cast_expanded_controller_control_buttons</item>
+    </style>
+
+    <array name="cast_expanded_controller_control_buttons">
+        <item>@id/cast_button_type_empty</item>
+        <item>@id/cast_button_type_rewind_30_seconds</item>
+        <item>@id/cast_button_type_mute_toggle</item>
+        <item>@id/cast_button_type_empty</item>
+    </array>
 
 </resources>

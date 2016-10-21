@@ -13,13 +13,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.birbit.android.jobqueue.JobManager;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
-import com.google.android.libraries.cast.companionlibrary.widgets.IntroductoryOverlay;
+import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastState;
+import com.google.android.gms.cast.framework.CastStateListener;
+import com.google.android.gms.cast.framework.IntroductoryOverlay;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,7 +40,7 @@ import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.utils.FeatureToggle;
 import de.xikolo.utils.PlayServicesUtil;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements CastStateListener {
 
     protected GlobalApplication globalApplication;
 
@@ -49,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected AppBarLayout appBar;
 
-    protected VideoCastManager videoCastManager;
+    protected CastContext castContext;
 
     private DrawerLayout drawerLayout;
 
@@ -72,17 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         PlayServicesUtil.checkPlayServices(this);
 
-        videoCastManager = VideoCastManager.getInstance();
-
-        VideoCastConsumerImpl castConsumer = new VideoCastConsumerImpl() {
-            @Override
-            public void onCastAvailabilityChanged(boolean castPresent) {
-                if (castPresent) {
-                    showOverlay();
-                }
-            }
-        };
-        videoCastManager.addVideoCastConsumer(castConsumer);
+        castContext = CastContext.getSharedInstance(this);
 
         if (overlay == null) {
             showOverlay();
@@ -95,25 +88,33 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (overlay != null) {
             overlay.remove();
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mediaRouteMenuItem != null && mediaRouteMenuItem.isVisible()) {
-                    overlay = new IntroductoryOverlay.Builder(BaseActivity.this)
-                            .setMenuItem(mediaRouteMenuItem)
-                            .setTitleText(R.string.intro_overlay_text)
-                            .setSingleTime()
-                            .setOnDismissed(new IntroductoryOverlay.OnOverlayDismissedListener() {
-                                @Override
-                                public void onOverlayDismissed() {
-                                    overlay = null;
-                                }
-                            })
-                            .build();
-                    overlay.show();
+        if ((mediaRouteMenuItem != null) && mediaRouteMenuItem.isVisible()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mediaRouteMenuItem != null && mediaRouteMenuItem.isVisible()) {
+                        overlay = new IntroductoryOverlay.Builder(BaseActivity.this, mediaRouteMenuItem)
+                                .setTitleText(R.string.intro_overlay_text)
+                                .setSingleTime()
+                                .setOnOverlayDismissedListener(new IntroductoryOverlay.OnOverlayDismissedListener() {
+                                    @Override
+                                    public void onOverlayDismissed() {
+                                        overlay = null;
+                                    }
+                                })
+                                .build();
+                        overlay.show();
+                    }
                 }
-            }
-        }, 1000);
+            }, 1000);
+        }
+    }
+
+    @Override
+    public void onCastStateChanged(int newState) {
+        if (newState != CastState.NO_DEVICES_AVAILABLE) {
+            showOverlay();
+        }
     }
 
     protected void setupActionBar() {
@@ -190,6 +191,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         EventBus.getDefault().register(this);
 
+        castContext.addCastStateListener(this);
+
         if (UserManager.isLoggedIn() && FeatureToggle.secondScreen()) {
             globalApplication.getWebSocketManager().initConnection(UserManager.getToken());
         }
@@ -200,8 +203,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
 
         globalApplication.startCookieSyncManager();
-        videoCastManager = VideoCastManager.getInstance();
-        videoCastManager.incrementUiCounter();
     }
 
     @Override
@@ -210,7 +211,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         globalApplication.syncCookieSyncManager();
         globalApplication.stopCookieSyncManager();
-        videoCastManager.decrementUiCounter();
     }
 
     @Override
@@ -218,6 +218,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onStop();
 
         EventBus.getDefault().unregister(this);
+
+        castContext.removeCastStateListener(this);
     }
 
     @Override
@@ -244,9 +246,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.cast, menu);
-        mediaRouteMenuItem = videoCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
-        return super.onCreateOptionsMenu(menu);
+        mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
+                getApplicationContext(),
+                menu,
+                R.id.media_route_menu_item);
+        return true;
     }
 
     @Override
@@ -265,6 +271,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         } else if (intent.getStringExtra(NotificationDeletedReceiver.KEY_ALL) != null) {
             notificationStorage.deleteAllDownloadNotifications();
         }
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return CastContext.getSharedInstance(this)
+                .onDispatchVolumeKeyEventBeforeJellyBean(event)
+                || super.dispatchKeyEvent(event);
     }
 
 }

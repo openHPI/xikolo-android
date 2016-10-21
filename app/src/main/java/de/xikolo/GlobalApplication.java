@@ -11,8 +11,8 @@ import android.webkit.WebView;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.config.Configuration;
 import com.birbit.android.jobqueue.log.CustomLogger;
-import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastStateListener;
 
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
@@ -45,6 +45,8 @@ public class GlobalApplication extends Application {
     private WebSocketManager webSocketManager;
 
     private SecondScreenManager secondScreenManager;
+
+    private int castState;
 
     public GlobalApplication() {
         instance = this;
@@ -106,6 +108,10 @@ public class GlobalApplication extends Application {
         return ClientUtil.id(this);
     }
 
+    public int getCastState() {
+        return castState;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -113,8 +119,7 @@ public class GlobalApplication extends Application {
         configureDefaultSettings();
         configureWebView();
         configureJobManager();
-        configureVideoCastManager();
-
+        configureCastListener();
         configureSecondScreenManager();
 
         // just for debugging, never use for production
@@ -149,17 +154,17 @@ public class GlobalApplication extends Application {
 
                     @Override
                     public boolean isDebugEnabled() {
-                        return Config.DEBUG;
+                        return false;
                     }
 
                     @Override
                     public void v(String text, Object... args) {
-                        if (Config.DEBUG) Log.v(TAG, String.format(text, args));
+//                        if (Config.DEBUG) Log.v(TAG, String.format(text, args));
                     }
 
                     @Override
                     public void d(String text, Object... args) {
-                        if (Config.DEBUG) Log.d(TAG, String.format(text, args));
+//                        if (Config.DEBUG) Log.d(TAG, String.format(text, args));
                     }
 
                     @Override
@@ -178,6 +183,16 @@ public class GlobalApplication extends Application {
                 .consumerKeepAlive(120) // wait 2 minute
                 .build();
         jobManager = new JobManager(configuration);
+    }
+
+    private void configureCastListener() {
+        final CastContext castContext = CastContext.getSharedInstance(this);
+        castContext.addCastStateListener(new CastStateListener() {
+            @Override
+            public void onCastStateChanged(int newState) {
+                castState = newState;
+            }
+        });
     }
 
     @SuppressWarnings("deprecation")
@@ -201,20 +216,6 @@ public class GlobalApplication extends Application {
         } else {
             CookieManager.getInstance().flush();
         }
-    }
-
-    private void configureVideoCastManager() {
-        CastConfiguration options = new CastConfiguration.Builder(Config.CAST_MEDIA_RECEIVER_APPLICATION_ID)
-                .enableAutoReconnect()
-                .enableLockScreen()
-                .enableWifiReconnection()
-                .enableNotification()
-                .setNextPrevVisibilityPolicy(CastConfiguration.NEXT_PREV_VISIBILITY_POLICY_HIDDEN)
-                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
-                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, true)
-                .setCastControllerImmersive(false)
-                .build();
-        VideoCastManager.initialize(this, options);
     }
 
     public void configureSecondScreenManager() {

@@ -159,8 +159,7 @@ dependencies {
     compile 'com.github.barteksc:android-pdf-viewer:2.1.0'
 
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.8.4'
-    compile 'com.google.android.gms:play-services-cast:9.6.1'
+    compile 'com.google.android.gms:play-services-cast-framework:9.6.1'
 
     def supportVersion = '25.0.0'
 
@@ -174,10 +173,10 @@ dependencies {
 
     apt      'com.google.auto.value:auto-value:1.3'
     provided 'com.google.auto.value:auto-value:1.3'
-    apt      'com.ryanharter.auto.value:auto-value-parcel:0.2.4-rc2'
-    provided 'com.ryanharter.auto.value:auto-value-parcel:0.2.4-rc2'
-    apt      'com.ryanharter.auto.value:auto-value-gson:0.4.2'
-    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.2'
+    apt      'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
+    provided 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
+    apt      'com.ryanharter.auto.value:auto-value-gson:0.4.3'
+    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.3'
 
     compile project(":lanalytics")
 

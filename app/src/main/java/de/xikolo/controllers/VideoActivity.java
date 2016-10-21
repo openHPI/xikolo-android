@@ -16,21 +16,21 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.google.android.gms.cast.ApplicationMetadata;
-import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
+import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.framework.CastState;
 
 import de.xikolo.R;
 import de.xikolo.controllers.exceptions.WrongParameterException;
 import de.xikolo.controllers.helper.VideoController;
 import de.xikolo.managers.ItemManager;
+import de.xikolo.managers.Result;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Module;
 import de.xikolo.models.VideoItemDetail;
-import de.xikolo.managers.Result;
+import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
-import de.xikolo.utils.AndroidDimenUtil;
 
 public class VideoActivity extends BaseActivity {
 
@@ -124,37 +124,13 @@ public class VideoActivity extends BaseActivity {
 
         mediaRouteButton = (MediaRouteButton) findViewById(R.id.video_media_route_button);
         if (mediaRouteButton != null) {
-            videoCastManager.addMediaRouterButton(mediaRouteButton);
+            CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), mediaRouteButton);
             Configuration config = getResources().getConfiguration();
-            mediaRouteButton.setVisibility(videoCastManager.isAnyRouteAvailable()
+
+            mediaRouteButton.setVisibility(CastUtil.isAvailable()
                     && config.orientation == Configuration.ORIENTATION_LANDSCAPE
                     ? View.VISIBLE : View.GONE);
         }
-
-        VideoCastConsumerImpl castConsumer = new VideoCastConsumerImpl() {
-            @Override
-            public void onApplicationConnected(ApplicationMetadata appMetadata, String sessionId, boolean wasLaunched) {
-                if (videoController != null) {
-                    LanalyticsUtil.trackVideoPlay(item.id, course.id, module.id, item.detail.progress, 1.0f,
-                            Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
-
-                    videoController.pause();
-                    videoCastManager.startVideoCastControllerActivity(VideoActivity.this, CastUtil.buildCastMetadata(item), item.detail.progress, true);
-                    finish();
-                }
-            }
-
-            @Override
-            public void onCastAvailabilityChanged(boolean castPresent) {
-                if (mediaRouteButton != null) {
-                    Configuration config = getResources().getConfiguration();
-                    mediaRouteButton.setVisibility(castPresent
-                            && config.orientation == Configuration.ORIENTATION_LANDSCAPE
-                            ? View.VISIBLE : View.GONE);
-                }
-            }
-        };
-        videoCastManager.addVideoCastConsumer(castConsumer);
 
         hideSystemBars();
 
@@ -171,6 +147,29 @@ public class VideoActivity extends BaseActivity {
                 videoController.getSourceString());
     }
 
+    @Override
+    public void onCastStateChanged(int newState) {
+        super.onCastStateChanged(newState);
+
+        if (newState != CastState.NO_DEVICES_AVAILABLE) {
+            if (mediaRouteButton != null) {
+                Configuration config = getResources().getConfiguration();
+                mediaRouteButton.setVisibility(config.orientation == Configuration.ORIENTATION_LANDSCAPE
+                        ? View.VISIBLE : View.GONE);
+            }
+        }
+
+        if (newState == CastState.CONNECTED && videoController != null) {
+            LanalyticsUtil.trackVideoPlay(item.id, course.id, module.id, item.detail.progress, 1.0f,
+                    Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
+
+            videoController.pause();
+            CastUtil.loadMedia(this, item, true, item.detail.progress);
+
+            finish();
+        }
+    }
+
     private void updateVideoView(int orientation) {
         View layout = findViewById(R.id.container);
         if (Build.VERSION.SDK_INT >= 17 && layout != null) {
@@ -180,7 +179,7 @@ public class VideoActivity extends BaseActivity {
                 actionBar.hide();
 
                 if (mediaRouteButton != null) {
-                    mediaRouteButton.setVisibility(videoCastManager.isAnyRouteAvailable()
+                    mediaRouteButton.setVisibility(CastUtil.isAvailable()
                             ? View.VISIBLE : View.GONE);
                 }
 

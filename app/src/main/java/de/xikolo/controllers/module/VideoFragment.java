@@ -206,7 +206,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             viewPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (videoCastManager.isConnected()) {
+                    if (CastUtil.isConnected()) {
                         itemManager.getLocalVideoProgress(new Result<VideoItemDetail>() {
                             @Override
                             protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
@@ -215,7 +215,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
                                 item.detail = result;
                                 setCurrentCourse();
-                                videoCastManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), result.progress, true);
+                                CastUtil.loadMedia(getActivity(), item, true, result.progress);
                             }
 
                             @Override
@@ -224,7 +224,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                                         Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
 
                                 setCurrentCourse();
-                                videoCastManager.startVideoCastControllerActivity(getActivity(), CastUtil.buildCastMetadata(item), 0, true);
+                                CastUtil.loadMedia(getActivity(), item, true, 0);
                             }
                         }, item.detail);
                     } else {

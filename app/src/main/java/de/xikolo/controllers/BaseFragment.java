@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.birbit.android.jobqueue.JobManager;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.android.gms.cast.framework.CastContext;
 
 import de.xikolo.GlobalApplication;
 
@@ -14,7 +14,7 @@ public abstract class BaseFragment extends Fragment {
 
     protected JobManager jobManager;
 
-    protected VideoCastManager videoCastManager;
+    protected CastContext castContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,13 +23,13 @@ public abstract class BaseFragment extends Fragment {
         globalApplication = GlobalApplication.getInstance();
         jobManager = globalApplication.getJobManager();
 
-        videoCastManager = VideoCastManager.getInstance();
+        castContext = CastContext.getSharedInstance(getActivity());
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        videoCastManager = VideoCastManager.getInstance();
+        castContext = CastContext.getSharedInstance(getActivity());
     }
 }
