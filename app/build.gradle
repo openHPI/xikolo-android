@@ -45,7 +45,7 @@ android {
         moocHouse_CN {
             applicationId "de.xikolo.moochouse.cn"
             buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.MOOC_HOUSE_CN"
-            appName = "cnmooc.house"
+            appName = "cnMOOC.house"
             appHost = "cnmooc.house"
         }
         openUNE {
