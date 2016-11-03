@@ -159,7 +159,7 @@ dependencies {
     compile 'com.github.barteksc:android-pdf-viewer:2.1.0'
 
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.android.gms:play-services-cast-framework:9.6.1'
+    compile 'com.google.android.gms:play-services-cast-framework:9.8.0'
 
     def supportVersion = '25.0.0'
 

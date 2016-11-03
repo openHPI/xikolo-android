@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/miniController"
     class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
     android:layout_width="fill_parent"
@@ -7,4 +9,5 @@
     android:layout_alignParentBottom="true"
     android:layout_gravity="bottom"
     android:layout_marginTop="-5dp"
-    android:visibility="gone" />
+    android:visibility="gone"
+    app:castProgressBarColor="@color/apptheme_second" />

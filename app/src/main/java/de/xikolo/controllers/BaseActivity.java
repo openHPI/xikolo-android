@@ -16,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.google.android.gms.cast.framework.CastButtonFactory;
@@ -73,9 +75,9 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
         offlineModeToolbar = true;
 
-        PlayServicesUtil.checkPlayServices(this);
-
-        castContext = CastContext.getSharedInstance(this);
+        if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
+            castContext = CastContext.getSharedInstance(this);
+        }
 
         if (overlay == null) {
             showOverlay();
@@ -138,6 +140,22 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
     }
 
+    protected boolean setupCastMiniController() {
+        if (PlayServicesUtil.checkPlayServices(this) && findViewById(R.id.miniControllerContainer) != null) {
+            View container = findViewById(R.id.miniControllerContainer);
+            ViewGroup parent = (ViewGroup) container.getParent();
+            int index = parent.indexOfChild(container);
+
+            parent.removeView(container);
+            container = getLayoutInflater().inflate(R.layout.container_mini_controller, parent, false);
+            parent.addView(container, index);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @SuppressWarnings("unused")
     protected void setActionBarElevation(float elevation) {
         if (actionBar != null && Build.VERSION.SDK_INT >= 21) {
@@ -191,7 +209,10 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
         EventBus.getDefault().register(this);
 
-        castContext.addCastStateListener(this);
+        if (castContext != null) {
+            castContext.addCastStateListener(this);
+            setupCastMiniController();
+        }
 
         if (UserManager.isLoggedIn() && FeatureToggle.secondScreen()) {
             globalApplication.getWebSocketManager().initConnection(UserManager.getToken());
@@ -219,7 +240,9 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
         EventBus.getDefault().unregister(this);
 
-        castContext.removeCastStateListener(this);
+        if (castContext != null) {
+            castContext.removeCastStateListener(this);
+        }
     }
 
     @Override
@@ -247,11 +270,13 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.cast, menu);
-        mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
-                getApplicationContext(),
-                menu,
-                R.id.media_route_menu_item);
+        if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
+            getMenuInflater().inflate(R.menu.cast, menu);
+            mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
+                    getApplicationContext(),
+                    menu,
+                    R.id.media_route_menu_item);
+        }
         return true;
     }
 
@@ -275,9 +300,13 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        return CastContext.getSharedInstance(this)
-                .onDispatchVolumeKeyEventBeforeJellyBean(event)
-                || super.dispatchKeyEvent(event);
+        if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
+            return CastContext.getSharedInstance(this)
+                    .onDispatchVolumeKeyEventBeforeJellyBean(event)
+                    || super.dispatchKeyEvent(event);
+        } else {
+            return super.dispatchKeyEvent(event);
+        }
     }
 
 }

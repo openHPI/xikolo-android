@@ -27,16 +27,16 @@
             android:value="true" />
 
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-        <meta-data
             android:name="de.xikolo.utils.GlideConfiguration"
             android:value="GlideModule"/>
 
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
             android:value="de.xikolo.utils.CastOptionsProvider" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <receiver
             android:name=".receivers.NetworkChangeReceiver"

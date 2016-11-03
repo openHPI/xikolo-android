@@ -31,6 +31,7 @@ import de.xikolo.models.VideoItemDetail;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
+import de.xikolo.utils.PlayServicesUtil;
 
 public class VideoActivity extends BaseActivity {
 
@@ -124,9 +125,11 @@ public class VideoActivity extends BaseActivity {
 
         mediaRouteButton = (MediaRouteButton) findViewById(R.id.video_media_route_button);
         if (mediaRouteButton != null) {
-            CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), mediaRouteButton);
-            Configuration config = getResources().getConfiguration();
+            if (PlayServicesUtil.checkPlayServices(this)) {
+                CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), mediaRouteButton);
+            }
 
+            Configuration config = getResources().getConfiguration();
             mediaRouteButton.setVisibility(CastUtil.isAvailable()
                     && config.orientation == Configuration.ORIENTATION_LANDSCAPE
                     ? View.VISIBLE : View.GONE);

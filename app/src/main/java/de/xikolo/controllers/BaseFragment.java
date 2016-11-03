@@ -7,6 +7,7 @@ import com.birbit.android.jobqueue.JobManager;
 import com.google.android.gms.cast.framework.CastContext;
 
 import de.xikolo.GlobalApplication;
+import de.xikolo.utils.PlayServicesUtil;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -23,13 +24,9 @@ public abstract class BaseFragment extends Fragment {
         globalApplication = GlobalApplication.getInstance();
         jobManager = globalApplication.getJobManager();
 
-        castContext = CastContext.getSharedInstance(getActivity());
+        if (PlayServicesUtil.checkPlayServices(getContext())) {
+            castContext = CastContext.getSharedInstance(getActivity());
+        }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        castContext = CastContext.getSharedInstance(getActivity());
-    }
 }

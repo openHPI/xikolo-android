@@ -12,7 +12,7 @@ import java.util.List;
 
 import de.xikolo.controllers.CastActivity;
 
-class CastOptionsProvider implements OptionsProvider {
+public class CastOptionsProvider implements OptionsProvider {
 
     @Override
     public CastOptions getCastOptions(Context appContext) {

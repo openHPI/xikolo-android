@@ -15,6 +15,9 @@
         android:background="@color/background_main"
         android:fitsSystemWindows="true" />
 
-    <include layout="@layout/container_mini_controller" />
+    <RelativeLayout
+        android:id="@+id/miniControllerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

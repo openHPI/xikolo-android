@@ -26,6 +26,7 @@ import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.utils.ClientUtil;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.FeatureToggle;
+import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.SslCertificateUtil;
 
 public class GlobalApplication extends Application {
@@ -186,13 +187,15 @@ public class GlobalApplication extends Application {
     }
 
     private void configureCastListener() {
-        final CastContext castContext = CastContext.getSharedInstance(this);
-        castContext.addCastStateListener(new CastStateListener() {
-            @Override
-            public void onCastStateChanged(int newState) {
-                castState = newState;
-            }
-        });
+        if (PlayServicesUtil.checkPlayServices(this)) {
+            final CastContext castContext = CastContext.getSharedInstance(this);
+            castContext.addCastStateListener(new CastStateListener() {
+                @Override
+                public void onCastStateChanged(int newState) {
+                    castState = newState;
+                }
+            });
+        }
     }
 
     @SuppressWarnings("deprecation")

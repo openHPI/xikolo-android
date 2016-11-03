@@ -20,12 +20,13 @@ import de.xikolo.controllers.main.CourseListFragment;
 import de.xikolo.controllers.main.ProfileFragment;
 import de.xikolo.controllers.navigation.NavigationFragment;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
-import de.xikolo.managers.UserManager;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
+import de.xikolo.managers.UserManager;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;
+import de.xikolo.utils.PlayServicesUtil;
 
 public class MainActivity extends BaseActivity
         implements NavigationFragment.NavigationDrawerCallbacks, ContentFragment.OnFragmentInteractionListener {
@@ -61,6 +62,9 @@ public class MainActivity extends BaseActivity
             Log.i(TAG, "Build Type: " + BuildConfig.X_TYPE);
             Log.i(TAG, "Build Flavor: " + BuildConfig.X_FLAVOR);
         }
+
+        // check Play Services, display dialog is update needed
+        PlayServicesUtil.checkPlayServicesWithDialog(this);
 
         handleIntent(getIntent());
     }

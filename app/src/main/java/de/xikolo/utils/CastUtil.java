@@ -1,6 +1,7 @@
 package de.xikolo.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -11,6 +12,7 @@ import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.cast.framework.SessionManager;
 import com.google.android.gms.cast.framework.media.RemoteMediaClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.images.WebImage;
 
 import de.xikolo.GlobalApplication;
@@ -21,17 +23,28 @@ import de.xikolo.models.VideoItemDetail;
 public class CastUtil {
 
     public static boolean isConnected() {
-        CastContext castContext = CastContext.getSharedInstance(GlobalApplication.getInstance());
-        SessionManager sessionManager = castContext.getSessionManager();
+        Context context = GlobalApplication.getInstance();
 
-        return sessionManager.getCurrentCastSession() != null && sessionManager.getCurrentCastSession().isConnected();
+        if (PlayServicesUtil.checkPlayServices(context)) {
+            CastContext castContext = CastContext.getSharedInstance(context);
+            SessionManager sessionManager = castContext.getSessionManager();
+
+            return sessionManager.getCurrentCastSession() != null && sessionManager.getCurrentCastSession().isConnected();
+        } else {
+            return false;
+        }
     }
 
     public static boolean isAvailable() {
-        return GlobalApplication.getInstance().getCastState() != CastState.NO_DEVICES_AVAILABLE;
+        GlobalApplication application = GlobalApplication.getInstance();
+        return PlayServicesUtil.checkPlayServices(application) && application.getCastState() != CastState.NO_DEVICES_AVAILABLE;
     }
 
     public static MediaInfo buildCastMetadata(Item<VideoItemDetail> video) {
+        if (!PlayServicesUtil.checkPlayServices(GlobalApplication.getInstance())) {
+            return null;
+        }
+
         MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
         mediaMetadata.putString(MediaMetadata.KEY_TITLE, video.title);
 
@@ -50,7 +63,11 @@ public class CastUtil {
                 .build();
     }
 
-    public static void loadMedia(final Activity activity, Item<VideoItemDetail> video, boolean autoPlay, int position) {
+    public static PendingResult<RemoteMediaClient.MediaChannelResult> loadMedia(final Activity activity, Item<VideoItemDetail> video, boolean autoPlay, int position) {
+        if (!PlayServicesUtil.checkPlayServices(GlobalApplication.getInstance())) {
+            return null;
+        }
+
         CastContext castContext = CastContext.getSharedInstance(GlobalApplication.getInstance());
         SessionManager sessionManager = castContext.getSessionManager();
         CastSession session = sessionManager.getCurrentCastSession();
@@ -87,7 +104,9 @@ public class CastUtil {
                 }
             });
 
-            remoteMediaClient.load(buildCastMetadata(video), autoPlay, position);
+            return remoteMediaClient.load(buildCastMetadata(video), autoPlay, position);
+        } else {
+            return null;
         }
     }
 
