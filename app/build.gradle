@@ -178,6 +178,8 @@ dependencies {
     apt      'com.ryanharter.auto.value:auto-value-gson:0.4.3'
     provided 'com.ryanharter.auto.value:auto-value-gson:0.4.3'
 
+    compile('de.psdev.licensesdialog:licensesdialog:1.8.1')
+
     compile project(":lanalytics")
 
     compile fileTree(include: ['*.jar'], dir: 'libs')

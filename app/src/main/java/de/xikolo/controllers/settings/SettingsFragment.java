@@ -15,15 +15,14 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Calendar;
 
+import de.psdev.licensesdialog.LicensesDialog;
 import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.LoginActivity;
-import de.xikolo.controllers.dialogs.ContributorsDialog;
-import de.xikolo.controllers.dialogs.LicensesDialog;
-import de.xikolo.managers.UserManager;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
+import de.xikolo.managers.UserManager;
 import de.xikolo.utils.BuildFlavor;
 import de.xikolo.utils.Config;
 
@@ -112,18 +111,11 @@ public class SettingsFragment extends PreferenceFragment {
         licenses.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                LicensesDialog dialog = new LicensesDialog();
-                dialog.show(getFragmentManager(), LicensesDialog.TAG);
-                return true;
-            }
-        });
-
-        Preference contributors = findPreference(getString(R.string.preference_open_source_contributors));
-        contributors.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                ContributorsDialog dialog = new ContributorsDialog();
-                dialog.show(getFragmentManager(), ContributorsDialog.TAG);
+                new LicensesDialog.Builder(getActivity())
+                        .setNotices(R.raw.notices)
+                        .setTitle(R.string.settings_title_licenses)
+                        .build()
+                        .show();
                 return true;
             }
         });

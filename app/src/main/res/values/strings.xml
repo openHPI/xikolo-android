@@ -181,9 +181,6 @@
     <string name="settings_title_licenses">Open source licenses</string>
     <string name="settings_summary_licenses">License details for open source software</string>
 
-    <string name="settings_title_contributors">Contributors</string>
-    <string name="settings_summary_contributors">List of all contributors</string>
-
     <string name="settings_title_build">Build version</string>
     <string name="settings_summary_build">Version:</string>
 
