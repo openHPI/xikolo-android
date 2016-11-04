@@ -27,14 +27,14 @@ import de.xikolo.controllers.helper.NotificationController;
 import de.xikolo.controllers.helper.RefeshLayoutController;
 import de.xikolo.controllers.main.adapter.CourseListAdapter;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
-import de.xikolo.managers.CourseManager;
-import de.xikolo.managers.UserManager;
-import de.xikolo.models.Course;
-import de.xikolo.managers.Result;
 import de.xikolo.events.EnrollEvent;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.events.UnenrollEvent;
+import de.xikolo.managers.CourseManager;
+import de.xikolo.managers.Result;
+import de.xikolo.managers.UserManager;
+import de.xikolo.models.Course;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
@@ -107,6 +107,11 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 }
 
                 courses = result;
+
+                // TODO: workaround, parcel size can be too large
+                for (Course course : courses) {
+                    course.description = course.description.substring(0, 100);
+                }
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
                     notificationController.setTitle(R.string.notification_no_network);
