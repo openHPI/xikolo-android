@@ -176,9 +176,6 @@
     <string name="settings_title_licenses">Open-Source-Lizenzen</string>
     <string name="settings_summary_licenses">Lizenzdetails für Open-Source-Software</string>
 
-    <string name="settings_title_contributors">Mitwirkende</string>
-    <string name="settings_summary_contributors">Liste aller Mitwirkenden</string>
-
     <string name="settings_title_build">Build-Version</string>
     <string name="settings_summary_build">Version:</string>
 

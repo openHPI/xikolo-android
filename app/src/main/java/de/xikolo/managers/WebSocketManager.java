@@ -6,6 +6,9 @@ import android.util.Log;
 
 import com.google.gson.JsonSyntaxException;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.java_websocket.WebSocket;
 import org.java_websocket.client.DefaultSSLWebSocketClientFactory;
 import org.java_websocket.client.WebSocketClient;
@@ -19,17 +22,15 @@ import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
-import de.greenrobot.event.EventBus;
 import de.xikolo.GlobalApplication;
-import de.xikolo.data.entities.WebSocketMessage;
-import de.xikolo.data.parser.GsonHelper;
-import de.xikolo.model.UserModel;
-import de.xikolo.model.events.Event;
-import de.xikolo.model.events.LoginEvent;
-import de.xikolo.model.events.LogoutEvent;
-import de.xikolo.model.events.NetworkStateEvent;
-import de.xikolo.util.Config;
-import de.xikolo.util.NetworkUtil;
+import de.xikolo.models.WebSocketMessage;
+import de.xikolo.network.parser.ApiParser;
+import de.xikolo.events.Event;
+import de.xikolo.events.LoginEvent;
+import de.xikolo.events.LogoutEvent;
+import de.xikolo.events.NetworkStateEvent;
+import de.xikolo.utils.Config;
+import de.xikolo.utils.NetworkUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class WebSocketManager {
@@ -129,33 +130,39 @@ public class WebSocketManager {
         return webSocketClient != null && webSocketClient.getReadyState() == WebSocket.READYSTATE.CONNECTING;
     }
 
-    public void onEvent(NetworkStateEvent event) {
-        if (event.isOnline() && UserModel.isLoggedIn(GlobalApplication.getInstance())) {
-            initConnection(UserModel.getToken(GlobalApplication.getInstance()));
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onNetworkEvent(NetworkStateEvent event) {
+        if (event.isOnline() && UserManager.isLoggedIn()) {
+            initConnection(UserManager.getToken());
         }
     }
 
-    public void onEvent(LoginEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onLoginEvent(LoginEvent event) {
         if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-            initConnection(UserModel.getToken(GlobalApplication.getInstance()));
+            initConnection(UserManager.getToken());
         }
     }
 
-    public void onEvent(LogoutEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onLogoutEvent(LogoutEvent event) {
         closeConnection();
     }
 
-    public static class WebSocketConnectedEvent extends Event {}
+    static class WebSocketConnectedEvent extends Event {}
 
-    public static class WebSocketClosedEvent extends Event {}
+    static class WebSocketClosedEvent extends Event {}
 
-    public static class WebSocketMessageEvent extends Event {
+    static class WebSocketMessageEvent extends Event {
 
         private WebSocketMessage webSocketMessage;
 
-        public WebSocketMessageEvent(String message) {
+        WebSocketMessageEvent(String message) {
             super();
-            this.webSocketMessage = GsonHelper.create().fromJson(message, WebSocketMessage.class);
+            this.webSocketMessage = ApiParser.parse(message, WebSocketMessage.class);
         }
 
         public WebSocketMessageEvent(WebSocketMessage message) {
@@ -163,7 +170,7 @@ public class WebSocketManager {
             this.webSocketMessage = message;
         }
 
-        public WebSocketMessage getWebSocketMessage() {
+        WebSocketMessage getWebSocketMessage() {
             return this.webSocketMessage;
         }
     }

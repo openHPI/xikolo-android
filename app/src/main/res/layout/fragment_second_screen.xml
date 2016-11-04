@@ -53,7 +53,7 @@
                         android:textColor="@color/white"
                         android:textSize="20sp" />
 
-                    <de.xikolo.view.CustomFontTextView
+                    <de.xikolo.views.CustomFontTextView
                         android:id="@+id/text_second_screen_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -189,7 +189,7 @@
                     android:text="@string/second_screen_no_video"
                     android:textSize="20sp" />
 
-                <de.xikolo.view.CustomFontTextView
+                <de.xikolo.views.CustomFontTextView
                     android:id="@+id/text_icon_no_video"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -251,7 +251,7 @@
                         android:textColor="@color/white"
                         android:textSize="20sp" />
 
-                    <de.xikolo.view.CustomFontTextView
+                    <de.xikolo.views.CustomFontTextView
                         android:id="@+id/text_survey_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

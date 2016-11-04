@@ -65,11 +65,6 @@
             android:title="@string/settings_title_licenses" />
 
         <android.support.v7.preference.Preference
-            android:key="@string/preference_open_source_contributors"
-            android:summary="@string/settings_summary_contributors"
-            android:title="@string/settings_title_contributors" />
-
-        <android.support.v7.preference.Preference
             android:key="@string/preference_build_version"
             android:summary="@string/settings_summary_build"
             android:title="@string/settings_title_build" />

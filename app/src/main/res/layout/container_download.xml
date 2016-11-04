@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <de.xikolo.view.IconButton
+            <de.xikolo.views.IconButton
                 android:id="@+id/buttonDownloadStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <de.xikolo.view.CustomFontTextView
+            <de.xikolo.views.CustomFontTextView
                 android:id="@+id/buttonDownloadCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

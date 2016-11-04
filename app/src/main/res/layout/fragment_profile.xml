@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|top">
 
-            <de.xikolo.view.CustomSizeImageView
+            <de.xikolo.views.CustomSizeImageView
                 android:id="@+id/imageHeader"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin">
 
-                <de.xikolo.view.CustomSizeImageView
+                <de.xikolo.views.CustomSizeImageView
                     android:id="@+id/imageProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

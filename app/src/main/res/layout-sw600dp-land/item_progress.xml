@@ -73,7 +73,7 @@
                         android:layout_marginBottom="4dp"
                         android:orientation="horizontal">
 
-                        <de.xikolo.view.CustomFontTextView
+                        <de.xikolo.views.CustomFontTextView
                             android:id="@+id/icon1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <de.xikolo.view.CustomFontTextView
+                        <de.xikolo.views.CustomFontTextView
                             android:id="@+id/icon2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -192,7 +192,7 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <de.xikolo.view.CustomFontTextView
+                        <de.xikolo.views.CustomFontTextView
                             android:id="@+id/icon3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

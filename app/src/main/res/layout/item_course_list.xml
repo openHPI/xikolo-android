@@ -75,7 +75,7 @@
                 android:textColor="@color/apptheme_main"
                 android:textSize="14sp" />
 
-            <de.xikolo.view.CustomFontTextView
+            <de.xikolo.views.CustomFontTextView
                 android:id="@+id/textDateIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                 android:textColor="@color/text_second"
                 android:textSize="14sp" />
 
-            <de.xikolo.view.CustomFontTextView
+            <de.xikolo.views.CustomFontTextView
                 android:id="@+id/textLangIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

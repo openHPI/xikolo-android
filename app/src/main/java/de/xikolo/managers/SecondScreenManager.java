@@ -10,20 +10,19 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controller.SecondScreenActivity;
-import de.xikolo.data.entities.Course;
-import de.xikolo.data.entities.Item;
-import de.xikolo.data.entities.Module;
-import de.xikolo.data.entities.VideoItemDetail;
-import de.xikolo.data.entities.WebSocketMessage;
-import de.xikolo.model.CourseModel;
-import de.xikolo.model.ItemModel;
-import de.xikolo.model.ModuleModel;
-import de.xikolo.model.Result;
-import de.xikolo.model.events.Event;
+import de.xikolo.controllers.SecondScreenActivity;
+import de.xikolo.models.Course;
+import de.xikolo.models.Item;
+import de.xikolo.models.Module;
+import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.WebSocketMessage;
+import de.xikolo.events.Event;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SecondScreenManager {
@@ -38,25 +37,27 @@ public class SecondScreenManager {
 
     private Item<VideoItemDetail> item;
 
-    private CourseModel courseModel;
+    private CourseManager courseManager;
 
-    private ModuleModel moduleModel;
+    private ModuleManager moduleManager;
 
-    private ItemModel itemModel;
+    private ItemManager itemManager;
 
     private boolean isRequesting;
 
     public SecondScreenManager() {
-        courseModel = new CourseModel(GlobalApplication.getInstance().getJobManager());
-        moduleModel = new ModuleModel(GlobalApplication.getInstance().getJobManager());
-        itemModel = new ItemModel(GlobalApplication.getInstance().getJobManager());
+        courseManager = new CourseManager(GlobalApplication.getInstance().getJobManager());
+        moduleManager = new ModuleManager(GlobalApplication.getInstance().getJobManager());
+        itemManager = new ItemManager(GlobalApplication.getInstance().getJobManager());
 
         EventBus.getDefault().register(this);
 
         isRequesting = false;
     }
 
-    public void onEventBackgroundThread(WebSocketManager.WebSocketMessageEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void onWebSocketMessageEvent(WebSocketManager.WebSocketMessageEvent event) {
         final WebSocketMessage message = event.getWebSocketMessage();
 
         if (!message.platform().equals("web") || !message.action().startsWith("video_")) {
@@ -109,7 +110,7 @@ public class SecondScreenManager {
             protected void onSuccess(Module module, DataSource dataSource) {
                 if (module != null && !module.equals(SecondScreenManager.this.module) && module.items != null && module.items.size() > 0) {
                     SecondScreenManager.this.module = module;
-                    itemModel.getItemDetail(itemResult, course.id, module.id, message.payload().get("item_id"), Item.TYPE_VIDEO);
+                    itemManager.getItemDetail(itemResult, course.id, module.id, message.payload().get("item_id"), Item.TYPE_VIDEO);
                 }
             }
 
@@ -124,7 +125,7 @@ public class SecondScreenManager {
             protected void onSuccess(Course course, DataSource dataSource) {
                 if (course != null && !course.equals(SecondScreenManager.this.course)) {
                     SecondScreenManager.this.course = course;
-                    moduleModel.getModuleWithItems(moduleResult, course.id, message.payload().get("section_id"));
+                    moduleManager.getModuleWithItems(moduleResult, course.id, message.payload().get("section_id"));
                 }
             }
 
@@ -140,7 +141,7 @@ public class SecondScreenManager {
                 isRequesting = true;
                 course = null;
                 module = null;
-                courseModel.getCourse(courseResult, message.payload().get("course_id"));
+                courseManager.getCourse(courseResult, message.payload().get("course_id"));
             } else if (item != null && item.id.equals(message.payload().get("item_id"))) {
                 // post video updated event
                 EventBus.getDefault().post(new SecondScreenUpdateVideoEvent(course, module, item, message));

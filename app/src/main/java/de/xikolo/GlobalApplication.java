@@ -1,7 +1,6 @@
 package de.xikolo;
 
 import android.app.Application;
-import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
@@ -9,25 +8,26 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 
-import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.path.android.jobqueue.JobManager;
-import com.path.android.jobqueue.config.Configuration;
-import com.path.android.jobqueue.log.CustomLogger;
+import com.birbit.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.config.Configuration;
+import com.birbit.android.jobqueue.log.CustomLogger;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastStateListener;
 
-import java.io.File;
-import java.io.IOException;
-
-import de.xikolo.data.database.DataAccessFactory;
-import de.xikolo.data.database.DatabaseHelper;
-import de.xikolo.data.preferences.PreferencesFactory;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
-import de.xikolo.util.ClientUtil;
-import de.xikolo.util.Config;
-import de.xikolo.util.FeatureToggle;
-import de.xikolo.util.SslCertificateUtil;
+import de.xikolo.storages.databases.DataType;
+import de.xikolo.storages.databases.DatabaseHelper;
+import de.xikolo.storages.databases.adapters.DataAdapter;
+import de.xikolo.storages.preferences.KeyValueStorage;
+import de.xikolo.storages.preferences.StorageHelper;
+import de.xikolo.storages.preferences.StorageType;
+import de.xikolo.utils.ClientUtil;
+import de.xikolo.utils.Config;
+import de.xikolo.utils.FeatureToggle;
+import de.xikolo.utils.PlayServicesUtil;
+import de.xikolo.utils.SslCertificateUtil;
 
 public class GlobalApplication extends Application {
 
@@ -37,19 +37,17 @@ public class GlobalApplication extends Application {
 
     private JobManager jobManager;
 
-    private HttpResponseCache httpResponseCache;
-
     private DatabaseHelper databaseHelper;
 
-    private DataAccessFactory dataAccessFactory;
-
-    private PreferencesFactory preferencesFactory;
+    private StorageHelper storageHelper;
 
     private Lanalytics lanalytics;
 
     private WebSocketManager webSocketManager;
 
     private SecondScreenManager secondScreenManager;
+
+    private int castState;
 
     public GlobalApplication() {
         instance = this;
@@ -61,24 +59,6 @@ public class GlobalApplication extends Application {
 
     public JobManager getJobManager() {
         return jobManager;
-    }
-
-    public DataAccessFactory getDataAccessFactory() {
-        synchronized (GlobalApplication.class) {
-            if (dataAccessFactory == null) {
-                dataAccessFactory = new DataAccessFactory(databaseHelper);
-            }
-        }
-        return dataAccessFactory;
-    }
-
-    public PreferencesFactory getPreferencesFactory() {
-        synchronized (GlobalApplication.class) {
-            if (preferencesFactory == null) {
-                preferencesFactory = new PreferencesFactory(this);
-            }
-        }
-        return preferencesFactory;
     }
 
     public Lanalytics getLanalytics() {
@@ -99,8 +79,38 @@ public class GlobalApplication extends Application {
         return webSocketManager;
     }
 
+    public static DataAdapter getDataAdapter(DataType type) {
+        return getInstance().getDatabaseHelper().getDataAdapter(type);
+    }
+
+    public DatabaseHelper getDatabaseHelper() {
+        synchronized (GlobalApplication.class) {
+            if (databaseHelper == null) {
+                databaseHelper = new DatabaseHelper(this);
+            }
+        }
+        return databaseHelper;
+    }
+
+    public static KeyValueStorage getStorage(StorageType type) {
+        return getInstance().getStorageHelper().getStorage(type);
+    }
+
+    public StorageHelper getStorageHelper() {
+        synchronized (GlobalApplication.class) {
+            if (storageHelper == null) {
+                storageHelper = new StorageHelper(this);
+            }
+        }
+        return storageHelper;
+    }
+
     public String getClientId() {
         return ClientUtil.id(this);
+    }
+
+    public int getCastState() {
+        return castState;
     }
 
     @Override
@@ -108,12 +118,9 @@ public class GlobalApplication extends Application {
         super.onCreate();
 
         configureDefaultSettings();
-        configureDatabase();
-        configureHttpResponseCache();
         configureWebView();
         configureJobManager();
-        configureVideoCastManager();
-
+        configureCastListener();
         configureSecondScreenManager();
 
         // just for debugging, never use for production
@@ -124,21 +131,6 @@ public class GlobalApplication extends Application {
 
     private void configureDefaultSettings() {
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-    }
-
-    private void configureDatabase() {
-        databaseHelper = new DatabaseHelper(this);
-    }
-
-    private void configureHttpResponseCache() {
-        // Create HTTP Response Cache
-        try {
-            File httpCacheDir = new File(this.getCacheDir(), "http");
-            long httpCacheSize = 20 * 1024 * 1024; // 20 MiB
-            httpResponseCache = HttpResponseCache.install(httpCacheDir, httpCacheSize);
-        } catch (IOException e) {
-            Log.i(TAG, "HTTP Response Cache installation failed:" + e);
-        }
     }
 
     @SuppressWarnings("deprecation")
@@ -159,7 +151,7 @@ public class GlobalApplication extends Application {
 
         Configuration configuration = new Configuration.Builder(this)
                 .customLogger(new CustomLogger() {
-                    private static final String TAG = "JOBS";
+                    private final String TAG = JobManager.class.getSimpleName();
 
                     @Override
                     public boolean isDebugEnabled() {
@@ -167,8 +159,13 @@ public class GlobalApplication extends Application {
                     }
 
                     @Override
+                    public void v(String text, Object... args) {
+//                        if (Config.DEBUG) Log.v(TAG, String.format(text, args));
+                    }
+
+                    @Override
                     public void d(String text, Object... args) {
-                        Log.d(TAG, String.format(text, args));
+//                        if (Config.DEBUG) Log.d(TAG, String.format(text, args));
                     }
 
                     @Override
@@ -186,12 +183,18 @@ public class GlobalApplication extends Application {
                 .loadFactor(2) // jobs per consumer
                 .consumerKeepAlive(120) // wait 2 minute
                 .build();
-        jobManager = new JobManager(this, configuration);
+        jobManager = new JobManager(configuration);
     }
 
-    public void flushHttpResponseCache() {
-        if (httpResponseCache != null) {
-            httpResponseCache.flush();
+    private void configureCastListener() {
+        if (PlayServicesUtil.checkPlayServices(this)) {
+            final CastContext castContext = CastContext.getSharedInstance(this);
+            castContext.addCastStateListener(new CastStateListener() {
+                @Override
+                public void onCastStateChanged(int newState) {
+                    castState = newState;
+                }
+            });
         }
     }
 
@@ -216,20 +219,6 @@ public class GlobalApplication extends Application {
         } else {
             CookieManager.getInstance().flush();
         }
-    }
-
-    private void configureVideoCastManager() {
-        CastConfiguration options = new CastConfiguration.Builder(Config.CAST_MEDIA_RECEIVER_APPLICATION_ID)
-                .enableAutoReconnect()
-                .enableLockScreen()
-                .enableWifiReconnection()
-                .enableNotification()
-                .setNextPrevVisibilityPolicy(CastConfiguration.NEXT_PREV_VISIBILITY_POLICY_HIDDEN)
-                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
-                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, true)
-                .setCastControllerImmersive(false)
-                .build();
-        VideoCastManager.initialize(this, options);
     }
 
     public void configureSecondScreenManager() {

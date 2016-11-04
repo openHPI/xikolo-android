@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 24
-        versionName "1.5.1"
-        versionCode 26
+        targetSdkVersion 25
+        versionName "1.6"
+        versionCode 27
     }
 
     productFlavors.all {
@@ -20,37 +20,37 @@ android {
     productFlavors {
         openHPI {
             applicationId "de.xikolo.openhpi"
-            buildConfigField "de.xikolo.util.BuildFlavor", "X_FLAVOR", "de.xikolo.util.BuildFlavor.OPEN_HPI"
+            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.OPEN_HPI"
             appName = "openHPI"
             appHost = "open.hpi.de"
         }
         openHPI_CN {
             applicationId "de.xikolo.openhpi.cn"
-            buildConfigField "de.xikolo.util.BuildFlavor", "X_FLAVOR", "de.xikolo.util.BuildFlavor.OPEN_HPI_CN"
+            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.OPEN_HPI_CN"
             appName = "openHPI CN"
             appHost = "openhpi.cn"
         }
         openSAP {
             applicationId "de.xikolo.opensap"
-            buildConfigField "de.xikolo.util.BuildFlavor", "X_FLAVOR", "de.xikolo.util.BuildFlavor.OPEN_SAP"
+            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.OPEN_SAP"
             appName = "openSAP"
             appHost = "open.sap.com"
         }
         moocHouse {
             applicationId "de.xikolo.moochouse"
-            buildConfigField "de.xikolo.util.BuildFlavor", "X_FLAVOR", "de.xikolo.util.BuildFlavor.MOOC_HOUSE"
+            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.MOOC_HOUSE"
             appName = "mooc.house"
             appHost = "mooc.house"
         }
         moocHouse_CN {
             applicationId "de.xikolo.moochouse.cn"
-            buildConfigField "de.xikolo.util.BuildFlavor", "X_FLAVOR", "de.xikolo.util.BuildFlavor.MOOC_HOUSE_CN"
-            appName = "cnmooc.house"
+            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.MOOC_HOUSE_CN"
+            appName = "cnMOOC.house"
             appHost = "cnmooc.house"
         }
         openUNE {
             applicationId "de.xikolo.openune"
-            buildConfigField "de.xikolo.util.BuildFlavor", "X_FLAVOR", "de.xikolo.util.BuildFlavor.OPEN_UNE"
+            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.OPEN_UNE"
             appName = "openUNE"
             appHost = "openune.cn"
         }
@@ -99,10 +99,10 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "de.xikolo.util.BuildType", "X_TYPE", "de.xikolo.util.BuildType.RELEASE"
+            buildConfigField "de.xikolo.utils.BuildType", "X_TYPE", "de.xikolo.utils.BuildType.RELEASE"
             debuggable false
             zipAlignEnabled true
 
@@ -117,7 +117,7 @@ android {
         }
         debug {
             minifyEnabled false
-            buildConfigField "de.xikolo.util.BuildType", "X_TYPE", "de.xikolo.util.BuildType.DEBUG"
+            buildConfigField "de.xikolo.utils.BuildType", "X_TYPE", "de.xikolo.utils.BuildType.DEBUG"
             shrinkResources false
             debuggable true
 
@@ -147,22 +147,21 @@ android {
 }
 
 dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile ('com.github.bumptech.glide:okhttp3-integration:1.4.0') {
         exclude group: 'glide-parent'
     }
-    compile 'com.birbit:android-priority-jobqueue:1.3.4'
-    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.birbit:android-priority-jobqueue:2.0.1'
+    compile 'org.greenrobot:eventbus:3.0.0'
 
     compile 'org.java-websocket:Java-WebSocket:1.3.0'
-    compile 'com.github.barteksc:android-pdf-viewer:1.4.0'
+    compile 'com.github.barteksc:android-pdf-viewer:2.1.0'
 
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.8.4'
-    compile 'com.google.android.gms:play-services-cast:9.6.1'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.google.android.gms:play-services-cast-framework:9.8.0'
 
-    def supportVersion = '24.2.1'
+    def supportVersion = '25.0.0'
 
     compile "com.android.support:support-v4:${supportVersion}"
     compile "com.android.support:appcompat-v7:${supportVersion}"
@@ -174,10 +173,12 @@ dependencies {
 
     apt      'com.google.auto.value:auto-value:1.3'
     provided 'com.google.auto.value:auto-value:1.3'
-    apt      'com.ryanharter.auto.value:auto-value-parcel:0.2.4-rc2'
-    provided 'com.ryanharter.auto.value:auto-value-parcel:0.2.4-rc2'
-    apt      'com.ryanharter.auto.value:auto-value-gson:0.4.2'
-    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.2'
+    apt      'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
+    provided 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
+    apt      'com.ryanharter.auto.value:auto-value-gson:0.4.4'
+    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.4'
+
+    compile('de.psdev.licensesdialog:licensesdialog:1.8.1')
 
     compile project(":lanalytics")
 

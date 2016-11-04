@@ -11,7 +11,7 @@
         android:layout_height="fill_parent"
         android:paddingRight="8dp">
 
-        <de.xikolo.view.CustomFontTextView
+        <de.xikolo.views.CustomFontTextView
             android:id="@+id/textIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

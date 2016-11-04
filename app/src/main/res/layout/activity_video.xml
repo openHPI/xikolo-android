@@ -1,4 +1,4 @@
-<de.xikolo.view.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<de.xikolo.views.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -45,4 +45,4 @@
 
     </RelativeLayout>
 
-</de.xikolo.view.ScrimInsetsFrameLayout>
+</de.xikolo.views.ScrimInsetsFrameLayout>

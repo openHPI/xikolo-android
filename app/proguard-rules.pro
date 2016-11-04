@@ -15,9 +15,11 @@
 
 ##---------------Begin: proguard configuration for EventBus  ----------
 
+-keepattributes *Annotation*
 -keepclassmembers class ** {
-    public void onEvent*(**);
+    @org.greenrobot.eventbus.Subscribe <methods>;
 }
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
 
 
 ##---------------Begin: proguard configuration for Gson  ----------
@@ -31,7 +33,7 @@
 -keep class com.google.gson.stream.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson
--keep class de.xikolo.data.entities.** { *; }
+-keep class de.xikolo.entities.** { *; }
 
 
 ##---------------Begin: proguard configuration for Samsung SDK  ----------
@@ -49,3 +51,15 @@
 
 ##---------------Begin: proguard configuration for CastCompanionLibrary  ----------
 -keep class android.support.v7.** { *; }
+
+
+##---------------Begin: proguard configuration for OkHttp3  ----------
+
+-keepattributes InnerClasses
+-keepattributes Annotation
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+-keep class okio.** { *; }
+-keep interface okio.** { *; }
+-dontwarn okio.**

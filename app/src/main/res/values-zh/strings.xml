@@ -171,9 +171,6 @@
     <string name="settings_title_licenses">开放源代码许可</string>
     <string name="settings_summary_licenses">开原软件许可细节</string>
 
-    <string name="settings_title_contributors">贡献者</string>
-    <string name="settings_summary_contributors">贡献者列表</string>
-
     <string name="settings_title_build">编译版本</string>
     <string name="settings_summary_build">版本：</string>
 
