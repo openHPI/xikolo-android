@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -29,6 +28,8 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageController;
 import de.xikolo.managers.ItemManager;
+import de.xikolo.managers.Result;
+import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Module;
@@ -36,8 +37,6 @@ import de.xikolo.models.Subtitle;
 import de.xikolo.models.VideoItemDetail;
 import de.xikolo.models.WebSocketMessage;
 import de.xikolo.storages.preferences.ApplicationPreferences;
-import de.xikolo.managers.SecondScreenManager;
-import de.xikolo.managers.Result;
 import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.LanalyticsUtil;
@@ -56,8 +55,6 @@ public class SecondScreenFragment extends Fragment {
     private ImageView imageVideoPoster;
 
     private TextView textVideoTime;
-
-    private View cardSurvey;
 
     private LinearLayout layoutVideoActions;
 
@@ -120,21 +117,6 @@ public class SecondScreenFragment extends Fragment {
 
         cardNoVideo = view.findViewById(R.id.card_no_video);
         cardNoVideo.setVisibility(View.VISIBLE);
-
-        cardSurvey = view.findViewById(R.id.card_survey);
-
-        cardSurvey.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(getString(R.string.second_screen_survey_url)));
-                startActivity(intent);
-            }
-        });
-
-        if (appPreferences.usedSecondScreen()) {
-            cardSurvey.setVisibility(View.VISIBLE);
-        }
     }
 
     @SuppressWarnings("unused")
@@ -170,9 +152,6 @@ public class SecondScreenFragment extends Fragment {
                 notificationManager.cancel(SecondScreenManager.NOTIFICATION_ID);
             }
 
-            if (cardSurvey != null) {
-                cardSurvey.setVisibility(View.VISIBLE);
-            }
             if (appPreferences != null) {
                 appPreferences.setUsedSecondScreen(true);
             }
