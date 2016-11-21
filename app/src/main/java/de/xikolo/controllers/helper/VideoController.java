@@ -447,13 +447,19 @@ public class VideoController {
     @TargetApi(23)
     public void setPlaybackSpeed(PlaybackSpeed speed) {
         if (mediaPlayer != null) {
-            currentPlaybackSpeed = speed;
-            textPlaybackSpeed.setText(speed.toString());
-            PlaybackParams pp = new PlaybackParams();
-            pp.setSpeed(speed.getSpeed());
-            mediaPlayer.setPlaybackParams(pp);
-            if (!isPlaying) {
-                pause();
+            try {
+                PlaybackParams pp = new PlaybackParams();
+                pp.setSpeed(speed.getSpeed());
+                mediaPlayer.setPlaybackParams(pp);
+
+                currentPlaybackSpeed = speed;
+                textPlaybackSpeed.setText(speed.toString());
+
+                if (!isPlaying) {
+                    pause();
+                }
+            } catch (IllegalStateException e) {
+                Log.e(TAG, e.getMessage(), e);
             }
         }
     }
