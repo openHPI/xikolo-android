@@ -70,7 +70,7 @@ public class RetrieveModuleListJob extends Job {
 
                 Response response = new ApiRequest(url).execute();
                 if (response.isSuccessful()) {
-                    Type type = new TypeToken<List<Module>>(){}.getType();
+                    Type type = TypeToken.getParameterized(List.class, Module.class).getType();
                     List<Module> modules = ApiParser.parse(response, type);
                     response.close();
 

@@ -62,7 +62,7 @@ public class RetrieveVideoSubtitlesJob extends Job {
 
                 Response response = new ApiRequest(url).execute();
                 if (response.isSuccessful()) {
-                    Type type = new TypeToken<List<Subtitle>>(){}.getType();
+                    Type type = TypeToken.getParameterized(List.class, Subtitle.class).getType();
                     List<Subtitle> subtitleList = ApiParser.parse(response, type);
                     response.close();
 

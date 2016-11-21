@@ -73,7 +73,7 @@ public class RetrieveModuleListWithItemListJob extends Job {
 
                 Response response = new ApiRequest(url).execute();
                 if (response.isSuccessful()) {
-                    Type type = new TypeToken<List<Module>>(){}.getType();
+                    Type type = TypeToken.getParameterized(List.class, Module.class).getType();
                     List<Module> modules = ApiParser.parse(response, type);
                     response.close();
 
@@ -90,7 +90,7 @@ public class RetrieveModuleListWithItemListJob extends Job {
 
                         response = new ApiRequest(itemListUrl).execute();
                         if (response.isSuccessful()) {
-                            Type itemListType = new TypeToken<List<Item>>() {}.getType();
+                            Type itemListType = TypeToken.getParameterized(List.class, Item.class).getType();
                             List<Item> items = ApiParser.parse(response, itemListType);
                             response.close();
 

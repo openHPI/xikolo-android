@@ -55,7 +55,7 @@ public class RetrieveCourseListJob extends Job {
 
                 Response response = new ApiRequest(url).execute();
                 if (response.isSuccessful()) {
-                    Type type = new TypeToken<List<Course>>(){}.getType();
+                    Type type = TypeToken.getParameterized(List.class, Course.class).getType();
                     List<Course> courses = ApiParser.parse(response, type);
                     response.close();
 

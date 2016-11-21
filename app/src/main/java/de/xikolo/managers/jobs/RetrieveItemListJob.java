@@ -58,7 +58,7 @@ public class RetrieveItemListJob extends Job {
 
                 Response response = new ApiRequest(url).execute();
                 if (response.isSuccessful()) {
-                    Type type = new TypeToken<List<Item>>() {}.getType();
+                    Type type = TypeToken.getParameterized(List.class, Item.class).getType();
                     List<Item> items = ApiParser.parse(response, type);
                     response.close();
 

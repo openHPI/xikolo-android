@@ -71,27 +71,22 @@ public class Item<T extends ItemDetail> implements DatabaseModel, Parcelable, Se
         return context.getString(icon);
     }
 
-    public static Type getTypeToken(String itemType) {
+    public static Type getType(String itemType) {
         if (itemType == null) {
             return null;
         }
 
         switch (itemType) {
             case TYPE_TEXT:
-                return new TypeToken<Item<TextItemDetail>>() {
-                }.getType();
+                return TypeToken.getParameterized(Item.class, TextItemDetail.class).getType();
             case TYPE_VIDEO:
-                return new TypeToken<Item<VideoItemDetail>>() {
-                }.getType();
+                return TypeToken.getParameterized(Item.class, VideoItemDetail.class).getType();
             case TYPE_SELFTEST:
-                return new TypeToken<Item<AssignmentItemDetail>>() {
-                }.getType();
-            case TYPE_PEER:
-                return new TypeToken<Item<LtiItemDetail>>() {
-                }.getType();
+                return TypeToken.getParameterized(Item.class, AssignmentItemDetail.class).getType();
             case TYPE_LTI:
-                return new TypeToken<Item<PeerAssessmentItemDetail>>() {
-                }.getType();
+                return TypeToken.getParameterized(Item.class, LtiItemDetail.class).getType();
+            case TYPE_PEER:
+                return TypeToken.getParameterized(Item.class, PeerAssessmentItemDetail.class).getType();
         }
 
         return null;

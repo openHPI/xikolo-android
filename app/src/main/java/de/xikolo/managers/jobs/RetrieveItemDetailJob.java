@@ -78,7 +78,7 @@ public class RetrieveItemDetailJob extends Job {
 
                 Response response = new ApiRequest(url).execute();
                 if (response.isSuccessful()) {
-                    Item item = ApiParser.parse(response, Item.getTypeToken(itemType));
+                    Item item = ApiParser.parse(response, Item.getType(itemType));
                     response.close();
 
                     item.courseId = courseId;
