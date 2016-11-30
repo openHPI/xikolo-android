@@ -54,6 +54,13 @@ public class Config {
                 TERMS_OF_USE_URL = "http://go.sap.com/corporate/en/legal/terms-of-use.html";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "2C63C05D";
                 break;
+            case OPEN_WHO:
+                COPYRIGHT_URL = "http://who.int/";
+                IMPRINT_URL = "https://openwho.org/pages/imprint";
+                PRIVACY_URL = "https://openwho.org/pages/privacy";
+                TERMS_OF_USE_URL = "";
+                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
+                break;
             case OPEN_UNE:
                 COPYRIGHT_URL = "http://www.guofudata.com/";
                 IMPRINT_URL = "https://openune.cn/pages/imprint";

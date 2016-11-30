@@ -15,7 +15,7 @@
     <color name="video_hd_disabled">#5a6065</color>
     <color name="video_hd_enabled">@color/apptheme_second</color>
 
-    <color name="offline_mode_actionbar">#424242</color>
+    <color name="offline_mode_toolbar">#424242</color>
     <color name="offline_mode_statusbar">#282828</color>
 
     <color name="navi_main_bg">#252525</color>
@@ -48,5 +48,10 @@
     <color name="preference_fallback_accent_color">@color/apptheme_second</color>
 
     <color name="bg_pdf_pager">#805a6065</color>
+
+    <color name="apptheme_toolbar">@color/apptheme_main</color>
+
+    <!-- toolbar with 40% black overlay -->
+    <color name="apptheme_statusbar">@color/apptheme_main_dark</color>
 
 </resources>

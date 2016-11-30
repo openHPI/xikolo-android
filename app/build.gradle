@@ -54,6 +54,12 @@ android {
             appName = "openUNE"
             appHost = "openune.cn"
         }
+        openWHO {
+            applicationId "de.xikolo.openwho"
+            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.OPEN_WHO"
+            appName = "OpenWHO"
+            appHost = "openwho.org"
+        }
     }
     signingConfigs {
         if (rootProject.file('signing.properties').exists()) {
@@ -95,6 +101,12 @@ android {
                 keyAlias props.RELEASE_KEY_ALIAS_OPENUNE
                 keyPassword props.RELEASE_KEY_PASSWORD_OPENUNE
             }
+            openWHO {
+                storeFile rootProject.file(props.RELEASE_STORE_FILE)
+                storePassword props.RELEASE_STORE_PASSWORD
+                keyAlias props.RELEASE_KEY_ALIAS_OPENWHO
+                keyPassword props.RELEASE_KEY_PASSWORD_OPENWHO
+            }
         }
     }
     buildTypes {
@@ -113,6 +125,7 @@ android {
                 productFlavors.moocHouse.signingConfig signingConfigs.moocHouse
                 productFlavors.moocHouse_CN.signingConfig signingConfigs.moocHouse_CN
                 productFlavors.openUNE.signingConfig signingConfigs.openUNE
+                productFlavors.openWHO.signingConfig signingConfigs.openWHO
             }
         }
         debug {

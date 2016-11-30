@@ -137,7 +137,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         contentLayout = (CoordinatorLayout) findViewById(R.id.contentLayout);
         appBar = (AppBarLayout) findViewById(R.id.appbar);
-        setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
+        setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
     }
 
     protected boolean setupCastMiniController() {
@@ -173,17 +173,17 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         this.offlineModeToolbar = enable;
     }
 
-    protected void setColorScheme(int color, int darkColor) {
+    protected void setColorScheme(int toolbarColor, int statusbarColor) {
         if (toolbar != null) {
-            toolbar.setBackgroundColor(ContextCompat.getColor(this, color));
+            toolbar.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
             if (Build.VERSION.SDK_INT >= 21) {
                 if (drawerLayout != null) {
-                    drawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, color));
+                    drawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, toolbarColor));
                 } else {
-                    getWindow().setStatusBarColor(ContextCompat.getColor(this, darkColor));
+                    getWindow().setStatusBarColor(ContextCompat.getColor(this, statusbarColor));
                 }
                 if (contentLayout != null) {
-                    contentLayout.setBackgroundColor(ContextCompat.getColor(this, color));
+                    contentLayout.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
                 }
             }
         }
@@ -195,10 +195,10 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         if (toolbar != null && offlineModeToolbar) {
             if (event.isOnline()) {
                 toolbar.setSubtitle("");
-                setColorScheme(R.color.apptheme_main, R.color.apptheme_main_dark);
+                setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
             } else {
                 toolbar.setSubtitle(getString(R.string.offline_mode));
-                setColorScheme(R.color.offline_mode_actionbar, R.color.offline_mode_statusbar);
+                setColorScheme(R.color.offline_mode_toolbar, R.color.offline_mode_statusbar);
             }
         }
     }

@@ -15,6 +15,7 @@ env:
   - FLAVOR="openHPI"
   - FLAVOR="openSAP"
   - FLAVOR="moocHouse"
+  - FLAVOR="openWHO"
 
 script:
    - >

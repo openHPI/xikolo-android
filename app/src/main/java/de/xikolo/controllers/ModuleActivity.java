@@ -153,9 +153,9 @@ public class ModuleActivity extends BaseActivity {
 
         if (tabLayout != null) {
             if (event.isOnline()) {
-                tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_main));
+                tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_toolbar));
             } else {
-                tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.offline_mode_actionbar));
+                tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.offline_mode_toolbar));
             }
         }
     }
