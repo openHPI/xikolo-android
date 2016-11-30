@@ -1,6 +1,8 @@
 Xikolo Android App
 ==================
 
+[![Build Status](https://travis-ci.org/openHPI/xikolo-android.svg?branch=master)](https://travis-ci.org/openHPI/xikolo-android)
+
 The official Android App for [openHPI](https://open.hpi.de/), [openSAP](https://open.sap.com/) and [mooc.house](https://mooc.house/).
 
 ## Setup
