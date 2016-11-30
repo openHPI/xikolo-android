@@ -36,8 +36,15 @@ public class CastUtil {
     }
 
     public static boolean isAvailable() {
-        GlobalApplication application = GlobalApplication.getInstance();
-        return PlayServicesUtil.checkPlayServices(application) && application.getCastState() != CastState.NO_DEVICES_AVAILABLE;
+        Context context = GlobalApplication.getInstance();
+
+        if (PlayServicesUtil.checkPlayServices(context)) {
+            CastContext castContext = CastContext.getSharedInstance(context);
+
+            return castContext.getCastState() != CastState.NO_DEVICES_AVAILABLE;
+        } else {
+            return false;
+        }
     }
 
     public static MediaInfo buildCastMetadata(Item<VideoItemDetail> video) {
@@ -101,6 +108,10 @@ public class CastUtil {
                 @Override
                 public void onSendingRemoteMediaRequest() {
 
+                }
+
+                @Override
+                public void onAdBreakStatusUpdated() {
                 }
             });
 

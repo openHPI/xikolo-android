@@ -11,8 +11,6 @@ import android.webkit.WebView;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.config.Configuration;
 import com.birbit.android.jobqueue.log.CustomLogger;
-import com.google.android.gms.cast.framework.CastContext;
-import com.google.android.gms.cast.framework.CastStateListener;
 
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
@@ -26,7 +24,6 @@ import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.utils.ClientUtil;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.FeatureToggle;
-import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.SslCertificateUtil;
 
 public class GlobalApplication extends Application {
@@ -46,8 +43,6 @@ public class GlobalApplication extends Application {
     private WebSocketManager webSocketManager;
 
     private SecondScreenManager secondScreenManager;
-
-    private int castState;
 
     public GlobalApplication() {
         instance = this;
@@ -109,10 +104,6 @@ public class GlobalApplication extends Application {
         return ClientUtil.id(this);
     }
 
-    public int getCastState() {
-        return castState;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -120,7 +111,6 @@ public class GlobalApplication extends Application {
         configureDefaultSettings();
         configureWebView();
         configureJobManager();
-        configureCastListener();
         configureSecondScreenManager();
 
         // just for debugging, never use for production
@@ -184,18 +174,6 @@ public class GlobalApplication extends Application {
                 .consumerKeepAlive(120) // wait 2 minute
                 .build();
         jobManager = new JobManager(configuration);
-    }
-
-    private void configureCastListener() {
-        if (PlayServicesUtil.checkPlayServices(this)) {
-            final CastContext castContext = CastContext.getSharedInstance(this);
-            castContext.addCastStateListener(new CastStateListener() {
-                @Override
-                public void onCastStateChanged(int newState) {
-                    castState = newState;
-                }
-            });
-        }
     }
 
     @SuppressWarnings("deprecation")
