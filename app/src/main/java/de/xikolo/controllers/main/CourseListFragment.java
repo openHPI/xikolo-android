@@ -110,7 +110,9 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
                 // TODO: workaround, parcel size can be too large
                 for (Course course : courses) {
-                    course.description = course.description.substring(0, 100);
+                    if (course.description.length() > 100) {
+                        course.description = course.description.substring(0, 100);
+                    }
                 }
 
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
