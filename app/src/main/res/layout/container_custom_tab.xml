@@ -10,7 +10,7 @@
         android:layout_above="@+id/tabLabel"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/circle_white" />
+        android:background="@drawable/tab_circle" />
 
     <de.xikolo.views.CustomFontTextView
         android:id="@+id/tabLabel"
@@ -20,8 +20,8 @@
         android:includeFontPadding="false"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:singleLine="true"
-        android:textColor="@color/white"
+        android:maxLines="1"
+        android:textColor="@color/apptheme_tab_text"
         android:textSize="20sp"
         app:customFont="xikolo.ttf" />
 

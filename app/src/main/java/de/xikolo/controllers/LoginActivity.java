@@ -5,22 +5,28 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ProgressDialog;
+import de.xikolo.controllers.helper.ImageController;
+import de.xikolo.events.LoginEvent;
+import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.User;
-import de.xikolo.managers.Result;
-import de.xikolo.events.LoginEvent;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
@@ -42,15 +48,32 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        setupActionBar();
 
-        setTitle(getString(R.string.title_section_login));
+        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+        if (tb != null) {
+            setSupportActionBar(tb);
+        }
+
+       ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+
+        setTitle(null);
 
         editTextEmail = (EditText) findViewById(R.id.editEmail);
         editTextPassword = (EditText) findViewById(R.id.editPassword);
         Button buttonLogin = (Button) findViewById(R.id.btnLogin);
         Button buttonNew = (Button) findViewById(R.id.btnNew);
         TextView textReset = (TextView) findViewById(R.id.textForgotPw);
+        ImageView topImage = (ImageView) findViewById(R.id.top_image);
+        TextView textCredentials = (TextView) findViewById(R.id.text_credentials);
+
+        textCredentials.setText(String.format(getString(R.string.login_with_credentials), Config.HOST));
+
+        ImageController.load(R.drawable.login_header, topImage, 0, false);
 
         progressDialog = ProgressDialog.getInstance();
 
@@ -92,23 +115,24 @@ public class LoginActivity extends BaseActivity {
             }
         };
 
+        editTextPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    login(v);
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+
         if (buttonLogin != null) {
             buttonLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    hideKeyboard(view);
-                    String email = editTextEmail.getText().toString().trim();
-                    String password = editTextPassword.getText().toString();
-                    if (isEmailValid(email)) {
-                        if (!password.equals("")) {
-                            userManager.login(loginResult, email, password);
-                            progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
-                        } else {
-                            editTextPassword.setError(getString(R.string.error_password));
-                        }
-                    } else {
-                        editTextEmail.setError(getString(R.string.error_email));
-                    }
+                    login(view);
                 }
             });
         }
@@ -131,6 +155,22 @@ public class LoginActivity extends BaseActivity {
                     startUrlIntent(Config.URI + Config.ACCOUNT + Config.RESET);
                 }
             });
+        }
+    }
+
+    private void login(View view) {
+        hideKeyboard(view);
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString();
+        if (isEmailValid(email)) {
+            if (!password.equals("")) {
+                userManager.login(loginResult, email, password);
+                progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
+            } else {
+                editTextPassword.setError(getString(R.string.error_password));
+            }
+        } else {
+            editTextEmail.setError(getString(R.string.error_email));
         }
     }
 

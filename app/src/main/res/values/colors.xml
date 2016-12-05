@@ -27,6 +27,8 @@
     <color name="navi_profile_light_bg">#5b5b5b</color>
     <color name="navi_profile_light_fg">#0dffffff</color>
 
+    <color name="navi_text">@color/white</color>
+
     <color name="list_divider">#1F000000</color>
 
     <color name="white">#ffffff</color>
@@ -53,5 +55,20 @@
 
     <!-- toolbar with 40% black overlay -->
     <color name="apptheme_statusbar">@color/apptheme_main_dark</color>
+
+    <color name="apptheme_login_bg">@color/apptheme_main</color>
+    <color name="apptheme_login_text">@color/white</color>
+    <color name="apptheme_login_gradient_start">@color/apptheme_third_60</color>
+    <color name="apptheme_login_gradient_end">@color/apptheme_second_60</color>
+
+    <color name="apptheme_tab_text">@color/white</color>
+    <color name="apptheme_tab_text_unfocused">@color/tab_text_unfocused</color>
+    <color name="apptheme_tab_indicator">@color/white</color>
+
+    <color name="apptheme_section_header_text">@color/white</color>
+    <color name="apptheme_section_header_bg">@color/apptheme_main</color>
+    <color name="apptheme_section_header_toggle_bg">@color/white_30</color>
+    <color name="apptheme_section_header_bg_locked">@color/text_light</color>
+    <color name="apptheme_section_header_text_locked">@color/white</color>
 
 </resources>

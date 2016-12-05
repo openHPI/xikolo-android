@@ -116,7 +116,8 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
     private void contentAvailable(final Module module, ModuleViewHolder holder) {
         holder.progressBar.setVisibility(View.GONE);
         holder.viewModuleNotification.setVisibility(View.GONE);
-        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.apptheme_main));
+        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_bg));
+        holder.textTitle.setTextColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_text));
 
         TypedValue outValue = new TypedValue();
         activity.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
@@ -152,7 +153,9 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
     private void contentLocked(Module module, ModuleViewHolder holder) {
         holder.progressBar.setVisibility(View.GONE);
         holder.viewModuleNotification.setVisibility(View.VISIBLE);
-        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.text_light));
+        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_bg_locked));
+        holder.textTitle.setTextColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_text_locked));
+
         holder.layout.setClickable(false);
         holder.layout.setForeground(null);
         holder.viewDownloadButton.setVisibility(View.GONE);

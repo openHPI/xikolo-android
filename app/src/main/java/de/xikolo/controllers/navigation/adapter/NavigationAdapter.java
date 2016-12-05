@@ -197,8 +197,8 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             }
         } else {
             if (position != NAV_PROFILE.getPosition() || !UserManager.isLoggedIn()) {
-                viewHolder.textIcon.setTextColor(ContextCompat.getColor(context, R.color.white));
-                viewHolder.textTitle.setTextColor(ContextCompat.getColor(context, R.color.white));
+                viewHolder.textIcon.setTextColor(ContextCompat.getColor(context, R.color.navi_text));
+                viewHolder.textTitle.setTextColor(ContextCompat.getColor(context, R.color.navi_text));
             }
         }
     }

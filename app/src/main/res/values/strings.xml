@@ -3,8 +3,8 @@
 
     <!-- -->
     <string name="title_section_profile">Profile</string>
-    <string name="title_section_login">Log in</string>
-    <string name="title_section_logout">Log out</string>
+    <string name="title_section_login">Login</string>
+    <string name="title_section_logout">Logout</string>
     <string name="title_section_all_courses">All Courses</string>
     <string name="title_section_news">News</string>
     <string name="title_section_downloads">Downloads</string>
@@ -89,15 +89,15 @@
     <string name="trying_reconnect">Trying to reconnect&#8230;</string>
     <string name="error_email">Please insert valid Email address.</string>
     <string name="error_password">Please insert valid Password.</string>
-    <string name="login">Log in</string>
-    <string name="login_with_credentials">Log in with credentials</string>
-    <string name="logout">Log out</string>
+    <string name="login">Login</string>
+    <string name="login_with_credentials">Login with %1$s credentials:</string>
+    <string name="logout">Logout</string>
     <string name="input_email">* Email</string>
     <string name="hint_email">Email</string>
     <string name="input_password">* Password</string>
     <string name="hint_password">Password</string>
     <string name="forgot_password">Forgot your password?</string>
-    <string name="header_new">New here?</string>
+    <string name="header_new">No account yet? Create one</string>
     <string name="button_new">Create new account</string>
     <string name="enrollments">enrollments</string>
     <string name="total">Total</string>
@@ -146,7 +146,7 @@
     <!-- -->
     <string name="toast_no_courses">No courses received.</string>
     <string name="toast_no_network">Please enable network connection.</string>
-    <string name="toast_please_log_in">Please log in.</string>
+    <string name="toast_please_log_in">Please login.</string>
     <string name="toast_log_in_failed">Login failed. Please check your credentials.</string>
     <string name="toast_file_already_downloaded">File already downloaded.</string>
     <string name="toast_no_external_write_access">No write access for external storage.</string>

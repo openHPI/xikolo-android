@@ -39,6 +39,16 @@ public class ImageController {
                 .into(imageView);
     }
 
+    private static void applyDontAnimate(DrawableRequestBuilder builder, final ImageView imageView, int placeholder, int width, int height) {
+        builder.centerCrop()
+                .placeholder(placeholder)
+                .error(placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .override(width, height)
+                .dontAnimate()
+                .into(imageView);
+    }
+
     public static void load(final String string, final ImageView imageView) {
         load(string, imageView, DEFAULT_PLACEHOLDER);
     }
@@ -57,6 +67,14 @@ public class ImageController {
 
     public static void load(final int resourceId, final ImageView imageView, int placeholder) {
         apply(init(resourceId), imageView, placeholder, Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+    }
+
+    public static void load(final int resourceId, final ImageView imageView, int placeholder, boolean animate) {
+        if (animate) {
+            apply(init(resourceId), imageView, placeholder, Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+        } else {
+            applyDontAnimate(init(resourceId), imageView, placeholder, Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+        }
     }
 
     public static void load(final int resourceId, final ImageView imageView, int placeholder, int width, int height) {

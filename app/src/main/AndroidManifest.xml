@@ -147,7 +147,8 @@
         <activity
             android:name=".controllers.LoginActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
+            android:parentActivityName=".controllers.MainActivity"
+            android:theme="@style/AppThemeTranslucentStatusAndNavigation">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controllers.MainActivity" />

@@ -31,6 +31,9 @@
     <style name="AppThemeTranslucentStatus" parent="AppTheme.Base">
     </style>
 
+    <style name="AppThemeTranslucentStatusAndNavigation" parent="AppThemeTranslucentStatus">
+    </style>
+
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/apptheme_main</item>
         <item name="colorPrimaryDark">@color/apptheme_main_dark</item>

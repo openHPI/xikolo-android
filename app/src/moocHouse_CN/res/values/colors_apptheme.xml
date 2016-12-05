@@ -9,14 +9,45 @@
     <!-- 40% black overlay -->
     <color name="apptheme_main_dark">#676b16</color>
 
-    <color name="apptheme_second">#b42946</color>
-    <color name="apptheme_third">#de6212</color>
+    <color name="apptheme_second">#abb324</color>
+    <color name="apptheme_third">#abb324</color>
 
     <color name="apptheme_main_10">#1aabb324</color>
 
-    <color name="apptheme_second_60">#99b42946</color>
+    <color name="apptheme_second_60">#99abb324</color>
     <color name="apptheme_third_60">#99abb324</color>
 
-    <color name="apptheme_second_26">#42b42946</color>
+    <color name="apptheme_second_26">#42abb324</color>
+
+    <color name="apptheme_toolbar">@color/white</color>
+
+    <!-- toolbar with 40% black overlay -->
+    <color name="apptheme_statusbar">#999999</color>
+
+    <color name="apptheme_tab_text">@color/text_main</color>
+    <color name="apptheme_tab_text_unfocused">@color/text_light</color>
+    <color name="apptheme_tab_indicator">@color/text_main</color>
+
+    <color name="apptheme_section_header_text">@color/apptheme_main</color>
+    <color name="apptheme_section_header_bg">@color/transparent</color>
+    <color name="apptheme_section_header_toggle_bg">@color/apptheme_main_light</color>
+    <color name="apptheme_section_header_bg_locked">@color/transparent</color>
+    <color name="apptheme_section_header_text_locked">@color/text_light</color>
+
+    <color name="navi_profile_bg">@color/white</color>
+    <color name="navi_main_bg">@color/white</color>
+    <color name="navi_sub_bg">@color/background_main</color>
+
+    <color name="navi_main_light_bg">@color/background_light_gray</color>
+    <color name="navi_sub_light_bg">@color/background_light_gray</color>
+    <color name="navi_profile_light_bg">@color/background_light_gray</color>
+    <color name="navi_profile_light_fg">@color/background_light_gray</color>
+
+    <color name="navi_text">@color/text_main</color>
+
+    <color name="apptheme_login_bg">@color/background_main</color>
+    <color name="apptheme_login_text">@color/text_main</color>
+    <color name="apptheme_login_gradient_start">@color/background_main</color>
+    <color name="apptheme_login_gradient_end">@color/background_main</color>
 
 </resources>

@@ -17,7 +17,7 @@
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/apptheme_main">
+            android:background="@color/apptheme_section_header_bg">
 
             <TextView
                 android:id="@+id/textTitle"
@@ -30,8 +30,8 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
-                android:singleLine="true"
-                android:textColor="@color/white"
+                android:maxLines="1"
+                android:textColor="@color/apptheme_section_header_text"
                 android:textSize="20sp" />
 
             <de.xikolo.views.CustomFontTextView
@@ -44,7 +44,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="2dp"
-                android:background="@drawable/icon_toggle_bg_white_on_color"
+                android:background="@drawable/icon_toggle_section_header"
                 android:clickable="true"
                 android:contentDescription="@string/download"
                 android:paddingBottom="8dp"
@@ -52,7 +52,7 @@
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/icon_download"
-                android:textColor="@color/white"
+                android:textColor="@color/apptheme_section_header_text"
                 android:textSize="20sp"
                 android:visibility="gone"
                 res:customFont="materialdesign.ttf" />

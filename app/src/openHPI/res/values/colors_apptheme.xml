@@ -19,4 +19,6 @@
 
     <color name="apptheme_second_26">#42b42946</color>
 
+    <color name="apptheme_login_bg">@color/apptheme_main_dark</color>
+
 </resources>
