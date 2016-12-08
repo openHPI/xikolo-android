@@ -188,9 +188,6 @@ public class TranscriptViewerFragment extends Fragment implements ChooseLanguage
         Log.d(TAG, "onCreateOptionsMenu");
         if (subtitleList != null && subtitleList.size() > 1) {
             inflater.inflate(R.menu.language, menu);
-            Log.d(TAG, "yeah");
-        } else {
-            Log.d(TAG, "nooo");
         }
     }
 

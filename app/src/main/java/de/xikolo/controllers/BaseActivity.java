@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.events.NetworkStateEvent;
@@ -39,8 +40,10 @@ import de.xikolo.managers.UserManager;
 import de.xikolo.receivers.NotificationDeletedReceiver;
 import de.xikolo.storages.preferences.NotificationStorage;
 import de.xikolo.storages.preferences.StorageType;
+import de.xikolo.utils.BuildFlavor;
 import de.xikolo.utils.FeatureToggle;
 import de.xikolo.utils.PlayServicesUtil;
+import de.xikolo.utils.TintUtil;
 
 public abstract class BaseActivity extends AppCompatActivity implements CastStateListener {
 
@@ -270,6 +273,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+
         if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
             getMenuInflater().inflate(R.menu.cast, menu);
             mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
@@ -277,6 +281,17 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
                     menu,
                     R.id.media_route_menu_item);
         }
+
+        // tint menu icons dark on mooc.house, cause toolbar has light background
+        if (BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE || BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE_CN) {
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem item = menu.getItem(i);
+                if (item.getIcon() != null && item.getItemId() != R.id.media_route_menu_item) {
+                    TintUtil.tintMenuIconDark(this, item);
+                }
+            }
+        }
+
         return true;
     }
 
