@@ -25,6 +25,8 @@ import de.xikolo.utils.ClientUtil;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.FeatureToggle;
 import de.xikolo.utils.SslCertificateUtil;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class GlobalApplication extends Application {
 
@@ -108,6 +110,7 @@ public class GlobalApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        configureRealm();
         configureDefaultSettings();
         configureWebView();
         configureJobManager();
@@ -117,6 +120,12 @@ public class GlobalApplication extends Application {
         if (Config.DEBUG) {
             SslCertificateUtil.disableSslCertificateChecking();
         }
+    }
+
+    private void configureRealm() {
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().build();
+        Realm.getInstance(config);
     }
 
     private void configureDefaultSettings() {

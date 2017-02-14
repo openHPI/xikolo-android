@@ -52,7 +52,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     public static ProgressFragment newInstance(Course course) {
         ProgressFragment fragment = new ProgressFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_COURSE, course);
+//        args.putParcelable(ARG_COURSE, course);
         fragment.setArguments(args);
         return fragment;
     }

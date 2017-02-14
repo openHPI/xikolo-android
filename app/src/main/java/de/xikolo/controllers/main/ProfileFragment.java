@@ -10,18 +10,17 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageController;
 import de.xikolo.controllers.helper.NotificationController;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
+import de.xikolo.managers.CourseManager;
+import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.User;
-import de.xikolo.managers.CourseManager;
-import de.xikolo.managers.Result;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
 import de.xikolo.views.CustomSizeImageView;
@@ -58,7 +57,7 @@ public class ProfileFragment extends ContentFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (courses != null) {
-            outState.putParcelableArrayList(ARG_COURSES, (ArrayList<Course>) courses);
+//            outState.putParcelableArrayList(ARG_COURSES, (ArrayList<Course>) courses);
         }
         super.onSaveInstanceState(outState);
     }
@@ -68,7 +67,7 @@ public class ProfileFragment extends ContentFragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            courses = savedInstanceState.getParcelableArrayList(ARG_COURSES);
+//            courses = savedInstanceState.getParcelableArrayList(ARG_COURSES);
         }
 
         courseManager = new CourseManager(jobManager);
@@ -131,7 +130,7 @@ public class ProfileFragment extends ContentFragment {
             showHeader();
             if (courses == null) {
                 userManager.getUser(userResult);
-                courseManager.getCourses(coursesResult, false);
+                courseManager.requestCourses();
             } else {
                 showCoursesProgress(courses);
             }

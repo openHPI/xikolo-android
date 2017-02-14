@@ -59,7 +59,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     public static CourseLearningsFragment newInstance(Course course) {
         CourseLearningsFragment fragment = new CourseLearningsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_COURSE, course);
+//        args.putParcelable(ARG_COURSE, course);
         fragment.setArguments(args);
         return fragment;
     }
@@ -204,7 +204,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     private void startModuleActivity(Course course, Module module, Item item) {
         Intent intent = new Intent(getActivity(), ModuleActivity.class);
         Bundle b = new Bundle();
-        b.putParcelable(ModuleActivity.ARG_COURSE, course);
+//        b.putParcelable(ModuleActivity.ARG_COURSE, course);
         b.putParcelable(ModuleActivity.ARG_MODULE, module);
         b.putParcelable(ModuleActivity.ARG_ITEM, item);
         intent.putExtras(b);

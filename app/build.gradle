@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 25
@@ -160,7 +161,7 @@ android {
 }
 
 dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile ('com.github.bumptech.glide:okhttp3-integration:1.4.0') {
         exclude group: 'glide-parent'
@@ -171,10 +172,13 @@ dependencies {
     compile 'org.java-websocket:Java-WebSocket:1.3.0'
     compile 'com.github.barteksc:android-pdf-viewer:2.4.0'
 
+    compile 'com.github.kamikat:moshi-jsonapi:3.0.6'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.android.gms:play-services-cast-framework:10.0.1'
 
-    def supportVersion = '25.1.0'
+    def supportVersion = '25.1.1'
 
     compile "com.android.support:support-v4:${supportVersion}"
     compile "com.android.support:appcompat-v7:${supportVersion}"
@@ -188,8 +192,8 @@ dependencies {
     provided 'com.google.auto.value:auto-value:1.3'
     apt      'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
     provided 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
-    apt      'com.ryanharter.auto.value:auto-value-gson:0.4.5'
-    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.5'
+    apt      'com.ryanharter.auto.value:auto-value-gson:0.4.6'
+    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.6'
 
     compile('de.psdev.licensesdialog:licensesdialog:1.8.1')
 

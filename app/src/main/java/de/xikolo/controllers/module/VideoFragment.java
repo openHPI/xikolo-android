@@ -172,11 +172,11 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             viewContainer.setVisibility(View.VISIBLE);
 
             if (item.detail == null) {
-                throw new NullPointerException("Item Detail is null for Course " + course.name + " (" + course.id + ")" +
+                throw new NullPointerException("Item Detail is null for Course " + course.title + " (" + course.id + ")" +
                         " and Module " + module.name + " (" + module.id + ")" +
                         " and Item " + item.title + " (" + item.id + ")");
             } else if (item.detail.stream == null) {
-                throw new NullPointerException("Item Stream is null for Course " + course.name + " (" + course.id + ")" +
+                throw new NullPointerException("Item Stream is null for Course " + course.title + " (" + course.id + ")" +
                         " and Module " + module.name + " (" + module.id + ")" +
                         " and Item " + item.title + " (" + item.id + ")");
             }
@@ -230,7 +230,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                     } else {
                         Intent intent = new Intent(getActivity(), VideoActivity.class);
                         Bundle b = new Bundle();
-                        b.putParcelable(VideoActivity.ARG_COURSE, course);
+//                        b.putParcelable(VideoActivity.ARG_COURSE, course);
                         b.putParcelable(VideoActivity.ARG_MODULE, module);
                         b.putParcelable(VideoActivity.ARG_ITEM, item);
                         intent.putExtras(b);

@@ -44,6 +44,7 @@ import de.xikolo.utils.BuildFlavor;
 import de.xikolo.utils.FeatureToggle;
 import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.TintUtil;
+import io.realm.Realm;
 
 public abstract class BaseActivity extends AppCompatActivity implements CastStateListener {
 
@@ -69,6 +70,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     private IntroductoryOverlay overlay;
 
+    protected Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +80,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         jobManager = globalApplication.getJobManager();
 
         offlineModeToolbar = true;
+
+        realm = Realm.getDefaultInstance();
 
         if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
             castContext = CastContext.getSharedInstance(this);
@@ -246,6 +251,13 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         if (castContext != null) {
             castContext.removeCastStateListener(this);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 
     @Override

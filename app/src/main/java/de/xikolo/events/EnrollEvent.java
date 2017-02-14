@@ -7,7 +7,7 @@ public class EnrollEvent extends Event {
     private Course course;
 
     public EnrollEvent(Course course) {
-        super(EnrollEvent.class.getSimpleName() + ": course = " + course.course_code);
+        super(EnrollEvent.class.getSimpleName() + ": course = " + course.slug);
         this.course = course;
     }
 

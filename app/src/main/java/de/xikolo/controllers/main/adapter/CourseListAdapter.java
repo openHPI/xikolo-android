@@ -20,6 +20,7 @@ import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageController;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
+import de.xikolo.utils.Config;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.HeaderAndSectionsList;
@@ -128,8 +129,8 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             Context context = GlobalApplication.getInstance();
 
-            Date dateBegin = DateUtil.parse(course.available_from);
-            Date dateEnd = DateUtil.parse(course.available_to);
+            Date dateBegin = DateUtil.parse(course.startDate);
+            Date dateEnd = DateUtil.parse(course.endDate);
 
             DateFormat dateOut;
             if (DisplayUtil.is7inchTablet(context)) {
@@ -146,15 +147,15 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 viewHolder.textDate.setText("");
             }
 
-            viewHolder.textTitle.setText(course.name);
-            viewHolder.textTeacher.setText(course.lecturer);
+            viewHolder.textTitle.setText(course.title);
+            viewHolder.textTeacher.setText(course.teachers);
             viewHolder.textLanguage.setText(LanguageUtil.languageForCode(context, course.language));
 
             if (courseFilter == CourseManager.CourseFilter.ALL) {
-                viewHolder.textDescription.setText(course.description);
+                viewHolder.textDescription.setText(course.shortAbstract);
                 viewHolder.textDescription.setVisibility(View.VISIBLE);
 
-                if (DateUtil.nowIsBetween(course.available_from, course.available_to)) {
+                if (DateUtil.nowIsBetween(course.startDate, course.endDate)) {
                     viewHolder.textBanner.setVisibility(View.VISIBLE);
                     viewHolder.textBanner.setText(context.getText(R.string.banner_running));
                     viewHolder.textBanner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
@@ -163,11 +164,11 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             } else {
                 viewHolder.textDescription.setVisibility(View.GONE);
-                if (DateUtil.nowIsBetween(course.available_from, course.available_to)) {
+                if (DateUtil.nowIsBetween(course.startDate, course.endDate)) {
                     viewHolder.textBanner.setVisibility(View.VISIBLE);
                     viewHolder.textBanner.setText(context.getText(R.string.banner_running));
                     viewHolder.textBanner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
-                } else if (DateUtil.nowIsAfter(course.available_to)) {
+                } else if (DateUtil.nowIsAfter(course.endDate)) {
                     viewHolder.textBanner.setVisibility(View.VISIBLE);
                     viewHolder.textBanner.setText(context.getText(R.string.banner_self_paced));
                     viewHolder.textBanner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_yellow));
@@ -176,9 +177,9 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
 
-            ImageController.load(course.visual_url, viewHolder.image);
+            ImageController.load(Config.HTTPS + "://" + Config.HOST + course.imageUrl, viewHolder.image);
 
-            if (course.is_enrolled && DateUtil.nowIsAfter(course.available_from)) {
+            if (course.is_enrolled && DateUtil.nowIsAfter(course.startDate)) {
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -208,7 +209,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
             }
 
-            if (course.is_enrolled && !DateUtil.nowIsAfter(course.available_from)) {
+            if (course.is_enrolled && !DateUtil.nowIsAfter(course.startDate)) {
                 viewHolder.buttonEnroll.setText(context.getString(R.string.btn_starts_soon));
                 viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -1,135 +1,134 @@
 package de.xikolo.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.squareup.moshi.Json;
 
-import com.google.gson.annotations.SerializedName;
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
+import moe.banana.jsonapi2.JsonApi;
+import moe.banana.jsonapi2.Resource;
 
-import java.io.Serializable;
+public class Course extends RealmObject {
 
-import de.xikolo.storages.databases.DatabaseModel;
-
-public class Course implements DatabaseModel, Parcelable, Serializable {
-
-    @SerializedName("id")
+    @PrimaryKey
     public String id;
 
-    @SerializedName("name")
-    public String name;
+    public String title;
 
-    @SerializedName("description")
+    public String slug;
+
+    public String startDate;
+
+    public String endDate;
+
+    public String shortAbstract;
+
     public String description;
 
-    @SerializedName("course_code")
-    public String course_code;
+    public String imageUrl;
 
-    @SerializedName("lecturer")
-    public String lecturer;
-
-    @SerializedName("language")
     public String language;
 
-    @SerializedName("url")
-    public String url;
+    public String status;
 
-    @SerializedName("visual_url")
-    public String visual_url;
+    public String classifiers;
 
-    @SerializedName("available_from")
-    public String available_from;
+    public String teachers;
 
-    @SerializedName("available_to")
-    public String available_to;
+    public boolean accessible;
 
-    @SerializedName("locked")
-    public boolean locked;
+    public boolean enrollable;
 
-    @SerializedName("is_enrolled")
-    public boolean is_enrolled;
+    public boolean hidden;
 
-    @SerializedName("progress")
-    public Progress progress;
+    public boolean external;
 
-    @Override
-    public String getId() {
-        return id;
-    }
+    public String externalUrl;
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+    public String policyUrl;
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(name);
-        parcel.writeString(description);
-        parcel.writeString(course_code);
-        parcel.writeString(lecturer);
-        parcel.writeString(language);
-        parcel.writeString(url);
-        parcel.writeString(visual_url);
-        parcel.writeString(available_from);
-        parcel.writeString(available_to);
-        parcel.writeByte((byte) (locked ? 1 : 0));
-        parcel.writeByte((byte) (is_enrolled ? 1 : 0 ));
-        parcel.writeParcelable(progress, i);
-    }
+    public boolean qualifiedCertificateAvailable;
 
-    public Course() {
-        progress = new Progress();
-    }
+    public boolean onDemand;
 
-    public Course(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        description = in.readString();
-        course_code = in.readString();
-        lecturer = in.readString();
-        language = in.readString();
-        url = in.readString();
-        visual_url = in.readString();
-        available_from = in.readString();
-        available_to = in.readString();
-        locked = in.readByte() != 0;
-        is_enrolled = in.readByte() != 0;
-        progress = in.readParcelable(Course.class.getClassLoader());
-    }
+    @Ignore
+    public boolean is_enrolled = true;
 
-    public static final Parcelable.Creator<Course> CREATOR = new Parcelable.Creator<Course>() {
-        public Course createFromParcel(Parcel in) {
-            return new Course(in);
+    @JsonApi(type = "courses")
+    public static class JsonModel extends Resource implements RealmAdapter<Course> {
+
+        public String title;
+
+        public String slug;
+
+        @Json(name = "start_at")
+        public String startDate;
+
+        @Json(name = "end_at")
+        public String endDate;
+
+        @Json(name = "abstract")
+        public String shortAbstract;
+
+        public String description;
+
+        @Json(name = "image_url")
+        public String imageUrl;
+
+        public String language;
+
+        public String status;
+
+        public transient String classifiers;
+
+        public String teachers;
+
+        public boolean accessible;
+
+        public boolean enrollable;
+
+        public boolean hidden;
+
+        public boolean external;
+
+        @Json(name = "external_url")
+        public String externalUrl;
+
+        @Json(name = "policy_url")
+        public String policyUrl;
+
+        @Json(name = "qualified_certificate_available")
+        public boolean qualifiedCertificateAvailable;
+
+        @Json(name = "on_demand")
+        public boolean onDemand;
+
+        @Override
+        public Course convertToRealmObject() {
+            Course course = new Course();
+            course.id = getId();
+            course.title = title;
+            course.slug = slug;
+            course.startDate = startDate;
+            course.endDate = endDate;
+            course.shortAbstract = shortAbstract;
+            course.description = description;
+            course.imageUrl = imageUrl;
+            course.language = language;
+            course.status = status;
+            course.classifiers = classifiers;
+            course.teachers = teachers;
+            course.accessible = accessible;
+            course.enrollable = enrollable;
+            course.hidden = hidden;
+            course.external = external;
+            course.externalUrl = externalUrl;
+            course.policyUrl = policyUrl;
+            course.qualifiedCertificateAvailable = qualifiedCertificateAvailable;
+            course.onDemand = onDemand;
+            return course;
         }
 
-        public Course[] newArray(int size) {
-            return new Course[size];
-        }
-    };
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (((Object) this).getClass() != obj.getClass())
-            return false;
-        Course o = (Course) obj;
-        if (id == null) {
-            if (o.id != null)
-                return false;
-        } else if (!id.equals(o.id))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 11;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
     }
 
 }

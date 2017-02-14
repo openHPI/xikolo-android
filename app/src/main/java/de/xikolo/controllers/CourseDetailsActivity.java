@@ -32,7 +32,7 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
         this.course = b.getParcelable(ARG_COURSE);
 
         if (course != null) {
-            setTitle(course.name);
+            setTitle(course.title);
         }
 
         String tag = "content";
@@ -40,7 +40,7 @@ public class CourseDetailsActivity extends BaseActivity implements UnenrollDialo
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code, false, false), tag);
+            transaction.replace(R.id.content, WebViewFragment.newInstance(Config.URI + Config.COURSES + course.slug, false, false), tag);
             transaction.commit();
         }
     }

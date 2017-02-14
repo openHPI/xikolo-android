@@ -14,7 +14,6 @@ import de.xikolo.models.Course;
 import de.xikolo.models.Module;
 import de.xikolo.network.ApiRequest;
 import de.xikolo.storages.databases.DataType;
-import de.xikolo.storages.databases.adapters.CourseDataAdapter;
 import de.xikolo.storages.databases.adapters.ModuleDataAdapter;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
@@ -59,8 +58,8 @@ public class DeleteEnrollmentJob extends Job {
 
                 course.is_enrolled = false;
 
-                CourseDataAdapter courseDataAdapter = (CourseDataAdapter) GlobalApplication.getDataAdapter(DataType.COURSE);
-                courseDataAdapter.update(course, false);
+//                CourseDataAdapter courseDataAdapter = (CourseDataAdapter) GlobalApplication.getDataAdapter(DataType.COURSE);
+//                courseDataAdapter.update(course, false);
 
                 ModuleDataAdapter moduleDataAdapter = (ModuleDataAdapter) GlobalApplication.getDataAdapter(DataType.MODULE);
                 for (Module module : moduleDataAdapter.getAllForCourse(course.id)) {

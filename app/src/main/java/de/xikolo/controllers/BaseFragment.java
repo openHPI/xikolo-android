@@ -8,6 +8,7 @@ import com.google.android.gms.cast.framework.CastContext;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.utils.PlayServicesUtil;
+import io.realm.Realm;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -17,6 +18,8 @@ public abstract class BaseFragment extends Fragment {
 
     protected CastContext castContext;
 
+    protected Realm realm;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,9 +27,17 @@ public abstract class BaseFragment extends Fragment {
         globalApplication = GlobalApplication.getInstance();
         jobManager = globalApplication.getJobManager();
 
+        realm = Realm.getDefaultInstance();
+
         if (PlayServicesUtil.checkPlayServices(getContext())) {
             castContext = CastContext.getSharedInstance(getActivity());
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
+    }
 }

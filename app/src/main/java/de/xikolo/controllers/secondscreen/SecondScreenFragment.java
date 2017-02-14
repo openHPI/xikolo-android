@@ -383,7 +383,7 @@ public class SecondScreenFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (course != null) {
-            outState.putParcelable(KEY_COURSE, course);
+//            outState.putParcelable(KEY_COURSE, course);
         }
         if (module != null) {
             outState.putParcelable(KEY_MODULE, module);

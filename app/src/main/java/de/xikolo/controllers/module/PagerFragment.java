@@ -24,7 +24,7 @@ public abstract class PagerFragment<T extends ItemDetail> extends BaseFragment {
 
     protected static PagerFragment newInstance(PagerFragment fragment, Course course, Module module, Item item) {
         Bundle args = new Bundle();
-        args.putParcelable(ARG_COURSE, course);
+//        args.putParcelable(ARG_COURSE, course);
         args.putParcelable(ARG_MODULE, module);
         args.putParcelable(ARG_ITEM, item);
         fragment.setArguments(args);

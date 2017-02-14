@@ -68,7 +68,7 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
     public static SlideViewerFragment newInstance(Course course, Module module, Item item) {
         SlideViewerFragment fragment = new SlideViewerFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_COURSE, course);
+//        args.putParcelable(ARG_COURSE, course);
         args.putParcelable(ARG_MODULE, module);
         args.putParcelable(ARG_ITEM, item);
         fragment.setArguments(args);

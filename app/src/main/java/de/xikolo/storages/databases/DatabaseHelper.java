@@ -8,12 +8,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.xikolo.storages.databases.adapters.CourseDataAdapter;
 import de.xikolo.storages.databases.adapters.DataAdapter;
 import de.xikolo.storages.databases.adapters.ItemDataAdapter;
 import de.xikolo.storages.databases.adapters.ModuleDataAdapter;
 import de.xikolo.storages.databases.adapters.VideoDataAdapter;
-import de.xikolo.storages.databases.tables.CourseTable;
 import de.xikolo.storages.databases.tables.ItemTable;
 import de.xikolo.storages.databases.tables.ModuleTable;
 import de.xikolo.storages.databases.tables.ProgressTable;
@@ -39,7 +37,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         tables = new ArrayList<>();
         tables.add(new ProgressTable());
-        tables.add(new CourseTable());
         tables.add(new ModuleTable());
         tables.add(new ItemTable());
         tables.add(new VideoTable());
@@ -101,9 +98,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         DataAdapter dataAdapter = null;
 
         switch (type) {
-            case COURSE:
-                dataAdapter = new CourseDataAdapter(this, new CourseTable(), new ProgressTable());
-                break;
             case MODULE:
                 dataAdapter = new ModuleDataAdapter(this, new ModuleTable(), new ProgressTable());
                 break;

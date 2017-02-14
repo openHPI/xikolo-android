@@ -12,8 +12,6 @@ import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.network.ApiRequest;
-import de.xikolo.storages.databases.DataType;
-import de.xikolo.storages.databases.adapters.CourseDataAdapter;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 import okhttp3.FormBody;
@@ -62,8 +60,8 @@ public class CreateEnrollmentJob extends Job {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
 
                 course.is_enrolled = true;
-                CourseDataAdapter courseDataAccess = (CourseDataAdapter) GlobalApplication.getDataAdapter(DataType.COURSE);
-                courseDataAccess.update(course, false);
+//                CourseDataAdapter courseDataAccess = (CourseDataAdapter) GlobalApplication.getDataAdapter(DataType.COURSE);
+//                courseDataAccess.update(course, false);
                 result.success(course, Result.DataSource.NETWORK);
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Enrollment not created");

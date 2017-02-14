@@ -1,44 +1,44 @@
 package de.xikolo.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import moe.banana.jsonapi2.JsonApi;
+import moe.banana.jsonapi2.Resource;
 
-import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.JsonModel> {
 
-public class Enrollment implements Parcelable, Serializable {
-
-    @SerializedName("id")
+    @PrimaryKey
     public String id;
 
-    @SerializedName("course_id")
-    public String course_id;
+    public boolean completed;
 
-    public Enrollment(Parcel in) {
-        id = in.readString();
-        course_id = in.readString();
-    }
+    public boolean reactivated;
 
     @Override
-    public int describeContents() {
-        return 0;
+    public JsonModel convertToJsonResource() {
+        JsonModel model = new JsonModel();
+        model.setId(id);
+        model.completed = completed;
+        model.reactivated = reactivated;
+        return model;
     }
 
-    public static final Creator<Enrollment> CREATOR = new Creator<Enrollment>() {
-        public Enrollment createFromParcel(Parcel in) {
-            return new Enrollment(in);
+    @JsonApi(type = "enrollments")
+    public static class JsonModel extends Resource implements RealmAdapter<Enrollment> {
+
+        public boolean completed;
+
+        public boolean reactivated;
+
+        @Override
+        public Enrollment convertToRealmObject() {
+            Enrollment model = new Enrollment();
+            model.completed = completed;
+            model.reactivated = reactivated;
+            return model;
         }
 
-        public Enrollment[] newArray(int size) {
-            return new Enrollment[size];
-        }
-    };
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(course_id);
     }
 
 }

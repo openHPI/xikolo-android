@@ -284,7 +284,7 @@ public class DownloadManager extends BaseManager {
         String file = this.escapeFilename(item.title) + type.getFileSuffix();
 
         return Uri.fromFile(new File(publicAppFolder.getAbsolutePath() + File.separator
-                + escapeFilename(course.name) + "_" + course.id + File.separator
+                + escapeFilename(course.title) + "_" + course.id + File.separator
                 + escapeFilename(module.name) + "_" + module.id + File.separator
                 + escapeFilename(item.title) + "_" + item.id + File.separator
                 + file));

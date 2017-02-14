@@ -67,7 +67,7 @@ public class ItemWebViewFragment extends PagerFragment {
                         break;
                 }
 
-                webViewController.request(Config.URI + Config.COURSES + course.course_code + "/" + Config.ITEMS + item.id, false);
+                webViewController.request(Config.URI + Config.COURSES + course.slug + "/" + Config.ITEMS + item.id, false);
             } else {
                 mutableContextWrapper.setBaseContext(getActivity());
             }

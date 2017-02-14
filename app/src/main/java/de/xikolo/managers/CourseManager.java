@@ -7,15 +7,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
 import de.xikolo.managers.jobs.CreateEnrollmentJob;
 import de.xikolo.managers.jobs.DeleteEnrollmentJob;
+import de.xikolo.managers.jobs.ListCoursesJob;
 import de.xikolo.managers.jobs.RetrieveCourseJob;
-import de.xikolo.managers.jobs.RetrieveCourseListJob;
 import de.xikolo.models.Course;
-import de.xikolo.storages.databases.DataType;
-import de.xikolo.storages.databases.adapters.CourseDataAdapter;
 import de.xikolo.utils.DateUtil;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 public class CourseManager extends BaseManager {
 
@@ -30,37 +30,23 @@ public class CourseManager extends BaseManager {
     }
 
     public int getEnrollmentsCount() {
-        CourseDataAdapter courseDataAdapter = (CourseDataAdapter) GlobalApplication.getDataAdapter(DataType.COURSE);
-        return courseDataAdapter.getEnrollmentsCount();
+//        CourseDataAdapter courseDataAdapter = (CourseDataAdapter) GlobalApplication.getDataAdapter(DataType.COURSE);
+//        return courseDataAdapter.getEnrollmentsCount();
+        return 0;
     }
 
     public void getCourse(Result<Course> result, String courseId) {
         jobManager.addJobInBackground(new RetrieveCourseJob(result, courseId));
     }
 
-    public void getCourses(Result<List<Course>> result, boolean includeProgress) {
-        getCourses(result, includeProgress, CourseFilter.ALL);
+    public RealmResults listCourses(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+        RealmResults<Course> courseListPromise = realm.where(Course.class).findAllSortedAsync("startDate");
+        courseListPromise.addChangeListener(listener);
+        return courseListPromise;
     }
 
-    public void getCourses(Result<List<Course>> result, boolean includeProgress, final CourseFilter filter) {
-        result.setResultFilter(result.new ResultFilter() {
-            @Override
-            public List<Course> onFilter(List<Course> result, Result.DataSource dataSource) {
-                if (filter == CourseFilter.MY) {
-                    ArrayList<Course> removeList = new ArrayList<>();
-                    for (Course course : result) {
-                        if (!course.is_enrolled) {
-                            removeList.add(course);
-                        }
-                    }
-                    result.removeAll(removeList);
-                }
-                sortCoursesAscending(result);
-                return result;
-            }
-        });
-
-        jobManager.addJobInBackground(new RetrieveCourseListJob(result, includeProgress));
+    public void requestCourses() {
+        jobManager.addJobInBackground(new ListCoursesJob());
     }
 
     public void addEnrollment(Result<Course> result, Course course) {
@@ -75,7 +61,7 @@ public class CourseManager extends BaseManager {
         Collections.sort(courses, new Comparator<Course>() {
             @Override
             public int compare(Course lhs, Course rhs) {
-                return DateUtil.compare(lhs.available_from, rhs.available_from);
+                return DateUtil.compare(lhs.startDate, rhs.endDate);
             }
         });
     }
@@ -84,7 +70,7 @@ public class CourseManager extends BaseManager {
         Collections.sort(courses, new Comparator<Course>() {
             @Override
             public int compare(Course rhs, Course lhs) {
-                return DateUtil.compare(lhs.available_from, rhs.available_from);
+                return DateUtil.compare(lhs.startDate, rhs.endDate);
             }
         });
     }
@@ -93,8 +79,8 @@ public class CourseManager extends BaseManager {
         List<Course> currentCourses = new ArrayList<>();
 
         for (Course course : courses) {
-            if (DateUtil.nowIsBetween(course.available_from, course.available_to) ||
-                    DateUtil.nowIsBefore(course.available_from)) {
+            if (DateUtil.nowIsBetween(course.startDate, course.endDate) ||
+                    DateUtil.nowIsBefore(course.endDate)) {
                 currentCourses.add(course);
             }
         }
@@ -120,8 +106,8 @@ public class CourseManager extends BaseManager {
         List<Course> currentCourses = new ArrayList<>();
 
         for (Course course : courses) {
-            if (DateUtil.nowIsBetween(course.available_from, course.available_to) ||
-                    DateUtil.nowIsAfter(course.available_to)) {
+            if (DateUtil.nowIsBetween(course.startDate, course.endDate) ||
+                    DateUtil.nowIsAfter(course.endDate)) {
                 currentCourses.add(course);
             }
         }

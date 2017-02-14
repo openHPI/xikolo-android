@@ -75,7 +75,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
                 }
                 if (course != null) {
                     Bundle restartBundle = new Bundle();
-                    restartBundle.putParcelable(ARG_COURSE, course);
+//                    restartBundle.putParcelable(ARG_COURSE, course);
                     Intent restartIntent = new Intent(CourseActivity.this, CourseActivity.class);
                     restartIntent.putExtras(restartBundle);
                     finish();
@@ -89,7 +89,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
     }
 
     private void setupView(int firstItem) {
-        setTitle(course.name);
+        setTitle(course.title);
 
         adapter = new CoursePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -129,16 +129,16 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
                 if (dataSource == DataSource.NETWORK) {
                     for (Course fetchedCourse : result) {
-                        if (fetchedCourse.course_code.equals(courseIntent)) {
+                        if (fetchedCourse.slug.equals(courseIntent)) {
                             if (progressDialog != null) {
                                 progressDialog.dismiss();
                             }
 
                             course = fetchedCourse;
-                            if (course.locked || !course.is_enrolled) {
-                                setTitle(course.name);
+                            if (!course.accessible || !course.is_enrolled) {
+                                setTitle(course.title);
 
-                                if (course.locked) {
+                                if (course.accessible) {
                                     ToastUtil.show(R.string.notification_course_locked);
                                 } else if (!course.is_enrolled) {
                                     ToastUtil.show(R.string.notification_not_enrolled);
@@ -146,7 +146,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
                                 Intent intent = new Intent(CourseActivity.this, CourseDetailsActivity.class);
                                 Bundle b = new Bundle();
-                                b.putParcelable(CourseDetailsActivity.ARG_COURSE, course);
+//                                b.putParcelable(CourseDetailsActivity.ARG_COURSE, course);
                                 intent.putExtras(b);
                                 startActivity(intent);
                                 finish();
@@ -205,7 +205,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
         };
 
         CourseManager courseManager = new CourseManager(jobManager);
-        courseManager.getCourses(result, false);
+        courseManager.requestCourses();
         progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
     }
 
@@ -305,19 +305,19 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
                         fragment = CourseLearningsFragment.newInstance(course);
                         break;
                     case 1:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code + "/" + Config.DISCUSSIONS, true, false);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.slug + "/" + Config.DISCUSSIONS, true, false);
                         break;
                     case 2:
                         fragment = ProgressFragment.newInstance(course);
                         break;
                     case 3:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code + "/" + Config.ROOMS, true, false);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.slug + "/" + Config.ROOMS, true, false);
                         break;
                     case 4:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code, false, false);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.slug, false, false);
                         break;
                     case 5:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.course_code + "/" + Config.ANNOUNCEMENTS, false, false);
+                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.slug + "/" + Config.ANNOUNCEMENTS, false, false);
                         break;
                     case 6:
                         fragment = WebViewFragment.newInstance(Config.URI + Config.QUIZ_RECAP + course.id, true, false);

@@ -97,7 +97,9 @@ public class Config {
     public static final String COOKIE_LANALYTICS_CONTEXT = "lanalytics-context";
 
     public static final String HEADER_ACCEPT_VALUE = "application/vnd.xikolo.v1, application/json";
+    public static final String HEADER_ACCEPT_VALUE_API_V2 = "application/vnd.api+json";
     public static final String HEADER_AUTHORIZATION_PREFIX = "Token token=";
+    public static final String HEADER_AUTHORIZATION_PREFIX_API_V2 = "Legacy-Token token=";
     public static final String HEADER_CACHE_CONTROL_VALUE = "no-cache";
     public static final String HEADER_USER_PLATFORM_VALUE = "Android";
 

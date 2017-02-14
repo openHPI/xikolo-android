@@ -78,7 +78,7 @@ public class ModuleActivity extends BaseActivity {
             }
             if (course != null && module != null && item != null) {
                 Bundle restartBundle = new Bundle();
-                restartBundle.putParcelable(ARG_COURSE, course);
+//                restartBundle.putParcelable(ARG_COURSE, course);
                 restartBundle.putParcelable(ARG_MODULE, module);
                 restartBundle.putParcelable(ARG_ITEM, item);
                 Intent restartIntent = new Intent(ModuleActivity.this, ModuleActivity.class);
@@ -96,10 +96,10 @@ public class ModuleActivity extends BaseActivity {
             throw new WrongParameterException("Course is null");
         }
         if (module == null) {
-            throw new WrongParameterException("Module is null for Course " + course.name + " (" + course.id + ")");
+            throw new WrongParameterException("Module is null for Course " + course.title + " (" + course.id + ")");
         }
         if (module == null || module.items.size() == 0) {
-            throw new WrongParameterException("Module Items are empty for Course " + course.name + " (" + course.id + ")" +
+            throw new WrongParameterException("Module Items are empty for Course " + course.title + " (" + course.id + ")" +
                     " and Module " + module.name + " (" + module.id + ")");
         }
 
