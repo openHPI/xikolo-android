@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,16 +57,17 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         List<Course> subList;
         if (courses.size() > 0) {
             if (courseFilter == CourseManager.CourseFilter.ALL) {
-                subList = CourseManager.getCurrentAndFutureCourses(courses);
-                if (subList.size() > 0) {
-                    headerAndSectionsList.add(context.getString(R.string.header_current_courses),
-                            subList);
-                }
-                subList = CourseManager.getPastCourses(courses);
-                if (subList.size() > 0) {
-                    headerAndSectionsList.add(context.getString(R.string.header_self_paced_courses),
-                            subList);
-                }
+//                subList = CourseManager.getCurrentAndFutureCourses(courses);
+//                if (subList.size() > 0) {
+//                    headerAndSectionsList.add(context.getString(R.string.header_current_courses),
+//                            subList);
+//                }
+//                subList = CourseManager.getPastCourses(courses);
+//                if (subList.size() > 0) {
+//                    headerAndSectionsList.add(context.getString(R.string.header_self_paced_courses),
+//                            subList);
+//                }
+                headerAndSectionsList.add("All", courses);
             } else if (courseFilter == CourseManager.CourseFilter.MY) {
                 subList = CourseManager.getCurrentAndPastCourses(courses);
                 if (subList.size() > 0) {
@@ -129,9 +129,6 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             Context context = GlobalApplication.getInstance();
 
-            Date dateBegin = DateUtil.parse(course.startDate);
-            Date dateEnd = DateUtil.parse(course.endDate);
-
             DateFormat dateOut;
             if (DisplayUtil.is7inchTablet(context)) {
                 dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault());
@@ -139,10 +136,10 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
             }
 
-            if (dateBegin != null && dateEnd != null) {
-                viewHolder.textDate.setText(dateOut.format(dateBegin) + " - " + dateOut.format(dateEnd));
-            } else if (dateBegin != null) {
-                viewHolder.textDate.setText(dateOut.format(dateBegin));
+            if (course.startDate != null && course.endDate != null) {
+                viewHolder.textDate.setText(dateOut.format(course.startDate) + " - " + dateOut.format(course.endDate));
+            } else if (course.startDate != null) {
+                viewHolder.textDate.setText(dateOut.format(course.startDate));
             } else {
                 viewHolder.textDate.setText("");
             }

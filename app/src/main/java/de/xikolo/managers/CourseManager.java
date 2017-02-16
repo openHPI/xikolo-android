@@ -16,6 +16,7 @@ import de.xikolo.utils.DateUtil;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class CourseManager extends BaseManager {
 
@@ -40,7 +41,7 @@ public class CourseManager extends BaseManager {
     }
 
     public RealmResults listCourses(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
-        RealmResults<Course> courseListPromise = realm.where(Course.class).findAllSortedAsync("startDate");
+        RealmResults<Course> courseListPromise = realm.where(Course.class).equalTo("external", false).findAllSortedAsync("startDate", Sort.DESCENDING);
         courseListPromise.addChangeListener(listener);
         return courseListPromise;
     }

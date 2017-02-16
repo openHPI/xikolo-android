@@ -2,6 +2,9 @@ package de.xikolo.models;
 
 import com.squareup.moshi.Json;
 
+import java.util.Date;
+
+import de.xikolo.utils.DateUtil;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -17,9 +20,9 @@ public class Course extends RealmObject {
 
     public String slug;
 
-    public String startDate;
+    public Date startDate;
 
-    public String endDate;
+    public Date endDate;
 
     public String shortAbstract;
 
@@ -115,8 +118,8 @@ public class Course extends RealmObject {
             course.id = getId();
             course.title = title;
             course.slug = slug;
-            course.startDate = startDate;
-            course.endDate = endDate;
+            course.startDate = DateUtil.parse(startDate);
+            course.endDate = DateUtil.parse(endDate);
             course.shortAbstract = shortAbstract;
             course.description = description;
             course.imageUrl = imageUrl;

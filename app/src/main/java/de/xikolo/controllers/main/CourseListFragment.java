@@ -17,6 +17,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.controllers.CourseActivity;
 import de.xikolo.controllers.CourseDetailsActivity;
@@ -26,9 +28,6 @@ import de.xikolo.controllers.helper.RefeshLayoutController;
 import de.xikolo.controllers.main.adapter.CourseListAdapter;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
 import de.xikolo.events.EnrollEvent;
-import de.xikolo.events.LoginEvent;
-import de.xikolo.events.LogoutEvent;
-import de.xikolo.events.UnenrollEvent;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
@@ -54,9 +53,10 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public static final String FILTER_MY = "filter_my";
 
     private String filter;
-    private SwipeRefreshLayout refreshLayout;
 
-    private AutofitRecyclerView recyclerView;
+    @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.recyclerView) AutofitRecyclerView recyclerView;
+
     private CourseListAdapter courseListAdapter;
 
     private NotificationController notificationController;
@@ -117,8 +117,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_course_list, container, false);
+        ButterKnife.bind(this, layout);
 
-        refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
         RefeshLayoutController.setup(refreshLayout, this);
 
         if (isAllCoursesFilter()) {
@@ -127,7 +127,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             courseListAdapter = new CourseListAdapter(this, CourseManager.CourseFilter.MY);
         }
 
-        recyclerView = (AutofitRecyclerView) layout.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(courseListAdapter);
 
@@ -313,52 +312,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 }
                 break;
         }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUnenrollEvent(UnenrollEvent event) {
-//        if (courses != null && courses.contains(event.getCourse())) {
-//            if (isMyCoursesFilter()) {
-//                courses.remove(event.getCourse());
-//            } else {
-//                courses.set(courses.indexOf(event.getCourse()), event.getCourse());
-//            }
-//        }
-//        updateView();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEnrollEvent(EnrollEvent event) {
-//        if (isMyCoursesFilter()) {
-//            if (courses != null && !courses.contains(event.getCourse())) {
-//                courses.add(event.getCourse());
-//            }
-//        } else {
-//            if (courses != null && courses.contains(event.getCourse())) {
-//                courses.set(courses.indexOf(event.getCourse()), event.getCourse());
-//            }
-//        }
-//        updateView();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLoginEvent(LoginEvent event) {
-        if (courseListAdapter != null) {
-            courseListAdapter.clear();
-        }
-        requestCourses();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLogoutEvent(LogoutEvent event) {
-        if (courseListAdapter != null) {
-            courseListAdapter.clear();
-        }
-        requestCourses();
     }
 
     @Override

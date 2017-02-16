@@ -11,38 +11,43 @@ public class DateUtil {
 
     public static final String TAG = DateUtil.class.getSimpleName();
 
-    public static final String XIKOLO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String XIKOLO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     public static boolean nowIsBetween(String from, String to) {
         Date dateBegin = parse(from);
         Date dateEnd = parse(to);
+        return nowIsBetween(dateBegin, dateEnd);
+    }
 
+    public static boolean nowIsBetween(Date from, Date to) {
         Date dateNow = new Date();
 
-        if (dateBegin == null && dateEnd == null) {
+        if (from == null && to == null) {
             return true;
         }
-        if (dateBegin == null) {
-            if (dateNow.before(dateEnd)) {
+        if (from == null) {
+            if (dateNow.before(to)) {
                 return true;
             }
         }
-        if (dateEnd == null) {
-            if (dateNow.after(dateBegin)) {
+        if (to == null) {
+            if (dateNow.after(from)) {
                 return true;
             }
         }
-        return dateBegin != null && dateEnd != null && dateNow.after(dateBegin) && dateNow.before(dateEnd);
+        return from != null && to != null && dateNow.after(from) && dateNow.before(to);
     }
 
     public static boolean nowIsAfter(String date) {
-        Date d = parse(date);
+        return nowIsAfter(parse(date));
+    }
 
+    public static boolean nowIsAfter(Date date) {
         Date dateNow = new Date();
 
-        if (d == null) {
+        if (date == null) {
             return true;
-        } else if (dateNow.after(d)) {
+        } else if (dateNow.after(date)) {
             return true;
         }
 
@@ -50,13 +55,15 @@ public class DateUtil {
     }
 
     public static boolean nowIsBefore(String date) {
-        Date d = parse(date);
+        return nowIsBefore(parse(date));
+    }
 
+    public static boolean nowIsBefore(Date date) {
         Date dateNow = new Date();
 
-        if (d == null) {
+        if (date == null) {
             return true;
-        } else if (dateNow.before(d)) {
+        } else if (dateNow.before(date)) {
             return true;
         }
 
@@ -87,10 +94,14 @@ public class DateUtil {
         Date dateLhs = parse(lhs);
         Date dateRhs = parse(rhs);
 
-        if (dateLhs != null && dateRhs != null) {
-            if (dateLhs.before(dateRhs)) {
+        return compare(dateLhs, dateRhs);
+    }
+
+    public static int compare(Date lhs, Date rhs) {
+        if (lhs != null && rhs != null) {
+            if (lhs.before(rhs)) {
                 return 1;
-            } else if (dateLhs.after(dateRhs)) {
+            } else if (lhs.after(rhs)) {
                 return -1;
             } else {
                 return 0;
