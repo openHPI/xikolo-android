@@ -59,7 +59,7 @@ public class CreateEnrollmentJob extends Job {
 
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
 
-                course.is_enrolled = true;
+//                course.enrollment = true;
 //                CourseDataAdapter courseDataAccess = (CourseDataAdapter) GlobalApplication.getDataAdapter(DataType.COURSE);
 //                courseDataAccess.update(course, false);
                 result.success(course, Result.DataSource.NETWORK);

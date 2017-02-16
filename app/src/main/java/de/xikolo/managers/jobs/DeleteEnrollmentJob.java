@@ -56,7 +56,7 @@ public class DeleteEnrollmentJob extends Job {
 
                 if (Config.DEBUG) Log.i(TAG, "Enrollment deleted");
 
-                course.is_enrolled = false;
+                course.enrollment = null;
 
 //                CourseDataAdapter courseDataAdapter = (CourseDataAdapter) GlobalApplication.getDataAdapter(DataType.COURSE);
 //                courseDataAdapter.update(course, false);

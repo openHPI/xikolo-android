@@ -10,6 +10,7 @@ import com.birbit.android.jobqueue.RetryConstraint;
 import org.greenrobot.eventbus.EventBus;
 
 import de.xikolo.GlobalApplication;
+import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.network.ApiV2Request;
 import de.xikolo.utils.Config;
@@ -34,7 +35,13 @@ public class ListCoursesJob extends Job {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
 
-            final Response<Course.JsonModel[]> response = ApiV2Request.service().listCourses().execute();
+            final Response<Course.JsonModel[]> response;
+
+            if (UserManager.isLoggedIn()) {
+                response = ApiV2Request.service().listCoursesWithEnrollments(UserManager.getTokenHeader()).execute();
+            } else {
+                response = ApiV2Request.service().listCourses().execute();
+            }
 
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Courses received (" + response.body().length + ")");

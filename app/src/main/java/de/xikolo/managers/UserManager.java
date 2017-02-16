@@ -11,6 +11,7 @@ import de.xikolo.managers.jobs.RetrieveUserJob;
 import de.xikolo.models.User;
 import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.storages.preferences.UserStorage;
+import de.xikolo.utils.Config;
 
 public class UserManager extends BaseManager {
 
@@ -23,6 +24,11 @@ public class UserManager extends BaseManager {
     public static String getToken() {
         UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
         return userStorage.getAccessToken().token;
+    }
+
+    public static String getTokenHeader() {
+        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
+        return Config.HEADER_AUTHORIZATION_PREFIX_API_V2 + userStorage.getAccessToken().token;
     }
 
     public static User getSavedUser() {

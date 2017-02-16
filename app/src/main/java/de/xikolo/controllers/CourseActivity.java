@@ -135,12 +135,12 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
                             }
 
                             course = fetchedCourse;
-                            if (!course.accessible || !course.is_enrolled) {
+                            if (!course.accessible || !course.isEnrolled()) {
                                 setTitle(course.title);
 
                                 if (course.accessible) {
                                     ToastUtil.show(R.string.notification_course_locked);
-                                } else if (!course.is_enrolled) {
+                                } else if (!course.isEnrolled()) {
                                     ToastUtil.show(R.string.notification_not_enrolled);
                                 }
 

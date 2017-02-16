@@ -179,7 +179,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             ImageController.load(Config.HTTPS + "://" + Config.HOST + course.imageUrl, viewHolder.image);
 
-            if (course.is_enrolled && DateUtil.nowIsAfter(course.startDate)) {
+            if (course.isEnrolled() && DateUtil.nowIsAfter(course.startDate)) {
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -209,7 +209,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
             }
 
-            if (course.is_enrolled && !DateUtil.nowIsAfter(course.startDate)) {
+            if (course.isEnrolled() && !DateUtil.nowIsAfter(course.startDate)) {
                 viewHolder.buttonEnroll.setText(context.getString(R.string.btn_starts_soon));
                 viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
                     @Override

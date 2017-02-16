@@ -124,8 +124,10 @@ public class GlobalApplication extends Application {
 
     private void configureRealm() {
         Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder().build();
-        Realm.getInstance(config);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
     }
 
     private void configureDefaultSettings() {

@@ -13,6 +13,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
 public class ApiV2Request {
@@ -20,6 +21,13 @@ public class ApiV2Request {
     private static ApiService service;
 
     static {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        if (Config.DEBUG) {
+            logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        } else {
+            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
@@ -34,6 +42,7 @@ public class ApiV2Request {
                         return chain.proceed(request);
                     }
                 })
+                .addInterceptor(logging)
                 .build();
 
         JsonAdapter.Factory jsonApiAdapterFactory = ResourceAdapterFactory.builder()

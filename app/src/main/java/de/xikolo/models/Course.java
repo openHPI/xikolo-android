@@ -3,8 +3,8 @@ package de.xikolo.models;
 import com.squareup.moshi.Json;
 
 import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
+import moe.banana.jsonapi2.HasOne;
 import moe.banana.jsonapi2.JsonApi;
 import moe.banana.jsonapi2.Resource;
 
@@ -51,8 +51,11 @@ public class Course extends RealmObject {
 
     public boolean onDemand;
 
-    @Ignore
-    public boolean is_enrolled = true;
+    public Enrollment enrollment;
+
+    public boolean isEnrolled() {
+        return enrollment != null;
+    }
 
     @JsonApi(type = "courses")
     public static class JsonModel extends Resource implements RealmAdapter<Course> {
@@ -103,6 +106,9 @@ public class Course extends RealmObject {
         @Json(name = "on_demand")
         public boolean onDemand;
 
+        @Json(name = "user_enrollment")
+        public HasOne<Enrollment.JsonModel> enrollment;
+
         @Override
         public Course convertToRealmObject() {
             Course course = new Course();
@@ -126,6 +132,10 @@ public class Course extends RealmObject {
             course.policyUrl = policyUrl;
             course.qualifiedCertificateAvailable = qualifiedCertificateAvailable;
             course.onDemand = onDemand;
+
+            if (enrollment != null) {
+                course.enrollment = enrollment.get(getContext()).convertToRealmObject();
+            }
             return course;
         }
 
