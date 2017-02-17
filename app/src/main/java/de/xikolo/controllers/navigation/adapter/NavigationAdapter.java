@@ -168,18 +168,8 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
 
-            if (UserManager.isLoggedIn()) {
-                int size = courseManager.getEnrollmentsCount();
-                counterViewHolder.textCounter.setText(String.valueOf(size));
-                if (size > 0) {
-                    counterViewHolder.textCounter.setVisibility(View.VISIBLE);
-                } else {
-                    counterViewHolder.textCounter.setVisibility(View.GONE);
-                }
-            } else {
-                counterViewHolder.textCounter.setText(String.valueOf(0));
-                counterViewHolder.textCounter.setVisibility(View.GONE);
-            }
+            counterViewHolder.textCounter.setText(String.valueOf(0));
+            counterViewHolder.textCounter.setVisibility(View.GONE);
         } else {
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
         }

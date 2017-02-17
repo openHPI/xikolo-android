@@ -39,8 +39,6 @@ import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 public class CourseListFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener,
         CourseListAdapter.OnCourseButtonClickListener {
@@ -60,8 +58,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     private CourseListAdapter courseListAdapter;
 
     private NotificationController notificationController;
-
-    private RealmResults courseListPromise;
 
     private CourseManager courseManager;
 
@@ -89,28 +85,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
         courseManager = new CourseManager(jobManager);
 
         EventBus.getDefault().register(this);
-    }
-
-    private void requestCourses() {
-        if (isMyCoursesFilter() && !UserManager.isLoggedIn()) {
-            notificationController.setTitle(R.string.notification_please_login);
-            notificationController.setSummary(R.string.notification_please_login_summary);
-            notificationController.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
-                }
-            });
-            notificationController.setNotificationVisible(true);
-            refreshLayout.setRefreshing(false);
-        } else {
-            refreshLayout.setRefreshing(true);
-            if (isMyCoursesFilter()) {
-                courseManager.requestCourses();
-            } else {
-                courseManager.requestCourses();
-            }
-        }
     }
 
     @Override
@@ -174,15 +148,27 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             activityCallback.onFragmentAttached(NavigationAdapter.NAV_MY_COURSES.getPosition(), getString(R.string.title_section_my_courses));
         }
 
-        courseListPromise = courseManager.listCourses(realm, new RealmChangeListener<RealmResults<Course>>() {
-            @Override
-            public void onChange(RealmResults<Course> result) {
-                notificationController.setInvisible();
-                updateView(result);
-            }
-        });
+        notificationController.setInvisible();
 
         requestCourses();
+    }
+
+    private void requestCourses() {
+//        if (isMyCoursesFilter() && !UserManager.isLoggedIn()) {
+//            notificationController.setTitle(R.string.notification_please_login);
+//            notificationController.setSummary(R.string.notification_please_login_summary);
+//            notificationController.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
+//                }
+//            });
+//            notificationController.setNotificationVisible(true);
+//            refreshLayout.setRefreshing(false);
+//        } else {
+//            refreshLayout.setRefreshing(true);
+            courseManager.requestCourses();
+//        }
     }
 
     private void updateView(List<Course> courseList) {
@@ -211,11 +197,6 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 notificationController.setNotificationVisible(true);
             }
 
-            if (courseList != null) {
-                courseListAdapter.updateCourses(courseList);
-            } else {
-                courseListAdapter.clear();
-            }
             activityCallback.updateDrawer();
         }
     }
@@ -226,14 +207,19 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (courseListAdapter != null) {
+            courseListAdapter.destroy();
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
 
         EventBus.getDefault().unregister(this);
-
-        if (courseListPromise != null) {
-            courseListPromise.removeChangeListeners();
-        }
     }
 
     @Override

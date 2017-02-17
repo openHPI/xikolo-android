@@ -24,6 +24,9 @@ import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.HeaderAndSectionsList;
 import de.xikolo.utils.LanguageUtil;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -38,51 +41,66 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private OnCourseButtonClickListener callback;
 
+    private CourseManager courseManager;
+
+    private Realm realm;
+
+    private RealmResults courseListPromise;
+
     public CourseListAdapter(OnCourseButtonClickListener callback, CourseManager.CourseFilter courseFilter) {
         this.headerAndSectionsList = new HeaderAndSectionsList<>();
         this.callback = callback;
         this.courseFilter = courseFilter;
+        this.courseManager = new CourseManager(GlobalApplication.getInstance().getJobManager());
+        this.realm = Realm.getDefaultInstance();
+
+        init();
+    }
+
+    private void init() {
+        courseListPromise = courseManager.listCoursesAsync(realm, new RealmChangeListener<RealmResults<Course>>() {
+            @Override
+            public void onChange(RealmResults<Course> element) {
+                Context context = GlobalApplication.getInstance();
+                headerAndSectionsList.clear();
+                List<Course> subList;
+
+                if (courseFilter == CourseManager.CourseFilter.ALL) {
+                    subList = courseManager.listCurrentAndFutureCourses(realm, null);
+                    if (subList.size() > 0) {
+                        headerAndSectionsList.add(context.getString(R.string.header_current_courses),
+                                subList);
+                    }
+                    subList = courseManager.listPastCourses(realm, null);
+                    if (subList.size() > 0) {
+                        headerAndSectionsList.add(context.getString(R.string.header_self_paced_courses),
+                                subList);
+                    }
+                } else if (courseFilter == CourseManager.CourseFilter.MY) {
+                    subList = courseManager.listCurrentAndPastCoursesWithEnrollment(realm, null);
+                    if (subList.size() > 0) {
+                        headerAndSectionsList.add(context.getString(R.string.header_my_current_courses),
+                                subList);
+                    }
+                    subList = courseManager.listFutureCoursesWithEnrollment(realm, null);
+                    if (subList.size() > 0) {
+                        headerAndSectionsList.add(context.getString(R.string.header_my_future_courses),
+                                subList);
+                    }
+                }
+                CourseListAdapter.this.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void destroy() {
+        if (courseListPromise != null) {
+            courseListPromise.removeChangeListeners();
+        }
     }
 
     public boolean isHeader(int position) {
         return headerAndSectionsList.isHeader(position);
-    }
-
-    public void updateCourses(List<Course> courses) {
-        if (courses == null) throw new NullPointerException("Courses can't be null");
-
-        Context context = GlobalApplication.getInstance();
-
-        headerAndSectionsList.clear();
-        List<Course> subList;
-        if (courses.size() > 0) {
-            if (courseFilter == CourseManager.CourseFilter.ALL) {
-//                subList = CourseManager.getCurrentAndFutureCourses(courses);
-//                if (subList.size() > 0) {
-//                    headerAndSectionsList.add(context.getString(R.string.header_current_courses),
-//                            subList);
-//                }
-//                subList = CourseManager.getPastCourses(courses);
-//                if (subList.size() > 0) {
-//                    headerAndSectionsList.add(context.getString(R.string.header_self_paced_courses),
-//                            subList);
-//                }
-                headerAndSectionsList.add("All", courses);
-            } else if (courseFilter == CourseManager.CourseFilter.MY) {
-                subList = CourseManager.getCurrentAndPastCourses(courses);
-                if (subList.size() > 0) {
-                    headerAndSectionsList.add(context.getString(R.string.header_my_current_courses),
-                            subList);
-                }
-                subList = CourseManager.getFutureCourses(courses);
-                if (subList.size() > 0) {
-                    headerAndSectionsList.add(context.getString(R.string.header_my_future_courses),
-                            subList);
-                }
-            }
-        }
-
-        this.notifyDataSetChanged();
     }
 
     public void clear() {

@@ -2,17 +2,14 @@ package de.xikolo.managers;
 
 import com.birbit.android.jobqueue.JobManager;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Date;
 
 import de.xikolo.managers.jobs.CreateEnrollmentJob;
 import de.xikolo.managers.jobs.DeleteEnrollmentJob;
 import de.xikolo.managers.jobs.ListCoursesJob;
 import de.xikolo.managers.jobs.RetrieveCourseJob;
 import de.xikolo.models.Course;
-import de.xikolo.utils.DateUtil;
+import de.xikolo.models.Enrollment;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -30,20 +27,95 @@ public class CourseManager extends BaseManager {
         super(jobManager);
     }
 
-    public int getEnrollmentsCount() {
-//        CourseDataAdapter courseDataAdapter = (CourseDataAdapter) GlobalApplication.getDataAdapter(DataType.COURSE);
-//        return courseDataAdapter.getEnrollmentsCount();
-        return 0;
+    public RealmResults listEnrollmentsAsync(Realm realm, RealmChangeListener<RealmResults<Enrollment>> listener) {
+        if (listener == null) {
+            throw new RuntimeException("RealmChangeListener is required for async queries.");
+        }
+
+        RealmResults<Enrollment> enrollmentListPromise = realm
+                .where(Enrollment.class)
+                .findAllAsync();
+
+        enrollmentListPromise.addChangeListener(listener);
+
+        return enrollmentListPromise;
     }
 
     public void getCourse(Result<Course> result, String courseId) {
         jobManager.addJobInBackground(new RetrieveCourseJob(result, courseId));
     }
 
-    public RealmResults listCourses(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
-        RealmResults<Course> courseListPromise = realm.where(Course.class).equalTo("external", false).findAllSortedAsync("startDate", Sort.DESCENDING);
+    public RealmResults listCoursesAsync(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+        if (listener == null) {
+            throw new RuntimeException("RealmChangeListener is required for async queries.");
+        }
+
+        RealmResults<Course> courseListPromise = realm
+                .where(Course.class)
+                .equalTo("external", false)
+                .findAllSortedAsync("startDate", Sort.DESCENDING);
+
         courseListPromise.addChangeListener(listener);
+
         return courseListPromise;
+    }
+
+    public RealmResults<Course> listCurrentAndFutureCourses(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+        RealmResults<Course> courseList = realm
+                .where(Course.class)
+                .equalTo("external", false)
+                .greaterThanOrEqualTo("endDate", new Date())
+                .findAllSorted("startDate", Sort.ASCENDING);
+
+        if (listener != null) {
+            courseList.addChangeListener(listener);
+        }
+
+        return courseList;
+    }
+
+    public RealmResults<Course> listPastCourses(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+        RealmResults<Course> courseList = realm
+                .where(Course.class)
+                .equalTo("external", false)
+                .lessThan("endDate", new Date())
+                .findAllSorted("startDate", Sort.DESCENDING);
+
+        if (listener != null) {
+            courseList.addChangeListener(listener);
+        }
+
+        return courseList;
+    }
+
+    public RealmResults<Course> listCurrentAndPastCoursesWithEnrollment(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+        RealmResults<Course> courseList = realm
+                .where(Course.class)
+                .equalTo("external", false)
+                .isNotNull("enrollment")
+                .lessThanOrEqualTo("startDate", new Date())
+                .findAllSorted("startDate", Sort.DESCENDING);
+
+        if (listener != null) {
+            courseList.addChangeListener(listener);
+        }
+
+        return courseList;
+    }
+
+    public RealmResults<Course> listFutureCoursesWithEnrollment(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+        RealmResults<Course> courseList = realm
+                .where(Course.class)
+                .equalTo("external", false)
+                .isNotNull("enrollment")
+                .greaterThan("startDate", new Date())
+                .findAllSorted("startDate", Sort.ASCENDING);
+
+        if (listener != null) {
+            courseList.addChangeListener(listener);
+        }
+
+        return courseList;
     }
 
     public void requestCourses() {
@@ -56,78 +128,6 @@ public class CourseManager extends BaseManager {
 
     public void deleteEnrollment(Result<Course> result, Course course) {
         jobManager.addJobInBackground(new DeleteEnrollmentJob(result, course));
-    }
-
-    public static void sortCoursesAscending(List<Course> courses) {
-        Collections.sort(courses, new Comparator<Course>() {
-            @Override
-            public int compare(Course lhs, Course rhs) {
-                return DateUtil.compare(lhs.startDate, rhs.endDate);
-            }
-        });
-    }
-
-    public static void sortCoursesDecending(List<Course> courses) {
-        Collections.sort(courses, new Comparator<Course>() {
-            @Override
-            public int compare(Course rhs, Course lhs) {
-                return DateUtil.compare(lhs.startDate, rhs.endDate);
-            }
-        });
-    }
-
-    public static List<Course> getCurrentAndFutureCourses(List<Course> courses) {
-        List<Course> currentCourses = new ArrayList<>();
-
-        for (Course course : courses) {
-            if (DateUtil.nowIsBetween(course.startDate, course.endDate) ||
-                    DateUtil.nowIsBefore(course.endDate)) {
-                currentCourses.add(course);
-            }
-        }
-
-        sortCoursesDecending(currentCourses);
-
-        return currentCourses;
-    }
-
-    public static List<Course> getPastCourses(List<Course> courses) {
-        List<Course> pastCourses = new ArrayList<>(courses);
-
-        List<Course> currentCourses = getCurrentAndFutureCourses(courses);
-
-        pastCourses.removeAll(currentCourses);
-
-        sortCoursesAscending(pastCourses);
-
-        return pastCourses;
-    }
-
-    public static List<Course> getCurrentAndPastCourses(List<Course> courses) {
-        List<Course> currentCourses = new ArrayList<>();
-
-        for (Course course : courses) {
-            if (DateUtil.nowIsBetween(course.startDate, course.endDate) ||
-                    DateUtil.nowIsAfter(course.endDate)) {
-                currentCourses.add(course);
-            }
-        }
-
-        sortCoursesAscending(currentCourses);
-
-        return currentCourses;
-    }
-
-    public static List<Course> getFutureCourses(List<Course> courses) {
-        List<Course> futureCourses = new ArrayList<>(courses);
-
-        List<Course> currentCourses = getCurrentAndPastCourses(courses);
-
-        futureCourses.removeAll(currentCourses);
-
-        sortCoursesDecending(futureCourses);
-
-        return futureCourses;
     }
 
 }

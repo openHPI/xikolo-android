@@ -3,14 +3,13 @@ package de.xikolo.controllers.main;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageController;
@@ -19,11 +18,13 @@ import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
-import de.xikolo.models.Course;
+import de.xikolo.models.Enrollment;
 import de.xikolo.models.User;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
 import de.xikolo.views.CustomSizeImageView;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 public class ProfileFragment extends ContentFragment {
 
@@ -33,7 +34,6 @@ public class ProfileFragment extends ContentFragment {
 
     private UserManager userManager;
     private CourseManager courseManager;
-    private Result<List<Course>> coursesResult;
     private Result<User> userResult;
 
     private NotificationController notificationController;
@@ -44,7 +44,7 @@ public class ProfileFragment extends ContentFragment {
     private TextView textEnrollCounts;
     private TextView textEmail;
 
-    private List<Course> courses;
+    private RealmResults enrollmentListPromise;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -55,35 +55,10 @@ public class ProfileFragment extends ContentFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (courses != null) {
-//            outState.putParcelableArrayList(ARG_COURSES, (ArrayList<Course>) courses);
-        }
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-//            courses = savedInstanceState.getParcelableArrayList(ARG_COURSES);
-        }
-
         courseManager = new CourseManager(jobManager);
-        coursesResult = new Result<List<Course>>() {
-            @Override
-            protected void onSuccess(List<Course> result, DataSource dataSource) {
-                showCoursesProgress(result);
-            }
-
-            @Override
-            protected void onError(ErrorCode errorCode) {
-                if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast();
-                }
-            }
-        };
 
         userManager = new UserManager(jobManager);
         userResult = new Result<User>() {
@@ -126,16 +101,29 @@ public class ProfileFragment extends ContentFragment {
     public void onStart() {
         super.onStart();
 
+        enrollmentListPromise = courseManager.listEnrollmentsAsync(realm, new RealmChangeListener<RealmResults<Enrollment>>() {
+            @Override
+            public void onChange(RealmResults<Enrollment> enrollments) {
+                Log.w(TAG, "Enrollments: " + enrollments.size());
+                showEnrollmentCount(enrollments.size());
+            }
+        });
+
         if (UserManager.isLoggedIn()) {
             showHeader();
-            if (courses == null) {
-                userManager.getUser(userResult);
-                courseManager.requestCourses();
-            } else {
-                showCoursesProgress(courses);
-            }
+            userManager.getUser(userResult);
+            courseManager.requestCourses();
         } else {
             getActivity().getSupportFragmentManager().popBackStack();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (enrollmentListPromise != null) {
+            enrollmentListPromise.removeChangeListeners();
         }
     }
 
@@ -176,8 +164,6 @@ public class ProfileFragment extends ContentFragment {
         }
 
         textEmail.setText(user.email);
-
-        textEnrollCounts.setText(String.valueOf(courseManager.getEnrollmentsCount()));
     }
 
     private void setProfilePicMargin() {
@@ -191,12 +177,14 @@ public class ProfileFragment extends ContentFragment {
         activityCallback.onFragmentAttached(NavigationAdapter.NAV_PROFILE.getPosition(), user.first_name + " " + user.last_name);
     }
 
-    private void showCoursesProgress(List<Course> courses) {
-        this.courses = courses;
-        textEnrollCounts.setText(String.valueOf(courseManager.getEnrollmentsCount()));
-        if (activityCallback != null) {
-            activityCallback.updateDrawer();
+    private void showEnrollmentCount(int count) {
+        if (textEnrollCounts != null) {
+            textEnrollCounts.setText(String.valueOf(count));
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }
