@@ -15,6 +15,7 @@ import de.xikolo.network.ApiRequest;
 import de.xikolo.storages.databases.DataType;
 import de.xikolo.storages.databases.adapters.ItemDataAdapter;
 import de.xikolo.utils.Config;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class UpdateProgressionJob extends Job {
@@ -50,7 +51,9 @@ public class UpdateProgressionJob extends Job {
         } else {
             String url = Config.API + Config.USER + Config.PROGRESSIONS + item.id;
 
-            Response response = new ApiRequest(url).execute();
+            RequestBody body = RequestBody.create(null, new byte[]{});
+
+            Response response = new ApiRequest(url).put(body).execute();
             if (response.isSuccessful()) {
                 response.close();
 
