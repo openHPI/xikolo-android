@@ -7,7 +7,7 @@ import java.util.Date;
 import de.xikolo.managers.jobs.CreateEnrollmentJob;
 import de.xikolo.managers.jobs.DeleteEnrollmentJob;
 import de.xikolo.managers.jobs.ListCoursesJob;
-import de.xikolo.managers.jobs.RetrieveCourseJob;
+import de.xikolo.managers.jobs.GetCourseJob;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
 import io.realm.Realm;
@@ -42,7 +42,7 @@ public class CourseManager extends BaseManager {
     }
 
     public void getCourse(Result<Course> result, String courseId) {
-        jobManager.addJobInBackground(new RetrieveCourseJob(result, courseId));
+        jobManager.addJobInBackground(new GetCourseJob(result, courseId));
     }
 
     public RealmResults listCoursesAsync(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {

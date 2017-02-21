@@ -21,6 +21,9 @@ public interface ApiService {
     @GET("courses/{id}")
     Call<Course.JsonModel> getCourse(@Path("id") String id);
 
+    @GET("courses/{id}")
+    Call<Course.JsonModel> getCourseWithEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id);
+
     @PATCH("enrollments/{id}")
     Call<Enrollment.JsonModel> patchEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id, @Body Enrollment.JsonModel enrollment);
 
