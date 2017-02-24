@@ -7,65 +7,66 @@ import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;
 
+import org.greenrobot.eventbus.EventBus;
+
 import de.xikolo.GlobalApplication;
-import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
-import de.xikolo.network.ApiRequest;
+import de.xikolo.models.Enrollment;
+import de.xikolo.network.ApiV2Request;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
-import okhttp3.FormBody;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import io.realm.Realm;
+import moe.banana.jsonapi2.HasOne;
+import retrofit2.Response;
 
 public class CreateEnrollmentJob extends Job {
 
     public static final String TAG = CreateEnrollmentJob.class.getSimpleName();
 
-    private Course course;
-    private Result<Course> result;
+    private String courseId;
 
-    public CreateEnrollmentJob(Result<Course> result, Course course) {
+    public CreateEnrollmentJob(String courseId) {
         super(new Params(Priority.HIGH));
 
-        this.result = result;
-        this.course = course;
+        this.courseId = courseId;
     }
 
     @Override
     public void onAdded() {
-        if (Config.DEBUG) Log.i(TAG, TAG + " added | course.id " + course.id);
+        if (Config.DEBUG) Log.i(TAG, TAG + " added | course.id " + courseId);
     }
 
     @Override
     public void onRun() throws Throwable {
         if (!UserManager.isLoggedIn()) {
-            result.error(Result.ErrorCode.NO_AUTH);
+            EventBus.getDefault().postSticky(new CreateEnrollmentJobEvent(NetworkJobEvent.State.NO_AUTH, courseId));
         } else if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-            result.error(Result.ErrorCode.NO_NETWORK);
+            EventBus.getDefault().postSticky(new CreateEnrollmentJobEvent(NetworkJobEvent.State.NO_NETWORK, courseId));
         } else {
-            String url = Config.API + Config.USER + Config.ENROLLMENTS;
+            Enrollment.JsonModel enrollment = new Enrollment.JsonModel();
+            String type = new Course.JsonModel().getType();
+            enrollment.course = new HasOne<>(type, courseId);
 
-            RequestBody body = new FormBody.Builder()
-                    .add("course_id", course.id)
-                    .build();
-
-            Response response = new ApiRequest(url)
-                    .post(body)
-                    .execute();
+            final Response<Enrollment.JsonModel> response = ApiV2Request.service()
+                    .postEnrollment(UserManager.getTokenHeader(), enrollment).execute();
 
             if (response.isSuccessful()) {
-                response.close();
-
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
 
-//                course.enrollment = true;
-//                CourseDataAdapter courseDataAccess = (CourseDataAdapter) GlobalApplication.getDataAdapter(DataType.COURSE);
-//                courseDataAccess.update(course, false);
-                result.success(course, Result.DataSource.NETWORK);
+                EventBus.getDefault().postSticky(new CreateEnrollmentJobEvent(NetworkJobEvent.State.SUCCESS, courseId));
+
+                Realm realm = Realm.getDefaultInstance();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(response.body().convertToRealmObject());
+                    }
+                });
+                realm.close();
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Enrollment not created");
-                result.error(Result.ErrorCode.NO_RESULT);
+                EventBus.getDefault().postSticky(new CreateEnrollmentJobEvent(NetworkJobEvent.State.ERROR, courseId));
             }
         }
 
@@ -73,12 +74,20 @@ public class CreateEnrollmentJob extends Job {
 
     @Override
     protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-        result.error(Result.ErrorCode.ERROR);
+        EventBus.getDefault().postSticky(new CreateEnrollmentJobEvent(NetworkJobEvent.State.CANCEL, courseId));
     }
 
     @Override
     protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
         return RetryConstraint.CANCEL;
+    }
+
+    public static class CreateEnrollmentJobEvent extends NetworkJobEvent {
+
+        public CreateEnrollmentJobEvent(State state, String id) {
+            super(state, id);
+        }
+
     }
 
 }

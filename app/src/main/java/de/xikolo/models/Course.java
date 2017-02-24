@@ -11,7 +11,7 @@ import moe.banana.jsonapi2.HasOne;
 import moe.banana.jsonapi2.JsonApi;
 import moe.banana.jsonapi2.Resource;
 
-public class Course extends RealmObject {
+public class Course extends RealmObject implements JsonAdapter<Course.JsonModel> {
 
     @PrimaryKey
     public String id;
@@ -58,6 +58,33 @@ public class Course extends RealmObject {
 
     public boolean isEnrolled() {
         return enrollment != null;
+    }
+
+    @Override
+    public JsonModel convertToJsonResource() {
+        Course.JsonModel model = new Course.JsonModel();
+        model.setId(id);
+        model.title = title;
+        model.slug = slug;
+        model.startDate = DateUtil.format(startDate);
+        model.endDate = DateUtil.format(endDate);
+        model.shortAbstract = shortAbstract;
+        model.description = description;
+        model.imageUrl = imageUrl;
+        model.language = language;
+        model.status = status;
+        model.classifiers = classifiers;
+        model.teachers = teachers;
+        model.accessible = accessible;
+        model.enrollable = enrollable;
+        model.hidden = hidden;
+        model.external = external;
+        model.externalUrl = externalUrl;
+        model.policyUrl = policyUrl;
+        model.qualifiedCertificateAvailable = qualifiedCertificateAvailable;
+        model.onDemand = onDemand;
+        model.enrollment = new HasOne<>(enrollment.convertToJsonResource());
+        return model;
     }
 
     @JsonApi(type = "courses")

@@ -50,7 +50,7 @@ public class GetCourseJob extends Job {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Course received");
 
-                EventBus.getDefault().postSticky(new GetCourseJobEvent(NetworkJobEvent.State.SUCCESS, null, courseId));
+                EventBus.getDefault().postSticky(new GetCourseJobEvent(NetworkJobEvent.State.SUCCESS, courseId));
 
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
@@ -62,16 +62,16 @@ public class GetCourseJob extends Job {
                 realm.close();
             } else {
                 if (Config.DEBUG) Log.e(TAG, "Error while fetching course");
-                EventBus.getDefault().postSticky(new GetCourseJobEvent(NetworkJobEvent.State.ERROR, null, courseId));
+                EventBus.getDefault().postSticky(new GetCourseJobEvent(NetworkJobEvent.State.ERROR, courseId));
             }
         } else {
-            EventBus.getDefault().postSticky(new GetCourseJobEvent(NetworkJobEvent.State.ERROR, NetworkJobEvent.Code.NO_NETWORK, courseId));
+            EventBus.getDefault().postSticky(new GetCourseJobEvent(NetworkJobEvent.State.NO_NETWORK, courseId));
         }
     }
 
     @Override
     protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-        EventBus.getDefault().postSticky(new GetCourseJobEvent(NetworkJobEvent.State.ERROR, NetworkJobEvent.Code.CANCELED, courseId));
+        EventBus.getDefault().postSticky(new GetCourseJobEvent(NetworkJobEvent.State.CANCEL, courseId));
     }
 
     @Override
@@ -81,8 +81,8 @@ public class GetCourseJob extends Job {
 
     public static class GetCourseJobEvent extends NetworkJobEvent {
 
-        public GetCourseJobEvent(State state, Code code, String id) {
-            super(state, code, id);
+        public GetCourseJobEvent(State state, String id) {
+            super(state, id);
         }
 
     }

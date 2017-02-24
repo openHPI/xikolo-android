@@ -3,7 +3,7 @@ package de.xikolo.managers.jobs;
 public abstract class NetworkJobEvent {
 
     public enum State {
-        SUCCESS, WARNING, ERROR
+        SUCCESS, CANCEL, ERROR, NO_NETWORK, NO_AUTH
     }
 
     private State state;
@@ -13,13 +13,7 @@ public abstract class NetworkJobEvent {
     }
 
     public enum Code {
-        NO_NETWORK, NO_RESULT, NO_AUTH, CANCELED
-    }
 
-    private Code code;
-
-    public Code getCode() {
-        return code;
     }
 
     private String id;
@@ -28,17 +22,13 @@ public abstract class NetworkJobEvent {
         return id;
     }
 
-    public NetworkJobEvent(State state, Code code, String id) {
+    public NetworkJobEvent(State state, String id) {
         this.state = state;
-        this.code = code;
         this.id = id;
     }
 
     public String getMessage() {
         String message = this.getClass().getSimpleName() + " " + getState().name();
-        if (code != null) {
-            message += " " + code;
-        }
         if (id != null) {
             message += " ID: " + id;
         }

@@ -41,10 +41,6 @@ public class CourseManager extends BaseManager {
         return enrollmentListPromise;
     }
 
-    public void getCourse(Result<Course> result, String courseId) {
-        jobManager.addJobInBackground(new GetCourseJob(result, courseId));
-    }
-
     public RealmResults listCoursesAsync(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
         if (listener == null) {
             throw new RuntimeException("RealmChangeListener is required for async queries.");
@@ -118,16 +114,20 @@ public class CourseManager extends BaseManager {
         return courseList;
     }
 
+    public void requestCourse(String courseId) {
+        jobManager.addJobInBackground(new GetCourseJob(courseId));
+    }
+
     public void requestCourses() {
         jobManager.addJobInBackground(new ListCoursesJob());
     }
 
-    public void addEnrollment(Result<Course> result, Course course) {
-        jobManager.addJobInBackground(new CreateEnrollmentJob(result, course));
+    public void createEnrollment(String courseId) {
+        jobManager.addJobInBackground(new CreateEnrollmentJob(courseId));
     }
 
-    public void deleteEnrollment(Result<Course> result, Course course) {
-        jobManager.addJobInBackground(new DeleteEnrollmentJob(result, course));
+    public void deleteEnrollment(String id) {
+        jobManager.addJobInBackground(new DeleteEnrollmentJob(id));
     }
 
 }
