@@ -23,6 +23,7 @@ import java.util.List;
 
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.controllers.course.CourseLearningsFragment;
 import de.xikolo.controllers.course.ProgressFragment;
 import de.xikolo.controllers.dialogs.ProgressDialog;

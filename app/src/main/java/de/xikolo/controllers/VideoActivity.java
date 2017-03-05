@@ -20,6 +20,7 @@ import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastState;
 
 import de.xikolo.R;
+import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.controllers.exceptions.WrongParameterException;
 import de.xikolo.controllers.helper.VideoController;
 import de.xikolo.managers.ItemManager;

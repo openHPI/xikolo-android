@@ -1,13 +1,12 @@
 package de.xikolo.managers;
 
-import com.birbit.android.jobqueue.JobManager;
-
 import java.util.Date;
 
 import de.xikolo.managers.jobs.CreateEnrollmentJob;
 import de.xikolo.managers.jobs.DeleteEnrollmentJob;
-import de.xikolo.managers.jobs.ListCoursesJob;
 import de.xikolo.managers.jobs.GetCourseJob;
+import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.managers.jobs.ListCoursesJob;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
 import io.realm.Realm;
@@ -22,10 +21,6 @@ public class CourseManager extends BaseManager {
     }
 
     public static final String TAG = CourseManager.class.getSimpleName();
-
-    public CourseManager(JobManager jobManager) {
-        super(jobManager);
-    }
 
     public RealmResults listEnrollmentsAsync(Realm realm, RealmChangeListener<RealmResults<Enrollment>> listener) {
         if (listener == null) {
@@ -114,20 +109,20 @@ public class CourseManager extends BaseManager {
         return courseList;
     }
 
-    public void requestCourse(String courseId) {
-        jobManager.addJobInBackground(new GetCourseJob(courseId));
+    public void requestCourse(String courseId, JobCallback callback) {
+        jobManager.addJobInBackground(new GetCourseJob(courseId, callback));
     }
 
-    public void requestCourses() {
-        jobManager.addJobInBackground(new ListCoursesJob());
+    public void requestCourses(JobCallback callback) {
+        jobManager.addJobInBackground(new ListCoursesJob(callback));
     }
 
-    public void createEnrollment(String courseId) {
-        jobManager.addJobInBackground(new CreateEnrollmentJob(courseId));
+    public void createEnrollment(String courseId, JobCallback callback) {
+        jobManager.addJobInBackground(new CreateEnrollmentJob(courseId, callback));
     }
 
-    public void deleteEnrollment(String id) {
-        jobManager.addJobInBackground(new DeleteEnrollmentJob(id));
+    public void deleteEnrollment(String id, JobCallback callback) {
+        jobManager.addJobInBackground(new DeleteEnrollmentJob(id, callback));
     }
 
 }

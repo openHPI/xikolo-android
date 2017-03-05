@@ -10,7 +10,7 @@ import com.google.android.gms.cast.framework.media.NotificationOptions;
 
 import java.util.List;
 
-import de.xikolo.controllers.CastActivity;
+import de.xikolo.controllers.activities.CastActivity;
 
 public class CastOptionsProvider implements OptionsProvider {
 

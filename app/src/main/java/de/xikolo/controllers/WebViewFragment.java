@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controllers.fragments.BaseFragment;
 import de.xikolo.controllers.helper.WebViewController;
 
 public class WebViewFragment extends BaseFragment {

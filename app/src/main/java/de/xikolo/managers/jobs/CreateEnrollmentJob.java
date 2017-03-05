@@ -1,13 +1,8 @@
 package de.xikolo.managers.jobs;
 
-import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
-import com.birbit.android.jobqueue.RetryConstraint;
-
-import org.greenrobot.eventbus.EventBus;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.managers.UserManager;
@@ -20,15 +15,14 @@ import io.realm.Realm;
 import moe.banana.jsonapi2.HasOne;
 import retrofit2.Response;
 
-public class CreateEnrollmentJob extends Job {
+public class CreateEnrollmentJob extends BaseJob {
 
     public static final String TAG = CreateEnrollmentJob.class.getSimpleName();
 
     private String courseId;
 
-    public CreateEnrollmentJob(String courseId) {
-        super(new Params(Priority.HIGH));
-
+    public CreateEnrollmentJob(String courseId, JobCallback callback) {
+        super(new Params(Priority.HIGH), callback);
         this.courseId = courseId;
     }
 
@@ -40,9 +34,9 @@ public class CreateEnrollmentJob extends Job {
     @Override
     public void onRun() throws Throwable {
         if (!UserManager.isLoggedIn()) {
-            EventBus.getDefault().postSticky(new CreateEnrollmentJobEvent(NetworkJobEvent.State.NO_AUTH, courseId));
+            if (callback != null) callback.onError(JobCallback.ErrorCode.NO_AUTH);
         } else if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-            EventBus.getDefault().postSticky(new CreateEnrollmentJobEvent(NetworkJobEvent.State.NO_NETWORK, courseId));
+            if (callback != null) callback.onError(JobCallback.ErrorCode.NO_NETWORK);
         } else {
             Enrollment.JsonModel enrollment = new Enrollment.JsonModel();
             String type = new Course.JsonModel().getType();
@@ -54,7 +48,7 @@ public class CreateEnrollmentJob extends Job {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
 
-                EventBus.getDefault().postSticky(new CreateEnrollmentJobEvent(NetworkJobEvent.State.SUCCESS, courseId));
+                if (callback != null) callback.onSuccess();
 
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
@@ -66,28 +60,9 @@ public class CreateEnrollmentJob extends Job {
                 realm.close();
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Enrollment not created");
-                EventBus.getDefault().postSticky(new CreateEnrollmentJobEvent(NetworkJobEvent.State.ERROR, courseId));
+                if (callback != null) callback.onError(JobCallback.ErrorCode.ERROR);
             }
         }
-
-    }
-
-    @Override
-    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-        EventBus.getDefault().postSticky(new CreateEnrollmentJobEvent(NetworkJobEvent.State.CANCEL, courseId));
-    }
-
-    @Override
-    protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
-        return RetryConstraint.CANCEL;
-    }
-
-    public static class CreateEnrollmentJobEvent extends NetworkJobEvent {
-
-        public CreateEnrollmentJobEvent(State state, String id) {
-            super(state, id);
-        }
-
     }
 
 }

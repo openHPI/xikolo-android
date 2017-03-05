@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import de.xikolo.R;
+import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.controllers.secondscreen.SecondScreenFragment;
 
 public class SecondScreenActivity extends BaseActivity {

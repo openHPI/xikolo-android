@@ -37,7 +37,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
     private Context context;
     private WebView webView;
-    private NotificationController notificationController;
+    private LoadingStateController notificationController;
 
     private SwipeRefreshLayout refreshLayout;
 
@@ -50,14 +50,14 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
         this.context = context;
         webView = (WebView) layout.findViewById(R.id.webView);
         refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
-        notificationController = new NotificationController(layout);
+        notificationController = new LoadingStateController(layout);
 
         inAppLinksEnabled = true;
         loadExternalUrlEnabled = false;
 
         setup();
 
-        RefeshLayoutController.setup(refreshLayout, this);
+        RefeshLayoutHelper.setup(refreshLayout, this);
     }
 
     public void setInAppLinksEnabled(boolean enabled) {
@@ -75,7 +75,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
         webView.setWebChromeClient(new WebChromeClient());
 
-        notificationController.setProgressVisible(true);
+        notificationController.showProgress(true);
 
         webView.setWebViewClient(new WebViewClient() {
 
@@ -102,7 +102,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                notificationController.setInvisible();
+                notificationController.hide();
                 refreshLayout.setRefreshing(false);
                 webView.setVisibility(View.VISIBLE);
                 super.onPageFinished(view, url);

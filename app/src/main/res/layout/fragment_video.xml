@@ -103,6 +103,6 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <include layout="@layout/container_notification" />
+    <include layout="@layout/container_loading_state" />
 
 </FrameLayout>

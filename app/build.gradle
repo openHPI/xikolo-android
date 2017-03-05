@@ -177,7 +177,11 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
 
     compile 'com.jakewharton:butterknife:8.5.1'
-    apt 'com.jakewharton:butterknife-compiler:8.5.1'
+    apt     'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'frankiesardo:icepick:3.1.0'
+    apt     'frankiesardo:icepick-processor:3.1.0'
+    compile 'com.hannesdorfmann.fragmentargs:annotation:3.0.2'
+    apt     'com.hannesdorfmann.fragmentargs:processor:3.0.2'
 
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.android.gms:play-services-cast-framework:10.2.0'

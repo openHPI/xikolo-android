@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.controllers.BaseFragment;
+import de.xikolo.controllers.fragments.BaseFragment;
 import de.xikolo.controllers.ModuleActivity;
 import de.xikolo.controllers.course.adapter.ItemListAdapter;
 import de.xikolo.controllers.course.adapter.ModuleListAdapter;
-import de.xikolo.controllers.helper.NotificationController;
-import de.xikolo.controllers.helper.RefeshLayoutController;
+import de.xikolo.controllers.helper.LoadingStateController;
+import de.xikolo.controllers.helper.RefeshLayoutHelper;
 import de.xikolo.managers.ModuleManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
@@ -47,7 +47,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     private ModuleManager moduleManager;
     private ModuleListAdapter adapter;
 
-    private NotificationController notificationController;
+    private LoadingStateController notificationController;
 
     private Course course;
     private List<Module> modules;
@@ -92,7 +92,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         View layout = inflater.inflate(R.layout.fragment_learnings, container, false);
 
         refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
-        RefeshLayoutController.setup(refreshLayout, this);
+        RefeshLayoutHelper.setup(refreshLayout, this);
 
         RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
         adapter = new ModuleListAdapter(getActivity(), course, this, this);
@@ -123,7 +123,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
                 }
         ));
 
-        notificationController = new NotificationController(layout);
+        notificationController = new LoadingStateController(layout);
 
         return layout;
     }
@@ -133,7 +133,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         super.onStart();
 
         if (modules == null) {
-            notificationController.setProgressVisible(true);
+            notificationController.showProgress(true);
             requestModulesWithItems(false, false);
         } else {
             adapter.updateModules(modules);
@@ -150,7 +150,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
             @Override
             protected void onSuccess(List<Module> result, DataSource dataSource) {
                 if (result.size() > 0) {
-                    notificationController.setInvisible();
+                    notificationController.hide();
                 }
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) ||
                         dataSource.equals(DataSource.NETWORK)) {
@@ -180,7 +180,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
             protected void onError(ErrorCode errorCode) {
                 ToastUtil.show(R.string.error);
                 refreshLayout.setRefreshing(false);
-                notificationController.setInvisible();
+                notificationController.hide();
             }
         };
 

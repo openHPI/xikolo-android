@@ -19,6 +19,6 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical" />
 
-    <include layout="@layout/container_notification" />
+    <include layout="@layout/container_loading_state" />
 
 </FrameLayout>

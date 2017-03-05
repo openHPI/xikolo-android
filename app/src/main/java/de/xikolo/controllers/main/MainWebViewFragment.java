@@ -12,11 +12,12 @@ import android.view.ViewGroup;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controllers.fragments.MainFragment;
 import de.xikolo.controllers.helper.WebViewController;
 
-public class ContentWebViewFragment extends ContentFragment {
+public class MainWebViewFragment extends MainFragment {
 
-    public static final String TAG = ContentWebViewFragment.class.getSimpleName();
+    public static final String TAG = MainWebViewFragment.class.getSimpleName();
 
     // the fragment initialization parameters
     private static final String ARG_URL = "arg_url";
@@ -37,12 +38,12 @@ public class ContentWebViewFragment extends ContentFragment {
 
     private MutableContextWrapper mutableContextWrapper;
 
-    public ContentWebViewFragment() {
+    public MainWebViewFragment() {
         // Required empty public constructor
     }
 
-    public static ContentWebViewFragment newInstance(int id, String url, String title, boolean inAppLinksEnabled, boolean externalLinksEnabled) {
-        ContentWebViewFragment fragment = new ContentWebViewFragment();
+    public static MainWebViewFragment newInstance(int id, String url, String title, boolean inAppLinksEnabled, boolean externalLinksEnabled) {
+        MainWebViewFragment fragment = new MainWebViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
         args.putString(ARG_TITLE, title);

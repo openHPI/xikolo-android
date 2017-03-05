@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import de.xikolo.R;
-import de.xikolo.controllers.BaseActivity;
+import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.controllers.WebViewFragment;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;

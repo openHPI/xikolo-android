@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.controllers.BaseFragment;
+import de.xikolo.controllers.fragments.BaseFragment;
 import de.xikolo.controllers.course.adapter.ProgressListAdapter;
-import de.xikolo.controllers.helper.NotificationController;
-import de.xikolo.controllers.helper.RefeshLayoutController;
+import de.xikolo.controllers.helper.LoadingStateController;
+import de.xikolo.controllers.helper.RefeshLayoutHelper;
 import de.xikolo.models.Course;
 import de.xikolo.models.Module;
 import de.xikolo.managers.ModuleManager;
@@ -43,7 +43,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
 
     private SwipeRefreshLayout refreshLayout;
 
-    private NotificationController notificationController;
+    private LoadingStateController notificationController;
 
     public ProgressFragment() {
         // Required empty public constructor
@@ -115,9 +115,9 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
         ));
 
         refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
-        RefeshLayoutController.setup(refreshLayout, this);
+        RefeshLayoutHelper.setup(refreshLayout, this);
 
-        notificationController = new NotificationController(layout);
+        notificationController = new LoadingStateController(layout);
 
         return layout;
     }
@@ -127,7 +127,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
         super.onStart();
 
         if (modules == null) {
-            notificationController.setProgressVisible(true);
+            notificationController.showProgress(true);
             requestProgress(false);
         } else {
             adapter.updateModules(modules);
@@ -139,7 +139,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
             @Override
             protected void onSuccess(List<Module> result, DataSource dataSource) {
                 if (result.size() > 0) {
-                    notificationController.setInvisible();
+                    notificationController.hide();
                 }
                 if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) ||
                         dataSource.equals(DataSource.NETWORK)) {
@@ -168,7 +168,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
 
             @Override
             protected void onError(ErrorCode errorCode) {
-                notificationController.setInvisible();
+                notificationController.hide();
                 refreshLayout.setRefreshing(false);
                 ToastUtil.show(R.string.error);
             }

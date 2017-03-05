@@ -3,14 +3,9 @@ package de.xikolo;
 import android.app.Application;
 import android.os.Build;
 import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
-
-import com.birbit.android.jobqueue.JobManager;
-import com.birbit.android.jobqueue.config.Configuration;
-import com.birbit.android.jobqueue.log.CustomLogger;
 
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
@@ -34,8 +29,6 @@ public class GlobalApplication extends Application {
 
     private static GlobalApplication instance;
 
-    private JobManager jobManager;
-
     private DatabaseHelper databaseHelper;
 
     private StorageHelper storageHelper;
@@ -52,10 +45,6 @@ public class GlobalApplication extends Application {
 
     public static GlobalApplication getInstance() {
         return instance;
-    }
-
-    public JobManager getJobManager() {
-        return jobManager;
     }
 
     public Lanalytics getLanalytics() {
@@ -113,7 +102,6 @@ public class GlobalApplication extends Application {
         configureRealm();
         configureDefaultSettings();
         configureWebView();
-        configureJobManager();
         configureSecondScreenManager();
 
         // just for debugging, never use for production
@@ -145,46 +133,6 @@ public class GlobalApplication extends Application {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Config.DEBUG) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-    }
-
-    private void configureJobManager() {
-        int numThreads = Runtime.getRuntime().availableProcessors();
-
-        Configuration configuration = new Configuration.Builder(this)
-                .customLogger(new CustomLogger() {
-                    private final String TAG = JobManager.class.getSimpleName();
-
-                    @Override
-                    public boolean isDebugEnabled() {
-                        return false;
-                    }
-
-                    @Override
-                    public void v(String text, Object... args) {
-//                        if (Config.DEBUG) Log.v(TAG, String.format(text, args));
-                    }
-
-                    @Override
-                    public void d(String text, Object... args) {
-//                        if (Config.DEBUG) Log.d(TAG, String.format(text, args));
-                    }
-
-                    @Override
-                    public void e(Throwable t, String text, Object... args) {
-                        Log.e(TAG, String.format(text, args), t);
-                    }
-
-                    @Override
-                    public void e(String text, Object... args) {
-                        Log.e(TAG, String.format(text, args));
-                    }
-                })
-                .minConsumerCount(numThreads > 3 ? 3 : numThreads) // always keep at least one consumer alive
-                .maxConsumerCount(numThreads) // consumers at a time
-                .loadFactor(2) // jobs per consumer
-                .consumerKeepAlive(120) // wait 2 minute
-                .build();
-        jobManager = new JobManager(configuration);
     }
 
     @SuppressWarnings("deprecation")

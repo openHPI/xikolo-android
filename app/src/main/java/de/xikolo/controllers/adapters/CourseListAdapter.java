@@ -1,4 +1,4 @@
-package de.xikolo.controllers.main.adapter;
+package de.xikolo.controllers.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -238,11 +238,11 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public interface OnCourseButtonClickListener {
 
-        void onEnrollButtonClicked(Course course);
+        void onEnrollButtonClicked(String courseId);
 
-        void onEnterButtonClicked(Course course);
+        void onEnterButtonClicked(String courseId);
 
-        void onDetailButtonClicked(Course course);
+        void onDetailButtonClicked(String courseId);
 
     }
 

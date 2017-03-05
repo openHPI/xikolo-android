@@ -1,7 +1,8 @@
-package de.xikolo.controllers.main;
+package de.xikolo.controllers.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
@@ -11,7 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.greenrobot.eventbus.EventBus;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -22,84 +25,69 @@ import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.controllers.CourseActivity;
 import de.xikolo.controllers.CourseDetailsActivity;
+import de.xikolo.controllers.adapters.CourseListAdapter;
 import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.controllers.helper.NotificationController;
-import de.xikolo.controllers.helper.RefeshLayoutController;
-import de.xikolo.controllers.main.adapter.CourseListAdapter;
+import de.xikolo.controllers.helper.LoadingStateController;
+import de.xikolo.controllers.helper.RefeshLayoutHelper;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
-import de.xikolo.events.EnrollEvent;
 import de.xikolo.managers.CourseManager;
-import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
 import de.xikolo.managers.jobs.ListCoursesJob;
-import de.xikolo.managers.jobs.NetworkJobEvent;
 import de.xikolo.models.Course;
-import de.xikolo.utils.DateUtil;
+import de.xikolo.presenters.CourseListPresenter;
+import de.xikolo.presenters.CourseListPresenterFactory;
+import de.xikolo.presenters.CourseListView;
+import de.xikolo.presenters.PresenterFactory;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
 
-public class CourseListFragment extends ContentFragment implements SwipeRefreshLayout.OnRefreshListener,
-        CourseListAdapter.OnCourseButtonClickListener {
+import static de.xikolo.R.id.refreshLayout;
+
+@FragmentWithArgs
+public class CourseListFragment extends MainFragment<CourseListPresenter, CourseListView> implements CourseListView {
 
     public static final String TAG = CourseListFragment.class.getSimpleName();
-
-    public static final String ARG_FILTER = "arg_filter";
 
     public static final String FILTER_ALL = "filter_all";
     public static final String FILTER_MY = "filter_my";
 
-    private String filter;
+    @Arg String filter;
 
-    @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
     @BindView(R.id.recyclerView) AutofitRecyclerView recyclerView;
 
     private CourseListAdapter courseListAdapter;
-
-    private NotificationController notificationController;
-
-    private CourseManager courseManager;
-
-    public CourseListFragment() {
-        // Required empty public constructor
-    }
-
-    public static CourseListFragment newInstance(String filter) {
-        CourseListFragment fragment = new CourseListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_FILTER, filter);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            filter = getArguments().getString(ARG_FILTER);
-        }
         setHasOptionsMenu(true);
-
-        courseManager = new CourseManager(jobManager);
-
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_course_list, container, false);
-        ButterKnife.bind(this, layout);
+        View view = inflater.inflate(R.layout.fragment_course_list, container, false);
+        ButterKnife.bind(this, view);
 
-        RefeshLayoutController.setup(refreshLayout, this);
+        courseListAdapter = new CourseListAdapter(new CourseListAdapter.OnCourseButtonClickListener() {
+            @Override
+            public void onEnrollButtonClicked(String courseId) {
+                presenter.onEnrollButtonClicked(courseId);
+            }
 
-        if (isAllCoursesFilter()) {
-            courseListAdapter = new CourseListAdapter(this, CourseManager.CourseFilter.ALL);
-        } else if (isMyCoursesFilter()) {
-            courseListAdapter = new CourseListAdapter(this, CourseManager.CourseFilter.MY);
-        }
+            @Override
+            public void onEnterButtonClicked(String courseId) {
+                presenter.onCourseEnterButtonClicked(courseId);
+            }
+
+            @Override
+            public void onDetailButtonClicked(String courseId) {
+                presenter.onCourseDetailButtonClicked(courseId);
+            }
+        }, isAllCoursesFilter() ? CourseManager.CourseFilter.ALL : CourseManager.CourseFilter.MY);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(courseListAdapter);
@@ -132,10 +120,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                     }
                 }));
 
-        notificationController = new NotificationController(layout);
-        notificationController.setInvisible();
-
-        return layout;
+        return view;
     }
 
     @Override
@@ -148,27 +133,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
             activityCallback.onFragmentAttached(NavigationAdapter.NAV_MY_COURSES.getPosition(), getString(R.string.title_section_my_courses));
         }
 
-        notificationController.setInvisible();
-
-        requestCourses();
-    }
-
-    private void requestCourses() {
-//        if (isMyCoursesFilter() && !UserManager.isLoggedIn()) {
-//            notificationController.setTitle(R.string.notification_please_login);
-//            notificationController.setSummary(R.string.notification_please_login_summary);
-//            notificationController.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
-//                }
-//            });
-//            notificationController.setNotificationVisible(true);
-//            refreshLayout.setRefreshing(false);
-//        } else {
-//            refreshLayout.setRefreshing(true);
-            courseManager.requestCourses();
-//        }
+        presenter.onStart();
     }
 
     private void updateView(List<Course> courseList) {
@@ -203,7 +168,7 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
-        requestCourses();
+        presenter.onRefresh();
     }
 
     @Override
@@ -216,38 +181,8 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onEnrollButtonClicked(Course course) {
-        final ProgressDialog dialog = ProgressDialog.getInstance();
-        Result<Course> result = new Result<Course>() {
-            @Override
-            protected void onSuccess(Course result, DataSource dataSource) {
-                dialog.dismiss();
-                EventBus.getDefault().post(new EnrollEvent(result));
-                if (DateUtil.nowIsAfter(result.startDate)) {
-                    onEnterButtonClicked(result);
-                }
-            }
-
-            @Override
-            protected void onError(ErrorCode errorCode) {
-                dialog.dismiss();
-                if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast();
-                } else if (errorCode == ErrorCode.NO_AUTH) {
-                    ToastUtil.show(R.string.toast_please_log_in);
-                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
-                }
-            }
-        };
-        dialog.show(getChildFragmentManager(), ProgressDialog.TAG);
-        courseManager.addEnrollment(result, course);
+    public void onEnrollButtonClicked(String courseId) {
+        presenter.onEnrollButtonClicked(courseId);
     }
 
     private boolean isMyCoursesFilter() {
@@ -289,13 +224,12 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 notificationController.setInvisible();
                 refreshLayout.setRefreshing(false);
                 break;
-            case WARNING:
-                break;
+            case NO_NETWORK:
+                NetworkUtil.showNoConnectionToast();
+            case NO_AUTH:
+            case CANCEL:
             case ERROR:
                 refreshLayout.setRefreshing(false);
-                if (event.getCode() == NetworkJobEvent.Code.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast();
-                }
                 break;
         }
     }
@@ -316,6 +250,36 @@ public class CourseListFragment extends ContentFragment implements SwipeRefreshL
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @NonNull
+    @Override
+    protected PresenterFactory<CourseListPresenter> getPresenterFactory() {
+        return new CourseListPresenterFactory();
+    }
+
+    @Override
+    public void showLoginRequiredMessage() {
+        super.showLoginRequiredMessage();
+        loadingStateController.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
+            }
+        });
+    }
+
+    @Override
+    public void showNoEnrollmentsMessage() {
+        loadingStateController.setTitle(R.string.notification_no_enrollments);
+        loadingStateController.setSummary(R.string.notification_no_enrollments_summary);
+        loadingStateController.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activityCallback.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.getPosition());
+            }
+        });
+        loadingStateController.showMessage();
     }
 
 }

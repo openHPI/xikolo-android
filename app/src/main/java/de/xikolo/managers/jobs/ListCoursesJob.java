@@ -1,13 +1,8 @@
 package de.xikolo.managers.jobs;
 
-import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
-import com.birbit.android.jobqueue.RetryConstraint;
-
-import org.greenrobot.eventbus.EventBus;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.managers.UserManager;
@@ -18,12 +13,12 @@ import de.xikolo.utils.NetworkUtil;
 import io.realm.Realm;
 import retrofit2.Response;
 
-public class ListCoursesJob extends Job {
+public class ListCoursesJob extends BaseJob {
 
     public static final String TAG = ListCoursesJob.class.getSimpleName();
 
-    public ListCoursesJob() {
-        super(new Params(Priority.MID));
+    public ListCoursesJob(JobCallback callback) {
+        super(new Params(Priority.MID), callback);
     }
 
     @Override
@@ -46,7 +41,7 @@ public class ListCoursesJob extends Job {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Courses received (" + response.body().length + ")");
 
-                EventBus.getDefault().postSticky(new ListCoursesJobEvent(NetworkJobEvent.State.SUCCESS, null));
+                if (callback != null) callback.onSuccess();
 
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
@@ -60,29 +55,11 @@ public class ListCoursesJob extends Job {
                 realm.close();
             } else {
                 if (Config.DEBUG) Log.e(TAG, "Error while fetching courses list");
-                EventBus.getDefault().postSticky(new ListCoursesJobEvent(NetworkJobEvent.State.ERROR, null));
+                if (callback != null) callback.onError(JobCallback.ErrorCode.ERROR);
             }
         } else {
-            EventBus.getDefault().postSticky(new ListCoursesJobEvent(NetworkJobEvent.State.NO_NETWORK, null));
+            if (callback != null) callback.onError(JobCallback.ErrorCode.NO_NETWORK);
         }
-    }
-
-    @Override
-    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-        EventBus.getDefault().postSticky(new ListCoursesJobEvent(NetworkJobEvent.State.CANCEL, null));
-    }
-
-    @Override
-    protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
-        return RetryConstraint.CANCEL;
-    }
-
-    public static class ListCoursesJobEvent extends NetworkJobEvent {
-
-        public ListCoursesJobEvent(State state, String id) {
-            super(state, id);
-        }
-
     }
 
 }

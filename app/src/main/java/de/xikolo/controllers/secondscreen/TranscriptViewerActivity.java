@@ -8,7 +8,7 @@ import android.view.WindowManager;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.controllers.BaseActivity;
+import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Module;

@@ -25,6 +25,7 @@ import java.util.List;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.controllers.exceptions.WrongParameterException;
 import de.xikolo.controllers.helper.CacheController;
 import de.xikolo.controllers.helper.ModuleDownloadController;

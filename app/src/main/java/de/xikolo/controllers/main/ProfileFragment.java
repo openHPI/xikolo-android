@@ -12,8 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import de.xikolo.R;
+import de.xikolo.controllers.fragments.MainFragment;
 import de.xikolo.controllers.helper.ImageController;
-import de.xikolo.controllers.helper.NotificationController;
+import de.xikolo.controllers.helper.LoadingStateController;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.Result;
@@ -26,7 +27,7 @@ import de.xikolo.views.CustomSizeImageView;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class ProfileFragment extends ContentFragment {
+public class ProfileFragment extends MainFragment {
 
     public static final String TAG = ProfileFragment.class.getSimpleName();
 
@@ -36,7 +37,7 @@ public class ProfileFragment extends ContentFragment {
     private CourseManager courseManager;
     private Result<User> userResult;
 
-    private NotificationController notificationController;
+    private LoadingStateController notificationController;
 
     private TextView textName;
     private CustomSizeImageView imageHeader;
@@ -84,7 +85,7 @@ public class ProfileFragment extends ContentFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        notificationController = new NotificationController(view);
+        notificationController = new LoadingStateController(view);
 
         textName = (TextView) view.findViewById(R.id.textName);
         imageHeader = (CustomSizeImageView) view.findViewById(R.id.imageHeader);
@@ -128,7 +129,7 @@ public class ProfileFragment extends ContentFragment {
     }
 
     private void updateLayout() {
-        notificationController.setProgressVisible(false);
+        notificationController.showProgress(false);
         showHeader();
         showUser(UserManager.getSavedUser());
         setProfilePicMargin();

@@ -64,7 +64,7 @@
         </receiver>
 
         <activity
-            android:name=".controllers.MainActivity"
+            android:name=".controllers.activities.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppThemeTranslucentStatus">
@@ -96,10 +96,10 @@
         <activity
             android:name=".controllers.CourseActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
+            android:parentActivityName=".controllers.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".controllers.activities.MainActivity" />
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -131,27 +131,27 @@
         <activity
             android:name=".controllers.CourseDetailsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
+            android:parentActivityName=".controllers.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".controllers.activities.MainActivity" />
         </activity>
         <activity
             android:name=".controllers.SecondScreenActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
+            android:parentActivityName=".controllers.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".controllers.activities.MainActivity" />
         </activity>
         <activity
             android:name=".controllers.LoginActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity"
+            android:parentActivityName=".controllers.activities.MainActivity"
             android:theme="@style/AppThemeTranslucentStatusAndNavigation">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".controllers.activities.MainActivity" />
         </activity>
         <activity
             android:name=".controllers.ModuleActivity"
@@ -174,18 +174,18 @@
         <activity
             android:name=".controllers.DownloadsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
+            android:parentActivityName=".controllers.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".controllers.activities.MainActivity" />
         </activity>
         <activity
             android:name=".controllers.SettingsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
+            android:parentActivityName=".controllers.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".controllers.activities.MainActivity" />
         </activity>
         <activity
             android:name=".controllers.secondscreen.QuizActivity"
@@ -221,7 +221,7 @@
         </activity>
 
         <activity
-            android:name=".controllers.CastActivity"
+            android:name=".controllers.activities.CastActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:parentActivityName=".controllers.ModuleActivity"

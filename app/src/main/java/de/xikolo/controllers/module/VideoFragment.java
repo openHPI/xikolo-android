@@ -15,7 +15,7 @@ import de.xikolo.R;
 import de.xikolo.controllers.VideoActivity;
 import de.xikolo.controllers.helper.CacheController;
 import de.xikolo.controllers.helper.ImageController;
-import de.xikolo.controllers.helper.NotificationController;
+import de.xikolo.controllers.helper.LoadingStateController;
 import de.xikolo.controllers.module.helper.DownloadViewController;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.ItemManager;
@@ -41,7 +41,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     private View viewContainer;
     private View viewPlay;
 
-    private NotificationController notificationController;
+    private LoadingStateController notificationController;
 
     private ItemManager itemManager;
 
@@ -67,7 +67,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
         this.viewContainer = layout.findViewById(R.id.container);
 
-        notificationController = new NotificationController(layout);
+        notificationController = new LoadingStateController(layout);
 
         textTitle = (TextView) layout.findViewById(R.id.textTitle);
 
@@ -149,7 +149,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             @Override
             protected void onError(ErrorCode errorCode) {
                 ToastUtil.show(R.string.error);
-                notificationController.setInvisible();
+                notificationController.hide();
                 viewContainer.setVisibility(View.GONE);
             }
 
@@ -162,13 +162,13 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
         };
 
         viewContainer.setVisibility(View.GONE);
-        notificationController.setProgressVisible(true);
+        notificationController.showProgress(true);
         itemManager.getItemDetail(result, course, module, item, Item.TYPE_VIDEO);
     }
 
     private void setupView() {
         if (isAdded()) {
-            notificationController.setInvisible();
+            notificationController.hide();
             viewContainer.setVisibility(View.VISIBLE);
 
             if (item.detail == null) {

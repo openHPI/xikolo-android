@@ -1,11 +1,8 @@
 package de.xikolo.managers.jobs;
 
-import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
-import com.birbit.android.jobqueue.RetryConstraint;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.managers.UserManager;
@@ -16,15 +13,14 @@ import de.xikolo.utils.NetworkUtil;
 import io.realm.Realm;
 import retrofit2.Response;
 
-public class DeleteEnrollmentJob extends Job {
+public class DeleteEnrollmentJob extends BaseJob {
 
     public static final String TAG = DeleteEnrollmentJob.class.getSimpleName();
 
     private String id;
 
-    public DeleteEnrollmentJob(String id) {
-        super(new Params(Priority.HIGH));
-
+    public DeleteEnrollmentJob(String id, JobCallback callback) {
+        super(new Params(Priority.HIGH), callback);
         this.id = id;
     }
 
@@ -36,15 +32,17 @@ public class DeleteEnrollmentJob extends Job {
     @Override
     public void onRun() throws Throwable {
         if (!UserManager.isLoggedIn()) {
-
+            if (callback != null) callback.onError(JobCallback.ErrorCode.NO_AUTH);
         } else if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-
+            if (callback != null) callback.onError(JobCallback.ErrorCode.NO_NETWORK);
         } else {
             Response response = ApiV2Request.service()
                     .deleteEnrollment(UserManager.getTokenHeader(), id).execute();
 
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment deleted");
+
+                if (callback != null) callback.onSuccess();
 
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
@@ -56,19 +54,9 @@ public class DeleteEnrollmentJob extends Job {
                 realm.close();
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Enrollment not deleted");
-
+                if (callback != null) callback.onError(JobCallback.ErrorCode.ERROR);
             }
         }
-    }
-
-    @Override
-    protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-
-    }
-
-    @Override
-    protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
-        return RetryConstraint.CANCEL;
     }
 
 }

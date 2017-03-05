@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import de.xikolo.R;
+import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
 import de.xikolo.controllers.helper.EnrollmentController;
 import de.xikolo.models.Course;

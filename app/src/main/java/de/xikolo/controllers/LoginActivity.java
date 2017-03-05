@@ -21,6 +21,7 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 
 import de.xikolo.R;
+import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.helper.ImageController;
 import de.xikolo.events.LoginEvent;

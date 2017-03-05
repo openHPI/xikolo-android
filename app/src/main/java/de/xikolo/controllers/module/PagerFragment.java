@@ -2,7 +2,7 @@ package de.xikolo.controllers.module;
 
 import android.os.Bundle;
 
-import de.xikolo.controllers.BaseFragment;
+import de.xikolo.controllers.fragments.BaseFragment;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.ItemDetail;

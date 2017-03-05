@@ -20,7 +20,7 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog;
 import de.xikolo.controllers.downloads.adapter.DownloadsAdapter;
-import de.xikolo.controllers.helper.NotificationController;
+import de.xikolo.controllers.helper.LoadingStateController;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.PermissionManager;
 import de.xikolo.storages.preferences.ApplicationPreferences;
@@ -40,7 +40,7 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
 
     private PermissionManager permissionManager;
 
-    private NotificationController notificationController;
+    private LoadingStateController notificationController;
 
     public DownloadsFragment() {
         // Required empty public constructor
@@ -72,8 +72,8 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        notificationController = new NotificationController(layout);
-        notificationController.setInvisible();
+        notificationController = new LoadingStateController(layout);
+        notificationController.hide();
 
         return layout;
     }
@@ -103,7 +103,7 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
 
     private void fetchItems() {
         if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-            notificationController.setInvisible();
+            notificationController.hide();
 
             adapter.clear();
 
