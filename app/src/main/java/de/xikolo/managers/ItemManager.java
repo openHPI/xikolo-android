@@ -1,7 +1,5 @@
 package de.xikolo.managers;
 
-import com.birbit.android.jobqueue.JobManager;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -21,10 +19,6 @@ import de.xikolo.models.VideoItemDetail;
 public class ItemManager extends BaseManager {
 
     public static final String TAG = ItemManager.class.getSimpleName();
-
-    public ItemManager(JobManager jobManager) {
-        super(jobManager);
-    }
 
     public void getItems(Result<List<Item>> result, Course course, Module module) {
         getItems(result, course.id, module.id);

@@ -28,6 +28,7 @@ import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.managers.UserManager;
+import de.xikolo.models.Course;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;
@@ -133,11 +134,11 @@ public class MainActivity extends BaseActivity
             }
         }
         if (position == NavigationAdapter.NAV_ALL_COURSES.getPosition()) {
-            newFragment = CourseListFragmentBuilder.newCourseListFragment(CourseListFragment.FILTER_ALL);
+            newFragment = CourseListFragmentBuilder.newCourseListFragment(Course.Filter.ALL);
             tag = "all_courses";
         }
         if (position == NavigationAdapter.NAV_MY_COURSES.getPosition()) {
-            newFragment = CourseListFragmentBuilder.newCourseListFragment(CourseListFragment.FILTER_MY);
+            newFragment = CourseListFragmentBuilder.newCourseListFragment(Course.Filter.MY);
             tag = "my_courses";
         }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {

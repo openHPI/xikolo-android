@@ -83,7 +83,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         }
         setHasOptionsMenu(true);
 
-        moduleManager = new ModuleManager(jobManager);
+        moduleManager = new ModuleManager();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         super.onStart();
 
         if (modules == null) {
-            notificationController.showProgress(true);
+            notificationController.showProgress();
             requestModulesWithItems(false, false);
         } else {
             adapter.updateModules(modules);

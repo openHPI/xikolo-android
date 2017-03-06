@@ -16,10 +16,6 @@ import io.realm.Sort;
 
 public class CourseManager extends BaseManager {
 
-    public enum CourseFilter {
-        ALL, MY
-    }
-
     public static final String TAG = CourseManager.class.getSimpleName();
 
     public RealmResults listEnrollmentsAsync(Realm realm, RealmChangeListener<RealmResults<Enrollment>> listener) {

@@ -99,7 +99,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
     private OnItemClickListener itemClickListener;
 
     public NavigationAdapter() {
-        this.courseManager = new CourseManager(GlobalApplication.getInstance().getJobManager());
+        this.courseManager = new CourseManager();
     }
 
     @Override

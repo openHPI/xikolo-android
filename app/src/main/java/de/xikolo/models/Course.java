@@ -13,6 +13,10 @@ import moe.banana.jsonapi2.Resource;
 
 public class Course extends RealmObject implements JsonAdapter<Course.JsonModel> {
 
+    public enum Filter {
+        ALL, MY
+    }
+
     @PrimaryKey
     public String id;
 

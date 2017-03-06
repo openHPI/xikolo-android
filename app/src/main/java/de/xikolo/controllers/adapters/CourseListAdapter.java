@@ -17,16 +17,12 @@ import java.util.Locale;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageController;
-import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.HeaderAndSectionsList;
 import de.xikolo.utils.LanguageUtil;
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -35,87 +31,40 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int ITEM_VIEW_TYPE_HEADER = 0;
     private static final int ITEM_VIEW_TYPE_ITEM = 1;
 
-    private CourseManager.CourseFilter courseFilter;
+    private Course.Filter courseFilter;
 
-    private HeaderAndSectionsList<String, List<Course>> headerAndSectionsList;
+    private HeaderAndSectionsList<String, List<Course>> courseList;
 
     private OnCourseButtonClickListener callback;
 
-    private CourseManager courseManager;
-
-    private Realm realm;
-
-    private RealmResults courseListPromise;
-
-    public CourseListAdapter(OnCourseButtonClickListener callback, CourseManager.CourseFilter courseFilter) {
-        this.headerAndSectionsList = new HeaderAndSectionsList<>();
+    public CourseListAdapter(OnCourseButtonClickListener callback, Course.Filter courseFilter) {
+        this.courseList = new HeaderAndSectionsList<>();
         this.callback = callback;
         this.courseFilter = courseFilter;
-        this.courseManager = new CourseManager(GlobalApplication.getInstance().getJobManager());
-        this.realm = Realm.getDefaultInstance();
-
-        init();
     }
 
-    private void init() {
-        courseListPromise = courseManager.listCoursesAsync(realm, new RealmChangeListener<RealmResults<Course>>() {
-            @Override
-            public void onChange(RealmResults<Course> element) {
-                Context context = GlobalApplication.getInstance();
-                headerAndSectionsList.clear();
-                List<Course> subList;
-
-                if (courseFilter == CourseManager.CourseFilter.ALL) {
-                    subList = courseManager.listCurrentAndFutureCourses(realm, null);
-                    if (subList.size() > 0) {
-                        headerAndSectionsList.add(context.getString(R.string.header_current_courses),
-                                subList);
-                    }
-                    subList = courseManager.listPastCourses(realm, null);
-                    if (subList.size() > 0) {
-                        headerAndSectionsList.add(context.getString(R.string.header_self_paced_courses),
-                                subList);
-                    }
-                } else if (courseFilter == CourseManager.CourseFilter.MY) {
-                    subList = courseManager.listCurrentAndPastCoursesWithEnrollment(realm, null);
-                    if (subList.size() > 0) {
-                        headerAndSectionsList.add(context.getString(R.string.header_my_current_courses),
-                                subList);
-                    }
-                    subList = courseManager.listFutureCoursesWithEnrollment(realm, null);
-                    if (subList.size() > 0) {
-                        headerAndSectionsList.add(context.getString(R.string.header_my_future_courses),
-                                subList);
-                    }
-                }
-                CourseListAdapter.this.notifyDataSetChanged();
-            }
-        });
-    }
-
-    public void destroy() {
-        if (courseListPromise != null) {
-            courseListPromise.removeChangeListeners();
-        }
+    public void update(HeaderAndSectionsList<String, List<Course>> courseList) {
+        this.courseList = courseList;
+        notifyDataSetChanged();
     }
 
     public boolean isHeader(int position) {
-        return headerAndSectionsList.isHeader(position);
+        return courseList.isHeader(position);
     }
 
     public void clear() {
-        headerAndSectionsList.clear();
+        courseList.clear();
         this.notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return headerAndSectionsList.size();
+        return courseList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (headerAndSectionsList.isHeader(position)) {
+        if (courseList.isHeader(position)) {
             return ITEM_VIEW_TYPE_HEADER;
         } else {
             return ITEM_VIEW_TYPE_ITEM;
@@ -139,11 +88,11 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
 
-            viewHolder.header.setText((String) headerAndSectionsList.getItem(position));
+            viewHolder.header.setText((String) courseList.getItem(position));
         } else {
             CourseViewHolder viewHolder = (CourseViewHolder) holder;
 
-            final Course course = (Course) headerAndSectionsList.getItem(position);
+            final Course course = (Course) courseList.getItem(position);
 
             Context context = GlobalApplication.getInstance();
 
@@ -166,7 +115,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             viewHolder.textTeacher.setText(course.teachers);
             viewHolder.textLanguage.setText(LanguageUtil.languageForCode(context, course.language));
 
-            if (courseFilter == CourseManager.CourseFilter.ALL) {
+            if (courseFilter == Course.Filter.ALL) {
                 viewHolder.textDescription.setText(course.shortAbstract);
                 viewHolder.textDescription.setVisibility(View.VISIBLE);
 
@@ -198,28 +147,28 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        callback.onEnterButtonClicked(course);
+                        callback.onEnterButtonClicked(course.id);
                     }
                 });
                 viewHolder.buttonEnroll.setText(context.getString(R.string.btn_enter_course));
                 viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        callback.onEnterButtonClicked(course);
+                        callback.onEnterButtonClicked(course.id);
                     }
                 });
             } else {
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        callback.onDetailButtonClicked(course);
+                        callback.onDetailButtonClicked(course.id);
                     }
                 });
                 viewHolder.buttonEnroll.setText(context.getString(R.string.btn_enroll_me));
                 viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        callback.onEnrollButtonClicked(course);
+                        callback.onEnrollButtonClicked(course.id);
                     }
                 });
             }
@@ -229,7 +178,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        callback.onDetailButtonClicked(course);
+                        callback.onDetailButtonClicked(course.id);
                     }
                 });
             }

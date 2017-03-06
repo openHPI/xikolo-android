@@ -1,7 +1,5 @@
 package de.xikolo.managers;
 
-import com.birbit.android.jobqueue.JobManager;
-
 import org.greenrobot.eventbus.EventBus;
 
 import de.xikolo.GlobalApplication;
@@ -16,10 +14,6 @@ import de.xikolo.utils.Config;
 public class UserManager extends BaseManager {
 
     public static final String TAG = UserManager.class.getSimpleName();
-
-    public UserManager(JobManager jobManager) {
-        super(jobManager);
-    }
 
     public static String getToken() {
         UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);

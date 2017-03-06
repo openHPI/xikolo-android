@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
-import com.birbit.android.jobqueue.JobManager;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -78,8 +76,8 @@ public class DownloadManager extends BaseManager {
 
     private PendingAction pendingAction;
 
-    public DownloadManager(JobManager jobManager, Activity activity) {
-        super(jobManager);
+    public DownloadManager(Activity activity) {
+        super();
 
         this.permissionManager = new PermissionManager(jobManager, activity);
         this.pendingAction = null;

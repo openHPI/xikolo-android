@@ -129,7 +129,7 @@
     <string name="notification_not_enrolled">Sie haben sich noch nicht für diesen Kurs angemeldet</string>
     <string name="notification_no_enrollments_summary">Sie haben sich bisher für keinen Kurs eingetragen.</string>
     <string name="notification_please_login">Anmeldung erforderlich</string>
-    <string name="notification_please_login_summary">Bitte melden Sie sich an, um auf Ihre Kurse zuzugreifen.</string>
+    <string name="notification_please_login_summary">Bitte melden Sie sich an, um auf diesen Inhalt zuzugreifen.</string>
     <string name="notification_url_invalid">URL fehlerhaft</string>
     <string name="notification_course_locked">Dieser Kurs ist vorerst gesperrt</string>
 

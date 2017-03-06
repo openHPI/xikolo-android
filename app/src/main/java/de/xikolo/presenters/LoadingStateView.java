@@ -4,12 +4,22 @@ public interface LoadingStateView {
 
     void showProgressDialog();
 
-    void hideProgressDialog();
+    void showProgressMessage();
+
+    void showRefreshProgress();
+
+    void hideAnyProgress();
 
     void showNetworkRequiredMessage();
 
+    void showNetworkRequiredToast();
+
     void showLoginRequiredMessage();
 
-    void showNoOfflineContentMessage();
+    void showLoginRequiredToast();
 
+    void hideAnyMessage();
+
+    void showErrorToast();
+ 
 }

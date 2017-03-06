@@ -57,7 +57,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        itemManager = new ItemManager(jobManager);
+        itemManager = new ItemManager();
     }
 
     @Override

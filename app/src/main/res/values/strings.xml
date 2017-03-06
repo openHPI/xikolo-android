@@ -131,7 +131,7 @@
     <string name="notification_not_enrolled">You are not enrolled for this course</string>
     <string name="notification_no_enrollments_summary">You enrolled for no courses yet.</string>
     <string name="notification_please_login">Login required</string>
-    <string name="notification_please_login_summary">Please login to access your courses.</string>
+    <string name="notification_please_login_summary">Please login to access this content.</string>
     <string name="notification_url_invalid">URL invalid</string>
     <string name="notification_course_locked">This course is locked</string>
 

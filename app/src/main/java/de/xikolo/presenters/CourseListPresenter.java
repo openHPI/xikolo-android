@@ -1,24 +1,38 @@
 package de.xikolo.presenters;
 
-import de.xikolo.R;
-import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
+import java.util.List;
+
 import de.xikolo.managers.CourseManager;
+import de.xikolo.managers.UserManager;
 import de.xikolo.managers.jobs.JobCallback;
-import de.xikolo.utils.NetworkUtil;
-import de.xikolo.utils.ToastUtil;
+import de.xikolo.models.Course;
+import de.xikolo.utils.HeaderAndSectionsList;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
-public class CourseListPresenter implements LoadingStatePresenter<CourseListView> {
+public abstract class CourseListPresenter implements LoadingStatePresenter<CourseListView> {
 
-    CourseListView view;
+    protected CourseListView view;
 
-    CourseManager courseManager;
+    protected CourseManager courseManager;
 
-    Realm realm;
+    protected Realm realm;
 
-    public CourseListPresenter() {
+    protected HeaderAndSectionsList<String, List<Course>> courseList;
+
+    protected RealmResults courseListPromise;
+
+    CourseListPresenter() {
         this.courseManager = new CourseManager();
         this.realm = Realm.getDefaultInstance();
+
+        this.courseListPromise = courseManager.listCoursesAsync(realm, new RealmChangeListener<RealmResults<Course>>() {
+            @Override
+            public void onChange(RealmResults<Course> element) {
+                updateContent();
+            }
+        });
     }
 
     @Override
@@ -33,10 +47,13 @@ public class CourseListPresenter implements LoadingStatePresenter<CourseListView
 
     @Override
     public void onDestroyed() {
+        if (courseListPromise != null) {
+            courseListPromise.removeChangeListeners();
+        }
         this.realm.close();
     }
 
-    public void onStart() {
+    public void onCreate() {
         requestCourses();
     }
 
@@ -51,49 +68,66 @@ public class CourseListPresenter implements LoadingStatePresenter<CourseListView
         courseManager.createEnrollment(courseId, new JobCallback() {
             @Override
             public void onSuccess() {
-                view.hideProgressDialog();
+                view.hideAnyProgress();
             }
 
             @Override
             public void onError(ErrorCode code) {
-                view.hideProgressDialog();
+                view.hideAnyProgress();
                 if (code == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast();
+                    view.showNetworkRequiredToast();
                 } else if (code == ErrorCode.NO_AUTH) {
-                    ToastUtil.show(R.string.toast_please_log_in);
-                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
+                    view.showLoginRequiredToast();
+                    view.goToProfile();
                 }
             }
         });
     }
 
     public void onCourseEnterButtonClicked(String courseId) {
-
+        if (!UserManager.isLoggedIn()) {
+            view.showLoginRequiredToast();
+            view.goToProfile();
+        } else {
+            view.enterCourse(courseId);
+        }
     }
 
     public void onCourseDetailButtonClicked(String courseId) {
-
+        view.enterCourseDetails(courseId);
     }
 
+    protected abstract void updateContent();
 
+    public void requestCourses() {
+        if (courseList == null || courseList.size() == 0) {
+            view.showProgressMessage();
+        } else {
+            view.showRefreshProgress();
+        }
+        courseManager.requestCourses(new JobCallback() {
+            @Override
+            public void onSuccess() {
+                view.hideAnyProgress();
+            }
 
-    private void requestCourses() {
-//        if (isMyCoursesFilter() && !UserManager.isLoggedIn()) {
-//            notificationController.setTitle(R.string.notification_please_login);
-//            notificationController.setSummary(R.string.notification_please_login_summary);
-//            notificationController.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
-//                }
-//            });
-//            notificationController.setNotificationVisible(true);
-//            refreshLayout.setRefreshing(false);
-//        } else {
-//            refreshLayout.setRefreshing(true);
-        courseManager.requestCourses();
-//        }
+            @Override
+            public void onError(ErrorCode code) {
+                switch (code) {
+                    case NO_NETWORK:
+                        if (courseList == null || courseList.size() == 0) {
+                            view.showNetworkRequiredMessage();
+                        } else {
+                            view.showNetworkRequiredToast();
+                        }
+                        break;
+                    case CANCEL:
+                    case ERROR:
+                        view.showErrorToast();
+                        break;
+                }
+            }
+        });
     }
-
 
 }

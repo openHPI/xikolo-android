@@ -1,9 +1,10 @@
 package de.xikolo.controllers.fragments;
 
+import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
 import de.xikolo.presenters.LoadingStatePresenter;
-import de.xikolo.presenters.LoadingStateView;
+import de.xikolo.presenters.MainView;
 
-public abstract class MainFragment<P extends LoadingStatePresenter<V>, V extends LoadingStateView> extends LoadingStatePresenterFragment<P, V> {
+public abstract class MainFragment<P extends LoadingStatePresenter<V>, V extends MainView> extends LoadingStatePresenterFragment<P, V> implements MainView {
 
     protected MainActivityCallback activityCallback;
 
@@ -21,6 +22,11 @@ public abstract class MainFragment<P extends LoadingStatePresenter<V>, V extends
     public void onStop() {
         super.onStop();
         activityCallback = null;
+    }
+
+    @Override
+    public void goToProfile() {
+        activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
     }
 
     public interface MainActivityCallback {

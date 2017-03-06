@@ -46,9 +46,9 @@ public class SecondScreenManager {
     private boolean isRequesting;
 
     public SecondScreenManager() {
-        courseManager = new CourseManager(GlobalApplication.getInstance().getJobManager());
-        moduleManager = new ModuleManager(GlobalApplication.getInstance().getJobManager());
-        itemManager = new ItemManager(GlobalApplication.getInstance().getJobManager());
+        courseManager = new CourseManager();
+        moduleManager = new ModuleManager();
+        itemManager = new ItemManager();
 
         EventBus.getDefault().register(this);
 
@@ -141,7 +141,8 @@ public class SecondScreenManager {
                 isRequesting = true;
                 course = null;
                 module = null;
-                courseManager.getCourse(courseResult, message.payload().get("course_id"));
+//                TODO
+//                courseManager.getCourse(courseResult, message.payload().get("course_id"));
             } else if (item != null && item.id.equals(message.payload().get("item_id"))) {
                 // post video updated event
                 EventBus.getDefault().post(new SecondScreenUpdateVideoEvent(course, module, item, message));

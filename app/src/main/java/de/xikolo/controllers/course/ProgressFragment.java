@@ -76,7 +76,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
         }
         setHasOptionsMenu(true);
 
-        moduleManager = new ModuleManager(jobManager);
+        moduleManager = new ModuleManager();
     }
 
     @Override

@@ -1,7 +1,5 @@
 package de.xikolo.managers;
 
-import com.birbit.android.jobqueue.JobManager;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -15,10 +13,6 @@ import de.xikolo.models.Module;
 public class ModuleManager extends BaseManager {
 
     public static final String TAG = ModuleManager.class.getSimpleName();
-
-    public ModuleManager(JobManager jobManager) {
-        super(jobManager);
-    }
 
     public void getModules(Result<List<Module>> result, Course course, boolean includeProgress) {
         result.setResultFilter(result.new ResultFilter() {

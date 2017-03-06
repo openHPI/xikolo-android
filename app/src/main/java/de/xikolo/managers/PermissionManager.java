@@ -10,8 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.birbit.android.jobqueue.JobManager;
-
 import de.xikolo.GlobalApplication;
 import de.xikolo.controllers.dialogs.PermissionsDialog;
 
@@ -23,11 +21,11 @@ public class PermissionManager extends BaseManager {
 
     public static final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-    private Activity mActivity;
+    private Activity activity;
 
-    public PermissionManager(JobManager jobManager, Activity parentActivity) {
-        super(jobManager);
-        this.mActivity = parentActivity;
+    public PermissionManager(Activity parentActivity) {
+        super();
+        this.activity = parentActivity;
     }
 
     public int requestPermission(String requestedPermission) {
@@ -39,7 +37,7 @@ public class PermissionManager extends BaseManager {
             Log.d(TAG, "Permission not granted yet");
 
             //Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                     requestedPermission)) {
                 Log.d(TAG, "Permission explanation expected");
 
@@ -48,13 +46,13 @@ public class PermissionManager extends BaseManager {
                 //sees the explanation, try again to request the permission.
                 if (getPermissionCode(requestedPermission) == REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
                     PermissionsDialog permDialog = new PermissionsDialog();
-                    permDialog.show(mActivity.getFragmentManager(), TAG);
+                    permDialog.show(activity.getFragmentManager(), TAG);
                 }
             } else {
                 Log.d(TAG, "Permission explanation expected");
 
                 //No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(mActivity,
+                ActivityCompat.requestPermissions(activity,
                         new String[]{requestedPermission},
                         getPermissionCode(requestedPermission));
             }

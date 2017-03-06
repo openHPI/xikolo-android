@@ -3,7 +3,6 @@ package de.xikolo.controllers.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,9 +14,6 @@ import android.view.ViewGroup;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,34 +22,23 @@ import de.xikolo.R;
 import de.xikolo.controllers.CourseActivity;
 import de.xikolo.controllers.CourseDetailsActivity;
 import de.xikolo.controllers.adapters.CourseListAdapter;
-import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.controllers.helper.LoadingStateController;
-import de.xikolo.controllers.helper.RefeshLayoutHelper;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
-import de.xikolo.managers.CourseManager;
-import de.xikolo.managers.UserManager;
-import de.xikolo.managers.jobs.ListCoursesJob;
 import de.xikolo.models.Course;
+import de.xikolo.presenters.CourseListFilterAllPresenterFactory;
+import de.xikolo.presenters.CourseListFilterMyPresenterFactory;
 import de.xikolo.presenters.CourseListPresenter;
-import de.xikolo.presenters.CourseListPresenterFactory;
 import de.xikolo.presenters.CourseListView;
 import de.xikolo.presenters.PresenterFactory;
-import de.xikolo.utils.NetworkUtil;
-import de.xikolo.utils.ToastUtil;
+import de.xikolo.utils.HeaderAndSectionsList;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
-
-import static de.xikolo.R.id.refreshLayout;
 
 @FragmentWithArgs
 public class CourseListFragment extends MainFragment<CourseListPresenter, CourseListView> implements CourseListView {
 
     public static final String TAG = CourseListFragment.class.getSimpleName();
 
-    public static final String FILTER_ALL = "filter_all";
-    public static final String FILTER_MY = "filter_my";
-
-    @Arg String filter;
+    @Arg Course.Filter filter;
 
     @BindView(R.id.recyclerView) AutofitRecyclerView recyclerView;
 
@@ -64,6 +49,8 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+
+        presenter.onCreate();
     }
 
     @Override
@@ -87,7 +74,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
             public void onDetailButtonClicked(String courseId) {
                 presenter.onCourseDetailButtonClicked(courseId);
             }
-        }, isAllCoursesFilter() ? CourseManager.CourseFilter.ALL : CourseManager.CourseFilter.MY);
+        }, filter);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(courseListAdapter);
@@ -127,42 +114,10 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     public void onStart() {
         super.onStart();
 
-        if (filter.equals(FILTER_ALL)) {
+        if (filter == Course.Filter.ALL) {
             activityCallback.onFragmentAttached(NavigationAdapter.NAV_ALL_COURSES.getPosition(), getString(R.string.title_section_all_courses));
-        } else if (filter.equals(FILTER_MY)) {
+        } else {
             activityCallback.onFragmentAttached(NavigationAdapter.NAV_MY_COURSES.getPosition(), getString(R.string.title_section_my_courses));
-        }
-
-        presenter.onStart();
-    }
-
-    private void updateView(List<Course> courseList) {
-        if (isAdded()) {
-            if (isMyCoursesFilter() && !UserManager.isLoggedIn()) {
-                courseList = null;
-
-                notificationController.setTitle(R.string.notification_please_login);
-                notificationController.setSummary(R.string.notification_please_login_summary);
-                notificationController.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
-                    }
-                });
-                notificationController.setNotificationVisible(true);
-            } else if (isMyCoursesFilter() && (courseList == null || courseList.size() == 0)) {
-                notificationController.setTitle(R.string.notification_no_enrollments);
-                notificationController.setSummary(R.string.notification_no_enrollments_summary);
-                notificationController.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activityCallback.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.getPosition());
-                    }
-                });
-                notificationController.setNotificationVisible(true);
-            }
-
-            activityCallback.updateDrawer();
         }
     }
 
@@ -172,66 +127,28 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
+    public void showCourseList(HeaderAndSectionsList<String, List<Course>> courseList) {
         if (courseListAdapter != null) {
-            courseListAdapter.destroy();
+            courseListAdapter.update(courseList);
         }
     }
 
     @Override
-    public void onEnrollButtonClicked(String courseId) {
-        presenter.onEnrollButtonClicked(courseId);
-    }
-
-    private boolean isMyCoursesFilter() {
-        return filter.equals(CourseListFragment.FILTER_MY);
-    }
-
-    private boolean isAllCoursesFilter() {
-        return filter.equals(CourseListFragment.FILTER_ALL);
-    }
-
-    @Override
-    public void onEnterButtonClicked(Course course) {
-        if (UserManager.isLoggedIn()) {
-            Intent intent = new Intent(getActivity(), CourseActivity.class);
-            Bundle b = new Bundle();
+    public void enterCourse(String courseId) {
+        Intent intent = new Intent(getActivity(), CourseActivity.class);
+        Bundle b = new Bundle();
 //            b.putParcelable(CourseActivity.ARG_COURSE, course);
-            intent.putExtras(b);
-            startActivity(intent);
-        } else {
-            ToastUtil.show(R.string.toast_please_log_in);
-            activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
-        }
+        intent.putExtras(b);
+        startActivity(intent);
     }
 
     @Override
-    public void onDetailButtonClicked(Course course) {
+    public void enterCourseDetails(String courseId) {
         Intent intent = new Intent(getActivity(), CourseDetailsActivity.class);
         Bundle b = new Bundle();
 //        b.putParcelable(CourseDetailsActivity.ARG_COURSE, course);
         intent.putExtras(b);
         startActivity(intent);
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCourseListJobEvent(ListCoursesJob.ListCoursesJobEvent event) {
-        switch (event.getState()) {
-            case SUCCESS:
-                notificationController.setInvisible();
-                refreshLayout.setRefreshing(false);
-                break;
-            case NO_NETWORK:
-                NetworkUtil.showNoConnectionToast();
-            case NO_AUTH:
-            case CANCEL:
-            case ERROR:
-                refreshLayout.setRefreshing(false);
-                break;
-        }
     }
 
     @Override
@@ -255,7 +172,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     @NonNull
     @Override
     protected PresenterFactory<CourseListPresenter> getPresenterFactory() {
-        return new CourseListPresenterFactory();
+        return filter == Course.Filter.ALL ? new CourseListFilterAllPresenterFactory() : new CourseListFilterMyPresenterFactory();
     }
 
     @Override

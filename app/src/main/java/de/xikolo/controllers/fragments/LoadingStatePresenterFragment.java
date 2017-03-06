@@ -10,6 +10,8 @@ import de.xikolo.R;
 import de.xikolo.controllers.helper.LoadingStateController;
 import de.xikolo.presenters.LoadingStatePresenter;
 import de.xikolo.presenters.LoadingStateView;
+import de.xikolo.utils.NetworkUtil;
+import de.xikolo.utils.ToastUtil;
 
 public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresenter<V>, V extends LoadingStateView> extends BasePresenterFragment<P, V> implements LoadingStateView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -34,13 +36,30 @@ public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresen
     }
 
     @Override
-    public void hideProgressDialog() {
+    public void showProgressMessage() {
+        loadingStateController.showProgress();
+    }
+
+    @Override
+    public void showRefreshProgress() {
+        loadingStateController.showRefreshProgress();
+    }
+
+    @Override
+    public void hideAnyProgress() {
         loadingStateController.hide();
     }
 
     @Override
     public void showNetworkRequiredMessage() {
+        loadingStateController.setTitle(R.string.notification_no_network);
+        loadingStateController.setSummary(R.string.notification_no_network_summary);
+        loadingStateController.showMessage();
+    }
 
+    @Override
+    public void showNetworkRequiredToast() {
+        NetworkUtil.showNoConnectionToast();
     }
 
     @Override
@@ -51,7 +70,18 @@ public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresen
     }
 
     @Override
-    public void showNoOfflineContentMessage() {
-
+    public void showLoginRequiredToast() {
+        ToastUtil.show(R.string.toast_please_log_in);
     }
+
+    @Override
+    public void hideAnyMessage() {
+        loadingStateController.hide();
+    }
+
+    @Override
+    public void showErrorToast() {
+        ToastUtil.show(R.string.error);
+    }
+
 }
