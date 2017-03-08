@@ -89,12 +89,12 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_learnings, container, false);
+        View view = inflater.inflate(R.layout.fragment_learnings, container, false);
 
-        refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
         RefeshLayoutHelper.setup(refreshLayout, this);
 
-        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         adapter = new ModuleListAdapter(getActivity(), course, this, this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -123,9 +123,9 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
                 }
         ));
 
-        notificationController = new LoadingStateController(layout);
+        notificationController = new LoadingStateController(getActivity(), view, this);
 
-        return layout;
+        return view;
     }
 
     @Override

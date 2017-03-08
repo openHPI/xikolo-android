@@ -14,7 +14,7 @@ import java.util.List;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.helper.ImageController;
+import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.User;
@@ -154,9 +154,9 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 profileViewHolder.textEmail.setText(user.email);
 
                 if (user.user_visual != null) {
-                    ImageController.loadRounded(user.user_visual, profileViewHolder.imageProfile);
+                    ImageHelper.loadRounded(user.user_visual, profileViewHolder.imageProfile);
                 } else {
-                    ImageController.loadRounded(R.drawable.avatar, profileViewHolder.imageProfile);
+                    ImageHelper.loadRounded(R.drawable.avatar, profileViewHolder.imageProfile);
                 }
             } else {
                 profileViewHolder.viewLogin.setVisibility(View.VISIBLE);

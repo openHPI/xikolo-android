@@ -16,7 +16,7 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 
 @SuppressWarnings("unused")
-public class ImageController {
+public class ImageHelper {
 
     public final static int DEFAULT_PLACEHOLDER = R.drawable.gradient_default_image;
 

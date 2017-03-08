@@ -14,7 +14,7 @@ import android.widget.TextView;
 import de.xikolo.R;
 import de.xikolo.controllers.VideoActivity;
 import de.xikolo.controllers.helper.CacheController;
-import de.xikolo.controllers.helper.ImageController;
+import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.controllers.helper.LoadingStateController;
 import de.xikolo.controllers.module.helper.DownloadViewController;
 import de.xikolo.managers.DownloadManager;
@@ -181,8 +181,8 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                         " and Item " + item.title + " (" + item.id + ")");
             }
 
-            ImageController.load(item.detail.stream.poster, imageVideoThumbnail,
-                    ImageController.DEFAULT_PLACEHOLDER,
+            ImageHelper.load(item.detail.stream.poster, imageVideoThumbnail,
+                    ImageHelper.DEFAULT_PLACEHOLDER,
                     imageVideoThumbnail.getForcedWidth(), imageVideoThumbnail.getForcedHeight());
 
             textTitle.setText(item.detail.title);

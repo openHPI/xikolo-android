@@ -20,8 +20,7 @@ import de.xikolo.controllers.SecondScreenActivity;
 import de.xikolo.controllers.SettingsActivity;
 import de.xikolo.controllers.fragments.CourseListFragmentBuilder;
 import de.xikolo.controllers.fragments.MainFragment;
-import de.xikolo.controllers.main.MainWebViewFragment;
-import de.xikolo.controllers.fragments.CourseListFragment;
+import de.xikolo.controllers.fragments.MainWebViewFragmentBuilder;
 import de.xikolo.controllers.main.ProfileFragment;
 import de.xikolo.controllers.navigation.NavigationFragment;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
@@ -142,7 +141,10 @@ public class MainActivity extends BaseActivity
             tag = "my_courses";
         }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {
-            newFragment = MainWebViewFragment.newInstance(NavigationAdapter.NAV_NEWS.getPosition(), Config.URI + Config.NEWS, getString(R.string.title_section_news), false, false);
+            newFragment = new MainWebViewFragmentBuilder(NavigationAdapter.NAV_NEWS.getPosition(), getString(R.string.title_section_news), Config.URI + Config.NEWS)
+                .externalLinksEnabled(false)
+                .inAppLinksEnabled(false)
+                .build();
             tag = "news";
         }
         if (position == NavigationAdapter.NAV_SECOND_SCREEN.getPosition()) {
@@ -223,7 +225,7 @@ public class MainActivity extends BaseActivity
             restoreActionBar();
             return true;
         }
-        return true;//
+        return true;
     }
 
     @Override

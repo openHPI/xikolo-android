@@ -26,7 +26,7 @@ import java.util.List;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.helper.ImageController;
+import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.managers.ItemManager;
 import de.xikolo.managers.Result;
 import de.xikolo.managers.SecondScreenManager;
@@ -143,7 +143,7 @@ public class SecondScreenFragment extends Fragment {
 
                 textVideoTime.setText(TimeUtil.getTimeString(item.detail.minutes, item.detail.seconds));
 
-                ImageController.load(item.detail.stream.poster, imageVideoPoster);
+                ImageHelper.load(item.detail.stream.poster, imageVideoPoster);
 
                 initSeconScreenActions(event.getWebSocketMessage());
 

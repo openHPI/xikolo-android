@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.fragments.BaseFragment;
-import de.xikolo.controllers.helper.WebViewController;
+import de.xikolo.controllers.helper.WebViewHelper;
 
 public class WebViewFragment extends BaseFragment {
 
@@ -29,7 +29,7 @@ public class WebViewFragment extends BaseFragment {
 
     private View layout;
 
-    private WebViewController webViewController;
+    private WebViewHelper webViewHelper;
 
     private MutableContextWrapper mutableContextWrapper;
 
@@ -69,11 +69,11 @@ public class WebViewFragment extends BaseFragment {
             layout = LayoutInflater.from(mutableContextWrapper)
                     .inflate(R.layout.fragment_webview, container, false);
 
-            webViewController = new WebViewController(mutableContextWrapper, layout);
-            webViewController.setInAppLinksEnabled(inAppLinksEnabled);
-            webViewController.setLoadExternalUrlEnabled(externalLinksEnabled);
+            webViewHelper = new WebViewHelper(mutableContextWrapper, layout);
+            webViewHelper.setInAppLinksEnabled(inAppLinksEnabled);
+            webViewHelper.setLoadExternalUrlEnabled(externalLinksEnabled);
 
-            webViewController.request(url, false);
+            webViewHelper.request(url, false);
         } else {
             mutableContextWrapper.setBaseContext(getActivity());
         }
@@ -101,7 +101,7 @@ public class WebViewFragment extends BaseFragment {
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.action_refresh:
-                webViewController.onRefresh();
+                webViewHelper.onRefresh();
                 return true;
         }
         return super.onOptionsItemSelected(item);

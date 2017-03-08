@@ -6,4 +6,5 @@ public class CourseListFilterAllPresenterFactory extends CourseListPresenterFact
     public CourseListPresenter create() {
         return new CourseListFilterAllPresenter();
     }
+
 }

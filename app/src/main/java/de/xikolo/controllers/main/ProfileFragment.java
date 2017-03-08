@@ -3,6 +3,7 @@ package de.xikolo.controllers.main;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -11,57 +12,50 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.controllers.fragments.MainFragment;
-import de.xikolo.controllers.helper.ImageController;
-import de.xikolo.controllers.helper.LoadingStateController;
+import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Enrollment;
 import de.xikolo.models.User;
+import de.xikolo.presenters.PresenterFactory;
+import de.xikolo.presenters.ProfilePresenter;
+import de.xikolo.presenters.ProfilePresenterFactory;
+import de.xikolo.presenters.ProfileView;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
 import de.xikolo.views.CustomSizeImageView;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class ProfileFragment extends MainFragment {
+public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView> implements ProfileView {
 
     public static final String TAG = ProfileFragment.class.getSimpleName();
-
-    private static final String ARG_COURSES = "arg_courses";
 
     private UserManager userManager;
     private CourseManager courseManager;
     private Result<User> userResult;
 
-    private LoadingStateController notificationController;
-
-    private TextView textName;
-    private CustomSizeImageView imageHeader;
-    private CustomSizeImageView imageProfile;
-    private TextView textEnrollCounts;
-    private TextView textEmail;
+    @BindView(R.id.textName) private TextView textName;
+    @BindView(R.id.imageHeader) private CustomSizeImageView imageHeader;
+    @BindView(R.id.imageProfile) private CustomSizeImageView imageProfile;
+    @BindView(R.id.textEnrollCount) private TextView textEnrollCounts;
+    @BindView(R.id.textEmail) private TextView textEmail;
 
     private RealmResults enrollmentListPromise;
-
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
-
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        courseManager = new CourseManager(jobManager);
+        courseManager = new CourseManager();
 
-        userManager = new UserManager(jobManager);
+        userManager = new UserManager();
         userResult = new Result<User>() {
             @Override
             protected void onSuccess(User result, DataSource dataSource) {
@@ -85,13 +79,7 @@ public class ProfileFragment extends MainFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        notificationController = new LoadingStateController(view);
-
-        textName = (TextView) view.findViewById(R.id.textName);
-        imageHeader = (CustomSizeImageView) view.findViewById(R.id.imageHeader);
-        imageProfile = (CustomSizeImageView) view.findViewById(R.id.imageProfile);
-        textEnrollCounts = (TextView) view.findViewById(R.id.textEnrollCount);
-        textEmail = (TextView) view.findViewById(R.id.textEmail);
+        ButterKnife.bind(this, view);
 
         updateLayout();
 
@@ -153,15 +141,15 @@ public class ProfileFragment extends MainFragment {
         imageHeader.setDimensions(size.x, heightHeader);
         imageHeader.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
-        ImageController.load(R.drawable.title, imageHeader);
+        ImageHelper.load(R.drawable.title, imageHeader);
 
         imageProfile.setDimensions(heightProfile, heightProfile);
         imageProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
         if (user.user_visual != null) {
-            ImageController.loadRounded(user.user_visual, imageProfile, heightProfile, heightProfile);
+            ImageHelper.loadRounded(user.user_visual, imageProfile, heightProfile, heightProfile);
         } else {
-            ImageController.loadRounded(R.drawable.avatar, imageProfile, heightProfile, heightProfile);
+            ImageHelper.loadRounded(R.drawable.avatar, imageProfile, heightProfile, heightProfile);
         }
 
         textEmail.setText(user.email);
@@ -184,8 +172,10 @@ public class ProfileFragment extends MainFragment {
         }
     }
 
+    @NonNull
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    protected PresenterFactory<ProfilePresenter> getPresenterFactory() {
+        return new ProfilePresenterFactory();
     }
+
 }

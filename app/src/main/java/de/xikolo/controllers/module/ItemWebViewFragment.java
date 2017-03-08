@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.helper.WebViewController;
+import de.xikolo.controllers.helper.WebViewHelper;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Module;
@@ -23,7 +23,7 @@ public class ItemWebViewFragment extends PagerFragment {
 
     private View layout;
 
-    private WebViewController webViewController;
+    private WebViewHelper webViewHelper;
 
     private MutableContextWrapper mutableContextWrapper;
 
@@ -52,22 +52,22 @@ public class ItemWebViewFragment extends PagerFragment {
                 layout = LayoutInflater.from(mutableContextWrapper)
                         .inflate(R.layout.fragment_webview, container, false);
 
-                webViewController = new WebViewController(mutableContextWrapper, layout);
+                webViewHelper = new WebViewHelper(mutableContextWrapper, layout);
                 switch (item.type) {
                     case Item.TYPE_TEXT:
                     case Item.TYPE_VIDEO:
                     case Item.TYPE_LTI:
-                        webViewController.setInAppLinksEnabled(false);
-                        webViewController.setLoadExternalUrlEnabled(false);
+                        webViewHelper.setInAppLinksEnabled(false);
+                        webViewHelper.setLoadExternalUrlEnabled(false);
                         break;
                     case Item.TYPE_SELFTEST:
                     case Item.TYPE_PEER:
-                        webViewController.setInAppLinksEnabled(true);
-                        webViewController.setLoadExternalUrlEnabled(false);
+                        webViewHelper.setInAppLinksEnabled(true);
+                        webViewHelper.setLoadExternalUrlEnabled(false);
                         break;
                 }
 
-                webViewController.request(Config.URI + Config.COURSES + course.slug + "/" + Config.ITEMS + item.id, false);
+                webViewHelper.request(Config.URI + Config.COURSES + course.slug + "/" + Config.ITEMS + item.id, false);
             } else {
                 mutableContextWrapper.setBaseContext(getActivity());
             }
@@ -95,7 +95,7 @@ public class ItemWebViewFragment extends PagerFragment {
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.action_refresh:
-                webViewController.onRefresh();
+                webViewHelper.onRefresh();
                 return true;
         }
         return super.onOptionsItemSelected(item);

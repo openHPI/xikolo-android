@@ -23,7 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 import de.xikolo.R;
 import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.controllers.helper.ImageController;
+import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
@@ -74,7 +74,7 @@ public class LoginActivity extends BaseActivity {
 
         textCredentials.setText(String.format(getString(R.string.login_with_credentials), Config.HOST));
 
-        ImageController.load(R.drawable.login_header, topImage, 0, false);
+        ImageHelper.load(R.drawable.login_header, topImage, 0, false);
 
         progressDialog = ProgressDialog.getInstance();
 

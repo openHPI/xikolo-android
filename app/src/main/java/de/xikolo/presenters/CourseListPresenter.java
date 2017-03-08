@@ -26,6 +26,11 @@ public abstract class CourseListPresenter implements LoadingStatePresenter<Cours
     CourseListPresenter() {
         this.courseManager = new CourseManager();
         this.realm = Realm.getDefaultInstance();
+    }
+
+    @Override
+    public void onViewAttached(CourseListView view) {
+        this.view = view;
 
         this.courseListPromise = courseManager.listCoursesAsync(realm, new RealmChangeListener<RealmResults<Course>>() {
             @Override
@@ -36,20 +41,16 @@ public abstract class CourseListPresenter implements LoadingStatePresenter<Cours
     }
 
     @Override
-    public void onViewAttached(CourseListView view) {
-        this.view = view;
-    }
-
-    @Override
     public void onViewDetached() {
         this.view = null;
+
+        if (courseListPromise != null) {
+            courseListPromise.removeChangeListeners();
+        }
     }
 
     @Override
     public void onDestroyed() {
-        if (courseListPromise != null) {
-            courseListPromise.removeChangeListeners();
-        }
         this.realm.close();
     }
 
