@@ -34,7 +34,6 @@ import de.xikolo.managers.Result;
 import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.events.DownloadDeletedEvent;
 import de.xikolo.events.DownloadStartedEvent;
-import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.views.IconButton;

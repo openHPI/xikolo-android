@@ -4,11 +4,10 @@ import android.util.Log;
 
 import com.birbit.android.jobqueue.Params;
 
-import de.xikolo.GlobalApplication;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
-import de.xikolo.network.ApiV2Request;
+import de.xikolo.network.ApiService;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 import io.realm.Realm;
@@ -33,17 +32,19 @@ public class CreateEnrollmentJob extends BaseJob {
 
     @Override
     public void onRun() throws Throwable {
-        if (!UserManager.isLoggedIn()) {
+        if (!UserManager.isAuthorized()) {
             if (callback != null) callback.onError(JobCallback.ErrorCode.NO_AUTH);
-        } else if (!NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+        } else if (!NetworkUtil.isOnline()) {
             if (callback != null) callback.onError(JobCallback.ErrorCode.NO_NETWORK);
         } else {
             Enrollment.JsonModel enrollment = new Enrollment.JsonModel();
             String type = new Course.JsonModel().getType();
             enrollment.course = new HasOne<>(type, courseId);
 
-            final Response<Enrollment.JsonModel> response = ApiV2Request.service()
-                    .postEnrollment(UserManager.getTokenHeader(), enrollment).execute();
+            final Response<Enrollment.JsonModel> response = ApiService.getInstance().createEnrollment(
+                    UserManager.getTokenAsHeader(),
+                    enrollment
+            ).execute();
 
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");

@@ -6,7 +6,6 @@ import android.content.Intent;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.storages.preferences.NotificationStorage;
-import de.xikolo.storages.preferences.StorageType;
 
 public class NotificationDeletedReceiver extends BroadcastReceiver {
 

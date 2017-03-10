@@ -133,7 +133,7 @@ public class WebSocketManager {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onNetworkEvent(NetworkStateEvent event) {
-        if (event.isOnline() && UserManager.isLoggedIn()) {
+        if (event.isOnline() && UserManager.isAuthorized()) {
             initConnection(UserManager.getToken());
         }
     }

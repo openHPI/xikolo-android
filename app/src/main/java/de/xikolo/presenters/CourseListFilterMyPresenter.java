@@ -11,7 +11,7 @@ public class CourseListFilterMyPresenter extends CourseListPresenter {
 
     @Override
     public void updateContent() {
-        if (!UserManager.isLoggedIn()) {
+        if (!UserManager.isAuthorized()) {
             view.showLoginRequiredMessage();
         } else if (courseList == null || courseList.size() == 0) {
             view.showNoEnrollmentsMessage();
@@ -38,7 +38,7 @@ public class CourseListFilterMyPresenter extends CourseListPresenter {
 
     @Override
     public void requestCourses() {
-        if (!UserManager.isLoggedIn()) {
+        if (!UserManager.isAuthorized()) {
             view.showLoginRequiredMessage();
             view.hideAnyProgress();
         } else {

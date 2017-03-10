@@ -13,7 +13,6 @@ import de.xikolo.managers.UserManager;
 import de.xikolo.models.User;
 import de.xikolo.network.ApiRequest;
 import de.xikolo.network.parser.ApiParser;
-import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.storages.preferences.UserStorage;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
@@ -38,7 +37,7 @@ public class RetrieveUserJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        if (!UserManager.isLoggedIn()) {
+        if (!UserManager.isAuthorized()) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
             UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);

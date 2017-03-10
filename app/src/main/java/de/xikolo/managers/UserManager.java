@@ -5,55 +5,91 @@ import org.greenrobot.eventbus.EventBus;
 import de.xikolo.GlobalApplication;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.managers.jobs.CreateAccessTokenJob;
-import de.xikolo.managers.jobs.RetrieveUserJob;
-import de.xikolo.models.User;
-import de.xikolo.storages.preferences.StorageType;
+import de.xikolo.managers.jobs.GetProfileJob;
+import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.models.Profile;
 import de.xikolo.storages.preferences.UserStorage;
 import de.xikolo.utils.Config;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
 
 public class UserManager extends BaseManager {
 
     public static final String TAG = UserManager.class.getSimpleName();
 
+    private UserStorage userStorage;
+
+    public UserManager() {
+        this.userStorage = new UserStorage();
+    }
+
     public static String getToken() {
-        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-        return userStorage.getAccessToken().token;
+        UserStorage userStorage = new UserStorage();
+        return userStorage.getAccessToken();
     }
 
-    public static String getTokenHeader() {
-        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-        return Config.HEADER_AUTHORIZATION_PREFIX_API_V2 + userStorage.getAccessToken().token;
+    public static String getTokenAsHeader() {
+        UserStorage userStorage = new UserStorage();
+        return Config.HEADER_AUTHORIZATION_PREFIX_API_V2 + userStorage.getAccessToken();
     }
 
-    public static User getSavedUser() {
-        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-        return userStorage.getUser();
+    public static String getUserId() {
+        UserStorage userStorage = new UserStorage();
+        return userStorage.getUserId();
     }
 
-    public static boolean isLoggedIn() {
-        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-        return userStorage.getAccessToken().token != null;
+    public static boolean isAuthorized() {
+        UserStorage userStorage = new UserStorage();
+        return userStorage.getAccessToken() != null;
+    }
+
+    public void login(JobCallback callback, String email, String password) {
+        jobManager.addJobInBackground(new CreateAccessTokenJob(callback, email, password));
     }
 
     public void logout() {
         GlobalApplication application = GlobalApplication.getInstance();
 
-        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-        userStorage.deleteUser();
+        UserStorage userStorage = new UserStorage();
+        userStorage.delete();
 
         application.getDatabaseHelper().deleteDatabase();
 
         application.getLanalytics().deleteData();
 
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.deleteAll();
+            }
+        });
+        realm.close();
+
         EventBus.getDefault().post(new LogoutEvent());
     }
 
-    public void login(Result<Void> result, String email, String password) {
-        jobManager.addJobInBackground(new CreateAccessTokenJob(result, email, password));
+    public void requestProfile(JobCallback callback) {
+        jobManager.addJobInBackground(new GetProfileJob(callback));
     }
 
-    public void getUser(Result<User> result) {
-        jobManager.addJobInBackground(new RetrieveUserJob(result));
+    public Profile getProfile(Realm realm, RealmChangeListener<Profile> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
+        }
+
+        if (!UserManager.isAuthorized()) {
+            return null;
+        }
+
+        Profile profilePromise = realm
+                .where(Profile.class)
+                .equalTo("id", UserManager.getUserId())
+                .findFirstAsync();
+
+        profilePromise.addChangeListener(listener);
+
+        return profilePromise;
     }
 
 }

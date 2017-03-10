@@ -37,7 +37,6 @@ import de.xikolo.models.Subtitle;
 import de.xikolo.models.VideoItemDetail;
 import de.xikolo.models.WebSocketMessage;
 import de.xikolo.storages.preferences.ApplicationPreferences;
-import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.TimeUtil;

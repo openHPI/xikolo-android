@@ -1,38 +1,76 @@
 package de.xikolo.network;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+
+import java.io.IOException;
+
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
+import de.xikolo.models.Profile;
 import de.xikolo.utils.Config;
-import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.PATCH;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
+import moe.banana.jsonapi2.ResourceAdapterFactory;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
-public interface ApiService {
+public abstract class ApiService {
 
-    @GET("courses")
-    Call<Course.JsonModel[]> listCourses();
+    private static ApiServiceInterface service;
 
-    @GET("courses?include=user_enrollment")
-    Call<Course.JsonModel[]> listCoursesWithEnrollments(@Header(Config.HEADER_AUTHORIZATION) String token);
+    private ApiService() {
+    }
 
-    @GET("courses/{id}")
-    Call<Course.JsonModel> getCourse(@Path("id") String id);
+    public synchronized static ApiServiceInterface getInstance() {
+        if (service == null) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            if (Config.DEBUG) {
+                logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+            } else {
+                logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+            }
 
-    @GET("courses/{id}")
-    Call<Course.JsonModel> getCourseWithEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id);
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(new Interceptor() {
+                        @Override
+                        public Response intercept(Interceptor.Chain chain) throws IOException {
+                            Request original = chain.request();
 
-    @POST("enrollments")
-    Call<Enrollment.JsonModel> postEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Body Enrollment.JsonModel enrollment);
+                            Request request = original.newBuilder()
+                                    .header(Config.HEADER_ACCEPT, Config.HEADER_ACCEPT_VALUE_API_V2)
+                                    .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE)
+                                    .build();
 
-    @PATCH("enrollments/{id}")
-    Call<Enrollment.JsonModel> patchEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id, @Body Enrollment.JsonModel enrollment);
+                            return chain.proceed(request);
+                        }
+                    })
+                    .addInterceptor(logging)
+                    .build();
 
-    @DELETE("enrollments/{id}")
-    Call deleteEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id);
+            JsonAdapter.Factory jsonApiAdapterFactory = ResourceAdapterFactory.builder()
+                    .add(Course.JsonModel.class)
+                    .add(Enrollment.JsonModel.class)
+                    .add(Profile.JsonModel.class)
+                    .build();
+
+            Moshi moshi = new Moshi.Builder()
+                    .add(jsonApiAdapterFactory)
+                    .build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(Config.API_V2)
+                    .client(client)
+                    .addConverterFactory(JsonApiConverterFactory.create(moshi))
+                    .addConverterFactory(MoshiConverterFactory.create())
+                    .build();
+
+            service = retrofit.create(ApiServiceInterface.class);
+        }
+        return service;
+    }
 
 }

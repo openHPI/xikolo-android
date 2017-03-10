@@ -45,7 +45,7 @@ public class UpdateProgressionJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        if (!UserManager.isLoggedIn()) {
+        if (!UserManager.isAuthorized()) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
             String url = Config.API + Config.USER + Config.PROGRESSIONS + item.id;

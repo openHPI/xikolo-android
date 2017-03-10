@@ -121,7 +121,7 @@ public class SettingsFragment extends PreferenceFragment {
         });
 
         loginOut = findPreference(getString(R.string.preference_login_out));
-        if (UserManager.isLoggedIn()) {
+        if (UserManager.isAuthorized()) {
             buildLogoutView(loginOut);
         } else {
             buildLoginView(loginOut);

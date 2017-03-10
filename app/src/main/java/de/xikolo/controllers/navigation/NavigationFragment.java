@@ -84,7 +84,7 @@ public class NavigationFragment extends BaseFragment {
         }
 
         if (!fromSavedInstanceState) {
-            if (UserManager.isLoggedIn()) {
+            if (UserManager.isAuthorized()) {
                 selectItem(NavigationAdapter.NAV_MY_COURSES.getPosition());
             } else {
                 selectItem(NavigationAdapter.NAV_ALL_COURSES.getPosition());

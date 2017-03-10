@@ -13,9 +13,7 @@ import de.xikolo.managers.WebSocketManager;
 import de.xikolo.storages.databases.DataType;
 import de.xikolo.storages.databases.DatabaseHelper;
 import de.xikolo.storages.databases.adapters.DataAdapter;
-import de.xikolo.storages.preferences.KeyValueStorage;
-import de.xikolo.storages.preferences.StorageHelper;
-import de.xikolo.storages.preferences.StorageType;
+import de.xikolo.storages.preferences.BaseStorage;
 import de.xikolo.utils.ClientUtil;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.FeatureToggle;
@@ -78,7 +76,7 @@ public class GlobalApplication extends Application {
         return databaseHelper;
     }
 
-    public static KeyValueStorage getStorage(StorageType type) {
+    public static BaseStorage getStorage(StorageType type) {
         return getInstance().getStorageHelper().getStorage(type);
     }
 

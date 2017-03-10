@@ -2,14 +2,21 @@ package de.xikolo.storages.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v7.preference.PreferenceManager;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.utils.PlaybackSpeed;
 
-public class ApplicationPreferences extends KeyValueStorage {
+public class ApplicationPreferences {
 
-    ApplicationPreferences(Context context) {
-        super(context);
+    private SharedPreferences preferences;
+
+    private Context context;
+
+    public ApplicationPreferences() {
+        this.preferences = PreferenceManager.getDefaultSharedPreferences(GlobalApplication.getInstance());
+        this.context = GlobalApplication.getInstance();
     }
 
     private boolean getBoolean(String key) {

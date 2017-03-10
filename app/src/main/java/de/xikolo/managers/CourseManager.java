@@ -1,6 +1,7 @@
 package de.xikolo.managers;
 
 import java.util.Date;
+import java.util.List;
 
 import de.xikolo.managers.jobs.CreateEnrollmentJob;
 import de.xikolo.managers.jobs.DeleteEnrollmentJob;
@@ -18,9 +19,9 @@ public class CourseManager extends BaseManager {
 
     public static final String TAG = CourseManager.class.getSimpleName();
 
-    public RealmResults listEnrollmentsAsync(Realm realm, RealmChangeListener<RealmResults<Enrollment>> listener) {
+    public RealmResults listEnrollments(Realm realm, RealmChangeListener<RealmResults<Enrollment>> listener) {
         if (listener == null) {
-            throw new RuntimeException("RealmChangeListener is required for async queries.");
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
 
         RealmResults<Enrollment> enrollmentListPromise = realm
@@ -32,9 +33,9 @@ public class CourseManager extends BaseManager {
         return enrollmentListPromise;
     }
 
-    public RealmResults listCoursesAsync(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+    public RealmResults listCourses(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
         if (listener == null) {
-            throw new RuntimeException("RealmChangeListener is required for async queries.");
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
 
         RealmResults<Course> courseListPromise = realm
@@ -47,35 +48,27 @@ public class CourseManager extends BaseManager {
         return courseListPromise;
     }
 
-    public RealmResults<Course> listCurrentAndFutureCourses(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+    public List<Course> listCurrentAndFutureCourses(Realm realm) {
         RealmResults<Course> courseList = realm
                 .where(Course.class)
                 .equalTo("external", false)
                 .greaterThanOrEqualTo("endDate", new Date())
                 .findAllSorted("startDate", Sort.ASCENDING);
 
-        if (listener != null) {
-            courseList.addChangeListener(listener);
-        }
-
         return courseList;
     }
 
-    public RealmResults<Course> listPastCourses(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+    public List<Course> listPastCourses(Realm realm) {
         RealmResults<Course> courseList = realm
                 .where(Course.class)
                 .equalTo("external", false)
                 .lessThan("endDate", new Date())
                 .findAllSorted("startDate", Sort.DESCENDING);
 
-        if (listener != null) {
-            courseList.addChangeListener(listener);
-        }
-
         return courseList;
     }
 
-    public RealmResults<Course> listCurrentAndPastCoursesWithEnrollment(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+    public List<Course> listCurrentAndPastCoursesWithEnrollment(Realm realm) {
         RealmResults<Course> courseList = realm
                 .where(Course.class)
                 .equalTo("external", false)
@@ -83,24 +76,16 @@ public class CourseManager extends BaseManager {
                 .lessThanOrEqualTo("startDate", new Date())
                 .findAllSorted("startDate", Sort.DESCENDING);
 
-        if (listener != null) {
-            courseList.addChangeListener(listener);
-        }
-
         return courseList;
     }
 
-    public RealmResults<Course> listFutureCoursesWithEnrollment(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+    public List<Course> listFutureCoursesWithEnrollment(Realm realm) {
         RealmResults<Course> courseList = realm
                 .where(Course.class)
                 .equalTo("external", false)
                 .isNotNull("enrollment")
                 .greaterThan("startDate", new Date())
                 .findAllSorted("startDate", Sort.ASCENDING);
-
-        if (listener != null) {
-            courseList.addChangeListener(listener);
-        }
 
         return courseList;
     }
@@ -109,7 +94,7 @@ public class CourseManager extends BaseManager {
         jobManager.addJobInBackground(new GetCourseJob(courseId, callback));
     }
 
-    public void requestCourses(JobCallback callback) {
+    public void requestCourseList(JobCallback callback) {
         jobManager.addJobInBackground(new ListCoursesJob(callback));
     }
 

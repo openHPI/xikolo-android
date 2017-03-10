@@ -18,10 +18,10 @@ import de.xikolo.R;
 import de.xikolo.controllers.fragments.MainFragment;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
-import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Enrollment;
+import de.xikolo.models.Profile;
 import de.xikolo.models.User;
 import de.xikolo.presenters.PresenterFactory;
 import de.xikolo.presenters.ProfilePresenter;
@@ -37,25 +37,19 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
 
     public static final String TAG = ProfileFragment.class.getSimpleName();
 
-    private UserManager userManager;
-    private CourseManager courseManager;
-    private Result<User> userResult;
-
     @BindView(R.id.textName) private TextView textName;
     @BindView(R.id.imageHeader) private CustomSizeImageView imageHeader;
     @BindView(R.id.imageProfile) private CustomSizeImageView imageProfile;
     @BindView(R.id.textEnrollCount) private TextView textEnrollCounts;
     @BindView(R.id.textEmail) private TextView textEmail;
 
+    private Profile profilePromise;
     private RealmResults enrollmentListPromise;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        courseManager = new CourseManager();
-
-        userManager = new UserManager();
         userResult = new Result<User>() {
             @Override
             protected void onSuccess(User result, DataSource dataSource) {
@@ -90,18 +84,17 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
     public void onStart() {
         super.onStart();
 
-        enrollmentListPromise = courseManager.listEnrollmentsAsync(realm, new RealmChangeListener<RealmResults<Enrollment>>() {
+        enrollmentListPromise = courseManager.listEnrollments(realm, new RealmChangeListener<RealmResults<Enrollment>>() {
             @Override
             public void onChange(RealmResults<Enrollment> enrollments) {
-                Log.w(TAG, "Enrollments: " + enrollments.size());
                 showEnrollmentCount(enrollments.size());
             }
         });
 
-        if (UserManager.isLoggedIn()) {
+        if (UserManager.isAuthorized()) {
             showHeader();
             userManager.getUser(userResult);
-            courseManager.requestCourses();
+            courseManager.requestCourseList();
         } else {
             getActivity().getSupportFragmentManager().popBackStack();
         }
@@ -119,12 +112,12 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
     private void updateLayout() {
         notificationController.showProgress(false);
         showHeader();
-        showUser(UserManager.getSavedUser());
+        showProfile(UserManager.getSavedUser());
         setProfilePicMargin();
     }
 
-    private void showUser(User user) {
-        textName.setText(String.format(getString(R.string.user_name), user.first_name, user.last_name));
+    private void showProfile(Profile profile) {
+        textName.setText(String.format(getString(R.string.user_name), profile.firstName, profile.lastName));
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -146,13 +139,13 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
         imageProfile.setDimensions(heightProfile, heightProfile);
         imageProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
-        if (user.user_visual != null) {
-            ImageHelper.loadRounded(user.user_visual, imageProfile, heightProfile, heightProfile);
+        if (profile.visualUrl != null) {
+            ImageHelper.loadRounded(profile.visualUrl, imageProfile, heightProfile, heightProfile);
         } else {
             ImageHelper.loadRounded(R.drawable.avatar, imageProfile, heightProfile, heightProfile);
         }
 
-        textEmail.setText(user.email);
+        textEmail.setText(profile.email);
     }
 
     private void setProfilePicMargin() {
@@ -161,9 +154,8 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
         imageProfile.setLayoutParams(layoutParams);
     }
 
-    private void showHeader() {
-        User user = UserManager.getSavedUser();
-        activityCallback.onFragmentAttached(NavigationAdapter.NAV_PROFILE.getPosition(), user.first_name + " " + user.last_name);
+    private void showHeader(Profile profile) {
+        activityCallback.onFragmentAttached(NavigationAdapter.NAV_PROFILE.getPosition(), profile.firstName + " " + profile.lastName);
     }
 
     private void showEnrollmentCount(int count) {

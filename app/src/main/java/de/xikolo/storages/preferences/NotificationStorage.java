@@ -10,14 +10,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationStorage extends KeyValueStorage {
+public class NotificationStorage extends BaseStorage {
 
     private static final String PREF_NOTIFICATIONS = "pref_notifications";
 
     private String DOWNLOAD_NOTIFICATIONS = "download_notifications";
 
-    NotificationStorage(Context context) {
-        super(context, PREF_NOTIFICATIONS, Context.MODE_PRIVATE);
+    public NotificationStorage() {
+        super(PREF_NOTIFICATIONS, Context.MODE_PRIVATE);
     }
 
     public List<String> getDownloadNotifications() {

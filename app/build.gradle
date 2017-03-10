@@ -174,7 +174,8 @@ dependencies {
     compile 'com.github.barteksc:android-pdf-viewer:2.4.0'
 
     compile 'com.github.kamikat:moshi-jsonapi:3.0.6'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-moshi:2.2.0'
 
     compile 'com.jakewharton:butterknife:8.5.1'
     apt     'com.jakewharton:butterknife-compiler:8.5.1'

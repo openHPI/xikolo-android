@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity
         Intent intent = null;
         MainFragment newFragment = null;
         if (position == NavigationAdapter.NAV_PROFILE.getPosition()) {
-            if (UserManager.isLoggedIn()) {
+            if (UserManager.isAuthorized()) {
                 newFragment = ProfileFragment.newInstance();
                 tag = "profile";
 
@@ -186,10 +186,10 @@ public class MainActivity extends BaseActivity
     @Override
     public void onBackPressed() {
         if (!navigationFragment.isDrawerOpen()) {
-            if (UserManager.isLoggedIn()
+            if (UserManager.isAuthorized()
                     && navigationFragment.getItem() == NavigationAdapter.NAV_MY_COURSES.getPosition()) {
                 finish();
-            } else if (!UserManager.isLoggedIn()
+            } else if (!UserManager.isAuthorized()
                     && navigationFragment.getItem() == NavigationAdapter.NAV_ALL_COURSES.getPosition()) {
                 finish();
             } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {

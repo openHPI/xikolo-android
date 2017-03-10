@@ -32,7 +32,7 @@ public abstract class CourseListPresenter implements LoadingStatePresenter<Cours
     public void onViewAttached(CourseListView view) {
         this.view = view;
 
-        this.courseListPromise = courseManager.listCoursesAsync(realm, new RealmChangeListener<RealmResults<Course>>() {
+        this.courseListPromise = courseManager.listCourses(realm, new RealmChangeListener<RealmResults<Course>>() {
             @Override
             public void onChange(RealmResults<Course> element) {
                 updateContent();
@@ -86,7 +86,7 @@ public abstract class CourseListPresenter implements LoadingStatePresenter<Cours
     }
 
     public void onCourseEnterButtonClicked(String courseId) {
-        if (!UserManager.isLoggedIn()) {
+        if (!UserManager.isAuthorized()) {
             view.showLoginRequiredToast();
             view.goToProfile();
         } else {
@@ -106,7 +106,7 @@ public abstract class CourseListPresenter implements LoadingStatePresenter<Cours
         } else {
             view.showRefreshProgress();
         }
-        courseManager.requestCourses(new JobCallback() {
+        courseManager.requestCourseList(new JobCallback() {
             @Override
             public void onSuccess() {
                 view.hideAnyProgress();

@@ -10,7 +10,6 @@ import java.util.Map;
 import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.managers.UserManager;
-import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.storages.preferences.UserStorage;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.lanalytics.Tracker;
@@ -367,7 +366,7 @@ public class LanalyticsUtil {
 
     public static void track(Lanalytics.Event event) {
         GlobalApplication application = GlobalApplication.getInstance();
-        if (UserManager.isLoggedIn() && isTrackingEnabled()) {
+        if (UserManager.isAuthorized() && isTrackingEnabled()) {
             Tracker tracker = application.getLanalytics().getDefaultTracker();
             tracker.send(event, UserManager.getToken());
         } else {
@@ -386,7 +385,7 @@ public class LanalyticsUtil {
         GlobalApplication application = GlobalApplication.getInstance();
         Lanalytics.Event.Builder builder = new Lanalytics.Event.Builder(application);
 
-        if (UserManager.isLoggedIn()) {
+        if (UserManager.isAuthorized()) {
             UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
             builder.setUser(userStorage.getUser().id);
         }

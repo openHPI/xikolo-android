@@ -26,7 +26,6 @@ import de.xikolo.managers.PermissionManager;
 import de.xikolo.storages.preferences.ApplicationPreferences;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
-import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.ToastUtil;
 

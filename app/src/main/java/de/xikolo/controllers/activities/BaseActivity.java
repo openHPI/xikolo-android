@@ -38,7 +38,6 @@ import de.xikolo.events.PermissionGrantedEvent;
 import de.xikolo.managers.UserManager;
 import de.xikolo.receivers.NotificationDeletedReceiver;
 import de.xikolo.storages.preferences.NotificationStorage;
-import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.utils.BuildFlavor;
 import de.xikolo.utils.FeatureToggle;
 import de.xikolo.utils.PlayServicesUtil;
@@ -136,7 +135,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
             setupCastMiniController();
         }
 
-        if (UserManager.isLoggedIn() && FeatureToggle.secondScreen()) {
+        if (UserManager.isAuthorized() && FeatureToggle.secondScreen()) {
             globalApplication.getWebSocketManager().initConnection(UserManager.getToken());
         }
     }

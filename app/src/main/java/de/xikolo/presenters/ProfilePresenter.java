@@ -1,7 +1,5 @@
 package de.xikolo.presenters;
 
-import android.util.Log;
-
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Enrollment;
@@ -33,7 +31,7 @@ public class ProfilePresenter implements LoadingStatePresenter<ProfileView> {
     public void onViewAttached(ProfileView view) {
         this.view = view;
 
-        enrollmentListPromise = courseManager.listEnrollmentsAsync(realm, new RealmChangeListener<RealmResults<Enrollment>>() {
+        enrollmentListPromise = courseManager.listEnrollments(realm, new RealmChangeListener<RealmResults<Enrollment>>() {
             @Override
             public void onChange(RealmResults<Enrollment> enrollments) {
                 view.showEnrollmentCount(enrollments.size());

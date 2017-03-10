@@ -144,7 +144,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
         if (position == NAV_PROFILE.getPosition()) {
             ProfileNavigationViewHolder profileViewHolder = (ProfileNavigationViewHolder) viewHolder;
 
-            if (UserManager.isLoggedIn()) {
+            if (UserManager.isAuthorized()) {
                 profileViewHolder.viewLogin.setVisibility(View.GONE);
                 profileViewHolder.viewProfile.setVisibility(View.VISIBLE);
 
@@ -181,12 +181,12 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
         }
 
         if (position == getCheckedItemPosition()) {
-            if (position != NAV_PROFILE.getPosition() || !UserManager.isLoggedIn()) {
+            if (position != NAV_PROFILE.getPosition() || !UserManager.isAuthorized()) {
                 viewHolder.textIcon.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
                 viewHolder.textTitle.setTextColor(ContextCompat.getColor(context, R.color.apptheme_main));
             }
         } else {
-            if (position != NAV_PROFILE.getPosition() || !UserManager.isLoggedIn()) {
+            if (position != NAV_PROFILE.getPosition() || !UserManager.isAuthorized()) {
                 viewHolder.textIcon.setTextColor(ContextCompat.getColor(context, R.color.navi_text));
                 viewHolder.textTitle.setTextColor(ContextCompat.getColor(context, R.color.navi_text));
             }

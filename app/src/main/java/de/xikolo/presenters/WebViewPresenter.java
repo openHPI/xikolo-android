@@ -62,7 +62,7 @@ public class WebViewPresenter implements LoadingStatePresenter<MainWebView> {
                     if (url.contains(Config.HOST)) {
                         Map<String, String> header = new HashMap<>();
                         header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
-                        if (UserManager.isLoggedIn()) {
+                        if (UserManager.isAuthorized()) {
                             header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserManager.getToken());
                         }
 
@@ -105,7 +105,7 @@ public class WebViewPresenter implements LoadingStatePresenter<MainWebView> {
             request(url, true);
         } else {
             Uri uri = Uri.parse(url);
-            if (url.contains(Config.HOST) && UserManager.isLoggedIn()) {
+            if (url.contains(Config.HOST) && UserManager.isAuthorized()) {
                 view.openUrlInBrowser(uri, UserManager.getToken());
             } else {
                 view.openUrlInBrowser(uri, null);

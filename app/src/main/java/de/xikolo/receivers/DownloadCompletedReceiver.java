@@ -22,7 +22,6 @@ import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.models.Download;
 import de.xikolo.network.DownloadHelper;
 import de.xikolo.storages.preferences.NotificationStorage;
-import de.xikolo.storages.preferences.StorageType;
 
 public class DownloadCompletedReceiver extends BroadcastReceiver {
 

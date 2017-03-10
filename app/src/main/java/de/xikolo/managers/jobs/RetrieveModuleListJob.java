@@ -47,7 +47,7 @@ public class RetrieveModuleListJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        if (!UserManager.isLoggedIn()) {
+        if (!UserManager.isAuthorized()) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
             ModuleDataAdapter moduleDataAccess = (ModuleDataAdapter) GlobalApplication.getDataAdapter(DataType.MODULE);

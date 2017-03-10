@@ -21,7 +21,7 @@ public class ApiRequest extends NetworkRequest {
 
     private boolean authorize() {
         Context context = GlobalApplication.getInstance();
-        if (UserManager.isLoggedIn()) {
+        if (UserManager.isAuthorized()) {
             builder.addHeader(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserManager.getToken());
             return true;
         } else {

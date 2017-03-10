@@ -15,7 +15,6 @@ import de.xikolo.models.VideoItemDetail;
 import de.xikolo.storages.preferences.ApplicationPreferences;
 import de.xikolo.managers.ItemManager;
 import de.xikolo.managers.Result;
-import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 

@@ -11,7 +11,6 @@ import java.util.Set;
 import de.xikolo.GlobalApplication;
 import de.xikolo.models.Download;
 import de.xikolo.storages.preferences.ApplicationPreferences;
-import de.xikolo.storages.preferences.StorageType;
 
 public class DownloadHelper {
 

@@ -56,7 +56,7 @@ public class RetrieveItemDetailJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        if (!UserManager.isLoggedIn()) {
+        if (!UserManager.isAuthorized()) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
             ItemDataAdapter itemDataAdapter = (ItemDataAdapter) GlobalApplication.getDataAdapter(DataType.ITEM);

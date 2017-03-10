@@ -53,7 +53,7 @@ public class RetrieveVideoSubtitlesJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        if (!UserManager.isLoggedIn()) {
+        if (!UserManager.isAuthorized()) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
             if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {

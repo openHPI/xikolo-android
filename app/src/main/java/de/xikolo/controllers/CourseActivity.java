@@ -206,7 +206,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
         };
 
         CourseManager courseManager = new CourseManager(jobManager);
-        courseManager.requestCourses();
+        courseManager.requestCourseList();
         progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
     }
 
