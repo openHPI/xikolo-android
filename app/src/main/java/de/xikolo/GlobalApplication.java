@@ -13,7 +13,6 @@ import de.xikolo.managers.WebSocketManager;
 import de.xikolo.storages.databases.DataType;
 import de.xikolo.storages.databases.DatabaseHelper;
 import de.xikolo.storages.databases.adapters.DataAdapter;
-import de.xikolo.storages.preferences.BaseStorage;
 import de.xikolo.utils.ClientUtil;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.FeatureToggle;
@@ -28,8 +27,6 @@ public class GlobalApplication extends Application {
     private static GlobalApplication instance;
 
     private DatabaseHelper databaseHelper;
-
-    private StorageHelper storageHelper;
 
     private Lanalytics lanalytics;
 
@@ -74,19 +71,6 @@ public class GlobalApplication extends Application {
             }
         }
         return databaseHelper;
-    }
-
-    public static BaseStorage getStorage(StorageType type) {
-        return getInstance().getStorageHelper().getStorage(type);
-    }
-
-    public StorageHelper getStorageHelper() {
-        synchronized (GlobalApplication.class) {
-            if (storageHelper == null) {
-                storageHelper = new StorageHelper(this);
-            }
-        }
-        return storageHelper;
     }
 
     public String getClientId() {

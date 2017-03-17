@@ -31,6 +31,9 @@ public interface ApiServiceInterface {
     @GET("courses/{id}")
     Call<Course.JsonModel> getCourseWithEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id);
 
+    @GET("enrollments")
+    Call<Enrollment.JsonModel[]> listEnrollments(@Header(Config.HEADER_AUTHORIZATION) String token);
+
     @POST("enrollments")
     Call<Enrollment.JsonModel> createEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Body Enrollment.JsonModel enrollment);
 

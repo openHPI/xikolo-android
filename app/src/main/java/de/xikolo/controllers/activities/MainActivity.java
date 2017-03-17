@@ -18,10 +18,10 @@ import de.xikolo.controllers.DownloadsActivity;
 import de.xikolo.controllers.LoginActivity;
 import de.xikolo.controllers.SecondScreenActivity;
 import de.xikolo.controllers.SettingsActivity;
-import de.xikolo.controllers.fragments.CourseListFragmentBuilder;
+import de.xikolo.controllers.fragments.CourseListFragmentAutoBundle;
 import de.xikolo.controllers.fragments.MainFragment;
-import de.xikolo.controllers.fragments.MainWebViewFragmentBuilder;
-import de.xikolo.controllers.main.ProfileFragment;
+import de.xikolo.controllers.fragments.MainWebViewFragmentAutoBundle;
+import de.xikolo.controllers.fragments.ProfileFragment;
 import de.xikolo.controllers.navigation.NavigationFragment;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
 import de.xikolo.events.LoginEvent;
@@ -124,27 +124,27 @@ public class MainActivity extends BaseActivity
         MainFragment newFragment = null;
         if (position == NavigationAdapter.NAV_PROFILE.getPosition()) {
             if (UserManager.isAuthorized()) {
-                newFragment = ProfileFragment.newInstance();
+                newFragment = new ProfileFragment();
                 tag = "profile";
 
-                LanalyticsUtil.trackVisitedProfile(UserManager.getSavedUser().id);
+                LanalyticsUtil.trackVisitedProfile(UserManager.getUserId());
             } else {
                 intent = new Intent(MainActivity.this, LoginActivity.class);
             }
         }
         if (position == NavigationAdapter.NAV_ALL_COURSES.getPosition()) {
-            newFragment = CourseListFragmentBuilder.newCourseListFragment(Course.Filter.ALL);
+            newFragment = CourseListFragmentAutoBundle.builder(Course.Filter.ALL).build();
             tag = "all_courses";
         }
         if (position == NavigationAdapter.NAV_MY_COURSES.getPosition()) {
-            newFragment = CourseListFragmentBuilder.newCourseListFragment(Course.Filter.MY);
+            newFragment = CourseListFragmentAutoBundle.builder(Course.Filter.ALL).build();
             tag = "my_courses";
         }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {
-            newFragment = new MainWebViewFragmentBuilder(NavigationAdapter.NAV_NEWS.getPosition(), getString(R.string.title_section_news), Config.URI + Config.NEWS)
-                .externalLinksEnabled(false)
-                .inAppLinksEnabled(false)
-                .build();
+            newFragment = MainWebViewFragmentAutoBundle.builder(NavigationAdapter.NAV_NEWS.getPosition(), Config.URI + Config.NEWS, getString(R.string.title_section_news))
+                    .externalLinksEnabled(false)
+                    .inAppLinksEnabled(false)
+                    .build();
             tag = "news";
         }
         if (position == NavigationAdapter.NAV_SECOND_SCREEN.getPosition()) {
@@ -153,12 +153,12 @@ public class MainActivity extends BaseActivity
         if (position == NavigationAdapter.NAV_DOWNLOADS.getPosition()) {
             intent = new Intent(MainActivity.this, DownloadsActivity.class);
 
-            LanalyticsUtil.trackVisitedDownloads(UserManager.getSavedUser().id);
+            LanalyticsUtil.trackVisitedDownloads(UserManager.getUserId());
         }
         if (position == NavigationAdapter.NAV_SETTINGS.getPosition()) {
             intent = new Intent(MainActivity.this, SettingsActivity.class);
 
-            LanalyticsUtil.trackVisitedPreferences(UserManager.getSavedUser().id);
+            LanalyticsUtil.trackVisitedPreferences(UserManager.getUserId());
         }
         if (tag != null) {
             MainFragment oldFragment = (MainFragment) fragmentManager.findFragmentByTag(tag);

@@ -1,10 +1,9 @@
-package de.xikolo.controllers.main;
+package de.xikolo.controllers.fragments;
 
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,23 +14,15 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;
-import de.xikolo.controllers.fragments.MainFragment;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
-import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
-import de.xikolo.models.Enrollment;
 import de.xikolo.models.Profile;
-import de.xikolo.models.User;
 import de.xikolo.presenters.PresenterFactory;
 import de.xikolo.presenters.ProfilePresenter;
 import de.xikolo.presenters.ProfilePresenterFactory;
 import de.xikolo.presenters.ProfileView;
-import de.xikolo.utils.NetworkUtil;
-import de.xikolo.utils.ToastUtil;
 import de.xikolo.views.CustomSizeImageView;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView> implements ProfileView {
 
@@ -43,29 +34,11 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
     @BindView(R.id.textEnrollCount) private TextView textEnrollCounts;
     @BindView(R.id.textEmail) private TextView textEmail;
 
-    private Profile profilePromise;
-    private RealmResults enrollmentListPromise;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        userResult = new Result<User>() {
-            @Override
-            protected void onSuccess(User result, DataSource dataSource) {
-                updateLayout();
-                activityCallback.updateDrawer();
-            }
-
-            @Override
-            protected void onError(ErrorCode errorCode) {
-                if (errorCode == ErrorCode.NO_NETWORK) {
-                    NetworkUtil.showNoConnectionToast();
-                } else {
-                    ToastUtil.show(R.string.toast_log_in_failed);
-                }
-            }
-        };
+        presenter.onCreate();
     }
 
     @Override
@@ -75,8 +48,6 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
 
         ButterKnife.bind(this, view);
 
-        updateLayout();
-
         return view;
     }
 
@@ -84,39 +55,15 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
     public void onStart() {
         super.onStart();
 
-        enrollmentListPromise = courseManager.listEnrollments(realm, new RealmChangeListener<RealmResults<Enrollment>>() {
-            @Override
-            public void onChange(RealmResults<Enrollment> enrollments) {
-                showEnrollmentCount(enrollments.size());
-            }
-        });
-
-        if (UserManager.isAuthorized()) {
-            showHeader();
-            userManager.getUser(userResult);
-            courseManager.requestCourseList();
-        } else {
+        if (!UserManager.isAuthorized()) {
             getActivity().getSupportFragmentManager().popBackStack();
         }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void showProfile(Profile profile) {
+        showHeader(profile);
 
-        if (enrollmentListPromise != null) {
-            enrollmentListPromise.removeChangeListeners();
-        }
-    }
-
-    private void updateLayout() {
-        notificationController.showProgress(false);
-        showHeader();
-        showProfile(UserManager.getSavedUser());
-        setProfilePicMargin();
-    }
-
-    private void showProfile(Profile profile) {
         textName.setText(String.format(getString(R.string.user_name), profile.firstName, profile.lastName));
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -146,6 +93,8 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
         }
 
         textEmail.setText(profile.email);
+
+        setProfilePicMargin();
     }
 
     private void setProfilePicMargin() {
@@ -158,7 +107,8 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
         activityCallback.onFragmentAttached(NavigationAdapter.NAV_PROFILE.getPosition(), profile.firstName + " " + profile.lastName);
     }
 
-    private void showEnrollmentCount(int count) {
+    @Override
+    public void showEnrollmentCount(int count) {
         if (textEnrollCounts != null) {
             textEnrollCounts.setText(String.valueOf(count));
         }

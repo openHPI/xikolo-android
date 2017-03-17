@@ -3,14 +3,15 @@ package de.xikolo.controllers.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.google.android.gms.cast.framework.CastContext;
-import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.yatatsu.autobundle.AutoBundle;
 
 import org.greenrobot.eventbus.EventBus;
 
+import butterknife.ButterKnife;
 import de.xikolo.utils.PlayServicesUtil;
-import icepick.Icepick;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -20,7 +21,12 @@ public abstract class BaseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FragmentArgs.inject(this);
+        if (savedInstanceState != null) {
+            // restore
+            AutoBundle.bind(this, savedInstanceState);
+        } else {
+            AutoBundle.bind(this);
+        }
 
         if (PlayServicesUtil.checkPlayServices(getContext())) {
             castContext = CastContext.getSharedInstance(getActivity());
@@ -28,9 +34,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
     }
 
     @Override
@@ -48,7 +54,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+        AutoBundle.pack(this, outState);
     }
 
 }

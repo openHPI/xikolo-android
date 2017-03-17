@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -24,11 +25,13 @@ import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.cast.framework.CastStateListener;
 import com.google.android.gms.cast.framework.IntroductoryOverlay;
+import com.yatatsu.autobundle.AutoBundle;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import butterknife.ButterKnife;
 import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
@@ -42,8 +45,6 @@ import de.xikolo.utils.BuildFlavor;
 import de.xikolo.utils.FeatureToggle;
 import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.TintUtil;
-import icepick.Icepick;
-import io.realm.Realm;
 
 public abstract class BaseActivity extends AppCompatActivity implements CastStateListener {
 
@@ -67,19 +68,20 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     private IntroductoryOverlay overlay;
 
-    protected Realm realm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Icepick.restoreInstanceState(this, savedInstanceState);
+        if (savedInstanceState != null) {
+            // restore
+            AutoBundle.bind(this, savedInstanceState);
+        } else {
+            AutoBundle.bind(this);
+        }
 
         globalApplication = GlobalApplication.getInstance();
 
         offlineModeToolbar = true;
-
-        realm = Realm.getDefaultInstance();
 
         if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
             castContext = CastContext.getSharedInstance(this);
@@ -90,6 +92,12 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         }
 
         handleIntent(getIntent());
+    }
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        super.setContentView(layoutResID);
+        ButterKnife.bind(this, findViewById(android.R.id.content));
     }
 
     @Override
@@ -167,10 +175,9 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        realm.close();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        AutoBundle.pack(this, outState);
     }
 
     private void showOverlay() {
@@ -313,7 +320,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     }
 
     private void handleIntent(Intent intent) {
-        NotificationStorage notificationStorage = (NotificationStorage) GlobalApplication.getStorage(StorageType.NOTIFICATION);
+        NotificationStorage notificationStorage = new NotificationStorage();
 
         String title = intent.getStringExtra(NotificationDeletedReceiver.KEY_TITLE);
         if (title != null) {

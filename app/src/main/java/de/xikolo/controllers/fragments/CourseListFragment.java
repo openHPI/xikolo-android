@@ -3,6 +3,7 @@ package de.xikolo.controllers.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,15 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hannesdorfmann.fragmentargs.annotation.Arg;
-import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+import com.yatatsu.autobundle.AutoBundleField;
 
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import de.xikolo.R;
-import de.xikolo.controllers.CourseActivity;
+import de.xikolo.controllers.CourseActivityAutoBundle;
 import de.xikolo.controllers.CourseDetailsActivity;
 import de.xikolo.controllers.adapters.CourseListAdapter;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
@@ -33,12 +32,11 @@ import de.xikolo.utils.HeaderAndSectionsList;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
 
-@FragmentWithArgs
 public class CourseListFragment extends MainFragment<CourseListPresenter, CourseListView> implements CourseListView {
 
     public static final String TAG = CourseListFragment.class.getSimpleName();
 
-    @Arg Course.Filter filter;
+    @AutoBundleField Course.Filter filter;
 
     @BindView(R.id.recyclerView) AutofitRecyclerView recyclerView;
 
@@ -56,8 +54,12 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_course_list, container, false);
-        ButterKnife.bind(this, view);
+        return inflater.inflate(R.layout.fragment_course_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         courseListAdapter = new CourseListAdapter(new CourseListAdapter.OnCourseButtonClickListener() {
             @Override
@@ -106,8 +108,6 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
                         return courseListAdapter.getItemCount();
                     }
                 }));
-
-        return view;
     }
 
     @Override
@@ -122,11 +122,6 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     }
 
     @Override
-    public void onRefresh() {
-        presenter.onRefresh();
-    }
-
-    @Override
     public void showCourseList(HeaderAndSectionsList<String, List<Course>> courseList) {
         if (courseListAdapter != null) {
             courseListAdapter.update(courseList);
@@ -135,10 +130,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
 
     @Override
     public void enterCourse(String courseId) {
-        Intent intent = new Intent(getActivity(), CourseActivity.class);
-        Bundle b = new Bundle();
-//            b.putParcelable(CourseActivity.ARG_COURSE, course);
-        intent.putExtras(b);
+        Intent intent = CourseActivityAutoBundle.builder(courseId).build(getActivity());
         startActivity(intent);
     }
 

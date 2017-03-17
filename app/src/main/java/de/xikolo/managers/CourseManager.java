@@ -8,6 +8,7 @@ import de.xikolo.managers.jobs.DeleteEnrollmentJob;
 import de.xikolo.managers.jobs.GetCourseJob;
 import de.xikolo.managers.jobs.JobCallback;
 import de.xikolo.managers.jobs.ListCoursesJob;
+import de.xikolo.managers.jobs.ListEnrollmentsJob;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
 import io.realm.Realm;
@@ -96,6 +97,10 @@ public class CourseManager extends BaseManager {
 
     public void requestCourseList(JobCallback callback) {
         jobManager.addJobInBackground(new ListCoursesJob(callback));
+    }
+
+    public void requestEnrollmentList(JobCallback callback) {
+        jobManager.addJobInBackground(new ListEnrollmentsJob(callback));
     }
 
     public void createEnrollment(String courseId, JobCallback callback) {

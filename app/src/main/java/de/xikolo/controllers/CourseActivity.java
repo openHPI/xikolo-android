@@ -15,12 +15,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.yatatsu.autobundle.AutoBundleField;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controllers.activities.BaseActivity;
@@ -44,13 +47,12 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
     public static final String TAG = CourseActivity.class.getSimpleName();
 
-    public static final String ARG_COURSE = "arg_course";
+    @AutoBundleField(required = false) String courseId;
 
-    private Course course;
+    @BindView(R.id.viewpager) ViewPager viewPager;
+    @BindView(R.id.tabs) TabLayout tabLayout;
 
-    private ViewPager viewPager;
-    private CoursePagerAdapter adapter;
-    private TabLayout tabLayout;
+    CoursePagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,47 +60,36 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
         setContentView(R.layout.activity_blank_tabs);
         setupActionBar();
 
-        // Initialize the ViewPager and set an adapter
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-
         String action = getIntent().getAction();
 
         if (action != null && action.equals(Intent.ACTION_VIEW)) {
             handleDeepLinkIntent(getIntent());
         } else {
-            Bundle b = getIntent().getExtras();
-            if (b == null || !b.containsKey(ARG_COURSE)) {
+            if (courseId == null) {
                 CacheController cacheController = new CacheController();
                 cacheController.readCachedExtras();
                 if (cacheController.getCourse() != null) {
-                    course = cacheController.getCourse();
+                    courseId = cacheController.getCourse().id;
                 }
-                if (course != null) {
-                    Bundle restartBundle = new Bundle();
-//                    restartBundle.putParcelable(ARG_COURSE, course);
-                    Intent restartIntent = new Intent(CourseActivity.this, CourseActivity.class);
-                    restartIntent.putExtras(restartBundle);
+                if (courseId != null) {
+                    Intent restartIntent = CourseActivityAutoBundle.builder(courseId).build(this);
                     finish();
                     startActivity(restartIntent);
                 }
             } else {
-                this.course = b.getParcelable(ARG_COURSE);
                 setupView(0);
             }
         }
     }
 
     private void setupView(int firstItem) {
-        setTitle(course.title);
-
         adapter = new CoursePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
 
         // Bind the tabs to the ViewPager
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setOnTabSelectedListener(adapter);
+        tabLayout.addOnTabSelectedListener(adapter);
 
         viewPager.setCurrentItem(firstItem);
     }

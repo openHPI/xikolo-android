@@ -14,8 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hannesdorfmann.fragmentargs.annotation.Arg;
-import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+import com.yatatsu.autobundle.AutoBundleField;
 
 import java.util.Map;
 
@@ -29,16 +28,15 @@ import de.xikolo.presenters.WebViewPresenterFactory;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.ToastUtil;
 
-@FragmentWithArgs
 public class MainWebViewFragment extends MainFragment<WebViewPresenter, MainWebView> implements MainWebView {
 
     public static final String TAG = MainWebViewFragment.class.getSimpleName();
 
-    @Arg int id;
-    @Arg String url;
-    @Arg String title;
-    @Arg(required = false) boolean inAppLinksEnabled;
-    @Arg(required = false) boolean externalLinksEnabled;
+    @AutoBundleField int id;
+    @AutoBundleField String url;
+    @AutoBundleField String title;
+    @AutoBundleField(required = false) boolean inAppLinksEnabled;
+    @AutoBundleField(required = false) boolean externalLinksEnabled;
 
     private View view;
 
