@@ -94,7 +94,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controllers.CourseActivity"
+            android:name=".controllers.activities.CourseActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controllers.activities.MainActivity">
             <meta-data
@@ -129,7 +129,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controllers.CourseDetailsActivity"
+            android:name=".controllers.activities.CourseDetailsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controllers.activities.MainActivity">
             <meta-data
@@ -137,7 +137,7 @@
                 android:value=".controllers.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".controllers.SecondScreenActivity"
+            android:name=".controllers.activities.SecondScreenActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controllers.activities.MainActivity">
             <meta-data
@@ -145,7 +145,7 @@
                 android:value=".controllers.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".controllers.LoginActivity"
+            android:name=".controllers.activities.LoginActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controllers.activities.MainActivity"
             android:theme="@style/AppThemeTranslucentStatusAndNavigation">
@@ -154,25 +154,25 @@
                 android:value=".controllers.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".controllers.ModuleActivity"
+            android:name=".controllers.CourseItemsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.CourseActivity">
+            android:parentActivityName=".controllers.activities.CourseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.CourseActivity" />
+                android:value=".controllers.activities.CourseActivity" />
         </activity>
         <activity
             android:name=".controllers.VideoActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.ModuleActivity"
+            android:parentActivityName=".controllers.CourseItemsActivity"
             android:theme="@style/AppThemeDarkStatusBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.ModuleActivity" />
+                android:value=".controllers.CourseItemsActivity" />
         </activity>
         <activity
-            android:name=".controllers.DownloadsActivity"
+            android:name=".controllers.activities.DownloadsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controllers.activities.MainActivity">
             <meta-data
@@ -180,7 +180,7 @@
                 android:value=".controllers.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".controllers.SettingsActivity"
+            android:name=".controllers.activities.SettingsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controllers.activities.MainActivity">
             <meta-data
@@ -190,48 +190,48 @@
         <activity
             android:name=".controllers.secondscreen.QuizActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.SecondScreenActivity">
+            android:parentActivityName=".controllers.activities.SecondScreenActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.SecondScreenActivity" />
+                android:value=".controllers.activities.SecondScreenActivity" />
         </activity>
         <activity
             android:name=".controllers.secondscreen.PinboardActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.SecondScreenActivity">
+            android:parentActivityName=".controllers.activities.SecondScreenActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.SecondScreenActivity" />
+                android:value=".controllers.activities.SecondScreenActivity" />
         </activity>
         <activity
             android:name=".controllers.secondscreen.SlideViewerActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.SecondScreenActivity">
+            android:parentActivityName=".controllers.activities.SecondScreenActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.SecondScreenActivity" />
+                android:value=".controllers.activities.SecondScreenActivity" />
         </activity>
         <activity
             android:name=".controllers.secondscreen.TranscriptViewerActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.SecondScreenActivity">
+            android:parentActivityName=".controllers.activities.SecondScreenActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.SecondScreenActivity" />
+                android:value=".controllers.activities.SecondScreenActivity" />
         </activity>
 
         <activity
             android:name=".controllers.activities.CastActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:parentActivityName=".controllers.ModuleActivity"
+            android:parentActivityName=".controllers.CourseItemsActivity"
             android:theme="@style/AppThemeDarkStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.ModuleActivity" />
+                android:value=".controllers.CourseItemsActivity" />
         </activity>
 
     </application>

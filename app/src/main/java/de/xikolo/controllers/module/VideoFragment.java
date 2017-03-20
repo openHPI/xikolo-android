@@ -22,7 +22,7 @@ import de.xikolo.managers.ItemManager;
 import de.xikolo.managers.Result;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.models.VideoItemDetail;
 import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
@@ -49,7 +49,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
 
     }
 
-    public static PagerFragment newInstance(Course course, Module module, Item item) {
+    public static PagerFragment newInstance(Course course, Section module, Item item) {
         return PagerFragment.newInstance(new VideoFragment(), course, module, item);
     }
 

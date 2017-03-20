@@ -13,16 +13,16 @@ import de.xikolo.utils.Config;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 
-public class WebViewPresenter implements LoadingStatePresenter<MainWebView> {
+public class WebViewPresenter implements LoadingStatePresenter<PWebView> {
 
     public static final String TAG = WebViewPresenter.class.getSimpleName();
 
-    private MainWebView view;
+    protected PWebView view;
 
-    private String url;
+    protected String url;
 
     @Override
-    public void onViewAttached(MainWebView view) {
+    public void onViewAttached(PWebView view) {
         this.view = view;
     }
 

@@ -19,7 +19,7 @@ import de.psdev.licensesdialog.LicensesDialog;
 import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.LoginActivity;
+import de.xikolo.controllers.activities.LoginActivity;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.managers.UserManager;

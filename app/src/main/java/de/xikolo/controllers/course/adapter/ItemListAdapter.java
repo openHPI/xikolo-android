@@ -15,7 +15,7 @@ import java.util.List;
 import de.xikolo.R;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.ItemTitle;
 
@@ -27,11 +27,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
     private Context context;
     private Course course;
-    private Module module;
+    private Section module;
 
     private OnItemButtonClickListener callback;
 
-    public ItemListAdapter(Context context, Course course, Module module, OnItemButtonClickListener callback) {
+    public ItemListAdapter(Context context, Course course, Section module, OnItemButtonClickListener callback) {
         this.context = context;
         this.items = new ArrayList<>();
         this.course = course;
@@ -90,7 +90,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
     public interface OnItemButtonClickListener {
 
-        void onItemButtonClicked(Course course, Module module, Item item);
+        void onItemButtonClicked(Course course, Section module, Item item);
 
     }
 

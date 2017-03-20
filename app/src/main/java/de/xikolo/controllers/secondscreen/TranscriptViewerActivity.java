@@ -11,7 +11,7 @@ import de.xikolo.R;
 import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.models.Subtitle;
 import de.xikolo.utils.LanalyticsUtil;
 
@@ -26,7 +26,7 @@ public class TranscriptViewerActivity extends BaseActivity {
     public static final String ARG_SUBTITLES = "arg_subtitles";
 
     private Course course;
-    private Module module;
+    private Section module;
     private Item item;
 
     @Override

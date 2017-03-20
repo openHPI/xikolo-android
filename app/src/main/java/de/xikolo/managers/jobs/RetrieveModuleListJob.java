@@ -15,7 +15,7 @@ import java.util.List;
 import de.xikolo.GlobalApplication;
 import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.network.ApiRequest;
 import de.xikolo.network.parser.ApiParser;
 import de.xikolo.storages.databases.DataType;
@@ -30,9 +30,9 @@ public class RetrieveModuleListJob extends Job {
 
     private String courseId;
     private boolean includeProgress;
-    private Result<List<Module>> result;
+    private Result<List<Section>> result;
 
-    public RetrieveModuleListJob(Result<List<Module>> result, String courseId, boolean includeProgress) {
+    public RetrieveModuleListJob(Result<List<Section>> result, String courseId, boolean includeProgress) {
         super(new Params(Priority.MID));
 
         this.result = result;
@@ -51,11 +51,11 @@ public class RetrieveModuleListJob extends Job {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
             ModuleDataAdapter moduleDataAccess = (ModuleDataAdapter) GlobalApplication.getDataAdapter(DataType.MODULE);
-            List<Module> localModules = moduleDataAccess.getAllForCourse(courseId);
+            List<Section> localModules = moduleDataAccess.getAllForCourse(courseId);
 
             if (includeProgress) {
-                List<Module> deleteList = new ArrayList<>();
-                for (Module module : localModules) {
+                List<Section> deleteList = new ArrayList<>();
+                for (Section module : localModules) {
                     if (module.progress == null) {
                         deleteList.add(module);
                     }
@@ -70,13 +70,13 @@ public class RetrieveModuleListJob extends Job {
 
                 Response response = new ApiRequest(url).execute();
                 if (response.isSuccessful()) {
-                    Type type = TypeToken.getParameterized(List.class, Module.class).getType();
-                    List<Module> modules = ApiParser.parse(response, type);
+                    Type type = TypeToken.getParameterized(List.class, Section.class).getType();
+                    List<Section> modules = ApiParser.parse(response, type);
                     response.close();
 
                     if (Config.DEBUG) Log.i(TAG, "Modules received (" + modules.size() + ")");
 
-                    for (Module module : modules) {
+                    for (Section module : modules) {
                         module.courseId = courseId;
                         moduleDataAccess.addOrUpdate(module, includeProgress);
                     }

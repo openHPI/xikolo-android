@@ -23,7 +23,7 @@ import de.xikolo.managers.jobs.RetrieveContentLengthJob;
 import de.xikolo.models.Course;
 import de.xikolo.models.Download;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.network.DownloadHelper;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.ExternalStorageUtil;
@@ -42,10 +42,10 @@ public class DownloadManager extends BaseManager {
         private String uri;
         private DownloadFileType type;
         private Course course;
-        private Module module;
+        private Section module;
         private Item item;
 
-        public void savePayload(String uri, DownloadFileType type, Course course, Module module, Item item) {
+        public void savePayload(String uri, DownloadFileType type, Course course, Section module, Item item) {
             this.uri = uri;
             this.type = type;
             this.course = course;
@@ -65,7 +65,7 @@ public class DownloadManager extends BaseManager {
             return course;
         }
 
-        public Module getModule() {
+        public Section getModule() {
             return module;
         }
 
@@ -89,7 +89,7 @@ public class DownloadManager extends BaseManager {
         jobManager.addJobInBackground(new RetrieveContentLengthJob(result, url));
     }
 
-    public long startDownload(String uri, DownloadFileType type, Course course, Module module, Item item) {
+    public long startDownload(String uri, DownloadFileType type, Course course, Section module, Item item) {
         if (Config.DEBUG) {
             Log.d(TAG, "Start download for " + uri);
         }
@@ -121,7 +121,7 @@ public class DownloadManager extends BaseManager {
         return 0;
     }
 
-    public boolean deleteDownload(DownloadFileType type, Course course, Module module, Item item) {
+    public boolean deleteDownload(DownloadFileType type, Course course, Section module, Item item) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 Uri downloadUri = buildDownloadUri(type, course, module, item);
@@ -149,7 +149,7 @@ public class DownloadManager extends BaseManager {
         }
     }
 
-    public boolean cancelDownload(DownloadFileType type, Course course, Module module, Item item) {
+    public boolean cancelDownload(DownloadFileType type, Course course, Section module, Item item) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 Uri downloadUri = buildDownloadUri(type, course, module, item);
@@ -219,7 +219,7 @@ public class DownloadManager extends BaseManager {
         }
     }
 
-    public Download getDownload(DownloadFileType type, Course course, Module module, Item item) {
+    public Download getDownload(DownloadFileType type, Course course, Section module, Item item) {
         Uri downloadUri = buildDownloadUri(type, course, module, item);
         Download dl = new Download();
         dl.localUri = downloadUri.toString();
@@ -238,7 +238,7 @@ public class DownloadManager extends BaseManager {
         return null;
     }
 
-    public boolean downloadRunning(DownloadFileType type, Course course, Module module, Item item) {
+    public boolean downloadRunning(DownloadFileType type, Course course, Section module, Item item) {
         Uri downloadUri = buildDownloadUri(type, course, module, item);
         Download dl = new Download();
         dl.localUri = downloadUri.toString();
@@ -249,7 +249,7 @@ public class DownloadManager extends BaseManager {
         return dlSet.contains(dl);
     }
 
-    public boolean downloadExists(DownloadFileType type, Course course, Module module, Item item) {
+    public boolean downloadExists(DownloadFileType type, Course course, Section module, Item item) {
         File file = new File(buildDownloadUri(type, course, module, item).getPath());
         return file.isFile() && file.exists();
     }
@@ -259,7 +259,7 @@ public class DownloadManager extends BaseManager {
         return file.isFile() && file.exists();
     }
 
-    public File getDownloadFile(DownloadFileType type, Course course, Module module, Item item) {
+    public File getDownloadFile(DownloadFileType type, Course course, Section module, Item item) {
         File file = new File(buildDownloadUri(type, course, module, item).getPath());
         if (file.isFile() && file.exists()) {
             return file;
@@ -267,7 +267,7 @@ public class DownloadManager extends BaseManager {
         return null;
     }
 
-    public long getDownloadFileSize(DownloadFileType type, Course course, Module module, Item item) {
+    public long getDownloadFileSize(DownloadFileType type, Course course, Section module, Item item) {
         File file = new File(buildDownloadUri(type, course, module, item).getPath());
         if (file.isFile() && file.exists()) {
             return file.length();
@@ -275,7 +275,7 @@ public class DownloadManager extends BaseManager {
         return 0;
     }
 
-    private Uri buildDownloadUri(DownloadFileType type, Course course, Module module, Item item) {
+    private Uri buildDownloadUri(DownloadFileType type, Course course, Section module, Item item) {
         File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
                 + GlobalApplication.getInstance().getString(R.string.app_name));
 

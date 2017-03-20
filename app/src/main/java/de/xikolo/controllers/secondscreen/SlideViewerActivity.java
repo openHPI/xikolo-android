@@ -9,7 +9,7 @@ import de.xikolo.R;
 import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.utils.LanalyticsUtil;
 
 public class SlideViewerActivity extends BaseActivity {
@@ -21,7 +21,7 @@ public class SlideViewerActivity extends BaseActivity {
     public static final String ARG_ITEM = "arg_item";
 
     private Course course;
-    private Module module;
+    private Section module;
     private Item item;
 
     @Override

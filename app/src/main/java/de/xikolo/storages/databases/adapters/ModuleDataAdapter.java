@@ -5,12 +5,12 @@ import android.database.Cursor;
 
 import java.util.List;
 
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.storages.databases.DatabaseHelper;
 import de.xikolo.storages.databases.tables.ModuleTable;
 import de.xikolo.storages.databases.tables.Table;
 
-public class ModuleDataAdapter extends DataAdapter<Module> {
+public class ModuleDataAdapter extends DataAdapter<Section> {
 
     private ProgressDataAdapter progressDataAccess;
 
@@ -21,8 +21,8 @@ public class ModuleDataAdapter extends DataAdapter<Module> {
     }
 
     @Override
-    protected Module buildEntity(Cursor cursor) {
-        Module module = new Module();
+    protected Section buildEntity(Cursor cursor) {
+        Section module = new Section();
 
         module.id = cursor.getString(0);
         module.position = cursor.getInt(1);
@@ -36,7 +36,7 @@ public class ModuleDataAdapter extends DataAdapter<Module> {
     }
 
     @Override
-    protected ContentValues buildContentValues(Module module) {
+    protected ContentValues buildContentValues(Section module) {
         ContentValues values = new ContentValues();
 
         values.put(ModuleTable.COLUMN_ID, module.id);
@@ -50,7 +50,7 @@ public class ModuleDataAdapter extends DataAdapter<Module> {
         return values;
     }
 
-    public void add(Module module, boolean includeProgress) {
+    public void add(Section module, boolean includeProgress) {
         super.add(module);
 
         if (includeProgress) {
@@ -58,41 +58,41 @@ public class ModuleDataAdapter extends DataAdapter<Module> {
         }
     }
 
-    public void addOrUpdate(Module module, boolean includeProgress) {
+    public void addOrUpdate(Section module, boolean includeProgress) {
         if (update(module, includeProgress) < 1) {
             add(module, includeProgress);
         }
     }
 
     @Override
-    public Module get(String id) {
-        Module module = super.get(id);
+    public Section get(String id) {
+        Section module = super.get(id);
         module.progress = progressDataAccess.get(id);
         return module;
     }
 
     @Override
-    public List<Module> getAll() {
-        List<Module> courseList = super.getAll();
+    public List<Section> getAll() {
+        List<Section> courseList = super.getAll();
 
-        for (Module module : courseList) {
+        for (Section module : courseList) {
             module.progress = progressDataAccess.get(module.id);
         }
 
         return courseList;
     }
 
-    public List<Module> getAllForCourse(String courseId) {
-        List<Module> moduleList = super.getAll("SELECT * FROM " + ModuleTable.TABLE_NAME + " WHERE " + ModuleTable.COLUMN_COURSE_ID + " = \'" + courseId + "\'");
+    public List<Section> getAllForCourse(String courseId) {
+        List<Section> moduleList = super.getAll("SELECT * FROM " + ModuleTable.TABLE_NAME + " WHERE " + ModuleTable.COLUMN_COURSE_ID + " = \'" + courseId + "\'");
 
-        for (Module module : moduleList) {
+        for (Section module : moduleList) {
             module.progress = progressDataAccess.get(module.id);
         }
 
         return moduleList;
     }
 
-    public int update(Module module, boolean includeProgress) {
+    public int update(Section module, boolean includeProgress) {
         int affected =  super.update(module);
 
         if (includeProgress) {

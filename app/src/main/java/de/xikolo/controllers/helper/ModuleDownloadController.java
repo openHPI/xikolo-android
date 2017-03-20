@@ -10,7 +10,7 @@ import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.models.VideoItemDetail;
 import de.xikolo.storages.preferences.ApplicationPreferences;
 import de.xikolo.managers.ItemManager;
@@ -38,7 +38,7 @@ public class ModuleDownloadController {
         this.downloadManager = new DownloadManager(application.getJobManager(), activity);
     }
 
-    public void initModuleDownloads(final Course course, final Module module) {
+    public void initModuleDownloads(final Course course, final Section module) {
         ModuleDownloadDialog listDialog = ModuleDownloadDialog.getInstance(module.name);
         listDialog.setModuleDownloadDialogListener(new ModuleDownloadDialog.ModuleDownloadDialogListener() {
             @Override
@@ -74,7 +74,7 @@ public class ModuleDownloadController {
         listDialog.show(activity.getSupportFragmentManager(), ModuleDownloadDialog.TAG);
     }
     
-    private void startModuleDownloads(final Course course, final Module module) {
+    private void startModuleDownloads(final Course course, final Section module) {
         ItemManager itemManager = new ItemManager(application.getJobManager());
 
         LanalyticsUtil.trackDownloadedSection(module.id, course.id, hdVideo, sdVideo, slides);
@@ -118,7 +118,7 @@ public class ModuleDownloadController {
 
     }
 
-    private void startDownload(String uri, DownloadManager.DownloadFileType downloadFileType, Course course, Module module, Item item) {
+    private void startDownload(String uri, DownloadManager.DownloadFileType downloadFileType, Course course, Section module, Item item) {
         if (uri != null
                 && !downloadManager.downloadExists(downloadFileType, course, module, item)
                 && !downloadManager.downloadRunning(downloadFileType, course, module, item)) {

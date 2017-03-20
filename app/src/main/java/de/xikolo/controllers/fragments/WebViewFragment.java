@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Browser;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,20 +20,18 @@ import java.util.Map;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.helper.WebViewHelper;
-import de.xikolo.presenters.MainWebView;
+import de.xikolo.presenters.PWebView;
 import de.xikolo.presenters.PresenterFactory;
 import de.xikolo.presenters.WebViewPresenter;
 import de.xikolo.presenters.WebViewPresenterFactory;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.ToastUtil;
 
-public class MainWebViewFragment extends MainFragment<WebViewPresenter, MainWebView> implements MainWebView {
+public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresenter, PWebView> implements PWebView {
 
-    public static final String TAG = MainWebViewFragment.class.getSimpleName();
+    public static final String TAG = WebViewFragment.class.getSimpleName();
 
-    @AutoBundleField int id;
     @AutoBundleField String url;
-    @AutoBundleField String title;
     @AutoBundleField(required = false) boolean inAppLinksEnabled;
     @AutoBundleField(required = false) boolean externalLinksEnabled;
 
@@ -68,12 +65,6 @@ public class MainWebViewFragment extends MainFragment<WebViewPresenter, MainWebV
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        activityCallback.onFragmentAttached(id, title);
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
 
@@ -85,18 +76,13 @@ public class MainWebViewFragment extends MainFragment<WebViewPresenter, MainWebV
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (activityCallback != null && !activityCallback.isDrawerOpen()) {
-            inflater.inflate(R.menu.refresh, menu);
-        }
+        inflater.inflate(R.menu.refresh, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(getActivity());
-                return true;
             case R.id.action_refresh:
                 presenter.onRefresh();
                 return true;

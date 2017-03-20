@@ -15,7 +15,7 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.network.ApiRequest;
 import de.xikolo.network.parser.ApiParser;
 import de.xikolo.storages.databases.DataType;
@@ -31,9 +31,9 @@ public class RetrieveModuleWithItemListJob extends Job {
 
     private String courseId;
     private String moduleId;
-    private Result<Module> result;
+    private Result<Section> result;
 
-    public RetrieveModuleWithItemListJob(Result<Module> result, String courseId, String moduleId) {
+    public RetrieveModuleWithItemListJob(Result<Section> result, String courseId, String moduleId) {
         super(new Params(Priority.MID));
 
         this.result = result;
@@ -54,7 +54,7 @@ public class RetrieveModuleWithItemListJob extends Job {
             ModuleDataAdapter moduleDataAdapter = (ModuleDataAdapter) GlobalApplication.getDataAdapter(DataType.MODULE);
             ItemDataAdapter itemDataAdapter = (ItemDataAdapter) GlobalApplication.getDataAdapter(DataType.ITEM);
 
-            Module localModule = moduleDataAdapter.get(moduleId);
+            Section localModule = moduleDataAdapter.get(moduleId);
             if (localModule != null) {
                 localModule.items = itemDataAdapter.getAllForModule(moduleId);
             }
@@ -69,7 +69,7 @@ public class RetrieveModuleWithItemListJob extends Job {
 
                 Response response = new ApiRequest(url).execute();
                 if (response.isSuccessful()) {
-                    Module module = ApiParser.parse(response, Module.class);
+                    Section module = ApiParser.parse(response, Section.class);
                     response.close();
 
                     if (Config.DEBUG) Log.i(TAG, "Module received (" + module.id + ")");

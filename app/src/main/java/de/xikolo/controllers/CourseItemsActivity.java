@@ -34,22 +34,22 @@ import de.xikolo.controllers.module.VideoFragment;
 import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.managers.Result;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.LanalyticsUtil;
 
-public class ModuleActivity extends BaseActivity {
+public class CourseItemsActivity extends BaseActivity {
 
-    public static final String TAG = ModuleActivity.class.getSimpleName();
+    public static final String TAG = CourseItemsActivity.class.getSimpleName();
 
     public static final String ARG_COURSE = "arg_course";
     public static final String ARG_MODULE = "arg_module";
     public static final String ARG_ITEM = "arg_item";
 
     private Course course;
-    private Module module;
+    private Section module;
     private Item item;
 
     private ItemManager itemManager;
@@ -82,7 +82,7 @@ public class ModuleActivity extends BaseActivity {
 //                restartBundle.putParcelable(ARG_COURSE, course);
                 restartBundle.putParcelable(ARG_MODULE, module);
                 restartBundle.putParcelable(ARG_ITEM, item);
-                Intent restartIntent = new Intent(ModuleActivity.this, ModuleActivity.class);
+                Intent restartIntent = new Intent(CourseItemsActivity.this, CourseItemsActivity.class);
                 restartIntent.putExtras(restartBundle);
                 finish();
                 startActivity(restartIntent);
@@ -283,7 +283,7 @@ public class ModuleActivity extends BaseActivity {
             if (fragment == null) {
                 switch (item.type) {
                     case Item.TYPE_TEXT:
-                    case Item.TYPE_SELFTEST:
+                    case Item.TYPE_Quiz:
                     case Item.TYPE_LTI:
                     case Item.TYPE_PEER:
                         fragment = ItemWebViewFragment.newInstance(course, module, items.get(position));

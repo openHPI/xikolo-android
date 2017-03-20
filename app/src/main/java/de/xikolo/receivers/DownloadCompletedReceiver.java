@@ -17,7 +17,7 @@ import java.util.List;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.DownloadsActivity;
+import de.xikolo.controllers.activities.DownloadsActivity;
 import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.models.Download;
 import de.xikolo.network.DownloadHelper;

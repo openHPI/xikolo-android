@@ -14,7 +14,7 @@ import de.xikolo.R;
 import de.xikolo.controllers.helper.WebViewHelper;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.utils.Config;
 
 public class ItemWebViewFragment extends PagerFragment {
@@ -31,7 +31,7 @@ public class ItemWebViewFragment extends PagerFragment {
         // Required empty public constructor
     }
 
-    public static PagerFragment newInstance(Course course, Module module, Item item) {
+    public static PagerFragment newInstance(Course course, Section module, Item item) {
         return PagerFragment.newInstance(new ItemWebViewFragment(), course, module, item);
     }
 
@@ -60,7 +60,7 @@ public class ItemWebViewFragment extends PagerFragment {
                         webViewHelper.setInAppLinksEnabled(false);
                         webViewHelper.setLoadExternalUrlEnabled(false);
                         break;
-                    case Item.TYPE_SELFTEST:
+                    case Item.TYPE_Quiz:
                     case Item.TYPE_PEER:
                         webViewHelper.setInAppLinksEnabled(true);
                         webViewHelper.setLoadExternalUrlEnabled(false);

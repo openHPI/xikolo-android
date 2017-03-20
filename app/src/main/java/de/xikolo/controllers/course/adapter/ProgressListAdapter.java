@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 
 public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapter.ProgressViewHolder> {
 
     public static final String TAG = ProgressListAdapter.class.getSimpleName();
 
-    private List<Module> modules;
+    private List<Section> modules;
 
     private Context context;
 
@@ -27,7 +27,7 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
         this.modules = new ArrayList<>();
     }
 
-    public void updateModules(List<Module> modules) {
+    public void updateModules(List<Section> modules) {
         if (modules == null) {
             throw new NullPointerException("Modules can't be null");
         }
@@ -51,7 +51,7 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
         float assignments_points_scored = 0;
         float assignments_points_possible = 0;
 
-        for (Module module : modules) {
+        for (Section module : modules) {
             count_visited += module.progress.items.count_visited;
             count_available += module.progress.items.count_available;
 
@@ -61,7 +61,7 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
             assignments_points_scored += module.progress.assignments.points_scored;
             assignments_points_possible += module.progress.assignments.points_possible;
         }
-        Module total = new Module();
+        Section total = new Section();
 
         total.name = context.getString(R.string.total);
 
@@ -90,7 +90,7 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
 
     @Override
     public void onBindViewHolder(ProgressViewHolder holder, int position) {
-        Module module = modules.get(position);
+        Section module = modules.get(position);
 
         holder.textTitle.setText(module.name);
 

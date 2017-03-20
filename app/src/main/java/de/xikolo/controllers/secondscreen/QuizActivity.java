@@ -6,10 +6,10 @@ import android.support.v4.app.FragmentTransaction;
 
 import de.xikolo.R;
 import de.xikolo.controllers.activities.BaseActivity;
-import de.xikolo.controllers.WebViewFragment;
+import de.xikolo.controllers.WebViewInterfaceFragment;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.utils.LanalyticsUtil;
 
 public class QuizActivity extends BaseActivity {
@@ -31,7 +31,7 @@ public class QuizActivity extends BaseActivity {
     public static final String ARG_ITEM = "arg_item";
 
     private Course course;
-    private Module module;
+    private Section module;
     private Item item;
 
     @Override
@@ -56,7 +56,7 @@ public class QuizActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, WebViewFragment.newInstance(url, inAppLinksEnabled, externalLinksEnabled), tag);
+            transaction.replace(R.id.content, WebViewInterfaceFragment.newInstance(url, inAppLinksEnabled, externalLinksEnabled), tag);
             transaction.commit();
         }
     }

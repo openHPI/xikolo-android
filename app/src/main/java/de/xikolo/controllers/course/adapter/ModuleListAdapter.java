@@ -22,7 +22,7 @@ import de.xikolo.R;
 import de.xikolo.controllers.helper.ModuleDownloadController;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
 import de.xikolo.views.AutofitRecyclerView;
@@ -32,7 +32,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
 
     public static final String TAG = ModuleListAdapter.class.getSimpleName();
 
-    private List<Module> modules;
+    private List<Section> modules;
 
     private FragmentActivity activity;
     private Course course;
@@ -49,7 +49,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
         this.itemButtonClickListener = itemCallback;
     }
 
-    public void updateModules(List<Module> modules) {
+    public void updateModules(List<Section> modules) {
         this.modules = modules;
         this.notifyDataSetChanged();
     }
@@ -72,7 +72,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
 
     @Override
     public void onBindViewHolder(final ModuleViewHolder holder, int position) {
-        final Module module = modules.get(position);
+        final Section module = modules.get(position);
 
         holder.textTitle.setText(module.name);
 
@@ -113,7 +113,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
         }
     }
 
-    private void contentAvailable(final Module module, ModuleViewHolder holder) {
+    private void contentAvailable(final Section module, ModuleViewHolder holder) {
         holder.progressBar.setVisibility(View.GONE);
         holder.viewModuleNotification.setVisibility(View.GONE);
         holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_bg));
@@ -150,7 +150,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
         }
     }
 
-    private void contentLocked(Module module, ModuleViewHolder holder) {
+    private void contentLocked(Section module, ModuleViewHolder holder) {
         holder.progressBar.setVisibility(View.GONE);
         holder.viewModuleNotification.setVisibility(View.VISIBLE);
         holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_bg_locked));
@@ -178,7 +178,7 @@ public class ModuleListAdapter extends RecyclerView.Adapter<ModuleListAdapter.Mo
 
     public interface OnModuleButtonClickListener {
 
-        void onModuleButtonClicked(Course course, Module module);
+        void onModuleButtonClicked(Course course, Section module);
 
     }
 

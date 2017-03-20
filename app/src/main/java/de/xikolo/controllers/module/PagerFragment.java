@@ -6,7 +6,7 @@ import de.xikolo.controllers.fragments.BaseFragment;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.ItemDetail;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 
 public abstract class PagerFragment<T extends ItemDetail> extends BaseFragment {
 
@@ -15,14 +15,14 @@ public abstract class PagerFragment<T extends ItemDetail> extends BaseFragment {
     public static final String ARG_ITEM = "arg_item";
 
     protected Course course;
-    protected Module module;
+    protected Section module;
     protected Item<T> item;
 
     public PagerFragment() {
         // Required empty public constructor
     }
 
-    protected static PagerFragment newInstance(PagerFragment fragment, Course course, Module module, Item item) {
+    protected static PagerFragment newInstance(PagerFragment fragment, Course course, Section module, Item item) {
         Bundle args = new Bundle();
 //        args.putParcelable(ARG_COURSE, course);
         args.putParcelable(ARG_MODULE, module);

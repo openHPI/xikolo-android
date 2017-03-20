@@ -17,6 +17,10 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         ALL, MY
     }
 
+    public enum Tab {
+        RESUME, PINBOARD, PROGRESS, LEARNING_ROOMS, ANNOUNCEMENTS, DETAILS
+    }
+
     @PrimaryKey
     public String id;
 

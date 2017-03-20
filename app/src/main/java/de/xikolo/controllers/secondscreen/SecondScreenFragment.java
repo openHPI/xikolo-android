@@ -32,7 +32,7 @@ import de.xikolo.managers.Result;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.models.Subtitle;
 import de.xikolo.models.VideoItemDetail;
 import de.xikolo.models.WebSocketMessage;
@@ -63,7 +63,7 @@ public class SecondScreenFragment extends Fragment {
     private static final String KEY_SUBTITLES = "subtitles";
 
     private Course course;
-    private Module module;
+    private Section module;
     private Item<VideoItemDetail> item;
     private List<Subtitle> subtitleList;
 

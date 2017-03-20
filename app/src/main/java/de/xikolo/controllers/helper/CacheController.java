@@ -13,10 +13,10 @@ import java.io.ObjectOutputStream;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.ModuleActivity;
+import de.xikolo.controllers.CourseItemsActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 
 public class CacheController {
 
@@ -26,7 +26,7 @@ public class CacheController {
 
     private File file;
     private Course course;
-    private Module module;
+    private Section module;
     private Item item;
 
     public CacheController() {
@@ -42,9 +42,9 @@ public class CacheController {
         try {
             fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(b.getParcelable(ModuleActivity.ARG_COURSE));
-            oos.writeObject(b.getParcelable(ModuleActivity.ARG_MODULE));
-            oos.writeObject(b.getParcelable(ModuleActivity.ARG_ITEM));
+            oos.writeObject(b.getParcelable(CourseItemsActivity.ARG_COURSE));
+            oos.writeObject(b.getParcelable(CourseItemsActivity.ARG_MODULE));
+            oos.writeObject(b.getParcelable(CourseItemsActivity.ARG_ITEM));
             oos.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,7 +58,7 @@ public class CacheController {
             fis = new FileInputStream(file);
             ois = new ObjectInputStream(fis);
             course = (Course) ois.readObject();
-            module = (Module) ois.readObject();
+            module = (Section) ois.readObject();
             item = (Item) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -90,7 +90,7 @@ public class CacheController {
         return item;
     }
 
-    public Module getModule() {
+    public Section getModule() {
         return module;
     }
 }

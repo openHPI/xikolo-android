@@ -18,8 +18,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import de.xikolo.R;
-import de.xikolo.controllers.CourseActivityAutoBundle;
-import de.xikolo.controllers.CourseDetailsActivity;
+import de.xikolo.controllers.activities.CourseActivityAutoBundle;
+import de.xikolo.controllers.activities.CourseDetailsActivityAutoBundle;
 import de.xikolo.controllers.adapters.CourseListAdapter;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
 import de.xikolo.models.Course;
@@ -130,16 +130,13 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
 
     @Override
     public void enterCourse(String courseId) {
-        Intent intent = CourseActivityAutoBundle.builder(courseId).build(getActivity());
+        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(getActivity());
         startActivity(intent);
     }
 
     @Override
     public void enterCourseDetails(String courseId) {
-        Intent intent = new Intent(getActivity(), CourseDetailsActivity.class);
-        Bundle b = new Bundle();
-//        b.putParcelable(CourseDetailsActivity.ARG_COURSE, course);
-        intent.putExtras(b);
+        Intent intent = CourseDetailsActivityAutoBundle.builder(courseId).build(getActivity());
         startActivity(intent);
     }
 

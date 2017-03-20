@@ -18,7 +18,7 @@ import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controllers.fragments.BaseFragment;
-import de.xikolo.controllers.ModuleActivity;
+import de.xikolo.controllers.CourseItemsActivity;
 import de.xikolo.controllers.course.adapter.ItemListAdapter;
 import de.xikolo.controllers.course.adapter.ModuleListAdapter;
 import de.xikolo.controllers.helper.LoadingStateController;
@@ -26,7 +26,7 @@ import de.xikolo.controllers.helper.RefeshLayoutHelper;
 import de.xikolo.managers.ModuleManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.managers.Result;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
@@ -50,7 +50,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     private LoadingStateController notificationController;
 
     private Course course;
-    private List<Module> modules;
+    private List<Section> modules;
 
     public CourseLearningsFragment() {
         // Required empty public constructor
@@ -67,7 +67,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (modules != null) {
-            outState.putParcelableArrayList(ARG_MODULES, (ArrayList<Module>) modules);
+            outState.putParcelableArrayList(ARG_MODULES, (ArrayList<Section>) modules);
         }
         super.onSaveInstanceState(outState);
     }
@@ -146,9 +146,9 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     }
 
     private void requestModulesWithItems(final boolean userRequest, final boolean includeProgress) {
-        Result<List<Module>> result = new Result<List<Module>>() {
+        Result<List<Section>> result = new Result<List<Section>>() {
             @Override
-            protected void onSuccess(List<Module> result, DataSource dataSource) {
+            protected void onSuccess(List<Section> result, DataSource dataSource) {
                 if (result.size() > 0) {
                     notificationController.hide();
                 }
@@ -192,21 +192,21 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     }
 
     @Override
-    public void onModuleButtonClicked(Course course, Module module) {
+    public void onModuleButtonClicked(Course course, Section module) {
         startModuleActivity(course, module, null);
     }
 
     @Override
-    public void onItemButtonClicked(Course course, Module module, Item item) {
+    public void onItemButtonClicked(Course course, Section module, Item item) {
         startModuleActivity(course, module, item);
     }
 
-    private void startModuleActivity(Course course, Module module, Item item) {
-        Intent intent = new Intent(getActivity(), ModuleActivity.class);
+    private void startModuleActivity(Course course, Section module, Item item) {
+        Intent intent = new Intent(getActivity(), CourseItemsActivity.class);
         Bundle b = new Bundle();
 //        b.putParcelable(ModuleActivity.ARG_COURSE, course);
-        b.putParcelable(ModuleActivity.ARG_MODULE, module);
-        b.putParcelable(ModuleActivity.ARG_ITEM, item);
+        b.putParcelable(CourseItemsActivity.ARG_MODULE, module);
+        b.putParcelable(CourseItemsActivity.ARG_ITEM, item);
         intent.putExtras(b);
         getActivity().startActivityForResult(intent, REQUEST_CODE_MODULES);
     }
@@ -214,10 +214,10 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_MODULES && resultCode == Activity.RESULT_OK) {
-            Module newModule = data.getExtras().getParcelable(ModuleActivity.ARG_MODULE);
+            Section newModule = data.getExtras().getParcelable(CourseItemsActivity.ARG_MODULE);
 
             if (modules != null && adapter != null) {
-                Module oldModule = modules.get(modules.indexOf(newModule));
+                Section oldModule = modules.get(modules.indexOf(newModule));
                 if (newModule != null) {
                     for (Item newItem : newModule.items) {
                         for (Item oldItem : oldModule.items) {

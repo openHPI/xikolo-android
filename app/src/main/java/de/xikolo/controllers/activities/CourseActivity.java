@@ -1,8 +1,8 @@
-package de.xikolo.controllers;
+package de.xikolo.controllers.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -26,24 +26,22 @@ import java.util.List;
 import butterknife.BindView;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
-import de.xikolo.controllers.activities.BaseActivity;
-import de.xikolo.controllers.course.CourseLearningsFragment;
-import de.xikolo.controllers.course.ProgressFragment;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
+import de.xikolo.controllers.fragments.WebViewFragmentAutoBundle;
 import de.xikolo.controllers.helper.CacheController;
-import de.xikolo.controllers.helper.EnrollmentController;
 import de.xikolo.events.NetworkStateEvent;
-import de.xikolo.managers.CourseManager;
-import de.xikolo.managers.Result;
 import de.xikolo.models.Course;
+import de.xikolo.presenters.CoursePresenter;
+import de.xikolo.presenters.CoursePresenterFactory;
+import de.xikolo.presenters.CourseView;
+import de.xikolo.presenters.PresenterFactory;
 import de.xikolo.utils.BuildFlavor;
 import de.xikolo.utils.Config;
-import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.ToastUtil;
 
-public class CourseActivity extends BaseActivity implements UnenrollDialog.UnenrollDialogListener {
+public class CourseActivity extends BasePresenterActivity<CoursePresenter, CourseView> implements CourseView, UnenrollDialog.UnenrollDialogListener {
 
     public static final String TAG = CourseActivity.class.getSimpleName();
 
@@ -51,6 +49,8 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
     @BindView(R.id.viewpager) ViewPager viewPager;
     @BindView(R.id.tabs) TabLayout tabLayout;
+
+    ProgressDialog progressDialog;
 
     CoursePagerAdapter adapter;
 
@@ -63,7 +63,7 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
         String action = getIntent().getAction();
 
         if (action != null && action.equals(Intent.ACTION_VIEW)) {
-            handleDeepLinkIntent(getIntent());
+            presenter.handleDeepLink(getIntent().getData());
         } else {
             if (courseId == null) {
                 CacheController cacheController = new CacheController();
@@ -72,17 +72,20 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
                     courseId = cacheController.getCourse().id;
                 }
                 if (courseId != null) {
-                    Intent restartIntent = CourseActivityAutoBundle.builder(courseId).build(this);
+                    Intent restartIntent = CourseActivityAutoBundle.builder().courseId(courseId).build(this);
                     finish();
                     startActivity(restartIntent);
                 }
             } else {
-                setupView(0);
+                presenter.handleCourse(courseId);
             }
         }
     }
 
-    private void setupView(int firstItem) {
+    @Override
+    public void setupView(Course course, Course.Tab courseTab) {
+        setTitle(course.title);
+        courseId = course.id;
         adapter = new CoursePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
@@ -90,6 +93,28 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
         // Bind the tabs to the ViewPager
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(adapter);
+
+        int firstItem = 0;
+
+        if (courseTab != null) {
+            switch (courseTab) {
+                case PINBOARD:
+                    firstItem = 1;
+                    break;
+                case PROGRESS:
+                    firstItem = 2;
+                    break;
+                case LEARNING_ROOMS:
+                    firstItem = 3;
+                    break;
+                case ANNOUNCEMENTS:
+                    firstItem = 4;
+                    break;
+                case DETAILS:
+                    firstItem = 5;
+                    break;
+            }
+        }
 
         viewPager.setCurrentItem(firstItem);
     }
@@ -102,103 +127,9 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
             String action = intent.getAction();
 
             if (action != null && action.equals(Intent.ACTION_VIEW)) {
-                handleDeepLinkIntent(intent);
+                presenter.handleDeepLink(intent.getData());
             }
         }
-    }
-
-    private void handleDeepLinkIntent(Intent intent) {
-        final Uri data = intent.getData();
-        final String courseIntent = DeepLinkingUtil.getCourseIdentifierFromResumeUri(data);
-
-        final ProgressDialog progressDialog = ProgressDialog.getInstance();
-
-        Result<List<Course>> result = new Result<List<Course>>() {
-
-            @Override
-            protected void onSuccess(List<Course> result, DataSource dataSource) {
-                super.onSuccess(result, dataSource);
-
-                if (dataSource == DataSource.NETWORK) {
-                    for (Course fetchedCourse : result) {
-                        if (fetchedCourse.slug.equals(courseIntent)) {
-                            if (progressDialog != null) {
-                                progressDialog.dismiss();
-                            }
-
-                            course = fetchedCourse;
-                            if (!course.accessible || !course.isEnrolled()) {
-                                setTitle(course.title);
-
-                                if (course.accessible) {
-                                    ToastUtil.show(R.string.notification_course_locked);
-                                } else if (!course.isEnrolled()) {
-                                    ToastUtil.show(R.string.notification_not_enrolled);
-                                }
-
-                                Intent intent = new Intent(CourseActivity.this, CourseDetailsActivity.class);
-                                Bundle b = new Bundle();
-//                                b.putParcelable(CourseDetailsActivity.ARG_COURSE, course);
-                                intent.putExtras(b);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                DeepLinkingUtil.CourseTab courseTab = DeepLinkingUtil.getTab(data.getPath());
-
-                                int firstFragment = 0;
-                                if (courseTab != null) {
-                                    switch (courseTab) {
-                                        case RESUME:
-                                            firstFragment = 0;
-                                            break;
-                                        case PINBOARD:
-                                            firstFragment = 1;
-                                            break;
-                                        case PROGRESS:
-                                            firstFragment = 2;
-                                            break;
-                                        case LEARNING_ROOMS:
-                                            firstFragment = 3;
-                                            break;
-                                        case ANNOUNCEMENTS:
-                                            firstFragment = 4;
-                                            break;
-                                        case DETAILS:
-                                            firstFragment = 5;
-                                            break;
-                                    }
-                                }
-
-                                setupView(firstFragment);
-                            }
-                            break;
-                        }
-                    }
-                }
-
-            }
-
-            @Override
-            protected void onWarning(WarnCode warnCode) {
-                super.onWarning(warnCode);
-            }
-
-            @Override
-            protected void onError(ErrorCode errorCode) {
-                super.onError(errorCode);
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                }
-
-                ToastUtil.show(R.string.error);
-
-                finish();
-            }
-        };
-
-        CourseManager courseManager = new CourseManager(jobManager);
-        courseManager.requestCourseList();
-        progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
     }
 
     @Override
@@ -242,12 +173,69 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        EnrollmentController.unenroll(this, course);
+        presenter.unenroll(courseId);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         adapter.getItem(viewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = ProgressDialog.getInstance();
+        }
+        if (!progressDialog.getDialog().isShowing()) {
+            progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
+        }
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if (progressDialog != null && progressDialog.getDialog().isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void showErrorToast() {
+        ToastUtil.show(R.string.error);
+    }
+
+    @Override
+    public void showNoNetworkToast() {
+        ToastUtil.show(R.string.toast_no_network);
+    }
+
+    @Override
+    public void showNotEnrolledToast() {
+        ToastUtil.show(R.string.notification_not_enrolled);
+    }
+
+    @Override
+    public void showCourseLockedToast() {
+        ToastUtil.show(R.string.notification_course_locked);
+    }
+
+    @Override
+    public void finishActivity() {
+        finish();
+    }
+
+    @Override
+    public void startCourseDetailsActivity(String courseId) {
+        Intent intent = new Intent(CourseActivity.this, CourseDetailsActivity.class);
+        Bundle b = new Bundle();
+//                                b.putParcelable(CourseDetailsActivity.ARG_COURSE, course);
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
+    @NonNull
+    @Override
+    protected PresenterFactory<CoursePresenter> getPresenterFactory() {
+        return new CoursePresenterFactory();
     }
 
     public class CoursePagerAdapter extends FragmentPagerAdapter implements TabLayout.OnTabSelectedListener {
@@ -268,11 +256,11 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
             }
         }
 
-        private FragmentManager mFragmentManager;
+        private FragmentManager fragmentManager;
 
         public CoursePagerAdapter(FragmentManager fm) {
             super(fm);
-            mFragmentManager = fm;
+            fragmentManager = fm;
         }
 
         @Override
@@ -290,29 +278,44 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
             // Check if this Fragment already exists.
             // Fragment Name is saved by FragmentPagerAdapter implementation.
             String name = makeFragmentName(R.id.viewpager, position);
-            Fragment fragment = mFragmentManager.findFragmentByTag(name);
+            Fragment fragment = fragmentManager.findFragmentByTag(name);
             if (fragment == null) {
                 switch (position) {
                     case 0:
-                        fragment = CourseLearningsFragment.newInstance(course);
+//                        fragment = CourseLearningsFragment.newInstance(courseId);
                         break;
                     case 1:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.slug + "/" + Config.DISCUSSIONS, true, false);
+                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
+                                .inAppLinksEnabled(true)
+                                .externalLinksEnabled(false)
+                                .build();
                         break;
                     case 2:
-                        fragment = ProgressFragment.newInstance(course);
+//                        fragment = ProgressFragment.newInstance(courseId);
                         break;
                     case 3:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.slug + "/" + Config.ROOMS, true, false);
+                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.ROOMS)
+                                .inAppLinksEnabled(true)
+                                .externalLinksEnabled(false)
+                                .build();
                         break;
                     case 4:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.slug, false, false);
+                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId)
+                                .inAppLinksEnabled(false)
+                                .externalLinksEnabled(false)
+                                .build();
                         break;
                     case 5:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.COURSES + course.slug + "/" + Config.ANNOUNCEMENTS, false, false);
+                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.ANNOUNCEMENTS)
+                                .inAppLinksEnabled(true)
+                                .externalLinksEnabled(false)
+                                .build();
                         break;
                     case 6:
-                        fragment = WebViewFragment.newInstance(Config.URI + Config.QUIZ_RECAP + course.id, true, false);
+                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.QUIZ_RECAP)
+                                .inAppLinksEnabled(true)
+                                .externalLinksEnabled(false)
+                                .build();
                         break;
                 }
             }
@@ -328,19 +331,19 @@ public class CourseActivity extends BaseActivity implements UnenrollDialog.Unenr
             viewPager.setCurrentItem(tabLayout.getSelectedTabPosition(), true);
             switch (tabLayout.getSelectedTabPosition()) {
                 case 1:
-                    LanalyticsUtil.trackVisitedPinboard(course.id);
+                    LanalyticsUtil.trackVisitedPinboard(courseId);
                     break;
                 case 2:
-                    LanalyticsUtil.trackVisitedProgress(course.id);
+                    LanalyticsUtil.trackVisitedProgress(courseId);
                     break;
                 case 3:
-                    LanalyticsUtil.trackVisitedLearningRooms(course.id);
+                    LanalyticsUtil.trackVisitedLearningRooms(courseId);
                     break;
                 case 5:
-                    LanalyticsUtil.trackVisitedAnnouncements(course.id);
+                    LanalyticsUtil.trackVisitedAnnouncements(courseId);
                     break;
                 case 6:
-                    LanalyticsUtil.trackVisitedRecap(course.id);
+                    LanalyticsUtil.trackVisitedRecap(courseId);
                     break;
             }
         }

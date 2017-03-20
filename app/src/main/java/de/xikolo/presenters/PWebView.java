@@ -4,7 +4,7 @@ import android.net.Uri;
 
 import java.util.Map;
 
-public interface MainWebView extends MainView {
+public interface PWebView extends LoadingStateView {
 
     void showInvalidUrlToast();
 

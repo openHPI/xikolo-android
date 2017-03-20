@@ -27,7 +27,7 @@ import de.xikolo.managers.ItemManager;
 import de.xikolo.managers.Result;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.models.VideoItemDetail;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.CastUtil;
@@ -45,7 +45,7 @@ public class VideoActivity extends BaseActivity {
     private VideoController videoController;
 
     private Course course;
-    private Module module;
+    private Section module;
     private Item<VideoItemDetail> item;
 
     private ItemManager itemManager;

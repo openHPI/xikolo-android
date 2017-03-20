@@ -32,7 +32,7 @@ import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.models.VideoItemDetail;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -50,7 +50,7 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
     private TextView textCurrentPage;
 
     private Course course;
-    private Module module;
+    private Section module;
     private Item<VideoItemDetail> item;
 
     public static final String ARG_COURSE = "arg_course";
@@ -65,7 +65,7 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
         // Required empty public constructor
     }
 
-    public static SlideViewerFragment newInstance(Course course, Module module, Item item) {
+    public static SlideViewerFragment newInstance(Course course, Section module, Item item) {
         SlideViewerFragment fragment = new SlideViewerFragment();
         Bundle args = new Bundle();
 //        args.putParcelable(ARG_COURSE, course);

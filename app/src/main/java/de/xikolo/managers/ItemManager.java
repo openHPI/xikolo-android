@@ -12,7 +12,7 @@ import de.xikolo.managers.jobs.UpdateLocalVideoJob;
 import de.xikolo.managers.jobs.UpdateProgressionJob;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.models.Subtitle;
 import de.xikolo.models.VideoItemDetail;
 
@@ -20,7 +20,7 @@ public class ItemManager extends BaseManager {
 
     public static final String TAG = ItemManager.class.getSimpleName();
 
-    public void getItems(Result<List<Item>> result, Course course, Module module) {
+    public void getItems(Result<List<Item>> result, Course course, Section module) {
         getItems(result, course.id, module.id);
     }
 
@@ -36,7 +36,7 @@ public class ItemManager extends BaseManager {
         jobManager.addJobInBackground(new RetrieveItemListJob(result, courseId, moduleId));
     }
 
-    public void getItemDetail(Result<Item> result, Course course, Module module, Item item, String itemType) {
+    public void getItemDetail(Result<Item> result, Course course, Section module, Item item, String itemType) {
         getItemDetail(result, course.id, module.id, item.id, itemType);
     }
 

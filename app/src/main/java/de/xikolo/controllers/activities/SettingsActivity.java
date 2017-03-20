@@ -1,4 +1,4 @@
-package de.xikolo.controllers;
+package de.xikolo.controllers.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import de.xikolo.R;
-import de.xikolo.controllers.activities.BaseActivity;
 import de.xikolo.controllers.settings.SettingsFragment;
 
 public class SettingsActivity extends BaseActivity {

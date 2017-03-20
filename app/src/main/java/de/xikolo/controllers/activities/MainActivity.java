@@ -14,13 +14,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
-import de.xikolo.controllers.DownloadsActivity;
-import de.xikolo.controllers.LoginActivity;
-import de.xikolo.controllers.SecondScreenActivity;
-import de.xikolo.controllers.SettingsActivity;
 import de.xikolo.controllers.fragments.CourseListFragmentAutoBundle;
 import de.xikolo.controllers.fragments.MainFragment;
-import de.xikolo.controllers.fragments.MainWebViewFragmentAutoBundle;
 import de.xikolo.controllers.fragments.ProfileFragment;
 import de.xikolo.controllers.navigation.NavigationFragment;
 import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
@@ -141,10 +136,10 @@ public class MainActivity extends BaseActivity
             tag = "my_courses";
         }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {
-            newFragment = MainWebViewFragmentAutoBundle.builder(NavigationAdapter.NAV_NEWS.getPosition(), Config.URI + Config.NEWS, getString(R.string.title_section_news))
-                    .externalLinksEnabled(false)
-                    .inAppLinksEnabled(false)
-                    .build();
+//            newFragment = MainWebViewFragmentAutoBundle.builder(NavigationAdapter.NAV_NEWS.getPosition(), Config.URI + Config.NEWS, getString(R.string.title_section_news))
+//                    .externalLinksEnabled(false)
+//                    .inAppLinksEnabled(false)
+//                    .build();
             tag = "news";
         }
         if (position == NavigationAdapter.NAV_SECOND_SCREEN.getPosition()) {

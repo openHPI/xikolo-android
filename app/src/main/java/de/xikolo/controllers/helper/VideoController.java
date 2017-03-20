@@ -23,7 +23,7 @@ import de.xikolo.R;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.models.VideoItemDetail;
 import de.xikolo.storages.preferences.ApplicationPreferences;
 import de.xikolo.utils.Config;
@@ -85,7 +85,7 @@ public class VideoController {
     private PlaybackSpeed currentPlaybackSpeed = PlaybackSpeed.x10;
 
     private Course course;
-    private Module module;
+    private Section module;
     private Item<VideoItemDetail> videoItemDetails;
 
     private MediaPlayer mediaPlayer;
@@ -531,7 +531,7 @@ public class VideoController {
         }
     }
 
-    public void setupVideo(Course course, Module module, Item<VideoItemDetail> video) {
+    public void setupVideo(Course course, Section module, Item<VideoItemDetail> video) {
         this.course = course;
         this.module = module;
         videoItemDetails = video;
@@ -556,7 +556,7 @@ public class VideoController {
         updateVideo(course, module, videoItemDetails);
     }
 
-    private void updateVideo(Course course, Module module, Item<VideoItemDetail> video) {
+    private void updateVideo(Course course, Section module, Item<VideoItemDetail> video) {
         String stream;
         DownloadManager.DownloadFileType fileType;
 
@@ -587,12 +587,12 @@ public class VideoController {
         updateHdSwitchColor();
     }
 
-    private boolean videoDownloadPresent(DownloadManager.DownloadFileType fileType, Course course, Module module, Item<VideoItemDetail> video) {
+    private boolean videoDownloadPresent(DownloadManager.DownloadFileType fileType, Course course, Section module, Item<VideoItemDetail> video) {
         return !downloadManager.downloadRunning(fileType, course, module, video)
                 && downloadManager.downloadExists(fileType, course, module, video);
     }
 
-    private void setLocalVideoURI(DownloadManager.DownloadFileType fileType, Course course, Module module, Item<VideoItemDetail> video) {
+    private void setLocalVideoURI(DownloadManager.DownloadFileType fileType, Course course, Section module, Item<VideoItemDetail> video) {
         setVideoURI("file://" + downloadManager.getDownloadFile(fileType, course, module, video).getAbsolutePath());
         viewOfflineHint.setVisibility(View.VISIBLE);
     }

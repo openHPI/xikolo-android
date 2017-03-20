@@ -16,10 +16,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.SecondScreenActivity;
+import de.xikolo.controllers.activities.SecondScreenActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.models.VideoItemDetail;
 import de.xikolo.models.WebSocketMessage;
 import de.xikolo.events.Event;
@@ -33,7 +33,7 @@ public class SecondScreenManager {
 
     private Course course;
 
-    private Module module;
+    private Section module;
 
     private Item<VideoItemDetail> item;
 
@@ -105,9 +105,9 @@ public class SecondScreenManager {
             }
         };
 
-        final Result<Module> moduleResult = new Result<Module>() {
+        final Result<Section> moduleResult = new Result<Section>() {
             @Override
-            protected void onSuccess(Module module, DataSource dataSource) {
+            protected void onSuccess(Section module, DataSource dataSource) {
                 if (module != null && !module.equals(SecondScreenManager.this.module) && module.items != null && module.items.size() > 0) {
                     SecondScreenManager.this.module = module;
                     itemManager.getItemDetail(itemResult, course.id, module.id, message.payload().get("item_id"), Item.TYPE_VIDEO);
@@ -165,13 +165,13 @@ public class SecondScreenManager {
 
         private Course course;
 
-        private Module module;
+        private Section module;
 
         private Item<VideoItemDetail> item;
 
         private WebSocketMessage webSocketMessage;
 
-        public SecondScreenUpdateVideoEvent(Course course, Module module, Item<VideoItemDetail> item, WebSocketMessage webSocketMessage) {
+        public SecondScreenUpdateVideoEvent(Course course, Section module, Item<VideoItemDetail> item, WebSocketMessage webSocketMessage) {
             super();
             this.course = course;
             this.module = module;
@@ -183,7 +183,7 @@ public class SecondScreenManager {
             return course;
         }
 
-        public Module getModule() {
+        public Section getModule() {
             return module;
         }
 
@@ -199,7 +199,7 @@ public class SecondScreenManager {
 
     public static class SecondScreenNewVideoEvent extends SecondScreenUpdateVideoEvent {
 
-        public SecondScreenNewVideoEvent(Course course, Module module, Item<VideoItemDetail> item, WebSocketMessage webSocketMessage) {
+        public SecondScreenNewVideoEvent(Course course, Section module, Item<VideoItemDetail> item, WebSocketMessage webSocketMessage) {
             super(course, module, item, webSocketMessage);
         }
 

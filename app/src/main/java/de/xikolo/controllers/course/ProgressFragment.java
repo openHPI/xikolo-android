@@ -20,7 +20,7 @@ import de.xikolo.controllers.course.adapter.ProgressListAdapter;
 import de.xikolo.controllers.helper.LoadingStateController;
 import de.xikolo.controllers.helper.RefeshLayoutHelper;
 import de.xikolo.models.Course;
-import de.xikolo.models.Module;
+import de.xikolo.models.Section;
 import de.xikolo.managers.ModuleManager;
 import de.xikolo.managers.Result;
 import de.xikolo.utils.NetworkUtil;
@@ -35,7 +35,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     private static final String ARG_MODULES = "arg_modules";
 
     private Course course;
-    private List<Module> modules;
+    private List<Section> modules;
 
     private ModuleManager moduleManager;
 
@@ -60,7 +60,7 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (modules != null) {
-            outState.putParcelableArrayList(ARG_MODULES, (ArrayList<Module>) modules);
+            outState.putParcelableArrayList(ARG_MODULES, (ArrayList<Section>) modules);
         }
         super.onSaveInstanceState(outState);
     }
@@ -135,9 +135,9 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     private void requestProgress(final boolean userRequest) {
-        Result<List<Module>> result = new Result<List<Module>>() {
+        Result<List<Section>> result = new Result<List<Section>>() {
             @Override
-            protected void onSuccess(List<Module> result, DataSource dataSource) {
+            protected void onSuccess(List<Section> result, DataSource dataSource) {
                 if (result.size() > 0) {
                     notificationController.hide();
                 }
