@@ -67,7 +67,9 @@ public class ModuleDataAdapter extends DataAdapter<Module> {
     @Override
     public Module get(String id) {
         Module module = super.get(id);
-        module.progress = progressDataAccess.get(id);
+        if (module != null) {
+            module.progress = progressDataAccess.get(id);
+        }
         return module;
     }
 
