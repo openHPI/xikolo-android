@@ -38,8 +38,7 @@ public class CreateEnrollmentJob extends BaseJob {
             if (callback != null) callback.onError(JobCallback.ErrorCode.NO_NETWORK);
         } else {
             Enrollment.JsonModel enrollment = new Enrollment.JsonModel();
-            String type = new Course.JsonModel().getType();
-            enrollment.course = new HasOne<>(type, courseId);
+            enrollment.course = new HasOne<>(new Course.JsonModel().getType(), courseId);
 
             final Response<Enrollment.JsonModel> response = ApiService.getInstance().createEnrollment(
                     UserManager.getTokenAsHeader(),
@@ -56,6 +55,8 @@ public class CreateEnrollmentJob extends BaseJob {
                     @Override
                     public void execute(Realm realm) {
                         realm.copyToRealmOrUpdate(response.body().convertToRealmObject());
+                        Course course = realm.where(Course.class).equalTo("id", courseId).findFirst();
+                        course.enrollmentId = response.body().getId();
                     }
                 });
                 realm.close();

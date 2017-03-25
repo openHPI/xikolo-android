@@ -104,7 +104,7 @@ public class Item extends RealmObject {
         public boolean visited;
 
         @Override
-        public Item convertToRealmObject() {
+        public Item addToRealm() {
             Item item = new Item();
 
             item.id = getId();

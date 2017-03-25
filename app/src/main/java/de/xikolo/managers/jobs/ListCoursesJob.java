@@ -6,6 +6,7 @@ import com.birbit.android.jobqueue.Params;
 
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
+import de.xikolo.models.Enrollment;
 import de.xikolo.network.ApiService;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
@@ -48,6 +49,11 @@ public class ListCoursesJob extends BaseJob {
                     public void execute(Realm realm) {
                         for (Course.JsonModel model : response.body()) {
                             realm.copyToRealmOrUpdate(model.convertToRealmObject());
+                            if (model.enrollment != null && model.enrollment.get(model.getContext()) != null) {
+                                Enrollment e = model.enrollment.get(model.getContext()).convertToRealmObject();
+                                e.courseId = model.getId();
+                                realm.copyToRealmOrUpdate(e);
+                            }
                         }
                     }
                 });

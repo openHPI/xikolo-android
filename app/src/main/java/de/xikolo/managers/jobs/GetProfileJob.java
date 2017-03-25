@@ -43,7 +43,7 @@ public class GetProfileJob extends BaseJob {
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
-                            realm.copyToRealmOrUpdate(response.body().convertToRealmObject());
+                            realm.copyToRealmOrUpdate(response.body().addToRealm());
                         }
                     });
                     realm.close();

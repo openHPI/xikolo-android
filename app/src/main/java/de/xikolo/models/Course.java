@@ -62,10 +62,10 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
     public boolean onDemand;
 
-    public Enrollment enrollment;
+    public String enrollmentId;
 
     public boolean isEnrolled() {
-        return enrollment != null;
+        return enrollmentId != null;
     }
 
     @Override
@@ -91,7 +91,11 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         model.policyUrl = policyUrl;
         model.qualifiedCertificateAvailable = qualifiedCertificateAvailable;
         model.onDemand = onDemand;
-        model.enrollment = new HasOne<>(enrollment.convertToJsonResource());
+
+        if (enrollmentId != null) {
+            model.enrollment = new HasOne<>(new Enrollment.JsonModel().getType(), enrollmentId);
+        }
+
         return model;
     }
 
@@ -172,8 +176,9 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.onDemand = onDemand;
 
             if (enrollment != null) {
-                course.enrollment = enrollment.get(getContext()).convertToRealmObject();
+                course.enrollmentId = enrollment.get().getId();
             }
+
             return course;
         }
 

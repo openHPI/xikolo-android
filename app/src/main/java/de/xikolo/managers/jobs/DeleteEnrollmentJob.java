@@ -5,6 +5,7 @@ import android.util.Log;
 import com.birbit.android.jobqueue.Params;
 
 import de.xikolo.managers.UserManager;
+import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
 import de.xikolo.network.ApiService;
 import de.xikolo.utils.Config;
@@ -48,6 +49,8 @@ public class DeleteEnrollmentJob extends BaseJob {
                     @Override
                     public void execute(Realm realm) {
                         realm.where(Enrollment.class).equalTo("id", id).findFirst().deleteFromRealm();
+                        Course course = realm.where(Course.class).equalTo("enrollmentId", id).findFirst();
+                        course.enrollmentId = null;
                     }
                 });
                 realm.close();

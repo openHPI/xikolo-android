@@ -3,8 +3,10 @@ package de.xikolo.models;
 import com.squareup.moshi.Json;
 
 import java.util.Date;
+import java.util.List;
 
 import de.xikolo.utils.DateUtil;
+import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -30,7 +32,25 @@ public class Section extends RealmObject {
 
     public String courseId;
 
-    public RealmList<Item> items;
+    private RealmList<Item> items;
+
+    public Course getCourse() {
+        Realm realm = Realm.getDefaultInstance();
+        Course course = realm.where(Course.class).equalTo("id", courseId).findFirst();
+        realm.close();
+        return course;
+    }
+
+    public List<Item> getItems() {
+        if (items != null) {
+            return items;
+        } else {
+            Realm realm = Realm.getDefaultInstance();
+            List<Item> items = realm.where(Item.class).equalTo("sectionId", id).findAll();
+            realm.close();
+            return items;
+        }
+    }
 
     @JsonApi(type = "course-sections")
     public static class JsonModel extends Resource implements RealmAdapter<Section> {
@@ -54,7 +74,7 @@ public class Section extends RealmObject {
         public HasMany<Item.JsonModel> items;
 
         @Override
-        public Section convertToRealmObject() {
+        public Section addToRealm() {
             Section section = new Section();
 
             section.id = getId();
@@ -70,7 +90,7 @@ public class Section extends RealmObject {
 
             if (items != null) {
                 for (Item.JsonModel item : items.get(getContext())) {
-                    section.items.add(item.convertToRealmObject());
+                    section.items.add(item.addToRealm());
                 }
             }
 
