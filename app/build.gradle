@@ -183,9 +183,9 @@ dependencies {
     apt     'com.github.yatatsu:autobundle-processor:4.1.0'
 
     compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.google.android.gms:play-services-cast-framework:10.2.0'
+    compile 'com.google.android.gms:play-services-cast-framework:10.2.1'
 
-    def supportVersion = '25.2.0'
+    def supportVersion = '25.3.0'
 
     compile "com.android.support:support-v4:${supportVersion}"
     compile "com.android.support:appcompat-v7:${supportVersion}"
