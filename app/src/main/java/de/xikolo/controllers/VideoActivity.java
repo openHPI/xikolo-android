@@ -28,7 +28,7 @@ import de.xikolo.managers.Result;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.Video;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
@@ -46,7 +46,7 @@ public class VideoActivity extends BaseActivity {
 
     private Course course;
     private Section module;
-    private Item<VideoItemDetail> item;
+    private Item<Video> item;
 
     private ItemManager itemManager;
 
@@ -93,9 +93,9 @@ public class VideoActivity extends BaseActivity {
             module = getIntent().getExtras().getParcelable(ARG_MODULE);
             item = getIntent().getExtras().getParcelable(ARG_ITEM);
 
-            itemManager.getLocalVideoProgress(new Result<VideoItemDetail>() {
+            itemManager.getLocalVideoProgress(new Result<Video>() {
                 @Override
-                protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
+                protected void onSuccess(Video result, DataSource dataSource) {
                     item.detail = result;
                 }
             }, item.detail);
@@ -310,7 +310,7 @@ public class VideoActivity extends BaseActivity {
 
         if (videoController != null) {
             videoController.pause();
-            VideoItemDetail itemDetail = videoController.getVideoItemDetail();
+            Video itemDetail = videoController.getVideoItemDetail();
             if (itemDetail != null) {
                 itemManager.updateLocalVideoProgress(new Result<Void>() {
                 }, itemDetail);

@@ -33,7 +33,7 @@ import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.Video;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SlideViewerFragment extends Fragment implements OnLoadCompleteListener, OnPageChangeListener {
@@ -51,7 +51,7 @@ public class SlideViewerFragment extends Fragment implements OnLoadCompleteListe
 
     private Course course;
     private Section module;
-    private Item<VideoItemDetail> item;
+    private Item<Video> item;
 
     public static final String ARG_COURSE = "arg_course";
     public static final String ARG_MODULE = "arg_module";

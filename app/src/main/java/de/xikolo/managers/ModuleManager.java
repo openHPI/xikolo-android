@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.xikolo.managers.jobs.RetrieveModuleListJob;
-import de.xikolo.managers.jobs.RetrieveModuleListWithItemListJob;
+import de.xikolo.managers.jobs.ListSectionsWithItemsJob;
 import de.xikolo.managers.jobs.RetrieveModuleWithItemListJob;
 import de.xikolo.models.Course;
 import de.xikolo.models.Section;
@@ -38,7 +38,7 @@ public class ModuleManager extends BaseManager {
             }
         });
 
-        jobManager.addJobInBackground(new RetrieveModuleListWithItemListJob(result, course.id, includeProgress));
+        jobManager.addJobInBackground(new ListSectionsWithItemsJob(result, course.id, includeProgress));
     }
 
     public void getModuleWithItems(Result<Section> result, String courseId, String moduleId) {

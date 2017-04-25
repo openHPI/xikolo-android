@@ -29,19 +29,21 @@ public class Item extends RealmObject {
 
     public String exerciseType;
 
+    public boolean proctored;
+
     public boolean visited;
 
     public String sectionId;
 
     public static final String TYPE_TEXT = "rich_text";
     public static final String TYPE_VIDEO = "video";
-    public static final String TYPE_Quiz = "quiz";
+    public static final String TYPE_QUIZ = "quiz";
     public static final String TYPE_LTI = "lti_exercise";
     public static final String TYPE_PEER = "peer_assessment";
 
     public static final String EXERCISE_TYPE_SELFTEST = "selftest";
     public static final String EXERCISE_TYPE_SURVEY = "survey";
-    public static final String EXERCISE_TYPE_ASSIGNMENT = "main";
+    public static final String EXERCISE_TYPE_MAIN = "main";
     public static final String EXERCISE_TYPE_BONUS = "bonus";
 
     public @StringRes int getIconRes() {
@@ -54,7 +56,7 @@ public class Item extends RealmObject {
             case TYPE_VIDEO:
                 icon = R.string.icon_video;
                 break;
-            case TYPE_Quiz:
+            case TYPE_QUIZ:
                 if (exerciseType != null && !exerciseType.equals("")) {
                     switch (exerciseType) {
                         case EXERCISE_TYPE_SELFTEST:
@@ -63,7 +65,7 @@ public class Item extends RealmObject {
                         case EXERCISE_TYPE_SURVEY:
                             icon = R.string.icon_survey;
                             break;
-                        case EXERCISE_TYPE_ASSIGNMENT:
+                        case EXERCISE_TYPE_MAIN:
                             icon = R.string.icon_assignment;
                             break;
                         case EXERCISE_TYPE_BONUS:
@@ -101,10 +103,14 @@ public class Item extends RealmObject {
         @Json(name = "exercise_type")
         public String exerciseType;
 
+        public boolean proctored;
+
         public boolean visited;
 
+        public HasOne content;
+
         @Override
-        public Item addToRealm() {
+        public Item convertToRealmObject() {
             Item item = new Item();
 
             item.id = getId();
@@ -113,6 +119,7 @@ public class Item extends RealmObject {
             item.deadline = DateUtil.parse(deadline);
             item.type = type;
             item.exerciseType = exerciseType;
+            item.proctored = proctored;
             item.visited = visited;
 
             if (section != null) {

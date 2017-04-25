@@ -11,7 +11,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
 import de.xikolo.controllers.exceptions.WrongParameterException;
 import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
@@ -56,7 +55,7 @@ public class RetrieveVideoSubtitlesJob extends Job {
         if (!UserManager.isAuthorized()) {
             result.error(Result.ErrorCode.NO_AUTH);
         } else {
-            if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+            if (NetworkUtil.isOnline()) {
                 String url = Config.API + Config.COURSES + courseId + "/"
                             + Config.MODULES + moduleId + "/" + Config.ITEMS + videoId + "/" + Config.SUBTITLES;
 

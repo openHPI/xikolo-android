@@ -34,7 +34,7 @@ import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Subtitle;
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.Video;
 import de.xikolo.models.WebSocketMessage;
 import de.xikolo.storages.preferences.ApplicationPreferences;
 import de.xikolo.utils.Config;
@@ -64,7 +64,7 @@ public class SecondScreenFragment extends Fragment {
 
     private Course course;
     private Section module;
-    private Item<VideoItemDetail> item;
+    private Item<Video> item;
     private List<Subtitle> subtitleList;
 
     private ApplicationPreferences appPreferences;

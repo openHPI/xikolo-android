@@ -18,7 +18,7 @@ import com.google.android.gms.common.images.WebImage;
 import de.xikolo.GlobalApplication;
 import de.xikolo.controllers.activities.CastActivity;
 import de.xikolo.models.Item;
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.Video;
 
 public class CastUtil {
 
@@ -47,7 +47,7 @@ public class CastUtil {
         }
     }
 
-    public static MediaInfo buildCastMetadata(Item<VideoItemDetail> video) {
+    public static MediaInfo buildCastMetadata(Item<Video> video) {
         if (!PlayServicesUtil.checkPlayServices(GlobalApplication.getInstance())) {
             return null;
         }
@@ -70,7 +70,7 @@ public class CastUtil {
                 .build();
     }
 
-    public static PendingResult<RemoteMediaClient.MediaChannelResult> loadMedia(final Activity activity, Item<VideoItemDetail> video, boolean autoPlay, int position) {
+    public static PendingResult<RemoteMediaClient.MediaChannelResult> loadMedia(final Activity activity, Item<Video> video, boolean autoPlay, int position) {
         if (!PlayServicesUtil.checkPlayServices(GlobalApplication.getInstance())) {
             return null;
         }

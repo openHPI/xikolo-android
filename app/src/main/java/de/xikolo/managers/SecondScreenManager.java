@@ -20,7 +20,7 @@ import de.xikolo.controllers.activities.SecondScreenActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.Video;
 import de.xikolo.models.WebSocketMessage;
 import de.xikolo.events.Event;
 
@@ -35,7 +35,7 @@ public class SecondScreenManager {
 
     private Section module;
 
-    private Item<VideoItemDetail> item;
+    private Item<Video> item;
 
     private CourseManager courseManager;
 
@@ -69,7 +69,7 @@ public class SecondScreenManager {
             @Override
             protected void onSuccess(Item item, DataSource dataSource) {
                 if (item != null && !item.equals(SecondScreenManager.this.item)) {
-                    SecondScreenManager.this.item = (Item<VideoItemDetail>) item;
+                    SecondScreenManager.this.item = (Item<Video>) item;
 
                     Context context = GlobalApplication.getInstance();
 
@@ -167,11 +167,11 @@ public class SecondScreenManager {
 
         private Section module;
 
-        private Item<VideoItemDetail> item;
+        private Item<Video> item;
 
         private WebSocketMessage webSocketMessage;
 
-        public SecondScreenUpdateVideoEvent(Course course, Section module, Item<VideoItemDetail> item, WebSocketMessage webSocketMessage) {
+        public SecondScreenUpdateVideoEvent(Course course, Section module, Item<Video> item, WebSocketMessage webSocketMessage) {
             super();
             this.course = course;
             this.module = module;
@@ -187,7 +187,7 @@ public class SecondScreenManager {
             return module;
         }
 
-        public Item<VideoItemDetail> getItem() {
+        public Item<Video> getItem() {
             return item;
         }
 
@@ -199,7 +199,7 @@ public class SecondScreenManager {
 
     public static class SecondScreenNewVideoEvent extends SecondScreenUpdateVideoEvent {
 
-        public SecondScreenNewVideoEvent(Course course, Section module, Item<VideoItemDetail> item, WebSocketMessage webSocketMessage) {
+        public SecondScreenNewVideoEvent(Course course, Section module, Item<Video> item, WebSocketMessage webSocketMessage) {
             super(course, module, item, webSocketMessage);
         }
 

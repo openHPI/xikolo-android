@@ -3,20 +3,20 @@ package de.xikolo.storages.databases.adapters;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.Video;
 import de.xikolo.storages.databases.DatabaseHelper;
 import de.xikolo.storages.databases.tables.Table;
 import de.xikolo.storages.databases.tables.VideoTable;
 
-public class VideoDataAdapter extends DataAdapter<VideoItemDetail> {
+public class VideoDataAdapter extends DataAdapter<Video> {
 
     public VideoDataAdapter(DatabaseHelper databaseHelper, Table table) {
         super(databaseHelper, table);
     }
 
     @Override
-    protected VideoItemDetail buildEntity(Cursor cursor) {
-        VideoItemDetail video = new VideoItemDetail();
+    protected Video buildEntity(Cursor cursor) {
+        Video video = new Video();
 
         video.id = cursor.getString(0);
         video.title = cursor.getString(1);
@@ -36,7 +36,7 @@ public class VideoDataAdapter extends DataAdapter<VideoItemDetail> {
     }
 
     @Override
-    protected ContentValues buildContentValues(VideoItemDetail video) {
+    protected ContentValues buildContentValues(Video video) {
         ContentValues values = new ContentValues();
 
         values.put(VideoTable.COLUMN_ID, video.id);

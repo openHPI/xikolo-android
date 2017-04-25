@@ -16,6 +16,8 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
     public boolean reactivated;
 
+    public boolean proctored;
+
     public String courseId;
 
     @Override
@@ -39,6 +41,8 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
         public boolean reactivated;
 
+        public boolean proctored;
+
         public HasOne<Course.JsonModel> course;
 
         @Override
@@ -47,6 +51,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
             enrollment.id = getId();
             enrollment.completed = completed;
             enrollment.reactivated = reactivated;
+            enrollment.proctored = proctored;
 
             if (course != null) {
                 enrollment.courseId = course.get().getId();

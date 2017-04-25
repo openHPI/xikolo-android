@@ -7,7 +7,6 @@ import java.util.List;
 
 import de.xikolo.utils.DateUtil;
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
@@ -32,8 +31,6 @@ public class Section extends RealmObject {
 
     public String courseId;
 
-    private RealmList<Item> items;
-
     public Course getCourse() {
         Realm realm = Realm.getDefaultInstance();
         Course course = realm.where(Course.class).equalTo("id", courseId).findFirst();
@@ -42,14 +39,10 @@ public class Section extends RealmObject {
     }
 
     public List<Item> getItems() {
-        if (items != null) {
-            return items;
-        } else {
-            Realm realm = Realm.getDefaultInstance();
-            List<Item> items = realm.where(Item.class).equalTo("sectionId", id).findAll();
-            realm.close();
-            return items;
-        }
+        Realm realm = Realm.getDefaultInstance();
+        List<Item> items = realm.where(Item.class).equalTo("sectionId", id).findAll();
+        realm.close();
+        return items;
     }
 
     @JsonApi(type = "course-sections")
@@ -74,7 +67,7 @@ public class Section extends RealmObject {
         public HasMany<Item.JsonModel> items;
 
         @Override
-        public Section addToRealm() {
+        public Section convertToRealmObject() {
             Section section = new Section();
 
             section.id = getId();
@@ -86,12 +79,6 @@ public class Section extends RealmObject {
 
             if (course != null) {
                 section.courseId = course.get().getId();
-            }
-
-            if (items != null) {
-                for (Item.JsonModel item : items.get(getContext())) {
-                    section.items.add(item.addToRealm());
-                }
             }
 
             return section;

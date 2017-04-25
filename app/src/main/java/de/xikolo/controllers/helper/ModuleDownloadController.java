@@ -11,7 +11,7 @@ import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.Video;
 import de.xikolo.storages.preferences.ApplicationPreferences;
 import de.xikolo.managers.ItemManager;
 import de.xikolo.managers.Result;
@@ -89,7 +89,7 @@ public class ModuleDownloadController {
                     @Override
                     protected void onSuccess(Item result, DataSource dataSource) {
                         @SuppressWarnings("unchecked")
-                        Item<VideoItemDetail> video = (Item<VideoItemDetail>) result;
+                        Item<Video> video = (Item<Video>) result;
 
                         if (dataSource == DataSource.NETWORK) {
                             dialog.dismiss();

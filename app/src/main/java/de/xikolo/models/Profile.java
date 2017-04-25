@@ -36,7 +36,7 @@ public class Profile extends RealmObject {
         public String visualUrl;
 
         @Override
-        public Profile addToRealm() {
+        public Profile convertToRealmObject() {
             Profile model = new Profile();
             model.firstName = firstName;
             model.lastName = lastName;

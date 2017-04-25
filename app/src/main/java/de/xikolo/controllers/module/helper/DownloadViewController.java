@@ -28,7 +28,7 @@ import de.xikolo.models.Course;
 import de.xikolo.models.Download;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.Video;
 import de.xikolo.storages.preferences.ApplicationPreferences;
 import de.xikolo.managers.Result;
 import de.xikolo.events.DownloadCompletedEvent;
@@ -47,7 +47,7 @@ public class DownloadViewController {
 
     private Course course;
     private Section module;
-    private Item<VideoItemDetail> item;
+    private Item<Video> item;
 
     private DownloadManager downloadManager;
 
@@ -69,7 +69,7 @@ public class DownloadViewController {
     private boolean progressBarUpdaterRunning = false;
 
     @SuppressWarnings("SetTextI18n")
-    public DownloadViewController(final FragmentActivity activity, final DownloadManager.DownloadFileType type, final Course course, final Section module, final Item<VideoItemDetail> item) {
+    public DownloadViewController(final FragmentActivity activity, final DownloadManager.DownloadFileType type, final Course course, final Section module, final Item<Video> item) {
         this.type = type;
         this.course = course;
         this.module = module;

@@ -23,14 +23,14 @@ import de.xikolo.managers.Result;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.Video;
 import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
 import de.xikolo.views.CustomSizeImageView;
 
-public class VideoFragment extends PagerFragment<VideoItemDetail> {
+public class VideoFragment extends PagerFragment<Video> {
 
     public static final String TAG = VideoFragment.class.getSimpleName();
 
@@ -127,7 +127,7 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
             protected void onSuccess(Item result, DataSource dataSource) {
                 if (result.detail != null) {
                     @SuppressWarnings("unchecked")
-                    Item<VideoItemDetail> item = (Item<VideoItemDetail>) result;
+                    Item<Video> item = (Item<Video>) result;
                     VideoFragment.this.item = item;
                 }
 
@@ -207,9 +207,9 @@ public class VideoFragment extends PagerFragment<VideoItemDetail> {
                 @Override
                 public void onClick(View v) {
                     if (CastUtil.isConnected()) {
-                        itemManager.getLocalVideoProgress(new Result<VideoItemDetail>() {
+                        itemManager.getLocalVideoProgress(new Result<Video>() {
                             @Override
-                            protected void onSuccess(VideoItemDetail result, DataSource dataSource) {
+                            protected void onSuccess(Video result, DataSource dataSource) {
                                 LanalyticsUtil.trackVideoPlay(item.id, course.id, module.id, result.progress, 1.0f,
                                         Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
 
