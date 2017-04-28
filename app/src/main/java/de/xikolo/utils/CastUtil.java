@@ -16,7 +16,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.images.WebImage;
 
 import de.xikolo.GlobalApplication;
-import de.xikolo.controllers.activities.CastActivity;
+import de.xikolo.controllers.cast.CastActivity;
 import de.xikolo.models.Item;
 import de.xikolo.models.Video;
 

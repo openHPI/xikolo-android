@@ -1,4 +1,4 @@
-package de.xikolo.controllers.activities;
+package de.xikolo.controllers.base;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;

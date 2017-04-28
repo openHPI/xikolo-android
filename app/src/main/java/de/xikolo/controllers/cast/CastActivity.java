@@ -1,4 +1,4 @@
-package de.xikolo.controllers.activities;
+package de.xikolo.controllers.cast;
 
 import android.view.KeyEvent;
 import android.view.Menu;

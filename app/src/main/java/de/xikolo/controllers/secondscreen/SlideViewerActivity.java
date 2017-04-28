@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.WindowManager;
 
 import de.xikolo.R;
-import de.xikolo.controllers.activities.BaseActivity;
+import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -44,7 +44,7 @@ public class SlideViewerActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, SlideViewerFragment.newInstance(course, module, item), tag);
+//            transaction.replace(R.id.content, SlideViewerFragment.newInstance(course, module, item), tag);
             transaction.commit();
         }
     }

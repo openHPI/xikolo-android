@@ -1,4 +1,4 @@
-package de.xikolo.controllers.fragments;
+package de.xikolo.controllers.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

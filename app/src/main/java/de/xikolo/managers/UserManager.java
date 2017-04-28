@@ -47,7 +47,7 @@ public class UserManager extends BaseManager {
         jobManager.addJobInBackground(new CreateAccessTokenJob(callback, email, password));
     }
 
-    public void logout() {
+    public static void logout() {
         GlobalApplication application = GlobalApplication.getInstance();
 
         UserStorage userStorage = new UserStorage();

@@ -1,4 +1,4 @@
-package de.xikolo.controllers.activities;
+package de.xikolo.controllers.course;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.yatatsu.autobundle.AutoBundleField;
 
 import de.xikolo.R;
+import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
 import de.xikolo.controllers.fragments.WebViewFragmentAutoBundle;

@@ -1,4 +1,4 @@
-package de.xikolo.controllers.activities;
+package de.xikolo.controllers.base;
 
 
 import android.os.Bundle;

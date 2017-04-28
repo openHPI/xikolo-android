@@ -17,13 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.controllers.fragments.BaseFragment;
+import de.xikolo.controllers.base.BaseFragment;
 import de.xikolo.controllers.CourseItemsActivity;
-import de.xikolo.controllers.course.adapter.ItemListAdapter;
-import de.xikolo.controllers.course.adapter.ModuleListAdapter;
 import de.xikolo.controllers.helper.LoadingStateController;
 import de.xikolo.controllers.helper.RefeshLayoutHelper;
-import de.xikolo.managers.ModuleManager;
+import de.xikolo.managers.SectionManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -44,7 +42,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
 
     private SwipeRefreshLayout refreshLayout;
 
-    private ModuleManager moduleManager;
+    private SectionManager sectionManager;
     private ModuleListAdapter adapter;
 
     private LoadingStateController notificationController;
@@ -83,7 +81,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
         }
         setHasOptionsMenu(true);
 
-        moduleManager = new ModuleManager();
+        sectionManager = new SectionManager();
     }
 
     @Override
@@ -188,7 +186,7 @@ public class CourseLearningsFragment extends BaseFragment implements SwipeRefres
             refreshLayout.setRefreshing(true);
         }
 
-        moduleManager.getModulesWithItems(result, course, includeProgress);
+        sectionManager.getModulesWithItems(result, course, includeProgress);
     }
 
     @Override

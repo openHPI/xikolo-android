@@ -24,6 +24,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import de.xikolo.R;
+import de.xikolo.controllers.base.BasePresenterFragment;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.presenters.LoginPresenter;

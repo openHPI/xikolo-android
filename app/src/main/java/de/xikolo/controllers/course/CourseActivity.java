@@ -1,4 +1,4 @@
-package de.xikolo.controllers.activities;
+package de.xikolo.controllers.course;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
 import de.xikolo.controllers.fragments.WebViewFragmentAutoBundle;
@@ -292,6 +293,10 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                         break;
                     case 2:
 //                        fragment = ProgressFragment.newInstance(courseId);
+                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
+                                .inAppLinksEnabled(true)
+                                .externalLinksEnabled(false)
+                                .build();
                         break;
                     case 3:
                         fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.ROOMS)

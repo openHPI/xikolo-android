@@ -22,13 +22,12 @@ import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
-import de.xikolo.GlobalApplication;
-import de.xikolo.models.WebSocketMessage;
-import de.xikolo.network.parser.ApiParser;
 import de.xikolo.events.Event;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.events.NetworkStateEvent;
+import de.xikolo.models.WebSocketMessage;
+import de.xikolo.network.parser.ApiParser;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 
@@ -141,7 +140,7 @@ public class WebSocketManager {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onLoginEvent(LoginEvent event) {
-        if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
+        if (NetworkUtil.isOnline()) {
             initConnection(UserManager.getToken());
         }
     }

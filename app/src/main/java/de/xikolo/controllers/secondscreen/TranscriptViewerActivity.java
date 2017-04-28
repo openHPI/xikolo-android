@@ -8,7 +8,7 @@ import android.view.WindowManager;
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.controllers.activities.BaseActivity;
+import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -50,7 +50,7 @@ public class TranscriptViewerActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, TranscriptViewerFragment.newInstance(item, subtitleList), tag);
+//            transaction.replace(R.id.content, TranscriptViewerFragment.newInstance(item, subtitleList), tag);
             transaction.commit();
         }
     }

@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import de.xikolo.R;
+import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.controllers.fragments.LoginFragment;
 
 public class LoginActivity extends BaseActivity {

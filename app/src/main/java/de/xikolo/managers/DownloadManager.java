@@ -19,7 +19,6 @@ import de.xikolo.events.DownloadDeletedEvent;
 import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
-import de.xikolo.managers.jobs.RetrieveContentLengthJob;
 import de.xikolo.models.Course;
 import de.xikolo.models.Download;
 import de.xikolo.models.Item;
@@ -42,14 +41,14 @@ public class DownloadManager extends BaseManager {
         private String uri;
         private DownloadFileType type;
         private Course course;
-        private Section module;
+        private Section section;
         private Item item;
 
-        public void savePayload(String uri, DownloadFileType type, Course course, Section module, Item item) {
+        public void savePayload(String uri, DownloadFileType type, Course course, Section section, Item item) {
             this.uri = uri;
             this.type = type;
             this.course = course;
-            this.module = module;
+            this.section = section;
             this.item = item;
         }
 
@@ -65,8 +64,8 @@ public class DownloadManager extends BaseManager {
             return course;
         }
 
-        public Section getModule() {
-            return module;
+        public Section getSection() {
+            return section;
         }
 
         public Item getItem() {
@@ -79,29 +78,29 @@ public class DownloadManager extends BaseManager {
     public DownloadManager(Activity activity) {
         super();
 
-        this.permissionManager = new PermissionManager(jobManager, activity);
+        this.permissionManager = new PermissionManager(activity);
         this.pendingAction = null;
 
         EventBus.getDefault().register(this);
     }
 
-    public void getRemoteDownloadFileSize(Result<Long> result, String url) {
-        jobManager.addJobInBackground(new RetrieveContentLengthJob(result, url));
-    }
+//    public void getRemoteDownloadFileSize(Result<Long> result, String url) {
+//        jobManager.addJobInBackground(new RetrieveContentLengthJob(result, url));
+//    }
 
-    public long startDownload(String uri, DownloadFileType type, Course course, Section module, Item item) {
+    public long startDownload(String uri, DownloadFileType type, Course course, Section section, Item item) {
         if (Config.DEBUG) {
             Log.d(TAG, "Start download for " + uri);
         }
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 String file =  this.escapeFilename(item.title) + type.getFileSuffix();
-                Uri downloadUri = buildDownloadUri(type, course, module, item);
+                Uri downloadUri = buildDownloadUri(type, course, section, item);
 
                 if (downloadExists(downloadUri)) {
                     ToastUtil.show(R.string.toast_file_already_downloaded);
                 } else {
-                    LanalyticsUtil.trackDownloadedFile(item.id, course.id, module.id, type);
+                    LanalyticsUtil.trackDownloadedFile(item.id, course.id, section.id, type);
 
                     File dlFile = new File(downloadUri.getPath());
 
@@ -112,7 +111,7 @@ public class DownloadManager extends BaseManager {
                 }
             } else {
                 pendingAction = PendingAction.START;
-                pendingAction.savePayload(uri, type, course, module, item);
+                pendingAction.savePayload(uri, type, course, section, item);
             }
         } else {
             Log.w(TAG, "No write access for external storage");
@@ -121,10 +120,10 @@ public class DownloadManager extends BaseManager {
         return 0;
     }
 
-    public boolean deleteDownload(DownloadFileType type, Course course, Section module, Item item) {
+    public boolean deleteDownload(DownloadFileType type, Course course, Section section, Item item) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-                Uri downloadUri = buildDownloadUri(type, course, module, item);
+                Uri downloadUri = buildDownloadUri(type, course, section, item);
 
                 if (Config.DEBUG) {
                     Log.d(TAG, "Delete download " + downloadUri.toString());
@@ -139,7 +138,7 @@ public class DownloadManager extends BaseManager {
                 }
             } else {
                 pendingAction = PendingAction.DELETE;
-                pendingAction.savePayload(null, type, course, module, item);
+                pendingAction.savePayload(null, type, course, section, item);
                 return false;
             }
         } else {
@@ -149,10 +148,10 @@ public class DownloadManager extends BaseManager {
         }
     }
 
-    public boolean cancelDownload(DownloadFileType type, Course course, Section module, Item item) {
+    public boolean cancelDownload(DownloadFileType type, Course course, Section section, Item item) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-                Uri downloadUri = buildDownloadUri(type, course, module, item);
+                Uri downloadUri = buildDownloadUri(type, course, section, item);
                 Download dl = new Download();
                 dl.localUri = downloadUri.toString();
 
@@ -175,7 +174,7 @@ public class DownloadManager extends BaseManager {
                 return false;
             } else {
                 pendingAction = PendingAction.CANCEL;
-                pendingAction.savePayload(null, type, course, module, item);
+                pendingAction.savePayload(null, type, course, section, item);
                 return false;
             }
         } else {
@@ -193,15 +192,15 @@ public class DownloadManager extends BaseManager {
                 switch (pendingAction) {
                     case START:
                         startDownload(pendingAction.getUri(), pendingAction.getType(),
-                                pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
+                                pendingAction.getCourse(), pendingAction.getSection(), pendingAction.getItem());
                         break;
                     case DELETE:
                         deleteDownload(pendingAction.getType(),
-                                pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
+                                pendingAction.getCourse(), pendingAction.getSection(), pendingAction.getItem());
                         break;
                     case CANCEL:
                         cancelDownload(pendingAction.getType(),
-                                pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
+                                pendingAction.getCourse(), pendingAction.getSection(), pendingAction.getItem());
                         break;
                     default:
                         pendingAction = null;
@@ -219,8 +218,8 @@ public class DownloadManager extends BaseManager {
         }
     }
 
-    public Download getDownload(DownloadFileType type, Course course, Section module, Item item) {
-        Uri downloadUri = buildDownloadUri(type, course, module, item);
+    public Download getDownload(DownloadFileType type, Course course, Section section, Item item) {
+        Uri downloadUri = buildDownloadUri(type, course, section, item);
         Download dl = new Download();
         dl.localUri = downloadUri.toString();
 
@@ -238,8 +237,8 @@ public class DownloadManager extends BaseManager {
         return null;
     }
 
-    public boolean downloadRunning(DownloadFileType type, Course course, Section module, Item item) {
-        Uri downloadUri = buildDownloadUri(type, course, module, item);
+    public boolean downloadRunning(DownloadFileType type, Course course, Section section, Item item) {
+        Uri downloadUri = buildDownloadUri(type, course, section, item);
         Download dl = new Download();
         dl.localUri = downloadUri.toString();
 
@@ -249,8 +248,8 @@ public class DownloadManager extends BaseManager {
         return dlSet.contains(dl);
     }
 
-    public boolean downloadExists(DownloadFileType type, Course course, Section module, Item item) {
-        File file = new File(buildDownloadUri(type, course, module, item).getPath());
+    public boolean downloadExists(DownloadFileType type, Course course, Section section, Item item) {
+        File file = new File(buildDownloadUri(type, course, section, item).getPath());
         return file.isFile() && file.exists();
     }
 
@@ -259,23 +258,23 @@ public class DownloadManager extends BaseManager {
         return file.isFile() && file.exists();
     }
 
-    public File getDownloadFile(DownloadFileType type, Course course, Section module, Item item) {
-        File file = new File(buildDownloadUri(type, course, module, item).getPath());
+    public File getDownloadFile(DownloadFileType type, Course course, Section section, Item item) {
+        File file = new File(buildDownloadUri(type, course, section, item).getPath());
         if (file.isFile() && file.exists()) {
             return file;
         }
         return null;
     }
 
-    public long getDownloadFileSize(DownloadFileType type, Course course, Section module, Item item) {
-        File file = new File(buildDownloadUri(type, course, module, item).getPath());
+    public long getDownloadFileSize(DownloadFileType type, Course course, Section section, Item item) {
+        File file = new File(buildDownloadUri(type, course, section, item).getPath());
         if (file.isFile() && file.exists()) {
             return file.length();
         }
         return 0;
     }
 
-    private Uri buildDownloadUri(DownloadFileType type, Course course, Section module, Item item) {
+    private Uri buildDownloadUri(DownloadFileType type, Course course, Section section, Item item) {
         File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
                 + GlobalApplication.getInstance().getString(R.string.app_name));
 
@@ -283,7 +282,7 @@ public class DownloadManager extends BaseManager {
 
         return Uri.fromFile(new File(publicAppFolder.getAbsolutePath() + File.separator
                 + escapeFilename(course.title) + "_" + course.id + File.separator
-                + escapeFilename(module.name) + "_" + module.id + File.separator
+                + escapeFilename(section.title) + "_" + section.id + File.separator
                 + escapeFilename(item.title) + "_" + item.id + File.separator
                 + file));
     }

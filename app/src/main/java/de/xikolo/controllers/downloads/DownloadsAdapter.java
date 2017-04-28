@@ -1,4 +1,4 @@
-package de.xikolo.controllers.downloads.adapter;
+package de.xikolo.controllers.downloads;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

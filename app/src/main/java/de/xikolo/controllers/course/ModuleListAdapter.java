@@ -1,4 +1,4 @@
-package de.xikolo.controllers.course.adapter;
+package de.xikolo.controllers.course;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;

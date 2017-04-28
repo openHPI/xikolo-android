@@ -16,7 +16,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.activities.SecondScreenActivity;
+import de.xikolo.controllers.secondscreen.SecondScreenActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -39,7 +39,7 @@ public class SecondScreenManager {
 
     private CourseManager courseManager;
 
-    private ModuleManager moduleManager;
+    private SectionManager sectionManager;
 
     private ItemManager itemManager;
 
@@ -47,7 +47,7 @@ public class SecondScreenManager {
 
     public SecondScreenManager() {
         courseManager = new CourseManager();
-        moduleManager = new ModuleManager();
+        sectionManager = new SectionManager();
         itemManager = new ItemManager();
 
         EventBus.getDefault().register(this);
@@ -125,7 +125,7 @@ public class SecondScreenManager {
             protected void onSuccess(Course course, DataSource dataSource) {
                 if (course != null && !course.equals(SecondScreenManager.this.course)) {
                     SecondScreenManager.this.course = course;
-                    moduleManager.getModuleWithItems(moduleResult, course.id, message.payload().get("section_id"));
+                    sectionManager.getModuleWithItems(moduleResult, course.id, message.payload().get("section_id"));
                 }
             }
 

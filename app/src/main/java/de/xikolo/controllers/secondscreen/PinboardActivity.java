@@ -5,8 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import de.xikolo.R;
-import de.xikolo.controllers.activities.BaseActivity;
-import de.xikolo.controllers.WebViewInterfaceFragment;
+import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -56,7 +55,7 @@ public class PinboardActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, WebViewInterfaceFragment.newInstance(url, inAppLinksEnabled, externalLinksEnabled), tag);
+//            transaction.replace(R.id.content, WebViewInterfaceFragment.newInstance(url, inAppLinksEnabled, externalLinksEnabled), tag);
             transaction.commit();
         }
     }

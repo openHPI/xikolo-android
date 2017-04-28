@@ -21,7 +21,7 @@ import de.xikolo.R;
 import de.xikolo.controllers.activities.CourseActivityAutoBundle;
 import de.xikolo.controllers.activities.CourseDetailsActivityAutoBundle;
 import de.xikolo.controllers.adapters.CourseListAdapter;
-import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
+import de.xikolo.controllers.navigation.NavigationAdapter;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.CourseListFilterAllPresenterFactory;
 import de.xikolo.presenters.CourseListFilterMyPresenterFactory;

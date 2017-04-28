@@ -1,6 +1,7 @@
-package de.xikolo.controllers.navigation.adapter;
+package de.xikolo.controllers.navigation;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
-import de.xikolo.models.User;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.FeatureToggle;
@@ -148,16 +148,16 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 profileViewHolder.viewLogin.setVisibility(View.GONE);
                 profileViewHolder.viewProfile.setVisibility(View.VISIBLE);
 
-                User user = UserManager.getSavedUser();
-                profileViewHolder.textName.setText(String.format(context.getResources().getString(R.string.user_name),
-                        user.first_name, user.last_name));
-                profileViewHolder.textEmail.setText(user.email);
-
-                if (user.user_visual != null) {
-                    ImageHelper.loadRounded(user.user_visual, profileViewHolder.imageProfile);
-                } else {
+//                User user = UserManager.getSavedUser();
+//                profileViewHolder.textName.setText(String.format(context.getResources().getString(R.string.user_name),
+//                        user.first_name, user.last_name));
+//                profileViewHolder.textEmail.setText(user.email);
+//
+//                if (user.user_visual != null) {
+//                    ImageHelper.loadRounded(user.user_visual, profileViewHolder.imageProfile);
+//                } else {
                     ImageHelper.loadRounded(R.drawable.avatar, profileViewHolder.imageProfile);
-                }
+//                }
             } else {
                 profileViewHolder.viewLogin.setVisibility(View.VISIBLE);
                 profileViewHolder.viewProfile.setVisibility(View.GONE);
@@ -270,6 +270,57 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             super(view);
 
             textCounter = (TextView) view.findViewById(R.id.textCounter);
+        }
+
+    }
+
+    static class NavigationItem {
+
+        @StringRes
+        private final int icon;
+
+        @StringRes
+        private final int title;
+
+        private final ViewType viewType;
+
+        private final int position;
+
+        public enum ViewType {
+            PROFILE(0), MAIN(1), SUB(2);
+
+            private final int value;
+
+            ViewType(int value) {
+                this.value = value;
+            }
+
+            public int toInteger() {
+                return value;
+            }
+        }
+
+        public NavigationItem(@StringRes int icon, @StringRes int title, ViewType viewType, int position) {
+            this.icon = icon;
+            this.title = title;
+            this.viewType = viewType;
+            this.position = position;
+        }
+
+        public String getIcon(Context context) {
+            return context.getString(icon);
+        }
+
+        public String getTitle(Context context) {
+            return context.getString(title);
+        }
+
+        public ViewType getViewType() {
+            return viewType;
+        }
+
+        public int getPosition() {
+            return position;
         }
 
     }

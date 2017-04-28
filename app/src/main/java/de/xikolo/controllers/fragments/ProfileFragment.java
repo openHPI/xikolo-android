@@ -15,7 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageHelper;
-import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
+import de.xikolo.controllers.navigation.NavigationAdapter;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Profile;
 import de.xikolo.presenters.PresenterFactory;

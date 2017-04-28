@@ -17,7 +17,6 @@ import java.util.Calendar;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.xikolo.BuildConfig;
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.activities.LoginActivity;
 import de.xikolo.events.LoginEvent;
@@ -148,8 +147,7 @@ public class SettingsFragment extends PreferenceFragment {
             pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    UserManager userManager = new UserManager(GlobalApplication.getInstance().getJobManager());
-                    userManager.logout();
+                    UserManager.logout();
                     return true;
                 }
             });

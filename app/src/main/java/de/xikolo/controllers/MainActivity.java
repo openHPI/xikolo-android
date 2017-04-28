@@ -1,4 +1,4 @@
-package de.xikolo.controllers.activities;
+package de.xikolo.controllers;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,11 +14,16 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.controllers.activities.LoginActivity;
+import de.xikolo.controllers.base.BaseActivity;
+import de.xikolo.controllers.downloads.DownloadsActivity;
 import de.xikolo.controllers.fragments.CourseListFragmentAutoBundle;
 import de.xikolo.controllers.fragments.MainFragment;
 import de.xikolo.controllers.fragments.ProfileFragment;
 import de.xikolo.controllers.navigation.NavigationFragment;
-import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
+import de.xikolo.controllers.navigation.NavigationAdapter;
+import de.xikolo.controllers.secondscreen.SecondScreenActivity;
+import de.xikolo.controllers.settings.SettingsActivity;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.managers.UserManager;

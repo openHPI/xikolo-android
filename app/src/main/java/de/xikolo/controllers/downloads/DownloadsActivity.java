@@ -1,4 +1,4 @@
-package de.xikolo.controllers.activities;
+package de.xikolo.controllers.downloads;
 
 
 import android.os.Bundle;
@@ -6,26 +6,26 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import de.xikolo.R;
-import de.xikolo.controllers.secondscreen.SecondScreenFragment;
+import de.xikolo.controllers.base.BaseActivity;
 
-public class SecondScreenActivity extends BaseActivity {
+public class DownloadsActivity extends BaseActivity {
 
-    public static final String TAG = SecondScreenActivity.class.getSimpleName();
+    public static final String TAG = DownloadsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_blank_no_scroll);
+        setContentView(R.layout.activity_blank);
         setupActionBar();
 
-        setTitle(getString(R.string.title_section_second_screen) + " (" + getString(R.string.title_section_beta) + ")");
+        setTitle(getString(R.string.title_section_downloads));
 
-        String tag = "second_screen";
+        String tag = "downloads";
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, SecondScreenFragment.newInstance(), tag);
+            transaction.replace(R.id.content, DownloadsFragment.newInstance(), tag);
             transaction.commit();
         }
     }

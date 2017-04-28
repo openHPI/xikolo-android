@@ -19,7 +19,6 @@ import java.util.List;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog;
-import de.xikolo.controllers.downloads.adapter.DownloadsAdapter;
 import de.xikolo.controllers.helper.LoadingStateController;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.PermissionManager;

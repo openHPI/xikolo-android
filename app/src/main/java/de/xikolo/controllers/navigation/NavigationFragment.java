@@ -21,8 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.xikolo.R;
-import de.xikolo.controllers.fragments.BaseFragment;
-import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
+import de.xikolo.controllers.base.BaseFragment;
 import de.xikolo.managers.UserManager;
 import de.xikolo.views.DividerItemDecoration;
 

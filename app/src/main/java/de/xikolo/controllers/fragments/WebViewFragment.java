@@ -19,6 +19,7 @@ import java.util.Map;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
+import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.helper.WebViewHelper;
 import de.xikolo.presenters.PWebView;
 import de.xikolo.presenters.PresenterFactory;

@@ -1,6 +1,7 @@
 package de.xikolo.controllers.fragments;
 
-import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
+import de.xikolo.controllers.base.LoadingStatePresenterFragment;
+import de.xikolo.controllers.navigation.NavigationAdapter;
 import de.xikolo.presenters.LoadingStatePresenter;
 import de.xikolo.presenters.MainView;
 
