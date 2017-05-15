@@ -10,7 +10,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.java_websocket.WebSocket;
-import org.java_websocket.client.DefaultSSLWebSocketClientFactory;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.handshake.ServerHandshake;
@@ -21,14 +20,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 
 import de.xikolo.GlobalApplication;
-import de.xikolo.models.WebSocketMessage;
-import de.xikolo.network.parser.ApiParser;
 import de.xikolo.events.Event;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.events.NetworkStateEvent;
+import de.xikolo.models.WebSocketMessage;
+import de.xikolo.network.parser.ApiParser;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 
@@ -94,7 +94,8 @@ public class WebSocketManager {
             try {
                 SSLContext sc = SSLContext.getInstance("TLS");
                 sc.init(null, null, null);
-                webSocketClient.setWebSocketFactory(new DefaultSSLWebSocketClientFactory(sc));
+                SSLSocketFactory factory = sc.getSocketFactory();
+                webSocketClient.setSocket(factory.createSocket());
                 webSocketClient.connect();
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);

@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
@@ -15,6 +15,7 @@ allprojects {
     repositories {
         mavenCentral()
         jcenter()
+        maven { url "http://clojars.org/repo/" }
         flatDir {
             dirs 'libs'
         }
