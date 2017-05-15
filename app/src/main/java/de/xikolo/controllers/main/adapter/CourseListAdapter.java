@@ -15,11 +15,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.xikolo.BuildConfig;
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageController;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
+import de.xikolo.utils.BuildFlavor;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.HeaderAndSectionsList;
@@ -57,15 +59,29 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         List<Course> subList;
         if (courses.size() > 0) {
             if (courseFilter == CourseManager.CourseFilter.ALL) {
-                subList = CourseManager.getCurrentAndFutureCourses(courses);
-                if (subList.size() > 0) {
-                    headerAndSectionsList.add(context.getString(R.string.header_current_courses),
-                            subList);
-                }
-                subList = CourseManager.getPastCourses(courses);
-                if (subList.size() > 0) {
-                    headerAndSectionsList.add(context.getString(R.string.header_self_paced_courses),
-                            subList);
+                if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                    subList = CourseManager.getCurrentAndPastCourses(courses);
+                    CourseManager.sortCoursesDecending(subList);
+                    if (subList.size() > 0) {
+                        headerAndSectionsList.add(context.getString(R.string.header_current_courses),
+                                subList);
+                    }
+                    subList = CourseManager.getFutureCourses(courses);
+                    if (subList.size() > 0) {
+                        headerAndSectionsList.add(context.getString(R.string.header_future_courses),
+                                subList);
+                    }
+                } else {
+                    subList = CourseManager.getCurrentAndFutureCourses(courses);
+                    if (subList.size() > 0) {
+                        headerAndSectionsList.add(context.getString(R.string.header_current_and_upcoming_courses),
+                                subList);
+                    }
+                    subList = CourseManager.getPastCourses(courses);
+                    if (subList.size() > 0) {
+                        headerAndSectionsList.add(context.getString(R.string.header_self_paced_courses),
+                                subList);
+                    }
                 }
             } else if (courseFilter == CourseManager.CourseFilter.MY) {
                 subList = CourseManager.getCurrentAndPastCourses(courses);
@@ -141,9 +157,15 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (dateBegin != null && dateEnd != null) {
                 viewHolder.textDate.setText(dateOut.format(dateBegin) + " - " + dateOut.format(dateEnd));
             } else if (dateBegin != null) {
-                viewHolder.textDate.setText(dateOut.format(dateBegin));
+                if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                    viewHolder.textDate.setText(context.getString(R.string.course_date_self_paced));
+                } else if (DateUtil.nowIsAfter(course.available_from)) {
+                    viewHolder.textDate.setText(String.format(context.getString(R.string.course_date_since), dateOut.format(dateBegin)));
+                } else {
+                    viewHolder.textDate.setText(String.format(context.getString(R.string.course_date_beginning), dateOut.format(dateBegin)));
+                }
             } else {
-                viewHolder.textDate.setText("");
+                viewHolder.textDate.setText(context.getString(R.string.course_date_coming_soon));
             }
 
             viewHolder.textTitle.setText(course.name);
@@ -174,6 +196,10 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     viewHolder.textBanner.setVisibility(View.GONE);
                 }
+            }
+
+            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                viewHolder.textBanner.setVisibility(View.GONE);
             }
 
             ImageController.load(course.visual_url, viewHolder.image);

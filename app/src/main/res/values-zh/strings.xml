@@ -12,7 +12,7 @@
     <string name="title_section_my_courses">我的课程</string>
 
     <!-- -->
-    <string name="header_current_courses">当前和即将开始的课程</string>
+    <string name="header_current_and_upcoming_courses">当前和即将开始的课程</string>
     <string name="header_self_paced_courses">自学课程</string>
     <string name="header_my_current_courses">我的当前课程</string>
     <string name="header_my_future_courses">我的即将开始的课程</string>

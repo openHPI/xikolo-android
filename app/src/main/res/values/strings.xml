@@ -15,8 +15,10 @@
     <string name="title_section_beta">Beta</string>
 
     <!-- -->
-    <string name="header_current_courses">Current and upcoming courses</string>
+    <string name="header_current_and_upcoming_courses">Current and upcoming courses</string>
     <string name="header_self_paced_courses">Self-paced courses</string>
+    <string name="header_current_courses">Current courses</string>
+    <string name="header_future_courses">Future courses</string>
     <string name="header_my_current_courses">My current courses</string>
     <string name="header_my_future_courses">My upcoming courses</string>
     <string name="banner_running">Running</string>
@@ -122,6 +124,11 @@
     <string name="self_test_points">%1$s of %2$s self-test points</string>
     <string name="assignments_points">%1$s of %2$s assignment points</string>
     <string name="items_visited">%1$s of %2$s visited</string>
+
+    <string name="course_date_coming_soon">Coming soon</string>
+    <string name="course_date_since">Since %s</string>
+    <string name="course_date_self_paced">Self-paced</string>
+    <string name="course_date_beginning">Beginning %s</string>
 
     <!-- -->
     <string name="notification_no_network">Please enable network connection</string>

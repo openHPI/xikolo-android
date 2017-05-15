@@ -228,7 +228,11 @@ public class ModuleActivity extends BaseActivity {
 
             List<Item> toRemove = new ArrayList<>();
             for (Item item : items) {
-                if (!DateUtil.nowIsBetween(item.available_from, item.available_to) || item.locked) {
+                if ((item.available_from != null && DateUtil.nowIsBefore(item.available_from)) ||
+                        (item.available_to != null && DateUtil.nowIsAfter(item.available_to)) ||
+                        (module.available_from != null && DateUtil.nowIsBefore(module.available_from)) ||
+                        (module.available_to != null && DateUtil.nowIsAfter(module.available_to)) ||
+                        item.locked) {
                     toRemove.add(item);
                 }
             }
