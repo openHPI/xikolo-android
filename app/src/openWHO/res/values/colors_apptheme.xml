@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="apptheme_main">#549ccb</color>
+    <color name="apptheme_main">#0b72b5</color>
 
     <!-- 30% white overlay -->
-    <color name="apptheme_main_light">#88badb</color>
+    <color name="apptheme_main_light">#559dcb</color>
 
     <!-- 40% black overlay -->
-    <color name="apptheme_main_dark">#325e7a</color>
+    <color name="apptheme_main_dark">#07446d</color>
 
     <color name="apptheme_second">#9164a7</color>
     <color name="apptheme_third">#a7ca6c</color>
 
-    <color name="apptheme_main_10">#1a549ccb</color>
+    <color name="apptheme_main_10">#1a0b72b5</color>
 
     <color name="apptheme_second_60">#999164a7</color>
     <color name="apptheme_third_60">#99a7ca6c</color>
@@ -23,5 +23,9 @@
 
     <!-- toolbar with 40% black overlay -->
     <color name="apptheme_statusbar">#07446d</color>
+
+    <color name="apptheme_login_gradient_start">@color/apptheme_main_light</color>
+
+    <color name="apptheme_placeholder_gradient_start">@color/apptheme_main_light</color>
 
 </resources>
