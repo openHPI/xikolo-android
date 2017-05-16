@@ -45,6 +45,8 @@ public class UserManager extends BaseManager {
 
         application.getLanalytics().deleteData();
 
+        application.clearCookieSyncManager();
+
         EventBus.getDefault().post(new LogoutEvent());
     }
 

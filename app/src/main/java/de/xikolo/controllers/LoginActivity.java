@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,13 +21,19 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import de.xikolo.BuildConfig;
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.helper.ImageController;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.managers.Result;
 import de.xikolo.managers.UserManager;
+import de.xikolo.models.AccessToken;
 import de.xikolo.models.User;
+import de.xikolo.storages.preferences.StorageType;
+import de.xikolo.storages.preferences.UserStorage;
+import de.xikolo.utils.BuildFlavor;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
@@ -43,6 +50,8 @@ public class LoginActivity extends BaseActivity {
     private EditText editTextPassword;
 
     private ProgressDialog progressDialog;
+
+    public static final String ARG_TOKEN = "arg_token";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +76,8 @@ public class LoginActivity extends BaseActivity {
         editTextPassword = (EditText) findViewById(R.id.editPassword);
         Button buttonLogin = (Button) findViewById(R.id.btnLogin);
         Button buttonNew = (Button) findViewById(R.id.btnNew);
+        Button buttonSSO = (Button) findViewById(R.id.btnSSO);
+        View containerSSO = findViewById(R.id.ssoContainer);
         TextView textReset = (TextView) findViewById(R.id.textForgotPw);
         ImageView topImage = (ImageView) findViewById(R.id.top_image);
         TextView textCredentials = (TextView) findViewById(R.id.text_credentials);
@@ -101,6 +112,7 @@ public class LoginActivity extends BaseActivity {
                 EventBus.getDefault().post(new LoginEvent());
                 progressDialog.dismiss();
                 LoginActivity.this.finish();
+                Log.i(TAG, "FINISH!!!");
             }
 
             @Override
@@ -156,6 +168,33 @@ public class LoginActivity extends BaseActivity {
                 }
             });
         }
+
+        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+            containerSSO.setVisibility(View.VISIBLE);
+            buttonSSO.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hideKeyboard(view);
+                    startSSOLogin("/auth/who");
+                }
+            });
+        }
+
+        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP) {
+            containerSSO.setVisibility(View.VISIBLE);
+            buttonSSO.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hideKeyboard(view);
+                    startSSOLogin("/auth/sap");
+                }
+            });
+        }
+
+        Bundle b = getIntent().getExtras();
+        if (b != null && b.getString(ARG_TOKEN) != null) {
+            externalLoginCallback(b.getString(ARG_TOKEN));
+        }
     }
 
     private void login(View view) {
@@ -172,6 +211,27 @@ public class LoginActivity extends BaseActivity {
         } else {
             editTextEmail.setError(getString(R.string.error_email));
         }
+    }
+
+    private void startSSOLogin(String strategy) {
+        Intent intent = new Intent(this, SsoLoginActivity.class);
+        intent.putExtra(SsoLoginActivity.ARG_URL, Config.URI + "?in_app=true&redirect_to=" + strategy);
+        intent.putExtra(SsoLoginActivity.ARG_TITLE, "SSO");
+        startActivity(intent);
+    }
+
+    private void externalLoginCallback(String token) {
+        Log.d(TAG, "External Login - Token: " + token);
+        progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
+
+        AccessToken at = new AccessToken();
+        at.token = token;
+        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
+        userStorage.saveAccessToken(at);
+
+        userManager.getUser(userResult);
+
+        EventBus.getDefault().post(new LoginEvent());
     }
 
     @Override

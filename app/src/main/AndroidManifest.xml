@@ -73,7 +73,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:label="@string/app_name">
+            <intent-filter android:label="@string/app_name" android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -152,6 +152,13 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controllers.MainActivity" />
+        </activity>
+        <activity
+            android:name=".controllers.SsoLoginActivity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.LoginActivity" />
         </activity>
         <activity
             android:name=".controllers.ModuleActivity"

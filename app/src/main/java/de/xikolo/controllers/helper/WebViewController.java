@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Browser;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,11 +24,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.xikolo.R;
+import de.xikolo.controllers.LoginActivity;
 import de.xikolo.managers.UserManager;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
+
+import static android.os.Build.VERSION_CODES.M;
 
 public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -85,7 +87,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                 ToastUtil.show("An error occurred" + description);
             }
 
-            @TargetApi(Build.VERSION_CODES.M)
+            @TargetApi(M)
             @Override
             public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
                 onReceivedError(view, err.getErrorCode(), err.getDescription().toString(), req.getUrl().toString());
@@ -110,7 +112,12 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Config.HOST) && inAppLinksEnabled || loadExternalUrlEnabled) {
+                if (url.contains(Config.HOST) && url.contains("/auth/app")) {
+                    String token = Uri.parse(url).getQueryParameter("token");
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    intent.putExtra(LoginActivity.ARG_TOKEN, token);
+                    context.startActivity(intent);
+                } else if (url.contains(Config.HOST) && inAppLinksEnabled || loadExternalUrlEnabled) {
                     request(url, true);
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

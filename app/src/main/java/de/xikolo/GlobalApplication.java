@@ -199,6 +199,23 @@ public class GlobalApplication extends Application {
         }
     }
 
+    @SuppressWarnings("deprecation")
+    public void clearCookieSyncManager() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            CookieSyncManager cookieSyncMngr = CookieSyncManager.getInstance();
+            cookieSyncMngr.startSync();
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+            cookieManager.removeSessionCookie();
+            cookieSyncMngr.stopSync();
+            cookieSyncMngr.sync();
+        } else  {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().removeSessionCookies(null);
+            CookieManager.getInstance().flush();
+        }
+    }
+
     public void configureSecondScreenManager() {
         if (FeatureToggle.secondScreen()) {
             synchronized (GlobalApplication.class) {
