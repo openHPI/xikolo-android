@@ -43,6 +43,8 @@
         <item>x2.0</item>
     </string-array>
 
+    <string name="preference_onboarding_shown" translatable="false">onboarding_shown</string>
+
     <!-- -->
     <string name="filename_cache_lastcourse" translatable="false">lastCourseExtras</string>
 

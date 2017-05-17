@@ -233,4 +233,9 @@
     <string name="lang_de">German</string>
     <string name="lang_zh">Chinese</string>
 
+    <!-- -->
+    <string name="onboarding_headline">Welcome to all new users of the OpenWHO App!</string>
+    <string name="onboarding_text">Particularly, we would like to salute the Delegates to the 70th World Health Assembly.\n\nOpenWHO seeks to provide direct access to action-oriented technical and operational know-how for decision-makers and frontline responders in health emergencies.\n\nCheck out this app, come back regularly, and get engaged in the OpenWHO community.</string>
+    <string name="onboarding_button">Start learning</string>
+
 </resources>

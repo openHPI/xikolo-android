@@ -9,6 +9,7 @@ import de.xikolo.events.LogoutEvent;
 import de.xikolo.managers.jobs.CreateAccessTokenJob;
 import de.xikolo.managers.jobs.RetrieveUserJob;
 import de.xikolo.models.User;
+import de.xikolo.storages.preferences.ApplicationPreferences;
 import de.xikolo.storages.preferences.StorageType;
 import de.xikolo.storages.preferences.UserStorage;
 
@@ -46,6 +47,9 @@ public class UserManager extends BaseManager {
         application.getLanalytics().deleteData();
 
         application.clearCookieSyncManager();
+
+        ApplicationPreferences appPreferences = (ApplicationPreferences) GlobalApplication.getStorage(StorageType.APP);
+        appPreferences.clear();
 
         EventBus.getDefault().post(new LogoutEvent());
     }
