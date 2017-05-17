@@ -13,6 +13,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import de.xikolo.BuildConfig;
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.main.ContentFragment;
 import de.xikolo.controllers.main.ContentWebViewFragment;
@@ -23,7 +24,11 @@ import de.xikolo.controllers.navigation.adapter.NavigationAdapter;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.managers.UserManager;
+import de.xikolo.storages.preferences.ApplicationPreferences;
+import de.xikolo.storages.preferences.StorageType;
+import de.xikolo.utils.BuildFlavor;
 import de.xikolo.utils.Config;
+import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.PlayServicesUtil;
@@ -48,6 +53,11 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupActionBar();
+
+        ApplicationPreferences appPreferences = (ApplicationPreferences) GlobalApplication.getStorage(StorageType.APP);
+        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO && DateUtil.nowIsBetween("2017-05-21T00:00:00", "2017-05-31T23:59:59") && !appPreferences.onboardingShown()) {
+            startActivity(new Intent(this, OnboardingActivity.class));
+        }
 
         navigationFragment = (NavigationFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);

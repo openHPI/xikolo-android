@@ -170,7 +170,9 @@ public class ProgressFragment extends BaseFragment implements SwipeRefreshLayout
             protected void onError(ErrorCode errorCode) {
                 notificationController.setInvisible();
                 refreshLayout.setRefreshing(false);
-                ToastUtil.show(R.string.error);
+                if (userRequest) {
+                    ToastUtil.show(R.string.error);
+                }
             }
         };
 

@@ -1,0 +1,85 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_login"
+    android:fitsSystemWindows="true">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <de.xikolo.views.MaxWidthFrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal|top"
+            app:maxWidthLayout="576dp">
+
+            <RelativeLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:paddingTop="56dp">
+
+                <ImageView
+                    android:id="@+id/top_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="72dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginTop="24dp" />
+
+                <TextView
+                    android:id="@+id/headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/top_image"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="16dp"
+                    android:padding="4dp"
+                    android:text="@string/onboarding_headline"
+                    android:textColor="@color/apptheme_login_text"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/headline"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="16dp"
+                    android:padding="4dp"
+                    android:text="@string/onboarding_text"
+                    android:textColor="@color/apptheme_login_text"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btnStart"
+                    style="@style/Button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/text"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginTop="40dp"
+                    android:padding="12dp"
+                    android:text="@string/onboarding_button" />
+
+            </RelativeLayout>
+
+        </de.xikolo.views.MaxWidthFrameLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <include layout="@layout/toolbar_login" />
+
+</FrameLayout>

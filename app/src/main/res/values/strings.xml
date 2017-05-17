@@ -15,8 +15,10 @@
     <string name="title_section_beta">Beta</string>
 
     <!-- -->
-    <string name="header_current_courses">Current and upcoming courses</string>
+    <string name="header_current_and_upcoming_courses">Current and upcoming courses</string>
     <string name="header_self_paced_courses">Self-paced courses</string>
+    <string name="header_current_courses">Current courses</string>
+    <string name="header_future_courses">Future courses</string>
     <string name="header_my_current_courses">My current courses</string>
     <string name="header_my_future_courses">My upcoming courses</string>
     <string name="banner_running">Running</string>
@@ -118,10 +120,18 @@
     <string name="download_all_content">Download contents</string>
     <string name="intro_overlay_text">Touch to cast videos on TV</string>
     <string name="user_name">%1$s %2$s</string>
+    <string name="or">or</string>
+    <string name="login_sso">SSO</string>
+    <string name="login_sso_hint">SSO Login</string>
 
     <string name="self_test_points">%1$s of %2$s self-test points</string>
     <string name="assignments_points">%1$s of %2$s assignment points</string>
     <string name="items_visited">%1$s of %2$s visited</string>
+
+    <string name="course_date_coming_soon">Coming soon</string>
+    <string name="course_date_since">Since %s</string>
+    <string name="course_date_self_paced">Self-paced</string>
+    <string name="course_date_beginning">Beginning %s</string>
 
     <!-- -->
     <string name="notification_no_network">Please enable network connection</string>
@@ -222,5 +232,10 @@
     <string name="lang_en">English</string>
     <string name="lang_de">German</string>
     <string name="lang_zh">Chinese</string>
+
+    <!-- -->
+    <string name="onboarding_headline">Welcome to all new users of the OpenWHO App!</string>
+    <string name="onboarding_text">Particularly, we would like to salute the Delegates to the 70th World Health Assembly.\n\nOpenWHO seeks to provide direct access to action-oriented technical and operational know-how for decision-makers and frontline responders in health emergencies.\n\nCheck out this app, come back regularly, and get engaged in the OpenWHO community.</string>
+    <string name="onboarding_button">Start learning</string>
 
 </resources>

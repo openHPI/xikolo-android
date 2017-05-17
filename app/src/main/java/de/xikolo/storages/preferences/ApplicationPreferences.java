@@ -26,6 +26,12 @@ public class ApplicationPreferences extends KeyValueStorage {
         editor.apply();
     }
 
+    public void clear() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
+
     public boolean isVideoQualityLimitedOnMobile() {
         return getBoolean(context.getString(R.string.preference_video_quality));
     }
@@ -69,6 +75,14 @@ public class ApplicationPreferences extends KeyValueStorage {
 
     public void setUsedSecondScreen(boolean used) {
         putBoolean(used, context.getString(R.string.preference_used_second_screen));
+    }
+
+    public boolean onboardingShown() {
+        return getBoolean(context.getString(R.string.preference_onboarding_shown), false);
+    }
+
+    public void setOnboardingShown(boolean shown) {
+        putBoolean(shown, context.getString(R.string.preference_onboarding_shown));
     }
 
 }

@@ -20,7 +20,7 @@ public class DateUtil {
         Date dateNow = new Date();
 
         if (dateBegin == null && dateEnd == null) {
-            return true;
+            return false;
         }
         if (dateBegin == null) {
             if (dateNow.before(dateEnd)) {
@@ -41,7 +41,7 @@ public class DateUtil {
         Date dateNow = new Date();
 
         if (d == null) {
-            return true;
+            return false;
         } else if (dateNow.after(d)) {
             return true;
         }
@@ -55,7 +55,7 @@ public class DateUtil {
         Date dateNow = new Date();
 
         if (d == null) {
-            return true;
+            return false;
         } else if (dateNow.before(d)) {
             return true;
         }

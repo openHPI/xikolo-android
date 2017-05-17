@@ -124,12 +124,75 @@
                     style="@style/Button"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/btnLogin"
                     android:layout_marginBottom="24dp"
                     android:background="@drawable/button_flat_dark"
                     android:text="@string/button_new"
                     android:textColor="@color/apptheme_login_text" />
+
+                <RelativeLayout
+                    android:id="@+id/ssoContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/btnNew"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/line"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="24dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/apptheme_login_text" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:padding="6dp"
+                            android:text="@string/or"
+                            android:textColor="@color/apptheme_login_text"
+                            android:textSize="14sp" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/apptheme_login_text" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnSSO"
+                        style="@style/Button"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/line"
+                        android:layout_marginBottom="6dp"
+                        android:padding="12dp"
+                        android:text="@string/login_sso" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/btnSSO"
+                        android:layout_marginBottom="24dp"
+                        android:text="@string/login_sso_hint"
+                        android:textColor="@color/apptheme_login_text"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
 
             </RelativeLayout>
 

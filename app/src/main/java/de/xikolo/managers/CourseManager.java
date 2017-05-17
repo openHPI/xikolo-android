@@ -94,7 +94,7 @@ public class CourseManager extends BaseManager {
 
         for (Course course : courses) {
             if (DateUtil.nowIsBetween(course.available_from, course.available_to) ||
-                    DateUtil.nowIsBefore(course.available_from)) {
+                    DateUtil.nowIsBefore(course.available_from) || course.available_from == null) {
                 currentCourses.add(course);
             }
         }
@@ -120,8 +120,8 @@ public class CourseManager extends BaseManager {
         List<Course> currentCourses = new ArrayList<>();
 
         for (Course course : courses) {
-            if (DateUtil.nowIsBetween(course.available_from, course.available_to) ||
-                    DateUtil.nowIsAfter(course.available_to)) {
+            if ((DateUtil.nowIsBetween(course.available_from, course.available_to) ||
+                    DateUtil.nowIsAfter(course.available_to)) && course.available_from != null) {
                 currentCourses.add(course);
             }
         }
