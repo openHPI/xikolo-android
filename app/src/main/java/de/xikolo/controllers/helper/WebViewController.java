@@ -32,6 +32,7 @@ import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
 
 import static android.os.Build.VERSION_CODES.M;
+import static android.os.Build.VERSION_CODES.N;
 
 public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -110,6 +111,7 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                 super.onPageFinished(view, url);
             }
 
+            @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.contains(Config.HOST) && url.contains("/auth/app")) {
@@ -129,6 +131,12 @@ public class WebViewController implements SwipeRefreshLayout.OnRefreshListener {
                     context.startActivity(i);
                 }
                 return true;
+            }
+
+            @TargetApi(N)
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return shouldOverrideUrlLoading(view, request.getUrl().toString());
             }
 
         });

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -112,7 +111,6 @@ public class LoginActivity extends BaseActivity {
                 EventBus.getDefault().post(new LoginEvent());
                 progressDialog.dismiss();
                 LoginActivity.this.finish();
-                Log.i(TAG, "FINISH!!!");
             }
 
             @Override
@@ -197,6 +195,15 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (UserManager.isLoggedIn()) {
+            finish();
+        }
+    }
+
     private void login(View view) {
         hideKeyboard(view);
         String email = editTextEmail.getText().toString().trim();
@@ -216,12 +223,11 @@ public class LoginActivity extends BaseActivity {
     private void startSSOLogin(String strategy) {
         Intent intent = new Intent(this, SsoLoginActivity.class);
         intent.putExtra(SsoLoginActivity.ARG_URL, Config.URI + "?in_app=true&redirect_to=" + strategy);
-        intent.putExtra(SsoLoginActivity.ARG_TITLE, "SSO");
+        intent.putExtra(SsoLoginActivity.ARG_TITLE, getString(R.string.login_sso));
         startActivity(intent);
     }
 
     private void externalLoginCallback(String token) {
-        Log.d(TAG, "External Login - Token: " + token);
         progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
 
         AccessToken at = new AccessToken();
