@@ -17,7 +17,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;
-import de.xikolo.presenters.WebViewPresenter;
+import de.xikolo.presenters.shared.WebViewPresenter;
 
 public class WebViewHelper {
 

@@ -8,6 +8,7 @@ import java.util.Date;
 
 import de.xikolo.R;
 import de.xikolo.utils.DateUtil;
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -34,6 +35,39 @@ public class Item extends RealmObject {
     public boolean visited;
 
     public String sectionId;
+
+    public static Item get(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        Item model = realm.where(Item.class).equalTo("id", id).findFirst();
+        realm.close();
+        return model;
+    }
+
+    public RealmObject getContent() {
+        Realm realm = Realm.getDefaultInstance();
+
+        RealmObject content = null;
+        switch (type) {
+            case TYPE_TEXT:
+                content = realm.where(RichText.class).equalTo("itemId", id).findFirst();
+                break;
+            case TYPE_VIDEO:
+                content = realm.where(Video.class).equalTo("itemId", id).findFirst();
+                break;
+            case TYPE_QUIZ:
+                content = realm.where(Quiz.class).equalTo("itemId", id).findFirst();
+                break;
+            case TYPE_LTI:
+                content = realm.where(LtiExercise.class).equalTo("itemId", id).findFirst();
+                break;
+            case TYPE_PEER:
+                content = realm.where(PeerAssessment.class).equalTo("itemId", id).findFirst();
+                break;
+        }
+
+        realm.close();
+        return content;
+    }
 
     public static final String TYPE_TEXT = "rich_text";
     public static final String TYPE_VIDEO = "video";

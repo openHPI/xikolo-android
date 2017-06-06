@@ -26,6 +26,8 @@ public class Video extends RealmObject {
 
     public String itemId;
 
+    public VideoStream singleStream;
+
     @JsonApi(type = "videos")
     public static class JsonModel extends Resource implements RealmAdapter<Video> {
 
@@ -46,6 +48,9 @@ public class Video extends RealmObject {
 
         public String itemId;
 
+        @Json(name = "single_stream")
+        public VideoStream singleStream;
+
         @Override
         public Video convertToRealmObject() {
             Video video = new Video();
@@ -57,6 +62,7 @@ public class Video extends RealmObject {
             video.transcriptUrl = transcriptUrl;
             video.thumbnailUrl = thumbnailUrl;
             video.itemId = itemId;
+            video.singleStream = singleStream;
 
             return video;
         }

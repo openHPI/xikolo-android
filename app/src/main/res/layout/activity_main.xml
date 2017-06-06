@@ -62,7 +62,7 @@
 
         <fragment
             android:id="@+id/navigation_drawer"
-            android:name="de.xikolo.controllers.navigation.NavigationFragment"
+            android:name="de.xikolo.controllers.main.NavigationFragment"
             android:layout_width="@dimen/navigation_drawer_width"
             android:layout_height="match_parent" />
 

@@ -3,6 +3,7 @@ package de.xikolo.managers;
 import java.util.List;
 
 import de.xikolo.managers.jobs.GetItemWithContentJob;
+import de.xikolo.managers.jobs.ListItemsWithContentForSectionJob;
 import de.xikolo.managers.jobs.JobCallback;
 import de.xikolo.managers.jobs.RetrieveVideoSubtitlesJob;
 import de.xikolo.managers.jobs.UpdateItemVisitedJob;
@@ -16,7 +17,7 @@ public class ItemManager extends BaseManager {
 
     public static final String TAG = ItemManager.class.getSimpleName();
 
-    public RealmResults listItemsForSection(Realm realm, RealmChangeListener<RealmResults<Item>> listener, String sectionId) {
+    public RealmResults listItemsForSection(String sectionId, Realm realm, RealmChangeListener<RealmResults<Item>> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
@@ -31,12 +32,16 @@ public class ItemManager extends BaseManager {
         return itemListPromise;
     }
 
-    public void requestItemWithContent(JobCallback callback, String itemId) {
+    public void requestItemWithContent(String itemId, JobCallback callback) {
         jobManager.addJobInBackground(new GetItemWithContentJob(callback, itemId));
     }
 
-    public void requestVideoSubtitles(Result<List<Subtitle>> result, String courseId, String moduleId, String videoId) {
-        jobManager.addJobInBackground(new RetrieveVideoSubtitlesJob(result, courseId, moduleId, videoId));
+    public void requestItemsWithContentForSection(String sectionId, JobCallback callback) {
+        jobManager.addJobInBackground(new ListItemsWithContentForSectionJob(callback, sectionId));
+    }
+
+    public void requestVideoSubtitles(String courseId, String sectionId, String videoId, Result<List<Subtitle>> result) {
+        jobManager.addJobInBackground(new RetrieveVideoSubtitlesJob(result, courseId, sectionId, videoId));
     }
 
     public void updateItemVisited(String itemId) {

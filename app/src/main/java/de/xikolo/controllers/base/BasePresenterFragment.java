@@ -7,11 +7,12 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
-import de.xikolo.presenters.Presenter;
-import de.xikolo.presenters.PresenterFactory;
-import de.xikolo.presenters.PresenterLoader;
+import de.xikolo.presenters.base.Presenter;
+import de.xikolo.presenters.base.PresenterFactory;
+import de.xikolo.presenters.base.PresenterLoader;
+import de.xikolo.presenters.base.View;
 
-public abstract class BasePresenterFragment<P extends Presenter<V>, V> extends BaseFragment {
+public abstract class BasePresenterFragment<P extends Presenter<V>, V extends View> extends BaseFragment implements View {
 
     private static final String TAG = BasePresenterFragment.class.getSimpleName();
 
@@ -60,6 +61,11 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V> extends B
         presenter.onViewDetached();
         super.onPause();
         Log.i(TAG, "onPause");
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        getActivity().setTitle(title);
     }
 
     /**

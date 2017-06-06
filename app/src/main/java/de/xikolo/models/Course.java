@@ -5,6 +5,7 @@ import com.squareup.moshi.Json;
 import java.util.Date;
 
 import de.xikolo.utils.DateUtil;
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -64,6 +65,13 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
     public boolean isEnrolled() {
         return enrollmentId != null;
+    }
+
+    public static Course get(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        Course model = realm.where(Course.class).equalTo("id", id).findFirst();
+        realm.close();
+        return model;
     }
 
     @Override

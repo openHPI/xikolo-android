@@ -59,6 +59,9 @@ public interface ApiServiceInterface {
     @GET("course-items/{id}?include=content")
     Call<Item.JsonModel> getItemWithContent(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id);
 
+    @GET("course-items?filter[section]={section_id}&include=content")
+    Call<Item.JsonModel[]> listItemsWithContentForSection(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("section_id") String sectionId);
+
     @PATCH("course-items/{id}")
     Call<Item.JsonModel> updateItem(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id, @Body Item.JsonModel item);
 

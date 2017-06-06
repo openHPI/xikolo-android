@@ -15,12 +15,12 @@ import de.xikolo.R;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
-import de.xikolo.controllers.fragments.WebViewFragmentAutoBundle;
+import de.xikolo.controllers.shared.WebViewFragmentAutoBundle;
 import de.xikolo.models.Course;
-import de.xikolo.presenters.CourseDetailsPresenter;
-import de.xikolo.presenters.CourseDetailsPresenterFactory;
-import de.xikolo.presenters.CourseDetailsView;
-import de.xikolo.presenters.PresenterFactory;
+import de.xikolo.presenters.base.PresenterFactory;
+import de.xikolo.presenters.course.CourseDetailsPresenter;
+import de.xikolo.presenters.course.CourseDetailsPresenterFactory;
+import de.xikolo.presenters.course.CourseDetailsView;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.ToastUtil;
 

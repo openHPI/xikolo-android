@@ -29,14 +29,14 @@ import de.xikolo.R;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
-import de.xikolo.controllers.fragments.WebViewFragmentAutoBundle;
-import de.xikolo.controllers.helper.CacheController;
+import de.xikolo.controllers.shared.WebViewFragmentAutoBundle;
+import de.xikolo.controllers.helper.CacheHelper;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.models.Course;
-import de.xikolo.presenters.CoursePresenter;
-import de.xikolo.presenters.CoursePresenterFactory;
-import de.xikolo.presenters.CourseView;
-import de.xikolo.presenters.PresenterFactory;
+import de.xikolo.presenters.course.CoursePresenter;
+import de.xikolo.presenters.course.CoursePresenterFactory;
+import de.xikolo.presenters.course.CourseView;
+import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.utils.BuildFlavor;
 import de.xikolo.utils.Config;
 import de.xikolo.utils.LanalyticsUtil;
@@ -67,7 +67,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
             presenter.handleDeepLink(getIntent().getData());
         } else {
             if (courseId == null) {
-                CacheController cacheController = new CacheController();
+                CacheHelper cacheController = new CacheHelper();
                 cacheController.readCachedExtras();
                 if (cacheController.getCourse() != null) {
                     courseId = cacheController.getCourse().id;

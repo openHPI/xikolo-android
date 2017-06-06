@@ -7,22 +7,22 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import de.xikolo.R;
-import de.xikolo.controllers.helper.LoadingStateController;
-import de.xikolo.presenters.LoadingStatePresenter;
-import de.xikolo.presenters.LoadingStateView;
+import de.xikolo.controllers.helper.LoadingStateHelper;
+import de.xikolo.presenters.base.LoadingStatePresenter;
+import de.xikolo.presenters.base.LoadingStateView;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
 
 public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresenter<V>, V extends LoadingStateView> extends BasePresenterFragment<P, V> implements LoadingStateView, SwipeRefreshLayout.OnRefreshListener {
 
-    protected LoadingStateController loadingStateController;
+    protected LoadingStateHelper loadingStateHelper;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        loadingStateController = new LoadingStateController(getActivity(), view, this);
-        loadingStateController.hide();
+        loadingStateHelper = new LoadingStateHelper(getActivity(), view, this);
+        loadingStateHelper.hide();
     }
 
     @Override
@@ -32,29 +32,29 @@ public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresen
 
     @Override
     public void showProgressDialog() {
-        loadingStateController.showBlockingProgress();
+        loadingStateHelper.showBlockingProgress();
     }
 
     @Override
     public void showProgressMessage() {
-        loadingStateController.showProgress();
+        loadingStateHelper.showProgress();
     }
 
     @Override
     public void showRefreshProgress() {
-        loadingStateController.showRefreshProgress();
+        loadingStateHelper.showRefreshProgress();
     }
 
     @Override
     public void hideAnyProgress() {
-        loadingStateController.hide();
+        loadingStateHelper.hide();
     }
 
     @Override
     public void showNetworkRequiredMessage() {
-        loadingStateController.setTitle(R.string.notification_no_network);
-        loadingStateController.setSummary(R.string.notification_no_network_summary);
-        loadingStateController.showMessage();
+        loadingStateHelper.setTitle(R.string.notification_no_network);
+        loadingStateHelper.setSummary(R.string.notification_no_network_summary);
+        loadingStateHelper.showMessage();
     }
 
     @Override
@@ -64,9 +64,9 @@ public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresen
 
     @Override
     public void showLoginRequiredMessage() {
-        loadingStateController.setTitle(R.string.notification_please_login);
-        loadingStateController.setSummary(R.string.notification_please_login_summary);
-        loadingStateController.showMessage();
+        loadingStateHelper.setTitle(R.string.notification_please_login);
+        loadingStateHelper.setSummary(R.string.notification_please_login_summary);
+        loadingStateHelper.showMessage();
     }
 
     @Override
@@ -76,7 +76,7 @@ public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresen
 
     @Override
     public void hideAnyMessage() {
-        loadingStateController.hide();
+        loadingStateHelper.hide();
     }
 
     @Override

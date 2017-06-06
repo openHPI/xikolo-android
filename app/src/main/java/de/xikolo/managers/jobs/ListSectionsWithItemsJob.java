@@ -19,7 +19,7 @@ public class ListSectionsWithItemsJob extends BaseJob {
 
     private String courseId;
 
-    public ListSectionsWithItemsJob(JobCallback callback, String courseId) {
+    public ListSectionsWithItemsJob(String courseId, JobCallback callback) {
         super(new Params(Priority.MID), callback);
 
         this.courseId = courseId;

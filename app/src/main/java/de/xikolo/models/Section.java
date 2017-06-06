@@ -31,6 +31,13 @@ public class Section extends RealmObject {
 
     public String courseId;
 
+    public static Section get(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        Section model = realm.where(Section.class).equalTo("id", id).findFirst();
+        realm.close();
+        return model;
+    }
+
     public Course getCourse() {
         Realm realm = Realm.getDefaultInstance();
         Course course = realm.where(Course.class).equalTo("id", courseId).findFirst();
@@ -40,7 +47,7 @@ public class Section extends RealmObject {
 
     public List<Item> getItems() {
         Realm realm = Realm.getDefaultInstance();
-        List<Item> items = realm.where(Item.class).equalTo("sectionId", id).findAll();
+        List<Item> items = realm.where(Item.class).equalTo("sectionId", id).findAllSorted("position");
         realm.close();
         return items;
     }

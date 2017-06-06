@@ -12,8 +12,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.utils.DateUtil;
@@ -25,18 +25,14 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
     private List<Item> items;
 
-    private Context context;
-    private Course course;
-    private Section module;
+    private Section section;
 
-    private OnItemButtonClickListener callback;
+    private OnItemClickListener listener;
 
-    public ItemListAdapter(Context context, Course course, Section module, OnItemButtonClickListener callback) {
-        this.context = context;
+    public ItemListAdapter(Section section, OnItemClickListener listener) {
         this.items = new ArrayList<>();
-        this.course = course;
-        this.module = module;
-        this.callback = callback;
+        this.section = section;
+        this.listener = listener;
     }
 
     public void updateItems(List<Item> items) {
@@ -57,21 +53,21 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
+        Context context = GlobalApplication.getInstance();
+
         final Item item = items.get(position);
 
-        holder.textTitle.setText(ItemTitle.format(module.name, item.title));
+        holder.textTitle.setText(ItemTitle.format(section.title, item.title));
 
-        holder.textIcon.setText(Item.getIcon(context, item.type, item.exercise_type));
+        holder.textIcon.setText(item.getIconRes());
 
-        if (!item.progress.visited) {
+        if (!item.visited) {
             holder.viewUnseenIndicator.setVisibility(View.VISIBLE);
         } else {
             holder.viewUnseenIndicator.setVisibility(View.GONE);
         }
 
-        if (!DateUtil.nowIsBetween(module.available_from, module.available_to)
-                || !DateUtil.nowIsBetween(item.available_from, item.available_to)
-                || item.locked) {
+        if (!DateUtil.nowIsBetween(section.startDate, section.endDate)) {
             holder.layout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
             holder.layout.setForeground(null);
             holder.textTitle.setTextColor(ContextCompat.getColor(context, R.color.text_light));
@@ -82,15 +78,15 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
             holder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.onItemButtonClicked(course, module, item);
+                    listener.onItemClicked(section.id, item.id);
                 }
             });
         }
     }
 
-    public interface OnItemButtonClickListener {
+    public interface OnItemClickListener {
 
-        void onItemButtonClicked(Course course, Section module, Item item);
+        void onItemClicked(String sectionId, String itemId);
 
     }
 

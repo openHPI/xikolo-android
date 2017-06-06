@@ -7,11 +7,12 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
-import de.xikolo.presenters.Presenter;
-import de.xikolo.presenters.PresenterFactory;
-import de.xikolo.presenters.PresenterLoader;
+import de.xikolo.presenters.base.Presenter;
+import de.xikolo.presenters.base.PresenterFactory;
+import de.xikolo.presenters.base.PresenterLoader;
+import de.xikolo.presenters.base.View;
 
-public abstract class BasePresenterActivity<P extends Presenter<V>, V> extends BaseActivity {
+public abstract class BasePresenterActivity<P extends Presenter<V>, V extends View> extends BaseActivity {
 
     private static final String TAG = BasePresenterActivity.class.getSimpleName();
 

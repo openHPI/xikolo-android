@@ -16,7 +16,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.secondscreen.SecondScreenActivity;
+import de.xikolo.controllers.second_screen.SecondScreenActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
