@@ -1,15 +1,11 @@
 package de.xikolo.presenters.course_items;
 
-import java.util.List;
-
-import de.xikolo.managers.CourseManager;
-import de.xikolo.managers.SectionManager;
-import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.presenters.base.LoadingStatePresenter;
 import de.xikolo.presenters.base.Presenter;
+import de.xikolo.utils.LanalyticsUtil;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -20,30 +16,56 @@ public class CourseItemsPresenter implements Presenter<CourseItemsView> {
 
     private CourseItemsView view;
 
-    private SectionManager sectionManager;
+    private ItemManager itemManager;
 
     private Realm realm;
 
-    private Section sectionPromise;
+    private RealmResults itemListPromise;
 
+    private String courseId;
     private String sectionId;
 
-    CourseItemsPresenter(String sectionId) {
-        this.sectionManager = new SectionManager();
+    // optional
+    private String itemId;
+
+    private int index = 0;
+
+    private Course course;
+    private Section section;
+    private Item item;
+
+    CourseItemsPresenter(String courseId, String sectionId, String itemId) {
+        this.itemManager = new ItemManager();
         this.realm = Realm.getDefaultInstance();
+        this.courseId = courseId;
         this.sectionId = sectionId;
+        this.itemId = itemId;
     }
 
     @Override
     public void onViewAttached(CourseItemsView v) {
         this.view = v;
 
-        sectionPromise = sectionManager.getSection(sectionId, realm, new RealmChangeListener<Section>() {
+        loadModels();
+
+        view.setTitle(section.title);
+
+        if (item != null) {
+            index = item.position - 1;
+        }
+
+        Item firstItem = section.getItems().get(index);
+        itemManager.updateItemVisited(firstItem.id);
+
+        if (index == 0) {
+            LanalyticsUtil.trackVisitedItem(firstItem.id, courseId, sectionId);
+        }
+
+        itemListPromise = itemManager.listItemsForSection(sectionId, realm, new RealmChangeListener<RealmResults<Item>>() {
             @Override
-            public void onChange(Section section) {
-                if (view != null) {
-                    view.setTitle(section.title);
-                }
+            public void onChange(RealmResults<Item> items) {
+                view.setupView(items);
+                view.setCurrentItem(index);
             }
         });
     }
@@ -52,8 +74,8 @@ public class CourseItemsPresenter implements Presenter<CourseItemsView> {
     public void onViewDetached() {
         this.view = null;
 
-        if (sectionPromise != null) {
-            sectionPromise.removeAllChangeListeners();
+        if (itemListPromise != null) {
+            itemListPromise.removeAllChangeListeners();
         }
     }
 
@@ -62,8 +84,18 @@ public class CourseItemsPresenter implements Presenter<CourseItemsView> {
         this.realm.close();
     }
 
-    public boolean hasDownloadableContent(String sectionId) {
-        for (Item item : Section.get(sectionId).getItems()) {
+    public void onItemSelected(String itemId) {
+        itemManager.updateItemVisited(itemId);
+
+        LanalyticsUtil.trackVisitedItem(itemId, courseId, sectionId);
+    }
+
+    public void onSectionDownloadClicked() {
+        view.startSectionDownload(course, section);
+    }
+
+    public boolean hasDownloadableContent() {
+        for (Item item : section.getItems()) {
             if (Item.TYPE_VIDEO.equals(item.type)) {
                 return true;
             }
@@ -71,35 +103,16 @@ public class CourseItemsPresenter implements Presenter<CourseItemsView> {
         return false;
     }
 
-    private void requestSectionListWithItems() {
-        if (sectionList == null || sectionList.size() == 0) {
-            view.showProgressMessage();
-        } else {
-            view.showRefreshProgress();
+    private void loadModels() {
+        if (course == null) {
+            course = Course.get(courseId);
         }
-        sectionManager.requestSectionListWithItems(courseId, new JobCallback() {
-            @Override
-            public void onSuccess() {
-                view.hideAnyProgress();
-            }
-
-            @Override
-            public void onError(ErrorCode code) {
-                switch (code) {
-                    case NO_NETWORK:
-                        if (sectionList == null || sectionList.size() == 0) {
-                            view.showNetworkRequiredMessage();
-                        } else {
-                            view.showNetworkRequiredToast();
-                        }
-                        break;
-                    case CANCEL:
-                    case ERROR:
-                        view.showErrorToast();
-                        break;
-                }
-            }
-        });
+        if (section == null) {
+            section = Section.get(sectionId);
+        }
+        if (item == null && itemId != null) {
+            item = Item.get(itemId);
+        }
     }
 
 }

@@ -23,6 +23,9 @@ import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog;
 import de.xikolo.controllers.dialogs.MobileDownloadDialog;
+import de.xikolo.events.DownloadCompletedEvent;
+import de.xikolo.events.DownloadDeletedEvent;
+import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Download;
@@ -30,10 +33,6 @@ import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
 import de.xikolo.storages.preferences.ApplicationPreferences;
-import de.xikolo.managers.Result;
-import de.xikolo.events.DownloadCompletedEvent;
-import de.xikolo.events.DownloadDeletedEvent;
-import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.views.IconButton;
@@ -47,7 +46,8 @@ public class DownloadViewController {
 
     private Course course;
     private Section module;
-    private Item<Video> item;
+    private Item item;
+    private Video video;
 
     private DownloadManager downloadManager;
 
@@ -63,19 +63,21 @@ public class DownloadViewController {
     private Button buttonOpenDownload;
     private Button buttonDeleteDownload;
 
-    private String uri;
-
     private Runnable progressBarUpdater;
     private boolean progressBarUpdaterRunning = false;
 
+    private String url;
+    private int size;
+
     @SuppressWarnings("SetTextI18n")
-    public DownloadViewController(final FragmentActivity activity, final DownloadManager.DownloadFileType type, final Course course, final Section module, final Item<Video> item) {
+    public DownloadViewController(final FragmentActivity activity, final DownloadManager.DownloadFileType type, final Course course, final Section module, final Item item, final Video video) {
         this.type = type;
         this.course = course;
         this.module = module;
         this.item = item;
+        this.video = video;
 
-        this.downloadManager = new DownloadManager(GlobalApplication.getInstance().getJobManager(), activity);
+        this.downloadManager = new DownloadManager(activity);
 
         LayoutInflater inflater = LayoutInflater.from(GlobalApplication.getInstance());
         layout = inflater.inflate(R.layout.container_download, null);
@@ -83,16 +85,15 @@ public class DownloadViewController {
         textFileSize = (TextView) layout.findViewById(R.id.textFileSize);
         textFileName = (TextView) layout.findViewById(R.id.textFileName);
 
-        final ApplicationPreferences appPreferences = (ApplicationPreferences) GlobalApplication.getStorage(StorageType.APP);;
+        final ApplicationPreferences appPreferences = new ApplicationPreferences();
 
         viewDownloadStart = layout.findViewById(R.id.downloadStartContainer);
         buttonDownloadStart = (IconButton) layout.findViewById(R.id.buttonDownloadStart);
         buttonDownloadStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (NetworkUtil.isOnline(GlobalApplication.getInstance())) {
-                    if (NetworkUtil.getConnectivityStatus(activity) == NetworkUtil.TYPE_MOBILE &&
-                            appPreferences.isDownloadNetworkLimitedOnMobile()) {
+                if (NetworkUtil.isOnline()) {
+                    if (NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_MOBILE && appPreferences.isDownloadNetworkLimitedOnMobile()) {
                         MobileDownloadDialog dialog = MobileDownloadDialog.getInstance();
                         dialog.setMobileDownloadDialogListener(new MobileDownloadDialog.MobileDownloadDialogListener() {
                             @Override
@@ -156,32 +157,36 @@ public class DownloadViewController {
 
         switch (type) {
             case SLIDES:
-                uri = item.detail.slides_url;
+                url = video.slidesUrl;
+                size = video.slidesSize;
                 textFileName.setText(GlobalApplication.getInstance().getText(R.string.slides_as_pdf));
                 buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_pdf));
                 openFileAsPdf();
                 break;
             case TRANSCRIPT:
-                uri = item.detail.transcript_url;
+                url = video.transcriptUrl;
+                size = video.transcriptSize;
                 textFileName.setText(GlobalApplication.getInstance().getText(R.string.transcript_as_pdf));
                 buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_pdf));
                 openFileAsPdf();
                 break;
             case VIDEO_HD:
-                uri = item.detail.stream.hd_url;
+                url = video.singleStream.hdUrl;
+                size = video.singleStream.hdSize;
                 textFileName.setText(GlobalApplication.getInstance().getText(R.string.video_hd_as_mp4));
                 buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_video));
                 buttonOpenDownload.setVisibility(View.GONE);
                 break;
             case VIDEO_SD:
-                uri = item.detail.stream.sd_url;
+                url = video.singleStream.sdUrl;
+                size = video.singleStream.sdSize;
                 textFileName.setText(GlobalApplication.getInstance().getText(R.string.video_sd_as_mp4));
                 buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_video));
                 buttonOpenDownload.setVisibility(View.GONE);
                 break;
         }
 
-        if (uri == null) {
+        if (url == null) {
             layout.setVisibility(View.GONE);
         }
 
@@ -235,7 +240,7 @@ public class DownloadViewController {
     }
 
     private void startDownload() {
-        long status = downloadManager.startDownload(uri,
+        long status = downloadManager.startDownload(url,
                 DownloadViewController.this.type,
                 DownloadViewController.this.course,
                 DownloadViewController.this.module,
@@ -260,18 +265,7 @@ public class DownloadViewController {
             viewDownloadEnd.setVisibility(View.INVISIBLE);
         }
 
-        if (uri != null) {
-            downloadManager.getRemoteDownloadFileSize(new Result<Long>() {
-                @Override
-                protected void onSuccess(Long result, DataSource dataSource) {
-                    if (result > 0) {
-                        textFileSize.setText(FileUtil.getFormattedFileSize(result));
-                    } else {
-                        textFileSize.setText("--");
-                    }
-                }
-            }, uri);
-        }
+        textFileSize.setText(FileUtil.getFormattedFileSize(size));
 
         progressBarDownload.setProgress(0);
         progressBarDownload.setIndeterminate(true);
@@ -321,7 +315,7 @@ public class DownloadViewController {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadStartedEvent(DownloadStartedEvent event) {
-        if (event.getUrl().equals(uri) && !progressBarUpdaterRunning) {
+        if (event.getUrl().equals(url) && !progressBarUpdaterRunning) {
             showRunningState();
         }
     }

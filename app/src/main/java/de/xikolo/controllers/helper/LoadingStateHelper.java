@@ -117,4 +117,8 @@ public class LoadingStateHelper {
         }
     }
 
+    public void enableSwipeRefresh(boolean enabled) {
+        refreshLayout.setEnabled(enabled);
+    }
+
 }

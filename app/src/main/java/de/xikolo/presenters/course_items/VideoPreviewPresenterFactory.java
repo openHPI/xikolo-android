@@ -2,7 +2,7 @@ package de.xikolo.presenters.course_items;
 
 import de.xikolo.presenters.base.PresenterFactory;
 
-public class CourseItemsPresenterFactory implements PresenterFactory<CourseItemsPresenter> {
+public class VideoPreviewPresenterFactory implements PresenterFactory<VideoPreviewPresenter> {
 
     private final String courseId;
 
@@ -10,15 +10,15 @@ public class CourseItemsPresenterFactory implements PresenterFactory<CourseItems
 
     private final String itemId;
 
-    public CourseItemsPresenterFactory(String courseId, String sectionId, String itemId) {
+    public VideoPreviewPresenterFactory(String courseId, String sectionId, String itemId) {
         this.courseId = courseId;
         this.sectionId = courseId;
         this.itemId = itemId;
     }
 
     @Override
-    public CourseItemsPresenter create() {
-        return new CourseItemsPresenter(courseId, sectionId, itemId);
+    public VideoPreviewPresenter create() {
+        return new VideoPreviewPresenter(courseId, sectionId, itemId);
     }
 
 }

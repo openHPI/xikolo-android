@@ -10,9 +10,9 @@ public class VideoStream extends RealmObject {
 
     public String hlsUrl;
 
-    public String hdSize;
+    public int hdSize;
 
-    public String sdSize;
+    public int sdSize;
 
     public String poster;
 

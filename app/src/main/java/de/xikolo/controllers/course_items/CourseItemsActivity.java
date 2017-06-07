@@ -1,7 +1,5 @@
 package de.xikolo.controllers.course_items;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -22,19 +20,18 @@ import com.yatatsu.autobundle.AutoBundleField;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.SectionDownloadHelper;
-import de.xikolo.managers.ItemManager;
-import de.xikolo.managers.Result;
+import de.xikolo.models.Course;
 import de.xikolo.models.Item;
+import de.xikolo.models.Section;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course_items.CourseItemsPresenter;
 import de.xikolo.presenters.course_items.CourseItemsPresenterFactory;
 import de.xikolo.presenters.course_items.CourseItemsView;
+import de.xikolo.utils.Config;
 import de.xikolo.utils.DateUtil;
-import de.xikolo.utils.LanalyticsUtil;
 
 public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresenter, CourseItemsView> implements CourseItemsView {
 
@@ -57,20 +54,13 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blank_tabs);
 
-        int index = 0;
-        if (itemId != null) {
-            index = module.items.indexOf(item);
-        }
-        module.items.get(index).progress.visited = true;
-        itemManager.updateProgression(progressionResult, module.items.get(index));
-
-        if (index == 0) {
-            LanalyticsUtil.trackVisitedItem(module.items.get(0).id, course.id, module.id);
-        }
-
         // Initialize the ViewPager and set an adapter
         viewpager = (ViewPager) findViewById(R.id.viewpager);
-        ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), module.items);
+    }
+
+    @Override
+    public void setupView(List<Item> itemList) {
+        ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), itemList);
         viewpager.setAdapter(adapter);
         viewpager.setOffscreenPageLimit(2);
 
@@ -79,8 +69,8 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
         if (tabLayout != null) {
             tabLayout.setupWithViewPager(viewpager);
 
-            tabLayout.setOnTabSelectedListener(adapter);
-
+            tabLayout.clearOnTabSelectedListeners();
+            tabLayout.addOnTabSelectedListener(adapter);
 
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
@@ -89,14 +79,16 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
                 }
             }
         }
+    }
 
+    @Override
+    public void setCurrentItem(int index) {
         viewpager.setCurrentItem(index, false);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (presenter.hasDownloadableContent(sectionId)) {
+        if (presenter.hasDownloadableContent()) {
             getMenuInflater().inflate(R.menu.download, menu);
         }
         super.onCreateOptionsMenu(menu);
@@ -114,17 +106,22 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
             return true;
         }
         if (id == R.id.action_download) {
-            SectionDownloadHelper sectionDownloadHelper = new SectionDownloadHelper(this);
-            sectionDownloadHelper.initSectionDownloads(course, section);
+            presenter.onSectionDownloadClicked();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void startSectionDownload(Course course, Section section) {
+        SectionDownloadHelper sectionDownloadHelper = new SectionDownloadHelper(this);
+        sectionDownloadHelper.initSectionDownloads(course, section);
+    }
+
     @NonNull
     @Override
     protected PresenterFactory<CourseItemsPresenter> getPresenterFactory() {
-        return new CourseItemsPresenterFactory(sectionId);
+        return new CourseItemsPresenterFactory(courseId, sectionId, itemId);
     }
 
     public class ModulePagerAdapter extends FragmentPagerAdapter implements TabLayout.OnTabSelectedListener {
@@ -191,13 +188,22 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
             // Fragment Name is saved by FragmentPagerAdapter implementation.
             String name = makeFragmentName(R.id.viewpager, position);
             Fragment fragment = fragmentManager.findFragmentByTag(name);
+            String url = Config.URI + Config.COURSES + courseId + "/" + Config.ITEMS + item.id;
             if (fragment == null) {
                 switch (item.type) {
                     case Item.TYPE_TEXT:
-                    case Item.TYPE_QUIZ:
                     case Item.TYPE_LTI:
+                        fragment = WebViewFragmentAutoBundle.builder(url)
+                                .inAppLinksEnabled(false)
+                                .externalLinksEnabled(false)
+                                .build();
+                        break;
+                    case Item.TYPE_QUIZ:
                     case Item.TYPE_PEER:
-                        fragment = ItemWebViewFragment.newInstance(course, module, items.get(position));
+                        fragment = WebViewFragmentAutoBundle.builder(url)
+                                .inAppLinksEnabled(true)
+                                .externalLinksEnabled(false)
+                                .build();
                         break;
                     case Item.TYPE_VIDEO:
                         fragment = VideoPreviewFragment.newInstance(course, module, items.get(position));
@@ -224,10 +230,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
 
                 unseenIndicator.setVisibility(View.GONE);
                 Item item = items.get(tabLayout.getSelectedTabPosition());
-                item.visited = true;
-                itemManager.updateProgression(progressionResult, item);
-
-                LanalyticsUtil.trackVisitedItem(item.id, course.id, module.id);
+                presenter.onItemSelected(item.id);
             }
         }
 
@@ -247,7 +250,6 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
         public void onTabReselected(TabLayout.Tab tab) {
 
         }
-
 
     }
 

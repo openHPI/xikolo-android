@@ -22,11 +22,18 @@ public class Video extends RealmObject {
 
     public String transcriptUrl;
 
+    public int slidesSize;
+
+    public int transcriptSize;
+
     public String thumbnailUrl;
 
     public String itemId;
 
     public VideoStream singleStream;
+
+    // local field
+    public int progress = 0;
 
     @JsonApi(type = "videos")
     public static class JsonModel extends Resource implements RealmAdapter<Video> {

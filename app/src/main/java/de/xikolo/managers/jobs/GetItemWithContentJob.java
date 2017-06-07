@@ -72,6 +72,10 @@ public class GetItemWithContentJob extends BaseJob {
                                     Video.JsonModel videoModel = response.body().getContext().find(response.body().content.get());
                                     Video video = videoModel.convertToRealmObject();
                                     video.itemId = itemId;
+                                    Video localVideo = realm.where(Video.class).equalTo("id", video.id).findFirst();
+                                    if (localVideo != null) {
+                                        video.progress = localVideo.progress;
+                                    }
                                     realm.copyToRealmOrUpdate(video);
                                     break;
                                 case Item.TYPE_LTI:

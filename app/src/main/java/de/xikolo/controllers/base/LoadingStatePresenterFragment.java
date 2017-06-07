@@ -84,4 +84,9 @@ public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresen
         ToastUtil.show(R.string.error);
     }
 
+    @Override
+    public void enableSwipeRefresh(boolean enabled) {
+        loadingStateHelper.enableSwipeRefresh(enabled);
+    }
+
 }

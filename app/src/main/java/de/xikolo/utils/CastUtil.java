@@ -17,7 +17,6 @@ import com.google.android.gms.common.images.WebImage;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.controllers.cast.CastActivity;
-import de.xikolo.models.Item;
 import de.xikolo.models.Video;
 
 public class CastUtil {
@@ -47,7 +46,7 @@ public class CastUtil {
         }
     }
 
-    public static MediaInfo buildCastMetadata(Item<Video> video) {
+    public static MediaInfo buildCastMetadata(Video video) {
         if (!PlayServicesUtil.checkPlayServices(GlobalApplication.getInstance())) {
             return null;
         }
@@ -55,7 +54,7 @@ public class CastUtil {
         MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
         mediaMetadata.putString(MediaMetadata.KEY_TITLE, video.title);
 
-        WebImage image = new WebImage(Uri.parse(video.detail.stream.poster));
+        WebImage image = new WebImage(Uri.parse(video.thumbnailUrl));
 
         // small size image used for notification, mini­controller and Lock Screen on JellyBean
         mediaMetadata.addImage(image);
@@ -63,14 +62,14 @@ public class CastUtil {
         // large image, used on the Cast Player page and Lock Screen on KitKat
         mediaMetadata.addImage(image);
 
-        return new MediaInfo.Builder(video.detail.stream.hd_url)
+        return new MediaInfo.Builder(video.singleStream.hdUrl)
                 .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
                 .setContentType("videos/mp4")
                 .setMetadata(mediaMetadata)
                 .build();
     }
 
-    public static PendingResult<RemoteMediaClient.MediaChannelResult> loadMedia(final Activity activity, Item<Video> video, boolean autoPlay, int position) {
+    public static PendingResult<RemoteMediaClient.MediaChannelResult> loadMedia(final Activity activity, Video video, boolean autoPlay) {
         if (!PlayServicesUtil.checkPlayServices(GlobalApplication.getInstance())) {
             return null;
         }
@@ -115,11 +114,10 @@ public class CastUtil {
                 }
             });
 
-            return remoteMediaClient.load(buildCastMetadata(video), autoPlay, position);
+            return remoteMediaClient.load(buildCastMetadata(video), autoPlay, video.progress);
         } else {
             return null;
         }
     }
-
 
 }

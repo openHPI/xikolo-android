@@ -386,8 +386,8 @@ public class LanalyticsUtil {
         Lanalytics.Event.Builder builder = new Lanalytics.Event.Builder(application);
 
         if (UserManager.isAuthorized()) {
-            UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-            builder.setUser(userStorage.getUser().id);
+            UserStorage userStorage = new UserStorage();
+            builder.setUser(userStorage.getUserId());
         }
 
         builder.putContext(CONTEXT_CLIENT_ID, application.getClientId());

@@ -21,5 +21,7 @@ public interface LoadingStateView extends View {
     void hideAnyMessage();
 
     void showErrorToast();
- 
+
+    void enableSwipeRefresh(boolean enabled);
+
 }
