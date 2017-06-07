@@ -13,7 +13,6 @@ import java.io.ObjectOutputStream;
 
 import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.course_items.CourseItemsActivity;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -42,9 +41,9 @@ public class CacheHelper {
         try {
             fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(b.getParcelable(CourseItemsActivity.ARG_COURSE));
-            oos.writeObject(b.getParcelable(CourseItemsActivity.ARG_MODULE));
-            oos.writeObject(b.getParcelable(CourseItemsActivity.ARG_ITEM));
+            oos.writeObject(b.getParcelable("course"));
+            oos.writeObject(b.getParcelable("section"));
+            oos.writeObject(b.getParcelable("item"));
             oos.close();
         } catch (IOException e) {
             e.printStackTrace();

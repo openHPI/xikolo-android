@@ -18,7 +18,6 @@ import android.widget.TextView;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
@@ -86,7 +85,8 @@ public class VideoHelper {
 
     private Course course;
     private Section module;
-    private Item<Video> videoItemDetails;
+    private Item item;
+    private Video video;
 
     private MediaPlayer mediaPlayer;
 
@@ -127,7 +127,7 @@ public class VideoHelper {
             }
         });
 
-        downloadManager = new DownloadManager(GlobalApplication.getInstance().getJobManager(), activity);
+        downloadManager = new DownloadManager(activity);
 
         setupView();
     }
@@ -147,7 +147,7 @@ public class VideoHelper {
                 textTotalTime.setText(getTimeString(videoView.getDuration()));
                 textCurrentTime.setText(getTimeString(0));
 
-                seekTo(videoItemDetails.detail.progress);
+                seekTo(video.progress);
 
                 if (Build.VERSION.SDK_INT >= PLAYBACK_PARAMS_SDK_LEVEL) {
                     setPlaybackSpeed(currentPlaybackSpeed);
@@ -207,7 +207,7 @@ public class VideoHelper {
                 if (extra == MediaPlayer.MEDIA_ERROR_IO) {
                     videoProgress.setVisibility(View.VISIBLE);
                     ToastUtil.show(R.string.trying_reconnect);
-                    updateVideo(course, module, videoItemDetails);
+                    updateVideo(course, module, item, video);
                 } else {
                     viewVideoWarning.setVisibility(View.VISIBLE);
                     textVideoWarning.setText(activity.getString(R.string.error_plain));
@@ -285,7 +285,7 @@ public class VideoHelper {
                 if (videoView.isPlaying()) {
                     pause();
 
-                    LanalyticsUtil.trackVideoPause(videoItemDetails.id,
+                    LanalyticsUtil.trackVideoPause(item.id,
                             course.id, module.id,
                             getCurrentPosition(),
                             currentPlaybackSpeed.getSpeed(),
@@ -295,7 +295,7 @@ public class VideoHelper {
                 } else {
                     play();
 
-                    LanalyticsUtil.trackVideoPlay(videoItemDetails.id,
+                    LanalyticsUtil.trackVideoPlay(item.id,
                             course.id, module.id,
                             getCurrentPosition(),
                             currentPlaybackSpeed.getSpeed(),
@@ -325,7 +325,7 @@ public class VideoHelper {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                LanalyticsUtil.trackVideoSeek(videoItemDetails.id,
+                LanalyticsUtil.trackVideoSeek(item.id,
                         course.id, module.id,
                         getCurrentPosition(),
                         progress,
@@ -348,7 +348,7 @@ public class VideoHelper {
 
                 toggleHdButton();
 
-                LanalyticsUtil.trackVideoChangeQuality(videoItemDetails.id,
+                LanalyticsUtil.trackVideoChangeQuality(item.id,
                         course.id, module.id,
                         position,
                         currentPlaybackSpeed.getSpeed(),
@@ -369,7 +369,7 @@ public class VideoHelper {
 
                     togglePlaybackSpeed();
 
-                    LanalyticsUtil.trackVideoChangeSpeed(videoItemDetails.id,
+                    LanalyticsUtil.trackVideoChangeSpeed(item.id,
                             course.id, module.id,
                             getCurrentPosition(),
                             oldSpeed.getSpeed(),
@@ -387,7 +387,7 @@ public class VideoHelper {
         buttonRetry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateVideo(course, module, videoItemDetails);
+                updateVideo(course, module, item, video);
             }
         });
     }
@@ -498,7 +498,7 @@ public class VideoHelper {
         }
 
         saveCurrentPosition();
-        updateVideo(course, module, videoItemDetails);
+        updateVideo(course, module, item, video);
     }
 
     public PlaybackSpeed getCurrentPlaybackSpeed() {
@@ -531,17 +531,18 @@ public class VideoHelper {
         }
     }
 
-    public void setupVideo(Course course, Section module, Item<Video> video) {
+    public void setupVideo(Course course, Section module, Item item, Video video) {
         this.course = course;
         this.module = module;
-        videoItemDetails = video;
+        this.item = item;
+        this.video = video;
 
-        int connectivityStatus = NetworkUtil.getConnectivityStatus(activity);
-        ApplicationPreferences appPreferences = (ApplicationPreferences) GlobalApplication.getStorage(StorageType.APP);
+        int connectivityStatus = NetworkUtil.getConnectivityStatus();
+        ApplicationPreferences appPreferences = new ApplicationPreferences();
 
-        if (videoDownloadPresent(DownloadManager.DownloadFileType.VIDEO_HD, course, module, video)) { // hd video download available
+        if (videoDownloadPresent(DownloadManager.DownloadFileType.VIDEO_HD, course, module, item)) { // hd video download available
             videoMode = VideoMode.HD;
-        } else if (videoDownloadPresent(DownloadManager.DownloadFileType.VIDEO_SD, course, module, video)) { // sd video download available
+        } else if (videoDownloadPresent(DownloadManager.DownloadFileType.VIDEO_SD, course, module, item)) { // sd video download available
             videoMode = VideoMode.SD;
         } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !appPreferences.isVideoQualityLimitedOnMobile()) {
             videoMode = VideoMode.HD;
@@ -553,32 +554,32 @@ public class VideoHelper {
             currentPlaybackSpeed = appPreferences.getVideoPlaybackSpeed();
         }
 
-        updateVideo(course, module, videoItemDetails);
+        updateVideo(course, module, item, video);
     }
 
-    private void updateVideo(Course course, Section module, Item<Video> video) {
+    private void updateVideo(Course course, Section module, Item item, Video video) {
         String stream;
         DownloadManager.DownloadFileType fileType;
 
         viewVideoWarning.setVisibility(View.GONE);
 
         if (videoMode == VideoMode.HD) {
-            stream = video.detail.stream.hd_url;
+            stream = video.singleStream.hdUrl;
             fileType = DownloadManager.DownloadFileType.VIDEO_HD;
         } else {
-            stream = video.detail.stream.sd_url;
+            stream = video.singleStream.sdUrl;
             fileType = DownloadManager.DownloadFileType.VIDEO_SD;
         }
 
         viewOfflineHint.setVisibility(View.GONE);
 
-        if (videoDownloadPresent(fileType, course, module, video)) {
-            setLocalVideoURI(fileType, course, module, video);
-        } else if (NetworkUtil.isOnline(activity)) {
+        if (videoDownloadPresent(fileType, course, module, item)) {
+            setLocalVideoURI(fileType, course, module, item);
+        } else if (NetworkUtil.isOnline()) {
             setVideoURI(stream);
         } else if (videoMode == VideoMode.HD) {
             videoMode = VideoMode.SD;
-            updateVideo(course, module, video);
+            updateVideo(course, module, item, video);
         } else {
             viewVideoWarning.setVisibility(View.VISIBLE);
             textVideoWarning.setText(activity.getString(R.string.video_notification_no_offline_video));
@@ -587,13 +588,13 @@ public class VideoHelper {
         updateHdSwitchColor();
     }
 
-    private boolean videoDownloadPresent(DownloadManager.DownloadFileType fileType, Course course, Section module, Item<Video> video) {
-        return !downloadManager.downloadRunning(fileType, course, module, video)
-                && downloadManager.downloadExists(fileType, course, module, video);
+    private boolean videoDownloadPresent(DownloadManager.DownloadFileType fileType, Course course, Section module, Item item) {
+        return !downloadManager.downloadRunning(fileType, course, module, item)
+                && downloadManager.downloadExists(fileType, course, module, item);
     }
 
-    private void setLocalVideoURI(DownloadManager.DownloadFileType fileType, Course course, Section module, Item<Video> video) {
-        setVideoURI("file://" + downloadManager.getDownloadFile(fileType, course, module, video).getAbsolutePath());
+    private void setLocalVideoURI(DownloadManager.DownloadFileType fileType, Course course, Section module, Item item) {
+        setVideoURI("file://" + downloadManager.getDownloadFile(fileType, course, module, item).getAbsolutePath());
         viewOfflineHint.setVisibility(View.VISIBLE);
     }
 
@@ -617,8 +618,8 @@ public class VideoHelper {
     }
 
     public void saveCurrentPosition(int position) {
-        if (videoItemDetails != null) {
-            videoItemDetails.detail.progress = position;
+        if (video != null) {
+            video.progress = position;
         }
     }
 
@@ -628,13 +629,6 @@ public class VideoHelper {
 
     public View getVideoContainer() {
         return videoContainer;
-    }
-
-    public Video getVideoItemDetail() {
-        if (videoItemDetails != null) {
-            return videoItemDetails.detail;
-        }
-        return null;
     }
 
     private String getTimeString(int millis) {
