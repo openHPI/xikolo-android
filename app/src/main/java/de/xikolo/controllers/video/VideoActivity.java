@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.MediaRouteButton;
@@ -18,41 +19,41 @@ import android.widget.TextView;
 
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastState;
+import com.yatatsu.autobundle.AutoBundleField;
 
 import de.xikolo.R;
-import de.xikolo.controllers.base.BaseActivity;
-import de.xikolo.controllers.exceptions.WrongParameterException;
+import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.VideoHelper;
-import de.xikolo.managers.ItemManager;
-import de.xikolo.managers.Result;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
+import de.xikolo.presenters.base.PresenterFactory;
+import de.xikolo.presenters.video.VideoPresenter;
+import de.xikolo.presenters.video.VideoPresenterFactory;
+import de.xikolo.presenters.video.VideoView;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.PlayServicesUtil;
 
-public class VideoActivity extends BaseActivity {
+public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoView> implements VideoView {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
 
-    public static final String ARG_COURSE = "arg_course";
-    public static final String ARG_MODULE = "arg_module";
-    public static final String ARG_ITEM = "arg_item";
+    private VideoHelper videoHelper;
 
-    private VideoHelper videoController;
-
-    private Course course;
-    private Section module;
-    private Item<Video> item;
-
-    private ItemManager itemManager;
+    @AutoBundleField String courseId;
+    @AutoBundleField String sectionId;
+    @AutoBundleField String itemId;
+    @AutoBundleField String videoId;
 
     private View videoMetadataView;
+    private TextView videoTitleText;
 
     private MediaRouteButton mediaRouteButton;
+
+    private Video video;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +68,11 @@ public class VideoActivity extends BaseActivity {
 
         View videoContainer = findViewById(R.id.videoContainer);
 
-        itemManager = new ItemManager(jobManager);
-
         videoMetadataView = findViewById(R.id.videoMetadata);
-        TextView videoTitleText = (TextView) findViewById(R.id.textTitle);
+        videoTitleText = (TextView) findViewById(R.id.textTitle);
 
-        videoController = new VideoHelper(this, videoContainer);
-        videoController.setControllerListener(new VideoHelper.ControllerListener() {
+        videoHelper = new VideoHelper(this, videoContainer);
+        videoHelper.setControllerListener(new VideoHelper.ControllerListener() {
             @Override
             public void onControllerShow() {
                 showSystemBars();
@@ -85,36 +84,16 @@ public class VideoActivity extends BaseActivity {
             }
         });
 
-        Bundle b = getIntent().getExtras();
-        if (b == null || !b.containsKey(ARG_COURSE) || !b.containsKey(ARG_MODULE) || !b.containsKey(ARG_ITEM)) {
-            throw new WrongParameterException();
-        } else {
-            course = getIntent().getExtras().getParcelable(ARG_COURSE);
-            module = getIntent().getExtras().getParcelable(ARG_MODULE);
-            item = getIntent().getExtras().getParcelable(ARG_ITEM);
-
-            itemManager.getLocalVideoProgress(new Result<Video>() {
-                @Override
-                protected void onSuccess(Video result, DataSource dataSource) {
-                    item.detail = result;
-                }
-            }, item.detail);
-
-            if (videoTitleText != null) {
-                videoTitleText.setText(item.detail.title);
-            }
-        }
-
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
                 if (Build.VERSION.SDK_INT >= 17) {
                     if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                        videoController.show();
+                        videoHelper.show();
                     }
                 } else {
                     if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
-                        videoController.show();
+                        videoHelper.show();
                     }
                 }
             }
@@ -140,15 +119,26 @@ public class VideoActivity extends BaseActivity {
 
         updateVideoView(getResources().getConfiguration().orientation);
 
-        videoController.setupVideo(course, module, item);
+        presenter.onCreate();
+    }
 
-        LanalyticsUtil.trackVideoPlay(item.id,
-                course.id, module.id,
-                item.detail.progress,
-                videoController.getCurrentPlaybackSpeed().getSpeed(),
+    @Override
+    public void setupVideo(Course course, Section section, Item item, Video video) {
+        this.video = video;
+
+        if (videoTitleText != null) {
+            videoTitleText.setText(item.title);
+        }
+
+        videoHelper.setupVideo(course, section, item, video);
+
+        LanalyticsUtil.trackVideoPlay(itemId,
+                courseId, sectionId,
+                video.progress,
+                videoHelper.getCurrentPlaybackSpeed().getSpeed(),
                 getResources().getConfiguration().orientation,
-                videoController.getQualityString(),
-                videoController.getSourceString());
+                videoHelper.getQualityString(),
+                videoHelper.getSourceString());
     }
 
     @Override
@@ -163,12 +153,12 @@ public class VideoActivity extends BaseActivity {
             }
         }
 
-        if (newState == CastState.CONNECTED && videoController != null) {
-            LanalyticsUtil.trackVideoPlay(item.id, course.id, module.id, item.detail.progress, 1.0f,
+        if (newState == CastState.CONNECTED && videoHelper != null) {
+            LanalyticsUtil.trackVideoPlay(itemId, courseId, sectionId, videoHelper.getCurrentPosition(), 1.0f,
                     Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
 
-            videoController.pause();
-            CastUtil.loadMedia(this, item, true, item.detail.progress);
+            videoHelper.pause();
+            CastUtil.loadMedia(this, video, true);
 
             finish();
         }
@@ -191,7 +181,7 @@ public class VideoActivity extends BaseActivity {
                 Point size = new Point();
                 display.getRealSize(size); // API 17
 
-                View videoContainer = videoController.getVideoContainer();
+                View videoContainer = videoHelper.getVideoContainer();
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) videoContainer.getLayoutParams();
                 params.height = size.y;
                 params.setMargins(0, 0, 0, 0);
@@ -206,7 +196,7 @@ public class VideoActivity extends BaseActivity {
                 getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
                 int systemBarHeight = size.y - displaymetrics.heightPixels;
 
-                videoController.getControllerView().setPadding(0,
+                videoHelper.getControllerView().setPadding(0,
                         videoOffset > statusBarHeight ? videoOffset : statusBarHeight,
                         size.x - displaymetrics.widthPixels,
                         videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
@@ -230,14 +220,14 @@ public class VideoActivity extends BaseActivity {
                     actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, displaymetrics);
                 }
 
-                View videoContainer = videoController.getVideoContainer();
+                View videoContainer = videoHelper.getVideoContainer();
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) videoContainer.getLayoutParams();
                 params.height = (int) Math.ceil(displaymetrics.widthPixels / 16. * 9.);
                 params.setMargins(0, actionBarHeight, 0, 0);
                 videoContainer.setLayoutParams(params);
                 videoContainer.requestLayout();
 
-                videoController.getControllerView().setPadding(0, 0, 0, 0);
+                videoHelper.getControllerView().setPadding(0, 0, 0, 0);
 
                 videoMetadataView.setVisibility(View.VISIBLE);
             }
@@ -308,13 +298,9 @@ public class VideoActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
 
-        if (videoController != null) {
-            videoController.pause();
-            Video itemDetail = videoController.getVideoItemDetail();
-            if (itemDetail != null) {
-                itemManager.updateLocalVideoProgress(new Result<Void>() {
-                }, itemDetail);
-            }
+        if (videoHelper != null) {
+            videoHelper.pause();
+            presenter.onPause(videoHelper.getCurrentPosition());
         }
     }
 
@@ -322,16 +308,22 @@ public class VideoActivity extends BaseActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        videoController.show();
+        videoHelper.show();
 
         updateVideoView(newConfig.orientation);
 
-        LanalyticsUtil.trackVideoChangeOrientation(item.id, course.id, module.id,
-                videoController.getCurrentPosition(),
-                videoController.getCurrentPlaybackSpeed().getSpeed(),
+        LanalyticsUtil.trackVideoChangeOrientation(itemId, courseId, sectionId,
+                videoHelper.getCurrentPosition(),
+                videoHelper.getCurrentPlaybackSpeed().getSpeed(),
                 newConfig.orientation,
-                videoController.getQualityString(),
-                videoController.getSourceString());
+                videoHelper.getQualityString(),
+                videoHelper.getSourceString());
+    }
+
+    @NonNull
+    @Override
+    protected PresenterFactory<VideoPresenter> getPresenterFactory() {
+        return new VideoPresenterFactory(courseId, sectionId, itemId, videoId);
     }
 
 }

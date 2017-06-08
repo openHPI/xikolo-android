@@ -2,6 +2,7 @@ package de.xikolo.models;
 
 import com.squareup.moshi.Json;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.JsonApi;
@@ -34,6 +35,13 @@ public class Video extends RealmObject {
 
     // local field
     public int progress = 0;
+
+    public static Video get(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        Video model = realm.where(Video.class).equalTo("id", id).findFirst();
+        realm.close();
+        return model;
+    }
 
     @JsonApi(type = "videos")
     public static class JsonModel extends Resource implements RealmAdapter<Video> {
