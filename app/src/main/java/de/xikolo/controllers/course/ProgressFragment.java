@@ -164,8 +164,8 @@ public class ProgressFragment extends BaseFragment {
 //
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
-//        int itemId = item.getItemId();
-//        switch (itemId) {
+//        int videoId = item.getItemId();
+//        switch (videoId) {
 //            case R.id.action_refresh:
 //                onRefresh();
 //                return true;

@@ -21,7 +21,7 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course.CourseDetailsPresenter;
 import de.xikolo.presenters.course.CourseDetailsPresenterFactory;
 import de.xikolo.presenters.course.CourseDetailsView;
-import de.xikolo.utils.Config;
+import de.xikolo.config.Config;
 import de.xikolo.utils.ToastUtil;
 
 public class CourseDetailsActivity extends BasePresenterActivity<CourseDetailsPresenter, CourseDetailsView> implements CourseDetailsView, UnenrollDialog.UnenrollDialogListener {

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 
 public class NetworkUtil {
@@ -14,7 +14,7 @@ public class NetworkUtil {
     public static int TYPE_MOBILE = 2;
 
     public static boolean isOnline() {
-        Context context = GlobalApplication.getInstance();
+        Context context = App.getInstance();
         if (context == null) {
             return false;
         }
@@ -29,7 +29,7 @@ public class NetworkUtil {
     }
 
     public static int getConnectivityStatus() {
-        Context context = GlobalApplication.getInstance();
+        Context context = App.getInstance();
         ConnectivityManager cm = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
 

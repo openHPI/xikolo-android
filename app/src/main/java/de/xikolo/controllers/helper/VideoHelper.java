@@ -24,11 +24,11 @@ import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
-import de.xikolo.storages.preferences.ApplicationPreferences;
-import de.xikolo.utils.Config;
+import de.xikolo.storages.ApplicationPreferences;
+import de.xikolo.config.Config;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
-import de.xikolo.utils.PlaybackSpeed;
+import de.xikolo.utils.PlaybackSpeedUtil;
 import de.xikolo.utils.ToastUtil;
 import de.xikolo.views.CustomFontTextView;
 import de.xikolo.views.CustomSizeVideoView;
@@ -81,7 +81,7 @@ public class VideoHelper {
 
     private boolean isPlaying = true;
 
-    private PlaybackSpeed currentPlaybackSpeed = PlaybackSpeed.x10;
+    private PlaybackSpeedUtil currentPlaybackSpeed = PlaybackSpeedUtil.x10;
 
     private Course course;
     private Section module;
@@ -365,7 +365,7 @@ public class VideoHelper {
             textPlaybackSpeed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PlaybackSpeed oldSpeed = currentPlaybackSpeed;
+                    PlaybackSpeedUtil oldSpeed = currentPlaybackSpeed;
 
                     togglePlaybackSpeed();
 
@@ -422,29 +422,29 @@ public class VideoHelper {
         if (mediaPlayer != null) {
             switch (currentPlaybackSpeed) {
                 case x07:
-                    setPlaybackSpeed(PlaybackSpeed.x10);
+                    setPlaybackSpeed(PlaybackSpeedUtil.x10);
                     break;
                 case x10:
-                    setPlaybackSpeed(PlaybackSpeed.x13);
+                    setPlaybackSpeed(PlaybackSpeedUtil.x13);
                     break;
                 case x13:
-                    setPlaybackSpeed(PlaybackSpeed.x15);
+                    setPlaybackSpeed(PlaybackSpeedUtil.x15);
                     break;
                 case x15:
-                    setPlaybackSpeed(PlaybackSpeed.x18);
+                    setPlaybackSpeed(PlaybackSpeedUtil.x18);
                     break;
                 case x18:
-                    setPlaybackSpeed(PlaybackSpeed.x20);
+                    setPlaybackSpeed(PlaybackSpeedUtil.x20);
                     break;
                 case x20:
-                    setPlaybackSpeed(PlaybackSpeed.x07);
+                    setPlaybackSpeed(PlaybackSpeedUtil.x07);
                     break;
             }
         }
     }
 
     @TargetApi(23)
-    public void setPlaybackSpeed(PlaybackSpeed speed) {
+    public void setPlaybackSpeed(PlaybackSpeedUtil speed) {
         if (mediaPlayer != null) {
             try {
                 PlaybackParams pp = new PlaybackParams();
@@ -501,7 +501,7 @@ public class VideoHelper {
         updateVideo(course, module, item, video);
     }
 
-    public PlaybackSpeed getCurrentPlaybackSpeed() {
+    public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
         return currentPlaybackSpeed;
     }
 

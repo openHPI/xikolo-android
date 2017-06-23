@@ -6,7 +6,8 @@ import de.xikolo.models.Enrollment;
 import de.xikolo.models.Item;
 import de.xikolo.models.Profile;
 import de.xikolo.models.Section;
-import de.xikolo.utils.Config;
+import de.xikolo.config.Config;
+import de.xikolo.models.SubtitleTrack;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -64,6 +65,11 @@ public interface ApiServiceInterface {
 
     @PATCH("course-items/{id}")
     Call<Item.JsonModel> updateItem(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id, @Body Item.JsonModel item);
+
+    // Subtitle
+    @GET("subtitles?filter[video]={video_id}&include=texts")
+    Call<SubtitleTrack.JsonModel[]> listSubtitlesWithTextsForVideo(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("video_id") String videoId);
+
 
     // Profile
 

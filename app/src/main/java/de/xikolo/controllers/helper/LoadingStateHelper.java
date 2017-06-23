@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.views.CustomFontTextView;
@@ -81,7 +81,7 @@ public class LoadingStateHelper {
     }
 
     public void setSymbol(int title) {
-        textIcon.setText(GlobalApplication.getInstance().getResources().getString(title));
+        textIcon.setText(App.getInstance().getResources().getString(title));
     }
 
     public CharSequence getTitle() {
@@ -93,7 +93,7 @@ public class LoadingStateHelper {
     }
 
     public void setTitle(int title) {
-        textTitle.setText(GlobalApplication.getInstance().getResources().getString(title));
+        textTitle.setText(App.getInstance().getResources().getString(title));
     }
 
     public CharSequence getSummary() {
@@ -105,7 +105,7 @@ public class LoadingStateHelper {
     }
 
     public void setSummary(int summary) {
-        textSummary.setText(GlobalApplication.getInstance().getResources().getString(summary));
+        textSummary.setText(App.getInstance().getResources().getString(summary));
     }
 
     public void hide() {

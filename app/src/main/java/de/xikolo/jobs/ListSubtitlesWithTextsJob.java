@@ -1,0 +1,79 @@
+package de.xikolo.jobs;
+
+import android.util.Log;
+
+import com.birbit.android.jobqueue.Params;
+
+import de.xikolo.config.Config;
+import de.xikolo.jobs.base.BaseJob;
+import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.managers.UserManager;
+import de.xikolo.models.SubtitleCue;
+import de.xikolo.models.SubtitleTrack;
+import de.xikolo.network.ApiService;
+import de.xikolo.utils.NetworkUtil;
+import io.realm.Realm;
+import retrofit2.Response;
+
+public class ListSubtitlesWithTextsJob extends BaseJob {
+
+    public static final String TAG = ListSubtitlesWithTextsJob.class.getSimpleName();
+
+    private String videoId;
+
+    public ListSubtitlesWithTextsJob(JobCallback callback, String videoId) {
+        super(new Params(PRIORITY_HIGH), callback);
+
+        this.videoId = videoId;
+    }
+
+    @Override
+    public void onAdded() {
+        if (Config.DEBUG) {
+            Log.i(TAG, TAG + " added | video.id " + videoId);
+        }
+    }
+
+    @Override
+    public void onRun() throws Throwable {
+        if (NetworkUtil.isOnline()) {
+            if (UserManager.isAuthorized()) {
+                final Response<SubtitleTrack.JsonModel[]> response = ApiService.getInstance().listSubtitlesWithTextsForVideo(UserManager.getToken(), videoId).execute();
+
+                if (response.isSuccessful()) {
+                    if (Config.DEBUG)
+                        Log.i(TAG, "Subtitles received");
+
+                    if (callback != null) callback.onSuccess();
+
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            for (SubtitleTrack.JsonModel subtitleModel : response.body()) {
+                                realm.copyToRealmOrUpdate(subtitleModel.convertToRealmObject());
+
+                                if (subtitleModel.cues != null && subtitleModel.cues.get(subtitleModel.getContext()) != null) {
+                                    for (SubtitleCue.JsonModel cueModel : subtitleModel.cues.get(subtitleModel.getContext())) {
+                                        SubtitleCue cue = cueModel.convertToRealmObject();
+                                        cue.subtitleId = subtitleModel.getId();
+                                        realm.copyToRealmOrUpdate(cue);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    realm.close();
+                } else {
+                    if (Config.DEBUG) Log.e(TAG, "Error while fetching subtitle list");
+                    if (callback != null) callback.onError(JobCallback.ErrorCode.ERROR);
+                }
+            } else {
+                if (callback != null) callback.onError(JobCallback.ErrorCode.NO_AUTH);
+            }
+        } else {
+            if (callback != null) callback.onError(JobCallback.ErrorCode.NO_NETWORK);
+        }
+    }
+
+}

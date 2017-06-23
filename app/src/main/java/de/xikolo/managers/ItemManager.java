@@ -1,14 +1,12 @@
 package de.xikolo.managers;
 
-import java.util.List;
-
-import de.xikolo.managers.jobs.GetItemWithContentJob;
-import de.xikolo.managers.jobs.JobCallback;
-import de.xikolo.managers.jobs.ListItemsWithContentForSectionJob;
-import de.xikolo.managers.jobs.RetrieveVideoSubtitlesJob;
-import de.xikolo.managers.jobs.UpdateItemVisitedJob;
+import de.xikolo.jobs.GetItemWithContentJob;
+import de.xikolo.jobs.ListItemsWithContentForSectionJob;
+import de.xikolo.jobs.ListSubtitlesWithTextsJob;
+import de.xikolo.jobs.UpdateItemVisitedJob;
+import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Item;
-import de.xikolo.models.Subtitle;
 import de.xikolo.models.Video;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -40,7 +38,7 @@ public class ItemManager extends BaseManager {
 
         Video videoPromise = realm
                 .where(Video.class)
-                .equalTo("itemId", itemId)
+                .equalTo("videoId", itemId)
                 .findFirstAsync();
 
         videoPromise.addChangeListener(listener);
@@ -56,8 +54,8 @@ public class ItemManager extends BaseManager {
         jobManager.addJobInBackground(new ListItemsWithContentForSectionJob(callback, sectionId));
     }
 
-    public void requestVideoSubtitles(String courseId, String sectionId, String videoId, Result<List<Subtitle>> result) {
-        jobManager.addJobInBackground(new RetrieveVideoSubtitlesJob(result, courseId, sectionId, videoId));
+    public void requestSubtitlesWithTextsForVideo(String videoId, JobCallback callback) {
+        jobManager.addJobInBackground(new ListSubtitlesWithTextsJob(callback, videoId));
     }
 
     public void updateItemVisited(String itemId) {

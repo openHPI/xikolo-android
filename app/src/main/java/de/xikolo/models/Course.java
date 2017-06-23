@@ -4,6 +4,8 @@ import com.squareup.moshi.Json;
 
 import java.util.Date;
 
+import de.xikolo.models.base.JsonAdapter;
+import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.utils.DateUtil;
 import io.realm.Realm;
 import io.realm.RealmObject;

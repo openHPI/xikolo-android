@@ -3,7 +3,7 @@ package de.xikolo.utils;
 import android.content.res.TypedArray;
 import android.os.Build;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 
 public class AndroidDimenUtil {
 
@@ -14,7 +14,7 @@ public class AndroidDimenUtil {
             return result;
         }
 
-        GlobalApplication application = GlobalApplication.getInstance();
+        App application = App.getInstance();
 
         int resourceId = application.getResources().getIdentifier("status_bar_height", "dimen", "android");
 
@@ -28,7 +28,7 @@ public class AndroidDimenUtil {
     public static int getActionBarHeight() {
         int result = 0;
 
-        GlobalApplication application = GlobalApplication.getInstance();
+        App application = App.getInstance();
 
         final TypedArray styledAttributes = application.getTheme().obtainStyledAttributes(
                 new int[]{android.R.attr.actionBarSize});

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.Hashtable;
 
 import de.xikolo.R;
-import de.xikolo.utils.Config;
+import de.xikolo.config.Config;
 
 public class CustomFontTextView extends TextView {
 

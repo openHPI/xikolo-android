@@ -15,13 +15,12 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.downloads.DownloadsActivity;
 import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.models.Download;
 import de.xikolo.network.DownloadHelper;
-import de.xikolo.storages.preferences.NotificationStorage;
+import de.xikolo.storages.NotificationStorage;
 
 public class DownloadCompletedReceiver extends BroadcastReceiver {
 
@@ -41,7 +40,7 @@ public class DownloadCompletedReceiver extends BroadcastReceiver {
             if (dl != null) {
                 EventBus.getDefault().post(new DownloadCompletedEvent(dl));
 
-                NotificationStorage notificationStorage = (NotificationStorage) GlobalApplication.getStorage(StorageType.NOTIFICATION);
+                NotificationStorage notificationStorage = new NotificationStorage();
 
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
                     notificationStorage.addDownloadNotification(dl.title);

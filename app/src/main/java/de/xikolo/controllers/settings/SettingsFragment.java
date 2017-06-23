@@ -22,8 +22,8 @@ import de.xikolo.controllers.login.LoginActivity;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.managers.UserManager;
-import de.xikolo.utils.BuildFlavor;
-import de.xikolo.utils.Config;
+import de.xikolo.config.BuildFlavor;
+import de.xikolo.config.Config;
 
 public class SettingsFragment extends PreferenceFragment {
 

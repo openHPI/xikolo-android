@@ -1,7 +1,8 @@
 package de.xikolo.managers;
 
-import de.xikolo.managers.jobs.JobCallback;
-import de.xikolo.managers.jobs.ListSectionsWithItemsJob;
+import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.ListSectionsWithItemsJob;
+import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Section;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;

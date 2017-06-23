@@ -2,14 +2,15 @@ package de.xikolo.managers;
 
 import org.greenrobot.eventbus.EventBus;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.events.LogoutEvent;
-import de.xikolo.managers.jobs.CreateAccessTokenJob;
-import de.xikolo.managers.jobs.GetProfileJob;
-import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.jobs.CreateAccessTokenJob;
+import de.xikolo.jobs.GetProfileJob;
+import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Profile;
-import de.xikolo.storages.preferences.UserStorage;
-import de.xikolo.utils.Config;
+import de.xikolo.storages.UserStorage;
+import de.xikolo.config.Config;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 
@@ -48,12 +49,10 @@ public class UserManager extends BaseManager {
     }
 
     public static void logout() {
-        GlobalApplication application = GlobalApplication.getInstance();
+        App application = App.getInstance();
 
         UserStorage userStorage = new UserStorage();
         userStorage.delete();
-
-        application.getDatabaseHelper().deleteDatabase();
 
         application.getLanalytics().deleteData();
 

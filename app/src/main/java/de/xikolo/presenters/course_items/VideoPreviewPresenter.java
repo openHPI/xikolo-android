@@ -3,7 +3,7 @@ package de.xikolo.presenters.course_items;
 import android.content.res.Configuration;
 
 import de.xikolo.managers.ItemManager;
-import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;

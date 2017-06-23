@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import de.xikolo.config.Config;
+
 public class DateUtil {
 
     public static final String TAG = DateUtil.class.getSimpleName();

@@ -18,6 +18,7 @@ import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
+import de.xikolo.controllers.course_items.CourseItemsActivityAutoBundle;
 import de.xikolo.controllers.helper.SectionDownloadHelper;
 import de.xikolo.models.Course;
 import de.xikolo.models.Section;
@@ -97,7 +98,7 @@ public class LearningsFragment extends LoadingStatePresenterFragment<LearningsPr
 
     @Override
     public void startCourseItemsActivity(String courseId, String sectionId, String itemId) {
-        Intent intent = CourseItemsActivityAutoBundle.builder(courseId, sectionId).itemId(itemId).build(this);
+        Intent intent = CourseItemsActivityAutoBundle.builder(courseId, sectionId).itemId(itemId).build(getActivity());
         getActivity().startActivity(intent);
     }
 
@@ -121,11 +122,6 @@ public class LearningsFragment extends LoadingStatePresenterFragment<LearningsPr
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void setTitle(String title) {
-        getActivity().setTitle(title);
     }
 
     @Override

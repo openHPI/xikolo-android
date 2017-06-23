@@ -5,10 +5,19 @@ import com.squareup.moshi.Moshi;
 
 import java.io.IOException;
 
+import de.xikolo.config.Config;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
+import de.xikolo.models.Item;
+import de.xikolo.models.LtiExercise;
+import de.xikolo.models.PeerAssessment;
 import de.xikolo.models.Profile;
-import de.xikolo.utils.Config;
+import de.xikolo.models.Quiz;
+import de.xikolo.models.RichText;
+import de.xikolo.models.Section;
+import de.xikolo.models.SubtitleCue;
+import de.xikolo.models.SubtitleTrack;
+import de.xikolo.models.Video;
 import moe.banana.jsonapi2.ResourceAdapterFactory;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -53,8 +62,17 @@ public abstract class ApiService {
 
             JsonAdapter.Factory jsonApiAdapterFactory = ResourceAdapterFactory.builder()
                     .add(Course.JsonModel.class)
+                    .add(Section.JsonModel.class)
+                    .add(Item.JsonModel.class)
                     .add(Enrollment.JsonModel.class)
                     .add(Profile.JsonModel.class)
+                    .add(RichText.JsonModel.class)
+                    .add(Quiz.JsonModel.class)
+                    .add(Video.JsonModel.class)
+                    .add(LtiExercise.JsonModel.class)
+                    .add(PeerAssessment.JsonModel.class)
+                    .add(SubtitleTrack.JsonModel.class)
+                    .add(SubtitleCue.JsonModel.class)
                     .build();
 
             Moshi moshi = new Moshi.Builder()

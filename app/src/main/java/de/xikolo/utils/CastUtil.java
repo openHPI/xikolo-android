@@ -15,14 +15,14 @@ import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.images.WebImage;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.controllers.cast.CastActivity;
 import de.xikolo.models.Video;
 
 public class CastUtil {
 
     public static boolean isConnected() {
-        Context context = GlobalApplication.getInstance();
+        Context context = App.getInstance();
 
         if (PlayServicesUtil.checkPlayServices(context)) {
             CastContext castContext = CastContext.getSharedInstance(context);
@@ -35,7 +35,7 @@ public class CastUtil {
     }
 
     public static boolean isAvailable() {
-        Context context = GlobalApplication.getInstance();
+        Context context = App.getInstance();
 
         if (PlayServicesUtil.checkPlayServices(context)) {
             CastContext castContext = CastContext.getSharedInstance(context);
@@ -47,7 +47,7 @@ public class CastUtil {
     }
 
     public static MediaInfo buildCastMetadata(Video video) {
-        if (!PlayServicesUtil.checkPlayServices(GlobalApplication.getInstance())) {
+        if (!PlayServicesUtil.checkPlayServices(App.getInstance())) {
             return null;
         }
 
@@ -70,11 +70,11 @@ public class CastUtil {
     }
 
     public static PendingResult<RemoteMediaClient.MediaChannelResult> loadMedia(final Activity activity, Video video, boolean autoPlay) {
-        if (!PlayServicesUtil.checkPlayServices(GlobalApplication.getInstance())) {
+        if (!PlayServicesUtil.checkPlayServices(App.getInstance())) {
             return null;
         }
 
-        CastContext castContext = CastContext.getSharedInstance(GlobalApplication.getInstance());
+        CastContext castContext = CastContext.getSharedInstance(App.getInstance());
         SessionManager sessionManager = castContext.getSessionManager();
         CastSession session = sessionManager.getCurrentCastSession();
 

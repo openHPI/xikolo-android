@@ -21,8 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
+import de.xikolo.config.Config;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.SectionDownloadHelper;
+import de.xikolo.controllers.shared.WebViewFragmentAutoBundle;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -30,21 +32,17 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course_items.CourseItemsPresenter;
 import de.xikolo.presenters.course_items.CourseItemsPresenterFactory;
 import de.xikolo.presenters.course_items.CourseItemsView;
-import de.xikolo.utils.Config;
 import de.xikolo.utils.DateUtil;
 
 public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresenter, CourseItemsView> implements CourseItemsView {
 
     public static final String TAG = CourseItemsActivity.class.getSimpleName();
 
-    @AutoBundleField
-    private String courseId;
+    @AutoBundleField String courseId;
 
-    @AutoBundleField
-    private String sectionId;
+    @AutoBundleField String sectionId;
 
-    @AutoBundleField(required = false)
-    private String itemId;
+    @AutoBundleField(required = false) String itemId;
 
     private ViewPager viewpager;
     private TabLayout tabLayout;
@@ -206,7 +204,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
                                 .build();
                         break;
                     case Item.TYPE_VIDEO:
-                        fragment = VideoPreviewFragment.newInstance(course, module, items.get(position));
+                        fragment = VideoPreviewFragmentAutoBundle.builder(courseId, sectionId, item.id).build();
                         break;
                 }
             }

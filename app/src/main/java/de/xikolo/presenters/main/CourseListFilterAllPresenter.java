@@ -2,7 +2,7 @@ package de.xikolo.presenters.main;
 
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.models.Course;
 
@@ -15,12 +15,12 @@ public class CourseListFilterAllPresenter extends CourseListPresenter {
 
         subList = courseManager.listCurrentAndFutureCourses(realm);
         if (subList.size() > 0) {
-            courseList.add(GlobalApplication.getInstance().getString(R.string.header_current_courses),
+            courseList.add(App.getInstance().getString(R.string.header_current_courses),
                     subList);
         }
         subList = courseManager.listPastCourses(realm);
         if (subList.size() > 0) {
-            courseList.add(GlobalApplication.getInstance().getString(R.string.header_self_paced_courses),
+            courseList.add(App.getInstance().getString(R.string.header_self_paced_courses),
                     subList);
         }
 

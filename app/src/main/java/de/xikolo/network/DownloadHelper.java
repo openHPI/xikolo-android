@@ -8,17 +8,17 @@ import android.net.Uri;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.models.Download;
-import de.xikolo.storages.preferences.ApplicationPreferences;
+import de.xikolo.storages.ApplicationPreferences;
 
 public class DownloadHelper {
 
     public static long request(String uri, String target, String title) {
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
+        DownloadManager dm = (DownloadManager) App.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uri));
 
-        ApplicationPreferences appPreferences = (ApplicationPreferences) GlobalApplication.getStorage(StorageType.APP);
+        ApplicationPreferences appPreferences = new ApplicationPreferences();
 
         if (appPreferences.isDownloadNetworkLimitedOnMobile()) {
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
@@ -35,7 +35,7 @@ public class DownloadHelper {
     }
 
     public static int remove(long... ids) {
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
+        DownloadManager dm = (DownloadManager) App.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
         return dm.remove(ids);
     }
 
@@ -59,7 +59,7 @@ public class DownloadHelper {
 
     public static Set<Download> getAllDownloads() {
         Set<Download> downloadSet = new HashSet<>();
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
+        DownloadManager dm = (DownloadManager) App.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
         DownloadManager.Query query = new DownloadManager.Query();
         Cursor c = dm.query(query);
         if (c.moveToFirst()) {
@@ -74,7 +74,7 @@ public class DownloadHelper {
 
     public static Download getDownloadForId(long id) {
         Download dl = null;
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
+        DownloadManager dm = (DownloadManager) App.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(id);
         Cursor c = dm.query(query);
@@ -87,7 +87,7 @@ public class DownloadHelper {
 
     public static Set<Download> getAllDownloadsForIds(long... ids) {
         Set<Download> downloadSet = new HashSet<>();
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
+        DownloadManager dm = (DownloadManager) App.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(ids);
         Cursor c = dm.query(query);
@@ -103,7 +103,7 @@ public class DownloadHelper {
 
     public static Set<Download> getAllDownloadsForStatus(int flags) {
         Set<Download> downloadSet = new HashSet<>();
-        DownloadManager dm = (DownloadManager) GlobalApplication.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
+        DownloadManager dm = (DownloadManager) App.getInstance().getSystemService(Application.DOWNLOAD_SERVICE);
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterByStatus(flags);
         Cursor c = dm.query(query);

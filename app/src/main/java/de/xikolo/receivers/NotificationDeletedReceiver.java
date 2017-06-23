@@ -4,8 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import de.xikolo.GlobalApplication;
-import de.xikolo.storages.preferences.NotificationStorage;
+import de.xikolo.storages.NotificationStorage;
 
 public class NotificationDeletedReceiver extends BroadcastReceiver {
 
@@ -19,7 +18,7 @@ public class NotificationDeletedReceiver extends BroadcastReceiver {
         String action = intent.getAction();
 
         if (INTENT_ACTION_NOTIFICATION_DELETED.equals(action)) {
-            NotificationStorage notificationStorage = (NotificationStorage) GlobalApplication.getStorage(StorageType.NOTIFICATION);
+            NotificationStorage notificationStorage = new NotificationStorage();
 
             String title = intent.getStringExtra(KEY_TITLE);
             if (title != null) {

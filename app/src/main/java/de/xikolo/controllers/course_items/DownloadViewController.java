@@ -19,7 +19,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog;
 import de.xikolo.controllers.dialogs.MobileDownloadDialog;
@@ -32,7 +32,7 @@ import de.xikolo.models.Download;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
-import de.xikolo.storages.preferences.ApplicationPreferences;
+import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.views.IconButton;
@@ -79,7 +79,7 @@ public class DownloadViewController {
 
         this.downloadManager = new DownloadManager(activity);
 
-        LayoutInflater inflater = LayoutInflater.from(GlobalApplication.getInstance());
+        LayoutInflater inflater = LayoutInflater.from(App.getInstance());
         layout = inflater.inflate(R.layout.container_download, null);
 
         textFileSize = (TextView) layout.findViewById(R.id.textFileSize);
@@ -159,29 +159,29 @@ public class DownloadViewController {
             case SLIDES:
                 url = video.slidesUrl;
                 size = video.slidesSize;
-                textFileName.setText(GlobalApplication.getInstance().getText(R.string.slides_as_pdf));
-                buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_pdf));
+                textFileName.setText(App.getInstance().getText(R.string.slides_as_pdf));
+                buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf));
                 openFileAsPdf();
                 break;
             case TRANSCRIPT:
                 url = video.transcriptUrl;
                 size = video.transcriptSize;
-                textFileName.setText(GlobalApplication.getInstance().getText(R.string.transcript_as_pdf));
-                buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_pdf));
+                textFileName.setText(App.getInstance().getText(R.string.transcript_as_pdf));
+                buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf));
                 openFileAsPdf();
                 break;
             case VIDEO_HD:
                 url = video.singleStream.hdUrl;
                 size = video.singleStream.hdSize;
-                textFileName.setText(GlobalApplication.getInstance().getText(R.string.video_hd_as_mp4));
-                buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_video));
+                textFileName.setText(App.getInstance().getText(R.string.video_hd_as_mp4));
+                buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video));
                 buttonOpenDownload.setVisibility(View.GONE);
                 break;
             case VIDEO_SD:
                 url = video.singleStream.sdUrl;
                 size = video.singleStream.sdSize;
-                textFileName.setText(GlobalApplication.getInstance().getText(R.string.video_sd_as_mp4));
-                buttonDownloadStart.setIconText(GlobalApplication.getInstance().getText(R.string.icon_download_video));
+                textFileName.setText(App.getInstance().getText(R.string.video_sd_as_mp4));
+                buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video));
                 buttonOpenDownload.setVisibility(View.GONE);
                 break;
         }
@@ -329,7 +329,7 @@ public class DownloadViewController {
     }
 
     private void openFileAsPdf() {
-        buttonOpenDownload.setText(GlobalApplication.getInstance().getResources().getText(R.string.open));
+        buttonOpenDownload.setText(App.getInstance().getResources().getText(R.string.open));
         buttonOpenDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -341,7 +341,7 @@ public class DownloadViewController {
                 Intent intent = Intent.createChooser(target, null);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 try {
-                    GlobalApplication.getInstance().startActivity(intent);
+                    App.getInstance().startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     // Instruct the user to install a PDF reader here, or something
                 }

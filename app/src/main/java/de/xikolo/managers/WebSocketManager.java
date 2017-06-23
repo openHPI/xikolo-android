@@ -22,13 +22,13 @@ import java.util.Map;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
-import de.xikolo.events.Event;
+import de.xikolo.config.Config;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.events.NetworkStateEvent;
+import de.xikolo.events.base.Event;
 import de.xikolo.models.WebSocketMessage;
-import de.xikolo.network.parser.ApiParser;
-import de.xikolo.utils.Config;
+import de.xikolo.utils.ParserUtil;
 import de.xikolo.utils.NetworkUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -162,7 +162,7 @@ public class WebSocketManager {
 
         WebSocketMessageEvent(String message) {
             super();
-            this.webSocketMessage = ApiParser.parse(message, WebSocketMessage.class);
+            this.webSocketMessage = ParserUtil.parse(message, WebSocketMessage.class);
         }
 
         public WebSocketMessageEvent(WebSocketMessage message) {

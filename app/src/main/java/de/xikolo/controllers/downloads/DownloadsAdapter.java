@@ -10,10 +10,10 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.utils.FileUtil;
-import de.xikolo.utils.HeaderAndSectionsList;
+import de.xikolo.models.base.SectionList;
 
 public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -22,33 +22,33 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int ITEM_VIEW_TYPE_HEADER = 0;
     private static final int ITEM_VIEW_TYPE_ITEM = 1;
 
-    private HeaderAndSectionsList<String, List<FolderItem>> headerAndSectionsList;
+    private SectionList<String, List<FolderItem>> sectionList;
 
     private OnDeleteButtonClickedListener callback;
 
     public DownloadsAdapter(OnDeleteButtonClickedListener callback) {
         this.callback = callback;
-        this.headerAndSectionsList = new HeaderAndSectionsList<>();
+        this.sectionList = new SectionList<>();
     }
 
     public void addItem(String header, List<FolderItem> folder) {
-        this.headerAndSectionsList.add(header, folder);
+        this.sectionList.add(header, folder);
         notifyDataSetChanged();
     }
 
     public void clear() {
-        this.headerAndSectionsList.clear();
+        this.sectionList.clear();
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return headerAndSectionsList.size();
+        return sectionList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (headerAndSectionsList.isHeader(position)) {
+        if (sectionList.isHeader(position)) {
             return ITEM_VIEW_TYPE_HEADER;
         } else {
             return ITEM_VIEW_TYPE_ITEM;
@@ -76,13 +76,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
 
-            viewHolder.title.setText((String) headerAndSectionsList.getItem(position));
+            viewHolder.title.setText((String) sectionList.getItem(position));
         } else {
             FolderViewHolder viewHolder = (FolderViewHolder) holder;
 
-            final FolderItem folderItem = (FolderItem) headerAndSectionsList.getItem(position);
+            final FolderItem folderItem = (FolderItem) sectionList.getItem(position);
 
-            Context context = GlobalApplication.getInstance();
+            Context context = App.getInstance();
 
             File dir = new File(folderItem.getPath());
             viewHolder.textTitle.setText(folderItem.getTitle().replaceAll("_", " "));
@@ -105,7 +105,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 viewHolder.textButtonDelete.setVisibility(View.GONE);
             }
 
-            if (position == getItemCount() - 1 || headerAndSectionsList.isHeader(position + 1)) {
+            if (position == getItemCount() - 1 || sectionList.isHeader(position + 1)) {
                 viewHolder.viewDivider.setVisibility(View.INVISIBLE);
             } else {
                 viewHolder.viewDivider.setVisibility(View.VISIBLE);

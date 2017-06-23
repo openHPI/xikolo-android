@@ -2,7 +2,7 @@ package de.xikolo.presenters.main;
 
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
@@ -21,12 +21,12 @@ public class CourseListFilterMyPresenter extends CourseListPresenter {
 
             subList = courseManager.listCurrentAndPastCoursesWithEnrollment(realm);
             if (subList.size() > 0) {
-                courseList.add(GlobalApplication.getInstance().getString(R.string.header_my_current_courses),
+                courseList.add(App.getInstance().getString(R.string.header_my_current_courses),
                         subList);
             }
             subList = courseManager.listFutureCoursesWithEnrollment(realm);
             if (subList.size() > 0) {
-                courseList.add(GlobalApplication.getInstance().getString(R.string.header_my_future_courses),
+                courseList.add(App.getInstance().getString(R.string.header_my_future_courses),
                         subList);
             }
         }

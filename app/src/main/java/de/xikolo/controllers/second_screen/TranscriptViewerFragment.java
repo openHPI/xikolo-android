@@ -193,8 +193,8 @@
 //
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
-//        int itemId = item.getItemId();
-//        switch (itemId) {
+//        int videoId = item.getItemId();
+//        switch (videoId) {
 //            case R.id.action_language:
 //                showLanguageDialog();
 //                return true;

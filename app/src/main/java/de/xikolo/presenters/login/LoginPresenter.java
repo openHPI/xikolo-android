@@ -4,7 +4,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import de.xikolo.events.LoginEvent;
 import de.xikolo.managers.UserManager;
-import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.presenters.base.Presenter;
 
 public class LoginPresenter implements Presenter<LoginView> {

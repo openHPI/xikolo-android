@@ -18,15 +18,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import de.xikolo.R;
-import de.xikolo.controllers.activities.CourseActivityAutoBundle;
-import de.xikolo.controllers.activities.CourseDetailsActivityAutoBundle;
+import de.xikolo.controllers.course.CourseActivityAutoBundle;
+import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.main.CourseListFilterAllPresenterFactory;
 import de.xikolo.presenters.main.CourseListFilterMyPresenterFactory;
 import de.xikolo.presenters.main.CourseListPresenter;
 import de.xikolo.presenters.main.CourseListView;
 import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.utils.HeaderAndSectionsList;
+import de.xikolo.models.base.SectionList;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
 
@@ -120,7 +120,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     }
 
     @Override
-    public void showCourseList(HeaderAndSectionsList<String, List<Course>> courseList) {
+    public void showCourseList(SectionList<String, List<Course>> courseList) {
         if (courseListAdapter != null) {
             courseListAdapter.update(courseList);
         }

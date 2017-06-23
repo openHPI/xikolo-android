@@ -4,10 +4,10 @@ import java.util.List;
 
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
-import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.base.LoadingStatePresenter;
-import de.xikolo.utils.HeaderAndSectionsList;
+import de.xikolo.models.base.SectionList;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -20,7 +20,7 @@ public abstract class CourseListPresenter implements LoadingStatePresenter<Cours
 
     protected Realm realm;
 
-    protected HeaderAndSectionsList<String, List<Course>> courseList;
+    protected SectionList<String, List<Course>> courseList;
 
     protected RealmResults courseListPromise;
 

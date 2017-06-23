@@ -16,15 +16,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog;
 import de.xikolo.controllers.helper.LoadingStateHelper;
-import de.xikolo.managers.DownloadManager;
-import de.xikolo.managers.PermissionManager;
-import de.xikolo.storages.preferences.ApplicationPreferences;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
+import de.xikolo.managers.DownloadManager;
+import de.xikolo.managers.PermissionManager;
+import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.ToastUtil;
 
@@ -52,8 +51,8 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        downloadManager = new DownloadManager(GlobalApplication.getInstance().getJobManager(), getActivity());
-        permissionManager = new PermissionManager(GlobalApplication.getInstance().getJobManager(), getActivity());
+        downloadManager = new DownloadManager(getActivity());
+        permissionManager = new PermissionManager(getActivity());
         adapter = new DownloadsAdapter(this);
 
         EventBus.getDefault().register(this);
@@ -70,7 +69,7 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        notificationController = new LoadingStateHelper(layout);
+        notificationController = new LoadingStateHelper(getActivity(), layout, null);
         notificationController.hide();
 
         return layout;
@@ -132,13 +131,13 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
                     PermissionManager.startAppInfo(getActivity());
                 }
             });
-            notificationController.setNotificationVisible(true);
+            notificationController.showMessage();
         }
     }
 
     @Override
     public void onDeleteButtonClicked(final DownloadsAdapter.FolderItem item) {
-        final ApplicationPreferences appPreferences = (ApplicationPreferences) GlobalApplication.getStorage(StorageType.APP);
+        final ApplicationPreferences appPreferences = new ApplicationPreferences();
 
         if (appPreferences.confirmBeforeDeleting()) {
             ConfirmDeleteDialog dialog = ConfirmDeleteDialog.getInstance(true);

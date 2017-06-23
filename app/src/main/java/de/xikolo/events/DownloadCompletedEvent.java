@@ -1,5 +1,6 @@
 package de.xikolo.events;
 
+import de.xikolo.events.base.Event;
 import de.xikolo.models.Download;
 
 public class DownloadCompletedEvent extends Event {

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
@@ -29,8 +29,8 @@ public class CacheHelper {
     private Item item;
 
     public CacheHelper() {
-        Context context = GlobalApplication.getInstance();
-        FILENAME = GlobalApplication.getInstance().getResources().getString(R.string.filename_cache_lastcourse);
+        Context context = App.getInstance();
+        FILENAME = App.getInstance().getResources().getString(R.string.filename_cache_lastcourse);
         String filename = context.getCacheDir().getAbsolutePath() + File.separator + FILENAME;
         file = new File(filename);
         createFolderIfNotExists(new File(file.getAbsolutePath().replace(FILENAME, "")));

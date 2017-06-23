@@ -1,5 +1,7 @@
 package de.xikolo.events;
 
+import de.xikolo.events.base.Event;
+
 public class NetworkStateEvent extends Event {
 
     private boolean online;

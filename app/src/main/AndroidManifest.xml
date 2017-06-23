@@ -11,7 +11,7 @@
     <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
 
     <application
-        android:name=".GlobalApplication"
+        android:name=".App"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup"
         android:hardwareAccelerated="true"
@@ -27,12 +27,12 @@
             android:value="true" />
 
         <meta-data
-            android:name="de.xikolo.utils.GlideConfiguration"
+            android:name="de.xikolo.config.GlideConfiguration"
             android:value="GlideModule"/>
 
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="de.xikolo.utils.CastOptionsProvider" />
+            android:value="de.xikolo.config.CastOptionsProvider" />
 
         <meta-data
             android:name="com.google.android.gms.version"

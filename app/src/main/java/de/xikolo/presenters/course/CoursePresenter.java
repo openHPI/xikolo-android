@@ -3,7 +3,7 @@ package de.xikolo.presenters.course;
 import android.net.Uri;
 
 import de.xikolo.managers.CourseManager;
-import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.base.Presenter;
 import de.xikolo.utils.DeepLinkingUtil;

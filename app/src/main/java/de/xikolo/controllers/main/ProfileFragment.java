@@ -27,11 +27,11 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
 
     public static final String TAG = ProfileFragment.class.getSimpleName();
 
-    @BindView(R.id.textName) private TextView textName;
-    @BindView(R.id.imageHeader) private CustomSizeImageView imageHeader;
-    @BindView(R.id.imageProfile) private CustomSizeImageView imageProfile;
-    @BindView(R.id.textEnrollCount) private TextView textEnrollCounts;
-    @BindView(R.id.textEmail) private TextView textEmail;
+    @BindView(R.id.textName) TextView textName;
+    @BindView(R.id.imageHeader) CustomSizeImageView imageHeader;
+    @BindView(R.id.imageProfile) CustomSizeImageView imageProfile;
+    @BindView(R.id.textEnrollCount) TextView textEnrollCounts;
+    @BindView(R.id.textEmail) TextView textEmail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

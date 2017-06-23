@@ -10,7 +10,7 @@ import java.util.Map;
 
 import de.xikolo.managers.UserManager;
 import de.xikolo.presenters.base.LoadingStatePresenter;
-import de.xikolo.utils.Config;
+import de.xikolo.config.Config;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 

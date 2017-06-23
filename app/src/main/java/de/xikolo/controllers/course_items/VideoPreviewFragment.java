@@ -90,11 +90,11 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
         textTitle.setText(video.title);
 
         linearLayoutDownloads.removeAllViews();
-        DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadManager.DownloadFileType.VIDEO_HD, course, section, item);
+        DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadManager.DownloadFileType.VIDEO_HD, course, section, item, video);
         linearLayoutDownloads.addView(hdVideo.getLayout());
-        DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadManager.DownloadFileType.VIDEO_SD, course, section, item);
+        DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadManager.DownloadFileType.VIDEO_SD, course, section, item, video);
         linearLayoutDownloads.addView(sdVideo.getLayout());
-        DownloadViewController slides = new DownloadViewController(getActivity(), DownloadManager.DownloadFileType.SLIDES, course, section, item);
+        DownloadViewController slides = new DownloadViewController(getActivity(), DownloadManager.DownloadFileType.SLIDES, course, section, item, video);
         linearLayoutDownloads.addView(slides.getLayout());
 
         long minutes = TimeUnit.MILLISECONDS.toMinutes(video.duration);

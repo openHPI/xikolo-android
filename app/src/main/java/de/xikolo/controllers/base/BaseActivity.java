@@ -33,22 +33,22 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import de.xikolo.BuildConfig;
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
 import de.xikolo.managers.UserManager;
 import de.xikolo.receivers.NotificationDeletedReceiver;
-import de.xikolo.storages.preferences.NotificationStorage;
-import de.xikolo.utils.BuildFlavor;
-import de.xikolo.utils.FeatureToggle;
+import de.xikolo.storages.NotificationStorage;
+import de.xikolo.config.BuildFlavor;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.TintUtil;
 
 public abstract class BaseActivity extends AppCompatActivity implements CastStateListener {
 
-    protected GlobalApplication globalApplication;
+    protected App app;
 
     protected ActionBar actionBar;
 
@@ -79,7 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
             AutoBundle.bind(this);
         }
 
-        globalApplication = GlobalApplication.getInstance();
+        app = App.getInstance();
 
         offlineModeToolbar = true;
 
@@ -144,7 +144,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         }
 
         if (UserManager.isAuthorized() && FeatureToggle.secondScreen()) {
-            globalApplication.getWebSocketManager().initConnection(UserManager.getToken());
+            app.getWebSocketManager().initConnection(UserManager.getToken());
         }
     }
 
@@ -152,15 +152,15 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     protected void onResume() {
         super.onResume();
 
-        globalApplication.startCookieSyncManager();
+        app.startCookieSyncManager();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        globalApplication.syncCookieSyncManager();
-        globalApplication.stopCookieSyncManager();
+        app.syncCookieSyncManager();
+        app.stopCookieSyncManager();
     }
 
     @Override

@@ -8,9 +8,12 @@ import com.google.gson.Gson;
 import java.util.Map;
 
 import de.xikolo.BuildConfig;
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
+import de.xikolo.config.BuildFlavor;
+import de.xikolo.config.BuildType;
+import de.xikolo.config.Config;
 import de.xikolo.managers.UserManager;
-import de.xikolo.storages.preferences.UserStorage;
+import de.xikolo.storages.UserStorage;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.lanalytics.Tracker;
 import de.xikolo.managers.DownloadManager;
@@ -365,7 +368,7 @@ public class LanalyticsUtil {
 
 
     public static void track(Lanalytics.Event event) {
-        GlobalApplication application = GlobalApplication.getInstance();
+        App application = App.getInstance();
         if (UserManager.isAuthorized() && isTrackingEnabled()) {
             Tracker tracker = application.getLanalytics().getDefaultTracker();
             tracker.send(event, UserManager.getToken());
@@ -382,7 +385,7 @@ public class LanalyticsUtil {
     }
 
     public static Lanalytics.Event.Builder newEventBuilder() {
-        GlobalApplication application = GlobalApplication.getInstance();
+        App application = App.getInstance();
         Lanalytics.Event.Builder builder = new Lanalytics.Event.Builder(application);
 
         if (UserManager.isAuthorized()) {
@@ -400,7 +403,7 @@ public class LanalyticsUtil {
     }
 
     public static String getContextDataJson() {
-        GlobalApplication application = GlobalApplication.getInstance();
+        App application = App.getInstance();
 
         Map<String, String> contextData = application.getLanalytics().getDefaultContextData();
         contextData.put(CONTEXT_CLIENT_ID, application.getClientId());

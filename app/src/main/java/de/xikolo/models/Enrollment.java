@@ -1,5 +1,7 @@
 package de.xikolo.models;
 
+import de.xikolo.models.base.JsonAdapter;
+import de.xikolo.models.base.RealmAdapter;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;

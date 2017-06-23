@@ -1,35 +1,18 @@
 package de.xikolo.models;
 
-import android.os.Parcelable;
-
-import com.google.auto.value.AutoValue;
-import com.google.gson.Gson;
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import java.util.Map;
 
-@AutoValue
-public abstract class WebSocketMessage implements Parcelable {
+public class WebSocketMessage {
 
-    @SerializedName("platform")
-    public abstract String platform();
+    public String platform;
 
-    @SerializedName("client_id")
-    public abstract String clientId();
+    @Json(name = "client_id")
+    public String clientId;
 
-    @SerializedName("action")
-    public abstract String action();
+    public String action;
 
-    @SerializedName("payload")
-    public abstract Map<String, String> payload();
-
-    public static WebSocketMessage create(String client, String clientId, String action, Map<String, String> payload) {
-        return new AutoValue_WebSocketMessage(client, clientId, action, payload);
-    }
-
-    public static TypeAdapter<WebSocketMessage> typeAdapter(Gson gson) {
-        return new AutoValue_WebSocketMessage.GsonTypeAdapter(gson);
-    }
+    public Map<String, String> payload;
 
 }

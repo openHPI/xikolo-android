@@ -13,18 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.events.DownloadDeletedEvent;
 import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
+import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Download;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.network.DownloadHelper;
-import de.xikolo.utils.Config;
+import de.xikolo.config.Config;
 import de.xikolo.utils.ExternalStorageUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.ToastUtil;
@@ -276,7 +277,7 @@ public class DownloadManager extends BaseManager {
 
     private Uri buildDownloadUri(DownloadFileType type, Course course, Section section, Item item) {
         File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                + GlobalApplication.getInstance().getString(R.string.app_name));
+                + App.getInstance().getString(R.string.app_name));
 
         String file = this.escapeFilename(item.title) + type.getFileSuffix();
 
@@ -318,7 +319,7 @@ public class DownloadManager extends BaseManager {
         List<String> folders = new ArrayList<>();
 
         File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                + GlobalApplication.getInstance().getString(R.string.app_name));
+                + App.getInstance().getString(R.string.app_name));
 
         if (publicAppFolder.isDirectory()) {
             File[] files = publicAppFolder.listFiles();
@@ -334,7 +335,7 @@ public class DownloadManager extends BaseManager {
 
     public String getAppFolder() {
         File appFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                + GlobalApplication.getInstance().getString(R.string.app_name));
+                + App.getInstance().getString(R.string.app_name));
 
         createFolderIfNotExists(appFolder);
 

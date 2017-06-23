@@ -10,8 +10,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.controllers.dialogs.PermissionsDialog;
+import de.xikolo.managers.base.BaseManager;
 
 public class PermissionManager extends BaseManager {
 
@@ -32,7 +33,7 @@ public class PermissionManager extends BaseManager {
         Log.d(TAG, "Request Permission " + requestedPermission);
 
         //Here, this Activity is the current activity
-        if (ContextCompat.checkSelfPermission(GlobalApplication.getInstance(),
+        if (ContextCompat.checkSelfPermission(App.getInstance(),
                 requestedPermission) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Permission not granted yet");
 

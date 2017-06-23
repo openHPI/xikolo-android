@@ -14,14 +14,14 @@ import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.models.Course;
-import de.xikolo.utils.Config;
+import de.xikolo.config.Config;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
-import de.xikolo.utils.HeaderAndSectionsList;
+import de.xikolo.models.base.SectionList;
 import de.xikolo.utils.LanguageUtil;
 
 public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -33,17 +33,17 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private Course.Filter courseFilter;
 
-    private HeaderAndSectionsList<String, List<Course>> courseList;
+    private SectionList<String, List<Course>> courseList;
 
     private OnCourseButtonClickListener callback;
 
     public CourseListAdapter(OnCourseButtonClickListener callback, Course.Filter courseFilter) {
-        this.courseList = new HeaderAndSectionsList<>();
+        this.courseList = new SectionList<>();
         this.callback = callback;
         this.courseFilter = courseFilter;
     }
 
-    public void update(HeaderAndSectionsList<String, List<Course>> courseList) {
+    public void update(SectionList<String, List<Course>> courseList) {
         this.courseList = courseList;
         notifyDataSetChanged();
     }
@@ -94,7 +94,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             final Course course = (Course) courseList.getItem(position);
 
-            Context context = GlobalApplication.getInstance();
+            Context context = App.getInstance();
 
             DateFormat dateOut;
             if (DisplayUtil.is7inchTablet(context)) {

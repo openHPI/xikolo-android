@@ -3,7 +3,7 @@ package de.xikolo.presenters.main;
 import java.util.List;
 
 import de.xikolo.models.Course;
-import de.xikolo.utils.HeaderAndSectionsList;
+import de.xikolo.models.base.SectionList;
 
 public interface CourseListView extends MainView {
 
@@ -13,6 +13,6 @@ public interface CourseListView extends MainView {
 
     void enterCourseDetails(String courseId);
 
-    void showCourseList(HeaderAndSectionsList<String, List<Course>> courseList);
+    void showCourseList(SectionList<String, List<Course>> courseList);
 
 }

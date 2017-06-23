@@ -37,8 +37,8 @@ import de.xikolo.presenters.course.CoursePresenter;
 import de.xikolo.presenters.course.CoursePresenterFactory;
 import de.xikolo.presenters.course.CourseView;
 import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.utils.BuildFlavor;
-import de.xikolo.utils.Config;
+import de.xikolo.config.BuildFlavor;
+import de.xikolo.config.Config;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.ToastUtil;
 

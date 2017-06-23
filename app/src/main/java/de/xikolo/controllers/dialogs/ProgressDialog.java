@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 
 public class ProgressDialog extends DialogFragment {
@@ -23,8 +23,8 @@ public class ProgressDialog extends DialogFragment {
     }
 
     public static ProgressDialog getInstance() {
-        return getInstance(GlobalApplication.getInstance().getString(R.string.dialog_progress_title),
-                GlobalApplication.getInstance().getString(R.string.dialog_progress_message));
+        return getInstance(App.getInstance().getString(R.string.dialog_progress_title),
+                App.getInstance().getString(R.string.dialog_progress_message));
     }
 
     public static ProgressDialog getInstance(String title, String message) {

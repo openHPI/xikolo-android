@@ -8,12 +8,12 @@ import de.xikolo.controllers.dialogs.ModuleDownloadDialog;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.ItemManager;
-import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
-import de.xikolo.storages.preferences.ApplicationPreferences;
+import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 

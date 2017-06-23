@@ -12,12 +12,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.utils.DateUtil;
-import de.xikolo.utils.ItemTitle;
+import de.xikolo.utils.ItemTitleUtil;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder> {
 
@@ -53,11 +53,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        Context context = GlobalApplication.getInstance();
+        Context context = App.getInstance();
 
         final Item item = items.get(position);
 
-        holder.textTitle.setText(ItemTitle.format(section.title, item.title));
+        holder.textTitle.setText(ItemTitleUtil.format(section.title, item.title));
 
         holder.textIcon.setText(item.getIconRes());
 

@@ -31,7 +31,7 @@ import de.xikolo.presenters.login.LoginPresenter;
 import de.xikolo.presenters.login.LoginPresenterFactory;
 import de.xikolo.presenters.login.LoginView;
 import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.utils.Config;
+import de.xikolo.config.Config;
 import de.xikolo.utils.ToastUtil;
 
 public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginView> implements LoginView {

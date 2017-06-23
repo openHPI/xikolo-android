@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.SectionManager;
-import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Course;
 import de.xikolo.models.Section;
 import de.xikolo.presenters.base.LoadingStatePresenter;

@@ -23,7 +23,7 @@ public class WebViewHelper {
 
     public static final String TAG = WebViewHelper.class.getSimpleName();
 
-    @BindView(R.id.webView) private WebView webView;
+    @BindView(R.id.webView) WebView webView;
 
     public WebViewHelper(View view) {
         ButterKnife.bind(this, view);

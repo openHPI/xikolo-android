@@ -13,14 +13,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.utils.AndroidDimenUtil;
-import de.xikolo.utils.Config;
-import de.xikolo.utils.FeatureToggle;
+import de.xikolo.config.Config;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.views.CustomFontTextView;
 
 public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.BaseNavigationViewHolder> {
@@ -137,7 +137,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
     public void onBindViewHolder(BaseNavigationViewHolder viewHolder, int position) {
         NavigationItem navigationItem = NAV_ITEMS.get(position);
 
-        Context context = GlobalApplication.getInstance();
+        Context context = App.getInstance();
 
         viewHolder.textIcon.setText(navigationItem.getIcon(context));
 

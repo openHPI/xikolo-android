@@ -2,7 +2,7 @@ package de.xikolo.presenters.main;
 
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
-import de.xikolo.managers.jobs.JobCallback;
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Enrollment;
 import de.xikolo.models.Profile;
 import de.xikolo.presenters.base.LoadingStatePresenter;

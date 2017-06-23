@@ -17,7 +17,7 @@ import com.yatatsu.autobundle.AutoBundleField;
 
 import java.util.Map;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.helper.WebViewHelper;
@@ -25,7 +25,7 @@ import de.xikolo.presenters.shared.PWebView;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.shared.WebViewPresenter;
 import de.xikolo.presenters.shared.WebViewPresenterFactory;
-import de.xikolo.utils.Config;
+import de.xikolo.config.Config;
 import de.xikolo.utils.ToastUtil;
 
 public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresenter, PWebView> implements PWebView {
@@ -71,7 +71,7 @@ public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresen
 
         if (getRetainInstance() && view.getParent() instanceof ViewGroup) {
             ((ViewGroup) view.getParent()).removeView(view);
-            mutableContextWrapper.setBaseContext(GlobalApplication.getInstance());
+            mutableContextWrapper.setBaseContext(App.getInstance());
         }
     }
 

@@ -12,7 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
 
 @SuppressWarnings("unused")
@@ -21,12 +21,12 @@ public class ImageHelper {
     public final static int DEFAULT_PLACEHOLDER = R.drawable.gradient_default_image;
 
     private static DrawableTypeRequest init(String string) {
-        return Glide.with(GlobalApplication.getInstance())
+        return Glide.with(App.getInstance())
                 .load(string);
     }
 
     private static DrawableTypeRequest init(int resourceId) {
-        return Glide.with(GlobalApplication.getInstance())
+        return Glide.with(App.getInstance())
                 .load(resourceId);
     }
 
@@ -90,7 +90,7 @@ public class ImageHelper {
                     @Override
                     protected void setResource(Bitmap resource) {
                         RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(GlobalApplication.getInstance().getResources(), resource);
+                                RoundedBitmapDrawableFactory.create(App.getInstance().getResources(), resource);
                         circularBitmapDrawable.setCircular(true);
                         imageView.setImageDrawable(circularBitmapDrawable);
                     }
