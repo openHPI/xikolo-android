@@ -14,27 +14,11 @@ import de.xikolo.config.Config;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 
-public class WebViewPresenter implements LoadingStatePresenter<PWebView> {
+public class WebViewPresenter extends LoadingStatePresenter<PWebView> {
 
     public static final String TAG = WebViewPresenter.class.getSimpleName();
 
-    protected PWebView view;
-
     protected String url;
-
-    @Override
-    public void onViewAttached(PWebView view) {
-        this.view = view;
-    }
-
-    @Override
-    public void onViewDetached() {
-        this.view = null;
-    }
-
-    @Override
-    public void onDestroyed() {
-    }
 
     @Override
     public void onRefresh() {
@@ -42,23 +26,50 @@ public class WebViewPresenter implements LoadingStatePresenter<PWebView> {
     }
 
     public void setup(String url) {
-        view.showProgressMessage();
+        getViewOrThrow().showProgressMessage();
         request(url, false);
     }
 
-    public void request(String url, boolean userRequest) {
+    public void onReceivedError(String message) {
+        getViewOrThrow().showErrorToast(message);
+    }
+
+    public void onPageStarted() {
+        getViewOrThrow().hideWebView();
+    }
+
+    public void onPageFinished() {
+        getViewOrThrow().hideAnyProgress();
+        getViewOrThrow().hideAnyMessage();
+        getViewOrThrow().showWebView();
+    }
+
+    public void onUrlLoading(String url) {
+        if (url.contains(Config.HOST) && getViewOrThrow().inAppLinksEnabled() || getViewOrThrow().externalLinksEnabled()) {
+            request(url, true);
+        } else {
+            Uri uri = Uri.parse(url);
+            if (url.contains(Config.HOST) && UserManager.isAuthorized()) {
+                getViewOrThrow().openUrlInBrowser(uri, UserManager.getToken());
+            } else {
+                getViewOrThrow().openUrlInBrowser(uri, null);
+            }
+        }
+    }
+
+    private void request(String url, boolean userRequest) {
         if (Config.DEBUG) {
             Log.i(TAG, "Request URL: " + url);
         }
         if (url != null) {
             this.url = url;
 
-            if (!view.externalLinksEnabled() || Patterns.WEB_URL.matcher(this.url).matches()) {
+            if (!getViewOrThrow().externalLinksEnabled() || Patterns.WEB_URL.matcher(this.url).matches()) {
                 if (NetworkUtil.isOnline()) {
-                    if (view.webViewIsShown()) {
-                        view.showProgressMessage();
+                    if (getViewOrThrow().webViewIsShown()) {
+                        getViewOrThrow().showProgressMessage();
                     } else {
-                        view.showRefreshProgress();
+                        getViewOrThrow().showRefreshProgress();
                     }
                     if (url.contains(Config.HOST)) {
                         Map<String, String> header = new HashMap<>();
@@ -71,45 +82,18 @@ public class WebViewPresenter implements LoadingStatePresenter<PWebView> {
                         String lanalyticsContextDataJson = LanalyticsUtil.getContextDataJson();
                         CookieManager.getInstance().setCookie(Config.URI, Config.COOKIE_LANALYTICS_CONTEXT + "=" + lanalyticsContextDataJson);
 
-                        view.loadUrl(this.url, header);
+                        getViewOrThrow().loadUrl(this.url, header);
                     } else {
-                        view.loadUrl(this.url, null);
+                        getViewOrThrow().loadUrl(this.url, null);
                     }
                 } else {
-                    view.showNetworkRequiredMessage();
+                    getViewOrThrow().showNetworkRequiredMessage();
                     if (userRequest) {
-                        view.showNetworkRequiredToast();
+                        getViewOrThrow().showNetworkRequiredToast();
                     }
                 }
             } else {
-                view.showInvalidUrlToast();
-            }
-        }
-    }
-
-    public void onReceivedError(String message) {
-        view.showErrorToast(message);
-    }
-
-    public void onPageStarted() {
-        view.hideWebView();
-    }
-
-    public void onPageFinished() {
-        view.hideAnyProgress();
-        view.hideAnyMessage();
-        view.showWebView();
-    }
-
-    public void onUrlLoading(String url) {
-        if (url.contains(Config.HOST) && view.inAppLinksEnabled() || view.externalLinksEnabled()) {
-            request(url, true);
-        } else {
-            Uri uri = Uri.parse(url);
-            if (url.contains(Config.HOST) && UserManager.isAuthorized()) {
-                view.openUrlInBrowser(uri, UserManager.getToken());
-            } else {
-                view.openUrlInBrowser(uri, null);
+                getViewOrThrow().showInvalidUrlToast();
             }
         }
     }

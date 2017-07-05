@@ -35,9 +35,9 @@ public class CreateEnrollmentJob extends BaseJob {
     @Override
     public void onRun() throws Throwable {
         if (!UserManager.isAuthorized()) {
-            if (callback != null) callback.onError(JobCallback.ErrorCode.NO_AUTH);
+            if (callback != null) callback.error(JobCallback.ErrorCode.NO_AUTH);
         } else if (!NetworkUtil.isOnline()) {
-            if (callback != null) callback.onError(JobCallback.ErrorCode.NO_NETWORK);
+            if (callback != null) callback.error(JobCallback.ErrorCode.NO_NETWORK);
         } else {
             Enrollment.JsonModel enrollment = new Enrollment.JsonModel();
             enrollment.course = new HasOne<>(new Course.JsonModel().getType(), courseId);
@@ -50,7 +50,7 @@ public class CreateEnrollmentJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
 
-                if (callback != null) callback.onSuccess();
+                if (callback != null) callback.success();
 
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
@@ -64,7 +64,7 @@ public class CreateEnrollmentJob extends BaseJob {
                 realm.close();
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Enrollment not created");
-                if (callback != null) callback.onError(JobCallback.ErrorCode.ERROR);
+                if (callback != null) callback.error(JobCallback.ErrorCode.ERROR);
             }
         }
     }

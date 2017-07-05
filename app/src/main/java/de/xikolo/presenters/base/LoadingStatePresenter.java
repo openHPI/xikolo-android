@@ -1,7 +1,7 @@
 package de.xikolo.presenters.base;
 
-public interface LoadingStatePresenter<V extends LoadingStateView> extends Presenter<V> {
+public abstract class LoadingStatePresenter<V extends LoadingStateView> extends Presenter<V> {
 
-    void onRefresh();
+    public abstract void onRefresh();
 
 }

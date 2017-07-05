@@ -12,9 +12,9 @@ public class CourseListFilterMyPresenter extends CourseListPresenter {
     @Override
     public void updateContent() {
         if (!UserManager.isAuthorized()) {
-            view.showLoginRequiredMessage();
+            getViewOrThrow().showLoginRequiredMessage();
         } else if (courseList == null || courseList.size() == 0) {
-            view.showNoEnrollmentsMessage();
+            getViewOrThrow().showNoEnrollmentsMessage();
         } else {
             courseList.clear();
             List<Course> subList;
@@ -31,16 +31,14 @@ public class CourseListFilterMyPresenter extends CourseListPresenter {
             }
         }
 
-        if (view != null) {
-            view.showCourseList(courseList);
-        }
+        getViewOrThrow().showCourseList(courseList);
     }
 
     @Override
     public void requestCourses() {
-        if (!UserManager.isAuthorized()) {
-            view.showLoginRequiredMessage();
-            view.hideAnyProgress();
+        if (!UserManager.isAuthorized() && getView() != null) {
+            getView().showLoginRequiredMessage();
+            getView().hideAnyProgress();
         } else {
             super.requestCourses();
         }

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,14 +24,14 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import de.xikolo.R;
+import de.xikolo.config.Config;
 import de.xikolo.controllers.base.BasePresenterFragment;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.helper.ImageHelper;
+import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.login.LoginPresenter;
 import de.xikolo.presenters.login.LoginPresenterFactory;
 import de.xikolo.presenters.login.LoginView;
-import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.config.Config;
 import de.xikolo.utils.ToastUtil;
 
 public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginView> implements LoginView {
@@ -40,8 +40,8 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
 
     @BindView(R.id.toolbar) Toolbar tb;
 
-    @BindView(R.id.editEmail) EditText editTextEmail;
-    @BindView(R.id.editPassword) EditText editTextPassword;
+    @BindView(R.id.editEmail) TextInputEditText editTextEmail;
+    @BindView(R.id.editPassword) TextInputEditText editTextPassword;
     @BindView(R.id.top_image) ImageView topImage;
     @BindView(R.id.text_credentials) TextView textCredentials;
 
@@ -71,7 +71,7 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
     }
 
     @SuppressWarnings("unused")
-    @OnEditorAction
+    @OnEditorAction(R.id.editPassword)
     protected boolean editPasswordAction(TextView v, int actionId) {
         boolean handled = false;
         if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -122,14 +122,12 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
         if (progressDialog == null) {
             progressDialog = ProgressDialog.getInstance();
         }
-        if (!progressDialog.getDialog().isShowing()) {
-            progressDialog.show(getChildFragmentManager(), ProgressDialog.TAG);
-        }
+        progressDialog.show(getChildFragmentManager(), ProgressDialog.TAG);
     }
 
     @Override
     public void hideProgressDialog() {
-        if (progressDialog != null && progressDialog.getDialog().isShowing()) {
+        if (progressDialog != null) {
             progressDialog.dismiss();
         }
     }

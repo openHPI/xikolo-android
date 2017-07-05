@@ -2,9 +2,9 @@ package de.xikolo.presenters.course;
 
 import java.util.List;
 
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.SectionManager;
-import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Course;
 import de.xikolo.models.Section;
 import de.xikolo.presenters.base.LoadingStatePresenter;
@@ -12,11 +12,9 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class LearningsPresenter implements LoadingStatePresenter<LearningsView> {
+public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
 
     public static final String TAG = LearningsPresenter.class.getSimpleName();
-
-    private LearningsView view;
 
     private CourseManager courseManager;
 
@@ -41,31 +39,31 @@ public class LearningsPresenter implements LoadingStatePresenter<LearningsView> 
 
     @Override
     public void onViewAttached(LearningsView v) {
-        this.view = v;
+        super.onViewAttached(v);
+
+        if (sectionList == null) {
+            requestSectionListWithItems();
+        }
 
         coursePromise = courseManager.getCourse(courseId, realm, new RealmChangeListener<Course>() {
             @Override
             public void onChange(Course course) {
-                if (view != null) {
-                    view.setTitle(course.title);
-                }
+                getViewOrThrow().setTitle(course.title);
             }
         });
 
         sectionsPromise = sectionManager.listSectionsForCourse(courseId, realm, new RealmChangeListener<RealmResults<Section>>() {
             @Override
             public void onChange(RealmResults<Section> sections) {
-                if (view != null) {
-                    sectionList = sections;
-                    view.setupSections(sections);
-                }
+                sectionList = sections;
+                getViewOrThrow().setupSections(sections);
             }
         });
     }
 
     @Override
     public void onViewDetached() {
-        this.view = null;
+        super.onViewDetached();
 
         if (coursePromise != null) {
             coursePromise.removeAllChangeListeners();
@@ -86,48 +84,50 @@ public class LearningsPresenter implements LoadingStatePresenter<LearningsView> 
         requestSectionListWithItems();
     }
 
-    public void onCreate() {
-        requestSectionListWithItems();
-    }
-
     public void onSectionClicked(String sectionId) {
-        view.startCourseItemsActivity(courseId, sectionId, null);
+        getViewOrThrow().startCourseItemsActivity(courseId, sectionId, null);
     }
 
     public void onSectionDownloadClicked(String sectionId) {
-        view.startSectionDownload(Course.get(courseId), Section.get(sectionId));
+        getViewOrThrow().startSectionDownload(Course.get(courseId), Section.get(sectionId));
     }
 
     public void onItemClicked(String sectionId, String itemId) {
-        view.startCourseItemsActivity(courseId, sectionId, itemId);
+        getViewOrThrow().startCourseItemsActivity(courseId, sectionId, itemId);
     }
 
     private void requestSectionListWithItems() {
-        if (sectionList == null || sectionList.size() == 0) {
-            view.showProgressMessage();
-        } else {
-            view.showRefreshProgress();
+        if (getView() != null) {
+            if (sectionList == null || sectionList.size() == 0) {
+                getView().showProgressMessage();
+            } else {
+                getView().showRefreshProgress();
+            }
         }
         sectionManager.requestSectionListWithItems(courseId, new JobCallback() {
             @Override
             public void onSuccess() {
-                view.hideAnyProgress();
+                if (getView() != null) {
+                    getView().hideAnyProgress();
+                }
             }
 
             @Override
             public void onError(ErrorCode code) {
-                switch (code) {
-                    case NO_NETWORK:
-                        if (sectionList == null || sectionList.size() == 0) {
-                            view.showNetworkRequiredMessage();
-                        } else {
-                            view.showNetworkRequiredToast();
-                        }
-                        break;
-                    case CANCEL:
-                    case ERROR:
-                        view.showErrorToast();
-                        break;
+                if (getView() != null) {
+                    switch (code) {
+                        case NO_NETWORK:
+                            if (sectionList == null || sectionList.size() == 0) {
+                                getView().showNetworkRequiredMessage();
+                            } else {
+                                getView().showNetworkRequiredToast();
+                            }
+                            break;
+                        case CANCEL:
+                        case ERROR:
+                            getView().showErrorToast();
+                            break;
+                    }
                 }
             }
         });

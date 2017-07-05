@@ -45,8 +45,6 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-
-        presenter.onCreate();
     }
 
     @Override

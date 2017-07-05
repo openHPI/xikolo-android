@@ -12,9 +12,9 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public abstract class CourseListPresenter implements LoadingStatePresenter<CourseListView> {
+import static de.xikolo.jobs.base.JobCallback.ErrorCode.NO_NETWORK;
 
-    protected CourseListView view;
+public abstract class CourseListPresenter extends LoadingStatePresenter<CourseListView> {
 
     protected CourseManager courseManager;
 
@@ -27,11 +27,16 @@ public abstract class CourseListPresenter implements LoadingStatePresenter<Cours
     CourseListPresenter() {
         this.courseManager = new CourseManager();
         this.realm = Realm.getDefaultInstance();
+        this.courseList = new SectionList<>();
     }
 
     @Override
     public void onViewAttached(CourseListView view) {
-        this.view = view;
+        super.onViewAttached(view);
+
+        if (courseList == null) {
+            requestCourses();
+        }
 
         this.courseListPromise = courseManager.listCourses(realm, new RealmChangeListener<RealmResults<Course>>() {
             @Override
@@ -43,7 +48,7 @@ public abstract class CourseListPresenter implements LoadingStatePresenter<Cours
 
     @Override
     public void onViewDetached() {
-        this.view = null;
+        super.onViewDetached();
 
         if (courseListPromise != null) {
             courseListPromise.removeAllChangeListeners();
@@ -55,32 +60,32 @@ public abstract class CourseListPresenter implements LoadingStatePresenter<Cours
         this.realm.close();
     }
 
-    public void onCreate() {
-        requestCourses();
-    }
-
     @Override
     public void onRefresh() {
         requestCourses();
     }
 
     public void onEnrollButtonClicked(String courseId) {
-        view.showProgressDialog();
+        getViewOrThrow().showProgressDialog();
 
         courseManager.createEnrollment(courseId, new JobCallback() {
             @Override
             public void onSuccess() {
-                view.hideAnyProgress();
+                if (getView() != null) {
+                    getView().hideAnyProgress();
+                }
             }
 
             @Override
             public void onError(ErrorCode code) {
-                view.hideAnyProgress();
-                if (code == ErrorCode.NO_NETWORK) {
-                    view.showNetworkRequiredToast();
-                } else if (code == ErrorCode.NO_AUTH) {
-                    view.showLoginRequiredToast();
-                    view.goToProfile();
+                if (getView() != null) {
+                    getView().hideAnyProgress();
+                    if (code == NO_NETWORK) {
+                        getView().showNetworkRequiredToast();
+                    } else if (code == ErrorCode.NO_AUTH) {
+                        getView().showLoginRequiredToast();
+                        getView().goToProfile();
+                    }
                 }
             }
         });
@@ -88,45 +93,51 @@ public abstract class CourseListPresenter implements LoadingStatePresenter<Cours
 
     public void onCourseEnterButtonClicked(String courseId) {
         if (!UserManager.isAuthorized()) {
-            view.showLoginRequiredToast();
-            view.goToProfile();
+            getViewOrThrow().showLoginRequiredToast();
+            getViewOrThrow().goToProfile();
         } else {
-            view.enterCourse(courseId);
+            getViewOrThrow().enterCourse(courseId);
         }
     }
 
     public void onCourseDetailButtonClicked(String courseId) {
-        view.enterCourseDetails(courseId);
+        getViewOrThrow().enterCourseDetails(courseId);
     }
 
     protected abstract void updateContent();
 
     public void requestCourses() {
-        if (courseList == null || courseList.size() == 0) {
-            view.showProgressMessage();
-        } else {
-            view.showRefreshProgress();
+        if (getView() != null) {
+            if (courseList == null || courseList.size() == 0) {
+                getView().showProgressMessage();
+            } else {
+                getView().showRefreshProgress();
+            }
         }
         courseManager.requestCourseList(new JobCallback() {
             @Override
             public void onSuccess() {
-                view.hideAnyProgress();
+                if (getView() != null) {
+                    getView().hideAnyProgress();
+                }
             }
 
             @Override
             public void onError(ErrorCode code) {
-                switch (code) {
-                    case NO_NETWORK:
-                        if (courseList == null || courseList.size() == 0) {
-                            view.showNetworkRequiredMessage();
-                        } else {
-                            view.showNetworkRequiredToast();
-                        }
-                        break;
-                    case CANCEL:
-                    case ERROR:
-                        view.showErrorToast();
-                        break;
+                if (getView() != null) {
+                    switch (code) {
+                        case NO_NETWORK:
+                            if (courseList == null || courseList.size() == 0) {
+                                getView().showNetworkRequiredMessage();
+                            } else {
+                                getView().showNetworkRequiredToast();
+                            }
+                            break;
+                        case CANCEL:
+                        case ERROR:
+                            getView().showErrorToast();
+                            break;
+                    }
                 }
             }
         });

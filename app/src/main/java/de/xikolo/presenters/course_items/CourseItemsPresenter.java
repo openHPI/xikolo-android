@@ -10,11 +10,9 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class CourseItemsPresenter implements Presenter<CourseItemsView> {
+public class CourseItemsPresenter extends Presenter<CourseItemsView> {
 
     public static final String TAG = CourseItemsPresenter.class.getSimpleName();
-
-    private CourseItemsView view;
 
     private ItemManager itemManager;
 
@@ -40,14 +38,13 @@ public class CourseItemsPresenter implements Presenter<CourseItemsView> {
         this.courseId = courseId;
         this.sectionId = sectionId;
         this.itemId = itemId;
+
+        loadModels();
     }
 
     @Override
-    public void onViewAttached(CourseItemsView v) {
-        this.view = v;
-
-        loadModels();
-
+    public void onViewAttached(CourseItemsView view) {
+        super.onViewAttached(view);
         view.setTitle(section.title);
 
         if (item != null) {
@@ -64,15 +61,15 @@ public class CourseItemsPresenter implements Presenter<CourseItemsView> {
         itemListPromise = itemManager.listItemsForSection(sectionId, realm, new RealmChangeListener<RealmResults<Item>>() {
             @Override
             public void onChange(RealmResults<Item> items) {
-                view.setupView(items);
-                view.setCurrentItem(index);
+                getViewOrThrow().setupView(items);
+                getViewOrThrow().setCurrentItem(index);
             }
         });
     }
 
     @Override
     public void onViewDetached() {
-        this.view = null;
+        super.onViewDetached();
 
         if (itemListPromise != null) {
             itemListPromise.removeAllChangeListeners();
@@ -91,7 +88,7 @@ public class CourseItemsPresenter implements Presenter<CourseItemsView> {
     }
 
     public void onSectionDownloadClicked() {
-        view.startSectionDownload(course, section);
+        getViewOrThrow().startSectionDownload(course, section);
     }
 
     public boolean hasDownloadableContent() {

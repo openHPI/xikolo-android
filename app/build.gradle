@@ -192,7 +192,7 @@ dependencies {
     apt     'com.github.yatatsu:autobundle-processor:4.1.0'
 
     // play services
-    compile 'com.google.android.gms:play-services-cast-framework:10.2.6'
+    compile 'com.google.android.gms:play-services-cast-framework:11.0.2'
 
     // support libraries
     def supportVersion = '25.3.1'

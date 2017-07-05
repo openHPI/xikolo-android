@@ -3,6 +3,7 @@ package de.xikolo.managers;
 import org.greenrobot.eventbus.EventBus;
 
 import de.xikolo.App;
+import de.xikolo.config.Config;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.jobs.CreateAccessTokenJob;
 import de.xikolo.jobs.GetProfileJob;
@@ -10,9 +11,9 @@ import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Profile;
 import de.xikolo.storages.UserStorage;
-import de.xikolo.config.Config;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmObject;
 
 public class UserManager extends BaseManager {
 
@@ -72,7 +73,7 @@ public class UserManager extends BaseManager {
         jobManager.addJobInBackground(new GetProfileJob(callback));
     }
 
-    public Profile getProfile(Realm realm, RealmChangeListener<Profile> listener) {
+    public RealmObject getProfile(Realm realm, RealmChangeListener<Profile> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
@@ -81,7 +82,7 @@ public class UserManager extends BaseManager {
             return null;
         }
 
-        Profile profilePromise = realm
+        RealmObject profilePromise = realm
                 .where(Profile.class)
                 .equalTo("id", UserManager.getUserId())
                 .findFirstAsync();

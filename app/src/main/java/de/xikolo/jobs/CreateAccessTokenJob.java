@@ -54,15 +54,15 @@ public class CreateAccessTokenJob extends BaseJob {
                 userStorage.saveAccessToken(token.token);
                 userStorage.saveUserId(token.userId);
 
-                callback.onSuccess();
+                callback.success();
 
                 EventBus.getDefault().post(new LoginEvent());
             } else {
                 if (Config.DEBUG) Log.w(TAG, "AccessToken not created");
-                callback.onError(JobCallback.ErrorCode.ERROR);
+                callback.error(JobCallback.ErrorCode.ERROR);
             }
         } else {
-            callback.onError(JobCallback.ErrorCode.NO_NETWORK);
+            callback.error(JobCallback.ErrorCode.NO_NETWORK);
         }
     }
 

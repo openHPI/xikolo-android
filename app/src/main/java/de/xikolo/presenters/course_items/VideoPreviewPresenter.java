@@ -2,8 +2,8 @@ package de.xikolo.presenters.course_items;
 
 import android.content.res.Configuration;
 
-import de.xikolo.managers.ItemManager;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -15,11 +15,9 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmObject;
 
-public class VideoPreviewPresenter implements LoadingStatePresenter<VideoPreviewView> {
+public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewView> {
 
     public static final String TAG = VideoPreviewPresenter.class.getSimpleName();
-
-    private VideoPreviewView view;
 
     private ItemManager itemManager;
 
@@ -42,13 +40,13 @@ public class VideoPreviewPresenter implements LoadingStatePresenter<VideoPreview
         this.courseId = courseId;
         this.sectionId = sectionId;
         this.itemId = itemId;
+
+        loadModels();
     }
 
     @Override
     public void onViewAttached(VideoPreviewView v) {
-        this.view = v;
-
-        loadModels();
+        super.onViewAttached(v);
 
         if (video == null) {
             requestVideo();
@@ -58,14 +56,14 @@ public class VideoPreviewPresenter implements LoadingStatePresenter<VideoPreview
             @Override
             public void onChange(Video v) {
                 video = v;
-                view.setupView(course, section, item, video);
+                getViewOrThrow().setupView(course, section, item, video);
             }
         });
     }
 
     @Override
     public void onViewDetached() {
-        this.view = null;
+        super.onViewDetached();
 
         if (videoPromise != null) {
             videoPromise.removeAllChangeListeners();
@@ -86,9 +84,9 @@ public class VideoPreviewPresenter implements LoadingStatePresenter<VideoPreview
         if (CastUtil.isConnected()) {
             LanalyticsUtil.trackVideoPlay(item.id, course.id, section.id, video.progress, 1.0f,
                     Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
-            view.startCast(video);
+            getViewOrThrow().startCast(video);
         } else {
-            view.startVideo(video);
+            getViewOrThrow().startVideo(video);
         }
     }
 
@@ -105,31 +103,37 @@ public class VideoPreviewPresenter implements LoadingStatePresenter<VideoPreview
     }
 
     private void requestVideo() {
-        if (video == null) {
-            view.showProgressMessage();
-        } else {
-            view.showRefreshProgress();
+        if (getView() != null) {
+            if (video == null) {
+                getView().showProgressMessage();
+            } else {
+                getView().showRefreshProgress();
+            }
         }
         itemManager.requestItemWithContent(itemId, new JobCallback() {
             @Override
             public void onSuccess() {
-                view.hideAnyProgress();
+                if (getView() != null) {
+                    getView().hideAnyProgress();
+                }
             }
 
             @Override
             public void onError(JobCallback.ErrorCode code) {
-                switch (code) {
-                    case NO_NETWORK:
-                        if (video == null) {
-                            view.showNetworkRequiredMessage();
-                        } else {
-                            view.showNetworkRequiredToast();
-                        }
-                        break;
-                    case CANCEL:
-                    case ERROR:
-                        view.showErrorToast();
-                        break;
+                if (getView() != null) {
+                    switch (code) {
+                        case NO_NETWORK:
+                            if (video == null) {
+                                getView().showNetworkRequiredMessage();
+                            } else {
+                                getView().showNetworkRequiredToast();
+                            }
+                            break;
+                        case CANCEL:
+                        case ERROR:
+                            getView().showErrorToast();
+                            break;
+                    }
                 }
             }
         });

@@ -43,7 +43,7 @@ public class ListCoursesJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Courses received (" + response.body().length + ")");
 
-                if (callback != null) callback.onSuccess();
+                if (callback != null) callback.success();
 
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
@@ -62,10 +62,10 @@ public class ListCoursesJob extends BaseJob {
                 realm.close();
             } else {
                 if (Config.DEBUG) Log.e(TAG, "Error while fetching courses list");
-                if (callback != null) callback.onError(JobCallback.ErrorCode.ERROR);
+                if (callback != null) callback.error(JobCallback.ErrorCode.ERROR);
             }
         } else {
-            if (callback != null) callback.onError(JobCallback.ErrorCode.NO_NETWORK);
+            if (callback != null) callback.error(JobCallback.ErrorCode.NO_NETWORK);
         }
     }
 

@@ -66,6 +66,13 @@ public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresen
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        webViewHelper.setup(presenter, url);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
 
@@ -95,11 +102,6 @@ public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresen
     @Override
     protected PresenterFactory<WebViewPresenter> getPresenterFactory() {
         return new WebViewPresenterFactory();
-    }
-
-    @Override
-    protected void onPresenterPrepared(@NonNull WebViewPresenter presenter) {
-        webViewHelper.setup(presenter, url);
     }
 
     @Override

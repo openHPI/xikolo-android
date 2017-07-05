@@ -1,28 +1,29 @@
 package de.xikolo.presenters.main;
 
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
-import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Enrollment;
 import de.xikolo.models.Profile;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
-public class ProfilePresenter implements LoadingStatePresenter<ProfileView> {
+public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
 
     public static final String TAG = ProfilePresenter.class.getSimpleName();
-
-    private ProfileView view;
 
     private UserManager userManager;
     private CourseManager courseManager;
 
     private Realm realm;
 
-    private Profile profilePromise;
+    private RealmObject profilePromise;
     private RealmResults enrollmentListPromise;
+
+    private Profile profile;
 
     ProfilePresenter() {
         this.userManager = new UserManager();
@@ -32,85 +33,90 @@ public class ProfilePresenter implements LoadingStatePresenter<ProfileView> {
 
     @Override
     public void onViewAttached(ProfileView v) {
-        this.view = v;
+        super.onViewAttached(v);
+
+        if (profile == null) {
+            requestProfile();
+        }
 
         profilePromise = userManager.getProfile(realm, new RealmChangeListener<Profile>() {
             @Override
-            public void onChange(Profile profile) {
-                if (view != null) {
-                    view.showProfile(profile);
-                }
+            public void onChange(Profile p) {
+                profile = p;
+                getViewOrThrow().showProfile(p);
             }
         });
 
         enrollmentListPromise = courseManager.listEnrollments(realm, new RealmChangeListener<RealmResults<Enrollment>>() {
             @Override
             public void onChange(RealmResults<Enrollment> enrollments) {
-                if (view != null) {
-                    view.showEnrollmentCount(enrollments.size());
-                }
+                getViewOrThrow().showEnrollmentCount(enrollments.size());
             }
         });
     }
 
     @Override
     public void onViewDetached() {
-        this.view = null;
+        super.onViewDetached();
 
         if (profilePromise != null) {
-            profilePromise.removeChangeListeners();
+            profilePromise.removeAllChangeListeners();
         }
         if (enrollmentListPromise != null) {
-            enrollmentListPromise.removeChangeListeners();
+            enrollmentListPromise.removeAllChangeListeners();
         }
-    }
-
-    public void onCreate() {
-        requestProfile();
     }
 
     private void requestProfile() {
-        if (profilePromise == null) {
-            view.showProgressMessage();
-        } else {
-            view.showRefreshProgress();
+        if (getView() != null) {
+            if (profilePromise == null) {
+                getView().showProgressMessage();
+            } else {
+                getView().showRefreshProgress();
+            }
         }
         userManager.requestProfile(new JobCallback() {
             @Override
             public void onSuccess() {
-                view.hideAnyProgress();
+                if (getView() != null) {
+                    getView().hideAnyProgress();
+                }
                 requestEnrollmentList();
             }
 
             @Override
             public void onError(ErrorCode code) {
-                switch (code) {
-                    case NO_NETWORK:
-                        if (profilePromise == null) {
-                            view.showNetworkRequiredMessage();
-                        } else {
-                            view.showNetworkRequiredToast();
-                        }
-                        break;
-                    default:
-                        view.showErrorToast();
-                        break;
+                if (getView() != null) {
+                    switch (code) {
+                        case NO_NETWORK:
+                            if (profilePromise == null) {
+                                getView().showNetworkRequiredMessage();
+                            } else {
+                                getView().showNetworkRequiredToast();
+                            }
+                            break;
+                        default:
+                            getView().showErrorToast();
+                            break;
+                    }
                 }
             }
         });
     }
 
     private void requestEnrollmentList() {
-        view.showRefreshProgress();
+        if (getView() != null) {
+            getView().showRefreshProgress();
+        }
         courseManager.requestEnrollmentList(new JobCallback() {
             @Override
             public void onSuccess() {
-                view.hideAnyProgress();
+                getView().hideAnyProgress();
             }
 
             @Override
             public void onError(ErrorCode code) {
-                view.hideAnyProgress();
+                getView().hideAnyProgress();
             }
         });
     }

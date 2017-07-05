@@ -24,9 +24,7 @@ public class CourseListFilterAllPresenter extends CourseListPresenter {
                     subList);
         }
 
-        if (view != null) {
-            view.showCourseList(courseList);
-        }
+        getViewOrThrow().showCourseList(courseList);
     }
 
 }

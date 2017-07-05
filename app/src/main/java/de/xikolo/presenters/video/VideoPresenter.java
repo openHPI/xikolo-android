@@ -8,11 +8,9 @@ import de.xikolo.models.Video;
 import de.xikolo.presenters.base.Presenter;
 import io.realm.Realm;
 
-public class VideoPresenter implements Presenter<VideoView> {
+public class VideoPresenter extends Presenter<VideoView> {
 
     public static final String TAG = VideoPresenter.class.getSimpleName();
-
-    private VideoView view;
 
     private ItemManager itemManager;
 
@@ -35,27 +33,20 @@ public class VideoPresenter implements Presenter<VideoView> {
         this.sectionId = sectionId;
         this.itemId = itemId;
         this.videoId = videoId;
-    }
-
-    @Override
-    public void onViewAttached(VideoView v) {
-        this.view = v;
 
         loadModels();
     }
 
     @Override
-    public void onViewDetached() {
-        this.view = null;
+    public void onViewAttached(VideoView view) {
+        super.onViewAttached(view);
+
+        getViewOrThrow().setupVideo(course, section, item, video);
     }
 
     @Override
     public void onDestroyed() {
         this.realm.close();
-    }
-
-    public void onCreate() {
-        view.setupVideo(course, section, item, video);
     }
 
     private void loadModels() {

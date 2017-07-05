@@ -40,8 +40,6 @@ public class LearningsFragment extends LoadingStatePresenterFragment<LearningsPr
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        presenter.onCreate();
     }
 
     @Override

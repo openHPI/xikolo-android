@@ -7,11 +7,9 @@ import de.xikolo.managers.UserManager;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.presenters.base.Presenter;
 
-public class LoginPresenter implements Presenter<LoginView> {
+public class LoginPresenter extends Presenter<LoginView> {
 
     public static final String TAG = LoginPresenter.class.getSimpleName();
-
-    private LoginView view;
 
     private UserManager userManager;
 
@@ -19,57 +17,57 @@ public class LoginPresenter implements Presenter<LoginView> {
         this.userManager = new UserManager();
     }
 
-    @Override
-    public void onViewAttached(LoginView v) {
-        this.view = v;
-    }
-
-    @Override
-    public void onViewDetached() {
-        this.view = null;
-    }
-
-    @Override
-    public void onDestroyed() {
-    }
-
     public void login(String email, String password) {
-        view.showProgressDialog();
-        userManager.login(new JobCallback() {
+        getViewOrThrow().showProgressDialog();
+        userManager.login(loginCallback(), email, password);
+    }
+
+    private JobCallback loginCallback() {
+        return new JobCallback() {
             @Override
             public void onSuccess() {
-                userManager.requestProfile(new JobCallback() {
-                    @Override
-                    public void onSuccess() {
-                        view.hideProgressDialog();
-                        EventBus.getDefault().post(new LoginEvent());
-                        view.finishActivity();
-                    }
-
-                    @Override
-                    public void onError(ErrorCode code) {
-                        userManager.logout();
-                        view.hideProgressDialog();
-                        if (code == ErrorCode.NO_NETWORK) {
-                            view.showNoNetworkToast();
-                        } else {
-                            view.showLoginFailedToast();
-                        }
-                    }
-                });
+                userManager.requestProfile(profileCallback());
             }
 
             @Override
             public void onError(ErrorCode code) {
-                userManager.logout();
-                view.hideProgressDialog();
-                if (code == ErrorCode.NO_NETWORK) {
-                    view.showNoNetworkToast();
-                } else {
-                    view.showLoginFailedToast();
+                UserManager.logout();
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                    if (code == ErrorCode.NO_NETWORK) {
+                        getView().showNoNetworkToast();
+                    } else {
+                        getView().showLoginFailedToast();
+                    }
                 }
             }
-        }, email, password);
+        };
+    }
+
+    private JobCallback profileCallback() {
+        return new JobCallback() {
+            @Override
+            public void onSuccess() {
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                    getView().finishActivity();
+                }
+                EventBus.getDefault().post(new LoginEvent());
+            }
+
+            @Override
+            public void onError(ErrorCode code) {
+                UserManager.logout();
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                    if (code == ErrorCode.NO_NETWORK) {
+                        getView().showNoNetworkToast();
+                    } else {
+                        getView().showLoginFailedToast();
+                    }
+                }
+            }
+        };
     }
 
 }

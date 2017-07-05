@@ -7,11 +7,9 @@ import de.xikolo.presenters.base.Presenter;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 
-public class CourseDetailsPresenter implements Presenter<CourseDetailsView> {
+public class CourseDetailsPresenter extends Presenter<CourseDetailsView> {
 
     public static final String TAG = CourseDetailsPresenter.class.getSimpleName();
-
-    private CourseDetailsView view;
 
     private CourseManager courseManager;
 
@@ -29,21 +27,19 @@ public class CourseDetailsPresenter implements Presenter<CourseDetailsView> {
 
     @Override
     public void onViewAttached(CourseDetailsView v) {
-        this.view = v;
+        super.onViewAttached(v);
 
         coursePromise = courseManager.getCourse(courseId, realm, new RealmChangeListener<Course>() {
             @Override
             public void onChange(Course course) {
-                if (view != null) {
-                    view.setupView(course);
-                }
+                getViewOrThrow().setupView(course);
             }
         });
     }
 
     @Override
     public void onViewDetached() {
-        this.view = null;
+        super.onViewDetached();
 
         if (coursePromise != null) {
             coursePromise.removeAllChangeListeners();
@@ -56,20 +52,24 @@ public class CourseDetailsPresenter implements Presenter<CourseDetailsView> {
     }
 
     public void unenroll(final String courseId) {
-        view.showProgressDialog();
+        getViewOrThrow().showProgressDialog();
         courseManager.deleteEnrollment(courseId, new JobCallback() {
             @Override
             public void onSuccess() {
-                view.hideProgressDialog();
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                }
             }
 
             @Override
             public void onError(ErrorCode code) {
-                view.hideProgressDialog();
-                if (code == ErrorCode.NO_NETWORK) {
-                    view.showNoNetworkToast();
-                } else {
-                    view.showErrorToast();
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                    if (code == ErrorCode.NO_NETWORK) {
+                        getView().showNoNetworkToast();
+                    } else {
+                        getView().showErrorToast();
+                    }
                 }
             }
         });

@@ -10,11 +10,9 @@ import de.xikolo.utils.DeepLinkingUtil;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 
-public class CoursePresenter implements Presenter<CourseView> {
+public class CoursePresenter extends Presenter<CourseView> {
 
     public static final String TAG = CoursePresenter.class.getSimpleName();
-
-    private CourseView view;
 
     private CourseManager courseManager;
 
@@ -34,15 +32,13 @@ public class CoursePresenter implements Presenter<CourseView> {
 
     @Override
     public void onViewAttached(CourseView v) {
-        this.view = v;
+        super.onViewAttached(v);
 
         if (courseId != null) {
             coursePromise = courseManager.getCourse(courseId, realm, new RealmChangeListener<Course>() {
                 @Override
                 public void onChange(Course course) {
-                    if (view != null) {
-                        handleCourse(course);
-                    }
+                    handleCourse(course);
                 }
             });
         }
@@ -50,7 +46,7 @@ public class CoursePresenter implements Presenter<CourseView> {
 
     @Override
     public void onViewDetached() {
-        this.view = null;
+        super.onViewDetached();
 
         if (coursePromise != null) {
             coursePromise.removeAllChangeListeners();
@@ -68,28 +64,26 @@ public class CoursePresenter implements Presenter<CourseView> {
         coursePromise = courseManager.getCourse(courseId, realm, new RealmChangeListener<Course>() {
             @Override
             public void onChange(Course course) {
-                if (view != null) {
-                    handleCourse(course);
-                }
+                handleCourse(course);
             }
         });
     }
 
     private void handleCourse(Course course) {
         if (!course.accessible) {
-            view.showCourseLockedToast();
-            view.startCourseDetailsActivity(course.id);
-            view.finishActivity();
+            getViewOrThrow().showCourseLockedToast();
+            getViewOrThrow().startCourseDetailsActivity(course.id);
+            getViewOrThrow().finishActivity();
             return;
         }
         if (!course.isEnrolled()) {
-            view.showNotEnrolledToast();
-            view.startCourseDetailsActivity(course.id);
-            view.finishActivity();
+            getViewOrThrow().showNotEnrolledToast();
+            getViewOrThrow().startCourseDetailsActivity(course.id);
+            getViewOrThrow().finishActivity();
             return;
         }
 
-        view.setupView(course, courseTab);
+        getViewOrThrow().setupView(course, courseTab);
     }
 
     public void handleDeepLink(Uri uri) {
@@ -98,38 +92,46 @@ public class CoursePresenter implements Presenter<CourseView> {
 
         handleCourse(courseId);
 
-        view.showProgressDialog();
+        getViewOrThrow().showProgressDialog();
         courseManager.requestCourse(courseId, new JobCallback() {
             @Override
             public void onSuccess() {
-                view.hideProgressDialog();
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                }
             }
 
             @Override
             public void onError(ErrorCode code) {
-                view.hideProgressDialog();
-                view.showErrorToast();
-                view.finishActivity();
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                    getView().showErrorToast();
+                    getView().finishActivity();
+                }
             }
         });
     }
 
     public void unenroll(final String courseId) {
-        view.showProgressDialog();
+        getViewOrThrow().showProgressDialog();
         courseManager.deleteEnrollment(courseId, new JobCallback() {
             @Override
             public void onSuccess() {
-                view.hideProgressDialog();
-                view.finishActivity();
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                    getView().finishActivity();
+                }
             }
 
             @Override
             public void onError(ErrorCode code) {
-                view.hideProgressDialog();
-                if (code == ErrorCode.NO_NETWORK) {
-                    view.showNoNetworkToast();
-                } else {
-                    view.showErrorToast();
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                    if (code == ErrorCode.NO_NETWORK) {
+                        getView().showNoNetworkToast();
+                    } else {
+                        getView().showErrorToast();
+                    }
                 }
             }
         });

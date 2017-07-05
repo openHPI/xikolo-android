@@ -52,13 +52,13 @@ public class UpdateItemVisitedJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Item visit successfully updated");
 
-                if (callback != null) callback.onSuccess();
+                if (callback != null) callback.success();
             } else {
                 if (Config.DEBUG) Log.e(TAG, "Error while updating item visit");
-                if (callback != null) callback.onError(JobCallback.ErrorCode.ERROR);
+                if (callback != null) callback.error(JobCallback.ErrorCode.ERROR);
             }
         } else {
-            if (callback != null) callback.onError(JobCallback.ErrorCode.NO_AUTH);
+            if (callback != null) callback.error(JobCallback.ErrorCode.NO_AUTH);
         }
     }
 

@@ -8,8 +8,6 @@ import android.view.View;
 import com.google.android.gms.cast.framework.CastContext;
 import com.yatatsu.autobundle.AutoBundle;
 
-import org.greenrobot.eventbus.EventBus;
-
 import butterknife.ButterKnife;
 import de.xikolo.utils.PlayServicesUtil;
 
@@ -39,17 +37,6 @@ public abstract class BaseFragment extends Fragment {
         ButterKnife.bind(this, view);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

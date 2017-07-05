@@ -18,10 +18,9 @@ import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.models.Course;
-import de.xikolo.config.Config;
+import de.xikolo.models.base.SectionList;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
-import de.xikolo.models.base.SectionList;
 import de.xikolo.utils.LanguageUtil;
 
 public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -141,7 +140,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
 
-            ImageHelper.load(Config.HTTPS + "://" + Config.HOST + course.imageUrl, viewHolder.image);
+            ImageHelper.load(course.imageUrl, viewHolder.image);
 
             if (course.isEnrolled() && DateUtil.nowIsAfter(course.startDate)) {
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {

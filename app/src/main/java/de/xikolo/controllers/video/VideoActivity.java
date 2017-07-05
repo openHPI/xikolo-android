@@ -118,8 +118,6 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         hideSystemBars();
 
         updateVideoView(getResources().getConfiguration().orientation);
-
-        presenter.onCreate();
     }
 
     @Override
