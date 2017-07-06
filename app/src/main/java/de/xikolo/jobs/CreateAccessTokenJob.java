@@ -40,7 +40,6 @@ public class CreateAccessTokenJob extends BaseJob {
         if (NetworkUtil.isOnline()) {
 
             final Response<AccessToken> response = ApiService.getInstance().createToken(
-                    Config.API + Config.AUTHENTICATE,
                     email,
                     password
             ).execute();

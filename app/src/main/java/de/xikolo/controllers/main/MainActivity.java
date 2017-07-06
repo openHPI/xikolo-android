@@ -132,7 +132,7 @@ public class MainActivity extends BaseActivity
             tag = "all_courses";
         }
         if (position == NavigationAdapter.NAV_MY_COURSES.getPosition()) {
-            newFragment = CourseListFragmentAutoBundle.builder(Course.Filter.ALL).build();
+            newFragment = CourseListFragmentAutoBundle.builder(Course.Filter.MY).build();
             tag = "my_courses";
         }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {

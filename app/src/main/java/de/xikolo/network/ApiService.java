@@ -49,8 +49,15 @@ public abstract class ApiService {
                         public Response intercept(Interceptor.Chain chain) throws IOException {
                             Request original = chain.request();
 
+                            String acceptHeader = Config.HEADER_ACCEPT_VALUE_API_V2;
+
+                            // plain json calls
+                            if (original.url().encodedPath().equals("/api/v2/authenticate")) {
+                                acceptHeader = Config.HEADER_ACCEPT_VALUE_JSON;
+                            }
+
                             Request request = original.newBuilder()
-                                    .header(Config.HEADER_ACCEPT, Config.HEADER_ACCEPT_VALUE_API_V2)
+                                    .header(Config.HEADER_ACCEPT, acceptHeader)
                                     .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE)
                                     .build();
 

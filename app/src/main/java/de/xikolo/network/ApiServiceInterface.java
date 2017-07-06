@@ -1,12 +1,12 @@
 package de.xikolo.network;
 
+import de.xikolo.config.Config;
 import de.xikolo.models.AccessToken;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
 import de.xikolo.models.Item;
 import de.xikolo.models.Profile;
 import de.xikolo.models.Section;
-import de.xikolo.config.Config;
 import de.xikolo.models.SubtitleTrack;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -18,7 +18,6 @@ import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Url;
 
 public interface ApiServiceInterface {
 
@@ -79,7 +78,7 @@ public interface ApiServiceInterface {
     // Token
 
     @FormUrlEncoded
-    @POST
-    Call<AccessToken> createToken(@Url String url, @Field("email") String email, @Field("password") String password);
+    @POST("authenticate")
+    Call<AccessToken> createToken(@Field("email") String email, @Field("password") String password);
 
 }
