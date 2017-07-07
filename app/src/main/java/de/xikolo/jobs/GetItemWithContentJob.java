@@ -42,7 +42,10 @@ public class GetItemWithContentJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<Item.JsonModel> response = ApiService.getInstance().getItemWithContent(UserManager.getToken(), itemId).execute();
+                final Response<Item.JsonModel> response = ApiService.getInstance().getItemWithContent(
+                        UserManager.getTokenAsHeader(),
+                        itemId
+                ).execute();
 
                 if (response.isSuccessful()) {
                     if (Config.DEBUG)

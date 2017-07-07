@@ -35,7 +35,9 @@ public class ListCoursesJob extends BaseJob {
             final Response<Course.JsonModel[]> response;
 
             if (UserManager.isAuthorized()) {
-                response = ApiService.getInstance().listCoursesWithEnrollments(UserManager.getTokenAsHeader()).execute();
+                response = ApiService.getInstance().listCoursesWithEnrollments(
+                        UserManager.getTokenAsHeader()
+                ).execute();
             } else {
                 response = ApiService.getInstance().listCourses().execute();
             }

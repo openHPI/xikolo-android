@@ -15,12 +15,14 @@ import java.util.List;
 
 import de.xikolo.App;
 import de.xikolo.R;
+import de.xikolo.config.Config;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
+import de.xikolo.models.Profile;
+import de.xikolo.models.User;
 import de.xikolo.utils.AndroidDimenUtil;
-import de.xikolo.config.Config;
-import de.xikolo.config.FeatureToggle;
 import de.xikolo.views.CustomFontTextView;
 
 public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.BaseNavigationViewHolder> {
@@ -148,16 +150,17 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 profileViewHolder.viewLogin.setVisibility(View.GONE);
                 profileViewHolder.viewProfile.setVisibility(View.VISIBLE);
 
-//                User user = UserManager.getSavedUser();
-//                profileViewHolder.textName.setText(String.format(context.getResources().getString(R.string.user_name),
-//                        user.first_name, user.last_name));
-//                profileViewHolder.textEmail.setText(user.email);
-//
-//                if (user.user_visual != null) {
-//                    ImageHelper.loadRounded(user.user_visual, profileViewHolder.imageProfile);
-//                } else {
+                User user = User.get(UserManager.getUserId());
+                Profile profile = Profile.get(user.profileId);
+                profileViewHolder.textName.setText(String.format(context.getResources().getString(R.string.user_name),
+                        profile.firstName, profile.lastName));
+                profileViewHolder.textEmail.setText(profile.email);
+
+                if (user.avatarUrl != null) {
+                    ImageHelper.loadRounded(user.avatarUrl, profileViewHolder.imageProfile);
+                } else {
                     ImageHelper.loadRounded(R.drawable.avatar, profileViewHolder.imageProfile);
-//                }
+                }
             } else {
                 profileViewHolder.viewLogin.setVisibility(View.VISIBLE);
                 profileViewHolder.viewProfile.setVisibility(View.GONE);

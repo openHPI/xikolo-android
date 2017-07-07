@@ -93,7 +93,7 @@ public class CourseManager extends BaseManager {
         RealmResults<Course> courseList = realm
                 .where(Course.class)
                 .equalTo("external", false)
-                .isNotNull("enrollment")
+                .isNotNull("enrollmentId")
                 .lessThanOrEqualTo("startDate", new Date())
                 .findAllSorted("startDate", Sort.DESCENDING);
 
@@ -104,11 +104,15 @@ public class CourseManager extends BaseManager {
         RealmResults<Course> courseList = realm
                 .where(Course.class)
                 .equalTo("external", false)
-                .isNotNull("enrollment")
+                .isNotNull("enrollmentId")
                 .greaterThan("startDate", new Date())
                 .findAllSorted("startDate", Sort.ASCENDING);
 
         return courseList;
+    }
+
+    public long countEnrollments(Realm realm) {
+        return realm.where(Enrollment.class).count();
     }
 
     public void requestCourse(String courseId, JobCallback callback) {

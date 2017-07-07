@@ -26,19 +26,19 @@ import java.util.List;
 import butterknife.BindView;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.config.BuildFlavor;
+import de.xikolo.config.Config;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
-import de.xikolo.controllers.shared.WebViewFragmentAutoBundle;
 import de.xikolo.controllers.helper.CacheHelper;
+import de.xikolo.controllers.shared.WebViewFragmentAutoBundle;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.models.Course;
+import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course.CoursePresenter;
 import de.xikolo.presenters.course.CoursePresenterFactory;
 import de.xikolo.presenters.course.CourseView;
-import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.config.BuildFlavor;
-import de.xikolo.config.Config;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.ToastUtil;
 
@@ -60,7 +60,10 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blank_tabs);
         setupActionBar();
+    }
 
+    @Override
+    protected void onPresenterPrepared(@NonNull CoursePresenter presenter) {
         String action = getIntent().getAction();
 
         if (action != null && action.equals(Intent.ACTION_VIEW)) {
@@ -78,7 +81,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                     startActivity(restartIntent);
                 }
             } else {
-                presenter.handleCourse(courseId);
+                presenter.initCourse(courseId);
             }
         }
     }
@@ -283,7 +286,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
             if (fragment == null) {
                 switch (position) {
                     case 0:
-//                        fragment = CourseLearningsFragment.newInstance(courseId);
+                        fragment = LearningsFragmentAutoBundle.builder(courseId).build();
                         break;
                     case 1:
                         fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)

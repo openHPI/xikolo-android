@@ -142,7 +142,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             ImageHelper.load(course.imageUrl, viewHolder.image);
 
-            if (course.isEnrolled() && DateUtil.nowIsAfter(course.startDate)) {
+            if (course.isEnrolled() && course.accessible) {
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -154,6 +154,20 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View view) {
                         callback.onEnterButtonClicked(course.id);
+                    }
+                });
+            } else if (course.isEnrolled() && !course.accessible) {
+                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        callback.onDetailButtonClicked(course.id);
+                    }
+                });
+                viewHolder.buttonEnroll.setText(context.getString(R.string.btn_starts_soon));
+                viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        callback.onDetailButtonClicked(course.id);
                     }
                 });
             } else {
@@ -168,16 +182,6 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View view) {
                         callback.onEnrollButtonClicked(course.id);
-                    }
-                });
-            }
-
-            if (course.isEnrolled() && !DateUtil.nowIsAfter(course.startDate)) {
-                viewHolder.buttonEnroll.setText(context.getString(R.string.btn_starts_soon));
-                viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.onDetailButtonClicked(course.id);
                     }
                 });
             }

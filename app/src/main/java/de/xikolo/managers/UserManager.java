@@ -6,10 +6,10 @@ import de.xikolo.App;
 import de.xikolo.config.Config;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.jobs.CreateAccessTokenJob;
-import de.xikolo.jobs.GetProfileJob;
+import de.xikolo.jobs.GetUserWithProfileJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.base.BaseManager;
-import de.xikolo.models.Profile;
+import de.xikolo.models.User;
 import de.xikolo.storages.UserStorage;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -19,10 +19,7 @@ public class UserManager extends BaseManager {
 
     public static final String TAG = UserManager.class.getSimpleName();
 
-    private UserStorage userStorage;
-
     public UserManager() {
-        this.userStorage = new UserStorage();
     }
 
     public static String getToken() {
@@ -69,11 +66,11 @@ public class UserManager extends BaseManager {
         EventBus.getDefault().post(new LogoutEvent());
     }
 
-    public void requestProfile(JobCallback callback) {
-        jobManager.addJobInBackground(new GetProfileJob(callback));
+    public void requestUserWithProfile(JobCallback callback) {
+        jobManager.addJobInBackground(new GetUserWithProfileJob(callback));
     }
 
-    public RealmObject getProfile(Realm realm, RealmChangeListener<Profile> listener) {
+    public RealmObject getUser(Realm realm, RealmChangeListener<User> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
@@ -82,14 +79,14 @@ public class UserManager extends BaseManager {
             return null;
         }
 
-        RealmObject profilePromise = realm
-                .where(Profile.class)
+        RealmObject userPromise = realm
+                .where(User.class)
                 .equalTo("id", UserManager.getUserId())
                 .findFirstAsync();
 
-        profilePromise.addChangeListener(listener);
+        userPromise.addChangeListener(listener);
 
-        return profilePromise;
+        return userPromise;
     }
 
 }

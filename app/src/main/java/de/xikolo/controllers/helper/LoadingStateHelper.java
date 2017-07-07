@@ -53,14 +53,14 @@ public class LoadingStateHelper {
     }
 
     public void showBlockingProgress() {
-        hide();
         progressDialog = ProgressDialog.getInstance();
         progressDialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);
     }
 
     public void showRefreshProgress() {
-        hide();
-        refreshLayout.setRefreshing(true);
+        if (!refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(true);
+        }
     }
 
     public void showMessage() {

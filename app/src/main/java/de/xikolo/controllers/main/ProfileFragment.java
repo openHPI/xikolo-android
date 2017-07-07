@@ -17,6 +17,7 @@ import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Profile;
+import de.xikolo.models.User;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.main.ProfilePresenter;
 import de.xikolo.presenters.main.ProfilePresenterFactory;
@@ -53,7 +54,7 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
     }
 
     @Override
-    public void showProfile(Profile profile) {
+    public void showUser(User user, Profile profile) {
         showHeader(profile);
 
         textName.setText(String.format(getString(R.string.user_name), profile.firstName, profile.lastName));
@@ -78,8 +79,8 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
         imageProfile.setDimensions(heightProfile, heightProfile);
         imageProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
-        if (profile.visualUrl != null) {
-            ImageHelper.loadRounded(profile.visualUrl, imageProfile, heightProfile, heightProfile);
+        if (user.avatarUrl != null) {
+            ImageHelper.loadRounded(user.avatarUrl, imageProfile, heightProfile, heightProfile);
         } else {
             ImageHelper.loadRounded(R.drawable.avatar, imageProfile, heightProfile, heightProfile);
         }

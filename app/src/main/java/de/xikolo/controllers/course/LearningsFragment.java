@@ -32,7 +32,7 @@ public class LearningsFragment extends LoadingStatePresenterFragment<LearningsPr
 
     public final static String TAG = LearningsFragment.class.getSimpleName();
 
-    @AutoBundleField(required = false) String courseId;
+    @AutoBundleField String courseId;
 
     private SectionListAdapter adapter;
 

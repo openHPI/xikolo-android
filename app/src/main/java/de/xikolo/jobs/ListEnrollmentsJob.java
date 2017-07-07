@@ -31,7 +31,9 @@ public class ListEnrollmentsJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<Enrollment.JsonModel[]> response = ApiService.getInstance().listEnrollments(UserManager.getToken()).execute();
+                final Response<Enrollment.JsonModel[]> response = ApiService.getInstance().listEnrollments(
+                        UserManager.getTokenAsHeader()
+                ).execute();
 
                 if (response.isSuccessful()) {
                     if (Config.DEBUG)

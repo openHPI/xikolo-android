@@ -5,6 +5,7 @@ import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Enrollment;
 import de.xikolo.models.Profile;
+import de.xikolo.models.User;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -20,9 +21,10 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
 
     private Realm realm;
 
-    private RealmObject profilePromise;
+    private RealmObject userPromise;
     private RealmResults enrollmentListPromise;
 
+    private User user;
     private Profile profile;
 
     ProfilePresenter() {
@@ -35,15 +37,17 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
     public void onViewAttached(ProfileView v) {
         super.onViewAttached(v);
 
-        if (profile == null) {
-            requestProfile();
+        if (user == null) {
+            requestUser();
         }
 
-        profilePromise = userManager.getProfile(realm, new RealmChangeListener<Profile>() {
+        userPromise = userManager.getUser(realm, new RealmChangeListener<User>() {
             @Override
-            public void onChange(Profile p) {
-                profile = p;
-                getViewOrThrow().showProfile(p);
+            public void onChange(User u) {
+                user = u;
+                profile = Profile.get(user.profileId);
+
+                getViewOrThrow().showUser(user, profile);
             }
         });
 
@@ -59,37 +63,31 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
     public void onViewDetached() {
         super.onViewDetached();
 
-        if (profilePromise != null) {
-            profilePromise.removeAllChangeListeners();
+        if (userPromise != null) {
+            userPromise.removeAllChangeListeners();
         }
         if (enrollmentListPromise != null) {
             enrollmentListPromise.removeAllChangeListeners();
         }
     }
 
-    private void requestProfile() {
+    private void requestUser() {
         if (getView() != null) {
-            if (profilePromise == null) {
-                getView().showProgressMessage();
-            } else {
-                getView().showRefreshProgress();
-            }
+            getView().showRefreshProgress();
         }
-        userManager.requestProfile(new JobCallback() {
+        userManager.requestUserWithProfile(new JobCallback() {
             @Override
             public void onSuccess() {
-                if (getView() != null) {
-                    getView().hideAnyProgress();
-                }
                 requestEnrollmentList();
             }
 
             @Override
             public void onError(ErrorCode code) {
                 if (getView() != null) {
+                    getView().hideAnyProgress();
                     switch (code) {
                         case NO_NETWORK:
-                            if (profilePromise == null) {
+                            if (userPromise == null) {
                                 getView().showNetworkRequiredMessage();
                             } else {
                                 getView().showNetworkRequiredToast();
@@ -105,18 +103,19 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
     }
 
     private void requestEnrollmentList() {
-        if (getView() != null) {
-            getView().showRefreshProgress();
-        }
         courseManager.requestEnrollmentList(new JobCallback() {
             @Override
             public void onSuccess() {
-                getView().hideAnyProgress();
+                if (getView() != null) {
+                    getView().hideAnyProgress();
+                }
             }
 
             @Override
             public void onError(ErrorCode code) {
-                getView().hideAnyProgress();
+                if (getView() != null) {
+                    getView().hideAnyProgress();
+                }
             }
         });
     }
@@ -128,7 +127,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
 
     @Override
     public void onRefresh() {
-        requestProfile();
+        requestUser();
     }
 
 }

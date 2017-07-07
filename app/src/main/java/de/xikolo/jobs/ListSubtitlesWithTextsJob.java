@@ -38,7 +38,10 @@ public class ListSubtitlesWithTextsJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<SubtitleTrack.JsonModel[]> response = ApiService.getInstance().listSubtitlesWithTextsForVideo(UserManager.getToken(), videoId).execute();
+                final Response<SubtitleTrack.JsonModel[]> response = ApiService.getInstance().listSubtitlesWithTextsForVideo(
+                        UserManager.getTokenAsHeader(),
+                        videoId
+                ).execute();
 
                 if (response.isSuccessful()) {
                     if (Config.DEBUG)

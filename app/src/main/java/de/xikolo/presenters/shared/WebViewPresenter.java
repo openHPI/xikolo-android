@@ -21,13 +21,26 @@ public class WebViewPresenter extends LoadingStatePresenter<PWebView> {
     protected String url;
 
     @Override
+    public void onViewAttached(PWebView view) {
+        super.onViewAttached(view);
+
+        if (url != null) {
+            setup(url);
+        }
+    }
+
+    @Override
     public void onRefresh() {
         request(url, true);
     }
 
     public void setup(String url) {
-        getViewOrThrow().showProgressMessage();
-        request(url, false);
+        if (getView() != null) {
+            getView().showProgressMessage();
+            request(url, false);
+        } else {
+            this.url = url;
+        }
     }
 
     public void onReceivedError(String message) {

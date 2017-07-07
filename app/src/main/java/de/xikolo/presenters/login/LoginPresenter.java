@@ -26,7 +26,7 @@ public class LoginPresenter extends Presenter<LoginView> {
         return new JobCallback() {
             @Override
             public void onSuccess() {
-                userManager.requestProfile(profileCallback());
+                userManager.requestUserWithProfile(profileCallback());
             }
 
             @Override

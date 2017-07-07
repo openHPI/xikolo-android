@@ -2,12 +2,12 @@ package de.xikolo.presenters.main;
 
 import java.util.List;
 
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
-import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Course;
-import de.xikolo.presenters.base.LoadingStatePresenter;
 import de.xikolo.models.base.SectionList;
+import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -34,7 +34,7 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
     public void onViewAttached(CourseListView view) {
         super.onViewAttached(view);
 
-        if (courseList == null) {
+        if (courseList == null || courseList.size() == 0) {
             requestCourses();
         }
 

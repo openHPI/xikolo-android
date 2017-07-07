@@ -13,9 +13,9 @@ public abstract class JobCallback {
         ERROR, CANCEL, NO_NETWORK, NO_AUTH
     }
 
-    public abstract void onSuccess();
+    protected abstract void onSuccess();
 
-    public abstract void onError(ErrorCode code);
+    protected abstract void onError(ErrorCode code);
 
     public final void success() {
         EventBus.getDefault().postSticky(new NetworkStateEvent(true));

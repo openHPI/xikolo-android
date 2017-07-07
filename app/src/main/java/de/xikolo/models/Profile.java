@@ -3,6 +3,7 @@ package de.xikolo.models;
 import com.squareup.moshi.Json;
 
 import de.xikolo.models.base.RealmAdapter;
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.JsonApi;
@@ -18,11 +19,18 @@ public class Profile extends RealmObject {
 
     public String lastName;
 
+    public String displayName;
+
     public String email;
 
-    public String visualUrl;
+    public static Profile get(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        Profile model = realm.where(Profile.class).equalTo("id", id).findFirst();
+        realm.close();
+        return model;
+    }
 
-    @JsonApi(type = "profiles")
+    @JsonApi(type = "user-profile")
     public static class JsonModel extends Resource implements RealmAdapter<Profile> {
 
         @Json(name = "first_name")
@@ -31,19 +39,19 @@ public class Profile extends RealmObject {
         @Json(name = "last_name")
         public String lastName;
 
-        public String email;
+        @Json(name = "display_name")
+        public String displayName;
 
-        @Json(name = "visual_url")
-        public String visualUrl;
+        public String email;
 
         @Override
         public Profile convertToRealmObject() {
             Profile model = new Profile();
+            model.id = getId();
             model.firstName = firstName;
             model.lastName = lastName;
+            model.displayName = displayName;
             model.email = email;
-            model.visualUrl = visualUrl;
-
             return model;
         }
 

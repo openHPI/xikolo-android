@@ -66,9 +66,7 @@ public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresen
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    protected void onPresenterPrepared(@NonNull WebViewPresenter presenter) {
         webViewHelper.setup(presenter, url);
     }
 

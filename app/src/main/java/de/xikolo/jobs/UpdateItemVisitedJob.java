@@ -47,7 +47,11 @@ public class UpdateItemVisitedJob extends BaseJob {
             model.setId(itemId);
             model.visited = true;
 
-            final Response<Item.JsonModel> response = ApiService.getInstance().updateItem(UserManager.getToken(), itemId, model).execute();
+            final Response<Item.JsonModel> response = ApiService.getInstance().updateItem(
+                    UserManager.getTokenAsHeader(),
+                    itemId,
+                    model
+            ).execute();
 
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Item visit successfully updated");

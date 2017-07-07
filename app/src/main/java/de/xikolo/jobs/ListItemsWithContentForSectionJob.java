@@ -42,7 +42,10 @@ public class ListItemsWithContentForSectionJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<Item.JsonModel[]> response = ApiService.getInstance().listItemsWithContentForSection(UserManager.getToken(), sectionId).execute();
+                final Response<Item.JsonModel[]> response = ApiService.getInstance().listItemsWithContentForSection(
+                        UserManager.getTokenAsHeader(),
+                        sectionId
+                ).execute();
 
                 if (response.isSuccessful()) {
                     if (Config.DEBUG)

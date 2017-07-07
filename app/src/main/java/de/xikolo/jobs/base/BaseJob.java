@@ -21,7 +21,7 @@ public abstract class BaseJob extends Job {
 
     @Override
     protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-        if (callback != null) callback.onError(JobCallback.ErrorCode.CANCEL);
+        if (callback != null) callback.error(JobCallback.ErrorCode.CANCEL);
     }
 
     @Override
