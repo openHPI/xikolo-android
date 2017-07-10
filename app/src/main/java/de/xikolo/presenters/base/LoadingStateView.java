@@ -1,27 +1,7 @@
 package de.xikolo.presenters.base;
 
-public interface LoadingStateView extends View {
+import de.xikolo.controllers.base.LoadingStateInterface;
 
-    void showProgressDialog();
-
-    void showProgressMessage();
-
-    void showRefreshProgress();
-
-    void hideAnyProgress();
-
-    void showNetworkRequiredMessage();
-
-    void showNetworkRequiredToast();
-
-    void showLoginRequiredMessage();
-
-    void showLoginRequiredToast();
-
-    void hideAnyMessage();
-
-    void showErrorToast();
-
-    void enableSwipeRefresh(boolean enabled);
+public interface LoadingStateView extends View, LoadingStateInterface {
 
 }

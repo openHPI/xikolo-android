@@ -32,7 +32,7 @@ import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
 import de.xikolo.controllers.helper.CacheHelper;
-import de.xikolo.controllers.shared.WebViewFragmentAutoBundle;
+import de.xikolo.controllers.webview.WebViewFragmentAutoBundle;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.base.PresenterFactory;

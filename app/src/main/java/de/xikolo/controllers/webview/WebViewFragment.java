@@ -1,11 +1,11 @@
-package de.xikolo.controllers.shared;
+package de.xikolo.controllers.webview;
 
 import android.content.Intent;
 import android.content.MutableContextWrapper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Browser;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,20 +15,14 @@ import android.view.ViewGroup;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
-import java.util.Map;
-
 import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.controllers.base.LoadingStatePresenterFragment;
-import de.xikolo.controllers.helper.WebViewHelper;
-import de.xikolo.presenters.shared.PWebView;
-import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.presenters.shared.WebViewPresenter;
-import de.xikolo.presenters.shared.WebViewPresenterFactory;
 import de.xikolo.config.Config;
+import de.xikolo.controllers.base.LoadingStateFragment;
+import de.xikolo.controllers.helper.WebViewHelper;
 import de.xikolo.utils.ToastUtil;
 
-public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresenter, PWebView> implements PWebView {
+public class WebViewFragment extends LoadingStateFragment implements WebViewInterface {
 
     public static final String TAG = WebViewFragment.class.getSimpleName();
 
@@ -57,7 +51,7 @@ public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresen
 
             view = LayoutInflater.from(mutableContextWrapper).inflate(R.layout.fragment_webview, container, false);
 
-            webViewHelper = new WebViewHelper(view);
+            webViewHelper = new WebViewHelper(view, this);
         } else {
             mutableContextWrapper.setBaseContext(getActivity());
         }
@@ -66,8 +60,10 @@ public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresen
     }
 
     @Override
-    protected void onPresenterPrepared(@NonNull WebViewPresenter presenter) {
-        webViewHelper.setup(presenter, url);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        webViewHelper.request(url, false);
     }
 
     @Override
@@ -90,24 +86,16 @@ public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresen
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.action_refresh:
-                presenter.onRefresh();
+                webViewHelper.refresh();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @NonNull
-    @Override
-    protected PresenterFactory<WebViewPresenter> getPresenterFactory() {
-        return new WebViewPresenterFactory();
-    }
-
-    @Override
     public void showInvalidUrlToast() {
         ToastUtil.show(R.string.notification_url_invalid);
     }
 
-    @Override
     public void showErrorToast(String message) {
         ToastUtil.show("An error occurred: " + message);
     }
@@ -123,26 +111,6 @@ public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresen
     }
 
     @Override
-    public void loadUrl(String url, Map<String, String> header) {
-        webViewHelper.loadUrl(url, header);
-    }
-
-    @Override
-    public boolean webViewIsShown() {
-        return webViewHelper.webViewIsShown();
-    }
-
-    @Override
-    public void showWebView() {
-        webViewHelper.showWebView();
-    }
-
-    @Override
-    public void hideWebView() {
-        webViewHelper.hideWebView();
-    }
-
-    @Override
     public void openUrlInBrowser(Uri uri, String token) {
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         if (token != null) {
@@ -151,6 +119,11 @@ public class WebViewFragment extends LoadingStatePresenterFragment<WebViewPresen
             i.putExtra(Browser.EXTRA_HEADERS, headers);
         }
         getActivity().startActivity(i);
+    }
+
+    @Override
+    public void onRefresh() {
+        webViewHelper.refresh();
     }
 
 }

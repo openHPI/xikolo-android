@@ -2,9 +2,13 @@ package de.xikolo.controllers.helper;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -12,12 +16,17 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;
-import de.xikolo.presenters.shared.WebViewPresenter;
+import de.xikolo.config.Config;
+import de.xikolo.controllers.webview.WebViewInterface;
+import de.xikolo.managers.UserManager;
+import de.xikolo.utils.LanalyticsUtil;
+import de.xikolo.utils.NetworkUtil;
 
 public class WebViewHelper {
 
@@ -25,28 +34,39 @@ public class WebViewHelper {
 
     @BindView(R.id.webView) WebView webView;
 
-    public WebViewHelper(View view) {
+    protected String url;
+
+    private WebViewInterface webViewInterface;
+
+    public WebViewHelper(View view, WebViewInterface callback) {
         ButterKnife.bind(this, view);
+        webViewInterface = callback;
+
+        setup();
     }
 
-    public void loadUrl(String url, Map<String, String> header) {
+    private void loadUrl(String url, Map<String, String> header) {
         webView.loadUrl(url, header);
     }
 
-    public boolean webViewIsShown() {
+    private boolean webViewIsShown() {
         return webView.getVisibility() == View.VISIBLE;
     }
 
-    public void showWebView() {
+    private void showWebView() {
         webView.setVisibility(View.VISIBLE);
     }
 
-    public void hideWebView() {
+    private void hideWebView() {
         webView.setVisibility(View.GONE);
     }
 
+    public void refresh() {
+        request(url, true);
+    }
+
     @SuppressWarnings("SetJavaScriptEnabled")
-    public void setup(final WebViewPresenter presenter, String url) {
+    private void setup() {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
@@ -57,7 +77,7 @@ public class WebViewHelper {
             @SuppressWarnings("deprecation")
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                presenter.onReceivedError(description);
+                webViewInterface.showErrorToast(description);
             }
 
             @TargetApi(Build.VERSION_CODES.M)
@@ -68,20 +88,31 @@ public class WebViewHelper {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                presenter.onPageStarted();
+                hideWebView();
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                presenter.onPageFinished();
+                webViewInterface.hideAnyProgress();
+                webViewInterface.hideAnyMessage();
+                showWebView();
                 super.onPageFinished(view, url);
             }
 
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                presenter.onUrlLoading(url);
+                if (url.contains(Config.HOST) && webViewInterface.inAppLinksEnabled() || webViewInterface.externalLinksEnabled()) {
+                    request(url, true);
+                } else {
+                    Uri uri = Uri.parse(url);
+                    if (url.contains(Config.HOST) && UserManager.isAuthorized()) {
+                        webViewInterface.openUrlInBrowser(uri, UserManager.getToken());
+                    } else {
+                        webViewInterface.openUrlInBrowser(uri, null);
+                    }
+                }
                 return true;
             }
 
@@ -103,8 +134,47 @@ public class WebViewHelper {
                 return false;
             }
         });
+    }
 
-        presenter.setup(url);
+    public void request(String url, boolean userRequest) {
+        if (Config.DEBUG) {
+            Log.i(TAG, "Request URL: " + url);
+        }
+        if (url != null) {
+            this.url = url;
+
+            if (!webViewInterface.externalLinksEnabled() || Patterns.WEB_URL.matcher(this.url).matches()) {
+                if (NetworkUtil.isOnline()) {
+                    if (webViewIsShown()) {
+                        webViewInterface.showProgressMessage();
+                    } else {
+                        webViewInterface.showRefreshProgress();
+                    }
+                    if (url.contains(Config.HOST)) {
+                        Map<String, String> header = new HashMap<>();
+                        header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
+                        if (UserManager.isAuthorized()) {
+                            header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserManager.getToken());
+                        }
+
+                        // lanalytics context data cookie
+                        String lanalyticsContextDataJson = LanalyticsUtil.getContextDataJson();
+                        CookieManager.getInstance().setCookie(Config.URI, Config.COOKIE_LANALYTICS_CONTEXT + "=" + lanalyticsContextDataJson);
+
+                        loadUrl(this.url, header);
+                    } else {
+                        loadUrl(this.url, null);
+                    }
+                } else {
+                    webViewInterface.showNetworkRequiredMessage();
+                    if (userRequest) {
+                        webViewInterface.showNetworkRequiredToast();
+                    }
+                }
+            } else {
+                webViewInterface.showInvalidUrlToast();
+            }
+        }
     }
 
 }
