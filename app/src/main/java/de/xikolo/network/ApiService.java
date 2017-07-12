@@ -49,7 +49,7 @@ public abstract class ApiService {
                         public Response intercept(Interceptor.Chain chain) throws IOException {
                             Request original = chain.request();
 
-                            String acceptHeader = Config.HEADER_ACCEPT_VALUE_API_V2;
+                            String acceptHeader = Config.HEADER_ACCEPT_VALUE_JSON_API;
 
                             // plain json calls
                             if (original.url().encodedPath().equals("/api/v2/authenticate")) {
@@ -87,7 +87,7 @@ public abstract class ApiService {
                     .build();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Config.API_V2)
+                    .baseUrl(Config.API_URL)
                     .client(client)
                     .addConverterFactory(JsonApiConverterFactory.create(moshi))
                     .addConverterFactory(MoshiConverterFactory.create())

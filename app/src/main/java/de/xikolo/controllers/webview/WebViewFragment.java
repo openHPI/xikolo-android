@@ -115,7 +115,7 @@ public class WebViewFragment extends LoadingStateFragment implements WebViewInte
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         if (token != null) {
             Bundle headers = new Bundle();
-            headers.putString(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + token);
+            headers.putString(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX + token);
             i.putExtra(Browser.EXTRA_HEADERS, headers);
         }
         getActivity().startActivity(i);

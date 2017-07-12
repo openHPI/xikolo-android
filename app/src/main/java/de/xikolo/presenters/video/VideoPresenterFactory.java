@@ -14,7 +14,7 @@ public class VideoPresenterFactory implements PresenterFactory<VideoPresenter> {
 
     public VideoPresenterFactory(String courseId, String sectionId, String itemId, String videoId) {
         this.courseId = courseId;
-        this.sectionId = courseId;
+        this.sectionId = sectionId;
         this.itemId = itemId;
         this.videoId = videoId;
     }

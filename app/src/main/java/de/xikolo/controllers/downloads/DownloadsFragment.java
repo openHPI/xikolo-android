@@ -3,6 +3,7 @@ package de.xikolo.controllers.downloads;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,7 +28,7 @@ import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.ToastUtil;
 
-public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDeleteButtonClickedListener {
+public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DownloadsAdapter.OnDeleteButtonClickedListener {
 
     public static final String TAG = DownloadsFragment.class.getSimpleName();
 
@@ -69,7 +70,7 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        notificationController = new LoadingStateHelper(getActivity(), layout, null);
+        notificationController = new LoadingStateHelper(getActivity(), layout, this);
         notificationController.hide();
 
         return layout;
@@ -79,6 +80,11 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
     public void onStart() {
         super.onStart();
 
+        fetchItems();
+    }
+
+    @Override
+    public void onRefresh() {
         fetchItems();
     }
 

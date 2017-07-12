@@ -10,16 +10,13 @@ public class Config {
 
     public static final boolean DEBUG = BuildConfig.X_TYPE == BuildType.DEBUG;
 
-    public static final String FONT = "fonts/";
+    public static final String FONT_DIR = "fonts/";
     public static final String FONT_XIKOLO = "xikolo.ttf";
     public static final String FONT_MATERIAL = "materialdesign.ttf";
 
-    public static final String HTTPS = "https";
-
     public static final String HOST;
-    public static final String URI;
-    public static final String API;
-    public static final String API_V2;
+    public static final String HOST_URL;
+    public static final String API_URL;
 
     public static final String COPYRIGHT_URL;
     public static final String IMPRINT_URL;
@@ -81,47 +78,40 @@ public class Config {
                 break;
         }
         HOST = App.getInstance().getString(R.string.app_host);
-        URI = HTTPS + "://" + HOST + "/";
-        API = URI + "api/";
-        API_V2 = API + "v2/";
+        HOST_URL = "https://" + HOST + "/";
+        API_URL = HOST_URL + "api/v2/";
     }
 
     public static final String HEADER_ACCEPT = "Accept";
-    public static final String HEADER_AUTHORIZATION = "Authorization";
-    public static final String HEADER_USER_PLATFORM = "X-User-Platform";
-
-    public static final String COOKIE_LANALYTICS_CONTEXT = "lanalytics-context";
-
     public static final String HEADER_ACCEPT_VALUE_JSON = "application/json";
-    public static final String HEADER_ACCEPT_VALUE_API_V2 = "application/vnd.api+json";
-    public static final String HEADER_AUTHORIZATION_PREFIX = "Token token=";
-    public static final String HEADER_AUTHORIZATION_PREFIX_API_V2 = "Legacy-Token token=";
+    public static final String HEADER_ACCEPT_VALUE_JSON_API = "application/vnd.api+json";
+
+    public static final String HEADER_AUTH = "Authorization";
+    public static final String HEADER_AUTH_VALUE_PREFIX = "Token token=";
+    public static final String HEADER_AUTH_VALUE_PREFIX_JSON_API = "Legacy-Token token=";
+
+    public static final String HEADER_USER_PLATFORM = "X-User-Platform";
     public static final String HEADER_USER_PLATFORM_VALUE = "Android";
+
+    public static final String LANALYTICS_CONTEXT_COOKIE = "lanalytics-context";
+    public static final String LANALYTICS_PATH = "tracking-events/";
 
     public static final String NEWS = "news/";
     public static final String LOGIN = "login/";
     public static final String ACCOUNT = "account/";
     public static final String NEW = "new/";
     public static final String RESET = "reset/" + NEW;
-
-    public static final String AUTHENTICATE = "authenticate/";
-
     public static final String COURSES = "courses/";
     public static final String DISCUSSIONS = "pinboard/";
     public static final String ANNOUNCEMENTS = "announcements/";
     public static final String ROOMS = "learning_rooms/";
-    public static final String MODULES = "modules/";
     public static final String ITEMS = "items/";
     public static final String QUIZ_RECAP = "learn?course_id=";
 
-    public static final String SUBTITLES = "subtitles/";
+    public static final String WEBSOCKET_URL = "wss://" + HOST + "/ws";
 
-    public static final String USER = "users/me/";
-    public static final String ENROLLMENTS = "enrollments/";
-    public static final String PROGRESSIONS = "progressions/";
-
-    public static final String LANALYTICS = "tracking-events/";
-
-    public static final String WEBSOCKET = "wss://" + HOST + "/ws";
+    public static boolean PRESENTER_LIFECYCLE_LOGGING = false;
+    public static boolean WEBVIEW_LOGGING = false;
+    public static boolean JOB_HELPER_LOGGING = false;
 
 }

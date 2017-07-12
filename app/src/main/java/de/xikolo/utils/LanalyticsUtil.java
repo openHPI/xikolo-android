@@ -7,16 +7,14 @@ import com.google.gson.Gson;
 
 import java.util.Map;
 
-import de.xikolo.BuildConfig;
 import de.xikolo.App;
-import de.xikolo.config.BuildFlavor;
-import de.xikolo.config.BuildType;
 import de.xikolo.config.Config;
-import de.xikolo.managers.UserManager;
-import de.xikolo.storages.UserStorage;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.lanalytics.Tracker;
 import de.xikolo.managers.DownloadManager;
+import de.xikolo.managers.UserManager;
+import de.xikolo.storages.UserStorage;
 
 public class LanalyticsUtil {
 
@@ -369,7 +367,7 @@ public class LanalyticsUtil {
 
     public static void track(Lanalytics.Event event) {
         App application = App.getInstance();
-        if (UserManager.isAuthorized() && isTrackingEnabled()) {
+        if (UserManager.isAuthorized() && FeatureToggle.tracking()) {
             Tracker tracker = application.getLanalytics().getDefaultTracker();
             tracker.send(event, UserManager.getToken());
         } else {
@@ -377,11 +375,6 @@ public class LanalyticsUtil {
                 Log.i(TAG, "Couldn't track event " + event.verb + ". No user login found or tracking is disabled for this build.");
             }
         }
-    }
-
-    private static boolean isTrackingEnabled() {
-        return BuildConfig.X_TYPE == BuildType.RELEASE
-                && (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP);
     }
 
     public static Lanalytics.Event.Builder newEventBuilder() {

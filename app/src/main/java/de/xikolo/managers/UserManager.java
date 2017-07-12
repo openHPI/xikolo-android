@@ -29,7 +29,7 @@ public class UserManager extends BaseManager {
 
     public static String getTokenAsHeader() {
         UserStorage userStorage = new UserStorage();
-        return Config.HEADER_AUTHORIZATION_PREFIX_API_V2 + userStorage.getAccessToken();
+        return Config.HEADER_AUTH_VALUE_PREFIX_JSON_API + userStorage.getAccessToken();
     }
 
     public static String getUserId() {

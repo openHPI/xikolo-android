@@ -8,6 +8,8 @@ import com.birbit.android.jobqueue.log.CustomLogger;
 
 import de.xikolo.App;
 
+import static de.xikolo.config.Config.JOB_HELPER_LOGGING;
+
 public abstract class JobHelper {
 
     private static JobManager instance;
@@ -30,12 +32,12 @@ public abstract class JobHelper {
 
                         @Override
                         public void v(String text, Object... args) {
-//                            if (Config.DEBUG) Log.v(TAG, String.format(text, args));
+                            if (JOB_HELPER_LOGGING) Log.v(TAG, String.format(text, args));
                         }
 
                         @Override
                         public void d(String text, Object... args) {
-//                        if (Config.DEBUG) Log.d(TAG, String.format(text, args));
+                            if (JOB_HELPER_LOGGING) Log.d(TAG, String.format(text, args));
                         }
 
                         @Override

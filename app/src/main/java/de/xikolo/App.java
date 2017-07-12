@@ -40,7 +40,7 @@ public class App extends Application {
     public Lanalytics getLanalytics() {
         synchronized (App.class) {
             if (lanalytics == null) {
-                lanalytics = Lanalytics.getInstance(this, Config.API_V2 + Config.LANALYTICS);
+                lanalytics = Lanalytics.getInstance(this, Config.API_URL + Config.LANALYTICS_PATH);
             }
         }
         return lanalytics;
@@ -49,7 +49,7 @@ public class App extends Application {
     public WebSocketManager getWebSocketManager() {
         synchronized (App.class) {
             if (webSocketManager == null) {
-                webSocketManager = new WebSocketManager(Config.WEBSOCKET);
+                webSocketManager = new WebSocketManager(Config.WEBSOCKET_URL);
             }
         }
         return webSocketManager;

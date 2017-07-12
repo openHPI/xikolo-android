@@ -20,19 +20,23 @@ public class Video extends RealmObject {
 
     public int duration;
 
+    public VideoStream singleStream;
+
     public String slidesUrl;
 
-    public String transcriptUrl;
-
     public int slidesSize;
+
+    public String audioUrl;
+
+    public int audioSize;
+
+    public String transcriptUrl;
 
     public int transcriptSize;
 
     public String thumbnailUrl;
 
     public String itemId;
-
-    public VideoStream singleStream;
 
     // local field
     public int progress = 0;
@@ -53,19 +57,31 @@ public class Video extends RealmObject {
 
         public int duration;
 
+        @Json(name = "single_stream")
+        public VideoStream singleStream;
+
         @Json(name = "slides_url")
         public String slidesUrl;
 
+//        @Json(name = "slides_size")
+//        public int slidesSize;
+
+        @Json(name = "audio_url")
+        public String audioUrl;
+
+//        @Json(name = "audio_size")
+//        public int audioSize;
+
         @Json(name = "transcript_url")
         public String transcriptUrl;
+
+//        @Json(name = "transcript_size")
+//        public int transcriptSize;
 
         @Json(name = "thumbnail_url")
         public String thumbnailUrl;
 
         public String itemId;
-
-        @Json(name = "single_stream")
-        public VideoStream singleStream;
 
         @Override
         public Video convertToRealmObject() {
@@ -74,11 +90,15 @@ public class Video extends RealmObject {
             video.title = title;
             video.summary = summary;
             video.duration = duration;
+            video.singleStream = singleStream;
             video.slidesUrl = slidesUrl;
+//            video.slidesSize = slidesSize;
+            video.audioUrl = audioUrl;
+//            video.audioSize = audioSize;
             video.transcriptUrl = transcriptUrl;
+//            video.transcriptSize = transcriptSize;
             video.thumbnailUrl = thumbnailUrl;
             video.itemId = itemId;
-            video.singleStream = singleStream;
 
             return video;
         }

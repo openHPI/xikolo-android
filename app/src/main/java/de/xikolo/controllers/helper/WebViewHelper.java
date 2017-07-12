@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -27,6 +28,8 @@ import de.xikolo.controllers.webview.WebViewInterface;
 import de.xikolo.managers.UserManager;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
+
+import static de.xikolo.config.Config.WEBVIEW_LOGGING;
 
 public class WebViewHelper {
 
@@ -70,7 +73,12 @@ public class WebViewHelper {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage cm) {
+                return !WEBVIEW_LOGGING || super.onConsoleMessage(cm);
+            }
+        });
 
         webView.setWebViewClient(new WebViewClient() {
 
@@ -138,7 +146,7 @@ public class WebViewHelper {
 
     public void request(String url, boolean userRequest) {
         if (Config.DEBUG) {
-            Log.i(TAG, "Request URL: " + url);
+            Log.d(TAG, "Request URL: " + url);
         }
         if (url != null) {
             this.url = url;
@@ -154,12 +162,12 @@ public class WebViewHelper {
                         Map<String, String> header = new HashMap<>();
                         header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
                         if (UserManager.isAuthorized()) {
-                            header.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + UserManager.getToken());
+                            header.put(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX + UserManager.getToken());
                         }
 
                         // lanalytics context data cookie
                         String lanalyticsContextDataJson = LanalyticsUtil.getContextDataJson();
-                        CookieManager.getInstance().setCookie(Config.URI, Config.COOKIE_LANALYTICS_CONTEXT + "=" + lanalyticsContextDataJson);
+                        CookieManager.getInstance().setCookie(Config.HOST_URL, Config.LANALYTICS_CONTEXT_COOKIE + "=" + lanalyticsContextDataJson);
 
                         loadUrl(this.url, header);
                     } else {

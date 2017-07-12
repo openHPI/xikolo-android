@@ -44,7 +44,7 @@ public class CustomFontTextView extends TextView {
         synchronized (cache) {
             try {
                 if (!cache.containsKey(asset)) {
-                    tf = Typeface.createFromAsset(ctx.getAssets(), Config.FONT + asset);
+                    tf = Typeface.createFromAsset(ctx.getAssets(), Config.FONT_DIR + asset);
                     cache.put(asset, tf);
                 }
                 tf = cache.get(asset);

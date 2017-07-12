@@ -21,7 +21,7 @@ import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.helper.ImageHelper;
-import de.xikolo.controllers.video.VideoActivity;
+import de.xikolo.controllers.video.VideoActivityAutoBundle;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
@@ -46,7 +46,7 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
     @BindView(R.id.durationText) TextView textDuration;
     @BindView(R.id.videoThumbnail) CustomSizeImageView imageVideoThumbnail;
     @BindView(R.id.containerDownloads) LinearLayout linearLayoutDownloads;
-    @BindView(R.id.container) View viewContainer;
+    @BindView(R.id.refreshLayout) View viewContainer;
     @BindView(R.id.playButton) View viewPlay;
     @BindView(R.id.videoMetadata) ViewGroup videoMetadata;
 
@@ -97,8 +97,8 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
         DownloadViewController slides = new DownloadViewController(getActivity(), DownloadManager.DownloadFileType.SLIDES, course, section, item, video);
         linearLayoutDownloads.addView(slides.getLayout());
 
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(video.duration);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(video.duration) - TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes(video.duration));
+        long minutes = TimeUnit.SECONDS.toMinutes(video.duration);
+        long seconds = video.duration - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(video.duration));
         textDuration.setText(getString(R.string.duration, minutes, seconds));
 
         viewPlay.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +111,7 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
 
     @Override
     public void startVideo(Video video) {
-        Intent intent = new Intent(getActivity(), VideoActivity.class);
+        Intent intent = VideoActivityAutoBundle.builder(courseId, sectionId, itemId, video.id).build(getActivity());
         startActivity(intent);
     }
 

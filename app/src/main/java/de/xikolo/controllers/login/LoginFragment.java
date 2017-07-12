@@ -91,14 +91,14 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
     @OnClick(R.id.btnNew)
     protected void newAccountClicked(View view) {
         hideKeyboard(view);
-        startUrlIntent(Config.URI + Config.ACCOUNT + Config.NEW);
+        startUrlIntent(Config.HOST_URL + Config.ACCOUNT + Config.NEW);
     }
 
     @SuppressWarnings("unused")
     @OnClick(R.id.textForgotPw)
     protected void forgotPasswordClicked(View view) {
         hideKeyboard(view);
-        startUrlIntent(Config.URI + Config.ACCOUNT + Config.RESET);
+        startUrlIntent(Config.HOST_URL + Config.ACCOUNT + Config.RESET);
     }
 
     private void login(View view) {

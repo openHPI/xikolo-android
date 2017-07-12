@@ -18,14 +18,13 @@ import java.util.List;
 import java.util.Locale;
 
 import de.xikolo.R;
-import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
 
-public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.ModuleViewHolder> {
+public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.SectionViewHolder> {
 
     public static final String TAG = SectionListAdapter.class.getSimpleName();
 
@@ -60,13 +59,13 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
     }
 
     @Override
-    public ModuleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_module, parent, false);
-        return new ModuleViewHolder(view);
+        return new SectionViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ModuleViewHolder holder, int position) {
+    public void onBindViewHolder(final SectionViewHolder holder, int position) {
         final Section section = sections.get(position);
 
         holder.textTitle.setText(section.title);
@@ -97,18 +96,15 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         ));
         ViewCompat.setNestedScrollingEnabled(holder.recyclerView, false);
 
-        if ((section.startDate != null && DateUtil.nowIsBefore(section.startDate)) ||
-                section.getItems() == null) {
+        if (!section.accessible || section.getAccessibleItems().size() == 0) {
             contentLocked(section, holder);
-        } else if (section.getItems().size() > 0) {
-            contentAvailable(section, holder);
-            itemAdapter.updateItems(section.getItems());
         } else {
-            contentLocked(section, holder);
+            contentAvailable(section, holder);
+            itemAdapter.updateItems(section.getAccessibleItems());
         }
     }
 
-    private void contentAvailable(final Section section, ModuleViewHolder holder) {
+    private void contentAvailable(final Section section, SectionViewHolder holder) {
         holder.progressBar.setVisibility(View.GONE);
         holder.viewModuleNotification.setVisibility(View.GONE);
         holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_bg));
@@ -124,14 +120,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
             }
         });
 
-        boolean downloadableContent = false;
-        for (Item item : section.getItems()) {
-            if (item.type.equals(Item.TYPE_VIDEO)) {
-                downloadableContent = true;
-                break;
-            }
-        }
-        if (downloadableContent) {
+        if (section.hasDownloadableContent()) {
             holder.viewDownloadButton.setVisibility(View.VISIBLE);
             holder.viewDownloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -144,7 +133,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         }
     }
 
-    private void contentLocked(Section section, ModuleViewHolder holder) {
+    private void contentLocked(Section section, SectionViewHolder holder) {
         holder.progressBar.setVisibility(View.GONE);
         holder.viewModuleNotification.setVisibility(View.VISIBLE);
         holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_bg_locked));
@@ -176,7 +165,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
     }
 
-    static class ModuleViewHolder extends RecyclerView.ViewHolder {
+    static class SectionViewHolder extends RecyclerView.ViewHolder {
 
         FrameLayout layout;
         TextView textTitle;
@@ -189,7 +178,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
         View viewDownloadButton;
 
-        public ModuleViewHolder(View view) {
+        public SectionViewHolder(View view) {
             super(view);
 
             layout = (FrameLayout) view.findViewById(R.id.container);

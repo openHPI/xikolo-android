@@ -48,7 +48,7 @@ public class CourseDetailsActivity extends BasePresenterActivity<CourseDetailsPr
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId).build(), tag);
+            transaction.replace(R.id.content, WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId).build(), tag);
             transaction.commit();
         }
     }

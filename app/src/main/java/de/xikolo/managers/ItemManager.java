@@ -10,13 +10,14 @@ import de.xikolo.models.Item;
 import de.xikolo.models.Video;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 public class ItemManager extends BaseManager {
 
     public static final String TAG = ItemManager.class.getSimpleName();
 
-    public RealmResults listItemsForSection(String sectionId, Realm realm, RealmChangeListener<RealmResults<Item>> listener) {
+    public RealmResults listAccessibleItemsForSection(String sectionId, Realm realm, RealmChangeListener<RealmResults<Item>> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
@@ -24,6 +25,7 @@ public class ItemManager extends BaseManager {
         RealmResults<Item> itemListPromise = realm
                 .where(Item.class)
                 .equalTo("sectionId", sectionId)
+                .equalTo("accessible", true)
                 .findAllSortedAsync("position");
 
         itemListPromise.addChangeListener(listener);
@@ -31,14 +33,14 @@ public class ItemManager extends BaseManager {
         return itemListPromise;
     }
 
-    public Video getVideoForItem(String itemId, Realm realm, RealmChangeListener<Video> listener) {
+    public RealmObject getVideoForItem(String itemId, Realm realm, RealmChangeListener<Video> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
 
-        Video videoPromise = realm
+        RealmObject videoPromise = realm
                 .where(Video.class)
-                .equalTo("videoId", itemId)
+                .equalTo("itemId", itemId)
                 .findFirstAsync();
 
         videoPromise.addChangeListener(listener);
@@ -62,10 +64,11 @@ public class ItemManager extends BaseManager {
         jobManager.addJobInBackground(new UpdateItemVisitedJob(itemId));
     }
 
-    public void updateVideo(final Video video, Realm realm) {
+    public void updateVideoProgress(final Video video, final int progress, Realm realm) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
+                video.progress = progress;
                 realm.copyToRealmOrUpdate(video);
             }
         });

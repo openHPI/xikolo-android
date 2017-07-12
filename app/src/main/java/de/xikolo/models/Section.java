@@ -32,6 +32,8 @@ public class Section extends RealmObject {
 
     public String courseId;
 
+    public boolean accessible;
+
     public static Section get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Section model = realm.where(Section.class).equalTo("id", id).findFirst();
@@ -46,11 +48,25 @@ public class Section extends RealmObject {
         return course;
     }
 
-    public List<Item> getItems() {
+    public List<Item> getAccessibleItems() {
         Realm realm = Realm.getDefaultInstance();
-        List<Item> items = realm.where(Item.class).equalTo("sectionId", id).findAllSorted("position");
+        List<Item> items = realm.where(Item.class)
+                .equalTo("sectionId", id)
+                .equalTo("accessible", true)
+                .findAllSorted("position");
         realm.close();
         return items;
+    }
+
+    public boolean hasDownloadableContent() {
+        Realm realm = Realm.getDefaultInstance();
+        List<Item> items = realm.where(Item.class)
+                .equalTo("sectionId", id)
+                .equalTo("accessible", true)
+                .equalTo("type", Item.TYPE_VIDEO)
+                .findAll();
+        realm.close();
+        return items.size() > 0;
     }
 
     @JsonApi(type = "course-sections")
@@ -62,10 +78,10 @@ public class Section extends RealmObject {
 
         public int position;
 
-        @Json(name = "start_date")
+        @Json(name = "start_at")
         public String startDate;
 
-        @Json(name = "end_date")
+        @Json(name = "end_at")
         public String endDate;
 
         @Json(name = "course")
@@ -73,6 +89,8 @@ public class Section extends RealmObject {
 
         @Json(name = "items")
         public HasMany<Item.JsonModel> items;
+
+        public boolean accessible;
 
         @Override
         public Section convertToRealmObject() {
@@ -84,6 +102,7 @@ public class Section extends RealmObject {
             section.position = position;
             section.startDate = DateUtil.parse(startDate);
             section.endDate = DateUtil.parse(endDate);
+            section.accessible = accessible;
 
             if (course != null) {
                 section.courseId = course.get().getId();

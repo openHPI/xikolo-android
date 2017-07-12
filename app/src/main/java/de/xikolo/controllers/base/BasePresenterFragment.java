@@ -12,6 +12,8 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.base.PresenterLoader;
 import de.xikolo.presenters.base.View;
 
+import static de.xikolo.config.Config.PRESENTER_LIFECYCLE_LOGGING;
+
 public abstract class BasePresenterFragment<P extends Presenter<V>, V extends View> extends BaseFragment implements View {
 
     private static final String TAG = BasePresenterFragment.class.getSimpleName();
@@ -23,26 +25,25 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i(TAG, "onActivityCreated");
 
         // LoaderCallbacks as an object, so no hint regarding loader will be leak to the subclasses.
         getLoaderManager().initLoader(loaderId(), null, new LoaderManager.LoaderCallbacks<P>() {
             @Override
             public final Loader<P> onCreateLoader(int id, Bundle args) {
-                Log.i(TAG, "onCreateLoader");
+                if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onCreateLoader");
                 return new PresenterLoader<>(getContext(), getPresenterFactory());
             }
 
             @Override
             public final void onLoadFinished(Loader<P> loader, P presenter) {
-                Log.i(TAG, "onLoadFinished");
+                if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onLoadFinished");
                 BasePresenterFragment.this.presenter = presenter;
                 onPresenterPrepared(presenter);
             }
 
             @Override
             public final void onLoaderReset(Loader<P> loader) {
-                Log.i(TAG, "onLoaderReset");
+                if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onLoaderReset");
                 BasePresenterFragment.this.presenter = null;
                 onPresenterDestroyed();
             }
@@ -52,7 +53,6 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume");
         presenter.onViewAttached(getPresenterView());
     }
 
@@ -60,7 +60,6 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
     public void onPause() {
         presenter.onViewDetached();
         super.onPause();
-        Log.i(TAG, "onPause");
     }
 
     @Override

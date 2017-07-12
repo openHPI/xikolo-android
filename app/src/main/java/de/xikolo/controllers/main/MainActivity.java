@@ -59,8 +59,8 @@ public class MainActivity extends BaseActivity
                 toolbar);
 
         if (Config.DEBUG) {
-            Log.i(TAG, "Build Type: " + BuildConfig.X_TYPE);
-            Log.i(TAG, "Build Flavor: " + BuildConfig.X_FLAVOR);
+            Log.d(TAG, "Build Type: " + BuildConfig.X_TYPE);
+            Log.d(TAG, "Build Flavor: " + BuildConfig.X_FLAVOR);
         }
 
         // check Play Services, display dialog is update needed
@@ -79,7 +79,6 @@ public class MainActivity extends BaseActivity
     private void handleIntent(Intent intent) {
         if (intent != null) {
             String action = intent.getAction();
-            Log.d(TAG, action + " " + intent.getData());
 
             if (action != null && action.equals(Intent.ACTION_VIEW)) {
                 Uri uri = intent.getData();
@@ -136,7 +135,7 @@ public class MainActivity extends BaseActivity
             tag = "my_courses";
         }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {
-//            newFragment = MainWebViewFragmentAutoBundle.builder(NavigationAdapter.NAV_NEWS.getPosition(), Config.URI + Config.NEWS, getString(R.string.title_section_news))
+//            newFragment = MainWebViewFragmentAutoBundle.builder(NavigationAdapter.NAV_NEWS.getPosition(), Config.HOST_URL + Config.NEWS, getString(R.string.title_section_news))
 //                    .externalLinksEnabled(false)
 //                    .inAppLinksEnabled(false)
 //                    .build();

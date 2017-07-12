@@ -35,6 +35,8 @@ public class Item extends RealmObject {
 
     public boolean visited;
 
+    public boolean accessible;
+
     public String sectionId;
 
     public static Item get(String id) {
@@ -123,7 +125,7 @@ public class Item extends RealmObject {
     }
 
     @JsonApi(type = "course-items")
-    public static class JsonModel extends Resource implements RealmAdapter<Item> {
+    public static class JsonModel<T extends Resource> extends Resource implements RealmAdapter<Item> {
 
         public String title;
 
@@ -142,7 +144,9 @@ public class Item extends RealmObject {
 
         public boolean visited;
 
-        public HasOne content;
+        public boolean accessible;
+
+        public HasOne<T> content;
 
         @Override
         public Item convertToRealmObject() {
@@ -156,6 +160,7 @@ public class Item extends RealmObject {
             item.exerciseType = exerciseType;
             item.proctored = proctored;
             item.visited = visited;
+            item.accessible = accessible;
 
             if (section != null) {
                 item.sectionId = section.get().getId();

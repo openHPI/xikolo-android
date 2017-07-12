@@ -1,5 +1,7 @@
 package de.xikolo.presenters.course_items;
 
+import java.util.List;
+
 import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
@@ -7,8 +9,6 @@ import de.xikolo.models.Section;
 import de.xikolo.presenters.base.Presenter;
 import de.xikolo.utils.LanalyticsUtil;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 public class CourseItemsPresenter extends Presenter<CourseItemsView> {
 
@@ -17,8 +17,6 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
     private ItemManager itemManager;
 
     private Realm realm;
-
-    private RealmResults itemListPromise;
 
     private String courseId;
     private String sectionId;
@@ -30,7 +28,9 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
 
     private Course course;
     private Section section;
-    private Item item;
+    private Item firstItem;
+
+    private List<Item> itemList;
 
     CourseItemsPresenter(String courseId, String sectionId, String itemId) {
         this.itemManager = new ItemManager();
@@ -47,32 +47,21 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         super.onViewAttached(view);
         view.setTitle(section.title);
 
-        if (item != null) {
-            index = item.position - 1;
+        if (firstItem != null) {
+            index = firstItem.position - 1;
         }
 
-        Item firstItem = section.getItems().get(index);
+        Item firstItem = section.getAccessibleItems().get(index);
         itemManager.updateItemVisited(firstItem.id);
 
         if (index == 0) {
             LanalyticsUtil.trackVisitedItem(firstItem.id, courseId, sectionId);
         }
 
-        itemListPromise = itemManager.listItemsForSection(sectionId, realm, new RealmChangeListener<RealmResults<Item>>() {
-            @Override
-            public void onChange(RealmResults<Item> items) {
-                getViewOrThrow().setupView(items);
-                getViewOrThrow().setCurrentItem(index);
-            }
-        });
-    }
-
-    @Override
-    public void onViewDetached() {
-        super.onViewDetached();
-
-        if (itemListPromise != null) {
-            itemListPromise.removeAllChangeListeners();
+        if (itemList == null) {
+            itemList =  section.getAccessibleItems();
+            getViewOrThrow().setupView(itemList);
+            getViewOrThrow().setCurrentItem(index);
         }
     }
 
@@ -92,12 +81,7 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
     }
 
     public boolean hasDownloadableContent() {
-        for (Item item : section.getItems()) {
-            if (Item.TYPE_VIDEO.equals(item.type)) {
-                return true;
-            }
-        }
-        return false;
+        return section.hasDownloadableContent();
     }
 
     private void loadModels() {
@@ -107,8 +91,8 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         if (section == null) {
             section = Section.get(sectionId);
         }
-        if (item == null && itemId != null) {
-            item = Item.get(itemId);
+        if (firstItem == null && itemId != null) {
+            firstItem = Item.get(itemId);
         }
     }
 

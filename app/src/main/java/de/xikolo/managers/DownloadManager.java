@@ -85,10 +85,6 @@ public class DownloadManager extends BaseManager {
         EventBus.getDefault().register(this);
     }
 
-//    public void getRemoteDownloadFileSize(Result<Long> result, String url) {
-//        jobManager.addJobInBackground(new RetrieveContentLengthJob(result, url));
-//    }
-
     public long startDownload(String uri, DownloadFileType type, Course course, Section section, Item item) {
         if (Config.DEBUG) {
             Log.d(TAG, "Start download for " + uri);

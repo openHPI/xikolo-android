@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.xikolo.R;
@@ -32,7 +31,6 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course_items.CourseItemsPresenter;
 import de.xikolo.presenters.course_items.CourseItemsPresenterFactory;
 import de.xikolo.presenters.course_items.CourseItemsView;
-import de.xikolo.utils.DateUtil;
 
 public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresenter, CourseItemsView> implements CourseItemsView {
 
@@ -51,6 +49,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blank_tabs);
+        setupActionBar();
 
         // Initialize the ViewPager and set an adapter
         viewpager = (ViewPager) findViewById(R.id.viewpager);
@@ -58,7 +57,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
 
     @Override
     public void setupView(List<Item> itemList) {
-        ModulePagerAdapter adapter = new ModulePagerAdapter(getSupportFragmentManager(), itemList);
+        ItemsPagerAdapter adapter = new ItemsPagerAdapter(getSupportFragmentManager(), itemList);
         viewpager.setAdapter(adapter);
         viewpager.setOffscreenPageLimit(2);
 
@@ -116,13 +115,18 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
         sectionDownloadHelper.initSectionDownloads(course, section);
     }
 
+    @Override
+    public void setTitle(CharSequence title) {
+        super.setTitle(title);
+    }
+
     @NonNull
     @Override
     protected PresenterFactory<CourseItemsPresenter> getPresenterFactory() {
         return new CourseItemsPresenterFactory(courseId, sectionId, itemId);
     }
 
-    public class ModulePagerAdapter extends FragmentPagerAdapter implements TabLayout.OnTabSelectedListener {
+    public class ItemsPagerAdapter extends FragmentPagerAdapter implements TabLayout.OnTabSelectedListener {
 
         private final float transparent = 0.7f;
         private final float opaque = 1f;
@@ -130,18 +134,10 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
         private List<Item> items;
         private FragmentManager fragmentManager;
 
-        public ModulePagerAdapter(FragmentManager fm, List<Item> items) {
+        public ItemsPagerAdapter(FragmentManager fm, List<Item> items) {
             super(fm);
             this.fragmentManager = fm;
             this.items = items;
-
-            List<Item> toRemove = new ArrayList<>();
-            for (Item item : items) {
-                if (!DateUtil.nowIsAfter(item.deadline)) {
-                    toRemove.add(item);
-                }
-            }
-            this.items.removeAll(toRemove);
         }
 
         public View getCustomTabView(int position, int currentPosition, ViewGroup parent) {
@@ -186,7 +182,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
             // Fragment Name is saved by FragmentPagerAdapter implementation.
             String name = makeFragmentName(R.id.viewpager, position);
             Fragment fragment = fragmentManager.findFragmentByTag(name);
-            String url = Config.URI + Config.COURSES + courseId + "/" + Config.ITEMS + item.id;
+            String url = Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ITEMS + item.id;
             if (fragment == null) {
                 switch (item.type) {
                     case Item.TYPE_TEXT:

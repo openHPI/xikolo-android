@@ -56,7 +56,7 @@ public class WebSocketManager {
     public void initConnection(String token) {
         if (webSocketClient == null || (!isConnected() && !isConnecting())) {
             Map<String, String> headers = new HashMap<>();
-            headers.put(Config.HEADER_AUTHORIZATION, Config.HEADER_AUTHORIZATION_PREFIX + token);
+            headers.put(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX + token);
 
             webSocketClient = new WebSocketClient(uri, new Draft_10(), headers, 0) {
                 @Override

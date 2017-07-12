@@ -82,7 +82,7 @@ public class SectionDownloadHelper {
             @Override
             public void onSuccess() {
                 dialog.dismiss();
-                for (Item item : section.getItems()) {
+                for (Item item : section.getAccessibleItems()) {
                     if (Item.TYPE_VIDEO.equals(item.type)) {
                         Video video = (Video) item.getContent();
 

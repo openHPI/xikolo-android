@@ -510,7 +510,7 @@ public class VideoHelper {
             try {
                 return mediaPlayer.getCurrentPosition();
             } catch (IllegalStateException e) {
-                Log.e(TAG, e.getMessage(), e);
+                // Log.e(TAG, e.getMessage(), e);
                 return 0;
             }
         } else {
@@ -523,7 +523,7 @@ public class VideoHelper {
             try {
                 return mediaPlayer.getDuration();
             } catch (IllegalStateException e) {
-                Log.e(TAG, e.getMessage(), e);
+                // Log.e(TAG, e.getMessage(), e);
                 return 0;
             }
         } else {
@@ -600,7 +600,7 @@ public class VideoHelper {
 
     private void setVideoURI(String uri) {
         if (Config.DEBUG) {
-            Log.i(TAG, "Video URI: " + uri);
+            Log.i(TAG, "Video HOST_URL: " + uri);
         }
         videoView.setVideoURI(Uri.parse(uri));
     }

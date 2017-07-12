@@ -12,7 +12,7 @@ public class VideoPreviewPresenterFactory implements PresenterFactory<VideoPrevi
 
     public VideoPreviewPresenterFactory(String courseId, String sectionId, String itemId) {
         this.courseId = courseId;
-        this.sectionId = courseId;
+        this.sectionId = sectionId;
         this.itemId = itemId;
     }
 

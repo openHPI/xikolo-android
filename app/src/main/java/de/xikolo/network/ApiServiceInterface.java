@@ -1,6 +1,5 @@
 package de.xikolo.network;
 
-import de.xikolo.config.Config;
 import de.xikolo.models.AccessToken;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
@@ -20,6 +19,8 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+import static de.xikolo.config.Config.HEADER_AUTH;
+
 public interface ApiServiceInterface {
 
     // Course
@@ -28,53 +29,53 @@ public interface ApiServiceInterface {
     Call<Course.JsonModel[]> listCourses();
 
     @GET("courses?include=user_enrollment")
-    Call<Course.JsonModel[]> listCoursesWithEnrollments(@Header(Config.HEADER_AUTHORIZATION) String token);
+    Call<Course.JsonModel[]> listCoursesWithEnrollments(@Header(HEADER_AUTH) String token);
 
     @GET("courses/{id}")
     Call<Course.JsonModel> getCourse(@Path("id") String id);
 
     @GET("courses/{id}?include=user_enrollment")
-    Call<Course.JsonModel> getCourseWithEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id);
+    Call<Course.JsonModel> getCourseWithEnrollment(@Header(HEADER_AUTH) String token, @Path("id") String id);
 
     // Enrollment
 
     @GET("enrollments")
-    Call<Enrollment.JsonModel[]> listEnrollments(@Header(Config.HEADER_AUTHORIZATION) String token);
+    Call<Enrollment.JsonModel[]> listEnrollments(@Header(HEADER_AUTH) String token);
 
     @POST("enrollments")
-    Call<Enrollment.JsonModel> createEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Body Enrollment.JsonModel enrollment);
+    Call<Enrollment.JsonModel> createEnrollment(@Header(HEADER_AUTH) String token, @Body Enrollment.JsonModel enrollment);
 
     @PATCH("enrollments/{id}")
-    Call<Enrollment.JsonModel> updateEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id, @Body Enrollment.JsonModel enrollment);
+    Call<Enrollment.JsonModel> updateEnrollment(@Header(HEADER_AUTH) String token, @Path("id") String id, @Body Enrollment.JsonModel enrollment);
 
     @DELETE("enrollments/{id}")
-    Call deleteEnrollment(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id);
+    Call deleteEnrollment(@Header(HEADER_AUTH) String token, @Path("id") String id);
 
     // Section
 
     @GET("course-sections?include=items")
-    Call<Section.JsonModel[]> listSectionsWithItemsForCourse(@Header(Config.HEADER_AUTHORIZATION) String token, @Query("filter[course]") String courseId);
+    Call<Section.JsonModel[]> listSectionsWithItemsForCourse(@Header(HEADER_AUTH) String token, @Query("filter[course]") String courseId);
 
     // Item
 
     @GET("course-items/{id}?include=content")
-    Call<Item.JsonModel> getItemWithContent(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id);
+    Call<Item.JsonModel> getItemWithContent(@Header(HEADER_AUTH) String token, @Path("id") String id);
 
     @GET("course-items?include=content")
-    Call<Item.JsonModel[]> listItemsWithContentForSection(@Header(Config.HEADER_AUTHORIZATION) String token, @Query("filter[section]") String sectionId);
+    Call<Item.JsonModel[]> listItemsWithContentForSection(@Header(HEADER_AUTH) String token, @Query("filter[section]") String sectionId);
 
     @PATCH("course-items/{id}")
-    Call<Item.JsonModel> updateItem(@Header(Config.HEADER_AUTHORIZATION) String token, @Path("id") String id, @Body Item.JsonModel item);
+    Call<Item.JsonModel> updateItem(@Header(HEADER_AUTH) String token, @Path("id") String id, @Body Item.JsonModel item);
 
     // Subtitle
     @GET("subtitles?include=texts")
-    Call<SubtitleTrack.JsonModel[]> listSubtitlesWithTextsForVideo(@Header(Config.HEADER_AUTHORIZATION) String token, @Query("filter[video]") String videoId);
+    Call<SubtitleTrack.JsonModel[]> listSubtitlesWithTextsForVideo(@Header(HEADER_AUTH) String token, @Query("filter[video]") String videoId);
 
 
     // User and Profile
 
     @GET("users/me?include=profile")
-    Call<User.JsonModel> getUserWithProfile(@Header(Config.HEADER_AUTHORIZATION) String token);
+    Call<User.JsonModel> getUserWithProfile(@Header(HEADER_AUTH) String token);
 
     // Token
 

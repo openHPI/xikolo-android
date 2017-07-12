@@ -289,38 +289,38 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                         fragment = LearningsFragmentAutoBundle.builder(courseId).build();
                         break;
                     case 1:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
+                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();
                         break;
                     case 2:
 //                        fragment = ProgressFragment.newInstance(courseId);
-                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
+                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();
                         break;
                     case 3:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.ROOMS)
+                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ROOMS)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();
                         break;
                     case 4:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId)
+                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId)
                                 .inAppLinksEnabled(false)
                                 .externalLinksEnabled(false)
                                 .build();
                         break;
                     case 5:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.ANNOUNCEMENTS)
+                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ANNOUNCEMENTS)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();
                         break;
                     case 6:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.URI + Config.COURSES + courseId + "/" + Config.QUIZ_RECAP)
+                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.QUIZ_RECAP)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();

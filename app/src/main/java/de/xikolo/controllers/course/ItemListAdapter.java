@@ -16,7 +16,6 @@ import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.ItemTitleUtil;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder> {
@@ -67,7 +66,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
             holder.viewUnseenIndicator.setVisibility(View.GONE);
         }
 
-        if (!DateUtil.nowIsBetween(section.startDate, section.endDate)) {
+        if (!item.accessible) {
             holder.layout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
             holder.layout.setForeground(null);
             holder.textTitle.setTextColor(ContextCompat.getColor(context, R.color.text_light));

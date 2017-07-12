@@ -41,7 +41,7 @@ public class VideoPresenter extends Presenter<VideoView> {
     public void onViewAttached(VideoView view) {
         super.onViewAttached(view);
 
-        getViewOrThrow().setupVideo(course, section, item, video);
+        getViewOrThrow().setupVideo(course, section, item, realm.copyFromRealm(video));
     }
 
     @Override
@@ -65,8 +65,7 @@ public class VideoPresenter extends Presenter<VideoView> {
     }
 
     public void onPause(int progress) {
-        video.progress = progress;
-        itemManager.updateVideo(video, realm);
+        itemManager.updateVideoProgress(video, progress, realm);
     }
 
 }

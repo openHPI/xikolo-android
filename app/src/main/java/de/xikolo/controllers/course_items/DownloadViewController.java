@@ -44,8 +44,10 @@ public class DownloadViewController {
 
     private DownloadManager.DownloadFileType type;
 
+    private FragmentActivity activity;
+
     private Course course;
-    private Section module;
+    private Section section;
     private Item item;
     private Video video;
 
@@ -70,14 +72,15 @@ public class DownloadViewController {
     private int size;
 
     @SuppressWarnings("SetTextI18n")
-    public DownloadViewController(final FragmentActivity activity, final DownloadManager.DownloadFileType type, final Course course, final Section module, final Item item, final Video video) {
-        this.type = type;
-        this.course = course;
-        this.module = module;
-        this.item = item;
-        this.video = video;
+    public DownloadViewController(FragmentActivity a, DownloadManager.DownloadFileType t, Course c, final Section s, Item i, Video v) {
+        activity = a;
+        type = t;
+        course = c;
+        section = s;
+        item = i;
+        video = v;
 
-        this.downloadManager = new DownloadManager(activity);
+        this.downloadManager = new DownloadManager(a);
 
         LayoutInflater inflater = LayoutInflater.from(App.getInstance());
         layout = inflater.inflate(R.layout.container_download, null);
@@ -121,7 +124,7 @@ public class DownloadViewController {
                 downloadManager.cancelDownload(
                         DownloadViewController.this.type,
                         DownloadViewController.this.course,
-                        DownloadViewController.this.module,
+                        DownloadViewController.this.section,
                         DownloadViewController.this.item);
 
                 showStartState();
@@ -195,7 +198,7 @@ public class DownloadViewController {
         progressBarUpdater = new Runnable() {
             @Override
             public void run() {
-                final Download dl = downloadManager.getDownload(type, course, module, item);
+                final Download dl = downloadManager.getDownload(type, course, section, item);
 
                 if (dl != null) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -214,14 +217,14 @@ public class DownloadViewController {
                 if (progressBarUpdaterRunning) {
                     progressBarDownload.postDelayed(this, MILLISECONDS);
                 } else {
-                    textFileSize.setText(FileUtil.getFormattedFileSize(downloadManager.getDownloadFileSize(type, course, module, item)));
+                    textFileSize.setText(FileUtil.getFormattedFileSize(downloadManager.getDownloadFileSize(type, course, section, item)));
                 }
             }
         };
 
-        if (downloadManager.downloadRunning(type, course, module, item)) {
+        if (downloadManager.downloadRunning(type, course, section, item)) {
             showRunningState();
-        } else if (downloadManager.downloadExists(type, course, module, item)) {
+        } else if (downloadManager.downloadExists(type, course, section, item)) {
             showEndState();
         } else {
             showStartState();
@@ -233,7 +236,7 @@ public class DownloadViewController {
         if (downloadManager.cancelDownload(
                 DownloadViewController.this.type,
                 DownloadViewController.this.course,
-                DownloadViewController.this.module,
+                DownloadViewController.this.section,
                 DownloadViewController.this.item)) {
             showStartState();
         }
@@ -243,7 +246,7 @@ public class DownloadViewController {
         long status = downloadManager.startDownload(url,
                 DownloadViewController.this.type,
                 DownloadViewController.this.course,
-                DownloadViewController.this.module,
+                DownloadViewController.this.section,
                 DownloadViewController.this.item);
         if (status != 0) {
             showRunningState();
@@ -298,7 +301,7 @@ public class DownloadViewController {
             viewDownloadEnd.setVisibility(View.VISIBLE);
         }
 
-        textFileSize.setText(FileUtil.getFormattedFileSize(downloadManager.getDownloadFileSize(type, course, module, item)));
+        textFileSize.setText(FileUtil.getFormattedFileSize(downloadManager.getDownloadFileSize(type, course, section, item)));
 
         progressBarUpdaterRunning = false;
     }
@@ -333,7 +336,7 @@ public class DownloadViewController {
         buttonOpenDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File pdf = downloadManager.getDownloadFile(type, course, module, item);
+                File pdf = downloadManager.getDownloadFile(type, course, section, item);
                 Intent target = new Intent(Intent.ACTION_VIEW);
                 target.setDataAndType(Uri.fromFile(pdf), "application/pdf");
                 target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
