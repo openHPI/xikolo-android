@@ -18,12 +18,12 @@ import java.util.Calendar;
 import de.psdev.licensesdialog.LicensesDialog;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
-import de.xikolo.controllers.login.LoginActivity;
+import de.xikolo.config.BuildFlavor;
+import de.xikolo.config.Config;
+import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.managers.UserManager;
-import de.xikolo.config.BuildFlavor;
-import de.xikolo.config.Config;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -133,7 +133,7 @@ public class SettingsFragment extends PreferenceFragment {
             pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    Intent intent = LoginActivityAutoBundle.builder().build(getActivity());
                     startActivity(intent);
                     return true;
                 }

@@ -54,8 +54,6 @@ public class CreateAccessTokenJob extends BaseJob {
                 userStorage.saveUserId(token.userId);
 
                 callback.success();
-
-                EventBus.getDefault().post(new LoginEvent());
             } else {
                 if (Config.DEBUG) Log.w(TAG, "AccessToken not created");
                 callback.error(JobCallback.ErrorCode.ERROR);

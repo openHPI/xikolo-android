@@ -7,4 +7,6 @@
     <string name="settings_privacy">Datenschutz</string>
     <string name="settings_terms_of_use">Nutzungsbedingungen</string>
 
+    <string name="login_sso_hint">für SAP-Mitarbeiter, Partner und Kunden</string>
+
 </resources>

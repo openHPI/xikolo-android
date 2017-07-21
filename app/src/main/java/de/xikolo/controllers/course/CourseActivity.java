@@ -63,7 +63,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     }
 
     @Override
-    protected void onPresenterPrepared(@NonNull CoursePresenter presenter) {
+    protected void onPresenterCreatedOrRestored(@NonNull CoursePresenter presenter) {
         String action = getIntent().getAction();
 
         if (action != null && action.equals(Intent.ACTION_VIEW)) {

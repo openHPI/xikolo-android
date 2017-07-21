@@ -16,4 +16,6 @@ public interface WebViewInterface extends LoadingStateInterface {
 
     void openUrlInBrowser(Uri uri, String token);
 
+    void interceptSSOLogin(String token);
+
 }

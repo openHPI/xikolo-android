@@ -20,6 +20,7 @@ import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.controllers.base.LoadingStateFragment;
 import de.xikolo.controllers.helper.WebViewHelper;
+import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.utils.ToastUtil;
 
 public class WebViewFragment extends LoadingStateFragment implements WebViewInterface {
@@ -119,6 +120,12 @@ public class WebViewFragment extends LoadingStateFragment implements WebViewInte
             i.putExtra(Browser.EXTRA_HEADERS, headers);
         }
         getActivity().startActivity(i);
+    }
+
+    @Override
+    public void interceptSSOLogin(String token) {
+        Intent intent = LoginActivityAutoBundle.builder().token(token).build(getActivity());
+        getActivity().startActivity(intent);
     }
 
     @Override

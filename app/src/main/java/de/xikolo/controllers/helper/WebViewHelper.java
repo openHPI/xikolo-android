@@ -3,7 +3,6 @@ package de.xikolo.controllers.helper;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
@@ -29,6 +28,8 @@ import de.xikolo.managers.UserManager;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 
+import static android.os.Build.VERSION_CODES.M;
+import static android.os.Build.VERSION_CODES.N;
 import static de.xikolo.config.Config.WEBVIEW_LOGGING;
 
 public class WebViewHelper {
@@ -88,7 +89,7 @@ public class WebViewHelper {
                 webViewInterface.showErrorToast(description);
             }
 
-            @TargetApi(Build.VERSION_CODES.M)
+            @TargetApi(M)
             @Override
             public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
                 onReceivedError(view, err.getErrorCode(), err.getDescription().toString(), req.getUrl().toString());
@@ -111,7 +112,10 @@ public class WebViewHelper {
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(Config.HOST) && webViewInterface.inAppLinksEnabled() || webViewInterface.externalLinksEnabled()) {
+                if (url.contains(Config.HOST) && url.contains("/auth/app")) {
+                    String token = Uri.parse(url).getQueryParameter("token");
+                    webViewInterface.interceptSSOLogin(token);
+                } else if (url.contains(Config.HOST) && webViewInterface.inAppLinksEnabled() || webViewInterface.externalLinksEnabled()) {
                     request(url, true);
                 } else {
                     Uri uri = Uri.parse(url);
@@ -124,7 +128,7 @@ public class WebViewHelper {
                 return true;
             }
 
-            @TargetApi(Build.VERSION_CODES.N)
+            @TargetApi(N)
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 return shouldOverrideUrlLoading(view, request.getUrl().toString());

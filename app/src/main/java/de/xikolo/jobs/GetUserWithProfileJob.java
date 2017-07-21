@@ -11,6 +11,7 @@ import de.xikolo.managers.UserManager;
 import de.xikolo.models.Profile;
 import de.xikolo.models.User;
 import de.xikolo.network.ApiService;
+import de.xikolo.storages.UserStorage;
 import de.xikolo.utils.NetworkUtil;
 import io.realm.Realm;
 import retrofit2.Response;
@@ -40,6 +41,9 @@ public class GetUserWithProfileJob extends BaseJob {
                     if (Config.DEBUG) Log.i(TAG, "User received");
 
                     if (callback != null) callback.success();
+
+                    UserStorage userStorage = new UserStorage();
+                    userStorage.saveUserId(response.body().getId());
 
                     Realm realm = Realm.getDefaultInstance();
                     realm.executeTransaction(new Realm.Transaction() {

@@ -12,8 +12,6 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.base.PresenterLoader;
 import de.xikolo.presenters.base.View;
 
-import static de.xikolo.config.Config.PRESENTER_LIFECYCLE_LOGGING;
-
 public abstract class BasePresenterActivity<P extends Presenter<V>, V extends View> extends BaseActivity {
 
     private static final String TAG = BasePresenterActivity.class.getSimpleName();
@@ -26,24 +24,34 @@ public abstract class BasePresenterActivity<P extends Presenter<V>, V extends Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Loader<P> loader = getSupportLoaderManager().getLoader(loaderId());
+        if (loader == null) {
+            initLoader();
+        } else {
+            this.presenter = ((PresenterLoader<P>) loader).getPresenter();
+            onPresenterCreatedOrRestored(presenter);
+        }
+    }
+
+    private void initLoader() {
         // LoaderCallbacks as an object, so no hint regarding Loader will be leak to the subclasses.
         getSupportLoaderManager().initLoader(loaderId(), null, new LoaderManager.LoaderCallbacks<P>() {
             @Override
             public final Loader<P> onCreateLoader(int id, Bundle args) {
-                if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onCreateLoader");
-                return new PresenterLoader<>(BasePresenterActivity.this, getPresenterFactory());
+                Log.i(TAG, "onCreateLoader");
+                return new PresenterLoader<>(BasePresenterActivity.this, getPresenterFactory(), tag());
             }
 
             @Override
             public final void onLoadFinished(Loader<P> loader, P presenter) {
-                if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onLoadFinished");
+                Log.i(TAG, "onLoadFinished");
                 BasePresenterActivity.this.presenter = presenter;
-                onPresenterPrepared(presenter);
+                onPresenterCreatedOrRestored(presenter);
             }
 
             @Override
             public final void onLoaderReset(Loader<P> loader) {
-                if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onLoaderReset");
+                Log.i(TAG, "onLoaderReset");
                 BasePresenterActivity.this.presenter = null;
                 onPresenterDestroyed();
             }
@@ -63,6 +71,14 @@ public abstract class BasePresenterActivity<P extends Presenter<V>, V extends Vi
     }
 
     /**
+     * String tag use for log purposes.
+     */
+    @NonNull
+    protected String tag() {
+        return TAG;
+    }
+
+    /**
      * Instance of {@link PresenterFactory} use to create a Presenter when needed. This instance should
      * not contain {@link android.app.Activity} context reference since it will be keep on rotations.
      */
@@ -73,7 +89,7 @@ public abstract class BasePresenterActivity<P extends Presenter<V>, V extends Vi
      * Hook for subclasses that deliver the {@link Presenter} before its View is attached.
      * Can be use to initialize the Presenter or simple hold a reference to it.
      */
-    protected void onPresenterPrepared(@NonNull P presenter) {
+    protected void onPresenterCreatedOrRestored(@NonNull P presenter) {
     }
 
     /**

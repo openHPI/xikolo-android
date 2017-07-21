@@ -79,12 +79,32 @@ public class CourseManager extends BaseManager {
         return courseList;
     }
 
+    public List<Course> listCurrentAndPastCourses(Realm realm) {
+        RealmResults<Course> courseList = realm
+                .where(Course.class)
+                .equalTo("external", false)
+                .lessThanOrEqualTo("startDate", new Date())
+                .findAllSorted("startDate", Sort.DESCENDING);
+
+        return courseList;
+    }
+
     public List<Course> listPastCourses(Realm realm) {
         RealmResults<Course> courseList = realm
                 .where(Course.class)
                 .equalTo("external", false)
                 .lessThan("endDate", new Date())
                 .findAllSorted("startDate", Sort.DESCENDING);
+
+        return courseList;
+    }
+
+    public List<Course> listFutureCourses(Realm realm) {
+        RealmResults<Course> courseList = realm
+                .where(Course.class)
+                .equalTo("external", false)
+                .greaterThan("startDate", new Date())
+                .findAllSorted("startDate", Sort.ASCENDING);
 
         return courseList;
     }

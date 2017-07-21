@@ -10,6 +10,7 @@ import de.xikolo.jobs.GetUserWithProfileJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.User;
+import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.storages.UserStorage;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -48,9 +49,13 @@ public class UserManager extends BaseManager {
 
     public static void logout() {
         App application = App.getInstance();
+        application.clearCookieSyncManager();
 
         UserStorage userStorage = new UserStorage();
         userStorage.delete();
+
+        ApplicationPreferences appPreferences = new ApplicationPreferences();
+        appPreferences.clear();
 
         application.getLanalytics().deleteData();
 

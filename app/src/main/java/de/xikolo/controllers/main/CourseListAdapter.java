@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Locale;
 
 import de.xikolo.App;
+import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.config.BuildFlavor;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.models.Course;
 import de.xikolo.models.base.SectionList;
@@ -105,9 +107,15 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (course.startDate != null && course.endDate != null) {
                 viewHolder.textDate.setText(dateOut.format(course.startDate) + " - " + dateOut.format(course.endDate));
             } else if (course.startDate != null) {
-                viewHolder.textDate.setText(dateOut.format(course.startDate));
+                if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                    viewHolder.textDate.setText(context.getString(R.string.course_date_self_paced));
+                } else if (DateUtil.nowIsAfter(course.startDate)) {
+                    viewHolder.textDate.setText(String.format(context.getString(R.string.course_date_since), dateOut.format(course.startDate)));
+                } else {
+                    viewHolder.textDate.setText(String.format(context.getString(R.string.course_date_beginning), dateOut.format(course.startDate)));
+                }
             } else {
-                viewHolder.textDate.setText("");
+                viewHolder.textDate.setText(context.getString(R.string.course_date_coming_soon));
             }
 
             viewHolder.textTitle.setText(course.title);
@@ -138,6 +146,10 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     viewHolder.textBanner.setVisibility(View.GONE);
                 }
+            }
+
+            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                viewHolder.textBanner.setVisibility(View.GONE);
             }
 
             ImageHelper.load(course.imageUrl, viewHolder.image);

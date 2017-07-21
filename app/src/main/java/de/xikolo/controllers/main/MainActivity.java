@@ -17,7 +17,7 @@ import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.controllers.downloads.DownloadsActivity;
-import de.xikolo.controllers.login.LoginActivity;
+import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.controllers.second_screen.SecondScreenActivity;
 import de.xikolo.controllers.settings.SettingsActivity;
 import de.xikolo.events.LoginEvent;
@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity
 
                 LanalyticsUtil.trackVisitedProfile(UserManager.getUserId());
             } else {
-                intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent = LoginActivityAutoBundle.builder().build(this);
             }
         }
         if (position == NavigationAdapter.NAV_ALL_COURSES.getPosition()) {

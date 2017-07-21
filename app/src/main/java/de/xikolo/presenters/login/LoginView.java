@@ -14,4 +14,8 @@ public interface LoginView extends View {
 
     void finishActivity();
 
+    void showSSOView();
+
+    void startSSOLogin(String strategy);
+
 }

@@ -17,8 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.yatatsu.autobundle.AutoBundleField;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -28,6 +31,7 @@ import de.xikolo.config.Config;
 import de.xikolo.controllers.base.BasePresenterFragment;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.helper.ImageHelper;
+import de.xikolo.managers.UserManager;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.login.LoginPresenter;
 import de.xikolo.presenters.login.LoginPresenterFactory;
@@ -38,12 +42,17 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
 
     public static final String TAG = LoginFragment.class.getSimpleName();
 
+    @AutoBundleField(required = false) String token;
+
     @BindView(R.id.toolbar) Toolbar tb;
 
     @BindView(R.id.editEmail) TextInputEditText editTextEmail;
     @BindView(R.id.editPassword) TextInputEditText editTextPassword;
     @BindView(R.id.top_image) ImageView topImage;
     @BindView(R.id.text_credentials) TextView textCredentials;
+
+    @BindView(R.id.btnSSO) Button buttonSSO;
+    @BindView(R.id.ssoContainer) View containerSSO;
 
     private ProgressDialog progressDialog;
 
@@ -68,6 +77,24 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
         textCredentials.setText(String.format(getString(R.string.login_with_credentials), Config.HOST));
 
         ImageHelper.load(R.drawable.login_header, topImage, 0, false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (token != null) {
+            presenter.externalLoginCallback(token);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (UserManager.isAuthorized()) {
+            getActivity().finish();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -101,6 +128,18 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
         startUrlIntent(Config.HOST_URL + Config.ACCOUNT + Config.RESET);
     }
 
+    @SuppressWarnings("unused")
+    @OnClick(R.id.btnSSO)
+    protected void ssoClicked(View view) {
+        hideKeyboard(view);
+        presenter.onSSOClicked();
+    }
+
+    @Override
+    public void showSSOView() {
+        containerSSO.setVisibility(View.VISIBLE);
+    }
+
     private void login(View view) {
         hideKeyboard(view);
         String email = editTextEmail.getText().toString().trim();
@@ -116,6 +155,14 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
         }
     }
 
+    @Override
+    public void startSSOLogin(String strategy) {
+        Intent intent = SsoLoginActivityAutoBundle.builder(
+                Config.HOST_URL + "?in_app=true&redirect_to=" + strategy,
+                getString(R.string.login_sso)
+        ).build(getActivity());
+        startActivity(intent);
+    }
 
     @Override
     public void showProgressDialog() {

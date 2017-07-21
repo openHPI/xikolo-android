@@ -61,6 +61,9 @@
     <color name="apptheme_login_gradient_start">@color/apptheme_third_60</color>
     <color name="apptheme_login_gradient_end">@color/apptheme_second_60</color>
 
+    <color name="apptheme_placeholder_gradient_start">@color/apptheme_third_60</color>
+    <color name="apptheme_placeholder_gradient_end">@color/apptheme_second_60</color>
+
     <color name="apptheme_tab_text">@color/white</color>
     <color name="apptheme_tab_text_unfocused">@color/tab_text_unfocused</color>
     <color name="apptheme_tab_indicator">@color/white</color>

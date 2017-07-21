@@ -78,4 +78,10 @@ public class ApplicationPreferences {
         putBoolean(used, context.getString(R.string.preference_used_second_screen));
     }
 
+    public void clear() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
+
 }

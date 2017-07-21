@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="settings_copyright">&#169; 2013 &#8211; %d Copyright SAP</string>
-
-    <string name="settings_imprint">Legal Disclosure</string>
-    <string name="settings_privacy">Privacy</string>
-    <string name="settings_terms_of_use">Terms of Use</string>
+    <string name="login_sso">SAP Single Sign On</string>
+    <string name="login_sso_hint">for SAP Employees, Partners and Customers</string>
 
 </resources>

@@ -15,8 +15,10 @@
     <string name="title_section_beta">Beta</string>
 
     <!-- -->
-    <string name="header_current_courses">Aktuelle und zukünftige Kurse</string>
+    <string name="header_current_and_upcoming_courses">Aktuelle und zukünftige Kurse</string>
     <string name="header_self_paced_courses">Kurse im Selbststudium</string>
+    <string name="header_current_courses">Aktuelle Kurse</string>
+    <string name="header_future_courses">Zukünftige Kurse</string>
     <string name="header_my_current_courses">Meine aktuellen Kurse</string>
     <string name="header_my_future_courses">Meine zukünftigen Kurse</string>
     <string name="banner_running">Läuft</string>
@@ -116,10 +118,16 @@
     <string name="download_all_content">Inhalte herunterladen</string>
     <string name="intro_overlay_text">Berühren, um Videos auf den Fernseher zu casten</string>
     <string name="user_name">%1$s %2$s</string>
+    <string name="or">oder</string>
 
     <string name="self_test_points">%1$s von %2$s Selbsttest-Punkten</string>
     <string name="assignments_points">%1$s von %2$s Hausaufgaben-Punkten</string>
     <string name="items_visited">%1$s von %2$s besucht</string>
+
+    <string name="course_date_coming_soon">Bald verfügbar</string>
+    <string name="course_date_since">Seit %s</string>
+    <string name="course_date_self_paced">Selbststudium</string>
+    <string name="course_date_beginning">Ab %s</string>
 
     <!-- -->
     <string name="notification_no_network">Bitte Netzwerk-Verbindung aktivieren</string>
