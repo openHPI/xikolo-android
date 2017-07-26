@@ -47,6 +47,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
                 user = u;
                 profile = Profile.get(user.profileId);
 
+                getViewOrThrow().showContent();
                 getViewOrThrow().showUser(user, profile);
             }
         });
@@ -73,7 +74,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
 
     private void requestUser() {
         if (getView() != null) {
-            getView().showRefreshProgress();
+            getView().showProgress();
         }
         userManager.requestUserWithProfile(new JobCallback() {
             @Override
@@ -84,17 +85,13 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
             @Override
             public void onError(ErrorCode code) {
                 if (getView() != null) {
-                    getView().hideAnyProgress();
+                    getView().hideProgress();
                     switch (code) {
                         case NO_NETWORK:
-                            if (userPromise == null) {
-                                getView().showNetworkRequiredMessage();
-                            } else {
-                                getView().showNetworkRequiredToast();
-                            }
+                            getView().showNetworkRequiredMessage();
                             break;
                         default:
-                            getView().showErrorToast();
+                            getView().showErrorMessage();
                             break;
                     }
                 }
@@ -107,14 +104,14 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
-                    getView().hideAnyProgress();
+                    getView().hideProgress();
                 }
             }
 
             @Override
             public void onError(ErrorCode code) {
                 if (getView() != null) {
-                    getView().hideAnyProgress();
+                    getView().hideProgress();
                 }
             }
         });

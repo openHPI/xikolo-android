@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
@@ -21,12 +19,12 @@ import de.xikolo.R;
 import de.xikolo.controllers.course.CourseActivityAutoBundle;
 import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
 import de.xikolo.models.Course;
+import de.xikolo.models.base.SectionList;
+import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.main.CourseListFilterAllPresenterFactory;
 import de.xikolo.presenters.main.CourseListFilterMyPresenterFactory;
 import de.xikolo.presenters.main.CourseListPresenter;
 import de.xikolo.presenters.main.CourseListView;
-import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.models.base.SectionList;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
 
@@ -36,7 +34,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
 
     @AutoBundleField Course.Filter filter;
 
-    @BindView(R.id.recyclerView) AutofitRecyclerView recyclerView;
+    @BindView(R.id.content_view) AutofitRecyclerView recyclerView;
 
     private CourseListAdapter courseListAdapter;
 
@@ -48,9 +46,8 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_course_list, container, false);
+    public int getLayoutResource() {
+        return R.layout.content_course_list;
     }
 
     @Override
@@ -163,7 +160,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     @Override
     public void showLoginRequiredMessage() {
         super.showLoginRequiredMessage();
-        loadingStateHelper.setOnClickListener(new View.OnClickListener() {
+        loadingStateHelper.setMessageOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
@@ -173,9 +170,9 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
 
     @Override
     public void showNoEnrollmentsMessage() {
-        loadingStateHelper.setTitle(R.string.notification_no_enrollments);
-        loadingStateHelper.setSummary(R.string.notification_no_enrollments_summary);
-        loadingStateHelper.setOnClickListener(new View.OnClickListener() {
+        loadingStateHelper.setMessageTitle(R.string.notification_no_enrollments);
+        loadingStateHelper.setMessageSummary(R.string.notification_no_enrollments_summary);
+        loadingStateHelper.setMessageOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activityCallback.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.getPosition());

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -46,13 +45,13 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
     @BindView(R.id.durationText) TextView textDuration;
     @BindView(R.id.videoThumbnail) CustomSizeImageView imageVideoThumbnail;
     @BindView(R.id.containerDownloads) LinearLayout linearLayoutDownloads;
-    @BindView(R.id.refreshLayout) View viewContainer;
+    @BindView(R.id.refresh_layout) View viewContainer;
     @BindView(R.id.playButton) View viewPlay;
     @BindView(R.id.videoMetadata) ViewGroup videoMetadata;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_video, container, false);
+    public int getLayoutResource() {
+        return R.layout.content_video;
     }
 
     @Override
@@ -80,7 +79,7 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
 
     @Override
     public void setupView(Course course, Section section, Item item, Video video) {
-        hideAnyProgress();
+        hideProgress();
         viewContainer.setVisibility(View.VISIBLE);
 
         ImageHelper.load(video.thumbnailUrl, imageVideoThumbnail,

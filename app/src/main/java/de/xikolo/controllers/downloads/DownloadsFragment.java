@@ -65,13 +65,12 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_downloads, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.content_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         notificationController = new LoadingStateHelper(getActivity(), layout, this);
-        notificationController.hide();
 
         return layout;
     }
@@ -105,10 +104,9 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     private void fetchItems() {
+        adapter.clear();
         if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-            notificationController.hide();
-
-            adapter.clear();
+            notificationController.showContentView();
 
             List<DownloadsAdapter.FolderItem> list = new ArrayList<>();
 
@@ -129,9 +127,9 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
                 adapter.addItem(getString(R.string.courses), list);
             }
         } else {
-            notificationController.setTitle(R.string.dialog_title_permissions);
-            notificationController.setSummary(R.string.dialog_permissions);
-            notificationController.setOnClickListener(new View.OnClickListener() {
+            notificationController.setMessageTitle(R.string.dialog_title_permissions);
+            notificationController.setMessageSummary(R.string.dialog_permissions);
+            notificationController.setMessageOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PermissionManager.startAppInfo(getActivity());

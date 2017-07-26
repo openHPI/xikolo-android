@@ -56,6 +56,7 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
             @Override
             public void onChange(RealmResults<Section> sections) {
                 sectionList = sections;
+                getViewOrThrow().showContent();
                 getViewOrThrow().setupSections(sections);
             }
         });
@@ -98,17 +99,13 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
 
     private void requestSectionListWithItems() {
         if (getView() != null) {
-            if (sectionList == null || sectionList.size() == 0) {
-                getView().showProgressMessage();
-            } else {
-                getView().showRefreshProgress();
-            }
+            getView().showProgress();
         }
         sectionManager.requestSectionListWithItems(courseId, new JobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
-                    getView().hideAnyProgress();
+                    getView().hideProgress();
                 }
             }
 
@@ -117,15 +114,11 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
                 if (getView() != null) {
                     switch (code) {
                         case NO_NETWORK:
-                            if (sectionList == null || sectionList.size() == 0) {
-                                getView().showNetworkRequiredMessage();
-                            } else {
-                                getView().showNetworkRequiredToast();
-                            }
+                            getView().showNetworkRequiredMessage();
                             break;
                         case CANCEL:
                         case ERROR:
-                            getView().showErrorToast();
+                            getView().showErrorMessage();
                             break;
                     }
                 }

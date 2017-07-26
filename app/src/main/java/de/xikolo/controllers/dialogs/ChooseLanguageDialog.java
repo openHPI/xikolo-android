@@ -56,7 +56,7 @@
 //        }
 //
 //        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog);
-//        builder.setTitle(R.string.action_language)
+//        builder.setMessageTitle(R.string.action_language)
 //                .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 //                    @Override
 //                    public void onClick(DialogInterface dialog, int which) {

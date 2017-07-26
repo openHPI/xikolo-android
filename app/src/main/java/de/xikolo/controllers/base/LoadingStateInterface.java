@@ -1,27 +1,25 @@
 package de.xikolo.controllers.base;
 
+import android.support.annotation.LayoutRes;
+
 public interface LoadingStateInterface {
 
-    void showProgressDialog();
+    void showContent();
 
-    void showProgressMessage();
+    void showBlockingProgress();
 
-    void showRefreshProgress();
+    void showProgress();
 
-    void hideAnyProgress();
+    void hideProgress();
 
     void showNetworkRequiredMessage();
 
-    void showNetworkRequiredToast();
-
     void showLoginRequiredMessage();
 
-    void showLoginRequiredToast();
+    void hideMessage();
 
-    void hideAnyMessage();
+    void showErrorMessage();
 
-    void showErrorToast();
-
-    void enableSwipeRefresh(boolean enabled);
+    @LayoutRes int getLayoutResource();
 
 }

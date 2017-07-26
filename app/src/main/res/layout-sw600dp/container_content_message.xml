@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <de.xikolo.views.MaxWidthFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/containerEmptyMessage"
+    android:id="@+id/container_content_message"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -11,7 +11,7 @@
     app:maxWidthLayout="600dp">
 
     <LinearLayout
-        android:id="@+id/linearLayoutCard"
+        android:id="@+id/linear_layout_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -19,7 +19,7 @@
         android:padding="16dp">
 
         <de.xikolo.views.CustomFontTextView
-            android:id="@+id/textNotificationSymbol"
+            android:id="@+id/text_notification_symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
@@ -27,28 +27,28 @@
             android:padding="4dp"
             android:text="@string/icon_info"
             android:textColor="@color/text_second"
-            android:textSize="32sp"
+            android:textSize="48sp"
             app:customFont="xikolo.ttf" />
 
         <LinearLayout
-            android:id="@+id/linearLayoutNotificationText"
+            android:id="@+id/linear_layout_notification_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textNotificationHeader"
+                android:id="@+id/text_notification_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_second"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/textNotificationSummary"
+                android:id="@+id/text_notification_summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_second"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
 
         </LinearLayout>
 

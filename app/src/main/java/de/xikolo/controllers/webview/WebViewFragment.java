@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
@@ -45,12 +46,20 @@ public class WebViewFragment extends LoadingStateFragment implements WebViewInte
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public int getLayoutResource() {
+        return R.layout.content_webview;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             mutableContextWrapper = new MutableContextWrapper(getActivity());
 
-            view = LayoutInflater.from(mutableContextWrapper).inflate(R.layout.fragment_webview, container, false);
+            view = LayoutInflater.from(mutableContextWrapper).inflate(R.layout.fragment_loading_state, container, false);
+            // inflate content view inside
+            ViewStub contentView = (ViewStub) view.findViewById(R.id.content_view);
+            contentView.setLayoutResource(getLayoutResource());
+            contentView.inflate();
 
             webViewHelper = new WebViewHelper(view, this);
         } else {

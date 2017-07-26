@@ -36,7 +36,7 @@ public class WebViewHelper {
 
     public static final String TAG = WebViewHelper.class.getSimpleName();
 
-    @BindView(R.id.webView) WebView webView;
+    @BindView(R.id.content_view) WebView webView;
 
     protected String url;
 
@@ -51,10 +51,6 @@ public class WebViewHelper {
 
     private void loadUrl(String url, Map<String, String> header) {
         webView.loadUrl(url, header);
-    }
-
-    private boolean webViewIsShown() {
-        return webView.getVisibility() == View.VISIBLE;
     }
 
     private void showWebView() {
@@ -103,8 +99,8 @@ public class WebViewHelper {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                webViewInterface.hideAnyProgress();
-                webViewInterface.hideAnyMessage();
+                webViewInterface.hideProgress();
+                webViewInterface.hideMessage();
                 showWebView();
                 super.onPageFinished(view, url);
             }
@@ -157,11 +153,7 @@ public class WebViewHelper {
 
             if (!webViewInterface.externalLinksEnabled() || Patterns.WEB_URL.matcher(this.url).matches()) {
                 if (NetworkUtil.isOnline()) {
-                    if (webViewIsShown()) {
-                        webViewInterface.showProgressMessage();
-                    } else {
-                        webViewInterface.showRefreshProgress();
-                    }
+                    webViewInterface.showProgress();
                     if (url.contains(Config.HOST)) {
                         Map<String, String> header = new HashMap<>();
                         header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
@@ -179,9 +171,6 @@ public class WebViewHelper {
                     }
                 } else {
                     webViewInterface.showNetworkRequiredMessage();
-                    if (userRequest) {
-                        webViewInterface.showNetworkRequiredToast();
-                    }
                 }
             } else {
                 webViewInterface.showInvalidUrlToast();

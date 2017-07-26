@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:background="@color/transparent">
 
-    <include layout="@layout/container_progress" />
+    <include layout="@layout/container_content_progress" />
 
-    <include layout="@layout/container_empty_message" />
+    <include layout="@layout/container_content_message" />
 
 </FrameLayout>

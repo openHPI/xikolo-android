@@ -41,6 +41,7 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
         this.courseListPromise = courseManager.listCourses(realm, new RealmChangeListener<RealmResults<Course>>() {
             @Override
             public void onChange(RealmResults<Course> results) {
+                getViewOrThrow().showContent();
                 updateContent();
             }
         });
@@ -66,24 +67,24 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
     }
 
     public void onEnrollButtonClicked(String courseId) {
-        getViewOrThrow().showProgressDialog();
+        getViewOrThrow().showBlockingProgress();
 
         courseManager.createEnrollment(courseId, new JobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
-                    getView().hideAnyProgress();
+                    getView().hideProgress();
                 }
             }
 
             @Override
             public void onError(ErrorCode code) {
                 if (getView() != null) {
-                    getView().hideAnyProgress();
+                    getView().hideProgress();
                     if (code == NO_NETWORK) {
-                        getView().showNetworkRequiredToast();
+                        getView().showNetworkRequiredMessage();
                     } else if (code == ErrorCode.NO_AUTH) {
-                        getView().showLoginRequiredToast();
+                        getView().showLoginRequiredMessage();
                         getView().goToProfile();
                     }
                 }
@@ -93,7 +94,7 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
 
     public void onCourseEnterButtonClicked(String courseId) {
         if (!UserManager.isAuthorized()) {
-            getViewOrThrow().showLoginRequiredToast();
+            getViewOrThrow().showLoginRequiredMessage();
             getViewOrThrow().goToProfile();
         } else {
             getViewOrThrow().enterCourse(courseId);
@@ -108,17 +109,13 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
 
     public void requestCourses() {
         if (getView() != null) {
-            if (courseList == null || courseList.size() == 0) {
-                getView().showProgressMessage();
-            } else {
-                getView().showRefreshProgress();
-            }
+            getView().showProgress();
         }
         courseManager.requestCourseList(new JobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
-                    getView().hideAnyProgress();
+                    getView().hideProgress();
                 }
             }
 
@@ -127,15 +124,11 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
                 if (getView() != null) {
                     switch (code) {
                         case NO_NETWORK:
-                            if (courseList == null || courseList.size() == 0) {
-                                getView().showNetworkRequiredMessage();
-                            } else {
-                                getView().showNetworkRequiredToast();
-                            }
+                            getView().showNetworkRequiredMessage();
                             break;
                         case CANCEL:
                         case ERROR:
-                            getView().showErrorToast();
+                            getView().showErrorMessage();
                             break;
                     }
                 }

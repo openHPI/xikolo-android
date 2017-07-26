@@ -30,7 +30,7 @@ public class TranscriptViewerActivity extends BaseActivity {
 //        item = b.getParcelable(ARG_ITEM);
 //        List<SubtitleTrack> subtitleList = b.getParcelableArrayList(ARG_SUBTITLES);
 //
-//        setTitle(item.title + " - " + getString(R.string.second_screen_transcript));
+//        setMessageTitle(item.title + " - " + getString(R.string.second_screen_transcript));
 //
 //        String tag = "content";
 //

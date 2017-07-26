@@ -2,6 +2,7 @@ package de.xikolo.controllers.helper;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -17,39 +18,57 @@ import de.xikolo.views.CustomFontTextView;
 @SuppressWarnings("unused")
 public class LoadingStateHelper {
 
-    @BindView(R.id.containerEmptyMessage) FrameLayout viewMessage;
-    @BindView(R.id.containerProgress) ProgressBar progressBar;
-    @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.content_view) View contentView;
+    
+    @BindView(R.id.container_content_message) FrameLayout messageContainer;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
 
-    @BindView(R.id.textNotificationSymbol) CustomFontTextView textIcon;
-    @BindView(R.id.textNotificationHeader) TextView textTitle;
-    @BindView(R.id.textNotificationSummary) TextView textSummary;
+    @BindView(R.id.text_notification_symbol) CustomFontTextView textIcon;
+    @BindView(R.id.text_notification_header) TextView textHeader;
+    @BindView(R.id.text_notification_summary) TextView textSummary;
 
-    FragmentActivity activity;
+    private FragmentActivity activity;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     public LoadingStateHelper(FragmentActivity activity, View view, SwipeRefreshLayout.OnRefreshListener onRefreshListener) {
         this.activity = activity;
 
         ButterKnife.bind(this, view);
 
-        if (viewMessage == null) {
-            throw new RuntimeException("Layout does not contain Empty Message view");
-        }
-        if (progressBar == null) {
-            throw new RuntimeException("Layout does not contain ProgressBar view");
-        }
-        if (refreshLayout == null) {
-            throw new RuntimeException("Layout does not contain RefreshLayout");
-        }
-
         RefeshLayoutHelper.setup(refreshLayout, onRefreshListener);
+
+        contentView.setVisibility(View.GONE);
+        hideMessage();
+        hideProgress();
+    }
+    
+    public void showContentView() {
+        hideMessage();
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.setVisibility(View.GONE);
+            refreshLayout.setRefreshing(true);
+        }
+        contentView.setVisibility(View.VISIBLE);
+    }
+
+    public boolean isContentViewVisible() {
+        return contentView.getVisibility() == View.VISIBLE;
     }
 
     public void showProgress() {
-        hide();
-        progressBar.setVisibility(View.VISIBLE);
+        Log.d("LOADING", "isContentViewVisible " + isContentViewVisible());
+        Log.d("LOADING", "isMessageVisible " + isMessageVisible());
+        if (isContentViewVisible() || isMessageVisible()) {
+            Log.d("LOADING", "REFRESH");
+            if (!refreshLayout.isRefreshing()) {
+                refreshLayout.setRefreshing(true);
+            }
+        } else {
+            Log.d("LOADING", "MESSAGE");
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     public void showBlockingProgress() {
@@ -57,64 +76,64 @@ public class LoadingStateHelper {
         progressDialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);
     }
 
-    public void showRefreshProgress() {
-        if (!refreshLayout.isRefreshing()) {
-            refreshLayout.setRefreshing(true);
+    public void hideProgress() {
+        refreshLayout.setRefreshing(false);
+        progressBar.setVisibility(View.GONE);
+        if (progressDialog != null && progressDialog.getDialog() != null && progressDialog.getDialog().isShowing()) {
+            progressDialog.dismiss();
         }
     }
 
     public void showMessage() {
-        hide();
-        viewMessage.setVisibility(View.VISIBLE);
+        messageContainer.setVisibility(View.VISIBLE);
     }
 
-    public void setOnClickListener(View.OnClickListener listener) {
-        viewMessage.setOnClickListener(listener);
+    public void hideMessage() {
+        messageContainer.setVisibility(View.GONE);
     }
 
-    public CharSequence getSymbol() {
+    private boolean isMessageVisible() {
+        return messageContainer.getVisibility() == View.VISIBLE;
+    }
+
+    public void setMessageOnClickListener(View.OnClickListener listener) {
+        messageContainer.setOnClickListener(listener);
+    }
+
+    public CharSequence getMessageSymbol() {
         return textIcon.getText();
     }
 
-    public void setSymbol(String symbol) {
+    public void setMessageSymbol(String symbol) {
         textIcon.setText(symbol);
     }
 
-    public void setSymbol(int title) {
+    public void setMessageSymbol(int title) {
         textIcon.setText(App.getInstance().getResources().getString(title));
     }
 
-    public CharSequence getTitle() {
-        return textTitle.getText();
+    public CharSequence getMessageTitle() {
+        return textHeader.getText();
     }
 
-    public void setTitle(String title) {
-        textTitle.setText(title);
+    public void setMessageTitle(String title) {
+        textHeader.setText(title);
     }
 
-    public void setTitle(int title) {
-        textTitle.setText(App.getInstance().getResources().getString(title));
+    public void setMessageTitle(int title) {
+        textHeader.setText(App.getInstance().getResources().getString(title));
     }
 
-    public CharSequence getSummary() {
+    public CharSequence getMessageSummary() {
         return textSummary.getText();
     }
 
-    public void setSummary(String summary) {
+    public void setMessageSummary(String summary) {
         textSummary.setText(summary);
     }
 
-    public void setSummary(int summary) {
+    public void setMessageSummary(int summary) {
         textSummary.setText(App.getInstance().getResources().getString(summary));
-    }
-
-    public void hide() {
-        progressBar.setVisibility(View.GONE);
-        viewMessage.setVisibility(View.GONE);
-        refreshLayout.setRefreshing(false);
-        if (progressDialog != null && progressDialog.getDialog() != null && progressDialog.getDialog().isShowing()) {
-            progressDialog.dismiss();
-        }
     }
 
     public void enableSwipeRefresh(boolean enabled) {

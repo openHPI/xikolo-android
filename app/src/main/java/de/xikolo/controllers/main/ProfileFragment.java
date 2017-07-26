@@ -2,17 +2,13 @@ package de.xikolo.controllers.main;
 
 import android.content.res.Configuration;
 import android.graphics.Point;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.managers.UserManager;
@@ -35,13 +31,8 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
     @BindView(R.id.textEmail) TextView textEmail;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        ButterKnife.bind(this, view);
-
-        return view;
+    public int getLayoutResource() {
+        return R.layout.content_profile;
     }
 
     @Override

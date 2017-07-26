@@ -56,6 +56,7 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
             @Override
             public void onChange(Video v) {
                 video = v;
+                getViewOrThrow().showContent();
                 getViewOrThrow().setupView(course, section, item, video);
             }
         });
@@ -104,17 +105,13 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
 
     private void requestVideo() {
         if (getView() != null) {
-            if (video == null) {
-                getView().showProgressMessage();
-            } else {
-                getView().showRefreshProgress();
-            }
+            getView().showProgress();
         }
         itemManager.requestItemWithContent(itemId, new JobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
-                    getView().hideAnyProgress();
+                    getView().hideProgress();
                 }
             }
 
@@ -123,15 +120,11 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
                 if (getView() != null) {
                     switch (code) {
                         case NO_NETWORK:
-                            if (video == null) {
-                                getView().showNetworkRequiredMessage();
-                            } else {
-                                getView().showNetworkRequiredToast();
-                            }
+                            getView().showNetworkRequiredMessage();
                             break;
                         case CANCEL:
                         case ERROR:
-                            getView().showErrorToast();
+                            getView().showErrorMessage();
                             break;
                     }
                 }

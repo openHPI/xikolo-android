@@ -127,8 +127,8 @@ public class ProgressFragment extends BaseFragment {
 //                if (!NetworkUtil.isOnline(getActivity()) && dataSource.equals(DataSource.LOCAL) && result.size() == 0) {
 //                    adapter.clear();
 //                    refreshLayout.setRefreshing(false);
-//                    notificationController.setTitle(R.string.notification_no_network);
-//                    notificationController.setSummary(R.string.notification_no_network_with_offline_mode_summary);
+//                    notificationController.setMessageTitle(R.string.notification_no_network);
+//                    notificationController.setMessageSummary(R.string.notification_no_network_with_offline_mode_summary);
 //                    notificationController.setNotificationVisible(true);
 //                } else if (modules != null && modules.size() > 0) {
 //                    adapter.updateModules(modules);

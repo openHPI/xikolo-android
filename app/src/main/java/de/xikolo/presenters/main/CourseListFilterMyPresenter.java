@@ -37,7 +37,7 @@ public class CourseListFilterMyPresenter extends CourseListPresenter {
     public void requestCourses() {
         if (!UserManager.isAuthorized() && getView() != null) {
             getView().showLoginRequiredMessage();
-            getView().hideAnyProgress();
+            getView().hideProgress();
         } else {
             super.requestCourses();
         }
