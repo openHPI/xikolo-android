@@ -6,12 +6,14 @@ import java.util.List;
 import de.xikolo.jobs.CreateEnrollmentJob;
 import de.xikolo.jobs.DeleteEnrollmentJob;
 import de.xikolo.jobs.GetCourseJob;
+import de.xikolo.jobs.GetCourseProgressWithSectionsJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.jobs.ListCoursesJob;
 import de.xikolo.jobs.ListEnrollmentsJob;
 import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
+import de.xikolo.models.SectionProgress;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -131,6 +133,21 @@ public class CourseManager extends BaseManager {
         return courseList;
     }
 
+    public RealmResults listSectionProgressesForCourse(String courseId, Realm realm, RealmChangeListener<RealmResults<SectionProgress>> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
+        }
+
+        RealmResults<SectionProgress> spListPromise = realm
+                .where(SectionProgress.class)
+                .equalTo("courseProgressId", courseId)
+                .findAllSortedAsync("position");
+
+        spListPromise.addChangeListener(listener);
+
+        return spListPromise;
+    }
+
     public long countEnrollments(Realm realm) {
         return realm.where(Enrollment.class).count();
     }
@@ -153,6 +170,10 @@ public class CourseManager extends BaseManager {
 
     public void deleteEnrollment(String id, JobCallback callback) {
         jobManager.addJobInBackground(new DeleteEnrollmentJob(id, callback));
+    }
+
+    public void requestCourseProgressWithSections(String courseId, JobCallback callback) {
+        jobManager.addJobInBackground(new GetCourseProgressWithSectionsJob(courseId, callback));
     }
 
 }

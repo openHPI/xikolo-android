@@ -14,6 +14,8 @@ import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
@@ -212,39 +214,31 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     static class CourseViewHolder extends RecyclerView.ViewHolder {
 
-        ViewGroup layout;
-        TextView textTitle;
-        TextView textTeacher;
-        TextView textDate;
-        TextView textLanguage;
-        TextView textDescription;
-        ImageView image;
-        Button buttonEnroll;
-        TextView textBanner;
+        @BindView(R.id.container) ViewGroup layout;
+        @BindView(R.id.textTitle) TextView textTitle;
+        @BindView(R.id.textTeacher) TextView textTeacher;
+        @BindView(R.id.textDate) TextView textDate;
+        @BindView(R.id.textLanguage) TextView textLanguage;
+        @BindView(R.id.textDescription) TextView textDescription;
+        @BindView(R.id.imageView) ImageView image;
+        @BindView(R.id.btnEnroll) Button buttonEnroll;
+        @BindView(R.id.textBanner) TextView textBanner;
 
-        public CourseViewHolder(View itemView) {
-            super(itemView);
-            layout = (ViewGroup) itemView.findViewById(R.id.container);
-            textTitle = (TextView) itemView.findViewById(R.id.textTitle);
-            textTeacher = (TextView) itemView.findViewById(R.id.textTeacher);
-            textDate = (TextView) itemView.findViewById(R.id.textDate);
-            textLanguage = (TextView) itemView.findViewById(R.id.textLanguage);
-            textDescription = (TextView) itemView.findViewById(R.id.textDescription);
-            image = (ImageView) itemView.findViewById(R.id.imageView);
-            buttonEnroll = (Button) itemView.findViewById(R.id.btnEnroll);
-            textBanner = (TextView) itemView.findViewById(R.id.textBanner);
+        public CourseViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
         }
 
     }
 
     static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        ViewGroup container;
-        TextView header;
 
-        public HeaderViewHolder(View itemView) {
-            super(itemView);
-            container = (ViewGroup) itemView.findViewById(R.id.container);
-            header = (TextView) itemView.findViewById(R.id.textHeader);
+        @BindView(R.id.container) ViewGroup container;
+        @BindView(R.id.textHeader) TextView header;
+
+        public HeaderViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
         }
 
     }

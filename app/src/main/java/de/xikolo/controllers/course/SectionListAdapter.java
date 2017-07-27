@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.models.Section;
 import de.xikolo.utils.DateUtil;
@@ -167,28 +169,20 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
     static class SectionViewHolder extends RecyclerView.ViewHolder {
 
-        FrameLayout layout;
-        TextView textTitle;
-        AutofitRecyclerView recyclerView;
-        ProgressBar progressBar;
-        View viewHeader;
+        @BindView(R.id.container) FrameLayout layout;
+        @BindView(R.id.textTitle) TextView textTitle;
+        @BindView(R.id.recyclerView) AutofitRecyclerView recyclerView;
+        @BindView(R.id.containerProgress) ProgressBar progressBar;
+        @BindView(R.id.header) View viewHeader;
 
-        View viewModuleNotification;
-        TextView textModuleNotification;
+        @BindView(R.id.moduleNotificationContainer) View viewModuleNotification;
+        @BindView(R.id.moduleNotificationLabel) TextView textModuleNotification;
 
-        View viewDownloadButton;
+        @BindView(R.id.downloadBtn) View viewDownloadButton;
 
         public SectionViewHolder(View view) {
             super(view);
-
-            layout = (FrameLayout) view.findViewById(R.id.container);
-            textTitle = (TextView) view.findViewById(R.id.textTitle);
-            recyclerView = (AutofitRecyclerView) view.findViewById(R.id.recyclerView);
-            progressBar = (ProgressBar) view.findViewById(R.id.containerProgress);
-            viewHeader = view.findViewById(R.id.header);
-            viewModuleNotification = view.findViewById(R.id.moduleNotificationContainer);
-            textModuleNotification = (TextView) view.findViewById(R.id.moduleNotificationLabel);
-            viewDownloadButton = view.findViewById(R.id.downloadBtn);
+            ButterKnife.bind(this, view);
         }
 
     }

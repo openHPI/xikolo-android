@@ -124,9 +124,9 @@
     <string name="login_sso">SSO</string>
     <string name="login_sso_hint">SSO Login</string>
 
-    <string name="self_test_points">%1$s of %2$s self-test points</string>
-    <string name="assignments_points">%1$s of %2$s assignment points</string>
-    <string name="items_visited">%1$s of %2$s visited</string>
+    <string name="self_test_points">%1$.1f of %2$.1f self-test points</string>
+    <string name="assignments_points">%1$.1f of %2$.1f assignment points</string>
+    <string name="items_visited">%1$d of %2$d visited</string>
 
     <string name="course_date_coming_soon">Coming soon</string>
     <string name="course_date_since">Since %s</string>

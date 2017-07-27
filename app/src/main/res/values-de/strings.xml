@@ -120,9 +120,9 @@
     <string name="user_name">%1$s %2$s</string>
     <string name="or">oder</string>
 
-    <string name="self_test_points">%1$s von %2$s Selbsttest-Punkten</string>
-    <string name="assignments_points">%1$s von %2$s Hausaufgaben-Punkten</string>
-    <string name="items_visited">%1$s von %2$s besucht</string>
+    <string name="self_test_points">%1$.1f von %2$.1f Selbsttest-Punkten</string>
+    <string name="assignments_points">%1$.1f von %2$.1f Hausaufgaben-Punkten</string>
+    <string name="items_visited">%1$d von %2$d besucht</string>
 
     <string name="course_date_coming_soon">Bald verfügbar</string>
     <string name="course_date_since">Seit %s</string>

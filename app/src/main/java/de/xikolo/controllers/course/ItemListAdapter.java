@@ -12,6 +12,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.models.Item;
@@ -91,21 +93,18 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textTitle;
-        TextView textIcon;
+        @BindView(R.id.textTitle) TextView textTitle;
+        @BindView(R.id.textIcon) TextView textIcon;
 
-        View viewUnseenIndicator;
+        @BindView(R.id.unseenIndicator) View viewUnseenIndicator;
 
-        FrameLayout layout;
+        @BindView(R.id.container) FrameLayout layout;
 
         public ItemViewHolder(View view) {
             super(view);
-
-            textTitle = (TextView) view.findViewById(R.id.textTitle);
-            textIcon = (TextView) view.findViewById(R.id.textIcon);
-            layout = (FrameLayout) view.findViewById(R.id.container);
-            viewUnseenIndicator = view.findViewById(R.id.unseenIndicator);
+            ButterKnife.bind(this, view);
         }
+
     }
 
 }

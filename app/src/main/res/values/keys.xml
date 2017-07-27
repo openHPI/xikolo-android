@@ -31,7 +31,7 @@
 
     <string name="duration" translatable="false">%1$02d:%2$02d</string>
 
-    <string name="percentage" translatable="false">%1$s%%</string>
+    <string name="percentage" translatable="false">%1$d%%</string>
 
     <string name="settings_default_value_video_playback_speed" translatable="false">x1.0</string>
     <string-array name="settings_values_video_playback_speed" translatable="false">

@@ -2,6 +2,7 @@ package de.xikolo.network;
 
 import de.xikolo.models.AccessToken;
 import de.xikolo.models.Course;
+import de.xikolo.models.CourseProgress;
 import de.xikolo.models.Enrollment;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -66,6 +67,11 @@ public interface ApiServiceInterface {
 
     @PATCH("course-items/{id}")
     Call<Item.JsonModel> updateItem(@Header(HEADER_AUTH) String token, @Path("id") String id, @Body Item.JsonModel item);
+
+    // Progress
+
+    @GET("course-progresses/{id}?include=section-progresses")
+    Call<CourseProgress.JsonModel> getCourseProgressWithSections(@Header(HEADER_AUTH) String token, @Path("id") String id);
 
     // Subtitle
     @GET("subtitles?include=texts")

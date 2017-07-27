@@ -109,9 +109,9 @@
     <string name="intro_overlay_text">点击以将视频推送至电视播放</string>
     <string name="user_name">%1$s %2$s</string>
 
-    <string name="self_test_points">自我测试总分 %2$s 分，您取得了 %1$s 分</string>
-    <string name="assignments_points">作业总分 %2$s 分，您取得了 %1$s 分</string>
-    <string name="items_visited">已访问 %2$s 中的 %1$s 项</string>
+    <string name="self_test_points">自我测试总分 %2$.1f 分，您取得了 %1$.1f 分</string>
+    <string name="assignments_points">作业总分 %2$.1f 分，您取得了 %1$.1f 分</string>
+    <string name="items_visited">已访问 %2$d 中的 %1$d 项</string>
 
     <!-- -->
     <string name="notification_no_network">请打开网络连接</string>

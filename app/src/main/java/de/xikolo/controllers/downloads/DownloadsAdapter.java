@@ -10,10 +10,12 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.utils.FileUtil;
 import de.xikolo.models.base.SectionList;
+import de.xikolo.utils.FileUtil;
 
 public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -142,27 +144,25 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     static class FolderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textTitle;
-        TextView textSubTitle;
-        TextView textButtonDelete;
-        View viewDivider;
+        @BindView(R.id.textTitle) TextView textTitle;
+        @BindView(R.id.textSubTitle) TextView textSubTitle;
+        @BindView(R.id.buttonDelete) TextView textButtonDelete;
+        @BindView(R.id.divider) View viewDivider;
 
-        public FolderViewHolder(View itemView) {
-            super(itemView);
-            textTitle = (TextView) itemView.findViewById(R.id.textTitle);
-            textSubTitle = (TextView) itemView.findViewById(R.id.textSubTitle);
-            textButtonDelete = (TextView) itemView.findViewById(R.id.buttonDelete);
-            viewDivider = itemView.findViewById(R.id.divider);
+        public FolderViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
         }
 
     }
 
     static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
 
-        public HeaderViewHolder(View itemView) {
-            super(itemView);
-            title = (TextView) itemView.findViewById(R.id.textHeader);
+        @BindView(R.id.textHeader) TextView title;
+
+        public HeaderViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
         }
 
     }
