@@ -50,8 +50,6 @@ public class CreateEnrollmentJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
 
-                if (callback != null) callback.success();
-
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
@@ -62,6 +60,8 @@ public class CreateEnrollmentJob extends BaseJob {
                     }
                 });
                 realm.close();
+
+                if (callback != null) callback.success();
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Enrollment not created");
                 if (callback != null) callback.error(JobCallback.ErrorCode.ERROR);

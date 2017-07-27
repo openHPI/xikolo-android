@@ -66,14 +66,18 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
         requestCourses();
     }
 
-    public void onEnrollButtonClicked(String courseId) {
+    public void onEnrollButtonClicked(final String courseId) {
         getViewOrThrow().showBlockingProgress();
 
         courseManager.createEnrollment(courseId, new JobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
+                    Course course = Course.get(courseId);
                     getView().hideProgress();
+                    if (course.accessible) {
+                        getView().enterCourse(courseId);
+                    }
                 }
             }
 

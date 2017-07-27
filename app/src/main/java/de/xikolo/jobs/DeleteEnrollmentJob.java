@@ -46,8 +46,6 @@ public class DeleteEnrollmentJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment deleted");
 
-                if (callback != null) callback.success();
-
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
@@ -58,6 +56,8 @@ public class DeleteEnrollmentJob extends BaseJob {
                     }
                 });
                 realm.close();
+
+                if (callback != null) callback.success();
             } else {
                 if (Config.DEBUG) Log.w(TAG, "Enrollment not deleted");
                 if (callback != null) callback.error(JobCallback.ErrorCode.ERROR);

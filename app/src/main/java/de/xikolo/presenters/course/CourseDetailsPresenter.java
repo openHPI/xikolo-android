@@ -3,6 +3,7 @@ package de.xikolo.presenters.course;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Course;
+import de.xikolo.models.Enrollment;
 import de.xikolo.presenters.base.Presenter;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -53,11 +54,12 @@ public class CourseDetailsPresenter extends Presenter<CourseDetailsView> {
 
     public void unenroll(final String courseId) {
         getViewOrThrow().showProgressDialog();
-        courseManager.deleteEnrollment(courseId, new JobCallback() {
+        courseManager.deleteEnrollment(Enrollment.getForCourse(courseId).id, new JobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
                     getView().hideProgressDialog();
+                    getView().finishActivity();
                 }
             }
 

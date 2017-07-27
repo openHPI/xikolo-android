@@ -39,8 +39,6 @@ public class ListEnrollmentsJob extends BaseJob {
                     if (Config.DEBUG)
                         Log.i(TAG, "Enrollments received (" + response.body().length + ")");
 
-                    if (callback != null) callback.success();
-
                     Realm realm = Realm.getDefaultInstance();
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
@@ -51,6 +49,8 @@ public class ListEnrollmentsJob extends BaseJob {
                         }
                     });
                     realm.close();
+
+                    if (callback != null) callback.success();
                 } else {
                     if (Config.DEBUG) Log.e(TAG, "Error while fetching enrollment list");
                     if (callback != null) callback.error(JobCallback.ErrorCode.ERROR);

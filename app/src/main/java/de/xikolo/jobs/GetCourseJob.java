@@ -45,8 +45,6 @@ public class GetCourseJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Course received");
 
-                if (callback != null) callback.success();
-
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
@@ -55,6 +53,8 @@ public class GetCourseJob extends BaseJob {
                     }
                 });
                 realm.close();
+
+                if (callback != null) callback.success();
             } else {
                 if (Config.DEBUG) Log.e(TAG, "Error while fetching course");
                 if (callback != null) callback.error(JobCallback.ErrorCode.ERROR);

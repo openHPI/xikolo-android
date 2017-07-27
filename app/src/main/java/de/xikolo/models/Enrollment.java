@@ -2,6 +2,7 @@ package de.xikolo.models;
 
 import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -21,6 +22,20 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 //    public boolean proctored;
 
     public String courseId;
+
+    public static Enrollment get(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        Enrollment model = realm.where(Enrollment.class).equalTo("id", id).findFirst();
+        realm.close();
+        return model;
+    }
+
+    public static Enrollment getForCourse(String courseId) {
+        Realm realm = Realm.getDefaultInstance();
+        Enrollment model = realm.where(Enrollment.class).equalTo("courseId", courseId).findFirst();
+        realm.close();
+        return model;
+    }
 
     @Override
     public JsonModel convertToJsonResource() {

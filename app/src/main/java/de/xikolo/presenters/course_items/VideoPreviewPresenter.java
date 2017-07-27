@@ -56,7 +56,7 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
             @Override
             public void onChange(Video v) {
                 if (v.isValid()) {
-                    video = v;
+                    video = realm.copyFromRealm(v);
                     getViewOrThrow().showContent();
                     getViewOrThrow().setupView(course, section, item, video);
                 }
@@ -95,13 +95,13 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
 
     private void loadModels() {
         if (course == null) {
-            course = Course.get(courseId);
+            course = realm.copyFromRealm(Course.get(courseId));
         }
         if (section == null) {
-            section = Section.get(sectionId);
+            section = realm.copyFromRealm(Section.get(sectionId));
         }
         if (item == null) {
-            item = Item.get(itemId);
+            item = realm.copyFromRealm(Item.get(itemId));
         }
     }
 

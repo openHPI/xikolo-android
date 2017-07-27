@@ -190,14 +190,12 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
         if (progressDialog == null) {
             progressDialog = ProgressDialog.getInstance();
         }
-        if (!progressDialog.getDialog().isShowing()) {
-            progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
-        }
+        progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
     }
 
     @Override
     public void hideProgressDialog() {
-        if (progressDialog != null && progressDialog.getDialog().isShowing()) {
+        if (progressDialog != null && progressDialog.getDialog() != null && progressDialog.getDialog().isShowing()) {
             progressDialog.dismiss();
         }
     }
@@ -229,10 +227,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
 
     @Override
     public void startCourseDetailsActivity(String courseId) {
-        Intent intent = new Intent(CourseActivity.this, CourseDetailsActivity.class);
-        Bundle b = new Bundle();
-//                                b.putParcelable(CourseDetailsActivity.ARG_COURSE, course);
-        intent.putExtras(b);
+        Intent intent = CourseDetailsActivityAutoBundle.builder(courseId).build(this);
         startActivity(intent);
     }
 

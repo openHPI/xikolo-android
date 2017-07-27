@@ -52,19 +52,19 @@ public class Item extends RealmObject {
         RealmObject content = null;
         switch (type) {
             case TYPE_TEXT:
-                content = realm.where(RichText.class).equalTo("videoId", id).findFirst();
+                content = realm.where(RichText.class).equalTo("itemId", id).findFirst();
                 break;
             case TYPE_VIDEO:
-                content = realm.where(Video.class).equalTo("videoId", id).findFirst();
+                content = realm.where(Video.class).equalTo("itemId", id).findFirst();
                 break;
             case TYPE_QUIZ:
-                content = realm.where(Quiz.class).equalTo("videoId", id).findFirst();
+                content = realm.where(Quiz.class).equalTo("itemId", id).findFirst();
                 break;
             case TYPE_LTI:
-                content = realm.where(LtiExercise.class).equalTo("videoId", id).findFirst();
+                content = realm.where(LtiExercise.class).equalTo("itemId", id).findFirst();
                 break;
             case TYPE_PEER:
-                content = realm.where(PeerAssessment.class).equalTo("videoId", id).findFirst();
+                content = realm.where(PeerAssessment.class).equalTo("itemId", id).findFirst();
                 break;
         }
 

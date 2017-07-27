@@ -206,7 +206,11 @@ public class DownloadViewController {
                         public void run() {
                             if (progressBarUpdaterRunning) {
                                 progressBarDownload.setIndeterminate(false);
-                                progressBarDownload.setProgress((int) (dl.bytesDownloadedSoFar * 100 / dl.totalSizeBytes));
+                                if (dl.totalSizeBytes == 0) {
+                                    progressBarDownload.setProgress(0);
+                                } else {
+                                    progressBarDownload.setProgress((int) (dl.bytesDownloadedSoFar * 100 / dl.totalSizeBytes));
+                                }
                                 textFileSize.setText(FileUtil.getFormattedFileSize(dl.bytesDownloadedSoFar) + " / "
                                         + FileUtil.getFormattedFileSize(dl.totalSizeBytes));
                             }
@@ -216,8 +220,6 @@ public class DownloadViewController {
 
                 if (progressBarUpdaterRunning) {
                     progressBarDownload.postDelayed(this, MILLISECONDS);
-                } else {
-                    textFileSize.setText(FileUtil.getFormattedFileSize(downloadManager.getDownloadFileSize(type, course, section, item)));
                 }
             }
         };
@@ -268,11 +270,11 @@ public class DownloadViewController {
             viewDownloadEnd.setVisibility(View.INVISIBLE);
         }
 
-        textFileSize.setText(FileUtil.getFormattedFileSize(size));
-
         progressBarDownload.setProgress(0);
         progressBarDownload.setIndeterminate(true);
         progressBarUpdaterRunning = false;
+
+        textFileSize.setText(FileUtil.getFormattedFileSize(size));
     }
 
     private void showRunningState() {

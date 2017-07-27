@@ -49,7 +49,7 @@ public interface ApiServiceInterface {
     Call<Enrollment.JsonModel> updateEnrollment(@Header(HEADER_AUTH) String token, @Path("id") String id, @Body Enrollment.JsonModel enrollment);
 
     @DELETE("enrollments/{id}")
-    Call deleteEnrollment(@Header(HEADER_AUTH) String token, @Path("id") String id);
+    Call<Void> deleteEnrollment(@Header(HEADER_AUTH) String token, @Path("id") String id);
 
     // Section
 

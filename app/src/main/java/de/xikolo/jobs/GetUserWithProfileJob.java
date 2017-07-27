@@ -40,8 +40,6 @@ public class GetUserWithProfileJob extends BaseJob {
                 if (response.isSuccessful()) {
                     if (Config.DEBUG) Log.i(TAG, "User received");
 
-                    if (callback != null) callback.success();
-
                     UserStorage userStorage = new UserStorage();
                     userStorage.saveUserId(response.body().getId());
 
@@ -58,6 +56,8 @@ public class GetUserWithProfileJob extends BaseJob {
                         }
                     });
                     realm.close();
+
+                    if (callback != null) callback.success();
                 } else {
                     if (Config.DEBUG) Log.e(TAG, "Error while fetching course");
                     if (callback != null) callback.error(JobCallback.ErrorCode.ERROR);

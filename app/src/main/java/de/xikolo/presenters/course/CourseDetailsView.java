@@ -15,4 +15,6 @@ public interface CourseDetailsView extends View {
 
     void setupView(Course course);
 
+    void finishActivity();
+
 }

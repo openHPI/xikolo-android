@@ -56,7 +56,9 @@ public class CourseDetailsActivity extends BasePresenterActivity<CourseDetailsPr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.unenroll, menu);
+        if (Course.get(courseId).isEnrolled()) {
+            inflater.inflate(R.menu.unenroll, menu);
+        }
         super.onCreateOptionsMenu(menu);
         return true;
     }
@@ -84,14 +86,12 @@ public class CourseDetailsActivity extends BasePresenterActivity<CourseDetailsPr
         if (progressDialog == null) {
             progressDialog = ProgressDialog.getInstance();
         }
-        if (!progressDialog.getDialog().isShowing()) {
-            progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
-        }
+        progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
     }
 
     @Override
     public void hideProgressDialog() {
-        if (progressDialog != null && progressDialog.getDialog().isShowing()) {
+        if (progressDialog != null && progressDialog.getDialog() != null && progressDialog.getDialog().isShowing()) {
             progressDialog.dismiss();
         }
     }
@@ -104,6 +104,11 @@ public class CourseDetailsActivity extends BasePresenterActivity<CourseDetailsPr
     @Override
     public void showNoNetworkToast() {
         ToastUtil.show(R.string.toast_no_network);
+    }
+
+    @Override
+    public void finishActivity() {
+        finish();
     }
 
     @NonNull
