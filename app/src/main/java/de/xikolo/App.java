@@ -7,12 +7,13 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 
+import de.xikolo.config.Config;
+import de.xikolo.config.FeatureToggle;
+import de.xikolo.config.RealmModelMigration;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
 import de.xikolo.utils.ClientUtil;
-import de.xikolo.config.Config;
-import de.xikolo.config.FeatureToggle;
 import de.xikolo.utils.SslCertificateUtil;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -77,7 +78,8 @@ public class App extends Application {
     private void configureRealm() {
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
+                .schemaVersion(0)
+                .migration(new RealmModelMigration())
                 .build();
         Realm.setDefaultConfiguration(config);
     }
