@@ -73,7 +73,11 @@ public class WebViewFragment extends LoadingStateFragment implements WebViewInte
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        webViewHelper.request(url, false);
+        if (webViewHelper.requestedUrl() == null) {
+            webViewHelper.request(url);
+        } else {
+            webViewHelper.showWebView();
+        }
     }
 
     @Override

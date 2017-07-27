@@ -59,10 +59,10 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         }
 
         if (itemList == null) {
-            itemList =  section.getAccessibleItems();
-            getViewOrThrow().setupView(itemList);
-            getViewOrThrow().setCurrentItem(index);
+            itemList = section.getAccessibleItems();
         }
+        getViewOrThrow().setupView(itemList);
+        getViewOrThrow().setCurrentItem(index);
     }
 
     @Override

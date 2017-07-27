@@ -2,7 +2,6 @@ package de.xikolo.controllers.helper;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -58,15 +57,11 @@ public class LoadingStateHelper {
     }
 
     public void showProgress() {
-        Log.d("LOADING", "isContentViewVisible " + isContentViewVisible());
-        Log.d("LOADING", "isMessageVisible " + isMessageVisible());
         if (isContentViewVisible() || isMessageVisible()) {
-            Log.d("LOADING", "REFRESH");
             if (!refreshLayout.isRefreshing()) {
                 refreshLayout.setRefreshing(true);
             }
         } else {
-            Log.d("LOADING", "MESSAGE");
             progressBar.setVisibility(View.VISIBLE);
         }
     }

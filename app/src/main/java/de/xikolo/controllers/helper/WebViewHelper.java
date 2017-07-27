@@ -53,7 +53,7 @@ public class WebViewHelper {
         webView.loadUrl(url, header);
     }
 
-    private void showWebView() {
+    public void showWebView() {
         webView.setVisibility(View.VISIBLE);
     }
 
@@ -62,7 +62,11 @@ public class WebViewHelper {
     }
 
     public void refresh() {
-        request(url, true);
+        request(url);
+    }
+
+    public String requestedUrl() {
+        return url;
     }
 
     @SuppressWarnings("SetJavaScriptEnabled")
@@ -112,7 +116,7 @@ public class WebViewHelper {
                     String token = Uri.parse(url).getQueryParameter("token");
                     webViewInterface.interceptSSOLogin(token);
                 } else if (url.contains(Config.HOST) && webViewInterface.inAppLinksEnabled() || webViewInterface.externalLinksEnabled()) {
-                    request(url, true);
+                    request(url);
                 } else {
                     Uri uri = Uri.parse(url);
                     if (url.contains(Config.HOST) && UserManager.isAuthorized()) {
@@ -144,7 +148,7 @@ public class WebViewHelper {
         });
     }
 
-    public void request(String url, boolean userRequest) {
+    public void request(String url) {
         if (Config.DEBUG) {
             Log.d(TAG, "Request URL: " + url);
         }

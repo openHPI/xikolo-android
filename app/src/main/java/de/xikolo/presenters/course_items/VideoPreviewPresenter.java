@@ -55,9 +55,11 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
         videoPromise = itemManager.getVideoForItem(itemId, realm, new RealmChangeListener<Video>() {
             @Override
             public void onChange(Video v) {
-                video = v;
-                getViewOrThrow().showContent();
-                getViewOrThrow().setupView(course, section, item, video);
+                if (v.isValid()) {
+                    video = v;
+                    getViewOrThrow().showContent();
+                    getViewOrThrow().setupView(course, section, item, video);
+                }
             }
         });
     }
