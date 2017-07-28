@@ -42,6 +42,8 @@
     <color name="banner_yellow">#F5A704</color>
     <color name="banner_green">#8CB30D</color>
 
+    <color name="progress_green">#80B600</color>
+
     <color name="button_gray">#5a6065</color>
     <!-- 30% white overlay -->
     <color name="button_gray_light">#8c9094</color>

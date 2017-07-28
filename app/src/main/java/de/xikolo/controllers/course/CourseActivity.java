@@ -290,11 +290,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                                 .build();
                         break;
                     case 2:
-//                        fragment = ProgressFragment.newInstance(courseId);
-                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
-                                .inAppLinksEnabled(true)
-                                .externalLinksEnabled(false)
-                                .build();
+                        fragment = ProgressFragmentAutoBundle.builder(courseId).build();
                         break;
                     case 3:
                         fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ROOMS)

@@ -122,7 +122,7 @@
 
     <string name="self_test_points">%1$.1f von %2$.1f Selbsttest-Punkten</string>
     <string name="assignments_points">%1$.1f von %2$.1f Hausaufgaben-Punkten</string>
-    <string name="items_visited">%1$d von %2$d besucht</string>
+    <string name="items_visited">%1$.0f von %2$.0f besucht</string>
 
     <string name="course_date_coming_soon">Bald verfügbar</string>
     <string name="course_date_since">Seit %s</string>

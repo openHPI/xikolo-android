@@ -1,6 +1,7 @@
 package de.xikolo.controllers.course;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;
+import de.xikolo.config.Config;
 import de.xikolo.models.CourseProgress;
 import de.xikolo.models.ExerciseStatistic;
 import de.xikolo.models.SectionProgress;
 import de.xikolo.models.VisitStatistic;
+import de.xikolo.views.CustomFontTextView;
 
 public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapter.ProgressViewHolder> {
 
@@ -34,12 +37,6 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
     }
 
     public void update(CourseProgress cp, List<SectionProgress> spList) {
-        if (cp == null) {
-            throw new NullPointerException("Course progress can't be null");
-        }
-        if (spList == null) {
-            throw new NullPointerException("Section progresses can't be null");
-        }
         this.cp = cp;
         this.spList.clear();
         this.spList.addAll(spList);
@@ -53,7 +50,11 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
 
     @Override
     public int getItemCount() {
-        return spList.size() + 1;
+        if (spList.size() == 0) {
+            return 0;
+        } else {
+            return spList.size() + 1;
+        }
     }
 
     @Override
@@ -80,10 +81,10 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
         } else {
             SectionProgress sp = spList.get(position);
             title = sp.title;
-            mainExercises = cp.mainExercises;
-            selftestExercises = cp.selftestExercises;
-            bonusExercises = cp.bonusExercises;
-            visits = cp.visits;
+            mainExercises = sp.mainExercises;
+            selftestExercises = sp.selftestExercises;
+            bonusExercises = sp.bonusExercises;
+            visits = sp.visits;
 
             holder.viewSeparator.setVisibility(View.GONE);
 
@@ -91,35 +92,76 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
 
         holder.textTitle.setText(title);
 
-        int percentage;
+        if (selftestExercises != null) {
+            holder.progressSelftest.setVisibility(View.VISIBLE);
+            setupExerciseProgressView(
+                    holder.progressSelftest,
+                    selftestExercises.pointsPossible,
+                    selftestExercises.pointsScored,
+                    R.string.self_test_points,
+                    R.string.icon_selftest,
+                    Config.FONT_XIKOLO
+            );
+        } else {
+            holder.progressSelftest.setVisibility(View.GONE);
+        }
 
-        holder.textCount1.setText(String.format(context.getString(R.string.self_test_points),
-                selftestExercises.pointsScored,
-                selftestExercises.pointsPossible));
+        if (mainExercises != null) {
+            holder.progressMain.setVisibility(View.VISIBLE);
+            setupExerciseProgressView(
+                    holder.progressMain,
+                    mainExercises.pointsPossible,
+                    mainExercises.pointsScored,
+                    R.string.assignments_points,
+                    R.string.icon_assignment,
+                    Config.FONT_XIKOLO
+            );
+        } else {
+            holder.progressMain.setVisibility(View.GONE);
+        }
 
-        percentage = getPercentage(selftestExercises.pointsScored, selftestExercises.pointsPossible);
-        holder.textPercentage1.setText(String.format(context.getString(R.string.percentage), percentage));
-        holder.progressBar1.setProgress(percentage);
+        if (bonusExercises != null) {
+            holder.progressBonus.setVisibility(View.VISIBLE);
+            setupExerciseProgressView(
+                    holder.progressBonus,
+                    bonusExercises.pointsPossible,
+                    bonusExercises.pointsScored,
+                    R.string.assignments_points,
+                    R.string.icon_bonus,
+                    Config.FONT_XIKOLO
+            );
+        } else {
+            holder.progressBonus.setVisibility(View.GONE);
+        }
 
-        holder.textCount2.setText(String.format(context.getString(R.string.assignments_points),
-                mainExercises.pointsScored,
-                mainExercises.pointsPossible));
-
-        percentage = getPercentage(mainExercises.pointsScored, mainExercises.pointsPossible);
-        holder.textPercentage2.setText(String.format(context.getString(R.string.percentage), percentage));
-        holder.progressBar2.setProgress(percentage);
-
-        holder.textCount3.setText(String.format(context.getString(R.string.items_visited),
-                visits.itemsVisited,
-                visits.itemsAvailable));
-
-        percentage = getPercentage(visits.itemsVisited, visits.itemsAvailable);
-        holder.textPercentage3.setText(String.format(context.getString(R.string.percentage), percentage));
-        holder.progressBar3.setProgress(percentage);
+        if (visits != null) {
+            holder.progressVisits.setVisibility(View.VISIBLE);
+            setupExerciseProgressView(
+                    holder.progressVisits,
+                    visits.itemsAvailable,
+                    visits.itemsVisited,
+                    R.string.items_visited,
+                    R.string.icon_visited,
+                    Config.FONT_MATERIAL
+            );
+        } else {
+            holder.progressVisits.setVisibility(View.GONE);
+        }
     }
 
-    private int getPercentage(int state, int max) {
-        return getPercentage((float) state, (float) max);
+    private void setupExerciseProgressView(View view, float base, float percent, @StringRes int label, @StringRes int icon, String iconFont) {
+        TextView textCount = (TextView) view.findViewById(R.id.text_count);
+        TextView textPercentage = (TextView) view.findViewById(R.id.text_percentage);
+        CustomFontTextView iconView = (CustomFontTextView) view.findViewById(R.id.icon);
+        ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress);
+
+        iconView.setText(context.getString(icon));
+        iconView.setCustomFont(context, iconFont);
+        textCount.setText(String.format(context.getString(label), percent, base));
+
+        int percentage = getPercentage(percent, base);
+        textPercentage.setText(String.format(context.getString(R.string.percentage), percentage));
+        progress.setProgress(percentage);
     }
 
     private int getPercentage(float state, float max) {
@@ -134,17 +176,12 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
 
     static class ProgressViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.textTitle) TextView textTitle;
-        @BindView(R.id.textCount1) TextView textCount1;
-        @BindView(R.id.textCount2) TextView textCount2;
-        @BindView(R.id.textCount3) TextView textCount3;
-        @BindView(R.id.progress1) ProgressBar progressBar1;
-        @BindView(R.id.progress2) ProgressBar progressBar2;
-        @BindView(R.id.progress3) ProgressBar progressBar3;
-        @BindView(R.id.textPercentage1) TextView textPercentage1;
-        @BindView(R.id.textPercentage2) TextView textPercentage2;
-        @BindView(R.id.textPercentage3) TextView textPercentage3;
-        @BindView(R.id.viewSeparator) View viewSeparator;
+        @BindView(R.id.text_title) TextView textTitle;
+        @BindView(R.id.progress_selftest) View progressSelftest;
+        @BindView(R.id.progress_main) View progressMain;
+        @BindView(R.id.progress_bonus) View progressBonus;
+        @BindView(R.id.progress_visits) View progressVisits;
+        @BindView(R.id.view_separator) View viewSeparator;
 
         public ProgressViewHolder(View view) {
             super(view);

@@ -45,8 +45,8 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         this.itemClickListener = itemCallback;
     }
 
-    public void updateModules(List<Section> modules) {
-        this.sections = modules;
+    public void updateSections(List<Section> sections) {
+        this.sections = sections;
         this.notifyDataSetChanged();
     }
 

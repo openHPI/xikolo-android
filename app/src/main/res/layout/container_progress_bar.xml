@@ -6,5 +6,5 @@
     android:minHeight="4dp"
     android:paddingBottom="2dp"
     android:paddingTop="6dp"
-    android:progressDrawable="@drawable/progress_bar_1" />
+    android:progressDrawable="@drawable/progress_bar" />
 

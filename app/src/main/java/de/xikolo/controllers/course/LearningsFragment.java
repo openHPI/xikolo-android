@@ -125,7 +125,7 @@ public class LearningsFragment extends LoadingStatePresenterFragment<LearningsPr
 
     @Override
     public void setupSections(List<Section> sectionList) {
-        adapter.updateModules(sectionList);
+        adapter.updateSections(sectionList);
     }
 
     @NonNull

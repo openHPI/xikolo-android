@@ -111,7 +111,7 @@
 
     <string name="self_test_points">自我测试总分 %2$.1f 分，您取得了 %1$.1f 分</string>
     <string name="assignments_points">作业总分 %2$.1f 分，您取得了 %1$.1f 分</string>
-    <string name="items_visited">已访问 %2$d 中的 %1$d 项</string>
+    <string name="items_visited">已访问 %2$.0f 中的 %1$.0f 项</string>
 
     <!-- -->
     <string name="notification_no_network">请打开网络连接</string>

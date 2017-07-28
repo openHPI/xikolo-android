@@ -126,7 +126,7 @@
 
     <string name="self_test_points">%1$.1f of %2$.1f self-test points</string>
     <string name="assignments_points">%1$.1f of %2$.1f assignment points</string>
-    <string name="items_visited">%1$d of %2$d visited</string>
+    <string name="items_visited">%1$.0f of %2$.0f visited</string>
 
     <string name="course_date_coming_soon">Coming soon</string>
     <string name="course_date_since">Since %s</string>

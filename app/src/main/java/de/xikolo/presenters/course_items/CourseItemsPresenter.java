@@ -48,19 +48,23 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         view.setTitle(section.title);
 
         if (firstItem != null) {
-            index = firstItem.position - 1;
+            index = section.getAccessibleItems().indexOf(firstItem);
+        } else {
+            index = 0;
+            firstItem = section.getAccessibleItems().get(index);
         }
 
-        Item firstItem = section.getAccessibleItems().get(index);
-        itemManager.updateItemVisited(firstItem.id);
-
         if (index == 0) {
-            LanalyticsUtil.trackVisitedItem(firstItem.id, courseId, sectionId);
+            realm.beginTransaction();
+            section.getAccessibleItems().get(index).visited = true;
+            realm.commitTransaction();
+            onItemSelected(firstItem.id);
         }
 
         if (itemList == null) {
             itemList = section.getAccessibleItems();
         }
+
         getViewOrThrow().setupView(itemList);
         getViewOrThrow().setCurrentItem(index);
     }
@@ -72,7 +76,6 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
 
     public void onItemSelected(String itemId) {
         itemManager.updateItemVisited(itemId);
-
         LanalyticsUtil.trackVisitedItem(itemId, courseId, sectionId);
     }
 
