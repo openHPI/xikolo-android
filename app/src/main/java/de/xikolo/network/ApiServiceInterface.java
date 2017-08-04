@@ -1,6 +1,7 @@
 package de.xikolo.network;
 
 import de.xikolo.models.AccessToken;
+import de.xikolo.models.Announcement;
 import de.xikolo.models.Course;
 import de.xikolo.models.CourseProgress;
 import de.xikolo.models.Enrollment;
@@ -74,14 +75,25 @@ public interface ApiServiceInterface {
     Call<CourseProgress.JsonModel> getCourseProgressWithSections(@Header(HEADER_AUTH) String token, @Path("id") String id);
 
     // Subtitle
+
     @GET("subtitles?include=texts")
     Call<SubtitleTrack.JsonModel[]> listSubtitlesWithTextsForVideo(@Header(HEADER_AUTH) String token, @Query("filter[video]") String videoId);
-
 
     // User and Profile
 
     @GET("users/me?include=profile")
     Call<User.JsonModel> getUserWithProfile(@Header(HEADER_AUTH) String token);
+
+    // Announcement
+
+    @GET("announcements?filter[global]=true")
+    Call<Announcement.JsonModel[]> listGlobalAnnouncements();
+
+    @GET("announcements?filter[global]=true")
+    Call<Announcement.JsonModel[]> listGlobalAnnouncementsWithCourses(@Header(HEADER_AUTH) String token);
+
+    @PATCH("course-items/{id}")
+    Call<Announcement.JsonModel> updateAnnouncement(@Header(HEADER_AUTH) String token, @Path("id") String id, @Body Announcement.JsonModel item);
 
     // Token
 

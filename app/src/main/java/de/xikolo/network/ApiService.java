@@ -6,6 +6,7 @@ import com.squareup.moshi.Moshi;
 import java.io.IOException;
 
 import de.xikolo.config.Config;
+import de.xikolo.models.Announcement;
 import de.xikolo.models.Course;
 import de.xikolo.models.CourseProgress;
 import de.xikolo.models.Enrollment;
@@ -84,6 +85,7 @@ public abstract class ApiService {
                     .add(PeerAssessment.JsonModel.class)
                     .add(SubtitleTrack.JsonModel.class)
                     .add(SubtitleCue.JsonModel.class)
+                    .add(Announcement.JsonModel.class)
                     .build();
 
             Moshi moshi = new Moshi.Builder()
