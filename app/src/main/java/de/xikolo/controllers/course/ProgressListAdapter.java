@@ -126,7 +126,7 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
                     holder.progressBonus,
                     bonusExercises.pointsPossible,
                     bonusExercises.pointsScored,
-                    R.string.assignments_points,
+                    R.string.bonus_points,
                     R.string.icon_bonus,
                     Config.FONT_XIKOLO
             );

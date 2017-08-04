@@ -31,9 +31,9 @@
     <string name="tab_learnings">学习</string>
     <string name="tab_discussions">讨论</string>
     <string name="tab_progress">进度</string>
-    <string name="tab_details">课程明细</string>
+    <string name="tab_course_details">课程明细</string>
     <string name="tab_announcements">公告</string>
-    <string name="tab_rooms">学习小组</string>
+    <string name="tab_collab_space">学习小组</string>
 
     <!-- -->
     <string name="btn_enroll_me">注册该课程</string>

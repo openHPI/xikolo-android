@@ -37,9 +37,9 @@
     <string name="tab_learnings">Lernmaterial</string>
     <string name="tab_discussions">Diskussionen</string>
     <string name="tab_progress">Fortschritt</string>
-    <string name="tab_details">Kursdetails</string>
+    <string name="tab_course_details">Kursdetails</string>
     <string name="tab_announcements">Neuigkeiten</string>
-    <string name="tab_rooms">Lerngruppen</string>
+    <string name="tab_collab_space">Lerngruppen</string>
 
     <!-- -->
     <string name="btn_enroll_me">Für den Kurs einschreiben</string>
@@ -122,6 +122,7 @@
 
     <string name="self_test_points">%1$.1f von %2$.1f Selbsttest-Punkten</string>
     <string name="assignments_points">%1$.1f von %2$.1f Hausaufgaben-Punkten</string>
+    <string name="bonus_points">%1$.1f von %2$.1f Bonus-Punkten</string>
     <string name="items_visited">%1$.0f von %2$.0f besucht</string>
 
     <string name="course_date_coming_soon">Bald verfügbar</string>

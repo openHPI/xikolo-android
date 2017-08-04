@@ -86,15 +86,15 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
     }
 
     public void onSectionClicked(String sectionId) {
-        getViewOrThrow().startCourseItemsActivity(courseId, sectionId, null);
+        getViewOrThrow().startCourseItemsActivity(courseId, sectionId, 0);
     }
 
     public void onSectionDownloadClicked(String sectionId) {
         getViewOrThrow().startSectionDownload(Course.get(courseId), Section.get(sectionId));
     }
 
-    public void onItemClicked(String sectionId, String itemId) {
-        getViewOrThrow().startCourseItemsActivity(courseId, sectionId, itemId);
+    public void onItemClicked(String sectionId, int position) {
+        getViewOrThrow().startCourseItemsActivity(courseId, sectionId, position);
     }
 
     private void requestSectionListWithItems() {

@@ -3,6 +3,7 @@ package de.xikolo.controllers.course;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, int position) {
+    public void onBindViewHolder(final ItemViewHolder holder, int position) {
         Context context = App.getInstance();
 
         final Item item = items.get(position);
@@ -61,6 +62,8 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
         holder.textTitle.setText(ItemTitleUtil.format(section.title, item.title));
 
         holder.textIcon.setText(item.getIconRes());
+
+        Log.e(TAG, item.title + " visited: " + item.visited);
 
         if (!item.visited) {
             holder.viewUnseenIndicator.setVisibility(View.VISIBLE);
@@ -79,7 +82,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
             holder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onItemClicked(section.id, item.id);
+                    listener.onItemClicked(section.id, holder.getAdapterPosition());
                 }
             });
         }
@@ -87,7 +90,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
     public interface OnItemClickListener {
 
-        void onItemClicked(String sectionId, String itemId);
+        void onItemClicked(String sectionId, int position);
 
     }
 

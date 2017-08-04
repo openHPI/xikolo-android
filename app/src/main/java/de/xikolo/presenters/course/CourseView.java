@@ -21,6 +21,6 @@ public interface CourseView extends View {
 
     void startCourseDetailsActivity(String courseId);
 
-    void setupView(Course course, Course.Tab courseTab);
+    void setupView(Course course, int courseTab);
 
 }

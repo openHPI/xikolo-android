@@ -40,7 +40,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
 
     @AutoBundleField String sectionId;
 
-    @AutoBundleField(required = false) String itemId;
+    @AutoBundleField int index;
 
     private ViewPager viewpager;
     private TabLayout tabLayout;
@@ -123,7 +123,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
     @NonNull
     @Override
     protected PresenterFactory<CourseItemsPresenter> getPresenterFactory() {
-        return new CourseItemsPresenterFactory(courseId, sectionId, itemId);
+        return new CourseItemsPresenterFactory(courseId, sectionId, index);
     }
 
     public class ItemsPagerAdapter extends FragmentPagerAdapter implements TabLayout.OnTabSelectedListener {
@@ -223,8 +223,9 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
                 ViewCompat.setAlpha(unseenIndicator, opaque);
 
                 unseenIndicator.setVisibility(View.GONE);
-                Item item = items.get(tabLayout.getSelectedTabPosition());
-                presenter.onItemSelected(item.id);
+
+                int tabPosition = tabLayout.getSelectedTabPosition();
+                presenter.onItemSelected(tabPosition);
             }
         }
 

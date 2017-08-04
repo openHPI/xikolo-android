@@ -8,17 +8,17 @@ public class CourseItemsPresenterFactory implements PresenterFactory<CourseItems
 
     private final String sectionId;
 
-    private final String itemId;
+    private final int index;
 
-    public CourseItemsPresenterFactory(String courseId, String sectionId, String itemId) {
+    public CourseItemsPresenterFactory(String courseId, String sectionId, int index) {
         this.courseId = courseId;
         this.sectionId = sectionId;
-        this.itemId = itemId;
+        this.index = index;
     }
 
     @Override
     public CourseItemsPresenter create() {
-        return new CourseItemsPresenter(courseId, sectionId, itemId);
+        return new CourseItemsPresenter(courseId, sectionId, index);
     }
 
 }

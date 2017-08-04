@@ -39,21 +39,21 @@ public class DeepLinkingUtil {
         return path;
     }
 
-    public static Course.Tab getTab(String courseRoute) {
+    public static int getTab(String courseRoute) {
 
         if (courseRoute.endsWith(ROUTE_RESUME)) {
-            return Course.Tab.RESUME;
+            return Course.TAB_LEARNINGS;
         } else if (courseRoute.endsWith(ROUTE_PINBOARD)) {
-            return Course.Tab.PINBOARD;
+            return Course.TAB_DISCUSSIONS;
         } else if (courseRoute.endsWith(ROUTE_PROGRESS)) {
-            return Course.Tab.PROGRESS;
+            return Course.TAB_PROGRESS;
         } else if (courseRoute.endsWith(ROUTE_LEARNING_ROOMS)) {
-            return Course.Tab.LEARNING_ROOMS;
+            return Course.TAB_COLLAB_SPACE;
         } else if (courseRoute.endsWith(ROUTE_ANNOUNCEMENTS)) {
-            return Course.Tab.ANNOUNCEMENTS;
+            return Course.TAB_ANNOUNCEMENTS;
         }
 
-        return Course.Tab.DETAILS;
+        return Course.TAB_LEARNINGS;
     }
 
     public static Type getType(Uri uri) {

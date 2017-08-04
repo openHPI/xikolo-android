@@ -20,9 +20,13 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         ALL, MY
     }
 
-    public enum Tab {
-        RESUME, PINBOARD, PROGRESS, LEARNING_ROOMS, ANNOUNCEMENTS, DETAILS
-    }
+    public static final int TAB_LEARNINGS = 0;
+    public static final int TAB_DISCUSSIONS = 1;
+    public static final int TAB_PROGRESS = 2;
+    public static final int TAB_COLLAB_SPACE = 3;
+    public static final int TAB_COURSE_DETAILS = 4;
+    public static final int TAB_ANNOUNCEMENTS = 5;
+    public static final int TAB_RECAP = 6;
 
     @PrimaryKey
     public String id;

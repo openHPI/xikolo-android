@@ -39,8 +39,9 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course.CoursePresenter;
 import de.xikolo.presenters.course.CoursePresenterFactory;
 import de.xikolo.presenters.course.CourseView;
-import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.ToastUtil;
+
+import static de.xikolo.config.Config.ANNOUNCEMENTS;
 
 public class CourseActivity extends BasePresenterActivity<CoursePresenter, CourseView> implements CourseView, UnenrollDialog.UnenrollDialogListener {
 
@@ -87,7 +88,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     }
 
     @Override
-    public void setupView(Course course, Course.Tab courseTab) {
+    public void setupView(Course course, int courseTab) {
         setTitle(course.title);
         courseId = course.id;
         adapter = new CoursePagerAdapter(getSupportFragmentManager());
@@ -98,29 +99,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(adapter);
 
-        int firstItem = 0;
-
-        if (courseTab != null) {
-            switch (courseTab) {
-                case PINBOARD:
-                    firstItem = 1;
-                    break;
-                case PROGRESS:
-                    firstItem = 2;
-                    break;
-                case LEARNING_ROOMS:
-                    firstItem = 3;
-                    break;
-                case ANNOUNCEMENTS:
-                    firstItem = 4;
-                    break;
-                case DETAILS:
-                    firstItem = 5;
-                    break;
-            }
-        }
-
-        viewPager.setCurrentItem(firstItem);
+        viewPager.setCurrentItem(courseTab);
     }
 
     @Override
@@ -246,12 +225,12 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
             TITLES.add(getString(R.string.tab_learnings));
             TITLES.add(getString(R.string.tab_discussions));
             TITLES.add(getString(R.string.tab_progress));
-            TITLES.add(getString(R.string.tab_rooms));
-            TITLES.add(getString(R.string.tab_details));
+            TITLES.add(getString(R.string.tab_collab_space));
+            TITLES.add(getString(R.string.tab_course_details));
             TITLES.add(getString(R.string.tab_announcements));
 
             if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI) {
-                TITLES.add(getString(R.string.tab_quiz_recap));
+                TITLES.add(getString(R.string.tab_recap));
             }
         }
 
@@ -280,38 +259,38 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
             Fragment fragment = fragmentManager.findFragmentByTag(name);
             if (fragment == null) {
                 switch (position) {
-                    case 0:
+                    case Course.TAB_LEARNINGS:
                         fragment = LearningsFragmentAutoBundle.builder(courseId).build();
                         break;
-                    case 1:
+                    case Course.TAB_DISCUSSIONS:
                         fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();
                         break;
-                    case 2:
+                    case Course.TAB_PROGRESS:
                         fragment = ProgressFragmentAutoBundle.builder(courseId).build();
                         break;
-                    case 3:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ROOMS)
+                    case Course.TAB_COLLAB_SPACE:
+                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.COLLAB_SPACE)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();
                         break;
-                    case 4:
+                    case Course.TAB_COURSE_DETAILS:
                         fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId)
                                 .inAppLinksEnabled(false)
                                 .externalLinksEnabled(false)
                                 .build();
                         break;
-                    case 5:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ANNOUNCEMENTS)
+                    case Course.TAB_ANNOUNCEMENTS:
+                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + ANNOUNCEMENTS)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();
                         break;
-                    case 6:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.QUIZ_RECAP)
+                    case Course.TAB_RECAP:
+                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();
@@ -327,24 +306,9 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
 
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-            viewPager.setCurrentItem(tabLayout.getSelectedTabPosition(), true);
-            switch (tabLayout.getSelectedTabPosition()) {
-                case 1:
-                    LanalyticsUtil.trackVisitedPinboard(courseId);
-                    break;
-                case 2:
-                    LanalyticsUtil.trackVisitedProgress(courseId);
-                    break;
-                case 3:
-                    LanalyticsUtil.trackVisitedLearningRooms(courseId);
-                    break;
-                case 5:
-                    LanalyticsUtil.trackVisitedAnnouncements(courseId);
-                    break;
-                case 6:
-                    LanalyticsUtil.trackVisitedRecap(courseId);
-                    break;
-            }
+            int tabPosition = tabLayout.getSelectedTabPosition();
+            viewPager.setCurrentItem(tabPosition, true);
+            presenter.setCourseTab(tabPosition);
         }
 
         @Override

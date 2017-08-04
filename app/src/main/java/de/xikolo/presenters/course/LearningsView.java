@@ -10,7 +10,7 @@ public interface LearningsView extends LoadingStateView {
 
     void setupSections(List<Section> sectionList);
 
-    void startCourseItemsActivity(String courseId, String sectionId, String itemId);
+    void startCourseItemsActivity(String courseId, String sectionId, int position);
 
     void startSectionDownload(Course course, Section section);
 

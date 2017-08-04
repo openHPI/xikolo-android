@@ -21,23 +21,19 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
     private String courseId;
     private String sectionId;
 
-    // optional
-    private String itemId;
-
-    private int index = 0;
+    private int index;
 
     private Course course;
     private Section section;
-    private Item firstItem;
 
     private List<Item> itemList;
 
-    CourseItemsPresenter(String courseId, String sectionId, String itemId) {
+    CourseItemsPresenter(String courseId, String sectionId, int index) {
         this.itemManager = new ItemManager();
         this.realm = Realm.getDefaultInstance();
         this.courseId = courseId;
         this.sectionId = sectionId;
-        this.itemId = itemId;
+        this.index = index;
 
         loadModels();
     }
@@ -47,22 +43,18 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         super.onViewAttached(view);
         view.setTitle(section.title);
 
-        if (firstItem != null) {
-            index = section.getAccessibleItems().indexOf(firstItem);
-        } else {
-            index = 0;
-            firstItem = section.getAccessibleItems().get(index);
+        if (itemList == null) {
+            itemList = section.getAccessibleItems();
         }
 
         if (index == 0) {
-            realm.beginTransaction();
-            section.getAccessibleItems().get(index).visited = true;
-            realm.commitTransaction();
-            onItemSelected(firstItem.id);
-        }
+            Item item = itemList.get(index);
 
-        if (itemList == null) {
-            itemList = section.getAccessibleItems();
+            realm.beginTransaction();
+            item.visited = true;
+            realm.commitTransaction();
+
+            onItemSelected(index);
         }
 
         getViewOrThrow().setupView(itemList);
@@ -74,9 +66,11 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         this.realm.close();
     }
 
-    public void onItemSelected(String itemId) {
-        itemManager.updateItemVisited(itemId);
-        LanalyticsUtil.trackVisitedItem(itemId, courseId, sectionId);
+    public void onItemSelected(int position) {
+        index = position;
+        Item item = itemList.get(position);
+        itemManager.updateItemVisited(item.id);
+        LanalyticsUtil.trackVisitedItem(item.id, courseId, sectionId);
     }
 
     public void onSectionDownloadClicked() {
@@ -93,9 +87,6 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         }
         if (section == null) {
             section = Section.get(sectionId);
-        }
-        if (firstItem == null && itemId != null) {
-            firstItem = Item.get(itemId);
         }
     }
 

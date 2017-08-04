@@ -104,9 +104,9 @@ public class Config {
     public static final String COURSES = "courses/";
     public static final String DISCUSSIONS = "pinboard/";
     public static final String ANNOUNCEMENTS = "announcements/";
-    public static final String ROOMS = "learning_rooms/";
+    public static final String COLLAB_SPACE = "learning_rooms/";
     public static final String ITEMS = "items/";
-    public static final String QUIZ_RECAP = "learn?course_id=";
+    public static final String RECAP = "learn?course_id=";
 
     public static final String WEBSOCKET_URL = "wss://" + HOST + "/ws";
 

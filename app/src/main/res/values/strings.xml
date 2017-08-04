@@ -37,10 +37,10 @@
     <string name="tab_learnings">Learnings</string>
     <string name="tab_discussions">Discussions</string>
     <string name="tab_progress">Progress</string>
-    <string name="tab_details">Course details</string>
+    <string name="tab_course_details">Course details</string>
     <string name="tab_announcements">Announcements</string>
-    <string name="tab_rooms">Collab Space</string>
-    <string name="tab_quiz_recap">Recap</string>
+    <string name="tab_collab_space">Collab Space</string>
+    <string name="tab_recap">Recap</string>
 
     <!-- -->
     <string name="btn_enroll_me">Enroll me for this course</string>
@@ -126,6 +126,7 @@
 
     <string name="self_test_points">%1$.1f of %2$.1f self-test points</string>
     <string name="assignments_points">%1$.1f of %2$.1f assignment points</string>
+    <string name="bonus_points">%1$.1f of %2$.1f bonus points</string>
     <string name="items_visited">%1$.0f of %2$.0f visited</string>
 
     <string name="course_date_coming_soon">Coming soon</string>

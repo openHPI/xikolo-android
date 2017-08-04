@@ -91,13 +91,13 @@ public class LearningsFragment extends LoadingStatePresenterFragment<LearningsPr
     }
 
     @Override
-    public void onItemClicked(String sectionId, String itemId) {
-        presenter.onItemClicked(sectionId, itemId);
+    public void onItemClicked(String sectionId, int position) {
+        presenter.onItemClicked(sectionId, position);
     }
 
     @Override
-    public void startCourseItemsActivity(String courseId, String sectionId, String itemId) {
-        Intent intent = CourseItemsActivityAutoBundle.builder(courseId, sectionId).itemId(itemId).build(getActivity());
+    public void startCourseItemsActivity(String courseId, String sectionId, int position) {
+        Intent intent = CourseItemsActivityAutoBundle.builder(courseId, sectionId, position).build(getActivity());
         getActivity().startActivity(intent);
     }
 
