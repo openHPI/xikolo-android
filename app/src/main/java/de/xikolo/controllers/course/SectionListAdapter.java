@@ -62,7 +62,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
     @Override
     public SectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_module, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_section, parent, false);
         return new SectionViewHolder(view);
     }
 

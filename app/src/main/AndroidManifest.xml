@@ -139,6 +139,11 @@
                 android:value=".controllers.main.MainActivity" />
         </activity>
         <activity
+            android:name=".controllers.announcement.AnnouncementActivity"
+            android:theme="@style/AppThemeTranslucentStatus"
+            android:launchMode="singleTop">
+        </activity>
+        <activity
             android:name=".controllers.second_screen.SecondScreenActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controllers.main.MainActivity">

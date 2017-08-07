@@ -80,6 +80,7 @@ public class LoadingStateHelper {
     }
 
     public void showMessage() {
+        hideProgress();
         messageContainer.setVisibility(View.VISIBLE);
     }
 

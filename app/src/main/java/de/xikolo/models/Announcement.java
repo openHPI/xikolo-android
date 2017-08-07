@@ -2,7 +2,11 @@ package de.xikolo.models;
 
 import com.squareup.moshi.Json;
 
+import java.util.Date;
+
 import de.xikolo.models.base.RealmAdapter;
+import de.xikolo.utils.DateUtil;
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -20,11 +24,18 @@ public class Announcement extends RealmObject {
 
     public String imageUrl;
 
-    public String publishedAt;
+    public Date publishedAt;
 
     public boolean visited;
 
     public String courseId;
+
+    public static Announcement get(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        Announcement model = realm.where(Announcement.class).equalTo("id", id).findFirst();
+        realm.close();
+        return model;
+    }
 
     @JsonApi(type = "announcements")
     public static class JsonModel extends Resource implements RealmAdapter<Announcement> {
@@ -50,7 +61,7 @@ public class Announcement extends RealmObject {
             model.title = title;
             model.text = text;
             model.imageUrl = imageUrl;
-            model.publishedAt = publishedAt;
+            model.publishedAt = DateUtil.parse(publishedAt);
             model.visited = visited;
 
             if (course != null) {

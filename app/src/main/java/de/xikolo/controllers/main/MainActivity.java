@@ -135,10 +135,7 @@ public class MainActivity extends BaseActivity
             tag = "my_courses";
         }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {
-//            newFragment = MainWebViewFragmentAutoBundle.builder(NavigationAdapter.NAV_NEWS.getPosition(), Config.HOST_URL + Config.NEWS, getString(R.string.title_section_news))
-//                    .externalLinksEnabled(false)
-//                    .inAppLinksEnabled(false)
-//                    .build();
+            newFragment = new NewsListFragment();
             tag = "news";
         }
         if (position == NavigationAdapter.NAV_SECOND_SCREEN.getPosition()) {
