@@ -13,7 +13,7 @@ import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
-import io.realm.RealmObject;
+import io.realm.RealmResults;
 
 public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewView> {
 
@@ -31,7 +31,7 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
     private Section section;
     private Item item;
 
-    private RealmObject videoPromise;
+    private RealmResults videoPromise;
     private Video video;
 
     VideoPreviewPresenter(String courseId, String sectionId, String itemId) {
@@ -52,11 +52,11 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
             requestVideo();
         }
 
-        videoPromise = itemManager.getVideoForItem(itemId, realm, new RealmChangeListener<Video>() {
+        videoPromise = itemManager.getVideoForItem(itemId, realm, new RealmChangeListener<RealmResults<Video>>() {
             @Override
-            public void onChange(Video v) {
-                if (v.isValid()) {
-                    video = realm.copyFromRealm(v);
+            public void onChange(RealmResults<Video> result) {
+                if (result.size() > 0) {
+                    video = realm.copyFromRealm(result.first());
                     getViewOrThrow().showContent();
                     getViewOrThrow().setupView(course, section, item, video);
                 }

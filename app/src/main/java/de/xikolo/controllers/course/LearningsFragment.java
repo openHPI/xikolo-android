@@ -15,6 +15,7 @@ import com.yatatsu.autobundle.AutoBundleField;
 
 import java.util.List;
 
+import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.course_items.CourseItemsActivityAutoBundle;
@@ -33,6 +34,8 @@ public class LearningsFragment extends LoadingStatePresenterFragment<LearningsPr
 
     @AutoBundleField String courseId;
 
+    @BindView(R.id.content_view) RecyclerView recyclerView;
+
     private SectionListAdapter adapter;
 
     @Override
@@ -50,13 +53,12 @@ public class LearningsFragment extends LoadingStatePresenterFragment<LearningsPr
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.content_view);
         adapter = new SectionListAdapter(getActivity(), this, this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
+        recyclerView.setHasFixedSize(false);
         recyclerView.addItemDecoration(new SpaceItemDecoration(
                 0,
                 getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),

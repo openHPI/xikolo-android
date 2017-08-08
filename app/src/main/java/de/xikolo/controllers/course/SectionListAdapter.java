@@ -50,11 +50,6 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         this.notifyDataSetChanged();
     }
 
-    public void clear() {
-        this.sections.clear();
-        this.notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
         return sections.size();
@@ -74,6 +69,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
         final ItemListAdapter itemAdapter = new ItemListAdapter(section, itemClickListener);
         holder.recyclerView.setAdapter(itemAdapter);
+        holder.recyclerView.setHasFixedSize(false);
         holder.recyclerView.clearItemDecorations();
         holder.recyclerView.addItemDecoration(new SpaceItemDecoration(
                 activity.getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin) / 2,

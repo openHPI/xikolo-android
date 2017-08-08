@@ -10,7 +10,6 @@ import de.xikolo.models.Item;
 import de.xikolo.models.Video;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
-import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 public class ItemManager extends BaseManager {
@@ -33,15 +32,16 @@ public class ItemManager extends BaseManager {
         return itemListPromise;
     }
 
-    public RealmObject getVideoForItem(String itemId, Realm realm, RealmChangeListener<Video> listener) {
+    public RealmResults getVideoForItem(String itemId, Realm realm, RealmChangeListener<RealmResults<Video>> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
 
-        RealmObject videoPromise = realm
+        // RealmChangeListener for RealmObject doesn't notify for initial copyToRealm
+        RealmResults<Video> videoPromise = realm
                 .where(Video.class)
                 .equalTo("itemId", itemId)
-                .findFirstAsync();
+                .findAllAsync();
 
         videoPromise.addChangeListener(listener);
 
