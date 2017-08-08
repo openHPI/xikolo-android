@@ -1,11 +1,11 @@
 package de.xikolo.managers;
 
+import de.xikolo.jobs.ListCourseAnnouncementsJob;
 import de.xikolo.jobs.ListGlobalAnnouncementsJob;
 import de.xikolo.jobs.UpdateAnnouncementVisitedJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Announcement;
-import de.xikolo.models.Course;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -29,23 +29,27 @@ public class AnnouncementManager extends BaseManager {
         return announcementListPromise;
     }
 
-    public Announcement getAnnouncement(String id, Realm realm, RealmChangeListener<Course> listener) {
+    public RealmResults listCourseAnnouncements(String courseId, Realm realm, RealmChangeListener<RealmResults<Announcement>> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
 
-        Announcement announcementPromise = realm
+        RealmResults<Announcement> announcementListPromise = realm
                 .where(Announcement.class)
-                .equalTo("id", id)
-                .findFirstAsync();
+                .equalTo("courseId", courseId)
+                .findAllSortedAsync("publishedAt", Sort.DESCENDING);
 
-        announcementPromise.addChangeListener(listener);
+        announcementListPromise.addChangeListener(listener);
 
-        return announcementPromise;
+        return announcementListPromise;
     }
 
     public void requestGlobalAnnouncementList(JobCallback callback) {
         jobManager.addJobInBackground(new ListGlobalAnnouncementsJob(callback));
+    }
+
+    public void requestCourseAnnouncementList(String courseId, JobCallback callback) {
+        jobManager.addJobInBackground(new ListCourseAnnouncementsJob(courseId, callback));
     }
 
     public void updateAnnouncementVisited(String announcementId) {

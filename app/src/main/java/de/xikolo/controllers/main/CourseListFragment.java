@@ -151,6 +151,11 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void goToProfile() {
+        activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
+    }
+
     @NonNull
     @Override
     protected PresenterFactory<CourseListPresenter> getPresenterFactory() {

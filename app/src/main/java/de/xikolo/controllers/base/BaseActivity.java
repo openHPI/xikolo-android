@@ -32,17 +32,17 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
-import de.xikolo.BuildConfig;
 import de.xikolo.App;
+import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.config.BuildFlavor;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
 import de.xikolo.managers.UserManager;
 import de.xikolo.receivers.NotificationDeletedReceiver;
 import de.xikolo.storages.NotificationStorage;
-import de.xikolo.config.BuildFlavor;
-import de.xikolo.config.FeatureToggle;
 import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.TintUtil;
 
@@ -67,6 +67,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     private boolean offlineModeToolbar;
 
     private IntroductoryOverlay overlay;
+
+    private boolean translucentActionbar = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,6 +216,11 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     }
 
     protected void setupActionBar() {
+        setupActionBar(false);
+    }
+
+    protected void setupActionBar(boolean translucentActionbar) {
+        this.translucentActionbar = translucentActionbar;
         Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
         if (tb != null) {
             setSupportActionBar(tb);
@@ -268,7 +275,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     }
 
     protected void setColorScheme(int toolbarColor, int statusbarColor) {
-        if (toolbar != null) {
+        if (toolbar != null && !translucentActionbar) {
             toolbar.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
             if (Build.VERSION.SDK_INT >= 21) {
                 if (drawerLayout != null) {

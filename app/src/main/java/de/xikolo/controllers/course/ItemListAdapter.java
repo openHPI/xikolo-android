@@ -3,7 +3,6 @@ package de.xikolo.controllers.course;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,8 +61,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
         holder.textTitle.setText(ItemTitleUtil.format(section.title, item.title));
 
         holder.textIcon.setText(item.getIconRes());
-
-        Log.e(TAG, item.title + " visited: " + item.visited);
 
         if (!item.visited) {
             holder.viewUnseenIndicator.setVisibility(View.VISIBLE);

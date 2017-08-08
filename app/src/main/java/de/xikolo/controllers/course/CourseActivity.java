@@ -41,8 +41,6 @@ import de.xikolo.presenters.course.CoursePresenterFactory;
 import de.xikolo.presenters.course.CourseView;
 import de.xikolo.utils.ToastUtil;
 
-import static de.xikolo.config.Config.ANNOUNCEMENTS;
-
 public class CourseActivity extends BasePresenterActivity<CoursePresenter, CourseView> implements CourseView, UnenrollDialog.UnenrollDialogListener {
 
     public static final String TAG = CourseActivity.class.getSimpleName();
@@ -284,10 +282,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                                 .build();
                         break;
                     case Course.TAB_ANNOUNCEMENTS:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + ANNOUNCEMENTS)
-                                .inAppLinksEnabled(true)
-                                .externalLinksEnabled(false)
-                                .build();
+                        fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build();
                         break;
                     case Course.TAB_RECAP:
                         fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)

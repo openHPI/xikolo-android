@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,8 +22,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.xikolo.R;
-import de.xikolo.controllers.base.BaseFragment;
+import de.xikolo.controllers.base.BasePresenterFragment;
 import de.xikolo.managers.UserManager;
+import de.xikolo.presenters.base.PresenterFactory;
+import de.xikolo.presenters.main.NavigationPresenter;
+import de.xikolo.presenters.main.NavigationPresenterFactory;
+import de.xikolo.presenters.main.NavigationView;
 import de.xikolo.views.DividerItemDecoration;
 
 /**
@@ -30,7 +35,7 @@ import de.xikolo.views.DividerItemDecoration;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationFragment extends BaseFragment {
+public class NavigationFragment extends BasePresenterFragment<NavigationPresenter, NavigationView> implements NavigationView {
 
     /**
      * Remember the position of the selected item.
@@ -131,6 +136,7 @@ public class NavigationFragment extends BaseFragment {
         return drawerLayout != null && drawerLayout.isDrawerOpen(fragmentContainerView);
     }
 
+    @Override
     public void updateDrawer() {
         adapter.notifyDataSetChanged();
     }
@@ -316,4 +322,11 @@ public class NavigationFragment extends BaseFragment {
          */
         void onNavigationDrawerItemSelected(int position);
     }
+
+    @NonNull
+    @Override
+    protected PresenterFactory<NavigationPresenter> getPresenterFactory() {
+        return new NavigationPresenterFactory();
+    }
+
 }

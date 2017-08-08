@@ -37,6 +37,13 @@ public class Announcement extends RealmObject {
         return model;
     }
 
+    public static long countNotVisited() {
+        Realm realm = Realm.getDefaultInstance();
+        long count = realm.where(Announcement.class).equalTo("visited", false).count();
+        realm.close();
+        return count;
+    }
+
     @JsonApi(type = "announcements")
     public static class JsonModel extends Resource implements RealmAdapter<Announcement> {
 

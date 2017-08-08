@@ -14,6 +14,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;
+import de.xikolo.managers.UserManager;
 import de.xikolo.models.Announcement;
 import de.xikolo.models.Course;
 
@@ -25,9 +26,16 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.Announ
 
     private OnAnnouncementClickListener callback;
 
-    public NewsListAdapter(OnAnnouncementClickListener callback) {
+    private boolean global;
+
+    public NewsListAdapter(OnAnnouncementClickListener callback, boolean global) {
+        this.global = global;
         this.callback = callback;
         this.announcementList = new ArrayList<>();
+    }
+
+    public NewsListAdapter(OnAnnouncementClickListener callback) {
+        this(callback, true);
     }
 
     public void update(List<Announcement> announcementList) {
@@ -62,7 +70,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.Announ
         holder.date.setText(dateFormat.format(announcement.publishedAt));
 
         Course course = Course.get(announcement.courseId);
-        if (course != null) {
+        if (course != null && global) {
             holder.course.setText(course.title);
             holder.course.setVisibility(View.VISIBLE);
             holder.bullet.setVisibility(View.VISIBLE);
@@ -71,7 +79,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.Announ
             holder.bullet.setVisibility(View.GONE);
         }
 
-        if (announcement.visited) {
+        if (announcement.visited || !UserManager.isAuthorized()) {
             holder.unseenIndicator.setVisibility(View.INVISIBLE);
         } else {
             holder.unseenIndicator.setVisibility(View.VISIBLE);

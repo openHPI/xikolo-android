@@ -7,4 +7,8 @@ public interface AnnouncementView extends LoadingStateView {
 
     void showAnnouncement(Announcement announcement);
 
+    void enterCourse(String courseId);
+
+    void enableCourseButton();
+
 }

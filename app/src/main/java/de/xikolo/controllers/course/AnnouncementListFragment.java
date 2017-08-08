@@ -1,4 +1,4 @@
-package de.xikolo.controllers.main;
+package de.xikolo.controllers.course;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,20 +12,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.yatatsu.autobundle.AutoBundleField;
+
 import java.util.List;
 
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle;
+import de.xikolo.controllers.base.LoadingStatePresenterFragment;
+import de.xikolo.controllers.main.NewsListAdapter;
 import de.xikolo.models.Announcement;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.main.NewsListPresenter;
 import de.xikolo.presenters.main.NewsListPresenterFactory;
 import de.xikolo.presenters.main.NewsListView;
 
-public class NewsListFragment extends MainFragment<NewsListPresenter, NewsListView> implements NewsListView {
+public class AnnouncementListFragment extends LoadingStatePresenterFragment<NewsListPresenter, NewsListView> implements NewsListView {
 
-    public static final String TAG = NewsListFragment.class.getSimpleName();
+    public static final String TAG = AnnouncementListFragment.class.getSimpleName();
+
+    @AutoBundleField String courseId;
 
     @BindView(R.id.content_view) RecyclerView recyclerView;
 
@@ -51,7 +57,7 @@ public class NewsListFragment extends MainFragment<NewsListPresenter, NewsListVi
             public void onAnnouncementClicked(String announcementId) {
                 presenter.onAnnouncementClicked(announcementId);
             }
-        });
+        }, false);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -63,14 +69,8 @@ public class NewsListFragment extends MainFragment<NewsListPresenter, NewsListVi
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        activityCallback.onFragmentAttached(NavigationAdapter.NAV_NEWS.getPosition(), getString(R.string.title_section_news));
-    }
-
-    @Override
     public void openAnnouncement(String announcementId) {
-        Intent intent = AnnouncementActivityAutoBundle.builder(announcementId, true).build(getActivity());
+        Intent intent = AnnouncementActivityAutoBundle.builder(announcementId, false).build(getActivity());
         startActivity(intent);
     }
 
@@ -83,9 +83,7 @@ public class NewsListFragment extends MainFragment<NewsListPresenter, NewsListVi
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (activityCallback != null && !activityCallback.isDrawerOpen()) {
-            inflater.inflate(R.menu.refresh, menu);
-        }
+        inflater.inflate(R.menu.refresh, menu);
     }
 
     @Override
@@ -102,7 +100,7 @@ public class NewsListFragment extends MainFragment<NewsListPresenter, NewsListVi
     @NonNull
     @Override
     protected PresenterFactory<NewsListPresenter> getPresenterFactory() {
-        return new NewsListPresenterFactory();
+        return new NewsListPresenterFactory(courseId);
     }
 
 }

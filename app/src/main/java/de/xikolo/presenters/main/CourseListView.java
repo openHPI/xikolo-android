@@ -4,8 +4,9 @@ import java.util.List;
 
 import de.xikolo.models.Course;
 import de.xikolo.models.base.SectionList;
+import de.xikolo.presenters.base.LoadingStateView;
 
-public interface CourseListView extends MainView {
+public interface CourseListView extends LoadingStateView {
 
     void showNoEnrollmentsMessage();
 
@@ -14,5 +15,7 @@ public interface CourseListView extends MainView {
     void enterCourseDetails(String courseId);
 
     void showCourseList(SectionList<String, List<Course>> courseList);
+
+    void goToProfile();
 
 }

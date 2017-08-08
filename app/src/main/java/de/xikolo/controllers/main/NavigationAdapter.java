@@ -20,6 +20,7 @@ import de.xikolo.config.FeatureToggle;
 import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
+import de.xikolo.models.Announcement;
 import de.xikolo.models.Profile;
 import de.xikolo.models.User;
 import de.xikolo.utils.AndroidDimenUtil;
@@ -166,13 +167,18 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 profileViewHolder.viewProfile.setVisibility(View.GONE);
                 profileViewHolder.textTitle.setText(navigationItem.getTitle(context));
             }
-        } else if (position == NAV_MY_COURSES.getPosition()) {
+        } else if (position == NAV_NEWS.getPosition() && UserManager.isAuthorized()) {
             CounterNavigationViewHolder counterViewHolder = (CounterNavigationViewHolder) viewHolder;
 
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
 
-            counterViewHolder.textCounter.setText(String.valueOf(0));
-            counterViewHolder.textCounter.setVisibility(View.GONE);
+            long count = Announcement.countNotVisited();
+            if (count > 0) {
+                counterViewHolder.textCounter.setText(String.valueOf(count));
+                counterViewHolder.textCounter.setVisibility(View.VISIBLE);
+            } else {
+                counterViewHolder.textCounter.setVisibility(View.GONE);
+            }
         } else {
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
         }

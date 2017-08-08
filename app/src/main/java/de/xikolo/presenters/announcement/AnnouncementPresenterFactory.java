@@ -6,13 +6,16 @@ public class AnnouncementPresenterFactory implements PresenterFactory<Announceme
 
     private final String announcementId;
 
-    public AnnouncementPresenterFactory(String announcementId) {
+    private boolean global;
+
+    public AnnouncementPresenterFactory(String announcementId, boolean global) {
         this.announcementId = announcementId;
+        this.global = global;
     }
 
     @Override
     public AnnouncementPresenter create() {
-        return new AnnouncementPresenter(announcementId);
+        return new AnnouncementPresenter(announcementId, global);
     }
 
 }

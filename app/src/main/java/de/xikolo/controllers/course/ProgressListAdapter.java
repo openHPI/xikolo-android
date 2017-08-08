@@ -76,8 +76,6 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
             selftestExercises = cp.selftestExercises;
             bonusExercises = cp.bonusExercises;
             visits = cp.visits;
-
-            holder.viewSeparator.setVisibility(View.VISIBLE);
         } else {
             SectionProgress sp = spList.get(position);
             title = sp.title;
@@ -85,9 +83,6 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
             selftestExercises = sp.selftestExercises;
             bonusExercises = sp.bonusExercises;
             visits = sp.visits;
-
-            holder.viewSeparator.setVisibility(View.GONE);
-
         }
 
         holder.textTitle.setText(title);
@@ -181,7 +176,6 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
         @BindView(R.id.progress_main) View progressMain;
         @BindView(R.id.progress_bonus) View progressBonus;
         @BindView(R.id.progress_visits) View progressVisits;
-        @BindView(R.id.view_separator) View viewSeparator;
 
         public ProgressViewHolder(View view) {
             super(view);

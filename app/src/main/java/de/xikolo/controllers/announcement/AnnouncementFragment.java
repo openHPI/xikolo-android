@@ -1,18 +1,25 @@
 package de.xikolo.controllers.announcement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
+import java.text.DateFormat;
+import java.util.Locale;
+
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
+import de.xikolo.controllers.course.CourseActivityAutoBundle;
 import de.xikolo.models.Announcement;
 import de.xikolo.presenters.announcement.AnnouncementPresenter;
 import de.xikolo.presenters.announcement.AnnouncementPresenterFactory;
@@ -25,8 +32,11 @@ public class AnnouncementFragment extends LoadingStatePresenterFragment<Announce
     public static final String TAG = AnnouncementFragment.class.getSimpleName();
 
     @AutoBundleField String announcementId;
+    @AutoBundleField boolean global;
 
     @BindView(R.id.text) TextView text;
+    @BindView(R.id.date) TextView date;
+    @BindView(R.id.course_button) Button courseButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,16 +51,36 @@ public class AnnouncementFragment extends LoadingStatePresenterFragment<Announce
 
     @Override
     public void showAnnouncement(Announcement announcement) {
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
+        date.setText(dateFormat.format(announcement.publishedAt));
+
         Bypass bypass = new Bypass(getActivity());
         CharSequence spannable = bypass.markdownToSpannable(announcement.text);
         text.setText(spannable);
         text.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
+    @Override
+    public void enableCourseButton() {
+        courseButton.setVisibility(View.VISIBLE);
+        courseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onCourseButtonClicked();
+            }
+        });
+    }
+
     @NonNull
     @Override
     protected PresenterFactory<AnnouncementPresenter> getPresenterFactory() {
-        return new AnnouncementPresenterFactory(announcementId);
+        return new AnnouncementPresenterFactory(announcementId, global);
+    }
+
+    @Override
+    public void enterCourse(String courseId) {
+        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(getActivity());
+        startActivity(intent);
     }
 
     @Override

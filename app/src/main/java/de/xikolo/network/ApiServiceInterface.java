@@ -92,6 +92,9 @@ public interface ApiServiceInterface {
     @GET("announcements?filter[global]=true")
     Call<Announcement.JsonModel[]> listGlobalAnnouncementsWithCourses(@Header(HEADER_AUTH) String token);
 
+    @GET("announcements")
+    Call<Announcement.JsonModel[]> listCourseAnnouncements(@Header(HEADER_AUTH) String token, @Query("filter[course]") String courseId);
+
     @PATCH("course-items/{id}")
     Call<Announcement.JsonModel> updateAnnouncement(@Header(HEADER_AUTH) String token, @Path("id") String id, @Body Announcement.JsonModel item);
 

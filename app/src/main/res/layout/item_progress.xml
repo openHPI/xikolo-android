@@ -1,80 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="2dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
 
-    <View
-        android:id="@+id/view_separator"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/card_vertical_margin"
-        android:background="@color/list_divider"
-        android:visibility="gone" />
-
-    <android.support.v7.widget.CardView
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/view_separator"
-        app:cardCornerRadius="2dp"
-        app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true">
+        android:paddingBottom="6dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="6dp">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:maxLines="1"
+            android:paddingBottom="2dp"
+            android:textSize="18sp" />
+
+        <include
+            android:id="@+id/progress_selftest"
+            layout="@layout/container_progress"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="6dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="6dp">
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/text_title" />
 
-            <TextView
-                android:id="@+id/text_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:maxLines="1"
-                android:paddingBottom="2dp"
-                android:textSize="18sp" />
+        <include
+            android:id="@+id/progress_main"
+            layout="@layout/container_progress"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/progress_selftest" />
 
-            <include
-                android:id="@+id/progress_selftest"
-                layout="@layout/container_progress"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/text_title" />
+        <include
+            android:id="@+id/progress_bonus"
+            layout="@layout/container_progress"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/progress_main" />
 
-            <include
-                android:id="@+id/progress_main"
-                layout="@layout/container_progress"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/progress_selftest" />
+        <include
+            android:id="@+id/progress_visits"
+            layout="@layout/container_progress"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/progress_bonus" />
 
-            <include
-                android:id="@+id/progress_bonus"
-                layout="@layout/container_progress"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/progress_main" />
+    </RelativeLayout>
 
-            <include
-                android:id="@+id/progress_visits"
-                layout="@layout/container_progress"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/progress_bonus" />
-
-        </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
-
-</RelativeLayout>
+</android.support.v7.widget.CardView>

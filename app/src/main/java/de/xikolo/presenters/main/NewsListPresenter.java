@@ -12,6 +12,8 @@ import io.realm.RealmResults;
 
 public class NewsListPresenter extends LoadingStatePresenter<NewsListView> {
 
+    private String courseId;
+
     private AnnouncementManager announcementManager;
 
     private Realm realm;
@@ -20,7 +22,8 @@ public class NewsListPresenter extends LoadingStatePresenter<NewsListView> {
 
     private RealmResults announcementListPromise;
 
-    NewsListPresenter() {
+    NewsListPresenter(String courseId) {
+        this.courseId = courseId;
         this.announcementManager = new AnnouncementManager();
         this.realm = Realm.getDefaultInstance();
         this.announcementList = new ArrayList<>();
@@ -34,14 +37,22 @@ public class NewsListPresenter extends LoadingStatePresenter<NewsListView> {
             requestAnnouncements();
         }
 
-        this.announcementListPromise = announcementManager.listGlobalAnnouncements(realm, new RealmChangeListener<RealmResults<Announcement>>() {
+        if (courseId == null) {
+            this.announcementListPromise = announcementManager.listGlobalAnnouncements(realm, getAnnouncementListRealmChangeLictener());
+        } else {
+            this.announcementListPromise = announcementManager.listCourseAnnouncements(courseId, realm, getAnnouncementListRealmChangeLictener());
+        }
+    }
+
+    private RealmChangeListener<RealmResults<Announcement>> getAnnouncementListRealmChangeLictener() {
+        return new RealmChangeListener<RealmResults<Announcement>>() {
             @Override
             public void onChange(RealmResults<Announcement> results) {
                 announcementList = results;
                 getViewOrThrow().showContent();
                 getViewOrThrow().showAnnouncementList(announcementList);
             }
-        });
+        };
     }
 
     @Override
@@ -71,7 +82,11 @@ public class NewsListPresenter extends LoadingStatePresenter<NewsListView> {
         if (getView() != null) {
             getView().showProgress();
         }
-        announcementManager.requestGlobalAnnouncementList(getDefaultJobCallback());
+        if (courseId == null) {
+            announcementManager.requestGlobalAnnouncementList(getDefaultJobCallback());
+        } else {
+            announcementManager.requestCourseAnnouncementList(courseId, getDefaultJobCallback());
+        }
     }
 
 }
