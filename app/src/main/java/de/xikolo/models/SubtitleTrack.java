@@ -20,12 +20,14 @@ public class SubtitleTrack extends RealmObject {
 
     public String language;
 
+    public boolean createdByMachine;
+
+    public String vttUrl;
+
     public String videoId;
 
     public int getTextPosition(long millis) {
-        Realm realm = Realm.getDefaultInstance();
-        List<SubtitleCue> cueList = realm.where(SubtitleCue.class).equalTo("subtitleId", id).findAllSorted("identifier");
-        realm.close();
+        List<SubtitleCue> cueList = listCues();
 
         for (int i = 0; i < cueList.size(); i++) {
             SubtitleCue cue = cueList.get(i);
@@ -36,11 +38,31 @@ public class SubtitleTrack extends RealmObject {
         return -1;
     }
 
+    public List<SubtitleCue> listCues() {
+        Realm realm = Realm.getDefaultInstance();
+        List<SubtitleCue> list = realm.where(SubtitleCue.class).equalTo("subtitleId", id).findAllSorted("identifier");
+        realm.close();
+        return list;
+    }
+
+    public static List<SubtitleTrack> listForVideoId(String videoId) {
+        Realm realm = Realm.getDefaultInstance();
+        List<SubtitleTrack> list = realm.where(SubtitleTrack.class).equalTo("videoId", videoId).findAll();
+        realm.close();
+        return list;
+    }
+
     @JsonApi(type = "subtitle-tracks")
     public static class JsonModel extends Resource implements RealmAdapter<SubtitleTrack> {
 
         @Json(name = "src_lang")
         public String language;
+
+        @Json(name = "created_by_machine")
+        public boolean createdByMachine;
+
+        @Json(name = "vtt_url")
+        public String vttUrl;
 
         public HasOne<Video.JsonModel> video;
 
@@ -50,6 +72,8 @@ public class SubtitleTrack extends RealmObject {
         public SubtitleTrack convertToRealmObject() {
             SubtitleTrack model = new SubtitleTrack();
             model.id = getId();
+            model.createdByMachine = createdByMachine;
+            model.vttUrl = vttUrl;
             model.language = language;
 
             if (video != null) {

@@ -15,13 +15,13 @@ import de.xikolo.utils.NetworkUtil;
 import io.realm.Realm;
 import retrofit2.Response;
 
-public class ListSubtitlesWithTextsJob extends BaseJob {
+public class ListSubtitlesWithCuesJob extends BaseJob {
 
-    public static final String TAG = ListSubtitlesWithTextsJob.class.getSimpleName();
+    public static final String TAG = ListSubtitlesWithCuesJob.class.getSimpleName();
 
     private String videoId;
 
-    public ListSubtitlesWithTextsJob(JobCallback callback, String videoId) {
+    public ListSubtitlesWithCuesJob(JobCallback callback, String videoId) {
         super(new Params(PRIORITY_HIGH), callback);
 
         this.videoId = videoId;
@@ -38,7 +38,7 @@ public class ListSubtitlesWithTextsJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<SubtitleTrack.JsonModel[]> response = ApiService.getInstance().listSubtitlesWithTextsForVideo(
+                final Response<SubtitleTrack.JsonModel[]> response = ApiService.getInstance().listSubtitlesWithCuesForVideo(
                         UserManager.getTokenAsHeader(),
                         videoId
                 ).execute();
@@ -57,7 +57,6 @@ public class ListSubtitlesWithTextsJob extends BaseJob {
                                 if (subtitleModel.cues != null && subtitleModel.cues.get(subtitleModel.getContext()) != null) {
                                     for (SubtitleCue.JsonModel cueModel : subtitleModel.cues.get(subtitleModel.getContext())) {
                                         SubtitleCue cue = cueModel.convertToRealmObject();
-                                        cue.subtitleId = subtitleModel.getId();
                                         realm.copyToRealmOrUpdate(cue);
                                     }
                                 }

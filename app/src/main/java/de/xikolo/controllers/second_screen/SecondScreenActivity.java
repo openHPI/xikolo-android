@@ -25,7 +25,7 @@ public class SecondScreenActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-//            transaction.replace(R.id.content, SecondScreenFragment.newInstance(), tag);
+            transaction.replace(R.id.content, new SecondScreenFragment(), tag);
             transaction.commit();
         }
     }

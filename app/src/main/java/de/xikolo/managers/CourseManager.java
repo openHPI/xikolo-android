@@ -7,6 +7,7 @@ import de.xikolo.jobs.CreateEnrollmentJob;
 import de.xikolo.jobs.DeleteEnrollmentJob;
 import de.xikolo.jobs.GetCourseJob;
 import de.xikolo.jobs.GetCourseProgressWithSectionsJob;
+import de.xikolo.jobs.GetCourseWithSectionsJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.jobs.ListCoursesJob;
 import de.xikolo.jobs.ListEnrollmentsJob;
@@ -154,6 +155,10 @@ public class CourseManager extends BaseManager {
 
     public void requestCourse(String courseId, JobCallback callback) {
         jobManager.addJobInBackground(new GetCourseJob(courseId, callback));
+    }
+
+    public void requestCourseWithSections(String courseId, JobCallback callback) {
+        jobManager.addJobInBackground(new GetCourseWithSectionsJob(courseId, callback));
     }
 
     public void requestCourseList(JobCallback callback) {

@@ -20,6 +20,7 @@ import de.xikolo.controllers.second_screen.SecondScreenActivity;
 import de.xikolo.events.base.Event;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Item;
+import de.xikolo.models.Video;
 import de.xikolo.models.WebSocketMessage;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -35,11 +36,14 @@ public class SecondScreenManager {
 
     private String itemId;
 
+    private CourseManager courseManager;
+
     private ItemManager itemManager;
 
     private boolean isRequesting;
 
     public SecondScreenManager() {
+        courseManager = new CourseManager();
         itemManager = new ItemManager();
 
         EventBus.getDefault().register(this);
@@ -69,7 +73,7 @@ public class SecondScreenManager {
                     sectionId = message.payload.get("section_id");
                     courseId = message.payload.get("course_id");
 
-                    itemManager.requestItemWithContent(newItemId, itemRequestCallback(message));
+                    courseManager.requestCourseWithSections(courseId, courseCallback(message));
                 } else {
                     // post video updated event
                     EventBus.getDefault().post(new SecondScreenUpdateVideoEvent(courseId, sectionId, itemId, message));
@@ -89,10 +93,39 @@ public class SecondScreenManager {
         }
     }
 
-    private JobCallback itemRequestCallback(final WebSocketMessage message) {
+    private JobCallback courseCallback(final WebSocketMessage message) {
+        return new JobCallback() {
+            @Override
+            protected void onSuccess() {
+                itemManager.requestItemsWithContentForSection(sectionId, itemCallback(message));
+            }
+
+            @Override
+            protected void onError(ErrorCode code) {
+                errorWhileRequesting();
+            }
+        };
+    }
+
+    private JobCallback itemCallback(final WebSocketMessage message) {
         return new JobCallback() {
             @Override
             public void onSuccess() {
+                Video video = Video.getForItemId(itemId);
+                itemManager.requestSubtitlesWithCuesForVideo(video.id, subtitleCallback(message));
+            }
+
+            @Override
+            public void onError(ErrorCode code) {
+                errorWhileRequesting();
+            }
+        };
+    }
+
+    private JobCallback subtitleCallback(final WebSocketMessage message) {
+        return new JobCallback() {
+            @Override
+            protected void onSuccess() {
                 Context context = App.getInstance();
 
                 Item item = Item.get(itemId);
@@ -123,13 +156,17 @@ public class SecondScreenManager {
             }
 
             @Override
-            public void onError(ErrorCode code) {
-                isRequesting = false;
-                courseId = null;
-                sectionId = null;
-                itemId = null;
+            protected void onError(ErrorCode code) {
+                errorWhileRequesting();
             }
         };
+    }
+
+    private void errorWhileRequesting() {
+        isRequesting = false;
+        courseId = null;
+        sectionId = null;
+        itemId = null;
     }
 
     public static class SecondScreenUpdateVideoEvent extends Event {

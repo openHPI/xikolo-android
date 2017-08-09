@@ -10,6 +10,7 @@ import de.xikolo.utils.DateUtil;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import moe.banana.jsonapi2.HasMany;
 import moe.banana.jsonapi2.HasOne;
 import moe.banana.jsonapi2.JsonApi;
 import moe.banana.jsonapi2.Resource;
@@ -161,6 +162,9 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
         @Json(name = "user_enrollment")
         public HasOne<Enrollment.JsonModel> enrollment;
+
+        @Json(name = "sections")
+        public HasMany<Section.JsonModel> sections;
 
         @Override
         public Course convertToRealmObject() {

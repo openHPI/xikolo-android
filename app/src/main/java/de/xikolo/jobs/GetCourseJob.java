@@ -4,12 +4,11 @@ import android.util.Log;
 
 import com.birbit.android.jobqueue.Params;
 
-import de.xikolo.managers.UserManager;
+import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Course;
 import de.xikolo.network.ApiService;
-import de.xikolo.config.Config;
 import de.xikolo.utils.NetworkUtil;
 import io.realm.Realm;
 import retrofit2.Response;
@@ -34,13 +33,7 @@ public class GetCourseJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
 
-            final Response<Course.JsonModel> response;
-
-            if (UserManager.isAuthorized()) {
-                response = ApiService.getInstance().getCourse(UserManager.getTokenAsHeader()).execute();
-            } else {
-                response = ApiService.getInstance().getCourse(courseId).execute();
-            }
+            final Response<Course.JsonModel> response = ApiService.getInstance().getCourse(courseId).execute();
 
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Course received");

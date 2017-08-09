@@ -48,6 +48,13 @@ public class Video extends RealmObject {
         return model;
     }
 
+    public static Video getForItemId(String itemId) {
+        Realm realm = Realm.getDefaultInstance();
+        Video model = realm.where(Video.class).equalTo("itemId", itemId).findFirst();
+        realm.close();
+        return model;
+    }
+
     @JsonApi(type = "videos")
     public static class JsonModel extends Resource implements RealmAdapter<Video> {
 

@@ -36,6 +36,9 @@ public interface ApiServiceInterface {
     @GET("courses/{id}")
     Call<Course.JsonModel> getCourse(@Path("id") String id);
 
+    @GET("courses/{id}?include=sections")
+    Call<Course.JsonModel> getCourseWithSections(@Header(HEADER_AUTH) String token, @Path("id") String id);
+
     @GET("courses/{id}?include=user_enrollment")
     Call<Course.JsonModel> getCourseWithEnrollment(@Header(HEADER_AUTH) String token, @Path("id") String id);
 
@@ -76,8 +79,8 @@ public interface ApiServiceInterface {
 
     // Subtitle
 
-    @GET("subtitles?include=texts")
-    Call<SubtitleTrack.JsonModel[]> listSubtitlesWithTextsForVideo(@Header(HEADER_AUTH) String token, @Query("filter[video]") String videoId);
+    @GET("subtitle-tracks?include=cues")
+    Call<SubtitleTrack.JsonModel[]> listSubtitlesWithCuesForVideo(@Header(HEADER_AUTH) String token, @Query("filter[video]") String videoId);
 
     // User and Profile
 

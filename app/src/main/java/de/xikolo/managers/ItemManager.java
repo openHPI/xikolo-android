@@ -2,7 +2,7 @@ package de.xikolo.managers;
 
 import de.xikolo.jobs.GetItemWithContentJob;
 import de.xikolo.jobs.ListItemsWithContentForSectionJob;
-import de.xikolo.jobs.ListSubtitlesWithTextsJob;
+import de.xikolo.jobs.ListSubtitlesWithCuesJob;
 import de.xikolo.jobs.UpdateItemVisitedJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.base.BaseManager;
@@ -56,8 +56,8 @@ public class ItemManager extends BaseManager {
         jobManager.addJobInBackground(new ListItemsWithContentForSectionJob(callback, sectionId));
     }
 
-    public void requestSubtitlesWithTextsForVideo(String videoId, JobCallback callback) {
-        jobManager.addJobInBackground(new ListSubtitlesWithTextsJob(callback, videoId));
+    public void requestSubtitlesWithCuesForVideo(String videoId, JobCallback callback) {
+        jobManager.addJobInBackground(new ListSubtitlesWithCuesJob(callback, videoId));
     }
 
     public void updateItemVisited(String itemId) {

@@ -1,52 +1,35 @@
 package de.xikolo.controllers.second_screen;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.yatatsu.autobundle.AutoBundleField;
+
 import de.xikolo.R;
 import de.xikolo.controllers.base.BaseActivity;
-import de.xikolo.models.Course;
-import de.xikolo.models.Item;
-import de.xikolo.models.Section;
+import de.xikolo.controllers.webview.WebViewFragmentAutoBundle;
 import de.xikolo.utils.LanalyticsUtil;
 
 public class QuizActivity extends BaseActivity {
 
     public static final String TAG = QuizActivity.class.getSimpleName();
 
-    public static final String ARG_TITLE = "arg_title";
-    public static final String ARG_URL = "arg_url";
-    public static final String ARG_IN_APP_LINKS = "arg_in_app_links";
-    public static final String ARG_EXTERNAL_LINKS = "arg_external_links";
+    @AutoBundleField String title;
+    @AutoBundleField String url;
+    @AutoBundleField boolean inAppLinksEnabled;
+    @AutoBundleField boolean externalLinksEnabled;
 
-    private String title;
-    private String url;
-    private boolean inAppLinksEnabled;
-    private boolean externalLinksEnabled;
-
-    public static final String ARG_COURSE = "arg_course";
-    public static final String ARG_MODULE = "arg_module";
-    public static final String ARG_ITEM = "arg_item";
-
-    private Course course;
-    private Section module;
-    private Item item;
+    @AutoBundleField String courseId;
+    @AutoBundleField String sectionId;
+    @AutoBundleField String itemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blank);
         setupActionBar();
-
-        Bundle b = getIntent().getExtras();
-        this.title = b.getString(ARG_TITLE);
-        this.url = b.getString(ARG_URL);
-        this.inAppLinksEnabled = b.getBoolean(ARG_IN_APP_LINKS);
-        this.externalLinksEnabled = b.getBoolean(ARG_EXTERNAL_LINKS);
-        this.course = b.getParcelable(ARG_COURSE);
-        this.module = b.getParcelable(ARG_MODULE);
-        this.item = b.getParcelable(ARG_ITEM);
 
         setTitle(title);
 
@@ -55,7 +38,11 @@ public class QuizActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-//            transaction.replace(R.id.content, WebViewInterfaceFragment.newInstance(url, inAppLinksEnabled, externalLinksEnabled), tag);
+            Fragment fragment = WebViewFragmentAutoBundle.builder(url)
+                    .inAppLinksEnabled(inAppLinksEnabled)
+                    .externalLinksEnabled(externalLinksEnabled)
+                    .build();
+            transaction.replace(R.id.content, fragment, tag);
             transaction.commit();
         }
     }
@@ -64,18 +51,14 @@ public class QuizActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        if (course != null && module != null && item != null) {
-            LanalyticsUtil.trackSecondScreenQuizStart(item.id, course.id, module.id);
-        }
+        LanalyticsUtil.trackSecondScreenQuizStart(itemId, courseId, sectionId);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        if (course != null && module != null && item != null) {
-            LanalyticsUtil.trackSecondScreenQuizStop(item.id, course.id, module.id);
-        }
+        LanalyticsUtil.trackSecondScreenQuizStop(itemId, courseId, sectionId);
     }
 
 }
