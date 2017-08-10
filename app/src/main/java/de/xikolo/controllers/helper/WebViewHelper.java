@@ -16,6 +16,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.controllers.webview.WebViewInterface;
+import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.managers.UserManager;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
@@ -86,7 +89,7 @@ public class WebViewHelper {
             @SuppressWarnings("deprecation")
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                webViewInterface.showErrorToast(description);
+                if (Config.DEBUG) Log.e(TAG, "An error occurred: " + description);
             }
 
             @TargetApi(M)
@@ -106,6 +109,7 @@ public class WebViewHelper {
                 webViewInterface.hideProgress();
                 webViewInterface.hideMessage();
                 showWebView();
+                EventBus.getDefault().postSticky(new NetworkStateEvent(true));
                 super.onPageFinished(view, url);
             }
 
@@ -174,11 +178,16 @@ public class WebViewHelper {
                         loadUrl(this.url, null);
                     }
                 } else {
+                    webViewInterface.hideProgress();
                     webViewInterface.showNetworkRequiredMessage();
+                    EventBus.getDefault().postSticky(new NetworkStateEvent(false));
                 }
             } else {
+                webViewInterface.hideProgress();
                 webViewInterface.showInvalidUrlToast();
             }
+        } else {
+            webViewInterface.hideProgress();
         }
     }
 

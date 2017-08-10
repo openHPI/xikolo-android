@@ -38,7 +38,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
         super.onViewAttached(v);
 
         if (user == null) {
-            requestUser();
+            requestUser(false);
         }
 
         userPromise = userManager.getUser(realm, new RealmChangeListener<User>() {
@@ -72,14 +72,14 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
         }
     }
 
-    private void requestUser() {
+    private void requestUser(final boolean userRequest) {
         if (getView() != null) {
             getView().showProgress();
         }
         userManager.requestUserWithProfile(new JobCallback() {
             @Override
             public void onSuccess() {
-                requestEnrollmentList();
+                requestEnrollmentList(userRequest);
             }
 
             @Override
@@ -88,9 +88,10 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
                     getView().hideProgress();
                     switch (code) {
                         case NO_NETWORK:
-                            getView().showNetworkRequiredMessage();
+                            if (userRequest) getView().showNetworkRequiredMessage();
                             break;
-                        default:
+                        case CANCEL:
+                        case ERROR:
                             getView().showErrorMessage();
                             break;
                     }
@@ -99,7 +100,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
         });
     }
 
-    private void requestEnrollmentList() {
+    private void requestEnrollmentList(final boolean userRequest) {
         courseManager.requestEnrollmentList(new JobCallback() {
             @Override
             public void onSuccess() {
@@ -112,6 +113,15 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
             public void onError(ErrorCode code) {
                 if (getView() != null) {
                     getView().hideProgress();
+                    switch (code) {
+                        case NO_NETWORK:
+                            if (userRequest) getView().showNetworkRequiredMessage();
+                            break;
+                        case CANCEL:
+                        case ERROR:
+                            getView().showErrorMessage();
+                            break;
+                    }
                 }
             }
         });
@@ -124,7 +134,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
 
     @Override
     public void onRefresh() {
-        requestUser();
+        requestUser(true);
     }
 
 }

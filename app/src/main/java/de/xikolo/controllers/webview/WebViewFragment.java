@@ -5,6 +5,7 @@ import android.content.MutableContextWrapper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Browser;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,12 +20,16 @@ import com.yatatsu.autobundle.AutoBundleField;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
-import de.xikolo.controllers.base.LoadingStateFragment;
+import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.helper.WebViewHelper;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
+import de.xikolo.presenters.base.LoadingStatePresenter;
+import de.xikolo.presenters.base.Presenter;
+import de.xikolo.presenters.base.PresenterFactory;
+import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
 
-public class WebViewFragment extends LoadingStateFragment implements WebViewInterface {
+public class WebViewFragment extends LoadingStatePresenterFragment implements WebViewInterface {
 
     public static final String TAG = WebViewFragment.class.getSimpleName();
 
@@ -73,7 +78,9 @@ public class WebViewFragment extends LoadingStateFragment implements WebViewInte
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (webViewHelper.requestedUrl() == null) {
+        if (!NetworkUtil.isOnline()) {
+            showNetworkRequiredMessage();
+        } else if (webViewHelper.requestedUrl() == null) {
             webViewHelper.request(url);
         } else {
             webViewHelper.showWebView();
@@ -143,7 +150,26 @@ public class WebViewFragment extends LoadingStateFragment implements WebViewInte
 
     @Override
     public void onRefresh() {
-        webViewHelper.refresh();
+        if (webViewHelper.requestedUrl() != null) {
+            webViewHelper.refresh();
+        } else {
+            webViewHelper.request(url);
+        }
+    }
+
+    // quite hacky, we want the loading state capabilities but don't need a presenter
+    @NonNull
+    @Override
+    protected PresenterFactory getPresenterFactory() {
+        return new PresenterFactory() {
+            @Override
+            public Presenter create() {
+                return new LoadingStatePresenter() {
+                    @Override
+                    public void onRefresh() {}
+                };
+            }
+        };
     }
 
 }

@@ -6,7 +6,7 @@ public abstract class LoadingStatePresenter<V extends LoadingStateView> extends 
 
     public abstract void onRefresh();
 
-    protected JobCallback getDefaultJobCallback() {
+    protected JobCallback getDefaultJobCallback(final boolean userRequest) {
         return new JobCallback() {
             @Override
             public void onSuccess() {
@@ -18,9 +18,10 @@ public abstract class LoadingStatePresenter<V extends LoadingStateView> extends 
             @Override
             public void onError(ErrorCode code) {
                 if (getView() != null) {
+                    getView().hideProgress();
                     switch (code) {
                         case NO_NETWORK:
-                            getView().showNetworkRequiredMessage();
+                            if (userRequest) getView().showNetworkRequiredMessage();
                             break;
                         case CANCEL:
                         case ERROR:

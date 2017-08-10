@@ -2,7 +2,6 @@ package de.xikolo.presenters.course;
 
 import java.util.List;
 
-import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.CourseProgress;
 import de.xikolo.models.SectionProgress;
@@ -36,7 +35,7 @@ public class ProgressPresenter extends LoadingStatePresenter<ProgressView> {
         super.onViewAttached(v);
 
         if (spList == null) {
-            requestCourseProgressWithSections();
+            requestCourseProgressWithSections(false);
         }
 
         spPromise = courseManager.listSectionProgressesForCourse(courseId, realm, new RealmChangeListener<RealmResults<SectionProgress>>() {
@@ -69,36 +68,14 @@ public class ProgressPresenter extends LoadingStatePresenter<ProgressView> {
 
     @Override
     public void onRefresh() {
-        requestCourseProgressWithSections();
+        requestCourseProgressWithSections(true);
     }
 
-    private void requestCourseProgressWithSections() {
+    private void requestCourseProgressWithSections(boolean userRequest) {
         if (getView() != null) {
             getView().showProgress();
         }
-        courseManager.requestCourseProgressWithSections(courseId, new JobCallback() {
-            @Override
-            public void onSuccess() {
-                if (getView() != null) {
-                    getView().hideProgress();
-                }
-            }
-
-            @Override
-            public void onError(ErrorCode code) {
-                if (getView() != null) {
-                    switch (code) {
-                        case NO_NETWORK:
-                            getView().showNetworkRequiredMessage();
-                            break;
-                        case CANCEL:
-                        case ERROR:
-                            getView().showErrorMessage();
-                            break;
-                    }
-                }
-            }
-        });
+        courseManager.requestCourseProgressWithSections(courseId, getDefaultJobCallback(userRequest));
     }
 
 }

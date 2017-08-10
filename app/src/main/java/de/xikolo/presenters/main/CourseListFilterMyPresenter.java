@@ -34,12 +34,12 @@ public class CourseListFilterMyPresenter extends CourseListPresenter {
     }
 
     @Override
-    public void requestCourses() {
+    public void requestCourses(boolean userRequest) {
         if (!UserManager.isAuthorized() && getView() != null) {
             getView().showLoginRequiredMessage();
             getView().hideProgress();
         } else {
-            super.requestCourses();
+            super.requestCourses(userRequest);
         }
     }
 

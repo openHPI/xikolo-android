@@ -35,7 +35,7 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
         super.onViewAttached(view);
 
         if (courseList == null || courseList.size() == 0) {
-            requestCourses();
+            requestCourses(false);
         }
 
         this.courseListPromise = courseManager.listCourses(realm, new RealmChangeListener<RealmResults<Course>>() {
@@ -63,7 +63,7 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
 
     @Override
     public void onRefresh() {
-        requestCourses();
+        requestCourses(true);
     }
 
     public void onEnrollButtonClicked(final String courseId) {
@@ -73,8 +73,8 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
             @Override
             public void onSuccess() {
                 if (getView() != null) {
-                    Course course = Course.get(courseId);
                     getView().hideProgress();
+                    Course course = Course.get(courseId);
                     if (course.accessible) {
                         getView().enterCourse(courseId);
                     }
@@ -111,33 +111,11 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
 
     protected abstract void updateContent();
 
-    public void requestCourses() {
+    public void requestCourses(boolean userRequest) {
         if (getView() != null) {
             getView().showProgress();
         }
-        courseManager.requestCourseList(new JobCallback() {
-            @Override
-            public void onSuccess() {
-                if (getView() != null) {
-                    getView().hideProgress();
-                }
-            }
-
-            @Override
-            public void onError(ErrorCode code) {
-                if (getView() != null) {
-                    switch (code) {
-                        case NO_NETWORK:
-                            getView().showNetworkRequiredMessage();
-                            break;
-                        case CANCEL:
-                        case ERROR:
-                            getView().showErrorMessage();
-                            break;
-                    }
-                }
-            }
-        });
+        courseManager.requestCourseList(getDefaultJobCallback(userRequest));
     }
 
 }

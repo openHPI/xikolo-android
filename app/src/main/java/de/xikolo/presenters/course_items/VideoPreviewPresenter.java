@@ -2,7 +2,6 @@ package de.xikolo.presenters.course_items;
 
 import android.content.res.Configuration;
 
-import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
@@ -49,7 +48,7 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
         super.onViewAttached(v);
 
         if (video == null) {
-            requestVideo();
+            requestVideo(false);
         }
 
         videoPromise = itemManager.getVideoForItem(itemId, realm, new RealmChangeListener<RealmResults<Video>>() {
@@ -80,7 +79,7 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
 
     @Override
     public void onRefresh() {
-        requestVideo();
+        requestVideo(true);
     }
 
     public void onPlayClicked() {
@@ -105,33 +104,11 @@ public class VideoPreviewPresenter extends LoadingStatePresenter<VideoPreviewVie
         }
     }
 
-    private void requestVideo() {
+    private void requestVideo(boolean userRequest) {
         if (getView() != null) {
             getView().showProgress();
         }
-        itemManager.requestItemWithContent(itemId, new JobCallback() {
-            @Override
-            public void onSuccess() {
-                if (getView() != null) {
-                    getView().hideProgress();
-                }
-            }
-
-            @Override
-            public void onError(JobCallback.ErrorCode code) {
-                if (getView() != null) {
-                    switch (code) {
-                        case NO_NETWORK:
-                            getView().showNetworkRequiredMessage();
-                            break;
-                        case CANCEL:
-                        case ERROR:
-                            getView().showErrorMessage();
-                            break;
-                    }
-                }
-            }
-        });
+        itemManager.requestItemWithContent(itemId, getDefaultJobCallback(userRequest));
     }
 
 }

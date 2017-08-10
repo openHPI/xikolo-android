@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -17,6 +18,9 @@ import android.widget.TextView;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import de.xikolo.R;
@@ -24,6 +28,7 @@ import de.xikolo.config.Config;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.SectionDownloadHelper;
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle;
+import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -118,6 +123,21 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
     @Override
     public void setTitle(CharSequence title) {
         super.setTitle(title);
+    }
+
+    @Override
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onNetworkEvent(NetworkStateEvent event) {
+        super.onNetworkEvent(event);
+
+        if (tabLayout != null) {
+            if (event.isOnline()) {
+                tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_toolbar));
+            } else {
+                tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.offline_mode_toolbar));
+            }
+        }
     }
 
     @NonNull

@@ -2,7 +2,6 @@ package de.xikolo.presenters.course;
 
 import java.util.List;
 
-import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.SectionManager;
 import de.xikolo.models.Course;
@@ -42,7 +41,7 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
         super.onViewAttached(v);
 
         if (sectionList == null) {
-            requestSectionListWithItems();
+            requestSectionListWithItems(false);
         }
 
         coursePromise = courseManager.getCourse(courseId, realm, new RealmChangeListener<Course>() {
@@ -82,7 +81,7 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
 
     @Override
     public void onRefresh() {
-        requestSectionListWithItems();
+        requestSectionListWithItems(true);
     }
 
     public void onSectionClicked(String sectionId) {
@@ -97,33 +96,11 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
         getViewOrThrow().startCourseItemsActivity(courseId, sectionId, position);
     }
 
-    private void requestSectionListWithItems() {
+    private void requestSectionListWithItems(boolean userRequest) {
         if (getView() != null) {
             getView().showProgress();
         }
-        sectionManager.requestSectionListWithItems(courseId, new JobCallback() {
-            @Override
-            public void onSuccess() {
-                if (getView() != null) {
-                    getView().hideProgress();
-                }
-            }
-
-            @Override
-            public void onError(ErrorCode code) {
-                if (getView() != null) {
-                    switch (code) {
-                        case NO_NETWORK:
-                            getView().showNetworkRequiredMessage();
-                            break;
-                        case CANCEL:
-                        case ERROR:
-                            getView().showErrorMessage();
-                            break;
-                    }
-                }
-            }
-        });
+        sectionManager.requestSectionListWithItems(courseId, getDefaultJobCallback(userRequest));
     }
 
 }

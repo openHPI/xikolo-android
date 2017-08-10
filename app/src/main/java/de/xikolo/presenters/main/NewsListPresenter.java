@@ -34,7 +34,7 @@ public class NewsListPresenter extends LoadingStatePresenter<NewsListView> {
         super.onViewAttached(view);
 
         if (announcementList == null || announcementList.size() == 0) {
-            requestAnnouncements();
+            requestAnnouncements(false);
         }
 
         if (courseId == null) {
@@ -71,21 +71,21 @@ public class NewsListPresenter extends LoadingStatePresenter<NewsListView> {
 
     @Override
     public void onRefresh() {
-        requestAnnouncements();
+        requestAnnouncements(true);
     }
 
     public void onAnnouncementClicked(String announcementId) {
         getViewOrThrow().openAnnouncement(announcementId);
     }
 
-    private void requestAnnouncements() {
+    private void requestAnnouncements(boolean userRequest) {
         if (getView() != null) {
             getView().showProgress();
         }
         if (courseId == null) {
-            announcementManager.requestGlobalAnnouncementList(getDefaultJobCallback());
+            announcementManager.requestGlobalAnnouncementList(getDefaultJobCallback(userRequest));
         } else {
-            announcementManager.requestCourseAnnouncementList(courseId, getDefaultJobCallback());
+            announcementManager.requestCourseAnnouncementList(courseId, getDefaultJobCallback(userRequest));
         }
     }
 

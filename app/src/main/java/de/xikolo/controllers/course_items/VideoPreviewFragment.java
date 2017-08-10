@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -48,6 +51,12 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
     @BindView(R.id.refresh_layout) View viewContainer;
     @BindView(R.id.playButton) View viewPlay;
     @BindView(R.id.videoMetadata) ViewGroup videoMetadata;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public int getLayoutResource() {
@@ -117,6 +126,22 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
     @Override
     public void startCast(Video video) {
         CastUtil.loadMedia(getActivity(), video, true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.refresh, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_refresh:
+                presenter.onRefresh();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @NonNull
