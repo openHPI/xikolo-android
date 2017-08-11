@@ -245,7 +245,7 @@ public class DownloadViewController {
     }
 
     private void startDownload() {
-        long status = downloadManager.startDownload(url + "?download=true",
+        long status = downloadManager.startDownload(url,
                 DownloadViewController.this.type,
                 DownloadViewController.this.course,
                 DownloadViewController.this.section,
