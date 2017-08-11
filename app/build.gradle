@@ -3,12 +3,12 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionName "1.7"
         versionCode 33
     }
@@ -184,6 +184,9 @@ dependencies {
     compile 'de.psdev.licensesdialog:licensesdialog:1.8.2'
     compile 'com.github.Commit451:bypasses:1.1.0'
 
+    // video
+    compile 'com.devbrackets.android:exomedia:4.0.3'
+
     // view binding
     compile 'com.jakewharton:butterknife:8.5.1'
     apt     'com.jakewharton:butterknife-compiler:8.5.1'
@@ -193,10 +196,10 @@ dependencies {
     apt     'com.github.yatatsu:autobundle-processor:4.1.0'
 
     // play services
-    compile 'com.google.android.gms:play-services-cast-framework:11.0.2'
+    compile 'com.google.android.gms:play-services-cast-framework:11.0.4'
 
     // support libraries
-    def supportVersion = '25.3.1'
+    def supportVersion = '26.0.1'
 
     compile "com.android.support:support-v4:${supportVersion}"
     compile "com.android.support:appcompat-v7:${supportVersion}"

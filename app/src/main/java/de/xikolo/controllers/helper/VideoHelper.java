@@ -2,12 +2,11 @@ package de.xikolo.controllers.helper;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.media.MediaPlayer;
-import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.IntRange;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,21 +14,27 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.devbrackets.android.exomedia.listener.OnBufferUpdateListener;
+import com.devbrackets.android.exomedia.listener.OnCompletionListener;
+import com.devbrackets.android.exomedia.listener.OnErrorListener;
+import com.devbrackets.android.exomedia.listener.OnPreparedListener;
+
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.xikolo.R;
+import de.xikolo.config.Config;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
-import de.xikolo.config.Config;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.PlaybackSpeedUtil;
-import de.xikolo.utils.ToastUtil;
 import de.xikolo.views.CustomFontTextView;
 import de.xikolo.views.CustomSizeVideoView;
 
@@ -48,26 +53,24 @@ public class VideoHelper {
 
     private Activity activity;
 
-    private CustomSizeVideoView videoView;
-
     private View videoContainer;
 
-    private View videoProgress;
+    @BindView(R.id.videoView) CustomSizeVideoView videoView;
+    @BindView(R.id.videoController) View videoController;
+    @BindView(R.id.videoProgress) View videoProgress;
+    @BindView(R.id.videoSeekBar) SeekBar seekBar;
 
-    private View videoController;
+    @BindView(R.id.btnPlay) CustomFontTextView buttonPlay;
+    @BindView(R.id.btnRetry) TextView buttonRetry;
 
-    private CustomFontTextView buttonPlay;
-    private TextView buttonRetry;
+    @BindView(R.id.currentTime) TextView textCurrentTime;
+    @BindView(R.id.totalTime) TextView textTotalTime;
+    @BindView(R.id.hdSwitch) CustomFontTextView textHdSwitch;
+    @BindView(R.id.playbackSpeed) TextView textPlaybackSpeed;
+    @BindView(R.id.offlineHint) View viewOfflineHint;
 
-    private SeekBar seekBar;
-    private TextView textCurrentTime;
-    private TextView textTotalTime;
-    private CustomFontTextView textHdSwitch;
-    private TextView textPlaybackSpeed;
-    private View viewOfflineHint;
-
-    private View viewVideoWarning;
-    private TextView textVideoWarning;
+    @BindView(R.id.videoWarning) View viewVideoWarning;
+    @BindView(R.id.videoWarningText) TextView textVideoWarning;
 
     private ControllerListener controllerListener;
 
@@ -88,8 +91,6 @@ public class VideoHelper {
     private Item item;
     private Video video;
 
-    private MediaPlayer mediaPlayer;
-
     private enum VideoMode {
         SD, HD
     }
@@ -98,26 +99,9 @@ public class VideoHelper {
 
     public VideoHelper(Activity activity, View videoContainer) {
         this.activity = activity;
-
         this.videoContainer = videoContainer;
-        videoView = (CustomSizeVideoView) this.videoContainer.findViewById(R.id.videoView);
-        videoController = this.videoContainer.findViewById(R.id.videoController);
 
-        videoProgress = this.videoContainer.findViewById(R.id.videoProgress);
-
-        seekBar = (SeekBar) this.videoContainer.findViewById(R.id.videoSeekBar);
-        textCurrentTime = (TextView) videoController.findViewById(R.id.currentTime);
-        textTotalTime = (TextView) videoController.findViewById(R.id.totalTime);
-        textHdSwitch = (CustomFontTextView) videoController.findViewById(R.id.hdSwitch);
-        textPlaybackSpeed = (TextView) videoController.findViewById(R.id.playbackSpeed);
-
-        buttonPlay = (CustomFontTextView) this.videoContainer.findViewById(R.id.btnPlay);
-
-        viewOfflineHint = this.videoContainer.findViewById(R.id.offlineHint);
-
-        viewVideoWarning = this.videoContainer.findViewById(R.id.videoWarning);
-        textVideoWarning = (TextView) this.videoContainer.findViewById(R.id.videoWarningText);
-        buttonRetry = (TextView) this.videoContainer.findViewById(R.id.btnRetry);
+        ButterKnife.bind(this, activity);
 
         this.videoContainer.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -134,17 +118,15 @@ public class VideoHelper {
 
     private void setupView() {
         videoView.setKeepScreenOn(true);
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        videoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                mediaPlayer = mp;
-
+            public void onPrepared() {
                 videoProgress.setVisibility(View.GONE);
                 viewVideoWarning.setVisibility(View.GONE);
-                seekBar.setMax(videoView.getDuration());
+                seekBar.setMax(getDuration());
                 show();
 
-                textTotalTime.setText(getTimeString(videoView.getDuration()));
+                textTotalTime.setText(getTimeString(getDuration()));
                 textCurrentTime.setText(getTimeString(0));
 
                 seekTo(video.progress);
@@ -156,106 +138,36 @@ public class VideoHelper {
                 isPlaying = true;
                 play();
 
-                mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-                    @Override
-                    public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                        seekBar.setSecondaryProgress((int) (seekBar.getMax() * (percent / 100.)));
-                    }
-                });
-
-
                 new Thread(seekBarUpdater).start();
             }
         });
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        videoView.setOnBufferUpdateListener(new OnBufferUpdateListener() {
             @Override
-            public void onCompletion(MediaPlayer mp) {
+            public void onBufferingUpdate(@IntRange(from = 0L, to = 100L) int percent) {
+                Log.e(TAG, "percent: " + percent);
+                Log.e(TAG, "max: " + seekBar.getMax());
+                Log.e(TAG, "update: " + (seekBar.getMax() * (percent / 100.)));
+                seekBar.setSecondaryProgress((int) (seekBar.getMax() * (percent / 100.)));
+            }
+        });
+        videoView.setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion() {
                 pause();
                 buttonPlay.setText(activity.getString(R.string.icon_reload));
                 show();
             }
         });
-        videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+        videoView.setOnErrorListener(new OnErrorListener() {
             @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                switch (what) {
-                    case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_UNKNOWN appeared (" + MediaPlayer.MEDIA_ERROR_UNKNOWN + ")");
-                        break;
-                    case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                        Log.e(TAG, "MediaPlayer.MEDIA_ERROR_SERVER_DIED appeared (" + MediaPlayer.MEDIA_ERROR_SERVER_DIED + ")");
-                        break;
-                }
-                if (Build.VERSION.SDK_INT >= 17) {
-                    switch (extra) {
-                        case MediaPlayer.MEDIA_ERROR_IO:
-                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_IO appeared (" + MediaPlayer.MEDIA_ERROR_IO + ")");
-                            break;
-                        case MediaPlayer.MEDIA_ERROR_MALFORMED:
-                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_MALFORMED appeared (" + MediaPlayer.MEDIA_ERROR_MALFORMED + ")");
-                            break;
-                        case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
-                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_UNSUPPORTED appeared (" + MediaPlayer.MEDIA_ERROR_UNSUPPORTED + ")");
-                            break;
-                        case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
-                            Log.e(TAG, "MediaPlayer.MEDIA_ERROR_TIMED_OUT appeared (" + MediaPlayer.MEDIA_ERROR_TIMED_OUT + ")");
-                            break;
-                    }
-                }
-
+            public boolean onError(Exception e) {
                 saveCurrentPosition();
-                if (extra == MediaPlayer.MEDIA_ERROR_IO) {
-                    videoProgress.setVisibility(View.VISIBLE);
-                    ToastUtil.show(R.string.trying_reconnect);
-                    updateVideo(course, module, item, video);
-                } else {
-                    viewVideoWarning.setVisibility(View.VISIBLE);
-                    textVideoWarning.setText(activity.getString(R.string.error_plain));
-                }
+                viewVideoWarning.setVisibility(View.VISIBLE);
+                textVideoWarning.setText(activity.getString(R.string.error_plain));
 
                 return true;
             }
         });
-        if (Build.VERSION.SDK_INT >= 17) {
-            videoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-                @Override
-                public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                    switch (what) {
-                        case MediaPlayer.MEDIA_INFO_UNKNOWN:
-                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_UNKNOWN notified (" + MediaPlayer.MEDIA_INFO_UNKNOWN + ")");
-                            break;
-                        case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING:
-                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING notified (" + MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING + ")");
-                            break;
-                        case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-                            if (Build.VERSION.SDK_INT >= 17) {
-                                Log.i(TAG, "MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START notified (" + MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START + ")");
-                            }
-                            break;
-                        case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_BUFFERING_START notified (" + MediaPlayer.MEDIA_INFO_BUFFERING_START + ")");
-                            break;
-                        case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_BUFFERING_END notified (" + MediaPlayer.MEDIA_INFO_BUFFERING_END + ")");
-                            break;
-                        case MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING:
-                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING notified (" + MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING + ")");
-                            break;
-                        case MediaPlayer.MEDIA_INFO_NOT_SEEKABLE:
-                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_NOT_SEEKABLE notified (" + MediaPlayer.MEDIA_INFO_NOT_SEEKABLE + ")");
-                            break;
-                        case MediaPlayer.MEDIA_INFO_METADATA_UPDATE:
-                            Log.i(TAG, "MediaPlayer.MEDIA_INFO_METADATA_UPDATE notified (" + MediaPlayer.MEDIA_INFO_METADATA_UPDATE + ")");
-                            break;
-                    }
-                    if (extra != 0) {
-                        Log.i(TAG, "MediaPlayer Info Extra " + extra + " notified");
-                    }
-
-                    return true;
-                }
-            });
-        }
 
         seekBarUpdater = new Runnable() {
             @Override
@@ -419,47 +331,41 @@ public class VideoHelper {
 
     @TargetApi(23)
     public void togglePlaybackSpeed() {
-        if (mediaPlayer != null) {
-            switch (currentPlaybackSpeed) {
-                case x07:
-                    setPlaybackSpeed(PlaybackSpeedUtil.x10);
-                    break;
-                case x10:
-                    setPlaybackSpeed(PlaybackSpeedUtil.x13);
-                    break;
-                case x13:
-                    setPlaybackSpeed(PlaybackSpeedUtil.x15);
-                    break;
-                case x15:
-                    setPlaybackSpeed(PlaybackSpeedUtil.x18);
-                    break;
-                case x18:
-                    setPlaybackSpeed(PlaybackSpeedUtil.x20);
-                    break;
-                case x20:
-                    setPlaybackSpeed(PlaybackSpeedUtil.x07);
-                    break;
-            }
+        switch (currentPlaybackSpeed) {
+            case x07:
+                setPlaybackSpeed(PlaybackSpeedUtil.x10);
+                break;
+            case x10:
+                setPlaybackSpeed(PlaybackSpeedUtil.x13);
+                break;
+            case x13:
+                setPlaybackSpeed(PlaybackSpeedUtil.x15);
+                break;
+            case x15:
+                setPlaybackSpeed(PlaybackSpeedUtil.x18);
+                break;
+            case x18:
+                setPlaybackSpeed(PlaybackSpeedUtil.x20);
+                break;
+            case x20:
+                setPlaybackSpeed(PlaybackSpeedUtil.x07);
+                break;
         }
     }
 
     @TargetApi(23)
     public void setPlaybackSpeed(PlaybackSpeedUtil speed) {
-        if (mediaPlayer != null) {
-            try {
-                PlaybackParams pp = new PlaybackParams();
-                pp.setSpeed(speed.getSpeed());
-                mediaPlayer.setPlaybackParams(pp);
+        try {
+            videoView.setPlaybackSpeed(speed.getSpeed());
 
-                currentPlaybackSpeed = speed;
-                textPlaybackSpeed.setText(speed.toString());
+            currentPlaybackSpeed = speed;
+            textPlaybackSpeed.setText(speed.toString());
 
-                if (!isPlaying) {
-                    pause();
-                }
-            } catch (IllegalStateException e) {
-                Log.e(TAG, e.getMessage(), e);
+            if (!isPlaying) {
+                pause();
             }
+        } catch (IllegalStateException e) {
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -506,29 +412,11 @@ public class VideoHelper {
     }
 
     public int getCurrentPosition() {
-        if (mediaPlayer != null) {
-            try {
-                return mediaPlayer.getCurrentPosition();
-            } catch (IllegalStateException e) {
-                // Log.e(TAG, e.getMessage(), e);
-                return 0;
-            }
-        } else {
-            return 0;
-        }
+        return (int) videoView.getCurrentPosition();
     }
 
     public int getDuration() {
-        if (mediaPlayer != null) {
-            try {
-                return mediaPlayer.getDuration();
-            } catch (IllegalStateException e) {
-                // Log.e(TAG, e.getMessage(), e);
-                return 0;
-            }
-        } else {
-            return 0;
-        }
+        return (int) videoView.getDuration();
     }
 
     public void setupVideo(Course course, Section module, Item item, Video video) {
@@ -664,7 +552,7 @@ public class VideoHelper {
     private static class MessageHandler extends Handler {
         VideoHelper mController;
 
-        public MessageHandler(VideoHelper controller) {
+        MessageHandler(VideoHelper controller) {
             mController = controller;
         }
 

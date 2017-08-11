@@ -21,6 +21,7 @@ import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastState;
 import com.yatatsu.autobundle.AutoBundleField;
 
+import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.VideoHelper;
@@ -48,10 +49,10 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     @AutoBundleField String itemId;
     @AutoBundleField String videoId;
 
-    private View videoMetadataView;
-    private TextView videoTitleText;
-
-    private MediaRouteButton mediaRouteButton;
+    @BindView(R.id.videoMetadata) View videoMetadataView;
+    @BindView(R.id.textTitle) TextView videoTitleText;
+    @BindView(R.id.videoContainer) View videoContainer;
+    @BindView(R.id.video_media_route_button) MediaRouteButton mediaRouteButton;
 
     private Video video;
 
@@ -65,11 +66,6 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         setColorScheme(R.color.black, R.color.black);
         actionBar.setTitle("");
         actionBar.setSubtitle("");
-
-        View videoContainer = findViewById(R.id.videoContainer);
-
-        videoMetadataView = findViewById(R.id.videoMetadata);
-        videoTitleText = (TextView) findViewById(R.id.textTitle);
 
         videoHelper = new VideoHelper(this, videoContainer);
         videoHelper.setControllerListener(new VideoHelper.ControllerListener() {
@@ -103,7 +99,6 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
         }
 
-        mediaRouteButton = (MediaRouteButton) findViewById(R.id.video_media_route_button);
         if (mediaRouteButton != null) {
             if (PlayServicesUtil.checkPlayServices(this)) {
                 CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), mediaRouteButton);
