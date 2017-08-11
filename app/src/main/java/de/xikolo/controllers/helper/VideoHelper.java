@@ -144,9 +144,6 @@ public class VideoHelper {
         videoView.setOnBufferUpdateListener(new OnBufferUpdateListener() {
             @Override
             public void onBufferingUpdate(@IntRange(from = 0L, to = 100L) int percent) {
-                Log.e(TAG, "percent: " + percent);
-                Log.e(TAG, "max: " + seekBar.getMax());
-                Log.e(TAG, "update: " + (seekBar.getMax() * (percent / 100.)));
                 seekBar.setSecondaryProgress((int) (seekBar.getMax() * (percent / 100.)));
             }
         });
