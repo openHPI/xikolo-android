@@ -38,13 +38,7 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
             requestCourses(false);
         }
 
-        this.courseListPromise = courseManager.listCourses(realm, new RealmChangeListener<RealmResults<Course>>() {
-            @Override
-            public void onChange(RealmResults<Course> results) {
-                getViewOrThrow().showContent();
-                updateContent();
-            }
-        });
+        setDefaultCourseListPromise();
     }
 
     @Override
@@ -64,6 +58,32 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
     @Override
     public void onRefresh() {
         requestCourses(true);
+    }
+
+    public void onSearch(final String query, boolean withEnrollment) {
+        courseListPromise.removeAllChangeListeners();
+        if (query != null && !"".equals(query)) {
+            this.courseListPromise = courseManager.searchCourses(query, withEnrollment, realm, new RealmChangeListener<RealmResults<Course>>() {
+                @Override
+                public void onChange(RealmResults<Course> results) {
+                    courseList.clear();
+                    courseList.add(null, results);
+                    getViewOrThrow().showCourseList(courseList);
+                }
+            });
+        } else {
+            setDefaultCourseListPromise();
+        }
+    }
+
+    private void setDefaultCourseListPromise() {
+        this.courseListPromise = courseManager.listCourses(realm, new RealmChangeListener<RealmResults<Course>>() {
+            @Override
+            public void onChange(RealmResults<Course> results) {
+                getViewOrThrow().showContent();
+                updateContent();
+            }
+        });
     }
 
     public void onEnrollButtonClicked(final String courseId) {

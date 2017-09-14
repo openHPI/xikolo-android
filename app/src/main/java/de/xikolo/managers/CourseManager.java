@@ -15,8 +15,10 @@ import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
 import de.xikolo.models.SectionProgress;
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -47,6 +49,35 @@ public class CourseManager extends BaseManager {
                 .where(Course.class)
                 .equalTo("external", false)
                 .findAllSortedAsync("startDate", Sort.DESCENDING);
+
+        courseListPromise.addChangeListener(listener);
+
+        return courseListPromise;
+    }
+
+    public RealmResults searchCourses(String query, boolean withEnrollment, Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
+        }
+
+        RealmQuery<Course> dbQuery = realm
+                .where(Course.class)
+                .equalTo("external", false)
+                .beginGroup()
+                    .like("title", "*" + query + "*", Case.INSENSITIVE)
+                    .or()
+                    .like("shortAbstract", "*" + query + "*", Case.INSENSITIVE)
+                    .or()
+                    .like("description", "*" + query + "*", Case.INSENSITIVE)
+                    .or()
+                    .like("teachers", "*" + query + "*", Case.INSENSITIVE)
+                .endGroup();
+
+        if (withEnrollment) {
+            dbQuery = dbQuery.isNotNull("enrollmentId");
+        }
+
+        RealmResults<Course> courseListPromise = dbQuery.findAllSortedAsync("startDate", Sort.DESCENDING);
 
         courseListPromise.addChangeListener(listener);
 

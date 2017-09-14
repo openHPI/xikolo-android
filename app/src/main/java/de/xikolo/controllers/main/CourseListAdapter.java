@@ -91,7 +91,13 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
 
-            viewHolder.header.setText((String) courseList.getItem(position));
+            String header = (String) courseList.getItem(position);
+            if (header == null) {
+                viewHolder.header.setVisibility(View.GONE);
+            } else {
+                viewHolder.header.setText(header);
+                viewHolder.header.setVisibility(View.VISIBLE);
+            }
         } else {
             CourseViewHolder viewHolder = (CourseViewHolder) holder;
 

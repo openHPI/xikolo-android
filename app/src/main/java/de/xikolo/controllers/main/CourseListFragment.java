@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -137,6 +138,23 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (activityCallback != null && !activityCallback.isDrawerOpen()) {
             inflater.inflate(R.menu.refresh, menu);
+            inflater.inflate(R.menu.search, menu);
+
+            SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+            searchView.setIconifiedByDefault(false);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    presenter.onSearch(query, filter == Course.Filter.MY);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    presenter.onSearch(newText, filter == Course.Filter.MY);
+                    return false;
+                }
+            });
         }
     }
 

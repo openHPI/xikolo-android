@@ -32,6 +32,7 @@
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_unenroll">Kursteilnahme beenden</string>
     <string name="action_language">Sprache ändern</string>
+    <string name="action_search">Suche</string>
 
     <!-- -->
     <string name="tab_learnings">Lernmaterial</string>
