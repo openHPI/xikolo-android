@@ -46,6 +46,7 @@
     <string name="btn_enroll_me">Für den Kurs einschreiben</string>
     <string name="btn_enter_course">Zum Kurs</string>
     <string name="btn_starts_soon">Kurs hat noch nicht begonnen</string>
+    <string name="btn_display_issues">Darstellungsprobleme?</string>
 
     <!-- -->
     <string name="dialog_unenroll_title">Kursteilnahme beenden?</string>

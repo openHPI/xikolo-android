@@ -48,6 +48,7 @@
     <string name="btn_enter_course">Enter course</string>
     <string name="btn_starts_soon">Course has not yet started</string>
     <string name="btn_play_cast">&#xe652;\n Play on Cast device</string>
+    <string name="btn_display_issues">Display issues?</string>
 
     <!-- -->
     <string name="dialog_unenroll_title">Un-enroll this course?</string>

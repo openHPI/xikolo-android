@@ -7,6 +7,7 @@ import de.xikolo.jobs.UpdateItemVisitedJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Item;
+import de.xikolo.models.RichText;
 import de.xikolo.models.Video;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -46,6 +47,22 @@ public class ItemManager extends BaseManager {
         videoPromise.addChangeListener(listener);
 
         return videoPromise;
+    }
+
+    public RealmResults getRichTextForItem(String itemId, Realm realm, RealmChangeListener<RealmResults<RichText>> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
+        }
+
+        // RealmChangeListener for RealmObject doesn't notify for initial copyToRealm
+        RealmResults<RichText> richTextPromise = realm
+                .where(RichText.class)
+                .equalTo("itemId", itemId)
+                .findAllAsync();
+
+        richTextPromise.addChangeListener(listener);
+
+        return richTextPromise;
     }
 
     public void requestItemWithContent(String itemId, JobCallback callback) {

@@ -205,7 +205,6 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
             String url = Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ITEMS + item.id;
             if (fragment == null) {
                 switch (item.type) {
-                    case Item.TYPE_TEXT:
                     case Item.TYPE_LTI:
                         fragment = WebViewFragmentAutoBundle.builder(url)
                                 .inAppLinksEnabled(false)
@@ -218,6 +217,9 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();
+                        break;
+                    case Item.TYPE_TEXT:
+                        fragment = RichTextFragmentAutoBundle.builder(courseId, sectionId, item.id).build();
                         break;
                     case Item.TYPE_VIDEO:
                         fragment = VideoPreviewFragmentAutoBundle.builder(courseId, sectionId, item.id).build();

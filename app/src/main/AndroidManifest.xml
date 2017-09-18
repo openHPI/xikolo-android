@@ -187,6 +187,10 @@
                 android:value=".controllers.course_items.CourseItemsActivity" />
         </activity>
         <activity
+            android:name=".controllers.webview.WebViewActivity"
+            android:launchMode="singleTop">
+        </activity>
+        <activity
             android:name=".controllers.downloads.DownloadsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controllers.main.MainActivity">
