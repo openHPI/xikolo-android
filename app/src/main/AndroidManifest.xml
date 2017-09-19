@@ -133,7 +133,8 @@
         <activity
             android:name=".controllers.course.CourseDetailsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.main.MainActivity">
+            android:parentActivityName=".controllers.main.MainActivity"
+            android:theme="@style/AppThemeTranslucentStatus">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controllers.main.MainActivity" />

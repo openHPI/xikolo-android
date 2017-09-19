@@ -276,10 +276,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                                 .build();
                         break;
                     case Course.TAB_COURSE_DETAILS:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId)
-                                .inAppLinksEnabled(false)
-                                .externalLinksEnabled(false)
-                                .build();
+                        fragment = CourseDetailsFragmentAutoBundle.builder(courseId).build();
                         break;
                     case Course.TAB_ANNOUNCEMENTS:
                         fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build();

@@ -1,120 +1,68 @@
 package de.xikolo.controllers.course;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
+import butterknife.BindView;
 import de.xikolo.R;
-import de.xikolo.controllers.base.BasePresenterActivity;
-import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.controllers.dialogs.UnenrollDialog;
-import de.xikolo.controllers.webview.WebViewFragmentAutoBundle;
+import de.xikolo.controllers.base.BaseActivity;
+import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.models.Course;
-import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.presenters.course.CourseDetailsPresenter;
-import de.xikolo.presenters.course.CourseDetailsPresenterFactory;
-import de.xikolo.presenters.course.CourseDetailsView;
-import de.xikolo.config.Config;
-import de.xikolo.utils.ToastUtil;
+import de.xikolo.utils.AndroidDimenUtil;
 
-public class CourseDetailsActivity extends BasePresenterActivity<CourseDetailsPresenter, CourseDetailsView> implements CourseDetailsView, UnenrollDialog.UnenrollDialogListener {
+import static de.xikolo.R.id.appbar;
+import static de.xikolo.R.id.collapsing_toolbar;
+
+public class CourseDetailsActivity extends BaseActivity {
 
     public static final String TAG = CourseDetailsActivity.class.getSimpleName();
 
     @AutoBundleField String courseId;
 
-    ProgressDialog progressDialog;
+    @BindView(R.id.toolbar_image) ImageView imageView;
+    @BindView(appbar) AppBarLayout appBarLayout;
+    @BindView(collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_blank);
-        setupActionBar();
-    }
+        setContentView(R.layout.activity_blank_collapsing);
+        setupActionBar(true);
+        enableOfflineModeToolbar(false);
 
-    @Override
-    public void setupView(Course course) {
+        Course course = Course.get(courseId);
+
         setTitle(course.title);
 
         String tag = "content";
 
+        if (course.imageUrl != null) {
+            ImageHelper.load(course.imageUrl, imageView);
+        } else {
+            lockCollapsingToolbar(course.title);
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId).build(), tag);
+            transaction.replace(R.id.content, CourseDetailsFragmentAutoBundle.builder(courseId).build(), tag);
             transaction.commit();
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        if (Course.get(courseId).isEnrolled()) {
-            inflater.inflate(R.menu.unenroll, menu);
-        }
-        super.onCreateOptionsMenu(menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        switch (itemId) {
-            case R.id.action_unenroll:
-                UnenrollDialog dialog = new UnenrollDialog();
-                dialog.setUnenrollDialogListener(this);
-                dialog.show(getSupportFragmentManager(), UnenrollDialog.TAG);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        presenter.unenroll(courseId);
-    }
-
-    @Override
-    public void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = ProgressDialog.getInstance();
-        }
-        progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
-    }
-
-    @Override
-    public void hideProgressDialog() {
-        if (progressDialog != null && progressDialog.getDialog() != null && progressDialog.getDialog().isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void showErrorToast() {
-        ToastUtil.show(R.string.error);
-    }
-
-    @Override
-    public void showNoNetworkToast() {
-        ToastUtil.show(R.string.toast_no_network);
-    }
-
-    @Override
-    public void finishActivity() {
-        finish();
-    }
-
-    @NonNull
-    @Override
-    protected PresenterFactory<CourseDetailsPresenter> getPresenterFactory() {
-        return new CourseDetailsPresenterFactory(courseId);
+    private void lockCollapsingToolbar(String title) {
+        appBarLayout.setExpanded(false, false);
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        lp.height = AndroidDimenUtil.getActionBarHeight() + AndroidDimenUtil.getStatusBarHeight();
+        collapsingToolbar.setTitleEnabled(false);
+        toolbar.setTitle(title);
     }
 
 }

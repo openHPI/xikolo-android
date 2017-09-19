@@ -1,13 +1,9 @@
 package de.xikolo.presenters.course;
 
 import de.xikolo.models.Course;
-import de.xikolo.presenters.base.View;
+import de.xikolo.presenters.base.LoadingStateView;
 
-public interface CourseDetailsView extends View {
-
-    void showProgressDialog();
-
-    void hideProgressDialog();
+public interface CourseDetailsView extends LoadingStateView {
 
     void showErrorToast();
 

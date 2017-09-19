@@ -76,4 +76,7 @@
     <color name="apptheme_section_header_bg_locked">@color/text_light</color>
     <color name="apptheme_section_header_text_locked">@color/white</color>
 
+    <color name="translucent_scrim_top">#33000000</color>
+    <color name="translucent_scrim_bottom">#33000000</color>
+
 </resources>
