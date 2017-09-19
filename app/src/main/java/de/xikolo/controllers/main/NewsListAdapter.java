@@ -64,7 +64,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.Announ
         final Announcement announcement = announcementList.get(position);
 
         holder.title.setText(announcement.title);
-        holder.text.setText(announcement.text.replaceAll(System.getProperty("line.separator"), ""));
+
+        if (announcement.text != null) {
+            holder.text.setText(announcement.text.replaceAll(System.getProperty("line.separator"), ""));
+        } else {
+            holder.text.setText(null);
+        }
 
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
         holder.date.setText(dateFormat.format(announcement.publishedAt));
