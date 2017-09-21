@@ -16,6 +16,6 @@ public interface CourseListView extends LoadingStateView {
 
     void showCourseList(SectionList<String, List<Course>> courseList);
 
-    void goToProfile();
+    void openLogin();
 
 }

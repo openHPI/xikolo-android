@@ -1,12 +1,22 @@
 package de.xikolo.models;
 
+import android.content.Context;
+
 import com.squareup.moshi.Json;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
+import de.xikolo.App;
+import de.xikolo.BuildConfig;
+import de.xikolo.R;
+import de.xikolo.config.BuildFlavor;
 import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.utils.DateUtil;
+import de.xikolo.utils.DisplayUtil;
+import de.xikolo.utils.LanguageUtil;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -109,6 +119,39 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         }
 
         return model;
+    }
+
+    public String getFormattedDate() {
+        String date;
+
+        Context context = App.getInstance();
+
+        DateFormat dateOut;
+        if (DisplayUtil.is7inchTablet(context)) {
+            dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault());
+        } else {
+            dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+        }
+
+        if (startDate != null && endDate != null) {
+            date = dateOut.format(startDate) + " - " + dateOut.format(endDate);
+        } else if (startDate != null) {
+            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                date = context.getString(R.string.course_date_self_paced);
+            } else if (DateUtil.nowIsAfter(startDate)) {
+                date = String.format(context.getString(R.string.course_date_since), dateOut.format(startDate));
+            } else {
+                date = String.format(context.getString(R.string.course_date_beginning), dateOut.format(startDate));
+            }
+        } else {
+            date = context.getString(R.string.course_date_coming_soon);
+        }
+
+        return date;
+    }
+
+    public String getFormattedLanguage() {
+        return LanguageUtil.languageForCode(App.getInstance(), language);
     }
 
     @JsonApi(type = "courses")

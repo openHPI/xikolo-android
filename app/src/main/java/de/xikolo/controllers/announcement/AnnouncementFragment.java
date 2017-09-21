@@ -3,7 +3,6 @@ package de.xikolo.controllers.announcement;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +24,7 @@ import de.xikolo.presenters.announcement.AnnouncementPresenter;
 import de.xikolo.presenters.announcement.AnnouncementPresenterFactory;
 import de.xikolo.presenters.announcement.AnnouncementView;
 import de.xikolo.presenters.base.PresenterFactory;
-import in.uncod.android.bypass.Bypass;
+import de.xikolo.utils.MarkdownUtil;
 
 public class AnnouncementFragment extends LoadingStatePresenterFragment<AnnouncementPresenter, AnnouncementView> implements AnnouncementView {
 
@@ -54,10 +53,7 @@ public class AnnouncementFragment extends LoadingStatePresenterFragment<Announce
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
         date.setText(dateFormat.format(announcement.publishedAt));
 
-        Bypass bypass = new Bypass(getActivity());
-        CharSequence spannable = bypass.markdownToSpannable(announcement.text);
-        text.setText(spannable);
-        text.setMovementMethod(LinkMovementMethod.getInstance());
+        MarkdownUtil.formatAndSet(announcement.text, text);
     }
 
     @Override

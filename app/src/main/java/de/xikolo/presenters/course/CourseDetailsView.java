@@ -5,12 +5,14 @@ import de.xikolo.presenters.base.LoadingStateView;
 
 public interface CourseDetailsView extends LoadingStateView {
 
-    void showErrorToast();
-
-    void showNoNetworkToast();
-
     void setupView(Course course);
 
-    void finishActivity();
+    void enterCourse(String courseId);
+
+    void openLogin();
+
+    void showCourseNotAccessibleToast();
+
+    void hideEnrollButton();
 
 }

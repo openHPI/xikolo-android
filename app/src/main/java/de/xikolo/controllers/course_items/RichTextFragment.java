@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -21,7 +20,7 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course_items.RichTextPresenter;
 import de.xikolo.presenters.course_items.RichTextPresenterFactory;
 import de.xikolo.presenters.course_items.RichTextView;
-import in.uncod.android.bypass.Bypass;
+import de.xikolo.utils.MarkdownUtil;
 
 public class RichTextFragment extends LoadingStatePresenterFragment<RichTextPresenter, RichTextView> implements RichTextView {
 
@@ -51,10 +50,7 @@ public class RichTextFragment extends LoadingStatePresenterFragment<RichTextPres
 
     @Override
     public void setupView(RichText richText) {
-        Bypass bypass = new Bypass(getActivity());
-        CharSequence spannable = bypass.markdownToSpannable(richText.text);
-        text.setText(spannable);
-        text.setMovementMethod(LinkMovementMethod.getInstance());
+        MarkdownUtil.formatAndSet(richText.text, text);
     }
 
     @Override

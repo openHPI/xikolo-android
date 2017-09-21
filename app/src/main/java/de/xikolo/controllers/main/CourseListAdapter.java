@@ -10,9 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,8 +22,6 @@ import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.models.Course;
 import de.xikolo.models.base.SectionList;
 import de.xikolo.utils.DateUtil;
-import de.xikolo.utils.DisplayUtil;
-import de.xikolo.utils.LanguageUtil;
 
 public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -105,30 +101,10 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             Context context = App.getInstance();
 
-            DateFormat dateOut;
-            if (DisplayUtil.is7inchTablet(context)) {
-                dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault());
-            } else {
-                dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
-            }
-
-            if (course.startDate != null && course.endDate != null) {
-                viewHolder.textDate.setText(dateOut.format(course.startDate) + " - " + dateOut.format(course.endDate));
-            } else if (course.startDate != null) {
-                if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-                    viewHolder.textDate.setText(context.getString(R.string.course_date_self_paced));
-                } else if (DateUtil.nowIsAfter(course.startDate)) {
-                    viewHolder.textDate.setText(String.format(context.getString(R.string.course_date_since), dateOut.format(course.startDate)));
-                } else {
-                    viewHolder.textDate.setText(String.format(context.getString(R.string.course_date_beginning), dateOut.format(course.startDate)));
-                }
-            } else {
-                viewHolder.textDate.setText(context.getString(R.string.course_date_coming_soon));
-            }
-
+            viewHolder.textDate.setText(course.getFormattedDate());
             viewHolder.textTitle.setText(course.title);
             viewHolder.textTeacher.setText(course.teachers);
-            viewHolder.textLanguage.setText(LanguageUtil.languageForCode(context, course.language));
+            viewHolder.textLanguage.setText(course.getFormattedLanguage());
 
             if (courseFilter == Course.Filter.ALL) {
                 viewHolder.textDescription.setText(course.shortAbstract);

@@ -19,6 +19,7 @@ import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.course.CourseActivityAutoBundle;
 import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
+import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.models.Course;
 import de.xikolo.models.base.SectionList;
 import de.xikolo.presenters.base.PresenterFactory;
@@ -170,8 +171,9 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     }
 
     @Override
-    public void goToProfile() {
-        activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
+    public void openLogin() {
+        Intent intent = LoginActivityAutoBundle.builder().build(getActivity());
+        startActivity(intent);
     }
 
     @NonNull

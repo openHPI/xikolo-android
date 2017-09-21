@@ -7,7 +7,9 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
+import de.xikolo.models.Enrollment;
 import de.xikolo.network.ApiService;
 import de.xikolo.utils.NetworkUtil;
 import io.realm.Realm;
@@ -33,7 +35,16 @@ public class GetCourseJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
 
-            final Response<Course.JsonModel> response = ApiService.getInstance().getCourse(courseId).execute();
+            final Response<Course.JsonModel> response;
+
+            if (UserManager.isAuthorized()) {
+                response = ApiService.getInstance().getCourseWithEnrollment(
+                        UserManager.getTokenAsHeader(),
+                        courseId
+                ).execute();
+            } else {
+                response = ApiService.getInstance().getCourse(courseId).execute();
+            }
 
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Course received");
@@ -42,7 +53,13 @@ public class GetCourseJob extends BaseJob {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        realm.copyToRealmOrUpdate(response.body().convertToRealmObject());
+                        Course.JsonModel model = response.body();
+                        realm.copyToRealmOrUpdate(model.convertToRealmObject());
+                        if (model.enrollment != null && model.enrollment.get(model.getContext()) != null) {
+                            Enrollment e = model.enrollment.get(model.getContext()).convertToRealmObject();
+                            e.courseId = model.getId();
+                            realm.copyToRealmOrUpdate(e);
+                        }
                     }
                 });
                 realm.close();

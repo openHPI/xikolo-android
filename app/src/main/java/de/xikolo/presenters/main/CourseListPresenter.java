@@ -109,7 +109,7 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
                         getView().showNetworkRequiredMessage();
                     } else if (code == ErrorCode.NO_AUTH) {
                         getView().showLoginRequiredMessage();
-                        getView().goToProfile();
+                        getView().openLogin();
                     }
                 }
             }
@@ -119,7 +119,7 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
     public void onCourseEnterButtonClicked(String courseId) {
         if (!UserManager.isAuthorized()) {
             getViewOrThrow().showLoginRequiredMessage();
-            getViewOrThrow().goToProfile();
+            getViewOrThrow().openLogin();
         } else {
             getViewOrThrow().enterCourse(courseId);
         }
