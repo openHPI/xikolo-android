@@ -28,4 +28,6 @@
 
     <color name="apptheme_placeholder_gradient_start">@color/apptheme_main_light</color>
 
+    <color name="apptheme_splash_background">@color/apptheme_main</color>
+
 </resources>

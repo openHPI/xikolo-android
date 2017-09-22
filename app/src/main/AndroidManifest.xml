@@ -64,15 +64,19 @@
         </receiver>
 
         <activity
-            android:name=".controllers.main.MainActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:theme="@style/AppThemeTranslucentStatus">
+            android:name=".controllers.main.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".controllers.main.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:theme="@style/AppThemeTranslucentStatus">
             <intent-filter
                 android:autoVerify="true"
                 android:label="@string/app_name">
