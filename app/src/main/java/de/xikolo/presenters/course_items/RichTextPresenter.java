@@ -2,6 +2,7 @@ package de.xikolo.presenters.course_items;
 
 import de.xikolo.config.Config;
 import de.xikolo.models.RichText;
+import de.xikolo.utils.LanalyticsUtil;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -48,10 +49,12 @@ public class RichTextPresenter extends ItemPresenter<RichTextView> {
     public void fallbackButtonClicked() {
         getViewOrThrow().openAsWebView(
                 item.title,
-                Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ITEMS + item.id,
+                Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ITEMS + itemId,
                 false,
                 false
         );
+
+        LanalyticsUtil.trackRichTextFallback(itemId, courseId, sectionId);
     }
 
 }

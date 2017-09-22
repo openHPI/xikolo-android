@@ -364,6 +364,15 @@ public class LanalyticsUtil {
                 .build());
     }
 
+    public static void trackRichTextFallback(String itemId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(itemId, "item")
+                .setVerb("RICHTEXT_FALLBACK_CLICKED")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
 
     public static void track(Lanalytics.Event event) {
         App application = App.getInstance();
