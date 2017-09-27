@@ -2,7 +2,6 @@ package de.xikolo.controllers.course_items;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.DialogFragment;
@@ -33,6 +32,7 @@ import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
+import de.xikolo.utils.FileProviderUtil;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.views.IconButton;
@@ -340,11 +340,12 @@ public class DownloadViewController {
             public void onClick(View v) {
                 File pdf = downloadManager.getDownloadFile(type, course, section, item);
                 Intent target = new Intent(Intent.ACTION_VIEW);
-                target.setDataAndType(Uri.fromFile(pdf), "application/pdf");
-                target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                target.setDataAndType(FileProviderUtil.getUriForFile(pdf), "application/pdf");
+                target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                 Intent intent = Intent.createChooser(target, null);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 try {
                     App.getInstance().startActivity(intent);
                 } catch (ActivityNotFoundException e) {
