@@ -38,7 +38,7 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
             requestCourses(false);
         }
 
-        setDefaultCourseListPromise();
+        setCourseListPromise();
     }
 
     @Override
@@ -72,18 +72,22 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
                 }
             });
         } else {
-            setDefaultCourseListPromise();
+            setCourseListPromise();
         }
     }
 
-    private void setDefaultCourseListPromise() {
-        this.courseListPromise = courseManager.listCourses(realm, new RealmChangeListener<RealmResults<Course>>() {
+    protected abstract void setCourseListPromise();
+
+    protected RealmChangeListener<RealmResults<Course>> getCourseListChangeListener() {
+        return new RealmChangeListener<RealmResults<Course>>() {
             @Override
             public void onChange(RealmResults<Course> results) {
-                getViewOrThrow().showContent();
-                updateContent();
+                if (results.size() > 0) {
+                    getViewOrThrow().showContent();
+                    updateContent();
+                }
             }
-        });
+        };
     }
 
     public void onEnrollButtonClicked(final String courseId) {

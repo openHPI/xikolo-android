@@ -54,9 +54,11 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
         sectionsPromise = sectionManager.listSectionsForCourse(courseId, realm, new RealmChangeListener<RealmResults<Section>>() {
             @Override
             public void onChange(RealmResults<Section> sections) {
-                sectionList = sections;
-                getViewOrThrow().showContent();
-                getViewOrThrow().setupSections(sections);
+                if (sections.size() > 0) {
+                    sectionList = sections;
+                    getViewOrThrow().showContent();
+                    getViewOrThrow().setupSections(sections);
+                }
             }
         });
     }

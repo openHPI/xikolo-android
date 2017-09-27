@@ -42,4 +42,9 @@ public class CourseListFilterAllPresenter extends CourseListPresenter {
         getViewOrThrow().showCourseList(courseList);
     }
 
+    @Override
+    protected void setCourseListPromise() {
+        this.courseListPromise = courseManager.listCourses(realm, getCourseListChangeListener());
+    }
+
 }

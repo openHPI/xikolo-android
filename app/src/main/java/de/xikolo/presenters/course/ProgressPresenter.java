@@ -44,7 +44,7 @@ public class ProgressPresenter extends LoadingStatePresenter<ProgressView> {
                 spList = sectionProgresses;
                 CourseProgress cp = CourseProgress.get(courseId);
 
-                if (getView() != null && cp != null && spList != null) {
+                if (getView() != null && cp != null && spList.size() > 0) {
                     getView().setupView(cp, spList);
                     getView().showContent();
                 }

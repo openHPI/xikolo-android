@@ -48,9 +48,11 @@ public class NewsListPresenter extends LoadingStatePresenter<NewsListView> {
         return new RealmChangeListener<RealmResults<Announcement>>() {
             @Override
             public void onChange(RealmResults<Announcement> results) {
-                announcementList = results;
-                getViewOrThrow().showContent();
-                getViewOrThrow().showAnnouncementList(announcementList);
+                if (results.size() > 0) {
+                    announcementList = results;
+                    getViewOrThrow().showContent();
+                    getViewOrThrow().showAnnouncementList(announcementList);
+                }
             }
         };
     }

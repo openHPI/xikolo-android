@@ -55,6 +55,22 @@ public class CourseManager extends BaseManager {
         return courseListPromise;
     }
 
+    public RealmResults listEnrolledCourses(Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
+        }
+
+        RealmResults<Course> courseListPromise = realm
+                .where(Course.class)
+                .equalTo("external", false)
+                .isNotNull("enrollmentId")
+                .findAllSortedAsync("startDate", Sort.DESCENDING);
+
+        courseListPromise.addChangeListener(listener);
+
+        return courseListPromise;
+    }
+
     public RealmResults searchCourses(String query, boolean withEnrollment, Realm realm, RealmChangeListener<RealmResults<Course>> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");

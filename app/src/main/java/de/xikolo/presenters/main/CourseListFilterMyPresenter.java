@@ -43,4 +43,9 @@ public class CourseListFilterMyPresenter extends CourseListPresenter {
         }
     }
 
+    @Override
+    protected void setCourseListPromise() {
+        this.courseListPromise = courseManager.listEnrolledCourses(realm, getCourseListChangeListener());
+    }
+
 }
