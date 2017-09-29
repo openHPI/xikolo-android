@@ -17,7 +17,7 @@ import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
-import de.xikolo.controllers.helper.ImageHelper;
+import de.xikolo.config.GlideApp;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Announcement;
@@ -157,11 +157,11 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                         profile.firstName, profile.lastName));
                 profileViewHolder.textEmail.setText(profile.email);
 
-                if (user.avatarUrl != null) {
-                    ImageHelper.loadRounded(user.avatarUrl, profileViewHolder.imageProfile);
-                } else {
-                    ImageHelper.loadRounded(R.drawable.avatar, profileViewHolder.imageProfile);
-                }
+                GlideApp.with(App.getInstance())
+                        .load(user.avatarUrl)
+                        .circleCrop()
+                        .allPlaceholders(R.drawable.avatar)
+                        .into(profileViewHolder.imageProfile);
             } else {
                 profileViewHolder.viewLogin.setVisibility(View.VISIBLE);
                 profileViewHolder.viewProfile.setVisibility(View.GONE);

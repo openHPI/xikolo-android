@@ -9,8 +9,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.controllers.helper.ImageHelper;
+import de.xikolo.config.GlideApp;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Profile;
 import de.xikolo.models.User;
@@ -65,16 +66,17 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
         imageHeader.setDimensions(size.x, heightHeader);
         imageHeader.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
-        ImageHelper.load(R.drawable.title, imageHeader);
+        GlideApp.with(this).load(R.drawable.title).into(imageHeader);
 
         imageProfile.setDimensions(heightProfile, heightProfile);
         imageProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
-        if (user.avatarUrl != null) {
-            ImageHelper.loadRounded(user.avatarUrl, imageProfile, heightProfile, heightProfile);
-        } else {
-            ImageHelper.loadRounded(R.drawable.avatar, imageProfile, heightProfile, heightProfile);
-        }
+        GlideApp.with(App.getInstance())
+                .load(user.avatarUrl)
+                .circleCrop()
+                .allPlaceholders(R.drawable.avatar)
+                .override(heightProfile)
+                .into(imageProfile);
 
         textEmail.setText(profile.email);
 

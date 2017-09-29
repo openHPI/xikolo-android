@@ -143,10 +143,11 @@ android {
         def name = variant.productFlavors.get(0).ext.appName
         def host = variant.productFlavors.get(0).ext.appHost
         if (variant.buildType.name == "debug") {
-            name += " Debug"
+            name += ".debug"
         }
         variant.resValue "string", "app_name", name
         variant.resValue "string", "app_host", host
+        variant.resValue "string", "service_download", name + " Download Service"
     }
     lintOptions {
         abortOnError false
@@ -162,13 +163,14 @@ android {
 
 dependencies {
     // networking
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
-    compile 'org.java-websocket:java-websocket:1.3.3'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    compile 'org.java-websocket:Java-WebSocket:1.3.4'
 
     // images
-    compile 'com.github.bumptech.glide:glide:3.8.0'
-    compile 'com.github.bumptech.glide:okhttp3-integration:1.5.0'
+    compile 'com.github.bumptech.glide:glide:4.1.1'
+    compile 'com.github.bumptech.glide:okhttp3-integration:4.1.1'
+    apt     'com.github.bumptech.glide:compiler:4.1.1'
 
     // architecture
     compile 'com.birbit:android-priority-jobqueue:2.0.1'
@@ -180,23 +182,23 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-moshi:2.3.0'
 
     // user interface
-    compile 'com.github.barteksc:android-pdf-viewer:2.5.1'
-    compile 'de.psdev.licensesdialog:licensesdialog:1.8.2'
+    compile 'com.github.barteksc:android-pdf-viewer:2.7.0'
+    compile 'de.psdev.licensesdialog:licensesdialog:1.8.3'
     compile 'com.github.Commit451:bypasses:1.1.0'
 
     // video
     compile 'com.devbrackets.android:exomedia:4.0.3'
 
     // view binding
-    compile 'com.jakewharton:butterknife:8.5.1'
-    apt     'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    apt     'com.jakewharton:butterknife-compiler:8.8.1'
 
     // field binding
     compile 'com.github.yatatsu:autobundle:4.1.0'
     apt     'com.github.yatatsu:autobundle-processor:4.1.0'
 
     // play services
-    compile 'com.google.android.gms:play-services-cast-framework:11.0.4'
+    compile 'com.google.android.gms:play-services-cast-framework:11.4.0'
 
     // support libraries
     def supportVersion = '26.1.0'

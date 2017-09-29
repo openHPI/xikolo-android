@@ -56,7 +56,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        courseListAdapter = new CourseListAdapter(new CourseListAdapter.OnCourseButtonClickListener() {
+        courseListAdapter = new CourseListAdapter(this, new CourseListAdapter.OnCourseButtonClickListener() {
             @Override
             public void onEnrollButtonClicked(String courseId) {
                 presenter.onEnrollButtonClicked(courseId);

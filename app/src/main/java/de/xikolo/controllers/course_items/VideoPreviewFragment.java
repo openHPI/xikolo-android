@@ -21,8 +21,8 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import de.xikolo.R;
+import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
-import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.controllers.video.VideoActivityAutoBundle;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
@@ -91,9 +91,10 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
         hideProgress();
         viewContainer.setVisibility(View.VISIBLE);
 
-        ImageHelper.load(video.thumbnailUrl, imageVideoThumbnail,
-                ImageHelper.DEFAULT_PLACEHOLDER,
-                imageVideoThumbnail.getForcedWidth(), imageVideoThumbnail.getForcedHeight());
+        GlideApp.with(this)
+                .load(video.thumbnailUrl)
+                .override(imageVideoThumbnail.getForcedWidth(), imageVideoThumbnail.getForcedHeight())
+                .into(imageVideoThumbnail);
 
         textTitle.setText(video.title);
 

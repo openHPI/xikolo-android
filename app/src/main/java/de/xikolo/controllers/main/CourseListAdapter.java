@@ -1,6 +1,7 @@
 package de.xikolo.controllers.main;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +19,7 @@ import de.xikolo.App;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.config.BuildFlavor;
-import de.xikolo.controllers.helper.ImageHelper;
+import de.xikolo.config.GlideApp;
 import de.xikolo.models.Course;
 import de.xikolo.models.base.SectionList;
 import de.xikolo.utils.DateUtil;
@@ -36,7 +37,10 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private OnCourseButtonClickListener callback;
 
-    public CourseListAdapter(OnCourseButtonClickListener callback, Course.Filter courseFilter) {
+    private Fragment fragment;
+
+    public CourseListAdapter(Fragment fragment, OnCourseButtonClickListener callback, Course.Filter courseFilter) {
+        this.fragment = fragment;
         this.courseList = new SectionList<>();
         this.callback = callback;
         this.courseFilter = courseFilter;
@@ -136,7 +140,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 viewHolder.textBanner.setVisibility(View.GONE);
             }
 
-            ImageHelper.load(course.imageUrl, viewHolder.image);
+            GlideApp.with(fragment).load(course.imageUrl).into(viewHolder.image);
 
             if (course.isEnrolled() && course.accessible) {
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {

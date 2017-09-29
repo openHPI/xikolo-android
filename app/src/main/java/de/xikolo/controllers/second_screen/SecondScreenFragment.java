@@ -26,8 +26,8 @@ import butterknife.BindView;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
+import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseFragment;
-import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -89,7 +89,7 @@ public class SecondScreenFragment extends BaseFragment {
             long seconds = video.duration - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(video.duration));
             textVideoTime.setText(getString(R.string.duration, minutes, seconds));
 
-            ImageHelper.load(video.thumbnailUrl, imageVideoPoster);
+            GlideApp.with(this).load(video.thumbnailUrl).into(imageVideoPoster);
 
             initSeconScreenActions(item, video, event);
 

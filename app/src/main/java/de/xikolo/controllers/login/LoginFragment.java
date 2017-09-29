@@ -28,9 +28,9 @@ import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import de.xikolo.R;
 import de.xikolo.config.Config;
+import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BasePresenterFragment;
 import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.managers.UserManager;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.login.LoginPresenter;
@@ -76,7 +76,12 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
 
         textCredentials.setText(String.format(getString(R.string.login_with_credentials), Config.HOST));
 
-        ImageHelper.load(R.drawable.login_header, topImage, 0, false);
+        GlideApp.with(this)
+                .load(R.drawable.login_header)
+                .dontAnimate()
+                .noPlaceholders()
+                .fitCenter()
+                .into(topImage);
     }
 
     @Override

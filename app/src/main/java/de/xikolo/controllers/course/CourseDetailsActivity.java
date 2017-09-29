@@ -15,8 +15,8 @@ import com.yatatsu.autobundle.AutoBundleField;
 
 import butterknife.BindView;
 import de.xikolo.R;
+import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseActivity;
-import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.models.Course;
 import de.xikolo.utils.AndroidDimenUtil;
 
@@ -45,7 +45,7 @@ public class CourseDetailsActivity extends BaseActivity {
         String tag = "content";
 
         if (course.imageUrl != null) {
-            ImageHelper.load(course.imageUrl, imageView);
+            GlideApp.with(this).load(course.imageUrl).into(imageView);
         } else {
             lockCollapsingToolbar(course.title);
         }

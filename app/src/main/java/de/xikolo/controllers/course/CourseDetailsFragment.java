@@ -15,8 +15,8 @@ import com.yatatsu.autobundle.AutoBundleField;
 
 import butterknife.BindView;
 import de.xikolo.R;
+import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
-import de.xikolo.controllers.helper.ImageHelper;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.base.PresenterFactory;
@@ -72,7 +72,7 @@ public class CourseDetailsFragment extends LoadingStatePresenterFragment<CourseD
         if (getActivity() instanceof CourseDetailsActivity) {
             layoutHeader.setVisibility(View.GONE);
         } else {
-            ImageHelper.load(course.imageUrl, imageCourse);
+            GlideApp.with(this).load(course.imageUrl).into(imageCourse);
             textTitle.setText(course.title);
         }
 
