@@ -17,9 +17,9 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
     public boolean completed;
 
-//    public boolean reactivated;
+    public boolean reactivated;
 
-//    public boolean proctored;
+    public boolean proctored;
 
     public String courseId;
 
@@ -42,8 +42,8 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
         JsonModel model = new JsonModel();
         model.setId(id);
         model.completed = completed;
-//        model.proctored = proctored;
-//        model.reactivated = reactivated;
+        model.proctored = proctored;
+        model.reactivated = reactivated;
 
         if (courseId != null) {
             model.course = new HasOne<>(new Course.JsonModel().getType(), courseId);
@@ -57,9 +57,9 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
         public boolean completed;
 
-//        public boolean reactivated;
+        public boolean reactivated;
 
-//        public boolean proctored;
+        public boolean proctored;
 
         public HasOne<Course.JsonModel> course;
 
@@ -68,8 +68,8 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
             Enrollment enrollment = new Enrollment();
             enrollment.id = getId();
             enrollment.completed = completed;
-//            enrollment.reactivated = reactivated;
-//            enrollment.proctored = proctored;
+            enrollment.reactivated = reactivated;
+            enrollment.proctored = proctored;
 
             if (course != null) {
                 enrollment.courseId = course.get().getId();

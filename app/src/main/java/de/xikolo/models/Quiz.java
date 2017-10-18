@@ -13,6 +13,8 @@ public class Quiz extends RealmObject {
     @PrimaryKey
     public String id;
 
+    public String instructions;
+
     public int timeLimit;
 
     public int allowedAttempts;
@@ -25,6 +27,8 @@ public class Quiz extends RealmObject {
 
     @JsonApi(type = "quizzes")
     public static class JsonModel extends Resource implements RealmAdapter<Quiz> {
+
+        public String instructions;
 
         @Json(name = "time_limit")
         public int timeLimit;
@@ -44,6 +48,7 @@ public class Quiz extends RealmObject {
         public Quiz convertToRealmObject() {
             Quiz quiz = new Quiz();
             quiz.id = getId();
+            quiz.instructions = instructions;
             quiz.timeLimit = timeLimit;
             quiz.allowedAttempts = allowedAttempts;
             quiz.maxPoints = maxPoints;

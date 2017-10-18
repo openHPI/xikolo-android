@@ -70,20 +70,20 @@ public class Video extends RealmObject {
         @Json(name = "slides_url")
         public String slidesUrl;
 
-//        @Json(name = "slides_size")
-//        public int slidesSize;
+        @Json(name = "slides_size")
+        public int slidesSize;
 
         @Json(name = "audio_url")
         public String audioUrl;
 
-//        @Json(name = "audio_size")
-//        public int audioSize;
+        @Json(name = "audio_size")
+        public int audioSize;
 
         @Json(name = "transcript_url")
         public String transcriptUrl;
 
-//        @Json(name = "transcript_size")
-//        public int transcriptSize;
+        @Json(name = "transcript_size")
+        public int transcriptSize;
 
         @Json(name = "thumbnail_url")
         public String thumbnailUrl;
@@ -99,11 +99,11 @@ public class Video extends RealmObject {
             video.duration = duration;
             video.singleStream = singleStream;
             video.slidesUrl = slidesUrl;
-//            video.slidesSize = slidesSize;
+            video.slidesSize = slidesSize;
             video.audioUrl = audioUrl;
-//            video.audioSize = audioSize;
+            video.audioSize = audioSize;
             video.transcriptUrl = transcriptUrl;
-//            video.transcriptSize = transcriptSize;
+            video.transcriptSize = transcriptSize;
             video.thumbnailUrl = thumbnailUrl;
             video.itemId = itemId;
 
