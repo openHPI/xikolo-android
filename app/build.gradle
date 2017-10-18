@@ -4,13 +4,16 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 26
         versionName "1.7"
         versionCode 33
+
+        // Xikolo API Version as integer (only major)
+        resValue "integer", "xikolo_api_version", "1"
     }
 
     productFlavors.all {
