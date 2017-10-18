@@ -52,15 +52,18 @@ public abstract class ApiService {
                         public Response intercept(Interceptor.Chain chain) throws IOException {
                             Request original = chain.request();
 
-                            String acceptHeader = Config.HEADER_ACCEPT_VALUE_JSON_API;
+                            String mediaType = Config.MEDIA_TYPE_JSON_API;
+                            String xikoloVersionExtension = "; xikolo-version=" + Config.XIKOLO_API_VERSION;
 
                             // plain json calls
                             if (original.url().encodedPath().equals("/api/v2/authenticate")) {
-                                acceptHeader = Config.HEADER_ACCEPT_VALUE_JSON;
+                                mediaType = Config.MEDIA_TYPE_JSON;
+                                xikoloVersionExtension = "";
                             }
 
                             Request request = original.newBuilder()
-                                    .header(Config.HEADER_ACCEPT, acceptHeader)
+                                    .header(Config.HEADER_ACCEPT, mediaType + xikoloVersionExtension)
+                                    .header(Config.HEADER_CONTENT_TYPE, mediaType)
                                     .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE)
                                     .build();
 

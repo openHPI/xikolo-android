@@ -18,6 +18,8 @@ public class Config {
     public static final String HOST_URL;
     public static final String API_URL;
 
+    public static final int XIKOLO_API_VERSION;
+
     public static final String COPYRIGHT_URL;
     public static final String IMPRINT_URL;
     public static final String PRIVACY_URL;
@@ -77,14 +79,19 @@ public class Config {
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
         }
+
         HOST = App.getInstance().getString(R.string.app_host);
         HOST_URL = "https://" + HOST + "/";
         API_URL = HOST_URL + "api/v2/";
+
+        XIKOLO_API_VERSION = App.getInstance().getResources().getInteger(R.integer.xikolo_api_version);
     }
 
     public static final String HEADER_ACCEPT = "Accept";
-    public static final String HEADER_ACCEPT_VALUE_JSON = "application/json";
-    public static final String HEADER_ACCEPT_VALUE_JSON_API = "application/vnd.api+json";
+    public static final String HEADER_CONTENT_TYPE = "Content-Type";
+
+    public static final String MEDIA_TYPE_JSON = "application/json";
+    public static final String MEDIA_TYPE_JSON_API = "application/vnd.api+json";
 
     public static final String HEADER_AUTH = "Authorization";
     public static final String HEADER_AUTH_VALUE_PREFIX = "Token token=";
@@ -93,17 +100,16 @@ public class Config {
     public static final String HEADER_USER_PLATFORM = "X-User-Platform";
     public static final String HEADER_USER_PLATFORM_VALUE = "Android";
 
+    public static final String HEADER_API_VERSION_EXPIRATION_DATE = "X-Api-Version-Expiration-Date";
+
     public static final String LANALYTICS_CONTEXT_COOKIE = "lanalytics-context";
     public static final String LANALYTICS_PATH = "tracking-events/";
 
-    public static final String NEWS = "news/";
-    public static final String LOGIN = "login/";
     public static final String ACCOUNT = "account/";
     public static final String NEW = "new/";
     public static final String RESET = "reset/" + NEW;
     public static final String COURSES = "courses/";
     public static final String DISCUSSIONS = "pinboard/";
-    public static final String ANNOUNCEMENTS = "announcements/";
     public static final String COLLAB_SPACE = "learning_rooms/";
     public static final String ITEMS = "items/";
     public static final String RECAP = "learn?course_id=";
