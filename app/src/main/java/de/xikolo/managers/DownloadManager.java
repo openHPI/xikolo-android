@@ -1,8 +1,8 @@
 package de.xikolo.managers;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -76,7 +76,7 @@ public class DownloadManager extends BaseManager {
 
     private PendingAction pendingAction;
 
-    public DownloadManager(Activity activity) {
+    public DownloadManager(FragmentActivity activity) {
         super();
 
         this.permissionManager = new PermissionManager(activity);

@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.IntRange;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -97,7 +98,7 @@ public class VideoHelper {
 
     private VideoMode videoMode;
 
-    public VideoHelper(Activity activity, View videoContainer) {
+    public VideoHelper(FragmentActivity activity, View videoContainer) {
         this.activity = activity;
         this.videoContainer = videoContainer;
 

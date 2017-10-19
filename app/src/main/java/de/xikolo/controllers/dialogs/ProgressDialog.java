@@ -3,12 +3,12 @@ package de.xikolo.controllers.dialogs;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 
 import de.xikolo.App;
 import de.xikolo.R;
+import de.xikolo.controllers.dialogs.base.BaseDialogFragment;
 
-public class ProgressDialog extends DialogFragment {
+public class ProgressDialog extends BaseDialogFragment {
 
     public static final String TAG = ProgressDialog.class.getSimpleName();
 

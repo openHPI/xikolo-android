@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -22,9 +23,9 @@ public class PermissionManager extends BaseManager {
 
     public static final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-    private Activity activity;
+    private FragmentActivity activity;
 
-    public PermissionManager(Activity parentActivity) {
+    public PermissionManager(FragmentActivity parentActivity) {
         super();
         this.activity = parentActivity;
     }
@@ -47,7 +48,7 @@ public class PermissionManager extends BaseManager {
                 //sees the explanation, try again to request the permission.
                 if (getPermissionCode(requestedPermission) == REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
                     PermissionsDialog permDialog = new PermissionsDialog();
-                    permDialog.show(activity.getFragmentManager(), TAG);
+                    permDialog.show(activity.getSupportFragmentManager(), TAG);
                 }
             } else {
                 Log.d(TAG, "Permission explanation expected");

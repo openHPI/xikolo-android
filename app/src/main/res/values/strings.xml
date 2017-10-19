@@ -84,6 +84,24 @@
     <string name="dialog_second_screen_message">Discover additional content on your mobile device, while watching video lectures on your computer. To start, simply play a video lecture on your computer\'s browser.</string>
     <string name="dialog_second_screen_yes">Open</string>
 
+    <string name="dialog_api_deprecation_title">Update %1$s</string>
+    <string name="dialog_api_deprecation_message">%1$s won\'t run after %2$s anymore unless you update the app.</string>
+    <string name="dialog_api_deprecation_yes">Update</string>
+    <string name="dialog_api_deprecation_no">Skip</string>
+
+    <string name="dialog_api_expiration_title">Update %1$s</string>
+    <string name="dialog_api_expiration_message">%1$s won\'t run unless you update the app.</string>
+    <string name="dialog_api_expiration_yes">Update</string>
+    <string name="dialog_api_expiration_no">Close</string>
+
+    <string name="dialog_server_maintenance_title">Server maintenance ongoing</string>
+    <string name="dialog_server_maintenance_message">A server maintenance is currently being performed. Please try again later.</string>
+    <string name="dialog_server_maintenance_no">Close</string>
+
+    <string name="dialog_server_error_title">Server issue</string>
+    <string name="dialog_server_error_message">There was an issue while contacting the server. Please try again later.</string>
+    <string name="dialog_server_error_no">Close</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 

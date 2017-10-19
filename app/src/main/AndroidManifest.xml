@@ -66,11 +66,12 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
         <activity
             android:name=".controllers.main.SplashActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -151,17 +152,8 @@
         </activity>
         <activity
             android:name=".controllers.announcement.AnnouncementActivity"
-            android:theme="@style/AppThemeTranslucentStatus"
-            android:launchMode="singleTop">
-        </activity>
-        <activity
-            android:name=".controllers.second_screen.SecondScreenActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.main.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.main.MainActivity" />
-        </activity>
+            android:theme="@style/AppThemeTranslucentStatus" />
         <activity
             android:name=".controllers.login.LoginActivity"
             android:launchMode="singleTop"
@@ -199,8 +191,7 @@
         </activity>
         <activity
             android:name=".controllers.webview.WebViewActivity"
-            android:launchMode="singleTop">
-        </activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".controllers.downloads.DownloadsActivity"
             android:launchMode="singleTop"
@@ -211,6 +202,17 @@
         </activity>
         <activity
             android:name=".controllers.settings.SettingsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controllers.main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.main.MainActivity" />
+        </activity>
+
+        <!-- SECOND SCREEN -->
+
+        <activity
+            android:name=".controllers.second_screen.SecondScreenActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controllers.main.MainActivity">
             <meta-data
@@ -249,6 +251,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controllers.second_screen.SecondScreenActivity" />
         </activity>
+
+        <!-- CAST -->
 
         <activity
             android:name=".controllers.cast.CastActivity"

@@ -82,6 +82,24 @@
     <string name="dialog_second_screen_message">Entdecken Sie zusätzliche Inhalte auf ihrem mobilen Gerät, während Sie Video-Lektionen auf Ihrem Computer schauen. Um zu starten, spielen Sie einfach eine Video-Lektion in dem Browser Ihres Computers ab.</string>
     <string name="dialog_second_screen_yes">Öffnen</string>
 
+    <string name="dialog_api_deprecation_title">%1$s aktualisieren</string>
+    <string name="dialog_api_deprecation_message">%1$s wird nach dem %2$s nur ausgeführt, wenn du die App aktualisierst.</string>
+    <string name="dialog_api_deprecation_yes">Aktualisieren</string>
+    <string name="dialog_api_deprecation_no">Überspringen</string>
+
+    <string name="dialog_api_expiration_title">%1$s aktualisieren</string>
+    <string name="dialog_api_expiration_message">%1$s wird nur ausgeführt, wenn du die App aktualisierst.</string>
+    <string name="dialog_api_expiration_yes">Aktualisieren</string>
+    <string name="dialog_api_expiration_no">Schließen</string>
+
+    <string name="dialog_server_maintenance_title">Serverwartung wird durchgeführt</string>
+    <string name="dialog_server_maintenance_message">Es wird derzeit eine Serverwartung durchgeführt. Bitte versuche es später noch einmal.</string>
+    <string name="dialog_server_maintenance_no">Schließen</string>
+
+    <string name="dialog_server_error_title">Serverproblem</string>
+    <string name="dialog_server_error_message">Beim Kontaktieren des Servers ist ein Problem aufgetreten. Bitte versuche es später noch einmal.</string>
+    <string name="dialog_server_error_no">Schließen</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
