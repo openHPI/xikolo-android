@@ -2,7 +2,6 @@
 
 buildscript {
     repositories {
-        mavenCentral()
         jcenter()
     }
     dependencies {
@@ -14,7 +13,6 @@ buildscript {
 
 allprojects {
     repositories {
-        mavenCentral()
         jcenter()
         maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
@@ -26,6 +24,18 @@ allprojects {
 }
 
 ext {
+    // shared build properties
+    buildToolsVersion   = "26.0.2"
+    minSdkVersion       = 15
+    targetSdkVersion    = 26
+    compileSdkVersion   = 26
+
+    versionName         = "1.7"
+    versionCode         = 33
+
+    xikoloApiVersion    = 1
+
+    // travis ci
     travisBuild = System.getenv("TRAVIS") == "true"
     // allows for -Dpre-dex=false to be set
     preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))

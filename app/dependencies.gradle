@@ -1,0 +1,62 @@
+dependencies {
+    // networking
+    def okhttpVersion = '3.9.0'
+    compile "com.squareup.okhttp3:okhttp:${okhttpVersion}"
+    compile "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
+
+    compile 'org.java-websocket:Java-WebSocket:1.3.4'
+
+    // images
+    def glideVersion = '4.1.1'
+    compile "com.github.bumptech.glide:glide:${glideVersion}"
+    compile "com.github.bumptech.glide:okhttp3-integration:${glideVersion}"
+    apt     "com.github.bumptech.glide:compiler:${glideVersion}"
+
+    // architecture
+    compile 'com.birbit:android-priority-jobqueue:2.0.1'
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+    // api
+    def retrofitVersion = '2.3.0'
+    compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
+    compile "com.squareup.retrofit2:converter-moshi:${retrofitVersion}"
+
+    compile 'moe.banana:moshi-jsonapi:3.2.2'
+
+    // user interface
+    compile 'com.github.barteksc:android-pdf-viewer:2.7.0'
+    compile 'de.psdev.licensesdialog:licensesdialog:1.8.3'
+    compile 'com.github.Commit451:bypasses:1.1.0'
+
+    // video
+    compile 'com.devbrackets.android:exomedia:4.0.3'
+
+    // view binding
+    def butterknifeVersion = '8.8.1'
+    compile "com.jakewharton:butterknife:${butterknifeVersion}"
+    apt     "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
+
+    // field binding
+    def autobundleVersion = '4.1.0'
+    compile "com.github.yatatsu:autobundle:${autobundleVersion}"
+    apt     "com.github.yatatsu:autobundle-processor:${autobundleVersion}"
+
+    // play services
+    def playVersion = '11.4.0'
+    compile "com.google.android.gms:play-services-cast-framework:${playVersion}"
+
+    // support libraries
+    def supportVersion = '26.1.0'
+    compile "com.android.support:support-v4:${supportVersion}"
+    compile "com.android.support:appcompat-v7:${supportVersion}"
+    compile "com.android.support:cardview-v7:${supportVersion}"
+    compile "com.android.support:recyclerview-v7:${supportVersion}"
+    compile "com.android.support:mediarouter-v7:${supportVersion}"
+    compile "com.android.support:design:${supportVersion}"
+    compile "com.android.support:preference-v14:${supportVersion}"
+
+    // local libraries
+    compile project(":lanalytics")
+
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+}

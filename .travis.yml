@@ -1,8 +1,9 @@
 language: android
 android:
   components:
-    - platform-tools
     - tools
+    - platform-tools
+    - tools # called twice to get the newest android sdk tools
     - build-tools-26.0.2
     - android-26
     - extra-android-m2repository
@@ -17,7 +18,9 @@ env:
   - FLAVOR="moocHouse"
   - FLAVOR="openWHO"
 
+sudo: required # more memory
+
 script:
    - >
-       ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest connected${FLAVOR}DebugAndroidTest
-       && ./gradlew assemble${FLAVOR}Release test${FLAVOR}ReleaseUnitTest
+       ./gradlew assemble${FLAVOR}RegularDebug test${FLAVOR}RegularDebugUnitTest connected${FLAVOR}RegularDebugAndroidTest
+       && ./gradlew assemble${FLAVOR}RegularRelease test${FLAVOR}RegularReleaseUnitTest
