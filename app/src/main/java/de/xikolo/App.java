@@ -14,7 +14,6 @@ import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
 import de.xikolo.utils.ClientUtil;
-import de.xikolo.utils.SslCertificateUtil;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -68,11 +67,6 @@ public class App extends Application {
         configureDefaultSettings();
         configureWebView();
         configureSecondScreenManager();
-
-        // just for debugging, never use for production
-        if (Config.DEBUG) {
-            SslCertificateUtil.disableSslCertificateChecking();
-        }
     }
 
     private void configureRealm() {
