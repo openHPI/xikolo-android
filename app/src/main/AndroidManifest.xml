@@ -51,6 +51,10 @@
         </receiver>
 
         <receiver
+            android:name=".receivers.CancelDownloadsReceiver"
+            android:label="CancelDownloadsReceiver" />
+
+        <receiver
             android:name=".receivers.NotificationDeletedReceiver"
             android:exported="false"
             android:label="NotificationDeletedReceiver">
@@ -68,6 +72,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <service
+            android:name=".services.DownloadService"
+            android:description="@string/service_download"
+            android:exported="false" />
 
         <activity
             android:name=".controllers.main.SplashActivity"

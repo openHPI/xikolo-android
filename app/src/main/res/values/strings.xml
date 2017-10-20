@@ -174,6 +174,9 @@
     <string name="notification_multiple_downloads_completed">%1$d downloads completed</string>
     <string name="notification_start_second_screen">Start Second Screen</string>
 
+    <string name="notification_channel_downloads">Downloads</string>
+    <string name="notification_downloads_cancel">Cancel</string>
+
     <!-- -->
     <string name="toast_no_courses">No courses received.</string>
     <string name="toast_no_network">Please enable network connection.</string>

@@ -1,9 +1,13 @@
 package de.xikolo.utils;
 
+import android.util.Log;
+
 import java.io.File;
 import java.text.DecimalFormat;
 
 public class FileUtil {
+
+    public static final String TAG = FileUtil.class.getSimpleName();
 
     public static String getFormattedFileSize(long size) {
         if (size <= 0)
@@ -54,6 +58,23 @@ public class FileUtil {
             }
         } else {
             file.delete();
+        }
+    }
+
+    public static void createFolderIfNotExists(File file) {
+        if (!file.exists()) {
+            if (file.isFile()) {
+                file = file.getParentFile();
+            }
+
+            Log.d(TAG, "Folder " + file.getAbsolutePath() + " not exists");
+            if (file.mkdirs()) {
+                Log.d(TAG, "Created Folder " + file.getAbsolutePath());
+            } else {
+                Log.w(TAG, "Failed creating Folder " + file.getAbsolutePath());
+            }
+        } else {
+            Log.d(TAG, "Folder " + file.getAbsolutePath() + " already exists");
         }
     }
 

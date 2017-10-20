@@ -1,5 +1,7 @@
 package de.xikolo.managers;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +17,7 @@ import java.util.Set;
 
 import de.xikolo.App;
 import de.xikolo.R;
+import de.xikolo.config.Config;
 import de.xikolo.events.DownloadDeletedEvent;
 import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.events.PermissionDeniedEvent;
@@ -25,7 +28,7 @@ import de.xikolo.models.Download;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.network.DownloadHelper;
-import de.xikolo.config.Config;
+import de.xikolo.services.DownloadService;
 import de.xikolo.utils.ExternalStorageUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.ToastUtil;
@@ -115,6 +118,12 @@ public class DownloadManager extends BaseManager {
             ToastUtil.show(R.string.toast_no_external_write_access);
         }
         return 0;
+    }
+
+    public void startDownload() {
+        Context context = App.getInstance();
+        Intent intent = new Intent(context, DownloadService.class);
+        context.startService(intent);
     }
 
     public boolean deleteDownload(DownloadFileType type, Course course, Section section, Item item) {
