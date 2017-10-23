@@ -2,15 +2,24 @@ package de.xikolo.models;
 
 public class Download2 {
 
-    public String title;
+    public int id;
 
     public String url;
 
     public String filePath;
 
-    public int totalBytes;
+    public long totalBytes;
 
-    public int bytesWritten;
+    public long bytesWritten;
+
+    public State state = State.PENDING;
+
+    public enum State {
+        PENDING,
+        RUNNING,
+        SUCCESSFUL,
+        FAILURE,
+    }
 
     public enum FileType {
         SLIDES, TRANSCRIPT, VIDEO_SD, VIDEO_HD;

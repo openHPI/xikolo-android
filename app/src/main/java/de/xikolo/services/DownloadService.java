@@ -44,8 +44,69 @@ public class DownloadService extends Service {
 
     private ConcurrentHashMap<Integer, Download2> downloadMap;
 
+    private static DownloadService instance;
+
+    public static DownloadService getInstance() {
+        return instance;
+    }
+
+    public synchronized boolean isDownloading(String url) {
+        return downloadClient != null && downloadClient.isDownloading(url);
+    }
+
+    public synchronized Download2 getDownload(String url) {
+        for (Download2 download : downloadMap.values()) {
+            if (url.equals(download.url)) return download;
+        }
+
+        return null;
+    }
+
+    private synchronized void updateDownloadProgress(int downloadId, long bytesWritten, long totalBytes) {
+        Download2 download = downloadMap.get(downloadId);
+
+        if (download != null) {
+            download.state = Download2.State.RUNNING;
+            download.bytesWritten = bytesWritten;
+            download.totalBytes = totalBytes;
+
+            downloadMap.put(download.id, download);
+        }
+
+        long bytesWrittenOfAll = 0;
+        long totalBytesOfAll = 0;
+
+        for (Download2 d : downloadMap.values()) {
+            bytesWrittenOfAll += d.bytesWritten;
+            totalBytesOfAll += d.totalBytes;
+        }
+
+        Notification notification = notificationUtil.getDownloadsNotification()
+                .setProgress(100, (int) (bytesWrittenOfAll / (totalBytesOfAll / 100.)), false)
+                .build();
+        notificationUtil.notify(NOTIFICATION_ID, notification);
+    }
+
+    private synchronized void updateDownloadSuccess(int downloadId) {
+        Download2 download = downloadMap.get(downloadId);
+
+        if (download != null) {
+            download.state = Download2.State.SUCCESSFUL;
+        }
+    }
+
+    private synchronized void updateDownloadFailure(int downloadId) {
+        Download2 download = downloadMap.get(downloadId);
+
+        if (download != null) {
+            download.state = Download2.State.FAILURE;
+        }
+    }
+
     @Override
     public void onCreate() {
+        instance = this;
+
         notificationUtil = new NotificationUtil(this);
 
         downloadClient = new DownloadManager.Builder()
@@ -94,10 +155,12 @@ public class DownloadService extends Service {
 
     @Override
     public void onDestroy() {
+        instance = null;
+
         if (Config.DEBUG) Log.d(TAG, "DownloadService destroyed");
 
-        downloadClient.cancelAll();
         stopForeground(true);
+        downloadClient.cancelAll();
     }
 
     // Handler that receives messages from the thread
@@ -133,23 +196,21 @@ public class DownloadService extends Service {
                         @Override
                         public void onStart(int downloadId, long totalBytes) {
                             if (Config.DEBUG) Log.i(TAG, "Download started: " + url);
-                            Notification notification = notificationUtil.getDownloadsNotification()
-                                    .setProgress(100, 0, false)
-                                    .build();
-                            notificationUtil.notify(NOTIFICATION_ID, notification);
+
+                            updateDownloadProgress(downloadId, 0, totalBytes);
                         }
 
                         @Override
                         public void onProgress(int downloadId, long bytesWritten, long totalBytes) {
-                            Notification notification = notificationUtil.getDownloadsNotification()
-                                    .setProgress(100, (int) (bytesWritten / (totalBytes / 100.)), false)
-                                    .build();
-                            notificationUtil.notify(NOTIFICATION_ID, notification);
+                            updateDownloadProgress(downloadId, bytesWritten, totalBytes);
                         }
 
                         @Override
                         public void onSuccess(int downloadId, String filePath) {
                             if (Config.DEBUG) Log.i(TAG, "Download finished: " + filePath);
+
+                            updateDownloadSuccess(downloadId);
+
                             // Stop the service using the startId, so that we don't stop
                             // the service in the middle of handling another job
                             DownloadService.this.stopSelf(messageId);
@@ -158,6 +219,9 @@ public class DownloadService extends Service {
                         @Override
                         public void onFailure(int downloadId, int statusCode, String errMsg) {
                             Log.e(TAG, "Download failed: " + errMsg);
+
+                            updateDownloadFailure(downloadId);
+
                             // Stop the service using the startId, so that we don't stop
                             // the service in the middle of handling another job
                             DownloadService.this.stopSelf(messageId);
@@ -165,8 +229,12 @@ public class DownloadService extends Service {
                     })
                     .build();
 
-            int downloadId = downloadClient.add(request);
+            Download2 download = new Download2();
+            download.url = url;
+            download.filePath = destFilePath;
+            download.id = downloadClient.add(request);
 
+            downloadMap.putIfAbsent(download.id, download);
         }
 
     }
