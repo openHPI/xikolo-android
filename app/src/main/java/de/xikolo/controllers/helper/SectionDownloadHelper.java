@@ -6,14 +6,15 @@ import android.support.v4.app.FragmentActivity;
 import de.xikolo.controllers.dialogs.MobileDownloadDialog;
 import de.xikolo.controllers.dialogs.ModuleDownloadDialog;
 import de.xikolo.controllers.dialogs.ProgressDialog;
+import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.ItemManager;
-import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
+import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 
@@ -87,16 +88,13 @@ public class SectionDownloadHelper {
                         Video video = (Video) item.getContent();
 
                         if (sdVideo) {
-                            startDownload(video.singleStream.sdUrl, DownloadManager.DownloadFileType.VIDEO_SD,
-                                    course, section, item);
+                            startDownload(item.id, DownloadUtil.VideoAssetType.VIDEO_SD);
                         }
                         if (hdVideo) {
-                            startDownload(video.singleStream.hdUrl, DownloadManager.DownloadFileType.VIDEO_HD,
-                                    course, section, item);
+                            startDownload(item.id, DownloadUtil.VideoAssetType.VIDEO_HD);
                         }
                         if (slides) {
-                            startDownload(video.slidesUrl, DownloadManager.DownloadFileType.SLIDES,
-                                    course, section, item);
+                            startDownload(item.id, DownloadUtil.VideoAssetType.SLIDES);
                         }
                     }
                 }
@@ -110,11 +108,10 @@ public class SectionDownloadHelper {
 
     }
 
-    private void startDownload(String uri, DownloadManager.DownloadFileType downloadFileType, Course course, Section module, Item item) {
-        if (uri != null
-                && !downloadManager.downloadExists(downloadFileType, course, module, item)
-                && !downloadManager.downloadRunning(downloadFileType, course, module, item)) {
-            downloadManager.startDownload(uri, downloadFileType, course, module, item);
+    private void startDownload(String itemId, DownloadUtil.VideoAssetType type) {
+        if (!downloadManager.downloadExists(itemId, type)
+                && !downloadManager.downloadRunning(itemId, type)) {
+            downloadManager.startItemAssetDownload(itemId, type);
         }
     }
 

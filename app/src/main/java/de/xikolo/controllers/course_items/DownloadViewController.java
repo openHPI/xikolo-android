@@ -32,6 +32,7 @@ import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
+import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.FileProviderUtil;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.NetworkUtil;
@@ -42,7 +43,7 @@ public class DownloadViewController {
     public static final String TAG = DownloadViewController.class.getSimpleName();
     private static final int MILLISECONDS = 250;
 
-    private DownloadManager.DownloadFileType type;
+    private DownloadUtil.VideoAssetType type;
 
     private FragmentActivity activity;
 
@@ -72,7 +73,7 @@ public class DownloadViewController {
     private int size;
 
     @SuppressWarnings("SetTextI18n")
-    public DownloadViewController(FragmentActivity a, DownloadManager.DownloadFileType t, Course c, final Section s, Item i, Video v) {
+    public DownloadViewController(FragmentActivity a, DownloadUtil.VideoAssetType t, Course c, final Section s, Item i, Video v) {
         activity = a;
         type = t;
         course = c;
@@ -121,11 +122,10 @@ public class DownloadViewController {
         buttonDownloadCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadManager.cancelDownload(
-                        DownloadViewController.this.type,
-                        DownloadViewController.this.course,
-                        DownloadViewController.this.section,
-                        DownloadViewController.this.item);
+                downloadManager.cancelItemAssetDownload(
+                        DownloadViewController.this.item.id,
+                        DownloadViewController.this.type
+                );
 
                 showStartState();
             }
@@ -198,7 +198,7 @@ public class DownloadViewController {
         progressBarUpdater = new Runnable() {
             @Override
             public void run() {
-                final Download dl = downloadManager.getDownload(type, course, section, item);
+                final Download dl = downloadManager.getDownload(item.id, type);
 
                 if (dl != null) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -206,13 +206,13 @@ public class DownloadViewController {
                         public void run() {
                             if (progressBarUpdaterRunning) {
                                 progressBarDownload.setIndeterminate(false);
-                                if (dl.totalSizeBytes == 0) {
+                                if (dl.totalBytes == 0) {
                                     progressBarDownload.setProgress(0);
                                 } else {
-                                    progressBarDownload.setProgress((int) (dl.bytesDownloadedSoFar * 100 / dl.totalSizeBytes));
+                                    progressBarDownload.setProgress((int) (dl.bytesWritten * 100 / dl.totalBytes));
                                 }
-                                textFileSize.setText(FileUtil.getFormattedFileSize(dl.bytesDownloadedSoFar) + " / "
-                                        + FileUtil.getFormattedFileSize(dl.totalSizeBytes));
+                                textFileSize.setText(FileUtil.getFormattedFileSize(dl.bytesWritten) + " / "
+                                        + FileUtil.getFormattedFileSize(dl.totalBytes));
                             }
                         }
                     });
@@ -224,9 +224,9 @@ public class DownloadViewController {
             }
         };
 
-        if (downloadManager.downloadRunning(type, course, section, item)) {
+        if (downloadManager.downloadRunning(item.id, type)) {
             showRunningState();
-        } else if (downloadManager.downloadExists(type, course, section, item)) {
+        } else if (downloadManager.downloadExists(item.id, type)) {
             showEndState();
         } else {
             showStartState();
@@ -235,24 +235,19 @@ public class DownloadViewController {
     }
 
     private void deleteFile() {
-        if (downloadManager.cancelDownload(
-                DownloadViewController.this.type,
-                DownloadViewController.this.course,
-                DownloadViewController.this.section,
-                DownloadViewController.this.item)) {
-            showStartState();
-        }
+        downloadManager.cancelItemAssetDownload(
+                DownloadViewController.this.item.id,
+                DownloadViewController.this.type
+        );
+        showStartState();
     }
 
     private void startDownload() {
-        long status = downloadManager.startDownload(url,
-                DownloadViewController.this.type,
-                DownloadViewController.this.course,
-                DownloadViewController.this.section,
-                DownloadViewController.this.item);
-        if (status != 0) {
-            showRunningState();
-        }
+        downloadManager.startItemAssetDownload(
+                DownloadViewController.this.item.id,
+                DownloadViewController.this.type
+        );
+        showRunningState();
     }
 
     public View getLayout() {
@@ -303,7 +298,7 @@ public class DownloadViewController {
             viewDownloadEnd.setVisibility(View.VISIBLE);
         }
 
-        textFileSize.setText(FileUtil.getFormattedFileSize(downloadManager.getDownloadFileSize(type, course, section, item)));
+        textFileSize.setText(FileUtil.getFormattedFileSize(size));
 
         progressBarUpdaterRunning = false;
     }
@@ -311,8 +306,7 @@ public class DownloadViewController {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadCompletedEvent(DownloadCompletedEvent event) {
-        if (event.getDownload().localUri.contains(item.id)
-                && DownloadManager.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri) == type) {
+        if (event.itemId.equals(item.id) && event.type == type) {
             showEndState();
         }
     }
@@ -320,7 +314,7 @@ public class DownloadViewController {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadStartedEvent(DownloadStartedEvent event) {
-        if (event.getUrl().equals(url) && !progressBarUpdaterRunning) {
+        if (event.itemId.equals(item.id) && event.type == type && !progressBarUpdaterRunning) {
             showRunningState();
         }
     }
@@ -328,7 +322,7 @@ public class DownloadViewController {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadDeletedEvent(DownloadDeletedEvent event) {
-        if (event.getItem().id.equals(item.id) && progressBarUpdaterRunning) {
+        if (event.itemId.equals(item.id) && event.type == type && progressBarUpdaterRunning) {
             showStartState();
         }
     }
@@ -338,7 +332,7 @@ public class DownloadViewController {
         buttonOpenDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File pdf = downloadManager.getDownloadFile(type, course, section, item);
+                File pdf = downloadManager.getDownloadFile(item.id, type);
                 Intent target = new Intent(Intent.ACTION_VIEW);
                 target.setDataAndType(FileProviderUtil.getUriForFile(pdf), "application/pdf");
                 target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);

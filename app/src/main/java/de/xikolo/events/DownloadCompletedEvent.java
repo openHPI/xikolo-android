@@ -1,19 +1,18 @@
 package de.xikolo.events;
 
 import de.xikolo.events.base.Event;
-import de.xikolo.models.Download;
+import de.xikolo.utils.DownloadUtil;
 
 public class DownloadCompletedEvent extends Event {
 
-    private Download dl;
+    public String itemId;
 
-    public DownloadCompletedEvent(Download download) {
-        super(DownloadCompletedEvent.class.getSimpleName() + ": id = " + download.id + ", uri = " + download.uri);
-        this.dl = download;
+    public DownloadUtil.VideoAssetType type;
+
+    public DownloadCompletedEvent(String itemId, DownloadUtil.VideoAssetType type) {
+        super(DownloadCompletedEvent.class.getSimpleName() + ": itemId = " + itemId + ", type = " + type.name());
+        this.itemId = itemId;
+        this.type = type;
     }
 
-    public Download getDownload() {
-        return dl;
-    }
-    
 }

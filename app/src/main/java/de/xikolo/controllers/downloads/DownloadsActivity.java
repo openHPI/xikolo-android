@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 
 import de.xikolo.R;
 import de.xikolo.controllers.base.BaseActivity;
-import de.xikolo.managers.DownloadManager;
 
 public class DownloadsActivity extends BaseActivity {
 
@@ -22,9 +21,6 @@ public class DownloadsActivity extends BaseActivity {
         setTitle(getString(R.string.title_section_downloads));
 
         String tag = "downloads";
-
-        DownloadManager downloadManager = new DownloadManager(this);
-        downloadManager.startDownload();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {

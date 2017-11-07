@@ -35,6 +35,7 @@ import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
+import de.xikolo.utils.DownloadUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteListener, OnPageChangeListener {
@@ -92,14 +93,14 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
             }
         });
 
-        if (downloadManager.downloadExists(DownloadManager.DownloadFileType.SLIDES, course, section, item)) {
+        if (downloadManager.downloadExists(item.id, DownloadUtil.VideoAssetType.SLIDES)) {
             initSlidesViewer();
         } else {
             DownloadSlidesDialog dialog = DownloadSlidesDialog.getInstance();
             dialog.setListener(new DownloadSlidesDialog.DownloadSlidesDialogListener() {
                 @Override
                 public void onDialogPositiveClick() {
-                    downloadManager.startDownload(video.slidesUrl, DownloadManager.DownloadFileType.SLIDES, course, section, item);
+                    downloadManager.startItemAssetDownload(item.id, DownloadUtil.VideoAssetType.SLIDES);
                     progressDialog = ProgressDialog.getInstance();
                     progressDialog.show(getFragmentManager(), ProgressDialog.TAG);
                 }
@@ -114,8 +115,8 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     }
 
     private void initSlidesViewer() {
-        if (downloadManager != null && downloadManager.downloadExists(DownloadManager.DownloadFileType.SLIDES, course, section, item)) {
-            File file = downloadManager.getDownloadFile(DownloadManager.DownloadFileType.SLIDES, course, section, item);
+        if (downloadManager != null && downloadManager.downloadExists(item.id, DownloadUtil.VideoAssetType.SLIDES)) {
+            File file = downloadManager.getDownloadFile(item.id, DownloadUtil.VideoAssetType.SLIDES);
             pdfView.fromFile(file)
                     .enableAnnotationRendering(true)
                     .onLoad(this)
@@ -182,8 +183,7 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadCompletedEvent(DownloadCompletedEvent event) {
-        if (event.getDownload().localUri.contains(item.id)
-                && DownloadManager.DownloadFileType.getDownloadFileTypeFromUri(event.getDownload().localUri) == DownloadManager.DownloadFileType.SLIDES) {
+        if (event.itemId.equals(item.id) && event.type == DownloadUtil.VideoAssetType.SLIDES) {
             if (progressDialog != null && progressDialog.getDialog().isShowing()) {
                 progressDialog.getDialog().cancel();
             }

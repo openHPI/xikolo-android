@@ -110,8 +110,11 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
 
             List<DownloadsAdapter.FolderItem> list = new ArrayList<>();
 
-            DownloadsAdapter.FolderItem total = new DownloadsAdapter.FolderItem(downloadManager.getAppFolder().substring(downloadManager.getAppFolder().lastIndexOf(File.separator) + 1),
-                    downloadManager.getAppFolder());
+            String appFolder = FileUtil.createPublicAppFolderPath();
+
+            DownloadsAdapter.FolderItem total = new DownloadsAdapter.FolderItem(
+                    appFolder.substring(appFolder.lastIndexOf(File.separator) + 1),
+                    appFolder);
             list.add(total);
 
             adapter.addItem(getString(R.string.overall), list);

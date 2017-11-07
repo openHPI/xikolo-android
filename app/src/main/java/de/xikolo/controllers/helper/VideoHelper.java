@@ -33,6 +33,7 @@ import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
+import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.PlaybackSpeedUtil;
@@ -426,9 +427,9 @@ public class VideoHelper {
         int connectivityStatus = NetworkUtil.getConnectivityStatus();
         ApplicationPreferences appPreferences = new ApplicationPreferences();
 
-        if (videoDownloadPresent(DownloadManager.DownloadFileType.VIDEO_HD, course, module, item)) { // hd video download available
+        if (videoDownloadPresent(item.id, DownloadUtil.VideoAssetType.VIDEO_HD)) { // hd video download available
             videoMode = VideoMode.HD;
-        } else if (videoDownloadPresent(DownloadManager.DownloadFileType.VIDEO_SD, course, module, item)) { // sd video download available
+        } else if (videoDownloadPresent(item.id, DownloadUtil.VideoAssetType.VIDEO_SD)) { // sd video download available
             videoMode = VideoMode.SD;
         } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !appPreferences.isVideoQualityLimitedOnMobile()) {
             videoMode = VideoMode.HD;
@@ -445,24 +446,24 @@ public class VideoHelper {
 
     private void updateVideo(Course course, Section module, Item item, Video video) {
         String stream;
-        DownloadManager.DownloadFileType fileType;
+        DownloadUtil.VideoAssetType videoAssetType;
 
         viewVideoWarning.setVisibility(View.GONE);
 
         if (videoMode == VideoMode.HD) {
             stream = video.singleStream.hdUrl;
-            fileType = DownloadManager.DownloadFileType.VIDEO_HD;
+            videoAssetType = DownloadUtil.VideoAssetType.VIDEO_HD;
         } else {
             stream = video.singleStream.sdUrl;
-            fileType = DownloadManager.DownloadFileType.VIDEO_SD;
+            videoAssetType = DownloadUtil.VideoAssetType.VIDEO_SD;
         }
 
         viewOfflineHint.setVisibility(View.GONE);
 
-        if (videoDownloadPresent(fileType, course, module, item)) {
-            setLocalVideoURI(fileType, course, module, item);
+        if (videoDownloadPresent(item.id, videoAssetType)) {
+            setLocalVideoUri(item.id, videoAssetType);
         } else if (NetworkUtil.isOnline()) {
-            setVideoURI(stream);
+            setVideoUri(stream);
         } else if (videoMode == VideoMode.HD) {
             videoMode = VideoMode.SD;
             updateVideo(course, module, item, video);
@@ -474,17 +475,17 @@ public class VideoHelper {
         updateHdSwitchColor();
     }
 
-    private boolean videoDownloadPresent(DownloadManager.DownloadFileType fileType, Course course, Section module, Item item) {
-        return !downloadManager.downloadRunning(fileType, course, module, item)
-                && downloadManager.downloadExists(fileType, course, module, item);
+    private boolean videoDownloadPresent(String itemId, DownloadUtil.VideoAssetType type) {
+        return !downloadManager.downloadRunning(itemId, type)
+                && downloadManager.downloadExists(itemId, type);
     }
 
-    private void setLocalVideoURI(DownloadManager.DownloadFileType fileType, Course course, Section module, Item item) {
-        setVideoURI("file://" + downloadManager.getDownloadFile(fileType, course, module, item).getAbsolutePath());
+    private void setLocalVideoUri(String itemId, DownloadUtil.VideoAssetType type) {
+        setVideoUri("file://" + downloadManager.getDownloadFile(itemId, type).getAbsolutePath());
         viewOfflineHint.setVisibility(View.VISIBLE);
     }
 
-    private void setVideoURI(String uri) {
+    private void setVideoUri(String uri) {
         if (Config.DEBUG) {
             Log.i(TAG, "Video HOST_URL: " + uri);
         }

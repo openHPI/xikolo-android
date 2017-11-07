@@ -3,7 +3,6 @@ package de.xikolo.services;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -15,22 +14,24 @@ import android.util.Log;
 import com.coolerfall.download.DownloadCallback;
 import com.coolerfall.download.DownloadManager;
 import com.coolerfall.download.DownloadRequest;
-import com.coolerfall.download.OkHttpDownloader;
 
-import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import de.xikolo.App;
-import de.xikolo.R;
 import de.xikolo.config.Config;
-import de.xikolo.models.Download2;
-import de.xikolo.utils.FileUtil;
+import de.xikolo.models.Download;
+import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.NotificationUtil;
 
 public class DownloadService extends Service {
 
-    private static final String TAG = DownloadService.class.getSimpleName();
+    public static final String TAG = DownloadService.class.getSimpleName();
+
+    public static final String ARG_TITLE = "title";
+
+    public static final String ARG_URL = "url";
+
+    public static final String ARG_FILE_PATH = "file_path";
 
     private static final int NOTIFICATION_ID = 420;
 
@@ -42,7 +43,7 @@ public class DownloadService extends Service {
 
     private DownloadManager downloadClient;
 
-    private ConcurrentHashMap<Integer, Download2> downloadMap;
+    private ConcurrentHashMap<Integer, Download> downloadMap;
 
     private static DownloadService instance;
 
@@ -54,19 +55,26 @@ public class DownloadService extends Service {
         return downloadClient != null && downloadClient.isDownloading(url);
     }
 
-    public synchronized Download2 getDownload(String url) {
-        for (Download2 download : downloadMap.values()) {
+    public synchronized Download getDownload(String url) {
+        for (Download download : downloadMap.values()) {
             if (url.equals(download.url)) return download;
         }
 
         return null;
     }
 
+    public synchronized void cancelDownload(String url) {
+        Download download = getDownload(url);
+        if (download != null && isDownloading(url)) {
+            downloadClient.cancel(download.id);
+        }
+    }
+
     private synchronized void updateDownloadProgress(int downloadId, long bytesWritten, long totalBytes) {
-        Download2 download = downloadMap.get(downloadId);
+        Download download = downloadMap.get(downloadId);
 
         if (download != null) {
-            download.state = Download2.State.RUNNING;
+            download.state = Download.State.RUNNING;
             download.bytesWritten = bytesWritten;
             download.totalBytes = totalBytes;
 
@@ -76,7 +84,7 @@ public class DownloadService extends Service {
         long bytesWrittenOfAll = 0;
         long totalBytesOfAll = 0;
 
-        for (Download2 d : downloadMap.values()) {
+        for (Download d : downloadMap.values()) {
             bytesWrittenOfAll += d.bytesWritten;
             totalBytesOfAll += d.totalBytes;
         }
@@ -88,18 +96,18 @@ public class DownloadService extends Service {
     }
 
     private synchronized void updateDownloadSuccess(int downloadId) {
-        Download2 download = downloadMap.get(downloadId);
+        Download download = downloadMap.get(downloadId);
 
         if (download != null) {
-            download.state = Download2.State.SUCCESSFUL;
+            download.state = Download.State.SUCCESSFUL;
         }
     }
 
     private synchronized void updateDownloadFailure(int downloadId) {
-        Download2 download = downloadMap.get(downloadId);
+        Download download = downloadMap.get(downloadId);
 
         if (download != null) {
-            download.state = Download2.State.FAILURE;
+            download.state = Download.State.FAILURE;
         }
     }
 
@@ -111,7 +119,7 @@ public class DownloadService extends Service {
 
         downloadClient = new DownloadManager.Builder()
                 .context(this)
-                .downloader(OkHttpDownloader.create())
+//                .downloader(OkHttpDownloader.create())
                 .build();
 
         downloadMap = new ConcurrentHashMap<>();
@@ -139,6 +147,7 @@ public class DownloadService extends Service {
         // start ID so we know which request we're stopping when we finish the job
         Message msg = serviceHandler.obtainMessage();
         msg.arg1 = startId;
+        msg.setData(intent.getExtras());
         serviceHandler.sendMessage(msg);
 
         Log.w(TAG, "Start ServiceHandler with ID: " + msg.arg1);
@@ -174,24 +183,22 @@ public class DownloadService extends Service {
         public void handleMessage(Message message) {
             final int messageId = message.arg1;
 
-            String destPath = Environment.getExternalStorageDirectory() + File.separator + App.getInstance().getString(R.string.app_name);
-            destPath += "/In-Memory_Data_Management_2017_d013d1a5-0f2c-42b7-a5ad-2bf665585faf/Week_1_b3bafe2e-faea-48e7-8218-c2a7ce4aa6ce/History_of_Enterprise_Computing_3975bbe0-01eb-456f-a465-391fd65a4286/";
-            String destFilePath = destPath + "History_of_Enterprise_Computing_video_sd.mp4";
+            final String title = message.getData().getString(ARG_TITLE);
+            final String url = message.getData().getString(ARG_URL);
+            final String filePath = message.getData().getString(ARG_FILE_PATH);
 
-//            destPath += "/Web-Technologien_71934f16-ffeb-4abd-a256-c8818fbc567e/Woche_5_77f10153-62b6-40a8-bf33-1cb5cd7de686/5.1_Technologien_1fdb48ad-d305-4eac-954e-e31762a3c299/";
-//            String destFilePath = destPath + "5.1_Technologien_slides.pdf";
-
-            FileUtil.createFolderIfNotExists(new File(destPath));
-
-            final String url = "https://player.vimeo.com/external/104610371.sd.mp4?s=bd16c26c117f94e5a62eab7c17295cc67e794eb8&profile_id=165&oauth2_token_id=60919992";
+            int allowedNetworkTypes = DownloadRequest.NETWORK_WIFI | DownloadRequest.NETWORK_MOBILE;
+            ApplicationPreferences appPreferences = new ApplicationPreferences();
+            if (appPreferences.isDownloadNetworkLimitedOnMobile()) {
+                allowedNetworkTypes = DownloadRequest.NETWORK_WIFI;
+            }
 
             DownloadRequest request = new DownloadRequest.Builder()
                     .url(url)
-//                    .url("https://open.hpi.de/files/7f36c275-ecac-41e2-a01d-1d652d7e945b.pdf")
                     .retryTime(0)
                     .progressInterval(1, TimeUnit.SECONDS)
-                    .allowedNetworkTypes(DownloadRequest.NETWORK_MOBILE)
-                    .destinationFilePath(destFilePath)
+                    .allowedNetworkTypes(allowedNetworkTypes)
+                    .destinationFilePath(filePath)
                     .downloadCallback(new DownloadCallback() {
                         @Override
                         public void onStart(int downloadId, long totalBytes) {
@@ -229,9 +236,10 @@ public class DownloadService extends Service {
                     })
                     .build();
 
-            Download2 download = new Download2();
+            Download download = new Download();
+            download.title = title;
             download.url = url;
-            download.filePath = destFilePath;
+            download.filePath = filePath;
             download.id = downloadClient.add(request);
 
             downloadMap.putIfAbsent(download.id, download);

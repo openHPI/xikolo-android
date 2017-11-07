@@ -1,19 +1,18 @@
 package de.xikolo.events;
 
 import de.xikolo.events.base.Event;
-import de.xikolo.models.Item;
+import de.xikolo.utils.DownloadUtil;
 
 public class DownloadDeletedEvent extends Event {
 
-    private Item item;
+    public String itemId;
 
-    public DownloadDeletedEvent(Item item) {
-        super(DownloadDeletedEvent.class.getSimpleName() + ": item.id = " + item.id);
-        this.item = item;
-    }
+    public DownloadUtil.VideoAssetType type;
 
-    public Item getItem() {
-        return item;
+    public DownloadDeletedEvent(String itemId, DownloadUtil.VideoAssetType type) {
+        super(DownloadCompletedEvent.class.getSimpleName() + ": itemId = " + itemId + ", type = " + type.name());
+        this.itemId = itemId;
+        this.type = type;
     }
     
 }

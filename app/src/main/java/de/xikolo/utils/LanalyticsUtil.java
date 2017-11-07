@@ -12,7 +12,6 @@ import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.lanalytics.Tracker;
-import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.storages.UserStorage;
 
@@ -113,7 +112,7 @@ public class LanalyticsUtil {
                 .build());
     }
 
-    public static void trackDownloadedFile(String videoId, String courseId, String sectionId, DownloadManager.DownloadFileType type) {
+    public static void trackDownloadedFile(String videoId, String courseId, String sectionId, DownloadUtil.VideoAssetType type) {
         String verb = null;
         switch (type) {
             case VIDEO_HD: verb = "DOWNLOADED_HD_VIDEO"; break;

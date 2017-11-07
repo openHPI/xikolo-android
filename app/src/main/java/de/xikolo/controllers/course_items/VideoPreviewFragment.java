@@ -24,7 +24,6 @@ import de.xikolo.R;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.video.VideoActivityAutoBundle;
-import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -34,6 +33,7 @@ import de.xikolo.presenters.course_items.VideoPreviewPresenter;
 import de.xikolo.presenters.course_items.VideoPreviewPresenterFactory;
 import de.xikolo.presenters.course_items.VideoPreviewView;
 import de.xikolo.utils.CastUtil;
+import de.xikolo.utils.DownloadUtil;
 import de.xikolo.views.CustomSizeImageView;
 
 public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPreviewPresenter, VideoPreviewView> implements VideoPreviewView {
@@ -99,11 +99,11 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
         textTitle.setText(video.title);
 
         linearLayoutDownloads.removeAllViews();
-        DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadManager.DownloadFileType.VIDEO_HD, course, section, item, video);
+        DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.VIDEO_HD, course, section, item, video);
         linearLayoutDownloads.addView(hdVideo.getLayout());
-        DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadManager.DownloadFileType.VIDEO_SD, course, section, item, video);
+        DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.VIDEO_SD, course, section, item, video);
         linearLayoutDownloads.addView(sdVideo.getLayout());
-        DownloadViewController slides = new DownloadViewController(getActivity(), DownloadManager.DownloadFileType.SLIDES, course, section, item, video);
+        DownloadViewController slides = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.SLIDES, course, section, item, video);
         linearLayoutDownloads.addView(slides.getLayout());
 
         long minutes = TimeUnit.SECONDS.toMinutes(video.duration);

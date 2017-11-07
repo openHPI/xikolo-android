@@ -1,18 +1,18 @@
 package de.xikolo.events;
 
 import de.xikolo.events.base.Event;
+import de.xikolo.utils.DownloadUtil;
 
 public class DownloadStartedEvent extends Event {
 
-    private String url;
+    public String itemId;
 
-    public DownloadStartedEvent(String url) {
-        super(DownloadStartedEvent.class.getSimpleName() + ": url = " + url);
-        this.url = url;
-    }
+    public DownloadUtil.VideoAssetType type;
 
-    public String getUrl() {
-        return url;
+    public DownloadStartedEvent(String itemId, DownloadUtil.VideoAssetType type) {
+        super(DownloadCompletedEvent.class.getSimpleName() + ": itemId = " + itemId + ", type = " + type.name());
+        this.itemId = itemId;
+        this.type = type;
     }
     
 }

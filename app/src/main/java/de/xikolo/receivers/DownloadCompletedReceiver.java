@@ -1,26 +1,18 @@
 package de.xikolo.receivers;
 
-import android.app.DownloadManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.List;
 
 import de.xikolo.R;
 import de.xikolo.controllers.downloads.DownloadsActivity;
-import de.xikolo.events.DownloadCompletedEvent;
-import de.xikolo.models.Download;
-import de.xikolo.network.DownloadHelper;
-import de.xikolo.storages.NotificationStorage;
 
 public class DownloadCompletedReceiver extends BroadcastReceiver {
 
@@ -30,33 +22,33 @@ public class DownloadCompletedReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        String action = intent.getAction();
-
-        if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
-
-            long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-            Download dl = DownloadHelper.getDownloadForId(downloadId);
-
-            if (dl != null) {
-                EventBus.getDefault().post(new DownloadCompletedEvent(dl));
-
-                NotificationStorage notificationStorage = new NotificationStorage();
-
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-                    notificationStorage.addDownloadNotification(dl.title);
-                    showNotification(context, dl.title);
-
-                    List<String> downloadList = notificationStorage.getDownloadNotifications();
-                    if (downloadList.size() > 1) {
-                        showSummaryNotification(context, downloadList);
-                    }
-                } else { // Notifications with group doesn't work before Lollipop
-                    notificationStorage.addDownloadNotification(dl.title);
-                    List<String> downloadList = notificationStorage.getDownloadNotifications();
-                    showSummaryNotification(context, downloadList);
-                }
-            }
-        }
+//        String action = intent.getAction();
+//
+//        if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+//
+//            long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+//            Download2 dl = DownloadHelper.getDownloadForId(downloadId);
+//
+//            if (dl != null) {
+//                EventBus.getDefault().post(new DownloadCompletedEvent(dl));
+//
+//                NotificationStorage notificationStorage = new NotificationStorage();
+//
+//                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+//                    notificationStorage.addDownloadNotification(dl.title);
+//                    showNotification(context, dl.title);
+//
+//                    List<String> downloadList = notificationStorage.getDownloadNotifications();
+//                    if (downloadList.size() > 1) {
+//                        showSummaryNotification(context, downloadList);
+//                    }
+//                } else { // Notifications with group doesn't work before Lollipop
+//                    notificationStorage.addDownloadNotification(dl.title);
+//                    List<String> downloadList = notificationStorage.getDownloadNotifications();
+//                    showSummaryNotification(context, downloadList);
+//                }
+//            }
+//        }
     }
 
     private void showNotification(Context context, String title) {

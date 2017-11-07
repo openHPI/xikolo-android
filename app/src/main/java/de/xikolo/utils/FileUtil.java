@@ -1,9 +1,13 @@
 package de.xikolo.utils;
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
 import java.text.DecimalFormat;
+
+import de.xikolo.App;
+import de.xikolo.R;
 
 public class FileUtil {
 
@@ -76,6 +80,42 @@ public class FileUtil {
         } else {
             Log.d(TAG, "Folder " + file.getAbsolutePath() + " already exists");
         }
+    }
+
+    public static String createPublicAppFolderPath() {
+        File appFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+                + App.getInstance().getString(R.string.app_name));
+
+        createFolderIfNotExists(appFolder);
+
+        return appFolder.getAbsolutePath();
+    }
+
+    public static String escapeFilename(String filename) {
+        return replaceUmlaute(filename).replaceAll("[^a-zA-Z0-9\\(\\).-]", "_");
+    }
+
+    /**
+     * Source http://gordon.koefner.at/blog/coding/replacing-german-umlauts/
+     */
+    private static String replaceUmlaute(String input) {
+        //replace all lower Umlauts
+        String output = input.replace("ü", "ue")
+                .replace("ö", "oe")
+                .replace("ä", "ae")
+                .replace("ß", "ss");
+
+        //first replace all capital umlaute in a non-capitalized context (e.g. Übung)
+        output = output.replace("Ü(?=[a-zäöüß ])", "Ue")
+                .replace("Ö(?=[a-zäöüß ])", "Oe")
+                .replace("Ä(?=[a-zäöüß ])", "Ae");
+
+        //now replace all the other capital umlaute
+        output = output.replace("Ü", "UE")
+                .replace("Ö", "OE")
+                .replace("Ä", "AE");
+
+        return output;
     }
 
 }

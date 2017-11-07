@@ -46,6 +46,13 @@ public class Item extends RealmObject {
         return model;
     }
 
+    public Section getSection() {
+        Realm realm = Realm.getDefaultInstance();
+        Section section = realm.where(Section.class).equalTo("id", sectionId).findFirst();
+        realm.close();
+        return section;
+    }
+
     public RealmObject getContent() {
         Realm realm = Realm.getDefaultInstance();
 
