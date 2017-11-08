@@ -22,6 +22,7 @@ import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog;
 import de.xikolo.controllers.dialogs.MobileDownloadDialog;
+import de.xikolo.events.AllDownloadsCancelledEvent;
 import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.events.DownloadDeletedEvent;
 import de.xikolo.events.DownloadStartedEvent;
@@ -234,20 +235,24 @@ public class DownloadViewController {
 
     }
 
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+    }
+
     private void deleteFile() {
-        downloadManager.cancelItemAssetDownload(
+        if (downloadManager.deleteItemAssetDownload(
                 DownloadViewController.this.item.id,
-                DownloadViewController.this.type
-        );
-        showStartState();
+                DownloadViewController.this.type)) {
+            showStartState();
+        }
     }
 
     private void startDownload() {
-        downloadManager.startItemAssetDownload(
+        if (downloadManager.startItemAssetDownload(
                 DownloadViewController.this.item.id,
-                DownloadViewController.this.type
-        );
-        showRunningState();
+                DownloadViewController.this.type)) {
+            showRunningState();
+        }
     }
 
     public View getLayout() {
@@ -306,7 +311,7 @@ public class DownloadViewController {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadCompletedEvent(DownloadCompletedEvent event) {
-        if (event.itemId.equals(item.id) && event.type == type) {
+        if (event.url.equals(url)) {
             showEndState();
         }
     }
@@ -323,6 +328,14 @@ public class DownloadViewController {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadDeletedEvent(DownloadDeletedEvent event) {
         if (event.itemId.equals(item.id) && event.type == type && progressBarUpdaterRunning) {
+            showStartState();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAllDownloadCancelledEvent(AllDownloadsCancelledEvent event) {
+        if (progressBarUpdaterRunning) {
             showStartState();
         }
     }

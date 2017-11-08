@@ -1,34 +1,24 @@
 package de.xikolo.managers;
 
 import android.annotation.TargetApi;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import de.xikolo.App;
-import de.xikolo.R;
-import de.xikolo.controllers.second_screen.SecondScreenActivity;
 import de.xikolo.events.base.Event;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Item;
 import de.xikolo.models.Video;
 import de.xikolo.models.WebSocketMessage;
+import de.xikolo.utils.NotificationUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SecondScreenManager {
 
     public static final String TAG = SecondScreenManager.class.getSimpleName();
-
-    public static final int NOTIFICATION_ID = "second_screen_notification".hashCode();
 
     private String courseId;
 
@@ -40,11 +30,15 @@ public class SecondScreenManager {
 
     private ItemManager itemManager;
 
+    private NotificationUtil notificationUtil;
+
     private boolean isRequesting;
 
     public SecondScreenManager() {
         courseManager = new CourseManager();
         itemManager = new ItemManager();
+
+        notificationUtil = new NotificationUtil(App.getInstance());
 
         EventBus.getDefault().register(this);
 
@@ -79,8 +73,7 @@ public class SecondScreenManager {
                     EventBus.getDefault().post(new SecondScreenUpdateVideoEvent(courseId, sectionId, itemId, message));
 
                     if (message.action.equals("video_close")) {
-                        NotificationManager notificationManager = (NotificationManager) App.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.cancel(NOTIFICATION_ID);
+                        notificationUtil.cancelSecondScreenNotification();
 
                         EventBus.getDefault().removeStickyEvent(SecondScreenNewVideoEvent.class);
 
@@ -126,28 +119,10 @@ public class SecondScreenManager {
         return new JobCallback() {
             @Override
             protected void onSuccess() {
-                Context context = App.getInstance();
-
                 Item item = Item.get(itemId);
 
                 // show notification
-                NotificationCompat.Builder builder =
-                        new NotificationCompat.Builder(context)
-                                .setSmallIcon(R.drawable.ic_notification_second_screen)
-                                .setContentTitle(context.getString(R.string.notification_start_second_screen))
-                                .setContentText(item.title)
-                                .setAutoCancel(true)
-                                .setColor(ContextCompat.getColor(context, R.color.apptheme_main))
-                                .setPriority(Notification.PRIORITY_HIGH)
-                                .setVibrate(new long[0]);
-
-                Intent intent = new Intent(context, SecondScreenActivity.class);
-                PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                builder.setContentIntent(contentIntent);
-
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(NOTIFICATION_ID, builder.build());
+                notificationUtil.showSecondScreenNotification(item.title);
 
                 // post sticky new video event
                 EventBus.getDefault().postSticky(new SecondScreenNewVideoEvent(courseId, sectionId, itemId, message));

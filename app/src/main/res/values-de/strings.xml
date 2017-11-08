@@ -170,6 +170,8 @@
     <string name="notification_multiple_downloads_completed">%1$d Downloads abgeschlossen</string>
     <string name="notification_start_second_screen">Starte Second Screen</string>
 
+    <string name="notification_multiple_downloads_running">%1$d Dateien werden heruntergeladen</string>
+
     <!-- -->
     <string name="toast_no_courses">Keine Kurse erhalten.</string>
     <string name="toast_no_network">Bitte aktivieren Sie die Netzwerk-Verbindung.</string>

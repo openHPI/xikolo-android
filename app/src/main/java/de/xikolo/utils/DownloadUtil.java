@@ -30,20 +30,31 @@ public class DownloadUtil {
                     return "";
             }
         }
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case SLIDES:
+                    return "Slides";
+                case TRANSCRIPT:
+                    return "Transcript";
+                case VIDEO_SD:
+                    return "SD Video";
+                case VIDEO_HD:
+                    return "HD Video";
+                case AUDIO:
+                    return "Audio";
+                default:
+                    return "";
+            }
+        }
     }
 
     public static String getVideoAssetFilePath(VideoAssetType type, Course course, Section section, Item item) {
-        String position = section.position + "." + item.position;
-
-        if (item.title.startsWith(position)) {
-            position = null;
-        } else {
-            position += "_";
-        }
-
         return FileUtil.createPublicAppFolderPath() + File.separator
                 + FileUtil.escapeFilename(course.title) + "_" + course.id + File.separator
-                + position + FileUtil.escapeFilename(item.title) + type.getFileSuffix();
+                + FileUtil.escapeFilename(section.title) + "_" + section.id + File.separator
+                + FileUtil.escapeFilename(item.title) + type.getFileSuffix();
     }
 
     public static String getVideoAssetUrl(VideoAssetType type, Video video) {

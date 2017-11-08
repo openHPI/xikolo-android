@@ -18,6 +18,7 @@ import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.events.DownloadDeletedEvent;
+import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
 import de.xikolo.managers.base.BaseManager;
@@ -30,6 +31,7 @@ import de.xikolo.services.DownloadService;
 import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.ExternalStorageUtil;
 import de.xikolo.utils.FileUtil;
+import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.ToastUtil;
 import io.realm.Realm;
 
@@ -63,9 +65,9 @@ public class DownloadManager extends BaseManager {
         EventBus.getDefault().register(this);
     }
 
-    public void startItemAssetDownload(String itemId, DownloadUtil.VideoAssetType type) {
-//        if (ExternalStorageUtil.isExternalStorageWritable()) {
-//            if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
+    public boolean startItemAssetDownload(String itemId, DownloadUtil.VideoAssetType type) {
+        if (ExternalStorageUtil.isExternalStorageWritable()) {
+            if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
 
                 Context context = App.getInstance();
                 Intent intent = new Intent(context, DownloadService.class);
@@ -77,31 +79,36 @@ public class DownloadManager extends BaseManager {
                 String url = getDownloadUrl(itemId, type);
                 String filePath = DownloadUtil.getVideoAssetFilePath(type, course, section, item);
 
-//                if (downloadExists(filePath)) {
-//                    ToastUtil.show(R.string.toast_file_already_downloaded);
-//                } else {
+                if (downloadExists(filePath)) {
+                    ToastUtil.show(R.string.toast_file_already_downloaded);
+                    return false;
+                } else {
                     FileUtil.createFolderIfNotExists(new File(filePath.substring(0, filePath.lastIndexOf(File.separator))));
 
                     Bundle bundle = new Bundle();
-                    bundle.putString(DownloadService.ARG_TITLE, item.title);
+                    bundle.putString(DownloadService.ARG_TITLE, item.title + " (" + type.toString() + ")");
                     bundle.putString(DownloadService.ARG_URL, url);
                     bundle.putString(DownloadService.ARG_FILE_PATH, filePath);
 
                     intent.putExtras(bundle);
                     context.startService(intent);
 
-//                    LanalyticsUtil.trackDownloadedFile(item.id, course.id, section.id, type);
-//
-//                    EventBus.getDefault().post(new DownloadStartedEvent(itemId, type));
-//                }
-//            } else {
-//                pendingAction = PendingAction.START;
-//                pendingAction.savePayload(itemId, type);
-//            }
-//        } else {
-//            Log.w(TAG, "No write access for external storage");
-//            ToastUtil.show(R.string.toast_no_external_write_access);
-//        }
+                    LanalyticsUtil.trackDownloadedFile(item.id, course.id, section.id, type);
+
+                    EventBus.getDefault().post(new DownloadStartedEvent(itemId, type));
+
+                    return true;
+                }
+            } else {
+                pendingAction = PendingAction.START;
+                pendingAction.savePayload(itemId, type);
+                return false;
+            }
+        } else {
+            Log.w(TAG, "No write access for external storage");
+            ToastUtil.show(R.string.toast_no_external_write_access);
+            return false;
+        }
     }
 
     public boolean deleteItemAssetDownload(String itemId, DownloadUtil.VideoAssetType type) {
@@ -141,8 +148,6 @@ public class DownloadManager extends BaseManager {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
 
-                Item item = Item.get(itemId);
-
                 String url = getDownloadUrl(itemId, type);
 
                 if (Config.DEBUG) {
@@ -152,8 +157,9 @@ public class DownloadManager extends BaseManager {
                 DownloadService downloadService = DownloadService.getInstance();
                 if (downloadService != null) {
                     downloadService.cancelDownload(url);
-                    EventBus.getDefault().post(new DownloadDeletedEvent(itemId, type));
                 }
+
+                deleteItemAssetDownload(itemId, type);
             } else {
                 pendingAction = PendingAction.CANCEL;
                 pendingAction.savePayload(itemId, type);
@@ -267,7 +273,9 @@ public class DownloadManager extends BaseManager {
     }
 
     private String getDownloadUrl(String itemId, DownloadUtil.VideoAssetType type) {
-        Video video = Realm.getDefaultInstance().copyFromRealm(Video.getForItemId(itemId));
+        Realm realm = Realm.getDefaultInstance();
+        Video video = realm.copyFromRealm(Video.getForItemId(itemId));
+        realm.close();
         return DownloadUtil.getVideoAssetUrl(type, video);
     }
 

@@ -1,8 +1,6 @@
 package de.xikolo.controllers.second_screen;
 
 import android.annotation.TargetApi;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +21,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.config.GlideApp;
@@ -35,6 +32,7 @@ import de.xikolo.models.SubtitleTrack;
 import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.LanalyticsUtil;
+import de.xikolo.utils.NotificationUtil;
 import de.xikolo.utils.TimeUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -94,8 +92,8 @@ public class SecondScreenFragment extends BaseFragment {
             initSeconScreenActions(item, video, event);
 
             // clear notification, user is already here
-            NotificationManager notificationManager = (NotificationManager) App.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(SecondScreenManager.NOTIFICATION_ID);
+            NotificationUtil notificationUtil = new NotificationUtil(getActivity());
+            notificationUtil.cancelSecondScreenNotification();
         }
 
         if (appPreferences != null) {

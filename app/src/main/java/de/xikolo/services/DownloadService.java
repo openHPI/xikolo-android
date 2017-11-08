@@ -14,14 +14,22 @@ import android.util.Log;
 import com.coolerfall.download.DownloadCallback;
 import com.coolerfall.download.DownloadManager;
 import com.coolerfall.download.DownloadRequest;
+import com.coolerfall.download.OkHttpDownloader;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import de.xikolo.config.Config;
+import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.models.Download;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.NotificationUtil;
+import okhttp3.OkHttpClient;
 
 public class DownloadService extends Service {
 
@@ -32,10 +40,6 @@ public class DownloadService extends Service {
     public static final String ARG_URL = "url";
 
     public static final String ARG_FILE_PATH = "file_path";
-
-    private static final int NOTIFICATION_ID = 420;
-
-    private Looper serviceLooper;
 
     private ServiceHandler serviceHandler;
 
@@ -51,75 +55,24 @@ public class DownloadService extends Service {
         return instance;
     }
 
-    public synchronized boolean isDownloading(String url) {
-        return downloadClient != null && downloadClient.isDownloading(url);
-    }
-
-    public synchronized Download getDownload(String url) {
-        for (Download download : downloadMap.values()) {
-            if (url.equals(download.url)) return download;
-        }
-
-        return null;
-    }
-
-    public synchronized void cancelDownload(String url) {
-        Download download = getDownload(url);
-        if (download != null && isDownloading(url)) {
-            downloadClient.cancel(download.id);
-        }
-    }
-
-    private synchronized void updateDownloadProgress(int downloadId, long bytesWritten, long totalBytes) {
-        Download download = downloadMap.get(downloadId);
-
-        if (download != null) {
-            download.state = Download.State.RUNNING;
-            download.bytesWritten = bytesWritten;
-            download.totalBytes = totalBytes;
-
-            downloadMap.put(download.id, download);
-        }
-
-        long bytesWrittenOfAll = 0;
-        long totalBytesOfAll = 0;
-
-        for (Download d : downloadMap.values()) {
-            bytesWrittenOfAll += d.bytesWritten;
-            totalBytesOfAll += d.totalBytes;
-        }
-
-        Notification notification = notificationUtil.getDownloadsNotification()
-                .setProgress(100, (int) (bytesWrittenOfAll / (totalBytesOfAll / 100.)), false)
-                .build();
-        notificationUtil.notify(NOTIFICATION_ID, notification);
-    }
-
-    private synchronized void updateDownloadSuccess(int downloadId) {
-        Download download = downloadMap.get(downloadId);
-
-        if (download != null) {
-            download.state = Download.State.SUCCESSFUL;
-        }
-    }
-
-    private synchronized void updateDownloadFailure(int downloadId) {
-        Download download = downloadMap.get(downloadId);
-
-        if (download != null) {
-            download.state = Download.State.FAILURE;
-        }
-    }
+    private AtomicInteger jobCounter;
 
     @Override
     public void onCreate() {
         instance = this;
 
+        if (Config.DEBUG) Log.d(TAG, "DownloadService created");
+
+        jobCounter = new AtomicInteger();
+
         notificationUtil = new NotificationUtil(this);
 
+        // Don't use HttpLoggingInterceptor, crashes with OutOfMemoryException!
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
         downloadClient = new DownloadManager.Builder()
                 .context(this)
-//                .downloader(OkHttpDownloader.create())
+                .downloader(OkHttpDownloader.create(client))
                 .build();
 
         downloadMap = new ConcurrentHashMap<>();
@@ -132,28 +85,35 @@ public class DownloadService extends Service {
         thread.start();
 
         // Get the HandlerThread's Looper and use it for our Handler
-        serviceLooper = thread.getLooper();
+        Looper serviceLooper = thread.getLooper();
         serviceHandler = new ServiceHandler(serviceLooper);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "DownloadService start command received");
+        if (Config.DEBUG) Log.d(TAG, "DownloadService start command received");
 
-        Notification notification = notificationUtil.getDownloadsNotification().build();
-        startForeground(NOTIFICATION_ID, notification);
+        List<String> titles = getRunningDownloadTitles();
+        titles.add(intent.getExtras().getString(ARG_TITLE));
+
+        Notification notification = notificationUtil.getDownloadRunningNotification(titles).build();
+        startForeground(NotificationUtil.DOWNLOAD_RUNNING_NOTIFICATION_ID, notification);
 
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
         Message msg = serviceHandler.obtainMessage();
-        msg.arg1 = startId;
         msg.setData(intent.getExtras());
+        jobCounter.incrementAndGet();
         serviceHandler.sendMessage(msg);
-
-        Log.w(TAG, "Start ServiceHandler with ID: " + msg.arg1);
 
         // If we get killed, after returning from here, restart
         return START_STICKY;
+    }
+
+    private synchronized void stopJob() {
+        if (jobCounter.decrementAndGet() == 0) {
+            stopSelf();
+        }
     }
 
     @Override
@@ -170,19 +130,102 @@ public class DownloadService extends Service {
 
         stopForeground(true);
         downloadClient.cancelAll();
+        notificationUtil = null;
+    }
+
+    public synchronized boolean isDownloading(String url) {
+        Download download = getDownload(url);
+        return download != null && (download.state == Download.State.PENDING || download.state == Download.State.RUNNING);
+    }
+
+    public synchronized Download getDownload(String url) {
+        if (downloadMap == null) return null;
+
+        for (Download download : downloadMap.values()) {
+            if (url.equals(download.url)) return download;
+        }
+
+        return null;
+    }
+
+    public synchronized void cancelDownload(String url) {
+        if (Config.DEBUG) Log.i(TAG, "Download cancelled: " + url);
+
+        Download download = getDownload(url);
+        if (download != null && isDownloading(url)) {
+            downloadClient.cancel(download.id);
+            downloadMap.remove(download.id);
+            stopJob();
+        }
+    }
+
+    private synchronized List<String> getRunningDownloadTitles() {
+        List<String> titles = new ArrayList<>();
+
+        for (Download download : downloadMap.values()) {
+            if (isDownloading(download.url)) {
+                titles.add(download.title);
+            }
+        }
+
+        return titles;
+    }
+
+    private synchronized void updateDownloadProgress(int downloadId, long bytesWritten, long totalBytes) {
+        Download download = downloadMap.get(downloadId);
+
+        if (download != null && downloadMap != null) {
+            download.state = Download.State.RUNNING;
+            download.bytesWritten = bytesWritten;
+            download.totalBytes = totalBytes;
+
+            downloadMap.put(download.id, download);
+        }
+
+        long bytesWrittenOfAll = 0;
+        long totalBytesOfAll = 0;
+
+        for (Download d : downloadMap.values()) {
+            bytesWrittenOfAll += d.bytesWritten;
+            totalBytesOfAll += d.totalBytes;
+        }
+
+        // Race condition NullPointerException can be thrown
+        if (notificationUtil != null) {
+            Notification notification = notificationUtil.getDownloadRunningNotification(getRunningDownloadTitles())
+                    .setProgress(100, (int) (bytesWrittenOfAll / (totalBytesOfAll / 100.)), false)
+                    .build();
+            notificationUtil.notify(NotificationUtil.DOWNLOAD_RUNNING_NOTIFICATION_ID, notification);
+        }
+    }
+
+    private synchronized void updateDownloadSuccess(int downloadId) {
+        Download download = downloadMap.get(downloadId);
+
+        if (download != null) {
+            download.state = Download.State.SUCCESSFUL;
+            notificationUtil.showDownloadCompletedNotification(download);
+            EventBus.getDefault().post(new DownloadCompletedEvent(download.url));
+        }
+    }
+
+    private synchronized void updateDownloadFailure(int downloadId) {
+        Download download = downloadMap.get(downloadId);
+
+        if (download != null) {
+            download.state = Download.State.FAILURE;
+        }
     }
 
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
 
-        public ServiceHandler(Looper looper) {
+        ServiceHandler(Looper looper) {
             super(looper);
         }
 
         @Override
         public void handleMessage(Message message) {
-            final int messageId = message.arg1;
-
             final String title = message.getData().getString(ARG_TITLE);
             final String url = message.getData().getString(ARG_URL);
             final String filePath = message.getData().getString(ARG_FILE_PATH);
@@ -195,7 +238,7 @@ public class DownloadService extends Service {
 
             DownloadRequest request = new DownloadRequest.Builder()
                     .url(url)
-                    .retryTime(0)
+                    .retryTime(1)
                     .progressInterval(1, TimeUnit.SECONDS)
                     .allowedNetworkTypes(allowedNetworkTypes)
                     .destinationFilePath(filePath)
@@ -218,9 +261,7 @@ public class DownloadService extends Service {
 
                             updateDownloadSuccess(downloadId);
 
-                            // Stop the service using the startId, so that we don't stop
-                            // the service in the middle of handling another job
-                            DownloadService.this.stopSelf(messageId);
+                            stopJob();
                         }
 
                         @Override
@@ -229,9 +270,7 @@ public class DownloadService extends Service {
 
                             updateDownloadFailure(downloadId);
 
-                            // Stop the service using the startId, so that we don't stop
-                            // the service in the middle of handling another job
-                            DownloadService.this.stopSelf(messageId);
+                            stopJob();
                         }
                     })
                     .build();

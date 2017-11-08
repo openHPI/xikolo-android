@@ -52,6 +52,10 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
     @BindView(R.id.playButton) View viewPlay;
     @BindView(R.id.videoMetadata) ViewGroup videoMetadata;
 
+    DownloadViewController hdVideo;
+    DownloadViewController sdVideo;
+    DownloadViewController slides;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,11 +103,11 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
         textTitle.setText(video.title);
 
         linearLayoutDownloads.removeAllViews();
-        DownloadViewController hdVideo = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.VIDEO_HD, course, section, item, video);
+        hdVideo = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.VIDEO_HD, course, section, item, video);
         linearLayoutDownloads.addView(hdVideo.getLayout());
-        DownloadViewController sdVideo = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.VIDEO_SD, course, section, item, video);
+        sdVideo = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.VIDEO_SD, course, section, item, video);
         linearLayoutDownloads.addView(sdVideo.getLayout());
-        DownloadViewController slides = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.SLIDES, course, section, item, video);
+        slides = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.SLIDES, course, section, item, video);
         linearLayoutDownloads.addView(slides.getLayout());
 
         long minutes = TimeUnit.SECONDS.toMinutes(video.duration);
@@ -143,6 +147,15 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        hdVideo.onDestroy();
+        sdVideo.onDestroy();
+        slides.onDestroy();
     }
 
     @NonNull
