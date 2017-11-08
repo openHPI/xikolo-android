@@ -127,7 +127,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     viewHolder.textBanner.setVisibility(View.VISIBLE);
                     viewHolder.textBanner.setText(context.getText(R.string.banner_running));
                     viewHolder.textBanner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
-                } else if (DateUtil.nowIsAfter(course.endDate)) {
+                } else if (DateUtil.isPast(course.endDate)) {
                     viewHolder.textBanner.setVisibility(View.VISIBLE);
                     viewHolder.textBanner.setText(context.getText(R.string.banner_self_paced));
                     viewHolder.textBanner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_yellow));

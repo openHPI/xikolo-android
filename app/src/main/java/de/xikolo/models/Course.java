@@ -122,32 +122,36 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
     }
 
     public String getFormattedDate() {
-        String date;
-
         Context context = App.getInstance();
 
         DateFormat dateOut;
         if (DisplayUtil.is7inchTablet(context)) {
-            dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault());
+            dateOut = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
         } else {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
         }
 
-        if (startDate != null && endDate != null) {
-            date = dateOut.format(startDate) + " - " + dateOut.format(endDate);
-        } else if (startDate != null) {
-            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-                date = context.getString(R.string.course_date_self_paced);
-            } else if (DateUtil.nowIsAfter(startDate)) {
-                date = String.format(context.getString(R.string.course_date_since), dateOut.format(startDate));
-            } else {
-                date = String.format(context.getString(R.string.course_date_beginning), dateOut.format(startDate));
-            }
-        } else {
-            date = context.getString(R.string.course_date_coming_soon);
+        if (DateUtil.isPast(endDate)) {
+            return context.getString(R.string.course_date_self_paced);
         }
 
-        return date;
+        if (DateUtil.isPast(startDate) && endDate == null) {
+            return context.getString(R.string.course_date_self_paced);
+        }
+
+        if (DateUtil.isFuture(startDate) && endDate == null) {
+            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                return context.getString(R.string.course_date_coming_soon);
+            } else {
+                return String.format(context.getString(R.string.course_date_beginning), dateOut.format(startDate));
+            }
+        }
+
+        if (startDate != null && endDate != null) {
+            return dateOut.format(startDate) + " - " + dateOut.format(endDate);
+        }
+
+        return context.getString(R.string.course_date_coming_soon);
     }
 
     public String getFormattedLanguage() {

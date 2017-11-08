@@ -140,7 +140,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         holder.layout.setClickable(false);
         holder.layout.setForeground(null);
         holder.viewDownloadButton.setVisibility(View.GONE);
-        if (section.startDate != null && DateUtil.nowIsBefore(section.startDate)) {
+        if (section.startDate != null && DateUtil.isFuture(section.startDate)) {
             DateFormat dateOut;
             if (DisplayUtil.is7inchTablet(activity)) {
                 dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault());

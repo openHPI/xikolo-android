@@ -40,11 +40,11 @@ public class DateUtil {
         return from != null && to != null && dateNow.after(from) && dateNow.before(to);
     }
 
-    public static boolean nowIsAfter(String date) {
-        return nowIsAfter(parse(date));
+    public static boolean isPast(String date) {
+        return isPast(parse(date));
     }
 
-    public static boolean nowIsAfter(Date date) {
+    public static boolean isPast(Date date) {
         Date dateNow = new Date();
 
         if (date == null) {
@@ -56,11 +56,11 @@ public class DateUtil {
         return false;
     }
 
-    public static boolean nowIsBefore(String date) {
-        return nowIsBefore(parse(date));
+    public static boolean isFuture(String date) {
+        return isFuture(parse(date));
     }
 
-    public static boolean nowIsBefore(Date date) {
+    public static boolean isFuture(Date date) {
         Date dateNow = new Date();
 
         if (date == null) {
