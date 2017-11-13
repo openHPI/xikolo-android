@@ -4,8 +4,6 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.util.Log;
 
-import com.google.gson.JsonSyntaxException;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -28,8 +26,8 @@ import de.xikolo.events.LogoutEvent;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.events.base.Event;
 import de.xikolo.models.WebSocketMessage;
-import de.xikolo.utils.ParserUtil;
 import de.xikolo.utils.NetworkUtil;
+import de.xikolo.utils.ParserUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class WebSocketManager {
@@ -70,11 +68,7 @@ public class WebSocketManager {
                     if (Config.DEBUG) {
 //                        Log.d(TAG, "WebSocket received message: " + message);
                     }
-                    try {
-                        EventBus.getDefault().post(new WebSocketMessageEvent(message));
-                    } catch (JsonSyntaxException e) {
-                        Log.e(TAG, "Couldn't parse WebSocket message: " + e.getMessage());
-                    }
+                    EventBus.getDefault().post(new WebSocketMessageEvent(message));
                 }
 
                 @Override

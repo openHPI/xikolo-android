@@ -11,17 +11,19 @@ dependencies {
     def glideVersion = '4.1.1'
     compile "com.github.bumptech.glide:glide:${glideVersion}"
     compile "com.github.bumptech.glide:okhttp3-integration:${glideVersion}"
-    apt     "com.github.bumptech.glide:compiler:${glideVersion}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${glideVersion}"
 
     // architecture
     compile 'com.birbit:android-priority-jobqueue:2.0.1'
     compile 'org.greenrobot:eventbus:3.0.0'
 
-    // api
+    // json
+    compile 'com.google.code.gson:gson:2.8.2'
+
+    // json:api
     def retrofitVersion = '2.3.0'
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-moshi:${retrofitVersion}"
-
     compile 'moe.banana:moshi-jsonapi:3.2.2'
 
     // user interface
@@ -35,12 +37,12 @@ dependencies {
     // view binding
     def butterknifeVersion = '8.8.1'
     compile "com.jakewharton:butterknife:${butterknifeVersion}"
-    apt     "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
 
     // field binding
     def autobundleVersion = '4.1.0'
     compile "com.github.yatatsu:autobundle:${autobundleVersion}"
-    apt     "com.github.yatatsu:autobundle-processor:${autobundleVersion}"
+    annotationProcessor "com.github.yatatsu:autobundle-processor:${autobundleVersion}"
 
     // play services
     def playVersion = '11.4.0'
@@ -57,7 +59,7 @@ dependencies {
     compile "com.android.support:preference-v14:${supportVersion}"
 
     // local libraries
-    compile project(":lanalytics")
+    implementation project(path: ':lanalytics', configuration: 'default')
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
