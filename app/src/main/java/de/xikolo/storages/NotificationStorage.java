@@ -29,13 +29,6 @@ public class NotificationStorage extends BaseStorage {
         return gson.fromJson(json, type);
     }
 
-    public void saveDownloadNotifications(List<String> notifications) {
-        SharedPreferences.Editor editor = preferences.edit();
-        Gson gson = new Gson();
-        editor.putString(DOWNLOAD_NOTIFICATIONS, gson.toJson(notifications));
-        editor.commit();
-    }
-
     public void addDownloadNotification(String notification) {
         List<String> notifications = getDownloadNotifications();
 

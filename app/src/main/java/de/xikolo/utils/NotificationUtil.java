@@ -41,6 +41,10 @@ public class NotificationUtil extends ContextWrapper {
 
     private NotificationManager notificationManager;
 
+    public static final String NOTIFICATION_DELETED_KEY_DOWNLOAD_TITLE = "key_notification_deleted_title";
+
+    public static final String NOTIFICATION_DELETED_KEY_DOWNLOAD_ALL = "key_notification_deleted_all";
+
     public NotificationUtil(Context base) {
         super(base);
         createChannels();
@@ -108,8 +112,8 @@ public class NotificationUtil extends ContextWrapper {
                 .setSmallIcon(R.drawable.ic_notification_download)
                 .setAutoCancel(true)
                 .setGroup(DOWNLOAD_COMPLETED_NOTIFICATION_GROUP)
-                .setContentIntent(createDownloadCompletedContentIntent(DownloadsActivity.class, NotificationDeletedReceiver.KEY_TITLE, download.title))
-                .setDeleteIntent(createDownloadCompletedDeleteIntent(NotificationDeletedReceiver.KEY_TITLE, download.title));
+                .setContentIntent(createDownloadCompletedContentIntent(DownloadsActivity.class, NOTIFICATION_DELETED_KEY_DOWNLOAD_TITLE, download.title))
+                .setDeleteIntent(createDownloadCompletedDeleteIntent(NOTIFICATION_DELETED_KEY_DOWNLOAD_TITLE, download.title));
     }
 
     private void showDownloadSummaryNotification(List<String> notifications) {
@@ -140,8 +144,8 @@ public class NotificationUtil extends ContextWrapper {
                 .setGroup(DOWNLOAD_COMPLETED_NOTIFICATION_GROUP)
                 .setGroupSummary(true)
                 .setStyle(inboxStyle)
-                .setContentIntent(createDownloadCompletedContentIntent(DownloadsActivity.class, NotificationDeletedReceiver.KEY_ALL, "true"))
-                .setDeleteIntent(createDownloadCompletedDeleteIntent(NotificationDeletedReceiver.KEY_ALL, "true"));
+                .setContentIntent(createDownloadCompletedContentIntent(DownloadsActivity.class, NOTIFICATION_DELETED_KEY_DOWNLOAD_ALL, "true"))
+                .setDeleteIntent(createDownloadCompletedDeleteIntent(NOTIFICATION_DELETED_KEY_DOWNLOAD_ALL, "true"));
     }
 
     public void showSecondScreenNotification(String title) {
@@ -224,9 +228,21 @@ public class NotificationUtil extends ContextWrapper {
     }
 
     private PendingIntent createDownloadCompletedDeleteIntent(String extraKey, String extraValue) {
-        Intent deleteIntent = new Intent(NotificationDeletedReceiver.INTENT_ACTION_NOTIFICATION_DELETED);
+        Intent deleteIntent = new Intent(this, NotificationDeletedReceiver.class);
+        deleteIntent.setAction(NotificationDeletedReceiver.INTENT_ACTION_NOTIFICATION_DELETED);
         deleteIntent.putExtra(extraKey, extraValue);
         return PendingIntent.getBroadcast(this, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public static void deleteDownloadNotificationsFromIntent(Intent intent) {
+        NotificationStorage notificationStorage = new NotificationStorage();
+
+        String title = intent.getStringExtra(NOTIFICATION_DELETED_KEY_DOWNLOAD_TITLE);
+        if (title != null) {
+            notificationStorage.deleteDownloadNotification(title);
+        } else if (intent.getStringExtra(NOTIFICATION_DELETED_KEY_DOWNLOAD_ALL) != null) {
+            notificationStorage.deleteAllDownloadNotifications();
+        }
     }
 
 }

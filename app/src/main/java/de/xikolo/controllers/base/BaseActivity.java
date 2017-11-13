@@ -41,8 +41,7 @@ import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
 import de.xikolo.managers.UserManager;
-import de.xikolo.receivers.NotificationDeletedReceiver;
-import de.xikolo.storages.NotificationStorage;
+import de.xikolo.utils.NotificationUtil;
 import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.TintUtil;
 
@@ -327,14 +326,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     }
 
     private void handleIntent(Intent intent) {
-        NotificationStorage notificationStorage = new NotificationStorage();
-
-        String title = intent.getStringExtra(NotificationDeletedReceiver.KEY_TITLE);
-        if (title != null) {
-            notificationStorage.deleteDownloadNotification(title);
-        } else if (intent.getStringExtra(NotificationDeletedReceiver.KEY_ALL) != null) {
-            notificationStorage.deleteAllDownloadNotifications();
-        }
+        NotificationUtil.deleteDownloadNotificationsFromIntent(intent);
     }
 
     @Override
