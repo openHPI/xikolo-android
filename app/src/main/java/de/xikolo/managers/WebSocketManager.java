@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft_10;
+import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -56,7 +56,7 @@ public class WebSocketManager {
             Map<String, String> headers = new HashMap<>();
             headers.put(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX + token);
 
-            webSocketClient = new WebSocketClient(uri, new Draft_10(), headers, 0) {
+            webSocketClient = new WebSocketClient(uri, new Draft_6455(), headers, 0) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     Log.i(TAG, "WebSocket opened");
