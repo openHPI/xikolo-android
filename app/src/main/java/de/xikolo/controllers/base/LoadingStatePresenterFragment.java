@@ -103,4 +103,8 @@ public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresen
         loadingStateHelper.hideMessage();
     }
 
+    @Override
+    public boolean isContentViewVisible() {
+        return loadingStateHelper.isContentViewVisible();
+    }
 }

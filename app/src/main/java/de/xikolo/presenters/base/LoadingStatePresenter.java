@@ -21,7 +21,7 @@ public abstract class LoadingStatePresenter<V extends LoadingStateView> extends 
                     getView().hideProgress();
                     switch (code) {
                         case NO_NETWORK:
-                            if (userRequest) getView().showNetworkRequiredMessage();
+                            if (userRequest || !getView().isContentViewVisible()) getView().showNetworkRequiredMessage();
                             break;
                         case CANCEL:
                         case ERROR:

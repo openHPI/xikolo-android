@@ -88,7 +88,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
                     getView().hideProgress();
                     switch (code) {
                         case NO_NETWORK:
-                            if (userRequest) getView().showNetworkRequiredMessage();
+                            if (userRequest || !getView().isContentViewVisible()) getView().showNetworkRequiredMessage();
                             break;
                         case CANCEL:
                         case ERROR:
@@ -115,7 +115,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
                     getView().hideProgress();
                     switch (code) {
                         case NO_NETWORK:
-                            if (userRequest) getView().showNetworkRequiredMessage();
+                            if (userRequest || !getView().isContentViewVisible()) getView().showNetworkRequiredMessage();
                             break;
                         case CANCEL:
                         case ERROR:

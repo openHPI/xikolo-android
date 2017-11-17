@@ -20,6 +20,8 @@ public interface LoadingStateInterface {
 
     void showErrorMessage();
 
+    boolean isContentViewVisible();
+
     @LayoutRes int getLayoutResource();
 
 }
