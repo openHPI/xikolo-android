@@ -153,9 +153,15 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
     public void onDestroyView() {
         super.onDestroyView();
 
-        hdVideo.onDestroy();
-        sdVideo.onDestroy();
-        slides.onDestroy();
+        if (hdVideo != null) {
+            hdVideo.onDestroy();
+        }
+        if (sdVideo != null) {
+            sdVideo.onDestroy();
+        }
+        if (slides != null) {
+            slides.onDestroy();
+        }
     }
 
     @NonNull
