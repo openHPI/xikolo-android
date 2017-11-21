@@ -26,7 +26,7 @@ public class AndroidDimenUtil {
     }
 
     public static int getActionBarHeight() {
-        int result = 0;
+        int result;
 
         App application = App.getInstance();
 

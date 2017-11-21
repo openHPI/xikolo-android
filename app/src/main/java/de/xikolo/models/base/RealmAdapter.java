@@ -5,6 +5,6 @@ import io.realm.RealmObject;
 
 public interface RealmAdapter<T extends RealmObject> {
 
-    public T convertToRealmObject();
+    T convertToRealmObject();
 
 }

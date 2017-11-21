@@ -49,8 +49,8 @@ public class GetUserWithProfileJob extends BaseJob {
                         public void execute(Realm realm) {
                             User.JsonModel model = response.body();
                             realm.copyToRealmOrUpdate(model.convertToRealmObject());
-                            if (model.profile != null && model.profile.get(model.getContext()) != null) {
-                                Profile p = model.profile.get(model.getContext()).convertToRealmObject();
+                            if (model.profile != null && model.profile.get(model.getDocument()) != null) {
+                                Profile p = model.profile.get(model.getDocument()).convertToRealmObject();
                                 realm.copyToRealmOrUpdate(p);
                             }
                         }

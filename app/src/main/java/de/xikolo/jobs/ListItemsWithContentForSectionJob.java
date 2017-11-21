@@ -53,7 +53,7 @@ public class ListItemsWithContentForSectionJob extends BaseJob {
                                 for (Item.JsonModel itemModel : response.body()) {
                                     Item item = itemModel.convertToRealmObject();
                                     realm.copyToRealmOrUpdate(item);
-                                    extractItemContent(realm, item, itemModel.getContext(), itemModel.content.get());
+                                    extractItemContent(realm, item, itemModel.getDocument(), itemModel.content.get());
                                 }
                             }
                         });

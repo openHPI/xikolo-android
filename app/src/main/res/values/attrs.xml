@@ -20,7 +20,7 @@
         <attr name="iconColor" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="ScrimInsets">
+    <declare-styleable name="ScrimInsetsFrameLayout">
         <attr name="insetFg" format="color|reference"/>
     </declare-styleable>
 

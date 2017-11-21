@@ -51,8 +51,8 @@ public class ListCoursesJob extends BaseJob {
                     public void execute(Realm realm) {
                         for (Course.JsonModel model : response.body()) {
                             realm.copyToRealmOrUpdate(model.convertToRealmObject());
-                            if (model.enrollment != null && model.enrollment.get(model.getContext()) != null) {
-                                Enrollment e = model.enrollment.get(model.getContext()).convertToRealmObject();
+                            if (model.enrollment != null && model.enrollment.get(model.getDocument()) != null) {
+                                Enrollment e = model.enrollment.get(model.getDocument()).convertToRealmObject();
                                 e.courseId = model.getId();
                                 realm.copyToRealmOrUpdate(e);
                             }

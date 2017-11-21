@@ -21,17 +21,18 @@ public class NetworkUtil {
         ConnectivityManager cm = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        if (cm == null) return false;
+
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            return true;
-        }
-        return false;
+        return netInfo != null && netInfo.isConnected();
     }
 
     public static int getConnectivityStatus() {
         Context context = App.getInstance();
         ConnectivityManager cm = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (cm == null) return TYPE_NOT_CONNECTED;
 
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null) {

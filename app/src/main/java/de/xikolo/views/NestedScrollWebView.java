@@ -64,7 +64,7 @@ public class NestedScrollWebView extends WebView implements NestedScrollingChild
 
         MotionEvent trackedEvent = MotionEvent.obtain(event);
 
-        final int action = MotionEventCompat.getActionMasked(event);
+        final int action = event.getActionMasked();
 
         if (action == MotionEvent.ACTION_DOWN) {
             mNestedYOffset = 0;

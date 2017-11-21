@@ -1,7 +1,6 @@
 package de.xikolo.jobs.base;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;

@@ -51,8 +51,8 @@ public class GetCourseProgressWithSectionsJob extends BaseJob {
                             CourseProgress.JsonModel cpModel = response.body();
                             realm.copyToRealmOrUpdate(cpModel.convertToRealmObject());
 
-                            if (cpModel.sectionProgresses != null && cpModel.sectionProgresses.get(cpModel.getContext()) != null) {
-                                for (SectionProgress.JsonModel spModel : cpModel.sectionProgresses.get(cpModel.getContext())) {
+                            if (cpModel.sectionProgresses != null && cpModel.sectionProgresses.get(cpModel.getDocument()) != null) {
+                                for (SectionProgress.JsonModel spModel : cpModel.sectionProgresses.get(cpModel.getDocument())) {
                                     SectionProgress cp = spModel.convertToRealmObject();
                                     cp.courseProgressId = cpModel.getId();
                                     realm.copyToRealmOrUpdate(cp);

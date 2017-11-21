@@ -54,8 +54,8 @@ public class ListSubtitlesWithCuesJob extends BaseJob {
                             for (SubtitleTrack.JsonModel subtitleModel : response.body()) {
                                 realm.copyToRealmOrUpdate(subtitleModel.convertToRealmObject());
 
-                                if (subtitleModel.cues != null && subtitleModel.cues.get(subtitleModel.getContext()) != null) {
-                                    for (SubtitleCue.JsonModel cueModel : subtitleModel.cues.get(subtitleModel.getContext())) {
+                                if (subtitleModel.cues != null && subtitleModel.cues.get(subtitleModel.getDocument()) != null) {
+                                    for (SubtitleCue.JsonModel cueModel : subtitleModel.cues.get(subtitleModel.getDocument())) {
                                         SubtitleCue cue = cueModel.convertToRealmObject();
                                         realm.copyToRealmOrUpdate(cue);
                                     }

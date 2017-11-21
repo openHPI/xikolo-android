@@ -163,15 +163,15 @@ public final class JsonApiConverterFactory extends Converter.Factory {
             } else if (List.class.isAssignableFrom(rawType)) {
                 ArrayDocument arrayDocument = new ArrayDocument();
                 List a = ((List) value);
-                if (!a.isEmpty() && a.get(0) != null && ((ResourceIdentifier) a.get(0)).getContext() != null) {
-                    arrayDocument = ((ResourceIdentifier) a.get(0)).getContext().asArrayDocument();
+                if (!a.isEmpty() && a.get(0) != null && ((ResourceIdentifier) a.get(0)).getDocument() != null) {
+                    arrayDocument = ((ResourceIdentifier) a.get(0)).getDocument().asArrayDocument();
                 }
                 arrayDocument.addAll(a);
                 document = arrayDocument;
             } else if (rawType.isArray()) {
                 ArrayDocument arrayDocument = new ArrayDocument();
-                if (Array.getLength(value) > 0 && ((ResourceIdentifier) Array.get(value, 0)).getContext() != null) {
-                    arrayDocument = ((ResourceIdentifier) Array.get(value, 0)).getContext().asArrayDocument();
+                if (Array.getLength(value) > 0 && ((ResourceIdentifier) Array.get(value, 0)).getDocument() != null) {
+                    arrayDocument = ((ResourceIdentifier) Array.get(value, 0)).getDocument().asArrayDocument();
                 }
                 for (int i = 0; i != Array.getLength(value); i++) {
                     arrayDocument.add((ResourceIdentifier) Array.get(value, i));
@@ -180,8 +180,8 @@ public final class JsonApiConverterFactory extends Converter.Factory {
             } else {
                 ResourceIdentifier data = ((ResourceIdentifier) value);
                 ObjectDocument objectDocument = new ObjectDocument();
-                if (data.getContext() != null) {
-                    objectDocument = data.getContext().asObjectDocument();
+                if (data.getDocument() != null) {
+                    objectDocument = data.getDocument().asObjectDocument();
                 }
                 objectDocument.set(data);
                 document = objectDocument;

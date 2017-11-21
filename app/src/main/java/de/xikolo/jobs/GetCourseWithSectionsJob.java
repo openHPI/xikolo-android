@@ -51,8 +51,8 @@ public class GetCourseWithSectionsJob extends BaseJob {
                             Course.JsonModel courseModel = response.body();
                             realm.copyToRealmOrUpdate(courseModel.convertToRealmObject());
 
-                            if (courseModel.sections != null && courseModel.sections.get(courseModel.getContext()) != null) {
-                                for (Section.JsonModel sectionModel : courseModel.sections.get(courseModel.getContext())) {
+                            if (courseModel.sections != null && courseModel.sections.get(courseModel.getDocument()) != null) {
+                                for (Section.JsonModel sectionModel : courseModel.sections.get(courseModel.getDocument())) {
                                     Section section = sectionModel.convertToRealmObject();
                                     section.courseId = courseModel.getId();
                                     realm.copyToRealmOrUpdate(section);

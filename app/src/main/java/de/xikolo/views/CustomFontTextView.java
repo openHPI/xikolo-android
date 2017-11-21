@@ -3,6 +3,7 @@ package de.xikolo.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
@@ -12,7 +13,7 @@ import java.util.Hashtable;
 import de.xikolo.R;
 import de.xikolo.config.Config;
 
-public class CustomFontTextView extends TextView {
+public class CustomFontTextView extends AppCompatTextView {
 
     private static final String TAG = CustomFontTextView.class.getSimpleName();
 

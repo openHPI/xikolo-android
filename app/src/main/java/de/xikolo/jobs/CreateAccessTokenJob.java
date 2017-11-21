@@ -4,10 +4,7 @@ import android.util.Log;
 
 import com.birbit.android.jobqueue.Params;
 
-import org.greenrobot.eventbus.EventBus;
-
 import de.xikolo.config.Config;
-import de.xikolo.events.LoginEvent;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.AccessToken;

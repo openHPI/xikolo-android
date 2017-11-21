@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -167,8 +166,8 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
             View unseenIndicator = layout.findViewById(R.id.unseenIndicator);
 
             if (position != currentPosition) {
-                ViewCompat.setAlpha(label, transparent);
-                ViewCompat.setAlpha(unseenIndicator, transparent);
+                label.setAlpha(transparent);
+                unseenIndicator.setAlpha(transparent);
             }
 
             final Item item = items.get(position);
@@ -241,8 +240,8 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
                 TextView label = (TextView) view.findViewById(R.id.tabLabel);
                 View unseenIndicator = view.findViewById(R.id.unseenIndicator);
 
-                ViewCompat.setAlpha(label, opaque);
-                ViewCompat.setAlpha(unseenIndicator, opaque);
+                label.setAlpha(opaque);
+                unseenIndicator.setAlpha(opaque);
 
                 unseenIndicator.setVisibility(View.GONE);
 
@@ -258,8 +257,8 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
                 TextView label = (TextView) view.findViewById(R.id.tabLabel);
                 View unseenIndicator = view.findViewById(R.id.unseenIndicator);
 
-                ViewCompat.setAlpha(label, transparent);
-                ViewCompat.setAlpha(unseenIndicator, transparent);
+                label.setAlpha(transparent);
+                unseenIndicator.setAlpha(transparent);
             }
         }
 

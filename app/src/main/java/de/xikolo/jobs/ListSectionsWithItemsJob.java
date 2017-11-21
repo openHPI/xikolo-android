@@ -52,8 +52,8 @@ public class ListSectionsWithItemsJob extends BaseJob {
                             for (Section.JsonModel sectionModel : response.body()) {
                                 realm.copyToRealmOrUpdate(sectionModel.convertToRealmObject());
 
-                                if (sectionModel.items != null && sectionModel.items.get(sectionModel.getContext()) != null) {
-                                    for (Item.JsonModel itemModel : sectionModel.items.get(sectionModel.getContext())) {
+                                if (sectionModel.items != null && sectionModel.items.get(sectionModel.getDocument()) != null) {
+                                    for (Item.JsonModel itemModel : sectionModel.items.get(sectionModel.getDocument())) {
                                         Item item = itemModel.convertToRealmObject();
                                         item.sectionId = sectionModel.getId();
                                         realm.copyToRealmOrUpdate(item);
