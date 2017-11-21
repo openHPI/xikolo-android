@@ -12,7 +12,6 @@ import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.LanalyticsUtil;
@@ -85,8 +84,6 @@ public class SectionDownloadHelper {
                 dialog.dismiss();
                 for (Item item : section.getAccessibleItems()) {
                     if (Item.TYPE_VIDEO.equals(item.type)) {
-                        Video video = (Video) item.getContent();
-
                         if (sdVideo) {
                             startDownload(item.id, DownloadUtil.VideoAssetType.VIDEO_SD);
                         }
