@@ -17,6 +17,7 @@
         android:layout_marginTop="4dp"
         android:background="@drawable/icon_toggle_bg_gray_on_light"
         android:clickable="true"
+        android:focusable="true"
         android:contentDescription="@string/delete"
         android:paddingBottom="12dp"
         android:paddingLeft="12dp"
