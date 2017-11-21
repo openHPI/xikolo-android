@@ -12,11 +12,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle;
+import de.xikolo.events.LoginEvent;
+import de.xikolo.events.LogoutEvent;
 import de.xikolo.models.Announcement;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.main.NewsListPresenter;
@@ -34,7 +40,10 @@ public class NewsListFragment extends MainFragment<NewsListPresenter, NewsListVi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -65,7 +74,17 @@ public class NewsListFragment extends MainFragment<NewsListPresenter, NewsListVi
     @Override
     public void onStart() {
         super.onStart();
+
+        EventBus.getDefault().register(this);
+
         activityCallback.onFragmentAttached(NavigationAdapter.NAV_NEWS.getPosition(), getString(R.string.title_section_news));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -103,6 +122,22 @@ public class NewsListFragment extends MainFragment<NewsListPresenter, NewsListVi
     @Override
     protected PresenterFactory<NewsListPresenter> getPresenterFactory() {
         return new NewsListPresenterFactory();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginEvent(LoginEvent event) {
+        if (presenter != null) {
+            presenter.onRefresh();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogoutEvent(LogoutEvent event) {
+        if (presenter != null) {
+            presenter.onRefresh();
+        }
     }
 
 }

@@ -13,6 +13,10 @@ import android.view.View;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -20,6 +24,8 @@ import de.xikolo.R;
 import de.xikolo.controllers.course.CourseActivityAutoBundle;
 import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
+import de.xikolo.events.LoginEvent;
+import de.xikolo.events.LogoutEvent;
 import de.xikolo.models.Course;
 import de.xikolo.models.base.SectionList;
 import de.xikolo.presenters.base.PresenterFactory;
@@ -45,6 +51,8 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -114,6 +122,13 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
         } else {
             activityCallback.onFragmentAttached(NavigationAdapter.NAV_MY_COURSES.getPosition(), getString(R.string.title_section_my_courses));
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -204,6 +219,22 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
             }
         });
         loadingStateHelper.showMessage();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginEvent(LoginEvent event) {
+        if (presenter != null) {
+            presenter.onRefresh();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogoutEvent(LogoutEvent event) {
+        if (presenter != null) {
+            presenter.onRefresh();
+        }
     }
 
 }
