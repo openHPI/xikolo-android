@@ -1,9 +1,9 @@
 package de.xikolo.models.base;
 
 
-import io.realm.RealmObject;
+import io.realm.RealmModel;
 
-public interface RealmAdapter<T extends RealmObject> {
+public interface RealmAdapter<T extends RealmModel> {
 
     T convertToRealmObject();
 

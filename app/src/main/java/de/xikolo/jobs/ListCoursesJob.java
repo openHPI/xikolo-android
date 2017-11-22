@@ -4,13 +4,13 @@ import android.util.Log;
 
 import com.birbit.android.jobqueue.Params;
 
-import de.xikolo.managers.UserManager;
+import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
 import de.xikolo.network.ApiService;
-import de.xikolo.config.Config;
 import de.xikolo.utils.NetworkUtil;
 import io.realm.Realm;
 import retrofit2.Response;
@@ -45,21 +45,14 @@ public class ListCoursesJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Courses received (" + response.body().length + ")");
 
-                Realm realm = Realm.getDefaultInstance();
-                realm.executeTransaction(new Realm.Transaction() {
+                syncData(Course.class, response.body());
+                syncIncluded(Enrollment.class, response.body(), new BeforeCommitCallback<Enrollment>() {
                     @Override
-                    public void execute(Realm realm) {
-                        for (Course.JsonModel model : response.body()) {
-                            realm.copyToRealmOrUpdate(model.convertToRealmObject());
-                            if (model.enrollment != null && model.enrollment.get(model.getDocument()) != null) {
-                                Enrollment e = model.enrollment.get(model.getDocument()).convertToRealmObject();
-                                e.courseId = model.getId();
-                                realm.copyToRealmOrUpdate(e);
-                            }
-                        }
+                    public void beforeCommit(Realm realm, Enrollment model) {
+                        Course course = realm.where(Course.class).equalTo("enrollmentId", model.id).findFirst();
+                        if (course != null) model.courseId = course.id;
                     }
                 });
-                realm.close();
 
                 if (callback != null) callback.success();
             } else {
