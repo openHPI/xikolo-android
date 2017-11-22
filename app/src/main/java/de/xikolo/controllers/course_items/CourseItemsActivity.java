@@ -223,6 +223,11 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
                     case Item.TYPE_VIDEO:
                         fragment = VideoPreviewFragmentAutoBundle.builder(courseId, sectionId, item.id).build();
                         break;
+                    default:
+                        fragment = WebViewFragmentAutoBundle.builder(url)
+                                .inAppLinksEnabled(false)
+                                .externalLinksEnabled(false)
+                                .build();
                 }
             }
             return fragment;
