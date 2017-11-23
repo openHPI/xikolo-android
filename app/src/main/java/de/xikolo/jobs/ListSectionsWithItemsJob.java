@@ -4,15 +4,15 @@ import android.util.Log;
 
 import com.birbit.android.jobqueue.Params;
 
-import de.xikolo.managers.UserManager;
+import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.Sync;
+import de.xikolo.managers.UserManager;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.network.ApiService;
-import de.xikolo.config.Config;
 import de.xikolo.utils.NetworkUtil;
-import io.realm.Realm;
 import retrofit2.Response;
 
 public class ListSectionsWithItemsJob extends BaseJob {
@@ -45,24 +45,12 @@ public class ListSectionsWithItemsJob extends BaseJob {
                     if (Config.DEBUG)
                         Log.i(TAG, "Sections received (" + response.body().length + ")");
 
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            for (Section.JsonModel sectionModel : response.body()) {
-                                realm.copyToRealmOrUpdate(sectionModel.convertToRealmObject());
-
-                                if (sectionModel.items != null && sectionModel.items.get(sectionModel.getDocument()) != null) {
-                                    for (Item.JsonModel itemModel : sectionModel.items.get(sectionModel.getDocument())) {
-                                        Item item = itemModel.convertToRealmObject();
-                                        item.sectionId = sectionModel.getId();
-                                        realm.copyToRealmOrUpdate(item);
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    realm.close();
+                    Sync.Data.with(Section.class, response.body())
+                            .addFilter("courseId", courseId)
+                            .run();
+                    Sync.Included.with(Item.class, response.body())
+                            .handleDeletes(false)
+                            .run();
 
                     if (callback != null) callback.success();
                 } else {

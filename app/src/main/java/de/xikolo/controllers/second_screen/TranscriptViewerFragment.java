@@ -30,6 +30,7 @@ import de.xikolo.controllers.base.BaseFragment;
 import de.xikolo.controllers.dialogs.ChooseLanguageDialog;
 import de.xikolo.controllers.dialogs.ChooseLanguageDialogAutoBundle;
 import de.xikolo.managers.SecondScreenManager;
+import de.xikolo.models.Item;
 import de.xikolo.models.SubtitleTrack;
 import de.xikolo.models.Video;
 import de.xikolo.utils.AndroidDimenUtil;
@@ -62,7 +63,8 @@ public class TranscriptViewerFragment extends BaseFragment implements ChooseLang
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        video = Video.getForItemId(itemId);
+        Item item = Item.get(itemId);
+        video = Video.getForContentId(item.contentId);
         subtitles = SubtitleTrack.listForVideoId(video.id);
     }
 

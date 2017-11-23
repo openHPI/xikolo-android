@@ -23,8 +23,6 @@ public class Quiz extends RealmObject {
 
     public boolean showWelcomePage;
 
-    public String itemId;
-
     @JsonApi(type = "quizzes")
     public static class JsonModel extends Resource implements RealmAdapter<Quiz> {
 
@@ -42,8 +40,6 @@ public class Quiz extends RealmObject {
         @Json(name = "show_welcome_page")
         public boolean showWelcomePage;
 
-        public String itemId;
-
         @Override
         public Quiz convertToRealmObject() {
             Quiz quiz = new Quiz();
@@ -53,7 +49,6 @@ public class Quiz extends RealmObject {
             quiz.allowedAttempts = allowedAttempts;
             quiz.maxPoints = maxPoints;
             quiz.showWelcomePage = showWelcomePage;
-            quiz.itemId = itemId;
 
             return quiz;
         }

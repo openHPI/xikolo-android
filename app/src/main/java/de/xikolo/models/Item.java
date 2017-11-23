@@ -37,6 +37,8 @@ public class Item extends RealmObject {
 
     public boolean accessible;
 
+    public String contentId;
+
     public String sectionId;
 
     public static Item get(String id) {
@@ -59,19 +61,19 @@ public class Item extends RealmObject {
         RealmObject content = null;
         switch (type) {
             case TYPE_TEXT:
-                content = realm.where(RichText.class).equalTo("itemId", id).findFirst();
+                content = realm.where(RichText.class).equalTo("id", contentId).findFirst();
                 break;
             case TYPE_VIDEO:
-                content = realm.where(Video.class).equalTo("itemId", id).findFirst();
+                content = realm.where(Video.class).equalTo("id", contentId).findFirst();
                 break;
             case TYPE_QUIZ:
-                content = realm.where(Quiz.class).equalTo("itemId", id).findFirst();
+                content = realm.where(Quiz.class).equalTo("id", contentId).findFirst();
                 break;
             case TYPE_LTI:
-                content = realm.where(LtiExercise.class).equalTo("itemId", id).findFirst();
+                content = realm.where(LtiExercise.class).equalTo("id", contentId).findFirst();
                 break;
             case TYPE_PEER:
-                content = realm.where(PeerAssessment.class).equalTo("itemId", id).findFirst();
+                content = realm.where(PeerAssessment.class).equalTo("id", contentId).findFirst();
                 break;
         }
 
@@ -132,7 +134,7 @@ public class Item extends RealmObject {
     }
 
     @JsonApi(type = "course-items")
-    public static class JsonModel<T extends Resource> extends Resource implements RealmAdapter<Item> {
+    public static class JsonModel extends Resource implements RealmAdapter<Item> {
 
         public String title;
 
@@ -153,7 +155,7 @@ public class Item extends RealmObject {
 
         public boolean accessible;
 
-        public HasOne<T> content;
+        public HasOne<?> content;
 
         @Override
         public Item convertToRealmObject() {
@@ -168,6 +170,10 @@ public class Item extends RealmObject {
             item.proctored = proctored;
             item.visited = visited;
             item.accessible = accessible;
+
+            if (content != null) {
+                item.contentId = content.get().getId();
+            }
 
             if (section != null) {
                 item.sectionId = section.get().getId();

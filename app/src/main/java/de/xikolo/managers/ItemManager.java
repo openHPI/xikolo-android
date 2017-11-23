@@ -33,7 +33,7 @@ public class ItemManager extends BaseManager {
         return itemListPromise;
     }
 
-    public RealmResults getVideoForItem(String itemId, Realm realm, RealmChangeListener<RealmResults<Video>> listener) {
+    public RealmResults getVideoForItem(String contentId, Realm realm, RealmChangeListener<RealmResults<Video>> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
@@ -41,7 +41,7 @@ public class ItemManager extends BaseManager {
         // RealmChangeListener for RealmObject doesn't notify for initial copyToRealm
         RealmResults<Video> videoPromise = realm
                 .where(Video.class)
-                .equalTo("itemId", itemId)
+                .equalTo("id", contentId)
                 .findAllAsync();
 
         videoPromise.addChangeListener(listener);
@@ -49,7 +49,7 @@ public class ItemManager extends BaseManager {
         return videoPromise;
     }
 
-    public RealmResults getRichTextForItem(String itemId, Realm realm, RealmChangeListener<RealmResults<RichText>> listener) {
+    public RealmResults getRichTextForItem(String contentId, Realm realm, RealmChangeListener<RealmResults<RichText>> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
         }
@@ -57,7 +57,7 @@ public class ItemManager extends BaseManager {
         // RealmChangeListener for RealmObject doesn't notify for initial copyToRealm
         RealmResults<RichText> richTextPromise = realm
                 .where(RichText.class)
-                .equalTo("itemId", itemId)
+                .equalTo("id", contentId)
                 .findAllAsync();
 
         richTextPromise.addChangeListener(listener);

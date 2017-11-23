@@ -7,11 +7,11 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Announcement;
 import de.xikolo.network.ApiService;
 import de.xikolo.utils.NetworkUtil;
-import io.realm.Realm;
 import retrofit2.Response;
 
 public class ListCourseAnnouncementsJob extends BaseJob {
@@ -43,16 +43,9 @@ public class ListCourseAnnouncementsJob extends BaseJob {
                     if (Config.DEBUG)
                         Log.i(TAG, "Announcements received (" + response.body().length + ")");
 
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            for (Announcement.JsonModel model : response.body()) {
-                                realm.copyToRealmOrUpdate(model.convertToRealmObject());
-                            }
-                        }
-                    });
-                    realm.close();
+                    Sync.Data.with(Announcement.class, response.body())
+                            .addFilter("courseId", courseId)
+                            .run();
 
                     if (callback != null) callback.success();
                 } else {

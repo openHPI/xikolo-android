@@ -7,12 +7,12 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Section;
 import de.xikolo.network.ApiService;
 import de.xikolo.utils.NetworkUtil;
-import io.realm.Realm;
 import retrofit2.Response;
 
 public class GetCourseWithSectionsJob extends BaseJob {
@@ -44,23 +44,12 @@ public class GetCourseWithSectionsJob extends BaseJob {
                 if (response.isSuccessful()) {
                     if (Config.DEBUG) Log.i(TAG, "Course received");
 
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            Course.JsonModel courseModel = response.body();
-                            realm.copyToRealmOrUpdate(courseModel.convertToRealmObject());
-
-                            if (courseModel.sections != null && courseModel.sections.get(courseModel.getDocument()) != null) {
-                                for (Section.JsonModel sectionModel : courseModel.sections.get(courseModel.getDocument())) {
-                                    Section section = sectionModel.convertToRealmObject();
-                                    section.courseId = courseModel.getId();
-                                    realm.copyToRealmOrUpdate(section);
-                                }
-                            }
-                        }
-                    });
-                    realm.close();
+                    Sync.Data.with(Course.class, response.body())
+                            .handleDeletes(false)
+                            .run();
+                    Sync.Included.with(Section.class, response.body())
+                            .addFilter("courseId", courseId)
+                            .run();
 
                     if (callback != null) callback.success();
                 } else {

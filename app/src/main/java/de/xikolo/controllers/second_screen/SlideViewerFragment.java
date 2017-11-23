@@ -80,7 +80,7 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
         course = Course.get(courseId);
         section = Section.get(sectionId);
         item = Item.get(itemId);
-        video = Video.getForItemId(itemId);
+        video = Video.getForContentId(item.contentId);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

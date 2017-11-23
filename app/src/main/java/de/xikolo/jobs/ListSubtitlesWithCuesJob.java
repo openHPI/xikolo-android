@@ -7,12 +7,12 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.SubtitleCue;
 import de.xikolo.models.SubtitleTrack;
 import de.xikolo.network.ApiService;
 import de.xikolo.utils.NetworkUtil;
-import io.realm.Realm;
 import retrofit2.Response;
 
 public class ListSubtitlesWithCuesJob extends BaseJob {
@@ -47,23 +47,12 @@ public class ListSubtitlesWithCuesJob extends BaseJob {
                     if (Config.DEBUG)
                         Log.i(TAG, "Subtitles received");
 
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            for (SubtitleTrack.JsonModel subtitleModel : response.body()) {
-                                realm.copyToRealmOrUpdate(subtitleModel.convertToRealmObject());
-
-                                if (subtitleModel.cues != null && subtitleModel.cues.get(subtitleModel.getDocument()) != null) {
-                                    for (SubtitleCue.JsonModel cueModel : subtitleModel.cues.get(subtitleModel.getDocument())) {
-                                        SubtitleCue cue = cueModel.convertToRealmObject();
-                                        realm.copyToRealmOrUpdate(cue);
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    realm.close();
+                    Sync.Data.with(SubtitleTrack.class, response.body())
+                            .addFilter("videoId", videoId)
+                            .run();
+                    Sync.Included.with(SubtitleCue.class, response.body())
+                            .handleDeletes(false)
+                            .run();
 
                     if (callback != null) callback.success();
                 } else {

@@ -7,12 +7,12 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.CourseProgress;
 import de.xikolo.models.SectionProgress;
 import de.xikolo.network.ApiService;
 import de.xikolo.utils.NetworkUtil;
-import io.realm.Realm;
 import retrofit2.Response;
 
 public class GetCourseProgressWithSectionsJob extends BaseJob {
@@ -44,23 +44,12 @@ public class GetCourseProgressWithSectionsJob extends BaseJob {
                 if (response.isSuccessful()) {
                     if (Config.DEBUG) Log.i(TAG, "Course progress received");
 
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            CourseProgress.JsonModel cpModel = response.body();
-                            realm.copyToRealmOrUpdate(cpModel.convertToRealmObject());
-
-                            if (cpModel.sectionProgresses != null && cpModel.sectionProgresses.get(cpModel.getDocument()) != null) {
-                                for (SectionProgress.JsonModel spModel : cpModel.sectionProgresses.get(cpModel.getDocument())) {
-                                    SectionProgress cp = spModel.convertToRealmObject();
-                                    cp.courseProgressId = cpModel.getId();
-                                    realm.copyToRealmOrUpdate(cp);
-                                }
-                            }
-                        }
-                    });
-                    realm.close();
+                    Sync.Data.with(CourseProgress.class, response.body())
+                            .handleDeletes(false)
+                            .run();
+                    Sync.Included.with(SectionProgress.class, response.body())
+                            .addFilter("courseProgressId", courseId)
+                            .run();
 
                     if (callback != null) callback.success();
                 } else {

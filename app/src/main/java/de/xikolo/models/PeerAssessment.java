@@ -13,21 +13,16 @@ public class PeerAssessment extends RealmObject {
 
     public String title;
 
-    public String itemId;
-
     @JsonApi(type = "peer-assessments")
     public static class JsonModel extends Resource implements RealmAdapter<PeerAssessment> {
 
         public String title;
-
-        public String itemId;
 
         @Override
         public PeerAssessment convertToRealmObject() {
             PeerAssessment peer = new PeerAssessment();
             peer.id = getId();
             peer.title = title;
-            peer.itemId = itemId;
 
             return peer;
         }

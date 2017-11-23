@@ -25,7 +25,7 @@ public class RichTextPresenter extends ItemPresenter<RichTextView> {
             requestItem(false);
         }
 
-        richTextPromise = itemManager.getRichTextForItem(itemId, realm, new RealmChangeListener<RealmResults<RichText>>() {
+        richTextPromise = itemManager.getRichTextForItem(item.contentId, realm, new RealmChangeListener<RealmResults<RichText>>() {
             @Override
             public void onChange(RealmResults<RichText> result) {
                 if (result.size() > 0) {

@@ -72,7 +72,7 @@ public class SecondScreenFragment extends BaseFragment {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onSecondScreenNewVideoEvent(SecondScreenManager.SecondScreenNewVideoEvent event) {
         Item item = Item.get(event.itemId);
-        Video video = Video.getForItemId(event.itemId);
+        Video video = Video.getForContentId(item.contentId);
 
         if (item != null && cardVideo != null) {
             if (cardVideo.getVisibility() == View.VISIBLE) {
@@ -267,7 +267,7 @@ public class SecondScreenFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecondScreenUpdateVideoEvent(SecondScreenManager.SecondScreenUpdateVideoEvent event) {
         Item item = Item.get(event.itemId);
-        Video video = Video.getForItemId(event.itemId);
+        Video video = Video.getForContentId(item.contentId);
 
         if (event.webSocketMessage.payload.containsKey("current_time")) {
             long minutes = TimeUnit.SECONDS.toMinutes(video.duration);

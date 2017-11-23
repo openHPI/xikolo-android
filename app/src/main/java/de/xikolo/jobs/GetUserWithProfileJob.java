@@ -7,6 +7,7 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Profile;
 import de.xikolo.models.User;
@@ -56,6 +57,13 @@ public class GetUserWithProfileJob extends BaseJob {
                         }
                     });
                     realm.close();
+
+                    Sync.Data.with(User.class, response.body())
+                            .handleDeletes(false)
+                            .run();
+                    Sync.Included.with(Profile.class, response.body())
+                            .handleDeletes(false)
+                            .run();
 
                     if (callback != null) callback.success();
                 } else {

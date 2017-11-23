@@ -7,12 +7,12 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
 import de.xikolo.network.ApiService;
 import de.xikolo.utils.NetworkUtil;
-import io.realm.Realm;
 import retrofit2.Response;
 
 public class GetCourseJob extends BaseJob {
@@ -49,20 +49,12 @@ public class GetCourseJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Course received");
 
-                Realm realm = Realm.getDefaultInstance();
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        Course.JsonModel model = response.body();
-                        realm.copyToRealmOrUpdate(model.convertToRealmObject());
-                        if (model.enrollment != null && model.enrollment.get(model.getDocument()) != null) {
-                            Enrollment e = model.enrollment.get(model.getDocument()).convertToRealmObject();
-                            e.courseId = model.getId();
-                            realm.copyToRealmOrUpdate(e);
-                        }
-                    }
-                });
-                realm.close();
+                Sync.Data.with(Course.class, response.body())
+                        .handleDeletes(false)
+                        .run();
+                Sync.Included.with(Enrollment.class, response.body())
+                        .handleDeletes(false)
+                        .run();
 
                 if (callback != null) callback.success();
             } else {

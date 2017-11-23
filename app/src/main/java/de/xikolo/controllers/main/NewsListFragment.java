@@ -75,8 +75,6 @@ public class NewsListFragment extends MainFragment<NewsListPresenter, NewsListVi
     public void onStart() {
         super.onStart();
 
-        EventBus.getDefault().register(this);
-
         activityCallback.onFragmentAttached(NavigationAdapter.NAV_NEWS.getPosition(), getString(R.string.title_section_news));
     }
 

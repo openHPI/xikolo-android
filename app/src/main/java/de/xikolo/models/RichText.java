@@ -13,8 +13,6 @@ public class RichText extends RealmObject {
 
     public String text;
 
-    public String itemId;
-
     @JsonApi(type = "rich-texts")
     public static class JsonModel extends Resource implements RealmAdapter<RichText> {
 
@@ -27,7 +25,6 @@ public class RichText extends RealmObject {
             RichText rt = new RichText();
             rt.id = getId();
             rt.text = text;
-            rt.itemId = itemId;
 
             return rt;
         }

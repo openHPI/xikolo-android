@@ -274,7 +274,8 @@ public class DownloadManager extends BaseManager {
 
     private String getDownloadUrl(String itemId, DownloadUtil.VideoAssetType type) {
         Realm realm = Realm.getDefaultInstance();
-        Video video = realm.copyFromRealm(Video.getForItemId(itemId));
+        Item item = Item.get(itemId);
+        Video video = realm.copyFromRealm(Video.getForContentId(item.contentId));
         realm.close();
         return DownloadUtil.getVideoAssetUrl(type, video);
     }

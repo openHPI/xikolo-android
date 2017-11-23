@@ -27,7 +27,7 @@ public class VideoPreviewPresenter extends ItemPresenter<VideoPreviewView> {
             requestItem(false);
         }
 
-        videoPromise = itemManager.getVideoForItem(itemId, realm, new RealmChangeListener<RealmResults<Video>>() {
+        videoPromise = itemManager.getVideoForItem(item.contentId, realm, new RealmChangeListener<RealmResults<Video>>() {
             @Override
             public void onChange(RealmResults<Video> result) {
                 if (result.size() > 0) {

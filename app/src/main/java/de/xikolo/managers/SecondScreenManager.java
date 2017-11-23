@@ -11,7 +11,6 @@ import de.xikolo.App;
 import de.xikolo.events.base.Event;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.models.Item;
-import de.xikolo.models.Video;
 import de.xikolo.models.WebSocketMessage;
 import de.xikolo.utils.NotificationUtil;
 
@@ -104,8 +103,8 @@ public class SecondScreenManager {
         return new JobCallback() {
             @Override
             public void onSuccess() {
-                Video video = Video.getForItemId(itemId);
-                itemManager.requestSubtitlesWithCuesForVideo(video.id, subtitleCallback(message));
+                Item item = Item.get(itemId);
+                itemManager.requestSubtitlesWithCuesForVideo(item.contentId, subtitleCallback(message));
             }
 
             @Override

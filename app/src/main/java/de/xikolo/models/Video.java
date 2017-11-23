@@ -36,8 +36,6 @@ public class Video extends RealmObject {
 
     public String thumbnailUrl;
 
-    public String itemId;
-
     // local field
     public int progress = 0;
 
@@ -48,9 +46,9 @@ public class Video extends RealmObject {
         return model;
     }
 
-    public static Video getForItemId(String itemId) {
+    public static Video getForContentId(String contentId) {
         Realm realm = Realm.getDefaultInstance();
-        Video model = realm.where(Video.class).equalTo("itemId", itemId).findFirst();
+        Video model = realm.where(Video.class).equalTo("id", contentId).findFirst();
         realm.close();
         return model;
     }
@@ -88,8 +86,6 @@ public class Video extends RealmObject {
         @Json(name = "thumbnail_url")
         public String thumbnailUrl;
 
-        public String itemId;
-
         @Override
         public Video convertToRealmObject() {
             Video video = new Video();
@@ -105,7 +101,6 @@ public class Video extends RealmObject {
             video.transcriptUrl = transcriptUrl;
             video.transcriptSize = transcriptSize;
             video.thumbnailUrl = thumbnailUrl;
-            video.itemId = itemId;
 
             return video;
         }
