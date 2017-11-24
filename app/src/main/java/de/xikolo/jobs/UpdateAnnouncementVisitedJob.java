@@ -9,6 +9,7 @@ import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Announcement;
+import de.xikolo.models.base.Sync;
 import de.xikolo.network.ApiService;
 import io.realm.Realm;
 import retrofit2.Response;
@@ -29,15 +30,14 @@ public class UpdateAnnouncementVisitedJob extends BaseJob {
     public void onAdded() {
         if (Config.DEBUG) Log.i(TAG, TAG + " added | announcement.id " + announcementId);
 
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Announcement announcement = realm.where(Announcement.class).equalTo("id", announcementId).findFirst();
-                announcement.visited = true;
-            }
-        });
-        realm.close();
+        Sync.Update.with(Announcement.class, announcementId)
+                .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Announcement>() {
+                    @Override
+                    public void beforeCommit(Realm realm, Announcement model) {
+                        model.visited = true;
+                    }
+                })
+                .run();
     }
 
     @Override

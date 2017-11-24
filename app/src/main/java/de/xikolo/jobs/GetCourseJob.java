@@ -7,7 +7,7 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
-import de.xikolo.jobs.base.Sync;
+import de.xikolo.models.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
@@ -50,10 +50,10 @@ public class GetCourseJob extends BaseJob {
                 if (Config.DEBUG) Log.i(TAG, "Course received");
 
                 Sync.Data.with(Course.class, response.body())
-                        .handleDeletes(false)
+                        .saveOnly()
                         .run();
                 Sync.Included.with(Enrollment.class, response.body())
-                        .handleDeletes(false)
+                        .addFilter("courseId", courseId)
                         .run();
 
                 if (callback != null) callback.success();

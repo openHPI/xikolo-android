@@ -7,7 +7,7 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
-import de.xikolo.jobs.base.Sync;
+import de.xikolo.models.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Section;
@@ -45,7 +45,7 @@ public class GetCourseWithSectionsJob extends BaseJob {
                     if (Config.DEBUG) Log.i(TAG, "Course received");
 
                     Sync.Data.with(Course.class, response.body())
-                            .handleDeletes(false)
+                            .saveOnly()
                             .run();
                     Sync.Included.with(Section.class, response.body())
                             .addFilter("courseId", courseId)

@@ -7,7 +7,7 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
-import de.xikolo.jobs.base.Sync;
+import de.xikolo.models.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.SubtitleCue;
 import de.xikolo.models.SubtitleTrack;
@@ -47,11 +47,11 @@ public class ListSubtitlesWithCuesJob extends BaseJob {
                     if (Config.DEBUG)
                         Log.i(TAG, "Subtitles received");
 
-                    Sync.Data.with(SubtitleTrack.class, response.body())
+                    String[] ids = Sync.Data.with(SubtitleTrack.class, response.body())
                             .addFilter("videoId", videoId)
                             .run();
                     Sync.Included.with(SubtitleCue.class, response.body())
-                            .handleDeletes(false)
+                            .addFilter("subtitleId", ids)
                             .run();
 
                     if (callback != null) callback.success();

@@ -13,6 +13,7 @@ import de.xikolo.models.PeerAssessment;
 import de.xikolo.models.Quiz;
 import de.xikolo.models.RichText;
 import de.xikolo.models.Video;
+import de.xikolo.models.base.Sync;
 import io.realm.Realm;
 
 public abstract class BaseJob extends Job {
@@ -44,20 +45,20 @@ public abstract class BaseJob extends Job {
 
     protected void syncItemContent(Item.JsonModel[] items) {
         Sync.Included.with(RichText.class, items)
-                .handleDeletes(false)
+                .saveOnly()
                 .run();
         Sync.Included.with(Quiz.class, items)
-                .handleDeletes(false)
+                .saveOnly()
                 .run();
         Sync.Included.with(PeerAssessment.class, items)
-                .handleDeletes(false)
+                .saveOnly()
                 .run();
         Sync.Included.with(LtiExercise.class, items)
-                .handleDeletes(false)
+                .saveOnly()
                 .run();
         Sync.Included.with(Video.class, items)
-                .handleDeletes(false)
-                .setBeforeCallback(new Sync.BeforeCommitCallback<Video>() {
+                .saveOnly()
+                .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Video>() {
                     @Override
                     public void beforeCommit(Realm realm, Video model) {
                         Video localVideo = realm.where(Video.class).equalTo("id", model.id).findFirst();

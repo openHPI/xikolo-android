@@ -7,6 +7,7 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.models.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
@@ -50,16 +51,16 @@ public class CreateEnrollmentJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");
 
-                Realm realm = Realm.getDefaultInstance();
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        realm.copyToRealmOrUpdate(response.body().convertToRealmObject());
-                        Course course = realm.where(Course.class).equalTo("id", courseId).findFirst();
-                        course.enrollmentId = response.body().getId();
-                    }
-                });
-                realm.close();
+                Sync.Data.with(Enrollment.class, response.body())
+                        .saveOnly()
+                        .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Enrollment>() {
+                            @Override
+                            public void beforeCommit(Realm realm, Enrollment model) {
+                                Course course = realm.where(Course.class).equalTo("id", courseId).findFirst();
+                                if (course != null) course.enrollmentId = model.id;
+                            }
+                        })
+                        .run();
 
                 if (callback != null) callback.success();
             } else {

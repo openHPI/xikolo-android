@@ -7,14 +7,13 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
-import de.xikolo.jobs.base.Sync;
+import de.xikolo.models.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Profile;
 import de.xikolo.models.User;
 import de.xikolo.network.ApiService;
 import de.xikolo.storages.UserStorage;
 import de.xikolo.utils.NetworkUtil;
-import io.realm.Realm;
 import retrofit2.Response;
 
 public class GetUserWithProfileJob extends BaseJob {
@@ -44,26 +43,8 @@ public class GetUserWithProfileJob extends BaseJob {
                     UserStorage userStorage = new UserStorage();
                     userStorage.saveUserId(response.body().getId());
 
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            User.JsonModel model = response.body();
-                            realm.copyToRealmOrUpdate(model.convertToRealmObject());
-                            if (model.profile != null && model.profile.get(model.getDocument()) != null) {
-                                Profile p = model.profile.get(model.getDocument()).convertToRealmObject();
-                                realm.copyToRealmOrUpdate(p);
-                            }
-                        }
-                    });
-                    realm.close();
-
-                    Sync.Data.with(User.class, response.body())
-                            .handleDeletes(false)
-                            .run();
-                    Sync.Included.with(Profile.class, response.body())
-                            .handleDeletes(false)
-                            .run();
+                    Sync.Data.with(User.class, response.body()).run();
+                    Sync.Included.with(Profile.class, response.body()).run();
 
                     if (callback != null) callback.success();
                 } else {

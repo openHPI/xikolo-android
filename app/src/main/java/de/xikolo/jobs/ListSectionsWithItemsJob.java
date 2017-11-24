@@ -7,7 +7,7 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
-import de.xikolo.jobs.base.Sync;
+import de.xikolo.models.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -49,7 +49,7 @@ public class ListSectionsWithItemsJob extends BaseJob {
                             .addFilter("courseId", courseId)
                             .run();
                     Sync.Included.with(Item.class, response.body())
-                            .handleDeletes(false)
+                            .addFilter("courseId", courseId)
                             .run();
 
                     if (callback != null) callback.success();

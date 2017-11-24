@@ -7,7 +7,7 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
-import de.xikolo.jobs.base.Sync;
+import de.xikolo.models.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
@@ -46,9 +46,17 @@ public class ListCoursesJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Courses received (" + response.body().length + ")");
 
-                Sync.Data.with(Course.class, response.body()).run();
+                Sync.Data.with(Course.class, response.body())
+                        .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Course>() {
+                            @Override
+                            public void beforeCommit(Realm realm, Course model) {
+                                Course course = realm.where(Course.class).equalTo("id", model.id).findFirst();
+                                if (course != null) model.description = course.description;
+                            }
+                        })
+                        .run();
                 Sync.Included.with(Enrollment.class, response.body())
-                        .setBeforeCallback(new Sync.BeforeCommitCallback<Enrollment>() {
+                        .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Enrollment>() {
                             @Override
                             public void beforeCommit(Realm realm, Enrollment model) {
                                 Course course = realm.where(Course.class).equalTo("enrollmentId", model.id).findFirst();

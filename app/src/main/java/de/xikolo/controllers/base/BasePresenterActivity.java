@@ -12,6 +12,8 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.base.PresenterLoader;
 import de.xikolo.presenters.base.View;
 
+import static de.xikolo.config.Config.PRESENTER_LIFECYCLE_LOGGING;
+
 public abstract class BasePresenterActivity<P extends Presenter<V>, V extends View> extends BaseActivity {
 
     private static final String TAG = BasePresenterActivity.class.getSimpleName();
@@ -38,20 +40,20 @@ public abstract class BasePresenterActivity<P extends Presenter<V>, V extends Vi
         getSupportLoaderManager().initLoader(loaderId(), null, new LoaderManager.LoaderCallbacks<P>() {
             @Override
             public final Loader<P> onCreateLoader(int id, Bundle args) {
-                Log.i(TAG, "onCreateLoader");
+                if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onCreateLoader");
                 return new PresenterLoader<>(BasePresenterActivity.this, getPresenterFactory(), tag());
             }
 
             @Override
             public final void onLoadFinished(Loader<P> loader, P presenter) {
-                Log.i(TAG, "onLoadFinished");
+                if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onLoadFinished");
                 BasePresenterActivity.this.presenter = presenter;
                 onPresenterCreatedOrRestored(presenter);
             }
 
             @Override
             public final void onLoaderReset(Loader<P> loader) {
-                Log.i(TAG, "onLoaderReset");
+                if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onLoaderReset");
                 BasePresenterActivity.this.presenter = null;
                 onPresenterDestroyed();
             }

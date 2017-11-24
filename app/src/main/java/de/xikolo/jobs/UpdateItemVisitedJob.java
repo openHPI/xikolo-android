@@ -4,12 +4,13 @@ import android.util.Log;
 
 import com.birbit.android.jobqueue.Params;
 
-import de.xikolo.managers.UserManager;
+import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.managers.UserManager;
 import de.xikolo.models.Item;
+import de.xikolo.models.base.Sync;
 import de.xikolo.network.ApiService;
-import de.xikolo.config.Config;
 import io.realm.Realm;
 import retrofit2.Response;
 
@@ -29,15 +30,14 @@ public class UpdateItemVisitedJob extends BaseJob {
     public void onAdded() {
         if (Config.DEBUG) Log.i(TAG, TAG + " added | item.id " + itemId);
 
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Item item = realm.where(Item.class).equalTo("id", itemId).findFirst();
-                item.visited = true;
-            }
-        });
-        realm.close();
+        Sync.Update.with(Item.class, itemId)
+                .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Item>() {
+                    @Override
+                    public void beforeCommit(Realm realm, Item model) {
+                        model.visited = true;
+                    }
+                })
+                .run();
     }
 
     @Override

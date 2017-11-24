@@ -10,6 +10,7 @@ import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
+import de.xikolo.models.base.Sync;
 import de.xikolo.network.ApiService;
 import de.xikolo.utils.NetworkUtil;
 import io.realm.Realm;
@@ -46,16 +47,15 @@ public class DeleteEnrollmentJob extends BaseJob {
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment deleted");
 
-                Realm realm = Realm.getDefaultInstance();
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        realm.where(Enrollment.class).equalTo("id", id).findFirst().deleteFromRealm();
-                        Course course = realm.where(Course.class).equalTo("enrollmentId", id).findFirst();
-                        course.enrollmentId = null;
-                    }
-                });
-                realm.close();
+                Sync.Delete.with(Enrollment.class, id)
+                        .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Enrollment>() {
+                            @Override
+                            public void beforeCommit(Realm realm, Enrollment model) {
+                                Course course = realm.where(Course.class).equalTo("enrollmentId", model.id).findFirst();
+                                if (course != null) course.enrollmentId = null;
+                            }
+                        })
+                        .run();
 
                 if (callback != null) callback.success();
             } else {

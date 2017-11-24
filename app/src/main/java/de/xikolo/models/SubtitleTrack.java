@@ -8,7 +8,6 @@ import de.xikolo.models.base.RealmAdapter;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import moe.banana.jsonapi2.HasMany;
 import moe.banana.jsonapi2.HasOne;
 import moe.banana.jsonapi2.JsonApi;
 import moe.banana.jsonapi2.Resource;
@@ -65,8 +64,6 @@ public class SubtitleTrack extends RealmObject {
         public String vttUrl;
 
         public HasOne<Video.JsonModel> video;
-
-        public HasMany<SubtitleCue.JsonModel> cues;
 
         @Override
         public SubtitleTrack convertToRealmObject() {

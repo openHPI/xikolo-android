@@ -43,7 +43,7 @@ public class ItemManager extends BaseManager {
                 .where(Item.class)
                 .equalTo("courseId", courseId)
                 .equalTo("accessible", true)
-                .findAll();
+                .findAllAsync();
 
         itemListPromise.addChangeListener(listener);
 

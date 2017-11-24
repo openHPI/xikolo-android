@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
+import static de.xikolo.config.Config.PRESENTER_LIFECYCLE_LOGGING;
+
 public class PresenterLoader<T extends Presenter> extends Loader<T> {
 
     public static final String TAG = PresenterLoader.class.getSimpleName();
@@ -20,7 +22,7 @@ public class PresenterLoader<T extends Presenter> extends Loader<T> {
 
     @Override
     protected void onStartLoading() {
-        Log.i(TAG, "onStartLoading-" + tag);
+        if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onStartLoading-" + tag);
 
         // if we already own a presenter instance, simply deliver it.
         if (presenter != null) {
@@ -34,7 +36,7 @@ public class PresenterLoader<T extends Presenter> extends Loader<T> {
 
     @Override
     protected void onForceLoad() {
-        Log.i(TAG, "onForceLoad-" + tag);
+        if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onForceLoad-" + tag);
 
         // Create the Presenter using the Factory
         presenter = factory.create();
@@ -47,17 +49,17 @@ public class PresenterLoader<T extends Presenter> extends Loader<T> {
     @Override
     public void deliverResult(T data) {
         super.deliverResult(data);
-        Log.i(TAG, "deliverResult-" + tag);
+        if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "deliverResult-" + tag);
     }
 
     @Override
     protected void onStopLoading() {
-        Log.i(TAG, "onStopLoading-" + tag);
+        if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onStopLoading-" + tag);
     }
 
     @Override
     protected void onReset() {
-        Log.i(TAG, "onReset-" + tag);
+        if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onReset-" + tag);
         if (presenter != null) {
             presenter.onDestroyed();
             presenter = null;
