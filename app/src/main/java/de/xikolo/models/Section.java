@@ -9,6 +9,7 @@ import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.utils.DateUtil;
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
 import moe.banana.jsonapi2.HasOne;
@@ -39,6 +40,16 @@ public class Section extends RealmObject {
         Section model = realm.where(Section.class).equalTo("id", id).findFirst();
         realm.close();
         return model;
+    }
+
+    public static List<Section> listForCourse(String courseId) {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Section> sectionList = realm
+                .where(Section.class)
+                .equalTo("courseId", courseId)
+                .findAllSorted("position");
+        realm.close();
+        return sectionList;
     }
 
     public Course getCourse() {

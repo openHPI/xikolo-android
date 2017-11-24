@@ -3,8 +3,9 @@ package de.xikolo.presenters.course;
 import java.util.List;
 
 import de.xikolo.managers.CourseManager;
-import de.xikolo.managers.SectionManager;
+import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
+import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
@@ -17,21 +18,21 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
 
     private CourseManager courseManager;
 
-    private SectionManager sectionManager;
+    private ItemManager itemManager;
 
     private Realm realm;
 
     private Course coursePromise;
 
-    private RealmResults sectionsPromise;
+    private RealmResults itemsPromise;
 
-    private List<Section> sectionList;
+    private List<Item> itemList;
 
     private String courseId;
 
     LearningsPresenter(String courseId) {
         this.courseManager = new CourseManager();
-        this.sectionManager = new SectionManager();
+        this.itemManager = new ItemManager();
         this.realm = Realm.getDefaultInstance();
         this.courseId = courseId;
     }
@@ -40,7 +41,7 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
     public void onViewAttached(LearningsView v) {
         super.onViewAttached(v);
 
-        if (sectionList == null) {
+        if (itemList == null) {
             requestSectionListWithItems(false);
         }
 
@@ -51,13 +52,13 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
             }
         });
 
-        sectionsPromise = sectionManager.listSectionsForCourse(courseId, realm, new RealmChangeListener<RealmResults<Section>>() {
+        itemsPromise = itemManager.listAccessibleItemsForCourse(courseId, realm, new RealmChangeListener<RealmResults<Item>>() {
             @Override
-            public void onChange(RealmResults<Section> sections) {
-                if (sections.size() > 0) {
-                    sectionList = sections;
+            public void onChange(RealmResults<Item> items) {
+                if (items.size() > 0) {
+                    itemList = items;
                     getViewOrThrow().showContent();
-                    getViewOrThrow().setupSections(sections);
+                    getViewOrThrow().setupSections(Section.listForCourse(courseId));
                 }
             }
         });
@@ -71,8 +72,8 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
             coursePromise.removeAllChangeListeners();
         }
 
-        if (sectionsPromise != null) {
-            sectionsPromise.removeAllChangeListeners();
+        if (itemsPromise != null) {
+            itemsPromise.removeAllChangeListeners();
         }
     }
 
@@ -102,7 +103,7 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
         if (getView() != null) {
             getView().showProgress();
         }
-        sectionManager.requestSectionListWithItems(courseId, getDefaultJobCallback(userRequest));
+        itemManager.requestSectionListWithItems(courseId, getDefaultJobCallback(userRequest));
     }
 
 }
