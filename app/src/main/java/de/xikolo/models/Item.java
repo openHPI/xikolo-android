@@ -41,6 +41,8 @@ public class Item extends RealmObject {
 
     public String sectionId;
 
+    public String courseId;
+
     public static Item get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Item model = realm.where(Item.class).equalTo("id", id).findFirst();
@@ -157,6 +159,8 @@ public class Item extends RealmObject {
 
         public HasOne<?> content;
 
+        public HasOne<Course.JsonModel> course;
+
         @Override
         public Item convertToRealmObject() {
             Item item = new Item();
@@ -177,6 +181,10 @@ public class Item extends RealmObject {
 
             if (section != null) {
                 item.sectionId = section.get().getId();
+            }
+
+            if (course != null) {
+                item.courseId = course.get().getId();
             }
 
             return item;
