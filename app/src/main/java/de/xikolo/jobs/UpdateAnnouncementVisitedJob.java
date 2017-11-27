@@ -9,6 +9,7 @@ import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Announcement;
+import de.xikolo.models.base.Local;
 import de.xikolo.models.base.Sync;
 import de.xikolo.network.ApiService;
 import io.realm.Realm;
@@ -30,7 +31,7 @@ public class UpdateAnnouncementVisitedJob extends BaseJob {
     public void onAdded() {
         if (Config.DEBUG) Log.i(TAG, TAG + " added | announcement.id " + announcementId);
 
-        Sync.Update.with(Announcement.class, announcementId)
+        Local.Update.with(Announcement.class, announcementId)
                 .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Announcement>() {
                     @Override
                     public void beforeCommit(Realm realm, Announcement model) {
@@ -47,14 +48,15 @@ public class UpdateAnnouncementVisitedJob extends BaseJob {
             model.setId(announcementId);
             model.visited = true;
 
-            final Response<Announcement.JsonModel> response = ApiService.getInstance().updateAnnouncement(
-                    UserManager.getTokenAsHeader(),
-                    announcementId,
-                    model
-            ).execute();
+            Response<Announcement.JsonModel> response =
+                    ApiService.getInstance().updateAnnouncement(announcementId, model).execute();
 
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Announcement visit successfully updated");
+
+                Sync.Data.with(Announcement.class, response.body())
+                        .saveOnly()
+                        .run();
 
                 if (callback != null) callback.success();
             } else {

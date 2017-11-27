@@ -38,10 +38,7 @@ public class GetCourseJob extends BaseJob {
             final Response<Course.JsonModel> response;
 
             if (UserManager.isAuthorized()) {
-                response = ApiService.getInstance().getCourseWithEnrollment(
-                        UserManager.getTokenAsHeader(),
-                        courseId
-                ).execute();
+                response = ApiService.getInstance().getCourseWithEnrollment(courseId).execute();
             } else {
                 response = ApiService.getInstance().getCourse(courseId).execute();
             }

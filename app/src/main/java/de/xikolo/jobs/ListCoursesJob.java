@@ -33,18 +33,16 @@ public class ListCoursesJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
 
-            final Response<Course.JsonModel[]> response;
+            Response<Course.JsonModel[]> response;
 
             if (UserManager.isAuthorized()) {
-                response = ApiService.getInstance().listCoursesWithEnrollments(
-                        UserManager.getTokenAsHeader()
-                ).execute();
+                response = ApiService.getInstance().listCoursesWithEnrollments().execute();
             } else {
                 response = ApiService.getInstance().listCourses().execute();
             }
 
             if (response.isSuccessful()) {
-                if (Config.DEBUG) Log.i(TAG, "Courses received (" + response.body().length + ")");
+                if (Config.DEBUG) Log.i(TAG, "Courses received");
 
                 Sync.Data.with(Course.class, response.body())
                         .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Course>() {

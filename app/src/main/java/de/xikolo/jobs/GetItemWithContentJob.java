@@ -37,14 +37,12 @@ public class GetItemWithContentJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<Item.JsonModel> response = ApiService.getInstance().getItemWithContent(
-                        UserManager.getTokenAsHeader(),
-                        itemId
-                ).execute();
+
+                Response<Item.JsonModel> response =
+                        ApiService.getInstance().getItemWithContent(itemId).execute();
 
                 if (response.isSuccessful()) {
-                    if (Config.DEBUG)
-                        Log.i(TAG, "Item received");
+                    if (Config.DEBUG) Log.i(TAG, "Item received");
 
                     Sync.Data.with(Item.class, response.body())
                             .saveOnly()

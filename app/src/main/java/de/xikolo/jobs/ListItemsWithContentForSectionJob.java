@@ -37,14 +37,12 @@ public class ListItemsWithContentForSectionJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<Item.JsonModel[]> response = ApiService.getInstance().listItemsWithContentForSection(
-                        UserManager.getTokenAsHeader(),
-                        sectionId
-                ).execute();
+
+                Response<Item.JsonModel[]> response =
+                        ApiService.getInstance().listItemsWithContentForSection(sectionId).execute();
 
                 if (response.isSuccessful()) {
-                    if (Config.DEBUG)
-                        Log.i(TAG, "Items received");
+                    if (Config.DEBUG) Log.i(TAG, "Items received");
 
                     Sync.Data.with(Item.class, response.body())
                             .addFilter("sectionId", sectionId)

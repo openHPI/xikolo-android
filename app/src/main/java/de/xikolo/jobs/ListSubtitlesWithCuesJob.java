@@ -38,14 +38,12 @@ public class ListSubtitlesWithCuesJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<SubtitleTrack.JsonModel[]> response = ApiService.getInstance().listSubtitlesWithCuesForVideo(
-                        UserManager.getTokenAsHeader(),
-                        videoId
-                ).execute();
+
+                Response<SubtitleTrack.JsonModel[]> response =
+                        ApiService.getInstance().listSubtitlesWithCuesForVideo(videoId).execute();
 
                 if (response.isSuccessful()) {
-                    if (Config.DEBUG)
-                        Log.i(TAG, "Subtitles received");
+                    if (Config.DEBUG) Log.i(TAG, "Subtitles received");
 
                     String[] ids = Sync.Data.with(SubtitleTrack.class, response.body())
                             .addFilter("videoId", videoId)

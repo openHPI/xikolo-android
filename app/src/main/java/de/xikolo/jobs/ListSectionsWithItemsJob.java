@@ -36,14 +36,12 @@ public class ListSectionsWithItemsJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<Section.JsonModel[]> response = ApiService.getInstance().listSectionsWithItemsForCourse(
-                        UserManager.getTokenAsHeader(),
-                        courseId
-                ).execute();
+
+                Response<Section.JsonModel[]> response =
+                        ApiService.getInstance().listSectionsWithItemsForCourse(courseId).execute();
 
                 if (response.isSuccessful()) {
-                    if (Config.DEBUG)
-                        Log.i(TAG, "Sections received (" + response.body().length + ")");
+                    if (Config.DEBUG) Log.i(TAG, "Sections received");
 
                     Sync.Data.with(Section.class, response.body())
                             .addFilter("courseId", courseId)

@@ -36,10 +36,9 @@ public class GetCourseProgressWithSectionsJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<CourseProgress.JsonModel> response = ApiService.getInstance().getCourseProgressWithSections(
-                        UserManager.getTokenAsHeader(),
-                        courseId
-                ).execute();
+
+                Response<CourseProgress.JsonModel> response =
+                        ApiService.getInstance().getCourseProgressWithSections(courseId).execute();
 
                 if (response.isSuccessful()) {
                     if (Config.DEBUG) Log.i(TAG, "Course progress received");

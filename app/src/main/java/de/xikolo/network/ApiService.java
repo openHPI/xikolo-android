@@ -6,6 +6,7 @@ import com.squareup.moshi.Moshi;
 import java.io.IOException;
 
 import de.xikolo.config.Config;
+import de.xikolo.managers.UserManager;
 import de.xikolo.models.Announcement;
 import de.xikolo.models.Course;
 import de.xikolo.models.CourseProgress;
@@ -61,13 +62,16 @@ public abstract class ApiService {
                                 xikoloVersionExtension = "";
                             }
 
-                            Request request = original.newBuilder()
+                            Request.Builder builder = original.newBuilder()
                                     .header(Config.HEADER_ACCEPT, mediaType + xikoloVersionExtension)
                                     .header(Config.HEADER_CONTENT_TYPE, mediaType)
-                                    .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE)
-                                    .build();
+                                    .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
 
-                            return chain.proceed(request);
+                            if (UserManager.isAuthorized()) {
+                                builder.header(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX_JSON_API + UserManager.getToken());
+                            }
+
+                            return chain.proceed(builder.build());
                         }
                     })
                     .addInterceptor(logging)

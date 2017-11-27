@@ -43,10 +43,8 @@ public class CreateEnrollmentJob extends BaseJob {
             Enrollment.JsonModel enrollment = new Enrollment.JsonModel();
             enrollment.course = new HasOne<>(new Course.JsonModel().getType(), courseId);
 
-            final Response<Enrollment.JsonModel> response = ApiService.getInstance().createEnrollment(
-                    UserManager.getTokenAsHeader(),
-                    enrollment
-            ).execute();
+            Response<Enrollment.JsonModel> response =
+                    ApiService.getInstance().createEnrollment(enrollment).execute();
 
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment created");

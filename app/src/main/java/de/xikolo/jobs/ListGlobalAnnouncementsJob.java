@@ -31,18 +31,16 @@ public class ListGlobalAnnouncementsJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
 
-            final Response<Announcement.JsonModel[]> response;
+            Response<Announcement.JsonModel[]> response;
 
             if (UserManager.isAuthorized()) {
-                response = ApiService.getInstance().listGlobalAnnouncementsWithCourses(
-                        UserManager.getTokenAsHeader()
-                ).execute();
+                response = ApiService.getInstance().listGlobalAnnouncementsWithCourses().execute();
             } else {
                 response = ApiService.getInstance().listGlobalAnnouncements().execute();
             }
 
             if (response.isSuccessful()) {
-                if (Config.DEBUG) Log.i(TAG, "Announcements received (" + response.body().length + ")");
+                if (Config.DEBUG) Log.i(TAG, "Announcements received");
 
                 Sync.Data.with(Announcement.class, response.body()).run();
 

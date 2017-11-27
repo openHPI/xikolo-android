@@ -36,10 +36,8 @@ public class GetCourseWithSectionsJob extends BaseJob {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
 
-                final Response<Course.JsonModel> response = ApiService.getInstance().getCourseWithSections(
-                        UserManager.getTokenAsHeader(),
-                        courseId
-                ).execute();
+                Response<Course.JsonModel> response =
+                        ApiService.getInstance().getCourseWithSections(courseId).execute();
 
                 if (response.isSuccessful()) {
                     if (Config.DEBUG) Log.i(TAG, "Course received");

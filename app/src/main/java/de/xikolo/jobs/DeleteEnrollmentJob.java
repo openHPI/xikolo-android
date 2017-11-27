@@ -10,6 +10,7 @@ import de.xikolo.jobs.base.JobCallback;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
+import de.xikolo.models.base.Local;
 import de.xikolo.models.base.Sync;
 import de.xikolo.network.ApiService;
 import de.xikolo.utils.NetworkUtil;
@@ -39,15 +40,12 @@ public class DeleteEnrollmentJob extends BaseJob {
         } else if (!NetworkUtil.isOnline()) {
             if (callback != null) callback.error(JobCallback.ErrorCode.NO_NETWORK);
         } else {
-            Response response = ApiService.getInstance().deleteEnrollment(
-                    UserManager.getTokenAsHeader(),
-                    id
-            ).execute();
+            Response response = ApiService.getInstance().deleteEnrollment(id).execute();
 
             if (response.isSuccessful()) {
                 if (Config.DEBUG) Log.i(TAG, "Enrollment deleted");
 
-                Sync.Delete.with(Enrollment.class, id)
+                Local.Delete.with(Enrollment.class, id)
                         .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Enrollment>() {
                             @Override
                             public void beforeCommit(Realm realm, Enrollment model) {

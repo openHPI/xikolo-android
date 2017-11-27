@@ -7,12 +7,11 @@ import com.birbit.android.jobqueue.Params;
 import de.xikolo.config.Config;
 import de.xikolo.jobs.base.BaseJob;
 import de.xikolo.jobs.base.JobCallback;
-import de.xikolo.models.base.Sync;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Profile;
 import de.xikolo.models.User;
+import de.xikolo.models.base.Sync;
 import de.xikolo.network.ApiService;
-import de.xikolo.storages.UserStorage;
 import de.xikolo.utils.NetworkUtil;
 import retrofit2.Response;
 
@@ -33,15 +32,12 @@ public class GetUserWithProfileJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<User.JsonModel> response = ApiService.getInstance().getUserWithProfile(
-                        UserManager.getTokenAsHeader()
-                ).execute();
+
+                Response<User.JsonModel> response =
+                        ApiService.getInstance().getUserWithProfile().execute();
 
                 if (response.isSuccessful()) {
                     if (Config.DEBUG) Log.i(TAG, "User received");
-
-                    UserStorage userStorage = new UserStorage();
-                    userStorage.saveUserId(response.body().getId());
 
                     Sync.Data.with(User.class, response.body()).run();
                     Sync.Included.with(Profile.class, response.body()).run();

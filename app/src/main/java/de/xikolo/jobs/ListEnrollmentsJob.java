@@ -31,13 +31,12 @@ public class ListEnrollmentsJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<Enrollment.JsonModel[]> response = ApiService.getInstance().listEnrollments(
-                        UserManager.getTokenAsHeader()
-                ).execute();
+
+                Response<Enrollment.JsonModel[]> response =
+                        ApiService.getInstance().listEnrollments().execute();
 
                 if (response.isSuccessful()) {
-                    if (Config.DEBUG)
-                        Log.i(TAG, "Enrollments received (" + response.body().length + ")");
+                    if (Config.DEBUG) Log.i(TAG, "Enrollments received");
 
                     Sync.Data.with(Enrollment.class, response.body());
 

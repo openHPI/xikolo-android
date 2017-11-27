@@ -31,7 +31,7 @@ public class CheckHealthJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
 
-            final Response<Void> response = ApiService.getInstance().base().execute();
+            Response<Void> response = ApiService.getInstance().base().execute();
 
             if (response.isSuccessful()) {
                 String apiVersionExpirationDate = response.headers().get(Config.HEADER_API_VERSION_EXPIRATION_DATE);

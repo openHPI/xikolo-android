@@ -36,14 +36,11 @@ public class CreateAccessTokenJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
 
-            final Response<AccessToken> response = ApiService.getInstance().createToken(
-                    email,
-                    password
-            ).execute();
+            Response<AccessToken> response =
+                    ApiService.getInstance().createToken(email, password).execute();
 
-            if (response.isSuccessful()) {
-                AccessToken token = response.body();
-
+            AccessToken token = response.body();
+            if (response.isSuccessful() && token != null) {
                 if (Config.DEBUG) Log.i(TAG, "AccessToken created");
 
                 UserStorage userStorage = new UserStorage();

@@ -34,14 +34,12 @@ public class ListCourseAnnouncementsJob extends BaseJob {
     public void onRun() throws Throwable {
         if (NetworkUtil.isOnline()) {
             if (UserManager.isAuthorized()) {
-                final Response<Announcement.JsonModel[]> response = ApiService.getInstance().listCourseAnnouncements(
-                        UserManager.getTokenAsHeader(),
-                        courseId
-                ).execute();
+
+                Response<Announcement.JsonModel[]> response =
+                        ApiService.getInstance().listCourseAnnouncements(courseId).execute();
 
                 if (response.isSuccessful()) {
-                    if (Config.DEBUG)
-                        Log.i(TAG, "Announcements received (" + response.body().length + ")");
+                    if (Config.DEBUG) Log.i(TAG, "Announcements received");
 
                     Sync.Data.with(Announcement.class, response.body())
                             .addFilter("courseId", courseId)

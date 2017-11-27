@@ -16,13 +16,10 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HEAD;
-import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-
-import static de.xikolo.config.Config.HEADER_AUTH;
 
 public interface ApiServiceInterface {
 
@@ -38,61 +35,61 @@ public interface ApiServiceInterface {
     Call<Course.JsonModel[]> listCourses();
 
     @GET("courses?include=user_enrollment")
-    Call<Course.JsonModel[]> listCoursesWithEnrollments(@Header(HEADER_AUTH) String token);
+    Call<Course.JsonModel[]> listCoursesWithEnrollments();
 
     @GET("courses/{id}")
     Call<Course.JsonModel> getCourse(@Path("id") String id);
 
     @GET("courses/{id}?include=user_enrollment")
-    Call<Course.JsonModel> getCourseWithEnrollment(@Header(HEADER_AUTH) String token, @Path("id") String id);
+    Call<Course.JsonModel> getCourseWithEnrollment(@Path("id") String id);
 
     @GET("courses/{id}?include=sections")
-    Call<Course.JsonModel> getCourseWithSections(@Header(HEADER_AUTH) String token, @Path("id") String id);
+    Call<Course.JsonModel> getCourseWithSections(@Path("id") String id);
 
     // Enrollment
 
     @GET("enrollments")
-    Call<Enrollment.JsonModel[]> listEnrollments(@Header(HEADER_AUTH) String token);
+    Call<Enrollment.JsonModel[]> listEnrollments();
 
     @POST("enrollments")
-    Call<Enrollment.JsonModel> createEnrollment(@Header(HEADER_AUTH) String token, @Body Enrollment.JsonModel enrollment);
+    Call<Enrollment.JsonModel> createEnrollment(@Body Enrollment.JsonModel enrollment);
 
     @PATCH("enrollments/{id}")
-    Call<Enrollment.JsonModel> updateEnrollment(@Header(HEADER_AUTH) String token, @Path("id") String id, @Body Enrollment.JsonModel enrollment);
+    Call<Enrollment.JsonModel> updateEnrollment(@Path("id") String id, @Body Enrollment.JsonModel enrollment);
 
     @DELETE("enrollments/{id}")
-    Call<Void> deleteEnrollment(@Header(HEADER_AUTH) String token, @Path("id") String id);
+    Call<Void> deleteEnrollment(@Path("id") String id);
 
     // Section
 
     @GET("course-sections?include=items")
-    Call<Section.JsonModel[]> listSectionsWithItemsForCourse(@Header(HEADER_AUTH) String token, @Query("filter[course]") String courseId);
+    Call<Section.JsonModel[]> listSectionsWithItemsForCourse(@Query("filter[course]") String courseId);
 
     // Item
 
     @GET("course-items/{id}?include=content")
-    Call<Item.JsonModel> getItemWithContent(@Header(HEADER_AUTH) String token, @Path("id") String id);
+    Call<Item.JsonModel> getItemWithContent(@Path("id") String id);
 
     @GET("course-items?include=content")
-    Call<Item.JsonModel[]> listItemsWithContentForSection(@Header(HEADER_AUTH) String token, @Query("filter[section]") String sectionId);
+    Call<Item.JsonModel[]> listItemsWithContentForSection(@Query("filter[section]") String sectionId);
 
     @PATCH("course-items/{id}")
-    Call<Item.JsonModel> updateItem(@Header(HEADER_AUTH) String token, @Path("id") String id, @Body Item.JsonModel item);
+    Call<Item.JsonModel> updateItem(@Path("id") String id, @Body Item.JsonModel item);
 
     // Progress
 
     @GET("course-progresses/{id}?include=section-progresses")
-    Call<CourseProgress.JsonModel> getCourseProgressWithSections(@Header(HEADER_AUTH) String token, @Path("id") String id);
+    Call<CourseProgress.JsonModel> getCourseProgressWithSections(@Path("id") String id);
 
     // Subtitle
 
     @GET("subtitle-tracks?include=cues")
-    Call<SubtitleTrack.JsonModel[]> listSubtitlesWithCuesForVideo(@Header(HEADER_AUTH) String token, @Query("filter[video]") String videoId);
+    Call<SubtitleTrack.JsonModel[]> listSubtitlesWithCuesForVideo(@Query("filter[video]") String videoId);
 
     // User and Profile
 
     @GET("users/me?include=profile")
-    Call<User.JsonModel> getUserWithProfile(@Header(HEADER_AUTH) String token);
+    Call<User.JsonModel> getUserWithProfile();
 
     // Announcement
 
@@ -100,13 +97,13 @@ public interface ApiServiceInterface {
     Call<Announcement.JsonModel[]> listGlobalAnnouncements();
 
     @GET("announcements?filter[global]=true")
-    Call<Announcement.JsonModel[]> listGlobalAnnouncementsWithCourses(@Header(HEADER_AUTH) String token);
+    Call<Announcement.JsonModel[]> listGlobalAnnouncementsWithCourses();
 
     @GET("announcements")
-    Call<Announcement.JsonModel[]> listCourseAnnouncements(@Header(HEADER_AUTH) String token, @Query("filter[course]") String courseId);
+    Call<Announcement.JsonModel[]> listCourseAnnouncements(@Query("filter[course]") String courseId);
 
     @PATCH("announcements/{id}")
-    Call<Announcement.JsonModel> updateAnnouncement(@Header(HEADER_AUTH) String token, @Path("id") String id, @Body Announcement.JsonModel item);
+    Call<Announcement.JsonModel> updateAnnouncement(@Path("id") String id, @Body Announcement.JsonModel item);
 
     // Token
 
