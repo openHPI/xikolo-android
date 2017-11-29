@@ -25,8 +25,7 @@ public interface ApiServiceInterface {
 
     // Base Request for Health Checks on Startup
 
-    // TODO refactor to base route when fixed in API
-    @HEAD("channels")
+    @HEAD("./")
     Call<Void> base();
 
     // Course
