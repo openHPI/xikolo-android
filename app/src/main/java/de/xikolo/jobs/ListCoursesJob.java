@@ -53,15 +53,7 @@ public class ListCoursesJob extends BaseJob {
                             }
                         })
                         .run();
-                Sync.Included.with(Enrollment.class, response.body())
-                        .setBeforeCommitCallback(new Sync.BeforeCommitCallback<Enrollment>() {
-                            @Override
-                            public void beforeCommit(Realm realm, Enrollment model) {
-                                Course course = realm.where(Course.class).equalTo("enrollmentId", model.id).findFirst();
-                                if (course != null) model.courseId = course.id;
-                            }
-                        })
-                        .run();
+                Sync.Included.with(Enrollment.class, response.body()).run();
 
                 if (callback != null) callback.success();
             } else {
