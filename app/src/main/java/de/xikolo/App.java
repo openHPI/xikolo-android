@@ -9,7 +9,7 @@ import android.webkit.WebView;
 
 import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
-import de.xikolo.config.RealmModelMigration;
+import de.xikolo.models.base.RealmSchemaMigration;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
@@ -72,8 +72,8 @@ public class App extends Application {
     private void configureRealm() {
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(0)
-                .migration(new RealmModelMigration())
+                .schemaVersion(Config.REALM_SCHEMA_VERSION)
+                .migration(new RealmSchemaMigration())
                 .build();
         Realm.setDefaultConfiguration(config);
     }

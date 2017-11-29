@@ -19,6 +19,7 @@ public class Config {
     public static final String API_URL;
 
     public static final int XIKOLO_API_VERSION;
+    public static final int REALM_SCHEMA_VERSION;
 
     public static final String COPYRIGHT_URL;
     public static final String IMPRINT_URL;
@@ -85,6 +86,7 @@ public class Config {
         API_URL = HOST_URL + "api/v2/";
 
         XIKOLO_API_VERSION = App.getInstance().getResources().getInteger(R.integer.xikolo_api_version);
+        REALM_SCHEMA_VERSION = App.getInstance().getResources().getInteger(R.integer.realm_schema_version);
     }
 
     public static final String HEADER_ACCEPT = "Accept";

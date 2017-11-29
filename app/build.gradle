@@ -13,6 +13,7 @@ android {
         versionCode rootProject.ext.versionCode
 
         resValue "integer", "xikolo_api_version", rootProject.ext.xikoloApiVersion.toString()
+        resValue "integer", "realm_schema_version", rootProject.ext.realmSchemaVersion.toString()
     }
 
     flavorDimensions "brand", "build"

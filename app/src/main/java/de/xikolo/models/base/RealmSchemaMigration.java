@@ -1,10 +1,10 @@
-package de.xikolo.config;
+package de.xikolo.models.base;
 
 import io.realm.DynamicRealm;
 import io.realm.RealmMigration;
 import io.realm.RealmSchema;
 
-public class RealmModelMigration implements RealmMigration {
+public class RealmSchemaMigration implements RealmMigration {
 
     @Override
     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
