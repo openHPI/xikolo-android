@@ -74,7 +74,7 @@ public class Section extends RealmObject {
         List<Item> items = realm.where(Item.class)
                 .equalTo("sectionId", id)
                 .equalTo("accessible", true)
-                .equalTo("type", Item.TYPE_VIDEO)
+                .equalTo("contentType", Item.TYPE_VIDEO)
                 .findAll();
         realm.close();
         return items.size() > 0;

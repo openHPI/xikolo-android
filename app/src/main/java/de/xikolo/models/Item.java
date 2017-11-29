@@ -27,7 +27,7 @@ public class Item extends RealmObject {
 
     public Date deadline;
 
-    public String type;
+    public String contentType;
 
     public String exerciseType;
 
@@ -61,7 +61,7 @@ public class Item extends RealmObject {
         Realm realm = Realm.getDefaultInstance();
 
         RealmObject content = null;
-        switch (type) {
+        switch (contentType) {
             case TYPE_TEXT:
                 content = realm.where(RichText.class).equalTo("id", contentId).findFirst();
                 break;
@@ -97,7 +97,7 @@ public class Item extends RealmObject {
     public @StringRes int getIconRes() {
         int icon = R.string.icon_text;
 
-        switch (type) {
+        switch (contentType) {
             case TYPE_TEXT:
                 icon = R.string.icon_text;
                 break;
@@ -144,7 +144,8 @@ public class Item extends RealmObject {
 
         public String deadline;
 
-        public String type;
+        @Json(name = "content_type")
+        public String contentType;
 
         public HasOne<Section.JsonModel> section;
 
@@ -169,7 +170,7 @@ public class Item extends RealmObject {
             item.title = title;
             item.position = position;
             item.deadline = DateUtil.parse(deadline);
-            item.type = type;
+            item.contentType = contentType;
             item.exerciseType = exerciseType;
             item.proctored = proctored;
             item.visited = visited;

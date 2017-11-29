@@ -203,7 +203,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
             Fragment fragment = fragmentManager.findFragmentByTag(name);
             String url = Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ITEMS + item.id;
             if (fragment == null) {
-                switch (item.type) {
+                switch (item.contentType) {
                     case Item.TYPE_LTI:
                         fragment = WebViewFragmentAutoBundle.builder(url)
                                 .inAppLinksEnabled(false)
