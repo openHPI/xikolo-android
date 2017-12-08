@@ -152,16 +152,19 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 profileViewHolder.viewProfile.setVisibility(View.VISIBLE);
 
                 User user = User.get(UserManager.getUserId());
-                Profile profile = Profile.get(user.profileId);
-                profileViewHolder.textName.setText(String.format(context.getResources().getString(R.string.user_name),
-                        profile.firstName, profile.lastName));
-                profileViewHolder.textEmail.setText(profile.email);
 
-                GlideApp.with(App.getInstance())
-                        .load(user.avatarUrl)
-                        .circleCrop()
-                        .allPlaceholders(R.drawable.avatar)
-                        .into(profileViewHolder.imageProfile);
+                if (user != null) {
+                    Profile profile = Profile.get(user.profileId);
+                    profileViewHolder.textName.setText(String.format(context.getResources().getString(R.string.user_name),
+                            profile.firstName, profile.lastName));
+                    profileViewHolder.textEmail.setText(profile.email);
+
+                    GlideApp.with(App.getInstance())
+                            .load(user.avatarUrl)
+                            .circleCrop()
+                            .allPlaceholders(R.drawable.avatar)
+                            .into(profileViewHolder.imageProfile);
+                }
             } else {
                 profileViewHolder.viewLogin.setVisibility(View.VISIBLE);
                 profileViewHolder.viewProfile.setVisibility(View.GONE);

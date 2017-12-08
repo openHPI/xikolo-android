@@ -7,7 +7,7 @@ import de.xikolo.storages.base.BaseStorage;
 
 public class UserStorage extends BaseStorage {
 
-    private static final String PREF_USER = "pref_user";
+    private static final String PREF_USER = "pref_user_v2";
 
     private static String USER_ID = "id";
     private static String ACCESS_TOKEN = "token";
