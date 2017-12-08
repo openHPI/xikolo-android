@@ -27,13 +27,13 @@ ext {
     // shared build properties
     buildToolsVersion   = "26.0.2"
     minSdkVersion       = 15
-    targetSdkVersion    = 26
-    compileSdkVersion   = 26
+    targetSdkVersion    = 27
+    compileSdkVersion   = 27
 
-    versionName         = "1.7"
-    versionCode         = 33
+    versionName         = "2.0"
+    versionCode         = 34
 
-    xikoloApiVersion    = 1
+    xikoloApiVersion    = 3
     realmSchemaVersion  = 1
 
     // travis ci

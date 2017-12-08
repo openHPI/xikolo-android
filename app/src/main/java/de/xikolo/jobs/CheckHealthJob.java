@@ -36,7 +36,7 @@ public class CheckHealthJob extends BaseJob {
             if (response.isSuccessful()) {
                 String apiVersionExpirationDate = response.headers().get(Config.HEADER_API_VERSION_EXPIRATION_DATE);
                 if (apiVersionExpirationDate != null) {
-                    if (Config.DEBUG) Log.w(TAG, "Health check: api deprecated and will expire at " + apiVersionExpirationDate);
+                    if (Config.DEBUG) Log.e(TAG, "Health check: api deprecated and will expire at " + apiVersionExpirationDate);
                     Date expirationDate = HttpDate.parse(apiVersionExpirationDate);
                     if (callback != null) callback.deprecated(expirationDate);
                 } else {
