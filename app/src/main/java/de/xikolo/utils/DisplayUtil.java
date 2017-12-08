@@ -11,11 +11,7 @@ public class DisplayUtil {
         float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
 
-        if (dpHeight >= 600 || dpWidth >= 600) {
-            return true;
-        } else {
-            return false;
-        }
+        return dpHeight >= 600 || dpWidth >= 600;
     }
 
     public static boolean is10inchTablet(Context context) {
@@ -24,11 +20,7 @@ public class DisplayUtil {
         float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
 
-        if (dpHeight >= 720 || dpWidth >= 720) {
-            return true;
-        } else {
-            return false;
-        }
+        return dpHeight >= 720 || dpWidth >= 720;
     }
 
 }

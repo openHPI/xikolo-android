@@ -3,4 +3,7 @@
 
     <string name="settings_copyright">&#169; 2016 &#8211; %d World Health Organization</string>
 
+    <string name="login_sso">WHO Identity (WIMS)</string>
+    <string name="login_sso_hint">If you have issues logging in using your WIMS account please create an OpenWHO account.</string>
+
 </resources>

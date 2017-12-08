@@ -5,20 +5,19 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
 
     <application
-        android:name=".GlobalApplication"
-        android:allowBackup="true"
-        android:fullBackupContent="@xml/backup"
+        android:name=".App"
+        android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_circle"
         android:label="@string/app_name"
         android:resizeableActivity="true"
+        android:roundIcon="@mipmap/ic_launcher_circle"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
 
@@ -27,12 +26,8 @@
             android:value="true" />
 
         <meta-data
-            android:name="de.xikolo.utils.GlideConfiguration"
-            android:value="GlideModule"/>
-
-        <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="de.xikolo.utils.CastOptionsProvider" />
+            android:value="de.xikolo.config.CastOptionsProvider" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -47,12 +42,8 @@
         </receiver>
 
         <receiver
-            android:name=".receivers.DownloadCompletedReceiver"
-            android:label="DownloadCompletedReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
-            </intent-filter>
-        </receiver>
+            android:name=".receivers.CancelDownloadsReceiver"
+            android:label="CancelDownloadsReceiver" />
 
         <receiver
             android:name=".receivers.NotificationDeletedReceiver"
@@ -63,17 +54,39 @@
             </intent-filter>
         </receiver>
 
+        <provider
+            android:name=".utils.FileProviderUtil"
+            android:authorities="de.xikolo.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <service
+            android:name=".services.DownloadService"
+            android:description="@string/service_download"
+            android:exported="false" />
+
         <activity
-            android:name=".controllers.MainActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:theme="@style/AppThemeTranslucentStatus">
+            android:name=".controllers.main.SplashActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name=".controllers.main.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:theme="@style/AppThemeTranslucentStatus">
+            <intent-filter
+                android:autoVerify="true"
+                android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -94,12 +107,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controllers.CourseActivity"
+            android:name=".controllers.course.CourseActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
+            android:parentActivityName=".controllers.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".controllers.main.MainActivity" />
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -129,109 +142,130 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controllers.CourseDetailsActivity"
+            android:name=".controllers.course.CourseDetailsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
+            android:parentActivityName=".controllers.main.MainActivity"
+            android:theme="@style/AppThemeTranslucentStatus">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".controllers.main.MainActivity" />
         </activity>
         <activity
-            android:name=".controllers.SecondScreenActivity"
+            android:name=".controllers.announcement.AnnouncementActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
-        </activity>
+            android:theme="@style/AppThemeTranslucentStatus" />
         <activity
-            android:name=".controllers.LoginActivity"
+            android:name=".controllers.login.LoginActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity"
+            android:parentActivityName=".controllers.main.MainActivity"
             android:theme="@style/AppThemeTranslucentStatusAndNavigation">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".controllers.main.MainActivity" />
         </activity>
         <activity
-            android:name=".controllers.ModuleActivity"
+            android:name=".controllers.login.SsoLoginActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.CourseActivity">
+            android:parentActivityName=".controllers.login.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.CourseActivity" />
+                android:value=".controllers.login.LoginActivity" />
         </activity>
         <activity
-            android:name=".controllers.VideoActivity"
+            android:name=".controllers.course_items.CourseItemsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controllers.course.CourseActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.course.CourseActivity" />
+        </activity>
+        <activity
+            android:name=".controllers.video.VideoActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.ModuleActivity"
+            android:parentActivityName=".controllers.course_items.CourseItemsActivity"
             android:theme="@style/AppThemeDarkStatusBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.ModuleActivity" />
+                android:value=".controllers.course_items.CourseItemsActivity" />
         </activity>
         <activity
-            android:name=".controllers.DownloadsActivity"
+            android:name=".controllers.webview.WebViewActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".controllers.downloads.DownloadsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
+            android:parentActivityName=".controllers.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".controllers.main.MainActivity" />
         </activity>
         <activity
-            android:name=".controllers.SettingsActivity"
+            android:name=".controllers.settings.SettingsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.MainActivity">
+            android:parentActivityName=".controllers.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
-        </activity>
-        <activity
-            android:name=".controllers.secondscreen.QuizActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controllers.SecondScreenActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.SecondScreenActivity" />
-        </activity>
-        <activity
-            android:name=".controllers.secondscreen.PinboardActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controllers.SecondScreenActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.SecondScreenActivity" />
-        </activity>
-        <activity
-            android:name=".controllers.secondscreen.SlideViewerActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controllers.SecondScreenActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.SecondScreenActivity" />
-        </activity>
-        <activity
-            android:name=".controllers.secondscreen.TranscriptViewerActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controllers.SecondScreenActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.SecondScreenActivity" />
+                android:value=".controllers.main.MainActivity" />
         </activity>
 
+        <!-- SECOND SCREEN -->
+
         <activity
-            android:name=".controllers.CastActivity"
+            android:name=".controllers.second_screen.SecondScreenActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controllers.main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.main.MainActivity" />
+        </activity>
+        <activity
+            android:name=".controllers.second_screen.QuizActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controllers.second_screen.SecondScreenActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.second_screen.SecondScreenActivity" />
+        </activity>
+        <activity
+            android:name=".controllers.second_screen.PinboardActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controllers.second_screen.SecondScreenActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.second_screen.SecondScreenActivity" />
+        </activity>
+        <activity
+            android:name=".controllers.second_screen.SlideViewerActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controllers.second_screen.SecondScreenActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.second_screen.SecondScreenActivity" />
+        </activity>
+        <activity
+            android:name=".controllers.second_screen.TranscriptViewerActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".controllers.second_screen.SecondScreenActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.second_screen.SecondScreenActivity" />
+        </activity>
+
+        <!-- CAST -->
+
+        <activity
+            android:name=".controllers.cast.CastActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:parentActivityName=".controllers.ModuleActivity"
+            android:parentActivityName=".controllers.course_items.CourseItemsActivity"
             android:theme="@style/AppThemeDarkStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.ModuleActivity" />
+                android:value=".controllers.course_items.CourseItemsActivity" />
         </activity>
 
     </application>

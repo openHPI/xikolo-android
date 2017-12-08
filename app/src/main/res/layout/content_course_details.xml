@@ -1,0 +1,129 @@
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:res="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/layout_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/image_course"
+                android:layout_width="match_parent"
+                android:layout_height="176dp"
+                android:layout_gravity="bottom"
+                android:scaleType="centerCrop" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sheet_text_scrim_height_bottom"
+                android:layout_gravity="bottom"
+                android:background="@drawable/scrim_bottom" />
+
+            <TextView
+                android:id="@+id/text_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:layout_marginBottom="2dp"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:maxLines="2"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/text_teacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/layout_header"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:textColor="@color/apptheme_main"
+            android:textSize="16sp" />
+
+        <de.xikolo.views.CustomFontTextView
+            android:id="@+id/text_date_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/text_teacher"
+            android:layout_marginRight="6dp"
+            android:maxLines="1"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:text="@string/icon_cal"
+            android:textColor="@color/text_second"
+            android:textSize="20sp"
+            res:customFont="xikolo.ttf" />
+
+        <TextView
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_teacher"
+            android:layout_toRightOf="@+id/text_date_icon"
+            android:maxLines="1"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:textColor="@color/text_second"
+            android:textSize="14sp" />
+
+        <de.xikolo.views.CustomFontTextView
+            android:id="@+id/text_lang_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/text_date_icon"
+            android:layout_marginRight="6dp"
+            android:maxLines="1"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:text="@string/icon_lang"
+            android:textColor="@color/text_second"
+            android:textSize="20sp"
+            res:customFont="xikolo.ttf" />
+
+        <TextView
+            android:id="@+id/text_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_date_icon"
+            android:layout_toRightOf="@+id/text_lang_icon"
+            android:maxLines="1"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:textColor="@color/text_second"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/text_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/text_lang_icon"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:textColor="@color/text_main"
+            android:textColorLink="@color/apptheme_second"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

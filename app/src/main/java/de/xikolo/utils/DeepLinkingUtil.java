@@ -2,6 +2,8 @@ package de.xikolo.utils;
 
 import android.net.Uri;
 
+import de.xikolo.models.Course;
+
 public class DeepLinkingUtil {
 
     public static final String ROUTE_COURSES = "/" + "courses";
@@ -23,10 +25,6 @@ public class DeepLinkingUtil {
         ALL_COURSES, NEWS, MY_COURSES
     }
 
-    public enum CourseTab {
-        RESUME, PINBOARD, PROGRESS, LEARNING_ROOMS, ANNOUNCEMENTS, DETAILS
-    }
-
     public static String getCourseIdentifierFromResumeUri(Uri uri) {
 
         path = uri.getPath();
@@ -41,21 +39,21 @@ public class DeepLinkingUtil {
         return path;
     }
 
-    public static CourseTab getTab(String courseRoute) {
+    public static int getTab(String courseRoute) {
 
         if (courseRoute.endsWith(ROUTE_RESUME)) {
-            return CourseTab.RESUME;
+            return Course.TAB_LEARNINGS;
         } else if (courseRoute.endsWith(ROUTE_PINBOARD)) {
-            return CourseTab.PINBOARD;
+            return Course.TAB_DISCUSSIONS;
         } else if (courseRoute.endsWith(ROUTE_PROGRESS)) {
-            return CourseTab.PROGRESS;
+            return Course.TAB_PROGRESS;
         } else if (courseRoute.endsWith(ROUTE_LEARNING_ROOMS)) {
-            return CourseTab.LEARNING_ROOMS;
+            return Course.TAB_COLLAB_SPACE;
         } else if (courseRoute.endsWith(ROUTE_ANNOUNCEMENTS)) {
-            return CourseTab.ANNOUNCEMENTS;
+            return Course.TAB_ANNOUNCEMENTS;
         }
 
-        return CourseTab.DETAILS;
+        return Course.TAB_LEARNINGS;
     }
 
     public static Type getType(Uri uri) {

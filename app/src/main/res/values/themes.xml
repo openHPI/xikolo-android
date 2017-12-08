@@ -40,6 +40,10 @@
         <item name="colorAccent">@color/apptheme_second</item>
     </style>
 
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/spash_screen</item>
+    </style>
+
     <style name="TextViewTheme" parent="android:Widget.TextView">
         <item name="android:textColor">@color/text_main</item>
     </style>

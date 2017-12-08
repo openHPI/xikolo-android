@@ -1,15 +1,15 @@
 package de.xikolo.controllers.dialogs;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
 import de.xikolo.R;
+import de.xikolo.controllers.dialogs.base.BaseDialogFragment;
 import de.xikolo.managers.PermissionManager;
 
-public class PermissionsDialog extends DialogFragment {
+public class PermissionsDialog extends BaseDialogFragment {
 
     public static final String TAG = PermissionsDialog.class.getSimpleName();
 

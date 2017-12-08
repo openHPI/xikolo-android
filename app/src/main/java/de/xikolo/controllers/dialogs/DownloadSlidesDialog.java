@@ -4,12 +4,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import de.xikolo.R;
+import de.xikolo.controllers.dialogs.base.BaseDialogFragment;
 
-public class DownloadSlidesDialog extends DialogFragment {
+public class DownloadSlidesDialog extends BaseDialogFragment {
 
     public static final String TAG = DownloadSlidesDialog.class.getSimpleName();
 

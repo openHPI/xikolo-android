@@ -42,6 +42,8 @@
     <color name="banner_yellow">#F5A704</color>
     <color name="banner_green">#8CB30D</color>
 
+    <color name="progress_green">#80B600</color>
+
     <color name="button_gray">#5a6065</color>
     <!-- 30% white overlay -->
     <color name="button_gray_light">#8c9094</color>
@@ -61,6 +63,9 @@
     <color name="apptheme_login_gradient_start">@color/apptheme_third_60</color>
     <color name="apptheme_login_gradient_end">@color/apptheme_second_60</color>
 
+    <color name="apptheme_placeholder_gradient_start">@color/apptheme_third_60</color>
+    <color name="apptheme_placeholder_gradient_end">@color/apptheme_second_60</color>
+
     <color name="apptheme_tab_text">@color/white</color>
     <color name="apptheme_tab_text_unfocused">@color/tab_text_unfocused</color>
     <color name="apptheme_tab_indicator">@color/white</color>
@@ -70,5 +75,10 @@
     <color name="apptheme_section_header_toggle_bg">@color/white_30</color>
     <color name="apptheme_section_header_bg_locked">@color/text_light</color>
     <color name="apptheme_section_header_text_locked">@color/white</color>
+
+    <color name="apptheme_splash_background">@color/white</color>
+
+    <color name="translucent_scrim_top">#33000000</color>
+    <color name="translucent_scrim_bottom">#33000000</color>
 
 </resources>

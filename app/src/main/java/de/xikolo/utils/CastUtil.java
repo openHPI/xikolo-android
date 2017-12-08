@@ -15,15 +15,14 @@ import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.images.WebImage;
 
-import de.xikolo.GlobalApplication;
-import de.xikolo.controllers.CastActivity;
-import de.xikolo.models.Item;
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.App;
+import de.xikolo.controllers.cast.CastActivity;
+import de.xikolo.models.Video;
 
 public class CastUtil {
 
     public static boolean isConnected() {
-        Context context = GlobalApplication.getInstance();
+        Context context = App.getInstance();
 
         if (PlayServicesUtil.checkPlayServices(context)) {
             CastContext castContext = CastContext.getSharedInstance(context);
@@ -36,7 +35,7 @@ public class CastUtil {
     }
 
     public static boolean isAvailable() {
-        Context context = GlobalApplication.getInstance();
+        Context context = App.getInstance();
 
         if (PlayServicesUtil.checkPlayServices(context)) {
             CastContext castContext = CastContext.getSharedInstance(context);
@@ -47,15 +46,15 @@ public class CastUtil {
         }
     }
 
-    public static MediaInfo buildCastMetadata(Item<VideoItemDetail> video) {
-        if (!PlayServicesUtil.checkPlayServices(GlobalApplication.getInstance())) {
+    public static MediaInfo buildCastMetadata(Video video) {
+        if (!PlayServicesUtil.checkPlayServices(App.getInstance())) {
             return null;
         }
 
         MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
         mediaMetadata.putString(MediaMetadata.KEY_TITLE, video.title);
 
-        WebImage image = new WebImage(Uri.parse(video.detail.stream.poster));
+        WebImage image = new WebImage(Uri.parse(video.thumbnailUrl));
 
         // small size image used for notification, mini­controller and Lock Screen on JellyBean
         mediaMetadata.addImage(image);
@@ -63,19 +62,19 @@ public class CastUtil {
         // large image, used on the Cast Player page and Lock Screen on KitKat
         mediaMetadata.addImage(image);
 
-        return new MediaInfo.Builder(video.detail.stream.hd_url)
+        return new MediaInfo.Builder(video.singleStream.hdUrl)
                 .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
                 .setContentType("videos/mp4")
                 .setMetadata(mediaMetadata)
                 .build();
     }
 
-    public static PendingResult<RemoteMediaClient.MediaChannelResult> loadMedia(final Activity activity, Item<VideoItemDetail> video, boolean autoPlay, int position) {
-        if (!PlayServicesUtil.checkPlayServices(GlobalApplication.getInstance())) {
+    public static PendingResult<RemoteMediaClient.MediaChannelResult> loadMedia(final Activity activity, Video video, boolean autoPlay) {
+        if (!PlayServicesUtil.checkPlayServices(App.getInstance())) {
             return null;
         }
 
-        CastContext castContext = CastContext.getSharedInstance(GlobalApplication.getInstance());
+        CastContext castContext = CastContext.getSharedInstance(App.getInstance());
         SessionManager sessionManager = castContext.getSessionManager();
         CastSession session = sessionManager.getCurrentCastSession();
 
@@ -115,11 +114,10 @@ public class CastUtil {
                 }
             });
 
-            return remoteMediaClient.load(buildCastMetadata(video), autoPlay, position);
+            return remoteMediaClient.load(buildCastMetadata(video), autoPlay, video.progress);
         } else {
             return null;
         }
     }
-
 
 }

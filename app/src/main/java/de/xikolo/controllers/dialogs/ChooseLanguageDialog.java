@@ -4,39 +4,27 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import java.util.ArrayList;
+import com.yatatsu.autobundle.AutoBundleField;
+
 import java.util.List;
 
 import de.xikolo.R;
-import de.xikolo.models.Subtitle;
+import de.xikolo.controllers.dialogs.base.BaseDialogFragment;
+import de.xikolo.models.SubtitleTrack;
 import de.xikolo.utils.LanguageUtil;
 
-public class ChooseLanguageDialog extends DialogFragment {
+public class ChooseLanguageDialog extends BaseDialogFragment {
 
     public static final String TAG = ChooseLanguageDialog.class.getSimpleName();
 
+    @AutoBundleField String videoId;
+
     private ChooseLanguageDialogListener listener;
-
-    private List<Subtitle> subtitleList;
-
-    public static final String ARG_SUBTITLES = "arg_subtitles";
 
     public void setMobileDownloadDialogListener(ChooseLanguageDialogListener listener) {
         this.listener = listener;
-    }
-
-    public ChooseLanguageDialog() {
-    }
-
-    public static ChooseLanguageDialog getInstance(List<Subtitle> subtitleList) {
-        ChooseLanguageDialog fragment = new ChooseLanguageDialog();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_SUBTITLES, (ArrayList<Subtitle>) subtitleList);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @NonNull
@@ -44,14 +32,12 @@ public class ChooseLanguageDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         CharSequence[] items = null;
 
-        if (getArguments() != null) {
-            subtitleList = getArguments().getParcelableArrayList(ARG_SUBTITLES);
-        }
+        List<SubtitleTrack> subtitles = SubtitleTrack.listForVideoId(videoId);
 
-        if (subtitleList != null) {
-            items = new CharSequence[subtitleList.size()];
-            for (int i = 0; i < subtitleList.size(); i++) {
-                items[i] = LanguageUtil.languageForCode(getContext(), subtitleList.get(i).language());
+        if (subtitles.size() > 0) {
+            items = new CharSequence[subtitles.size()];
+            for (int i = 0; i < subtitles.size(); i++) {
+                items[i] = LanguageUtil.languageForCode(getContext(), subtitles.get(i).language);
             }
         }
 

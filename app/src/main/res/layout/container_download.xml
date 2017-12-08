@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/textFileSize"
         android:paddingBottom="4dp"
         android:paddingTop="8dp"
         android:singleLine="true"

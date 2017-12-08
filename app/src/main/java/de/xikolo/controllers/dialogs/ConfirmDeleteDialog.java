@@ -8,9 +8,10 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import de.xikolo.R;
+import de.xikolo.controllers.dialogs.base.BaseDialogFragment;
 import de.xikolo.utils.DisplayUtil;
 
-public class ConfirmDeleteDialog extends DialogFragment {
+public class ConfirmDeleteDialog extends BaseDialogFragment {
 
     public static final String TAG = ConfirmDeleteDialog.class.getSimpleName();
 

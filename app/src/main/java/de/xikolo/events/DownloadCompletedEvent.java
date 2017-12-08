@@ -1,18 +1,14 @@
 package de.xikolo.events;
 
-import de.xikolo.models.Download;
+import de.xikolo.events.base.Event;
 
 public class DownloadCompletedEvent extends Event {
 
-    private Download dl;
+    public String url;
 
-    public DownloadCompletedEvent(Download download) {
-        super(DownloadCompletedEvent.class.getSimpleName() + ": id = " + download.id + ", uri = " + download.uri);
-        this.dl = download;
+    public DownloadCompletedEvent(String url) {
+        super(DownloadCompletedEvent.class.getSimpleName() + ": url = " + url);
+        this.url = url;
     }
 
-    public Download getDownload() {
-        return dl;
-    }
-    
 }

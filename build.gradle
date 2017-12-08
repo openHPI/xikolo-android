@@ -2,19 +2,21 @@
 
 buildscript {
     repositories {
-        mavenCentral()
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'io.realm:realm-gradle-plugin:4.3.1'
     }
 }
 
 allprojects {
     repositories {
-        mavenCentral()
         jcenter()
+        google()
+        maven { url "https://jitpack.io" }
+        maven { url "https://clojars.org/repo/" }
         flatDir {
             dirs 'libs'
         }
@@ -22,6 +24,19 @@ allprojects {
 }
 
 ext {
+    // shared build properties
+    buildToolsVersion   = "26.0.2"
+    minSdkVersion       = 15
+    targetSdkVersion    = 27
+    compileSdkVersion   = 27
+
+    versionName         = "2.0"
+    versionCode         = 34
+
+    xikoloApiVersion    = 3
+    realmSchemaVersion  = 1
+
+    // travis ci
     travisBuild = System.getenv("TRAVIS") == "true"
     // allows for -Dpre-dex=false to be set
     preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))

@@ -1,76 +1,113 @@
 package de.xikolo.managers;
 
-import com.birbit.android.jobqueue.JobManager;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import de.xikolo.managers.jobs.RetrieveItemDetailJob;
-import de.xikolo.managers.jobs.RetrieveItemListJob;
-import de.xikolo.managers.jobs.RetrieveLocalVideoJob;
-import de.xikolo.managers.jobs.RetrieveVideoSubtitlesJob;
-import de.xikolo.managers.jobs.UpdateLocalVideoJob;
-import de.xikolo.managers.jobs.UpdateProgressionJob;
-import de.xikolo.models.Course;
+import de.xikolo.jobs.GetItemWithContentJob;
+import de.xikolo.jobs.ListItemsWithContentForSectionJob;
+import de.xikolo.jobs.ListSectionsWithItemsJob;
+import de.xikolo.jobs.ListSubtitlesWithCuesJob;
+import de.xikolo.jobs.UpdateItemVisitedJob;
+import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
-import de.xikolo.models.Subtitle;
-import de.xikolo.models.VideoItemDetail;
+import de.xikolo.models.RichText;
+import de.xikolo.models.Video;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 public class ItemManager extends BaseManager {
 
     public static final String TAG = ItemManager.class.getSimpleName();
 
-    public ItemManager(JobManager jobManager) {
-        super(jobManager);
+    public RealmResults listAccessibleItemsForSection(String sectionId, Realm realm, RealmChangeListener<RealmResults<Item>> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
+        }
+
+        RealmResults<Item> itemListPromise = realm
+                .where(Item.class)
+                .equalTo("sectionId", sectionId)
+                .equalTo("accessible", true)
+                .findAllSortedAsync("position");
+
+        itemListPromise.addChangeListener(listener);
+
+        return itemListPromise;
     }
 
-    public void getItems(Result<List<Item>> result, Course course, Module module) {
-        getItems(result, course.id, module.id);
+    public RealmResults listAccessibleItemsForCourse(String courseId, Realm realm, RealmChangeListener<RealmResults<Item>> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
+        }
+
+        RealmResults<Item> itemListPromise = realm
+                .where(Item.class)
+                .equalTo("courseId", courseId)
+                .equalTo("accessible", true)
+                .findAllAsync();
+
+        itemListPromise.addChangeListener(listener);
+
+        return itemListPromise;
     }
 
-    public void getItems(Result<List<Item>> result, String courseId, String moduleId) {
-        result.setResultFilter(result.new ResultFilter() {
+    public RealmResults getVideoForItem(String contentId, Realm realm, RealmChangeListener<RealmResults<Video>> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
+        }
+
+        // RealmChangeListener for RealmObject doesn't notify for initial copyToRealm
+        RealmResults<Video> videoPromise = realm
+                .where(Video.class)
+                .equalTo("id", contentId)
+                .findAllAsync();
+
+        videoPromise.addChangeListener(listener);
+
+        return videoPromise;
+    }
+
+    public RealmResults getRichTextForItem(String contentId, Realm realm, RealmChangeListener<RealmResults<RichText>> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
+        }
+
+        // RealmChangeListener for RealmObject doesn't notify for initial copyToRealm
+        RealmResults<RichText> richTextPromise = realm
+                .where(RichText.class)
+                .equalTo("id", contentId)
+                .findAllAsync();
+
+        richTextPromise.addChangeListener(listener);
+
+        return richTextPromise;
+    }
+
+    public void requestItemWithContent(String itemId, JobCallback callback) {
+        jobManager.addJobInBackground(new GetItemWithContentJob(callback, itemId));
+    }
+
+    public void requestItemsWithContentForSection(String sectionId, JobCallback callback) {
+        jobManager.addJobInBackground(new ListItemsWithContentForSectionJob(callback, sectionId));
+    }
+
+    public void requestSubtitlesWithCuesForVideo(String videoId, JobCallback callback) {
+        jobManager.addJobInBackground(new ListSubtitlesWithCuesJob(callback, videoId));
+    }
+
+    public void updateItemVisited(String itemId) {
+        jobManager.addJobInBackground(new UpdateItemVisitedJob(itemId));
+    }
+
+    public void requestSectionListWithItems(String courseId, JobCallback callback) {
+        jobManager.addJobInBackground(new ListSectionsWithItemsJob(courseId, callback));
+    }
+
+    public void updateVideoProgress(final Video video, final int progress, Realm realm) {
+        realm.executeTransaction(new Realm.Transaction() {
             @Override
-            public List<Item> onFilter(List<Item> result, Result.DataSource dataSource) {
-                sortItems(result);
-                return result;
-            }
-        });
-
-        jobManager.addJobInBackground(new RetrieveItemListJob(result, courseId, moduleId));
-    }
-
-    public void getItemDetail(Result<Item> result, Course course, Module module, Item item, String itemType) {
-        getItemDetail(result, course.id, module.id, item.id, itemType);
-    }
-
-    public void getItemDetail(Result<Item> result, String courseId, String moduleId, String itemId, String itemType) {
-        jobManager.addJobInBackground(new RetrieveItemDetailJob(result, courseId, moduleId, itemId, itemType));
-    }
-
-    public void getVideoSubtitles(Result<List<Subtitle>> result, String courseId, String moduleId, String videoId) {
-        jobManager.addJobInBackground(new RetrieveVideoSubtitlesJob(result, courseId, moduleId, videoId));
-    }
-
-    public void updateProgression(Result<Void> result, Item item) {
-        jobManager.addJobInBackground(new UpdateProgressionJob(result, item));
-    }
-
-    public void updateLocalVideoProgress(Result<Void> result, VideoItemDetail videoItemDetail) {
-        jobManager.addJobInBackground(new UpdateLocalVideoJob(result, videoItemDetail));
-    }
-
-    public void getLocalVideoProgress(Result<VideoItemDetail> result, VideoItemDetail videoItemDetail) {
-            jobManager.addJobInBackground(new RetrieveLocalVideoJob(result, videoItemDetail.id));
-    }
-
-    public static void sortItems(List<Item> items) {
-        Collections.sort(items, new Comparator<Item>() {
-            @Override
-            public int compare(Item lhs, Item rhs) {
-                return lhs.position - rhs.position;
+            public void execute(Realm realm) {
+                video.progress = progress;
+                realm.copyToRealmOrUpdate(video);
             }
         });
     }

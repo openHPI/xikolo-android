@@ -7,14 +7,13 @@ import com.google.gson.Gson;
 
 import java.util.Map;
 
-import de.xikolo.BuildConfig;
-import de.xikolo.GlobalApplication;
-import de.xikolo.managers.UserManager;
-import de.xikolo.storages.preferences.StorageType;
-import de.xikolo.storages.preferences.UserStorage;
+import de.xikolo.App;
+import de.xikolo.config.Config;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.lanalytics.Tracker;
-import de.xikolo.managers.DownloadManager;
+import de.xikolo.managers.UserManager;
+import de.xikolo.storages.UserStorage;
 
 public class LanalyticsUtil {
 
@@ -113,7 +112,7 @@ public class LanalyticsUtil {
                 .build());
     }
 
-    public static void trackDownloadedFile(String videoId, String courseId, String sectionId, DownloadManager.DownloadFileType type) {
+    public static void trackDownloadedFile(String videoId, String courseId, String sectionId, DownloadUtil.VideoAssetType type) {
         String verb = null;
         switch (type) {
             case VIDEO_HD: verb = "DOWNLOADED_HD_VIDEO"; break;
@@ -364,10 +363,19 @@ public class LanalyticsUtil {
                 .build());
     }
 
+    public static void trackRichTextFallback(String itemId, String courseId, String sectionId) {
+        track(newEventBuilder()
+                .setResource(itemId, "item")
+                .setVerb("RICHTEXT_FALLBACK_CLICKED")
+                .putContext(CONTEXT_COURSE_ID, courseId)
+                .putContext(CONTEXT_SECTION_ID, sectionId)
+                .setOnlyWifi(true)
+                .build());
+    }
 
     public static void track(Lanalytics.Event event) {
-        GlobalApplication application = GlobalApplication.getInstance();
-        if (UserManager.isLoggedIn() && isTrackingEnabled()) {
+        App application = App.getInstance();
+        if (UserManager.isAuthorized() && FeatureToggle.tracking()) {
             Tracker tracker = application.getLanalytics().getDefaultTracker();
             tracker.send(event, UserManager.getToken());
         } else {
@@ -377,18 +385,13 @@ public class LanalyticsUtil {
         }
     }
 
-    private static boolean isTrackingEnabled() {
-        return BuildConfig.X_TYPE == BuildType.RELEASE
-                && (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP);
-    }
-
     public static Lanalytics.Event.Builder newEventBuilder() {
-        GlobalApplication application = GlobalApplication.getInstance();
+        App application = App.getInstance();
         Lanalytics.Event.Builder builder = new Lanalytics.Event.Builder(application);
 
-        if (UserManager.isLoggedIn()) {
-            UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-            builder.setUser(userStorage.getUser().id);
+        if (UserManager.isAuthorized()) {
+            UserStorage userStorage = new UserStorage();
+            builder.setUser(userStorage.getUserId());
         }
 
         builder.putContext(CONTEXT_CLIENT_ID, application.getClientId());
@@ -401,7 +404,7 @@ public class LanalyticsUtil {
     }
 
     public static String getContextDataJson() {
-        GlobalApplication application = GlobalApplication.getInstance();
+        App application = App.getInstance();
 
         Map<String, String> contextData = application.getLanalytics().getDefaultContextData();
         contextData.put(CONTEXT_CLIENT_ID, application.getClientId());

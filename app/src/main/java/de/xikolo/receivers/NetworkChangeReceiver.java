@@ -13,9 +13,10 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        boolean isOnline = NetworkUtil.isOnline(context);
-
-        EventBus.getDefault().postSticky(new NetworkStateEvent(isOnline));
+        if ("android.net.conn.CONNECTIVITY_CHANGE".equals(intent.getAction())) {
+            boolean isOnline = NetworkUtil.isOnline();
+            EventBus.getDefault().postSticky(new NetworkStateEvent(isOnline));
+        }
     }
 
 }

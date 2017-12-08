@@ -1,16 +1,22 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionName "1.6.2"
-        versionCode 29
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
+        versionName rootProject.ext.versionName
+        versionCode rootProject.ext.versionCode
+
+        resValue "integer", "xikolo_api_version", rootProject.ext.xikoloApiVersion.toString()
+        resValue "integer", "realm_schema_version", rootProject.ext.realmSchemaVersion.toString()
     }
+
+    flavorDimensions "brand", "build"
 
     productFlavors.all {
         ext.appName = null
@@ -18,47 +24,63 @@ android {
     }
 
     productFlavors {
+        regular {
+            dimension "build"
+        }
+        fast {
+            // faster dev builds
+            minSdkVersion 21
+            dimension "build"
+        }
+
         openHPI {
             applicationId "de.xikolo.openhpi"
-            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.OPEN_HPI"
+            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_HPI"
             appName = "openHPI"
             appHost = "open.hpi.de"
+            dimension "brand"
         }
         openHPI_CN {
             applicationId "de.xikolo.openhpi.cn"
-            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.OPEN_HPI_CN"
+            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_HPI_CN"
             appName = "openHPI CN"
             appHost = "openhpi.cn"
+            dimension "brand"
         }
         openSAP {
             applicationId "de.xikolo.opensap"
-            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.OPEN_SAP"
+            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_SAP"
             appName = "openSAP"
             appHost = "open.sap.com"
+            dimension "brand"
         }
         moocHouse {
             applicationId "de.xikolo.moochouse"
-            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.MOOC_HOUSE"
+            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.MOOC_HOUSE"
             appName = "mooc.house"
             appHost = "mooc.house"
+            dimension "brand"
         }
         moocHouse_CN {
             applicationId "de.xikolo.moochouse.cn"
-            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.MOOC_HOUSE_CN"
+            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.MOOC_HOUSE_CN"
             appName = "cnMOOC.house"
             appHost = "cnmooc.house"
+            dimension "brand"
         }
         openUNE {
             applicationId "de.xikolo.openune"
-            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.OPEN_UNE"
+            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_UNE"
             appName = "openUNE"
             appHost = "openune.cn"
+            dimension "brand"
         }
         openWHO {
             applicationId "de.xikolo.openwho"
-            buildConfigField "de.xikolo.utils.BuildFlavor", "X_FLAVOR", "de.xikolo.utils.BuildFlavor.OPEN_WHO"
+            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_WHO"
             appName = "OpenWHO"
             appHost = "openwho.org"
+            dimension "brand"
         }
     }
     signingConfigs {
@@ -113,10 +135,9 @@ android {
         release {
             minifyEnabled false
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "de.xikolo.utils.BuildType", "X_TYPE", "de.xikolo.utils.BuildType.RELEASE"
-            debuggable false
             zipAlignEnabled true
+            debuggable false
+            buildConfigField "de.xikolo.config.BuildType", "X_TYPE", "de.xikolo.config.BuildType.RELEASE"
 
             if (rootProject.file('signing.properties').exists()) {
                 productFlavors.openHPI.signingConfig signingConfigs.openHPI
@@ -130,9 +151,10 @@ android {
         }
         debug {
             minifyEnabled false
-            buildConfigField "de.xikolo.utils.BuildType", "X_TYPE", "de.xikolo.utils.BuildType.DEBUG"
             shrinkResources false
+            zipAlignEnabled false
             debuggable true
+            buildConfigField "de.xikolo.config.BuildType", "X_TYPE", "de.xikolo.config.BuildType.DEBUG"
 
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
@@ -142,10 +164,17 @@ android {
         def name = variant.productFlavors.get(0).ext.appName
         def host = variant.productFlavors.get(0).ext.appHost
         if (variant.buildType.name == "debug") {
-            name += " Debug"
+            name += ".debug"
         }
         variant.resValue "string", "app_name", name
         variant.resValue "string", "app_host", host
+        variant.resValue "string", "service_download", name + " Download Service"
+    }
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        if (variant.buildType.name == "release" && names.contains("fast")) {
+            setIgnore(true)
+        }
     }
     lintOptions {
         abortOnError false
@@ -159,41 +188,4 @@ android {
     }
 }
 
-dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.5.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile ('com.github.bumptech.glide:okhttp3-integration:1.4.0') {
-        exclude group: 'glide-parent'
-    }
-    compile 'com.birbit:android-priority-jobqueue:2.0.1'
-    compile 'org.greenrobot:eventbus:3.0.0'
-
-    compile 'org.java-websocket:Java-WebSocket:1.3.0'
-    compile 'com.github.barteksc:android-pdf-viewer:2.4.0'
-
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.google.android.gms:play-services-cast-framework:10.0.1'
-
-    def supportVersion = '25.1.0'
-
-    compile "com.android.support:support-v4:${supportVersion}"
-    compile "com.android.support:appcompat-v7:${supportVersion}"
-    compile "com.android.support:cardview-v7:${supportVersion}"
-    compile "com.android.support:recyclerview-v7:${supportVersion}"
-    compile "com.android.support:mediarouter-v7:${supportVersion}"
-    compile "com.android.support:design:${supportVersion}"
-    compile "com.android.support:preference-v14:${supportVersion}"
-
-    apt      'com.google.auto.value:auto-value:1.3'
-    provided 'com.google.auto.value:auto-value:1.3'
-    apt      'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
-    provided 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
-    apt      'com.ryanharter.auto.value:auto-value-gson:0.4.5'
-    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.5'
-
-    compile('de.psdev.licensesdialog:licensesdialog:1.8.1')
-
-    compile project(":lanalytics")
-
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-}
+apply from: 'dependencies.gradle'

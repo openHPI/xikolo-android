@@ -1,10 +1,11 @@
 package de.xikolo.views;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class CustomSizeImageView extends ImageView {
+public class CustomSizeImageView extends AppCompatImageView {
 
     private int mForceHeight = 0;
     private int mForceWidth = 0;

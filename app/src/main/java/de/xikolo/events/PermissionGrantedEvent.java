@@ -1,6 +1,8 @@
 package de.xikolo.events;
 
 
+import de.xikolo.events.base.Event;
+
 public class PermissionGrantedEvent extends Event {
 
     private int rC;

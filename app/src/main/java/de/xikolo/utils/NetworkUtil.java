@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import de.xikolo.App;
 import de.xikolo.R;
 
 public class NetworkUtil {
@@ -12,23 +13,26 @@ public class NetworkUtil {
     public static int TYPE_WIFI = 1;
     public static int TYPE_MOBILE = 2;
 
-    public static boolean isOnline(Context context) {
+    public static boolean isOnline() {
+        Context context = App.getInstance();
         if (context == null) {
             return false;
         }
         ConnectivityManager cm = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        if (cm == null) return false;
+
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            return true;
-        }
-        return false;
+        return netInfo != null && netInfo.isConnected();
     }
 
-    public static int getConnectivityStatus(Context context) {
+    public static int getConnectivityStatus() {
+        Context context = App.getInstance();
         ConnectivityManager cm = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (cm == null) return TYPE_NOT_CONNECTED;
 
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null) {

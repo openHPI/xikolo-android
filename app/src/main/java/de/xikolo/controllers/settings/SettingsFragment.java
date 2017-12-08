@@ -17,14 +17,13 @@ import java.util.Calendar;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.xikolo.BuildConfig;
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
-import de.xikolo.controllers.LoginActivity;
+import de.xikolo.config.BuildFlavor;
+import de.xikolo.config.Config;
+import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.managers.UserManager;
-import de.xikolo.utils.BuildFlavor;
-import de.xikolo.utils.Config;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -121,7 +120,7 @@ public class SettingsFragment extends PreferenceFragment {
         });
 
         loginOut = findPreference(getString(R.string.preference_login_out));
-        if (UserManager.isLoggedIn()) {
+        if (UserManager.isAuthorized()) {
             buildLogoutView(loginOut);
         } else {
             buildLoginView(loginOut);
@@ -134,7 +133,7 @@ public class SettingsFragment extends PreferenceFragment {
             pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    Intent intent = LoginActivityAutoBundle.builder().build(getActivity());
                     startActivity(intent);
                     return true;
                 }
@@ -148,8 +147,7 @@ public class SettingsFragment extends PreferenceFragment {
             pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    UserManager userManager = new UserManager(GlobalApplication.getInstance().getJobManager());
-                    userManager.logout();
+                    UserManager.logout();
                     return true;
                 }
             });

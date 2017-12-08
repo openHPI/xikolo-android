@@ -1,135 +1,248 @@
 package de.xikolo.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.Context;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
-import java.io.Serializable;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
 
-import de.xikolo.storages.databases.DatabaseModel;
+import de.xikolo.App;
+import de.xikolo.BuildConfig;
+import de.xikolo.R;
+import de.xikolo.config.BuildFlavor;
+import de.xikolo.models.base.JsonAdapter;
+import de.xikolo.models.base.RealmAdapter;
+import de.xikolo.utils.DateUtil;
+import de.xikolo.utils.DisplayUtil;
+import de.xikolo.utils.LanguageUtil;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import moe.banana.jsonapi2.HasMany;
+import moe.banana.jsonapi2.HasOne;
+import moe.banana.jsonapi2.JsonApi;
+import moe.banana.jsonapi2.Resource;
 
-public class Course implements DatabaseModel, Parcelable, Serializable {
+public class Course extends RealmObject implements JsonAdapter<Course.JsonModel> {
 
-    @SerializedName("id")
+    public enum Filter {
+        ALL, MY
+    }
+
+    public static final int TAB_LEARNINGS = 0;
+    public static final int TAB_DISCUSSIONS = 1;
+    public static final int TAB_PROGRESS = 2;
+    public static final int TAB_COLLAB_SPACE = 3;
+    public static final int TAB_COURSE_DETAILS = 4;
+    public static final int TAB_ANNOUNCEMENTS = 5;
+    public static final int TAB_RECAP = 6;
+
+    @PrimaryKey
     public String id;
 
-    @SerializedName("name")
-    public String name;
+    public String title;
 
-    @SerializedName("description")
+    public String slug;
+
+    public Date startDate;
+
+    public Date endDate;
+
+    public String shortAbstract;
+
     public String description;
 
-    @SerializedName("course_code")
-    public String course_code;
+    public String imageUrl;
 
-    @SerializedName("lecturer")
-    public String lecturer;
-
-    @SerializedName("language")
     public String language;
 
-    @SerializedName("url")
-    public String url;
+    public String status;
 
-    @SerializedName("visual_url")
-    public String visual_url;
+    public String classifiers;
 
-    @SerializedName("available_from")
-    public String available_from;
+    public String teachers;
 
-    @SerializedName("available_to")
-    public String available_to;
+    public boolean accessible;
 
-    @SerializedName("locked")
-    public boolean locked;
+    public boolean enrollable;
 
-    @SerializedName("is_enrolled")
-    public boolean is_enrolled;
+    public boolean hidden;
 
-    @SerializedName("progress")
-    public Progress progress;
+    public boolean external;
 
-    @Override
-    public String getId() {
-        return id;
+    public String externalUrl;
+
+    public String policyUrl;
+
+    public boolean onDemand;
+
+    public String enrollmentId;
+
+    public boolean isEnrolled() {
+        return enrollmentId != null;
+    }
+
+    public static Course get(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        Course model = realm.where(Course.class).equalTo("id", id).findFirst();
+        realm.close();
+        return model;
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
+    public JsonModel convertToJsonResource() {
+        Course.JsonModel model = new Course.JsonModel();
+        model.setId(id);
+        model.title = title;
+        model.slug = slug;
+        model.startDate = DateUtil.format(startDate);
+        model.endDate = DateUtil.format(endDate);
+        model.shortAbstract = shortAbstract;
+        model.description = description;
+        model.imageUrl = imageUrl;
+        model.language = language;
+        model.status = status;
+        model.classifiers = classifiers;
+        model.teachers = teachers;
+        model.accessible = accessible;
+        model.enrollable = enrollable;
+        model.hidden = hidden;
+        model.external = external;
+        model.externalUrl = externalUrl;
+        model.policyUrl = policyUrl;
+        model.onDemand = onDemand;
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(name);
-        parcel.writeString(description);
-        parcel.writeString(course_code);
-        parcel.writeString(lecturer);
-        parcel.writeString(language);
-        parcel.writeString(url);
-        parcel.writeString(visual_url);
-        parcel.writeString(available_from);
-        parcel.writeString(available_to);
-        parcel.writeByte((byte) (locked ? 1 : 0));
-        parcel.writeByte((byte) (is_enrolled ? 1 : 0 ));
-        parcel.writeParcelable(progress, i);
-    }
-
-    public Course() {
-        progress = new Progress();
-    }
-
-    public Course(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        description = in.readString();
-        course_code = in.readString();
-        lecturer = in.readString();
-        language = in.readString();
-        url = in.readString();
-        visual_url = in.readString();
-        available_from = in.readString();
-        available_to = in.readString();
-        locked = in.readByte() != 0;
-        is_enrolled = in.readByte() != 0;
-        progress = in.readParcelable(Course.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<Course> CREATOR = new Parcelable.Creator<Course>() {
-        public Course createFromParcel(Parcel in) {
-            return new Course(in);
+        if (enrollmentId != null) {
+            model.enrollment = new HasOne<>(new Enrollment.JsonModel().getType(), enrollmentId);
         }
 
-        public Course[] newArray(int size) {
-            return new Course[size];
-        }
-    };
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (((Object) this).getClass() != obj.getClass())
-            return false;
-        Course o = (Course) obj;
-        if (id == null) {
-            if (o.id != null)
-                return false;
-        } else if (!id.equals(o.id))
-            return false;
-        return true;
+        return model;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 11;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+    public String getFormattedDate() {
+        Context context = App.getInstance();
+
+        DateFormat dateOut;
+        if (DisplayUtil.is7inchTablet(context)) {
+            dateOut = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
+        } else {
+            dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+        }
+
+        if (DateUtil.isPast(endDate)) {
+            return context.getString(R.string.course_date_self_paced);
+        }
+
+        if (DateUtil.isPast(startDate) && endDate == null) {
+            return context.getString(R.string.course_date_self_paced);
+        }
+
+        if (DateUtil.isFuture(startDate) && endDate == null) {
+            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                return context.getString(R.string.course_date_coming_soon);
+            } else {
+                return String.format(context.getString(R.string.course_date_beginning), dateOut.format(startDate));
+            }
+        }
+
+        if (startDate != null && endDate != null) {
+            return dateOut.format(startDate) + " - " + dateOut.format(endDate);
+        }
+
+        return context.getString(R.string.course_date_coming_soon);
+    }
+
+    public String getFormattedLanguage() {
+        return LanguageUtil.languageForCode(App.getInstance(), language);
+    }
+
+    @JsonApi(type = "courses")
+    public static class JsonModel extends Resource implements RealmAdapter<Course> {
+
+        public String title;
+
+        public String slug;
+
+        @Json(name = "start_at")
+        public String startDate;
+
+        @Json(name = "end_at")
+        public String endDate;
+
+        @Json(name = "abstract")
+        public String shortAbstract;
+
+        public String description;
+
+        @Json(name = "image_url")
+        public String imageUrl;
+
+        public String language;
+
+        public String status;
+
+        public transient String classifiers;
+
+        public String teachers;
+
+        public boolean accessible;
+
+        public boolean enrollable;
+
+        public boolean hidden;
+
+        public boolean external;
+
+        @Json(name = "external_url")
+        public String externalUrl;
+
+        @Json(name = "policy_url")
+        public String policyUrl;
+
+        @Json(name = "qualified_certificate_available")
+        public boolean qualifiedCertificateAvailable;
+
+        @Json(name = "on_demand")
+        public boolean onDemand;
+
+        @Json(name = "user_enrollment")
+        public HasOne<Enrollment.JsonModel> enrollment;
+
+        @Json(name = "sections")
+        public HasMany<Section.JsonModel> sections;
+
+        @Override
+        public Course convertToRealmObject() {
+            Course course = new Course();
+            course.id = getId();
+            course.title = title;
+            course.slug = slug;
+            course.startDate = DateUtil.parse(startDate);
+            course.endDate = DateUtil.parse(endDate);
+            course.shortAbstract = shortAbstract;
+            course.description = description;
+            course.imageUrl = imageUrl;
+            course.language = language;
+            course.status = status;
+            course.classifiers = classifiers;
+            course.teachers = teachers;
+            course.accessible = accessible;
+            course.enrollable = enrollable;
+            course.hidden = hidden;
+            course.external = external;
+            course.externalUrl = externalUrl;
+            course.policyUrl = policyUrl;
+            course.onDemand = onDemand;
+
+            if (enrollment != null) {
+                course.enrollmentId = enrollment.get().getId();
+            }
+
+            return course;
+        }
+
     }
 
 }

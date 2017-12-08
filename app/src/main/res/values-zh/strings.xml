@@ -12,7 +12,7 @@
     <string name="title_section_my_courses">我的课程</string>
 
     <!-- -->
-    <string name="header_current_courses">当前和即将开始的课程</string>
+    <string name="header_current_and_upcoming_courses">当前和即将开始的课程</string>
     <string name="header_self_paced_courses">自学课程</string>
     <string name="header_my_current_courses">我的当前课程</string>
     <string name="header_my_future_courses">我的即将开始的课程</string>
@@ -31,9 +31,9 @@
     <string name="tab_learnings">学习</string>
     <string name="tab_discussions">讨论</string>
     <string name="tab_progress">进度</string>
-    <string name="tab_details">课程明细</string>
+    <string name="tab_course_details">课程明细</string>
     <string name="tab_announcements">公告</string>
-    <string name="tab_rooms">学习小组</string>
+    <string name="tab_collab_space">学习小组</string>
 
     <!-- -->
     <string name="btn_enroll_me">注册该课程</string>
@@ -109,9 +109,9 @@
     <string name="intro_overlay_text">点击以将视频推送至电视播放</string>
     <string name="user_name">%1$s %2$s</string>
 
-    <string name="self_test_points">自我测试总分 %2$s 分，您取得了 %1$s 分</string>
-    <string name="assignments_points">作业总分 %2$s 分，您取得了 %1$s 分</string>
-    <string name="items_visited">已访问 %2$s 中的 %1$s 项</string>
+    <string name="self_test_points">自我测试总分 %2$.1f 分，您取得了 %1$.1f 分</string>
+    <string name="assignments_points">作业总分 %2$.1f 分，您取得了 %1$.1f 分</string>
+    <string name="items_visited">已访问 %2$.0f 中的 %1$.0f 项</string>
 
     <!-- -->
     <string name="notification_no_network">请打开网络连接</string>

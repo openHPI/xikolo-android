@@ -1,46 +1,110 @@
 package de.xikolo.models;
 
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.support.annotation.StringRes;
 
-import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
+import com.squareup.moshi.Json;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
+import java.util.Date;
 
 import de.xikolo.R;
-import de.xikolo.storages.databases.DatabaseModel;
+import de.xikolo.models.base.RealmAdapter;
+import de.xikolo.utils.DateUtil;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import moe.banana.jsonapi2.HasOne;
+import moe.banana.jsonapi2.JsonApi;
+import moe.banana.jsonapi2.Resource;
 
-public class Item<T extends ItemDetail> implements DatabaseModel, Parcelable, Serializable {
+public class Item extends RealmObject {
 
-    public static final String TYPE_TEXT = "text";
+    @PrimaryKey
+    public String id;
+
+    public String title;
+
+    public int position;
+
+    public Date deadline;
+
+    public String contentType;
+
+    public String exerciseType;
+
+    public boolean proctored;
+
+    public boolean visited;
+
+    public boolean accessible;
+
+    public String contentId;
+
+    public String sectionId;
+
+    public String courseId;
+
+    public static Item get(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        Item model = realm.where(Item.class).equalTo("id", id).findFirst();
+        realm.close();
+        return model;
+    }
+
+    public Section getSection() {
+        Realm realm = Realm.getDefaultInstance();
+        Section section = realm.where(Section.class).equalTo("id", sectionId).findFirst();
+        realm.close();
+        return section;
+    }
+
+    public RealmObject getContent() {
+        Realm realm = Realm.getDefaultInstance();
+
+        RealmObject content = null;
+        switch (contentType) {
+            case TYPE_TEXT:
+                content = realm.where(RichText.class).equalTo("id", contentId).findFirst();
+                break;
+            case TYPE_VIDEO:
+                content = realm.where(Video.class).equalTo("id", contentId).findFirst();
+                break;
+            case TYPE_QUIZ:
+                content = realm.where(Quiz.class).equalTo("id", contentId).findFirst();
+                break;
+            case TYPE_LTI:
+                content = realm.where(LtiExercise.class).equalTo("id", contentId).findFirst();
+                break;
+            case TYPE_PEER:
+                content = realm.where(PeerAssessment.class).equalTo("id", contentId).findFirst();
+                break;
+        }
+
+        realm.close();
+        return content;
+    }
+
+    public static final String TYPE_TEXT = "rich_text";
     public static final String TYPE_VIDEO = "video";
-    public static final String TYPE_SELFTEST = "self test";
+    public static final String TYPE_QUIZ = "quiz";
     public static final String TYPE_LTI = "lti_exercise";
     public static final String TYPE_PEER = "peer_assessment";
 
     public static final String EXERCISE_TYPE_SELFTEST = "selftest";
     public static final String EXERCISE_TYPE_SURVEY = "survey";
-    public static final String EXERCISE_TYPE_ASSIGNMENT = "main";
+    public static final String EXERCISE_TYPE_MAIN = "main";
     public static final String EXERCISE_TYPE_BONUS = "bonus";
 
-    public static String getIcon(Context context, String itemType, String exerciseType) {
-        if (context == null) {
-            return null;
-        }
-
+    public @StringRes int getIconRes() {
         int icon = R.string.icon_text;
 
-        switch (itemType) {
+        switch (contentType) {
             case TYPE_TEXT:
                 icon = R.string.icon_text;
                 break;
             case TYPE_VIDEO:
                 icon = R.string.icon_video;
                 break;
-            case TYPE_SELFTEST:
+            case TYPE_QUIZ:
                 if (exerciseType != null && !exerciseType.equals("")) {
                     switch (exerciseType) {
                         case EXERCISE_TYPE_SELFTEST:
@@ -49,7 +113,7 @@ public class Item<T extends ItemDetail> implements DatabaseModel, Parcelable, Se
                         case EXERCISE_TYPE_SURVEY:
                             icon = R.string.icon_survey;
                             break;
-                        case EXERCISE_TYPE_ASSIGNMENT:
+                        case EXERCISE_TYPE_MAIN:
                             icon = R.string.icon_assignment;
                             break;
                         case EXERCISE_TYPE_BONUS:
@@ -68,181 +132,64 @@ public class Item<T extends ItemDetail> implements DatabaseModel, Parcelable, Se
                 break;
         }
 
-        return context.getString(icon);
+        return icon;
     }
 
-    public static Type getType(String itemType) {
-        if (itemType == null) {
-            return null;
-        }
+    @JsonApi(type = "course-items")
+    public static class JsonModel extends Resource implements RealmAdapter<Item> {
 
-        switch (itemType) {
-            case TYPE_TEXT:
-                return TypeToken.getParameterized(Item.class, TextItemDetail.class).getType();
-            case TYPE_VIDEO:
-                return TypeToken.getParameterized(Item.class, VideoItemDetail.class).getType();
-            case TYPE_SELFTEST:
-                return TypeToken.getParameterized(Item.class, AssignmentItemDetail.class).getType();
-            case TYPE_LTI:
-                return TypeToken.getParameterized(Item.class, LtiItemDetail.class).getType();
-            case TYPE_PEER:
-                return TypeToken.getParameterized(Item.class, PeerAssessmentItemDetail.class).getType();
-        }
+        public String title;
 
-        return null;
-    }
+        public int position;
 
-    @SerializedName("id")
-    public String id;
+        public String deadline;
 
-    @SerializedName("position")
-    public int position;
+        @Json(name = "content_type")
+        public String contentType;
 
-    @SerializedName("title")
-    public String title;
+        public HasOne<Section.JsonModel> section;
 
-    @SerializedName("type")
-    public String type;
+        @Json(name = "exercise_type")
+        public String exerciseType;
 
-    @SerializedName("available_from")
-    public String available_from;
+        public boolean proctored;
 
-    @SerializedName("available_to")
-    public String available_to;
-
-    @SerializedName("locked")
-    public boolean locked;
-
-    @SerializedName("exercise_type")
-    public String exercise_type;
-
-    public String courseId;
-
-    public String moduleId;
-
-    @SerializedName("object")
-    public T detail;
-
-    @SerializedName("progress")
-    public Progress progress;
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeInt(position);
-        parcel.writeString(title);
-        parcel.writeString(type);
-        parcel.writeString(available_from);
-        parcel.writeString(available_to);
-        parcel.writeByte((byte) (locked ? 1 : 0));
-        parcel.writeString(exercise_type);
-        parcel.writeString(courseId);
-        parcel.writeString(moduleId);
-        parcel.writeParcelable(detail, i);
-        parcel.writeParcelable(progress, i);
-    }
-
-    public Item(Parcel in) {
-        id = in.readString();
-        position = in.readInt();
-        title = in.readString();
-        type = in.readString();
-        available_from = in.readString();
-        available_to = in.readString();
-        locked = in.readByte() != 0;
-        exercise_type = in.readString();
-        courseId = in.readString();
-        moduleId = in.readString();
-        detail = in.readParcelable(Item.class.getClassLoader());
-        progress = in.readParcelable(Item.class.getClassLoader());
-    }
-
-    public Item() {
-        progress = new Progress();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (((Object) this).getClass() != obj.getClass())
-            return false;
-        Item o = (Item) obj;
-        if (id == null) {
-            if (o.id != null)
-                return false;
-        } else if (!id.equals(o.id))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 11;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
-    }
-
-    public static final Creator<Item> CREATOR = new Creator<Item>() {
-        public Item createFromParcel(Parcel in) {
-            return new Item(in);
-        }
-
-        public Item[] newArray(int size) {
-            return new Item[size];
-        }
-    };
-
-    public static class Progress implements Parcelable, Serializable {
-
-        @SerializedName("visited")
         public boolean visited;
 
-        @SerializedName("completed")
-        public boolean completed;
+        public boolean accessible;
+
+        public HasOne<?> content;
+
+        public HasOne<Course.JsonModel> course;
 
         @Override
-        public int describeContents() {
-            return 0;
-        }
+        public Item convertToRealmObject() {
+            Item item = new Item();
 
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeByte((byte) (visited ? 1 : 0));
-            parcel.writeByte((byte) (completed ? 1 : 0));
-        }
+            item.id = getId();
+            item.title = title;
+            item.position = position;
+            item.deadline = DateUtil.parse(deadline);
+            item.contentType = contentType;
+            item.exerciseType = exerciseType;
+            item.proctored = proctored;
+            item.visited = visited;
+            item.accessible = accessible;
 
-        public Progress(Parcel in) {
-            visited = in.readByte() != 0;
-            completed = in.readByte() != 0;
-        }
-
-        public Progress() {
-
-        }
-
-        public static final Creator<Progress> CREATOR = new Creator<Progress>() {
-            public Progress createFromParcel(Parcel in) {
-                return new Progress(in);
+            if (content != null) {
+                item.contentId = content.get().getId();
             }
 
-            public Progress[] newArray(int size) {
-                return new Progress[size];
+            if (section != null) {
+                item.sectionId = section.get().getId();
             }
-        };
+
+            if (course != null) {
+                item.courseId = course.get().getId();
+            }
+
+            return item;
+        }
 
     }
 

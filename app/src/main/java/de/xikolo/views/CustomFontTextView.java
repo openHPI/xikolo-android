@@ -3,6 +3,7 @@ package de.xikolo.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
@@ -10,9 +11,9 @@ import android.widget.TextView;
 import java.util.Hashtable;
 
 import de.xikolo.R;
-import de.xikolo.utils.Config;
+import de.xikolo.config.Config;
 
-public class CustomFontTextView extends TextView {
+public class CustomFontTextView extends AppCompatTextView {
 
     private static final String TAG = CustomFontTextView.class.getSimpleName();
 
@@ -44,7 +45,7 @@ public class CustomFontTextView extends TextView {
         synchronized (cache) {
             try {
                 if (!cache.containsKey(asset)) {
-                    tf = Typeface.createFromAsset(ctx.getAssets(), Config.FONT + asset);
+                    tf = Typeface.createFromAsset(ctx.getAssets(), Config.FONT_DIR + asset);
                     cache.put(asset, tf);
                 }
                 tf = cache.get(asset);

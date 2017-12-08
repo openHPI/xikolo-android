@@ -3,6 +3,7 @@ package de.xikolo.controllers.downloads;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,21 +17,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.xikolo.GlobalApplication;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog;
-import de.xikolo.controllers.downloads.adapter.DownloadsAdapter;
-import de.xikolo.controllers.helper.NotificationController;
-import de.xikolo.managers.DownloadManager;
-import de.xikolo.managers.PermissionManager;
-import de.xikolo.storages.preferences.ApplicationPreferences;
+import de.xikolo.controllers.helper.LoadingStateHelper;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
-import de.xikolo.storages.preferences.StorageType;
+import de.xikolo.managers.DownloadManager;
+import de.xikolo.managers.PermissionManager;
+import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.ToastUtil;
 
-public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDeleteButtonClickedListener {
+public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DownloadsAdapter.OnDeleteButtonClickedListener {
 
     public static final String TAG = DownloadsFragment.class.getSimpleName();
 
@@ -40,7 +38,7 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
 
     private PermissionManager permissionManager;
 
-    private NotificationController notificationController;
+    private LoadingStateHelper notificationController;
 
     public DownloadsFragment() {
         // Required empty public constructor
@@ -54,8 +52,8 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        downloadManager = new DownloadManager(GlobalApplication.getInstance().getJobManager(), getActivity());
-        permissionManager = new PermissionManager(GlobalApplication.getInstance().getJobManager(), getActivity());
+        downloadManager = new DownloadManager(getActivity());
+        permissionManager = new PermissionManager(getActivity());
         adapter = new DownloadsAdapter(this);
 
         EventBus.getDefault().register(this);
@@ -67,13 +65,12 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_downloads, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.content_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        notificationController = new NotificationController(layout);
-        notificationController.setInvisible();
+        notificationController = new LoadingStateHelper(getActivity(), layout, this);
 
         return layout;
     }
@@ -82,6 +79,11 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
     public void onStart() {
         super.onStart();
 
+        fetchItems();
+    }
+
+    @Override
+    public void onRefresh() {
         fetchItems();
     }
 
@@ -102,15 +104,17 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
     }
 
     private void fetchItems() {
+        adapter.clear();
         if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-            notificationController.setInvisible();
-
-            adapter.clear();
+            notificationController.showContentView();
 
             List<DownloadsAdapter.FolderItem> list = new ArrayList<>();
 
-            DownloadsAdapter.FolderItem total = new DownloadsAdapter.FolderItem(downloadManager.getAppFolder().substring(downloadManager.getAppFolder().lastIndexOf(File.separator) + 1),
-                    downloadManager.getAppFolder());
+            String appFolder = FileUtil.createPublicAppFolderPath();
+
+            DownloadsAdapter.FolderItem total = new DownloadsAdapter.FolderItem(
+                    appFolder.substring(appFolder.lastIndexOf(File.separator) + 1),
+                    appFolder);
             list.add(total);
 
             adapter.addItem(getString(R.string.overall), list);
@@ -126,21 +130,21 @@ public class DownloadsFragment extends Fragment implements DownloadsAdapter.OnDe
                 adapter.addItem(getString(R.string.courses), list);
             }
         } else {
-            notificationController.setTitle(R.string.dialog_title_permissions);
-            notificationController.setSummary(R.string.dialog_permissions);
-            notificationController.setOnClickListener(new View.OnClickListener() {
+            notificationController.setMessageTitle(R.string.dialog_title_permissions);
+            notificationController.setMessageSummary(R.string.dialog_permissions);
+            notificationController.setMessageOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PermissionManager.startAppInfo(getActivity());
                 }
             });
-            notificationController.setNotificationVisible(true);
+            notificationController.showMessage();
         }
     }
 
     @Override
     public void onDeleteButtonClicked(final DownloadsAdapter.FolderItem item) {
-        final ApplicationPreferences appPreferences = (ApplicationPreferences) GlobalApplication.getStorage(StorageType.APP);
+        final ApplicationPreferences appPreferences = new ApplicationPreferences();
 
         if (appPreferences.confirmBeforeDeleting()) {
             ConfirmDeleteDialog dialog = ConfirmDeleteDialog.getInstance(true);

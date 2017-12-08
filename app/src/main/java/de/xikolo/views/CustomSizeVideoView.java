@@ -2,7 +2,8 @@ package de.xikolo.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.VideoView;
+
+import com.devbrackets.android.exomedia.ui.widget.VideoView;
 
 public class CustomSizeVideoView extends VideoView {
 

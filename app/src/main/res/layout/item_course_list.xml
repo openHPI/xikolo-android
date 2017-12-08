@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
+    android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     res:cardCornerRadius="2dp"
     res:cardPreventCornerOverlap="true"
@@ -60,8 +61,9 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginBottom="2dp"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif-medium"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textSize="16sp" />
 
             <TextView
@@ -71,7 +73,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textTitle"
                 android:layout_marginBottom="4dp"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textColor="@color/apptheme_main"
                 android:textSize="14sp" />
 
@@ -82,7 +84,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textTeacher"
                 android:layout_marginRight="4dp"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:text="@string/icon_cal"
                 android:textColor="@color/text_second"
                 android:textSize="20sp"
@@ -106,7 +108,7 @@
                 android:layout_below="@+id/textTeacher"
                 android:layout_marginRight="4dp"
                 android:layout_toRightOf="@+id/textDate"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:text="@string/icon_lang"
                 android:textColor="@color/text_second"
                 android:textSize="20sp"
@@ -118,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textTeacher"
                 android:layout_toRightOf="@+id/textLangIcon"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textColor="@color/text_second"
                 android:textSize="14sp" />
 

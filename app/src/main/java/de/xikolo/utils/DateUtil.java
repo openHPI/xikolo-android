@@ -7,56 +7,65 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import de.xikolo.config.Config;
+
 public class DateUtil {
 
     public static final String TAG = DateUtil.class.getSimpleName();
 
-    public static final String XIKOLO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String XIKOLO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     public static boolean nowIsBetween(String from, String to) {
         Date dateBegin = parse(from);
         Date dateEnd = parse(to);
-
-        Date dateNow = new Date();
-
-        if (dateBegin == null && dateEnd == null) {
-            return true;
-        }
-        if (dateBegin == null) {
-            if (dateNow.before(dateEnd)) {
-                return true;
-            }
-        }
-        if (dateEnd == null) {
-            if (dateNow.after(dateBegin)) {
-                return true;
-            }
-        }
-        return dateBegin != null && dateEnd != null && dateNow.after(dateBegin) && dateNow.before(dateEnd);
+        return nowIsBetween(dateBegin, dateEnd);
     }
 
-    public static boolean nowIsAfter(String date) {
-        Date d = parse(date);
-
+    public static boolean nowIsBetween(Date from, Date to) {
         Date dateNow = new Date();
 
-        if (d == null) {
-            return true;
-        } else if (dateNow.after(d)) {
+        if (from == null && to == null) {
+            return false;
+        }
+        if (from == null) {
+            if (dateNow.before(to)) {
+                return true;
+            }
+        }
+        if (to == null) {
+            if (dateNow.after(from)) {
+                return true;
+            }
+        }
+        return from != null && to != null && dateNow.after(from) && dateNow.before(to);
+    }
+
+    public static boolean isPast(String date) {
+        return isPast(parse(date));
+    }
+
+    public static boolean isPast(Date date) {
+        Date dateNow = new Date();
+
+        if (date == null) {
+            return false;
+        } else if (dateNow.after(date)) {
             return true;
         }
 
         return false;
     }
 
-    public static boolean nowIsBefore(String date) {
-        Date d = parse(date);
+    public static boolean isFuture(String date) {
+        return isFuture(parse(date));
+    }
 
+    public static boolean isFuture(Date date) {
         Date dateNow = new Date();
 
-        if (d == null) {
-            return true;
-        } else if (dateNow.before(d)) {
+        if (date == null) {
+            return false;
+        } else if (dateNow.before(date)) {
             return true;
         }
 
@@ -87,10 +96,14 @@ public class DateUtil {
         Date dateLhs = parse(lhs);
         Date dateRhs = parse(rhs);
 
-        if (dateLhs != null && dateRhs != null) {
-            if (dateLhs.before(dateRhs)) {
+        return compare(dateLhs, dateRhs);
+    }
+
+    public static int compare(Date lhs, Date rhs) {
+        if (lhs != null && rhs != null) {
+            if (lhs.before(rhs)) {
                 return 1;
-            } else if (dateLhs.after(dateRhs)) {
+            } else if (lhs.after(rhs)) {
                 return -1;
             } else {
                 return 0;

@@ -1,59 +1,91 @@
 package de.xikolo.managers;
 
-import com.birbit.android.jobqueue.JobManager;
-
 import org.greenrobot.eventbus.EventBus;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.events.LogoutEvent;
-import de.xikolo.managers.jobs.CreateAccessTokenJob;
-import de.xikolo.managers.jobs.RetrieveUserJob;
+import de.xikolo.jobs.CreateAccessTokenJob;
+import de.xikolo.jobs.GetUserWithProfileJob;
+import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.User;
-import de.xikolo.storages.preferences.StorageType;
-import de.xikolo.storages.preferences.UserStorage;
+import de.xikolo.storages.ApplicationPreferences;
+import de.xikolo.storages.UserStorage;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmObject;
 
 public class UserManager extends BaseManager {
 
     public static final String TAG = UserManager.class.getSimpleName();
 
-    public UserManager(JobManager jobManager) {
-        super(jobManager);
+    public UserManager() {
     }
 
     public static String getToken() {
-        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-        return userStorage.getAccessToken().token;
+        UserStorage userStorage = new UserStorage();
+        return userStorage.getAccessToken();
     }
 
-    public static User getSavedUser() {
-        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-        return userStorage.getUser();
+    public static String getUserId() {
+        UserStorage userStorage = new UserStorage();
+        return userStorage.getUserId();
     }
 
-    public static boolean isLoggedIn() {
-        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-        return userStorage.getAccessToken().token != null;
+    public static boolean isAuthorized() {
+        UserStorage userStorage = new UserStorage();
+        return userStorage.getAccessToken() != null;
     }
 
-    public void logout() {
-        GlobalApplication application = GlobalApplication.getInstance();
+    public void login(JobCallback callback, String email, String password) {
+        jobManager.addJobInBackground(new CreateAccessTokenJob(callback, email, password));
+    }
 
-        UserStorage userStorage = (UserStorage) GlobalApplication.getStorage(StorageType.USER);
-        userStorage.deleteUser();
+    public static void logout() {
+        App application = App.getInstance();
+        application.clearCookieSyncManager();
 
-        application.getDatabaseHelper().deleteDatabase();
+        UserStorage userStorage = new UserStorage();
+        userStorage.delete();
+
+        ApplicationPreferences appPreferences = new ApplicationPreferences();
+        appPreferences.clear();
 
         application.getLanalytics().deleteData();
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.deleteAll();
+            }
+        });
+        realm.close();
 
         EventBus.getDefault().post(new LogoutEvent());
     }
 
-    public void login(Result<Void> result, String email, String password) {
-        jobManager.addJobInBackground(new CreateAccessTokenJob(result, email, password));
+    public void requestUserWithProfile(JobCallback callback) {
+        jobManager.addJobInBackground(new GetUserWithProfileJob(callback));
     }
 
-    public void getUser(Result<User> result) {
-        jobManager.addJobInBackground(new RetrieveUserJob(result));
+    public RealmObject getUser(Realm realm, RealmChangeListener<User> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("RealmChangeListener should not be null for async queries.");
+        }
+
+        if (!UserManager.isAuthorized()) {
+            return null;
+        }
+
+        RealmObject userPromise = realm
+                .where(User.class)
+                .equalTo("id", UserManager.getUserId())
+                .findFirstAsync();
+
+        userPromise.addChangeListener(listener);
+
+        return userPromise;
     }
 
 }

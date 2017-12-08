@@ -1,11 +1,11 @@
 package de.xikolo.managers;
 
-import android.app.Activity;
-import android.net.Uri;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-
-import com.birbit.android.jobqueue.JobManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -13,24 +13,27 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import de.xikolo.GlobalApplication;
+import de.xikolo.App;
 import de.xikolo.R;
+import de.xikolo.config.Config;
 import de.xikolo.events.DownloadDeletedEvent;
 import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
-import de.xikolo.managers.jobs.RetrieveContentLengthJob;
+import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Download;
 import de.xikolo.models.Item;
-import de.xikolo.models.Module;
-import de.xikolo.network.DownloadHelper;
-import de.xikolo.utils.Config;
+import de.xikolo.models.Section;
+import de.xikolo.models.Video;
+import de.xikolo.services.DownloadService;
+import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.ExternalStorageUtil;
+import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.ToastUtil;
+import io.realm.Realm;
 
 public class DownloadManager extends BaseManager {
 
@@ -41,107 +44,97 @@ public class DownloadManager extends BaseManager {
     public enum PendingAction {
             START, DELETE, CANCEL;
 
-        private String uri;
-        private DownloadFileType type;
-        private Course course;
-        private Module module;
-        private Item item;
+        public String itemId;
+        public DownloadUtil.VideoAssetType type;
 
-        public void savePayload(String uri, DownloadFileType type, Course course, Module module, Item item) {
-            this.uri = uri;
+        public void savePayload(String itemId, DownloadUtil.VideoAssetType type) {
+            this.itemId = itemId;
             this.type = type;
-            this.course = course;
-            this.module = module;
-            this.item = item;
         }
 
-        public String getUri() {
-            return uri;
-        }
-
-        public DownloadFileType getType() {
-            return type;
-        }
-
-        public Course getCourse() {
-            return course;
-        }
-
-        public Module getModule() {
-            return module;
-        }
-
-        public Item getItem() {
-            return item;
-        }
     }
 
     private PendingAction pendingAction;
 
-    public DownloadManager(JobManager jobManager, Activity activity) {
-        super(jobManager);
+    public DownloadManager(FragmentActivity activity) {
+        super();
 
-        this.permissionManager = new PermissionManager(jobManager, activity);
+        this.permissionManager = new PermissionManager(activity);
         this.pendingAction = null;
 
         EventBus.getDefault().register(this);
     }
 
-    public void getRemoteDownloadFileSize(Result<Long> result, String url) {
-        jobManager.addJobInBackground(new RetrieveContentLengthJob(result, url));
-    }
-
-    public long startDownload(String uri, DownloadFileType type, Course course, Module module, Item item) {
-        if (Config.DEBUG) {
-            Log.d(TAG, "Start download for " + uri);
-        }
+    public boolean startItemAssetDownload(String itemId, DownloadUtil.VideoAssetType type) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-                String file =  this.escapeFilename(item.title) + type.getFileSuffix();
-                Uri downloadUri = buildDownloadUri(type, course, module, item);
 
-                if (downloadExists(downloadUri)) {
+                Context context = App.getInstance();
+                Intent intent = new Intent(context, DownloadService.class);
+
+                Item item = Item.get(itemId);
+                Section section = item.getSection();
+                Course course = section.getCourse();
+
+                String url = getDownloadUrl(itemId, type);
+                String filePath = DownloadUtil.getVideoAssetFilePath(type, course, section, item);
+
+                if (downloadExists(filePath)) {
                     ToastUtil.show(R.string.toast_file_already_downloaded);
+                    return false;
                 } else {
-                    LanalyticsUtil.trackDownloadedFile(item.id, course.id, module.id, type);
+                    FileUtil.createFolderIfNotExists(new File(filePath.substring(0, filePath.lastIndexOf(File.separator))));
 
-                    File dlFile = new File(downloadUri.getPath());
+                    Bundle bundle = new Bundle();
+                    bundle.putString(DownloadService.ARG_TITLE, item.title + " (" + type.toString() + ")");
+                    bundle.putString(DownloadService.ARG_URL, url);
+                    bundle.putString(DownloadService.ARG_FILE_PATH, filePath);
 
-                    createFolderIfNotExists(new File(dlFile.getAbsolutePath().replace(file, "")));
+                    intent.putExtras(bundle);
+                    context.startService(intent);
 
-                    EventBus.getDefault().post(new DownloadStartedEvent(uri));
-                    return DownloadHelper.request(uri, "file://" + dlFile.getAbsolutePath(), item.title + " (" + type.toString() + ")");
+                    LanalyticsUtil.trackDownloadedFile(item.id, course.id, section.id, type);
+
+                    EventBus.getDefault().post(new DownloadStartedEvent(itemId, type));
+
+                    return true;
                 }
             } else {
                 pendingAction = PendingAction.START;
-                pendingAction.savePayload(uri, type, course, module, item);
+                pendingAction.savePayload(itemId, type);
+                return false;
             }
         } else {
             Log.w(TAG, "No write access for external storage");
             ToastUtil.show(R.string.toast_no_external_write_access);
+            return false;
         }
-        return 0;
     }
 
-    public boolean deleteDownload(DownloadFileType type, Course course, Module module, Item item) {
+    public boolean deleteItemAssetDownload(String itemId, DownloadUtil.VideoAssetType type) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-                Uri downloadUri = buildDownloadUri(type, course, module, item);
+
+                Item item = Item.get(itemId);
+                Section section = item.getSection();
+                Course course = section.getCourse();
+
+                String filePath = DownloadUtil.getVideoAssetFilePath(type, course, section, item);
 
                 if (Config.DEBUG) {
-                    Log.d(TAG, "Delete download " + downloadUri.toString());
+                    Log.d(TAG, "Delete download " + filePath);
                 }
 
-                if (!downloadExists(downloadUri)) {
+                if (!downloadExists(filePath)) {
                     return false;
                 } else {
-                    EventBus.getDefault().post(new DownloadDeletedEvent(item));
-                    File dlFile = new File(downloadUri.getPath());
+                    EventBus.getDefault().post(new DownloadDeletedEvent(itemId, type));
+                    File dlFile = new File(filePath);
                     return dlFile.delete();
                 }
             } else {
                 pendingAction = PendingAction.DELETE;
-                pendingAction.savePayload(null, type, course, module, item);
+                pendingAction.savePayload(itemId, type);
                 return false;
             }
         } else {
@@ -151,39 +144,29 @@ public class DownloadManager extends BaseManager {
         }
     }
 
-    public boolean cancelDownload(DownloadFileType type, Course course, Module module, Item item) {
+    public void cancelItemAssetDownload(String itemId, DownloadUtil.VideoAssetType type) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-                Uri downloadUri = buildDownloadUri(type, course, module, item);
-                Download dl = new Download();
-                dl.localUri = downloadUri.toString();
+
+                String url = getDownloadUrl(itemId, type);
 
                 if (Config.DEBUG) {
-                    Log.d(TAG, "Cancel download " + downloadUri.toString());
+                    Log.d(TAG, "Cancel download " + url);
                 }
 
-                int id = 0;
-                Set<Download> dlSet = DownloadHelper.getAllDownloads();
-                for (Download download : dlSet) {
-                    if (download.equals(dl)) {
-                        id = DownloadHelper.remove(download.id);
-                    }
-                }
-                if (id > 0) {
-                    EventBus.getDefault().post(new DownloadDeletedEvent(item));
-                    return true;
+                DownloadService downloadService = DownloadService.getInstance();
+                if (downloadService != null) {
+                    downloadService.cancelDownload(url);
                 }
 
-                return false;
+                deleteItemAssetDownload(itemId, type);
             } else {
                 pendingAction = PendingAction.CANCEL;
-                pendingAction.savePayload(null, type, course, module, item);
-                return false;
+                pendingAction.savePayload(itemId, type);
             }
         } else {
             Log.w(TAG, "No write access for external storage");
             ToastUtil.show(R.string.toast_no_external_write_access);
-            return false;
         }
     }
 
@@ -194,16 +177,13 @@ public class DownloadManager extends BaseManager {
             if (pendingAction != null) {
                 switch (pendingAction) {
                     case START:
-                        startDownload(pendingAction.getUri(), pendingAction.getType(),
-                                pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
+                        startItemAssetDownload(pendingAction.itemId, pendingAction.type);
                         break;
                     case DELETE:
-                        deleteDownload(pendingAction.getType(),
-                                pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
+                        deleteItemAssetDownload(pendingAction.itemId, pendingAction.type);
                         break;
                     case CANCEL:
-                        cancelDownload(pendingAction.getType(),
-                                pendingAction.getCourse(), pendingAction.getModule(), pendingAction.getItem());
+                        cancelItemAssetDownload(pendingAction.itemId, pendingAction.type);
                         break;
                     default:
                         pendingAction = null;
@@ -221,107 +201,64 @@ public class DownloadManager extends BaseManager {
         }
     }
 
-    public Download getDownload(DownloadFileType type, Course course, Module module, Item item) {
-        Uri downloadUri = buildDownloadUri(type, course, module, item);
-        Download dl = new Download();
-        dl.localUri = downloadUri.toString();
+    public Download getDownload(String itemId, DownloadUtil.VideoAssetType type) {
+        DownloadService downloadService = DownloadService.getInstance();
+        String downloadUrl = getDownloadUrl(itemId, type);
+        Download download = null;
 
-        if (Config.DEBUG) {
-            Log.d(TAG, "Get download " + downloadUri.toString());
+        if (downloadService != null) {
+            download = downloadService.getDownload(downloadUrl);
         }
 
-        Set<Download> dlSet = DownloadHelper.getAllDownloads();
-        for (Download download : dlSet) {
-            if (download.equals(dl)) {
-                return download;
-            }
+        return download;
+    }
+
+    public boolean downloadRunning(String itemId, DownloadUtil.VideoAssetType type) {
+        DownloadService downloadService = DownloadService.getInstance();
+        String downloadUrl = getDownloadUrl(itemId, type);
+        boolean running = false;
+
+        if (downloadService != null) {
+            running = downloadService.isDownloading(downloadUrl);
         }
 
-        return null;
+        return running;
     }
 
-    public boolean downloadRunning(DownloadFileType type, Course course, Module module, Item item) {
-        Uri downloadUri = buildDownloadUri(type, course, module, item);
-        Download dl = new Download();
-        dl.localUri = downloadUri.toString();
+    public boolean downloadExists(String itemId, DownloadUtil.VideoAssetType type) {
+        Item item = Item.get(itemId);
+        Section section = item.getSection();
+        Course course = section.getCourse();
 
-        int flags = android.app.DownloadManager.STATUS_PAUSED | android.app.DownloadManager.STATUS_PENDING | android.app.DownloadManager.STATUS_RUNNING;
-        Set<Download> dlSet = DownloadHelper.getAllDownloadsForStatus(flags);
+        String filePath = DownloadUtil.getVideoAssetFilePath(type, course, section, item);
 
-        return dlSet.contains(dl);
+        return downloadExists(filePath);
     }
 
-    public boolean downloadExists(DownloadFileType type, Course course, Module module, Item item) {
-        File file = new File(buildDownloadUri(type, course, module, item).getPath());
+    private boolean downloadExists(String filePath) {
+        File file = new File(filePath);
         return file.isFile() && file.exists();
     }
 
-    private boolean downloadExists(Uri downloadUri) {
-        File file = new File(downloadUri.getPath());
-        return file.isFile() && file.exists();
-    }
+    public File getDownloadFile(String itemId, DownloadUtil.VideoAssetType type) {
+        Item item = Item.get(itemId);
+        Section section = item.getSection();
+        Course course = section.getCourse();
 
-    public File getDownloadFile(DownloadFileType type, Course course, Module module, Item item) {
-        File file = new File(buildDownloadUri(type, course, module, item).getPath());
+        String filePath = DownloadUtil.getVideoAssetFilePath(type, course, section, item);
+        File file = new File(filePath);
+
         if (file.isFile() && file.exists()) {
             return file;
         }
         return null;
     }
 
-    public long getDownloadFileSize(DownloadFileType type, Course course, Module module, Item item) {
-        File file = new File(buildDownloadUri(type, course, module, item).getPath());
-        if (file.isFile() && file.exists()) {
-            return file.length();
-        }
-        return 0;
-    }
-
-    private Uri buildDownloadUri(DownloadFileType type, Course course, Module module, Item item) {
-        File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                + GlobalApplication.getInstance().getString(R.string.app_name));
-
-        String file = this.escapeFilename(item.title) + type.getFileSuffix();
-
-        return Uri.fromFile(new File(publicAppFolder.getAbsolutePath() + File.separator
-                + escapeFilename(course.name) + "_" + course.id + File.separator
-                + escapeFilename(module.name) + "_" + module.id + File.separator
-                + escapeFilename(item.title) + "_" + item.id + File.separator
-                + file));
-    }
-
-    private String escapeFilename(String filename) {
-        return replaceUmlaute(filename).replaceAll("[^a-zA-Z0-9\\(\\).-]", "_");
-    }
-
-    /**
-     * Source http://gordon.koefner.at/blog/coding/replacing-german-umlauts/
-     */
-    private String replaceUmlaute(String input) {
-        //replace all lower Umlauts
-        String output = input.replace("ü", "ue")
-                .replace("ö", "oe")
-                .replace("ä", "ae")
-                .replace("ß", "ss");
-
-        //first replace all capital umlaute in a non-capitalized context (e.g. Übung)
-        output = output.replace("Ü(?=[a-zäöüß ])", "Ue")
-                .replace("Ö(?=[a-zäöüß ])", "Oe")
-                .replace("Ä(?=[a-zäöüß ])", "Ae");
-
-        //now replace all the other capital umlaute
-        output = output.replace("Ü", "UE")
-                .replace("Ö", "OE")
-                .replace("Ä", "AE");
-
-        return output;
-    }
-
     public List<String> getFoldersWithDownloads() {
         List<String> folders = new ArrayList<>();
 
         File publicAppFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                + GlobalApplication.getInstance().getString(R.string.app_name));
+                + App.getInstance().getString(R.string.app_name));
 
         if (publicAppFolder.isDirectory()) {
             File[] files = publicAppFolder.listFiles();
@@ -335,79 +272,12 @@ public class DownloadManager extends BaseManager {
         return folders;
     }
 
-    public String getAppFolder() {
-        File appFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                + GlobalApplication.getInstance().getString(R.string.app_name));
-
-        createFolderIfNotExists(appFolder);
-
-        return appFolder.getAbsolutePath();
-    }
-
-    private void createFolderIfNotExists(File file) {
-        if (!file.exists()) {
-            if (file.isFile()) {
-                file = file.getParentFile();
-            }
-
-            Log.d(TAG, "Folder " + file.getAbsolutePath() + " not exists");
-            if (file.mkdirs()) {
-                Log.d(TAG, "Created Folder " + file.getAbsolutePath());
-            } else {
-                Log.w(TAG, "Failed creating Folder " + file.getAbsolutePath());
-            }
-        } else {
-            Log.d(TAG, "Folder " + file.getAbsolutePath() + " already exists");
-        }
-    }
-
-    public enum DownloadFileType {
-        SLIDES, TRANSCRIPT, VIDEO_SD, VIDEO_HD;
-
-        public static DownloadFileType getDownloadFileTypeFromUri(String uri) {
-            if (uri.endsWith(DownloadFileType.SLIDES.getFileSuffix())) {
-                return DownloadFileType.SLIDES;
-            } else if (uri.endsWith(DownloadFileType.TRANSCRIPT.getFileSuffix())) {
-                return DownloadFileType.TRANSCRIPT;
-            } else if (uri.endsWith(DownloadFileType.VIDEO_SD.getFileSuffix())) {
-                return DownloadFileType.VIDEO_SD;
-            } else if (uri.endsWith(DownloadFileType.VIDEO_HD.getFileSuffix())) {
-                return DownloadFileType.VIDEO_HD;
-            }
-            return null;
-        }
-
-        public String getFileSuffix() {
-            switch (this) {
-                case SLIDES:
-                    return "_slides.pdf";
-                case TRANSCRIPT:
-                    return "_transcript.pdf";
-                case VIDEO_SD:
-                    return "_video_sd.mp4";
-                case VIDEO_HD:
-                    return "_video_hd.mp4";
-                default:
-                    return "";
-            }
-        }
-
-        @Override
-        public String toString() {
-            switch (this) {
-                case SLIDES:
-                    return "Slides";
-                case TRANSCRIPT:
-                    return "Transcript";
-                case VIDEO_SD:
-                    return "SD Video";
-                case VIDEO_HD:
-                    return "HD Video";
-                default:
-                    return "";
-            }
-        }
-
+    private String getDownloadUrl(String itemId, DownloadUtil.VideoAssetType type) {
+        Realm realm = Realm.getDefaultInstance();
+        Item item = Item.get(itemId);
+        Video video = realm.copyFromRealm(Video.getForContentId(item.contentId));
+        realm.close();
+        return DownloadUtil.getVideoAssetUrl(type, video);
     }
 
 }

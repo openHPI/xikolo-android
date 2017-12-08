@@ -15,8 +15,10 @@
     <string name="title_section_beta">Beta</string>
 
     <!-- -->
-    <string name="header_current_courses">Current and upcoming courses</string>
+    <string name="header_current_and_upcoming_courses">Current and upcoming courses</string>
     <string name="header_self_paced_courses">Self-paced courses</string>
+    <string name="header_current_courses">Current courses</string>
+    <string name="header_future_courses">Future courses</string>
     <string name="header_my_current_courses">My current courses</string>
     <string name="header_my_future_courses">My upcoming courses</string>
     <string name="banner_running">Running</string>
@@ -30,21 +32,23 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_unenroll">Un-enroll</string>
     <string name="action_language">Change language</string>
+    <string name="action_search">Search</string>
 
     <!-- -->
     <string name="tab_learnings">Learnings</string>
     <string name="tab_discussions">Discussions</string>
     <string name="tab_progress">Progress</string>
-    <string name="tab_details">Course details</string>
+    <string name="tab_course_details">Course details</string>
     <string name="tab_announcements">Announcements</string>
-    <string name="tab_rooms">Collab Space</string>
-    <string name="tab_quiz_recap">Recap</string>
+    <string name="tab_collab_space">Collab Space</string>
+    <string name="tab_recap">Recap</string>
 
     <!-- -->
     <string name="btn_enroll_me">Enroll me for this course</string>
     <string name="btn_enter_course">Enter course</string>
     <string name="btn_starts_soon">Course has not yet started</string>
     <string name="btn_play_cast">&#xe652;\n Play on Cast device</string>
+    <string name="btn_display_issues">Display issues?</string>
 
     <!-- -->
     <string name="dialog_unenroll_title">Un-enroll this course?</string>
@@ -79,6 +83,24 @@
     <string name="dialog_second_screen_title">Try the new Second Screen!</string>
     <string name="dialog_second_screen_message">Discover additional content on your mobile device, while watching video lectures on your computer. To start, simply play a video lecture on your computer\'s browser.</string>
     <string name="dialog_second_screen_yes">Open</string>
+
+    <string name="dialog_api_deprecation_title">Update %1$s</string>
+    <string name="dialog_api_deprecation_message">%1$s won\'t run after %2$s anymore unless you update the app.</string>
+    <string name="dialog_api_deprecation_yes">Update</string>
+    <string name="dialog_api_deprecation_no">Skip</string>
+
+    <string name="dialog_api_expiration_title">Update %1$s</string>
+    <string name="dialog_api_expiration_message">%1$s won\'t run unless you update the app.</string>
+    <string name="dialog_api_expiration_yes">Update</string>
+    <string name="dialog_api_expiration_no">Close</string>
+
+    <string name="dialog_server_maintenance_title">Server maintenance ongoing</string>
+    <string name="dialog_server_maintenance_message">A server maintenance is currently being performed. Please try again later.</string>
+    <string name="dialog_server_maintenance_no">Close</string>
+
+    <string name="dialog_server_error_title">Server issue</string>
+    <string name="dialog_server_error_message">There was an issue while contacting the server. Please try again later.</string>
+    <string name="dialog_server_error_no">Close</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -118,10 +140,19 @@
     <string name="download_all_content">Download contents</string>
     <string name="intro_overlay_text">Touch to cast videos on TV</string>
     <string name="user_name">%1$s %2$s</string>
+    <string name="or">or</string>
+    <string name="login_sso">SSO</string>
+    <string name="login_sso_hint">SSO Login</string>
 
-    <string name="self_test_points">%1$s of %2$s self-test points</string>
-    <string name="assignments_points">%1$s of %2$s assignment points</string>
-    <string name="items_visited">%1$s of %2$s visited</string>
+    <string name="self_test_points">%1$.1f of %2$.1f self-test points</string>
+    <string name="assignments_points">%1$.1f of %2$.1f assignment points</string>
+    <string name="bonus_points">%1$.1f of %2$.1f bonus points</string>
+    <string name="items_visited">%1$.0f of %2$.0f visited</string>
+
+    <string name="course_date_coming_soon">Coming soon</string>
+    <string name="course_date_since">Since %s</string>
+    <string name="course_date_self_paced">Self-paced</string>
+    <string name="course_date_beginning">Beginning %s</string>
 
     <!-- -->
     <string name="notification_no_network">Please enable network connection</string>
@@ -131,7 +162,7 @@
     <string name="notification_not_enrolled">You are not enrolled for this course</string>
     <string name="notification_no_enrollments_summary">You enrolled for no courses yet.</string>
     <string name="notification_please_login">Login required</string>
-    <string name="notification_please_login_summary">Please login to access your courses.</string>
+    <string name="notification_please_login_summary">Please login to access this content.</string>
     <string name="notification_url_invalid">URL invalid</string>
     <string name="notification_course_locked">This course is locked</string>
 
@@ -142,6 +173,12 @@
     <string name="notification_download_completed">Download completed</string>
     <string name="notification_multiple_downloads_completed">%1$d downloads completed</string>
     <string name="notification_start_second_screen">Start Second Screen</string>
+
+    <string name="notification_multiple_downloads_running">%1$d files downloading</string>
+
+    <string name="notification_channel_downloads">Downloads</string>
+    <string name="notification_channel_second_screen">Second Screen</string>
+    <string name="notification_downloads_cancel">Cancel</string>
 
     <!-- -->
     <string name="toast_no_courses">No courses received.</string>

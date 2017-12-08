@@ -8,8 +8,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import de.xikolo.R;
+import de.xikolo.controllers.dialogs.base.BaseDialogFragment;
 
-public class ModuleDownloadDialog extends DialogFragment {
+public class ModuleDownloadDialog extends BaseDialogFragment {
 
     public static final String TAG = ModuleDownloadDialog.class.getSimpleName();
 
