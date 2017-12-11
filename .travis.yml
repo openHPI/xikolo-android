@@ -1,24 +1,27 @@
 language: android
+
+jdk: oraclejdk8
+
+sudo: required # more memory
+
+before_install:
+  - yes | sdkmanager "platforms;android-27"
+
 android:
   components:
     - tools
     - platform-tools
     - tools # called twice to get the newest android sdk tools
-    - build-tools-26.0.2
+    - build-tools-27.0.2
     - android-27
     - extra-android-m2repository
     - extra-google-m2repository
-
-jdk:
-  - oraclejdk8
 
 env:
   - FLAVOR="openHPI"
   - FLAVOR="openSAP"
   - FLAVOR="moocHouse"
   - FLAVOR="openWHO"
-
-sudo: required # more memory
 
 script:
    - >
