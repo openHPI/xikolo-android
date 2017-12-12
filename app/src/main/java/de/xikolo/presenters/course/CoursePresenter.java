@@ -104,7 +104,9 @@ public class CoursePresenter extends Presenter<CourseView> {
 
         initCourse(courseId, courseTab);
 
-        getViewOrThrow().showProgressDialog();
+        if (getView() != null) {
+            getView().showProgressDialog();
+        }
         courseManager.requestCourse(courseId, new JobCallback() {
             @Override
             public void onSuccess() {

@@ -93,18 +93,20 @@ public class DownloadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (Config.DEBUG) Log.d(TAG, "DownloadService start command received");
 
-        List<String> titles = getRunningDownloadTitles();
-        titles.add(intent.getExtras().getString(ARG_TITLE));
+        if (intent.getExtras() != null && intent.getExtras().getString(ARG_TITLE) != null) {
+            List<String> titles = getRunningDownloadTitles();
+            titles.add(intent.getExtras().getString(ARG_TITLE));
 
-        Notification notification = notificationUtil.getDownloadRunningNotification(titles).build();
-        startForeground(NotificationUtil.DOWNLOAD_RUNNING_NOTIFICATION_ID, notification);
+            Notification notification = notificationUtil.getDownloadRunningNotification(titles).build();
+            startForeground(NotificationUtil.DOWNLOAD_RUNNING_NOTIFICATION_ID, notification);
 
-        // For each start request, send a message to start a job and deliver the
-        // start ID so we know which request we're stopping when we finish the job
-        Message msg = serviceHandler.obtainMessage();
-        msg.setData(intent.getExtras());
-        jobCounter.incrementAndGet();
-        serviceHandler.sendMessage(msg);
+            // For each start request, send a message to start a job and deliver the
+            // start ID so we know which request we're stopping when we finish the job
+            Message msg = serviceHandler.obtainMessage();
+            msg.setData(intent.getExtras());
+            jobCounter.incrementAndGet();
+            serviceHandler.sendMessage(msg);
+        }
 
         // If we get killed, after returning from here, restart
         return START_STICKY;
@@ -139,7 +141,7 @@ public class DownloadService extends Service {
     }
 
     public synchronized Download getDownload(String url) {
-        if (downloadMap == null) return null;
+        if (downloadMap == null || url == null) return null;
 
         for (Download download : downloadMap.values()) {
             if (url.equals(download.url)) return download;
