@@ -51,14 +51,14 @@ public class PinboardActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        LanalyticsUtil.trackSecondScreenPinboardStart(itemId, courseId, sectionId);
+        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.PINBOARD_START, itemId, courseId, sectionId);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        LanalyticsUtil.trackSecondScreenPinboardStop(itemId, courseId, sectionId);
+        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.PINBOARD_STOP, itemId, courseId, sectionId);
     }
 
 }

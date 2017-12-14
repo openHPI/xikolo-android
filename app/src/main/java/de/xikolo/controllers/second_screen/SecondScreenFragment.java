@@ -122,7 +122,7 @@ public class SecondScreenFragment extends BaseFragment {
                         ).build(getActivity());
                         startActivity(intent);
 
-                        LanalyticsUtil.trackVisitedSecondScreenSlides(event.itemId, event.courseId, event.sectionId);
+                        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.SLIDES_VISITED, event.itemId, event.courseId, event.sectionId);
                     }
                 });
                 viewSlides.setVisibility(View.VISIBLE);
@@ -140,7 +140,7 @@ public class SecondScreenFragment extends BaseFragment {
                         ).build(getActivity());
                         startActivity(intent);
 
-                        LanalyticsUtil.trackVisitedSecondScreenTranscript(event.itemId, event.courseId, event.sectionId);
+                        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.TRANSCRIPT_VISITED, event.itemId, event.courseId, event.sectionId);
                     }
                 });
                 viewTranscript.setVisibility(View.VISIBLE);
@@ -174,7 +174,7 @@ public class SecondScreenFragment extends BaseFragment {
                             ).build(getActivity());
                             startActivity(intent);
 
-                            LanalyticsUtil.trackVisitedSecondScreenQuiz(event.itemId, event.courseId, event.sectionId);
+                            LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.QUIZ_VISITED, event.itemId, event.courseId, event.sectionId);
                         }
                     });
                     viewQuiz.setVisibility(View.VISIBLE);
@@ -196,7 +196,7 @@ public class SecondScreenFragment extends BaseFragment {
                     ).build(getActivity());
                     startActivity(intent);
 
-                    LanalyticsUtil.trackVisitedSecondScreenPinboard(event.itemId, event.courseId, event.sectionId);
+                    LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.PINBOARD_VISITED, event.itemId, event.courseId, event.sectionId);
                 }
             });
             viewPinboard.setVisibility(View.VISIBLE);

@@ -51,14 +51,14 @@ public class QuizActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        LanalyticsUtil.trackSecondScreenQuizStart(itemId, courseId, sectionId);
+        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.QUIZ_START, itemId, courseId, sectionId);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        LanalyticsUtil.trackSecondScreenQuizStop(itemId, courseId, sectionId);
+        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.QUIZ_STOP, itemId, courseId, sectionId);
     }
 
 }

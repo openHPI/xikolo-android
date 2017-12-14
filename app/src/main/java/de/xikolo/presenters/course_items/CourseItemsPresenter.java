@@ -70,7 +70,7 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         index = position;
         Item item = itemList.get(position);
         itemManager.updateItemVisited(item.id);
-        LanalyticsUtil.trackVisitedItem(item.id, courseId, sectionId);
+        LanalyticsUtil.trackVisitedItem(item.id, courseId, sectionId, item.contentType);
     }
 
     public void onSectionDownloadClicked() {

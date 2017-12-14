@@ -51,7 +51,7 @@ public class VideoPreviewPresenter extends ItemPresenter<VideoPreviewView> {
     public void onPlayClicked() {
         if (CastUtil.isConnected()) {
             LanalyticsUtil.trackVideoPlay(item.id, course.id, section.id, video.progress, 1.0f,
-                    Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
+                    Configuration.ORIENTATION_LANDSCAPE, "hd", "cast");
             getViewOrThrow().startCast(video);
         } else {
             getViewOrThrow().startVideo(video);
