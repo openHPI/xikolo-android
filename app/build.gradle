@@ -1,19 +1,21 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
 android {
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+    compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
 
-        versionName rootProject.ext.versionName
-        versionCode rootProject.ext.versionCode
+        versionName rootProject.versionName
+        versionCode rootProject.versionCode
 
-        resValue "integer", "xikolo_api_version", rootProject.ext.xikoloApiVersion.toString()
-        resValue "integer", "realm_schema_version", rootProject.ext.realmSchemaVersion.toString()
+        resValue "integer", "xikolo_api_version", rootProject.xikoloApiVersion.toString()
+        resValue "integer", "realm_schema_version", rootProject.realmSchemaVersion.toString()
     }
 
     flavorDimensions "brand", "build"
@@ -185,6 +187,10 @@ android {
     dexOptions {
         // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
         preDexLibraries = preDexEnabled && !travisBuild
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

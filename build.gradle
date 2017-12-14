@@ -1,13 +1,33 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext {
+        // shared build properties
+        kotlin_version      = '1.2.10'
+        buildToolsVersion   = '27.0.2'
+        minSdkVersion       = 15
+        targetSdkVersion    = 27
+        compileSdkVersion   = 27
+
+        versionName         = '2.0'
+        versionCode         = 34
+
+        xikoloApiVersion    = 3
+        realmSchemaVersion  = 1
+
+        // travis ci
+        travisBuild = System.getenv("TRAVIS") == "true"
+        // allows for -Dpre-dex=false to be set
+        preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
+    }
     repositories {
         jcenter()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'io.realm:realm-gradle-plugin:4.3.1'
+        classpath "com.android.tools.build:gradle:3.0.1"
+        classpath "io.realm:realm-gradle-plugin:4.3.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
     }
 }
 
@@ -21,23 +41,4 @@ allprojects {
             dirs 'libs'
         }
     }
-}
-
-ext {
-    // shared build properties
-    buildToolsVersion   = "27.0.2"
-    minSdkVersion       = 15
-    targetSdkVersion    = 27
-    compileSdkVersion   = 27
-
-    versionName         = "2.0"
-    versionCode         = 34
-
-    xikoloApiVersion    = 3
-    realmSchemaVersion  = 1
-
-    // travis ci
-    travisBuild = System.getenv("TRAVIS") == "true"
-    // allows for -Dpre-dex=false to be set
-    preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
 }
