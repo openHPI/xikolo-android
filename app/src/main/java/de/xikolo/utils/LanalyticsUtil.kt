@@ -209,10 +209,21 @@ object LanalyticsUtil {
     }
 
     @JvmStatic
-    fun trackVisitedAnnouncements(courseId: String) {
-        createEventBuilder()
-                .setResource(courseId, "course")
+    fun trackVisitedAnnouncements(courseId: String?) {
+        val builder = createEventBuilder()
                 .setVerb("VISITED_ANNOUNCEMENTS")
+                .setOnlyWifi(true)
+
+        courseId?.let { builder.setResource(courseId, "course") }
+
+        builder.build().track()
+    }
+
+    @JvmStatic
+    fun trackVisitedAnnouncementDetail(announcementId: String) {
+        createEventBuilder()
+                .setResource(announcementId, "announcement")
+                .setVerb("VISITED_ANNOUNCEMENT_DETAIL")
                 .setOnlyWifi(true)
                 .build()
                 .track()
@@ -311,7 +322,7 @@ object LanalyticsUtil {
         if (UserManager.isAuthorized() && FeatureToggle.tracking()) {
             val tracker = application.lanalytics.defaultTracker
             tracker.send(this, UserManager.getToken())
-            Log.i("Lanalytics", "Would have created tracking event " + this.verb)
+            Log.i("Lanalytics", "Created tracking event " + this.verb)
         }
         if (UserManager.isAuthorized() && !FeatureToggle.tracking()) Log.d("Lanalytics", "Would have created tracking event " + this.verb)
     }
