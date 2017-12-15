@@ -24,10 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import de.xikolo.BuildConfig;
 import de.xikolo.R;
-import de.xikolo.config.BuildFlavor;
 import de.xikolo.config.Config;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
@@ -227,7 +226,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
             TITLES.add(getString(R.string.tab_course_details));
             TITLES.add(getString(R.string.tab_announcements));
 
-            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI) {
+            if (FeatureToggle.recapMode()) {
                 TITLES.add(getString(R.string.tab_recap));
             }
         }
