@@ -62,6 +62,9 @@ dependencies {
     compile "com.android.support:design:${supportVersion}"
     compile "com.android.support:preference-v14:${supportVersion}"
 
+    // multidex support
+    compile 'com.android.support:multidex:1.0.2'
+
     // local libraries
     implementation project(path: ':lanalytics', configuration: 'default')
 

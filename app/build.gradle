@@ -11,6 +11,8 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
+        multiDexEnabled true
+
         versionName rootProject.versionName
         versionCode rootProject.versionCode
 
