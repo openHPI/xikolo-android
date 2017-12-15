@@ -121,7 +121,7 @@ public class MainActivity extends BaseActivity
                 newFragment = new ProfileFragment();
                 tag = "profile";
 
-                LanalyticsUtil.trackVisitedProfile(UserManager.getUserId());
+                LanalyticsUtil.trackVisitedProfile();
             } else {
                 intent = LoginActivityAutoBundle.builder().build(this);
             }
@@ -137,6 +137,8 @@ public class MainActivity extends BaseActivity
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {
             newFragment = new NewsListFragment();
             tag = "news";
+
+            LanalyticsUtil.trackVisitedAnnouncements(null);
         }
         if (position == NavigationAdapter.NAV_SECOND_SCREEN.getPosition()) {
             intent = new Intent(MainActivity.this, SecondScreenActivity.class);
@@ -144,12 +146,12 @@ public class MainActivity extends BaseActivity
         if (position == NavigationAdapter.NAV_DOWNLOADS.getPosition()) {
             intent = new Intent(MainActivity.this, DownloadsActivity.class);
 
-            LanalyticsUtil.trackVisitedDownloads(UserManager.getUserId());
+            LanalyticsUtil.trackVisitedDownloads();
         }
         if (position == NavigationAdapter.NAV_SETTINGS.getPosition()) {
             intent = new Intent(MainActivity.this, SettingsActivity.class);
 
-            LanalyticsUtil.trackVisitedPreferences(UserManager.getUserId());
+            LanalyticsUtil.trackVisitedPreferences();
         }
         if (tag != null) {
             MainFragment oldFragment = (MainFragment) fragmentManager.findFragmentByTag(tag);

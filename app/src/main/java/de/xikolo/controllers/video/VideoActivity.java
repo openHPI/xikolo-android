@@ -148,7 +148,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
         if (newState == CastState.CONNECTED && videoHelper != null) {
             LanalyticsUtil.trackVideoPlay(itemId, courseId, sectionId, videoHelper.getCurrentPosition(), 1.0f,
-                    Configuration.ORIENTATION_LANDSCAPE, "hd", LanalyticsUtil.CONTEXT_CAST);
+                    Configuration.ORIENTATION_LANDSCAPE, "hd", "cast");
 
             videoHelper.pause();
             CastUtil.loadMedia(this, video, true);

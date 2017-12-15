@@ -51,14 +51,14 @@ public class TranscriptViewerActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        LanalyticsUtil.trackSecondScreenTranscriptStart(itemId, courseId, sectionId);
+        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.TRANSCRIPT_START, itemId, courseId, sectionId);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        LanalyticsUtil.trackSecondScreenTranscriptStop(itemId, courseId, sectionId);
+        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.TRANSCRIPT_STOP, itemId, courseId, sectionId);
     }
 
 }

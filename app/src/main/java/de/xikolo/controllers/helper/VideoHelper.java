@@ -528,7 +528,7 @@ public class VideoHelper {
 
     public String getSourceString() {
         if (viewOfflineHint != null) {
-            return viewOfflineHint.getVisibility() == View.VISIBLE ? LanalyticsUtil.CONTEXT_OFFLINE : LanalyticsUtil.CONTEXT_ONLINE;
+            return viewOfflineHint.getVisibility() == View.VISIBLE ? "offline" : "online";
         } else return null;
     }
 

@@ -6,6 +6,7 @@ import java.util.List;
 import de.xikolo.managers.AnnouncementManager;
 import de.xikolo.models.Announcement;
 import de.xikolo.presenters.base.LoadingStatePresenter;
+import de.xikolo.utils.LanalyticsUtil;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -78,6 +79,7 @@ public class NewsListPresenter extends LoadingStatePresenter<NewsListView> {
 
     public void onAnnouncementClicked(String announcementId) {
         getViewOrThrow().openAnnouncement(announcementId);
+        LanalyticsUtil.trackVisitedAnnouncementDetail(announcementId);
     }
 
     private void requestAnnouncements(boolean userRequest) {

@@ -20,6 +20,7 @@ public class CoursePresenter extends Presenter<CourseView> {
     private Realm realm;
 
     private int courseTab;
+    private int lastTrackedCourseTab;
 
     private String courseId;
 
@@ -27,6 +28,8 @@ public class CoursePresenter extends Presenter<CourseView> {
         this.courseManager = new CourseManager();
         this.realm = Realm.getDefaultInstance();
         this.courseTab = Course.TAB_LEARNINGS;
+
+        lastTrackedCourseTab = -1;
     }
 
     @Override
@@ -58,27 +61,30 @@ public class CoursePresenter extends Presenter<CourseView> {
 
     public void setCourseTab(int tab) {
         courseTab = tab;
-        switch (tab) {
-            case Course.TAB_LEARNINGS:
-                break;
-            case Course.TAB_DISCUSSIONS:
-                LanalyticsUtil.trackVisitedPinboard(courseId);
-                break;
-            case Course.TAB_PROGRESS:
-                LanalyticsUtil.trackVisitedProgress(courseId);
-                break;
-            case Course.TAB_COLLAB_SPACE:
-                LanalyticsUtil.trackVisitedLearningRooms(courseId);
-                break;
-            case Course.TAB_COURSE_DETAILS:
-                break;
-            case Course.TAB_ANNOUNCEMENTS:
-                LanalyticsUtil.trackVisitedAnnouncements(courseId);
-                break;
-            case Course.TAB_RECAP:
-                LanalyticsUtil.trackVisitedRecap(courseId);
-                break;
+        if (lastTrackedCourseTab != courseTab) {
+            switch (tab) {
+                case Course.TAB_LEARNINGS:
+                    break;
+                case Course.TAB_DISCUSSIONS:
+                    LanalyticsUtil.trackVisitedPinboard(courseId);
+                    break;
+                case Course.TAB_PROGRESS:
+                    LanalyticsUtil.trackVisitedProgress(courseId);
+                    break;
+                case Course.TAB_COLLAB_SPACE:
+                    LanalyticsUtil.trackVisitedLearningRooms(courseId);
+                    break;
+                case Course.TAB_COURSE_DETAILS:
+                    break;
+                case Course.TAB_ANNOUNCEMENTS:
+                    LanalyticsUtil.trackVisitedAnnouncements(courseId);
+                    break;
+                case Course.TAB_RECAP:
+                    LanalyticsUtil.trackVisitedRecap(courseId);
+                    break;
+            }
         }
+        lastTrackedCourseTab = courseTab;
     }
 
     private void setupCourse(Course course) {

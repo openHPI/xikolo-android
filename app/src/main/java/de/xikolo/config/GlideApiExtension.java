@@ -12,16 +12,16 @@ public class GlideApiExtension {
     private GlideApiExtension() { }
 
     @GlideOption
-    public static void noPlaceholders(RequestOptions options) {
-        options
+    public static RequestOptions noPlaceholders(RequestOptions options) {
+        return options
                 .placeholder(0)
                 .error(0)
                 .fallback(0);
     }
 
     @GlideOption
-    public static void allPlaceholders(RequestOptions options, @DrawableRes int resourceId) {
-        options
+    public static RequestOptions allPlaceholders(RequestOptions options, @DrawableRes int resourceId) {
+        return options
                 .placeholder(resourceId)
                 .error(resourceId)
                 .fallback(resourceId);

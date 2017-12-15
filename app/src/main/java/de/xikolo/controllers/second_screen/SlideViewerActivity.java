@@ -47,14 +47,14 @@ public class SlideViewerActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        LanalyticsUtil.trackSecondScreenSlidesStart(itemId, courseId, sectionId);
+        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.SLIDES_START, itemId, courseId, sectionId);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        LanalyticsUtil.trackSecondScreenSlidesStop(itemId, courseId, sectionId);
+        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.SLIDES_STOP, itemId, courseId, sectionId);
     }
 
 }

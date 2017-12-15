@@ -1,7 +1,7 @@
 package de.xikolo;
 
-import android.app.Application;
 import android.os.Build;
+import android.support.multidex.MultiDexApplication;
 import android.support.v7.preference.PreferenceManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -9,15 +9,15 @@ import android.webkit.WebView;
 
 import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
-import de.xikolo.models.base.RealmSchemaMigration;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
+import de.xikolo.models.base.RealmSchemaMigration;
 import de.xikolo.utils.ClientUtil;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     public static final String TAG = App.class.getSimpleName();
 

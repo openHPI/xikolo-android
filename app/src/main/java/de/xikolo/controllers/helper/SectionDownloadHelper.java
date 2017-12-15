@@ -83,7 +83,7 @@ public class SectionDownloadHelper {
             public void onSuccess() {
                 dialog.dismiss();
                 for (Item item : section.getAccessibleItems()) {
-                    if (Item.TYPE_VIDEO.equals(item.contentId)) {
+                    if (Item.TYPE_VIDEO.equals(item.contentType)) {
                         if (sdVideo) {
                             startDownload(item.id, DownloadUtil.VideoAssetType.VIDEO_SD);
                         }
