@@ -94,6 +94,8 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
 
         // Bind the tabs to the ViewPager
         tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.clearOnTabSelectedListeners();
         tabLayout.addOnTabSelectedListener(adapter);
 
         viewPager.setCurrentItem(courseTab);

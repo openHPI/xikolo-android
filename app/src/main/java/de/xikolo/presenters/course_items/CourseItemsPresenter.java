@@ -22,6 +22,7 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
     private String sectionId;
 
     private int index;
+    private int lastTrackedIndex;
 
     private Course course;
     private Section section;
@@ -34,6 +35,7 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         this.courseId = courseId;
         this.sectionId = sectionId;
         this.index = index;
+        this.lastTrackedIndex = -1;
 
         loadModels();
     }
@@ -70,7 +72,9 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         index = position;
         Item item = itemList.get(position);
         itemManager.updateItemVisited(item.id);
-        LanalyticsUtil.trackVisitedItem(item.id, courseId, sectionId, item.contentType);
+
+        if (lastTrackedIndex != index) LanalyticsUtil.trackVisitedItem(item.id, courseId, sectionId, item.contentType);
+        lastTrackedIndex = index;
     }
 
     public void onSectionDownloadClicked() {
