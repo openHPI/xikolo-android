@@ -8,8 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
-
     <application
         android:name=".App"
         android:allowBackup="false"
@@ -20,10 +18,6 @@
         android:roundIcon="@mipmap/ic_launcher_circle"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
-
-        <meta-data
-            android:name="com.samsung.android.sdk.multiwindow.enable"
-            android:value="true" />
 
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
