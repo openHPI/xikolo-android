@@ -93,7 +93,7 @@ public class DownloadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (Config.DEBUG) Log.d(TAG, "DownloadService start command received");
 
-        if (intent.getExtras() != null && intent.getExtras().getString(ARG_TITLE) != null) {
+        if (intent != null && intent.getExtras() != null && intent.getExtras().getString(ARG_TITLE) != null) {
             List<String> titles = getRunningDownloadTitles();
             titles.add(intent.getExtras().getString(ARG_TITLE));
 

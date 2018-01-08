@@ -123,8 +123,13 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
             if (folders.size() > 0) {
                 list = new ArrayList<>();
                 for (String folder : folders) {
-                    DownloadsAdapter.FolderItem item = new DownloadsAdapter.FolderItem(folder.substring(folder.lastIndexOf(File.separator) + 1, folder.lastIndexOf("_")),
-                            folder);
+                    String name;
+                    try {
+                        name = folder.substring(folder.lastIndexOf(File.separator) + 1, folder.lastIndexOf("_"));
+                    } catch (Exception e) {
+                        name = folder;
+                    }
+                    DownloadsAdapter.FolderItem item = new DownloadsAdapter.FolderItem(name, folder);
                     list.add(item);
                 }
                 adapter.addItem(getString(R.string.courses), list);

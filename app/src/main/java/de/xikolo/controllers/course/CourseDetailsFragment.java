@@ -101,7 +101,9 @@ public class CourseDetailsFragment extends LoadingStatePresenterFragment<CourseD
     }
 
     public void onEnrollButtonClicked() {
-        presenter.enroll();
+        if (presenter != null) {
+            presenter.enroll();
+        }
     }
 
     @Override
