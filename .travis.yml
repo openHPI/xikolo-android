@@ -12,7 +12,7 @@ android:
     - tools
     - platform-tools
     - tools # called twice to get the newest android sdk tools
-    - build-tools-27.0.2
+    - build-tools-27.0.3
     - android-27
     - extra-android-m2repository
     - extra-google-m2repository

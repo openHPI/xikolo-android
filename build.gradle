@@ -3,8 +3,8 @@
 buildscript {
     ext {
         // shared build properties
-        kotlin_version      = '1.2.10'
-        buildToolsVersion   = '27.0.2'
+        kotlinVersion       = '1.2.10'
+        buildToolsVersion   = '27.0.3'
         minSdkVersion       = 15
         targetSdkVersion    = 27
         compileSdkVersion   = 27
@@ -22,7 +22,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:3.0.1"
         classpath "io.realm:realm-gradle-plugin:4.3.1"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
     }
 }
 
