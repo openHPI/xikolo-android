@@ -14,8 +14,7 @@ import de.xikolo.controllers.dialogs.ApiVersionExpiredDialog;
 import de.xikolo.controllers.dialogs.ServerErrorDialog;
 import de.xikolo.controllers.dialogs.ServerMaintenanceDialog;
 import de.xikolo.jobs.CheckHealthJob;
-import de.xikolo.jobs.base.JobCallback;
-import de.xikolo.jobs.base.JobHelper;
+import de.xikolo.jobs.base.RequestJobCallback;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -25,11 +24,11 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        JobHelper.getJobManager().addJobInBackground(new CheckHealthJob(getHealthCheckCallback()));
+        new CheckHealthJob(getHealthCheckCallback()).run();
     }
 
-    private JobCallback getHealthCheckCallback() {
-        return new JobCallback() {
+    private RequestJobCallback getHealthCheckCallback() {
+        return new RequestJobCallback() {
             @Override
             protected void onSuccess() {
                 startApp();

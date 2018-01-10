@@ -2,6 +2,9 @@ dependencies {
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
     implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.21"
+    implementation "ru.gildor.coroutines:kotlin-coroutines-retrofit:0.9.0"
 
     // networking
     def okhttpVersion = '3.9.1'
@@ -18,7 +21,7 @@ dependencies {
     kapt           "com.github.bumptech.glide:compiler:${glideVersion}"
 
     // architecture
-    implementation 'com.birbit:android-priority-jobqueue:2.0.1'
+    implementation 'com.evernote:android-job:1.2.1'
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     // json
@@ -51,6 +54,7 @@ dependencies {
     // play services
     def playVersion = '11.8.0'
     implementation "com.google.android.gms:play-services-cast-framework:${playVersion}"
+    implementation "com.google.android.gms:play-services-gcm:${playVersion}"
 
     // support libraries
     def supportVersion = '27.0.2'

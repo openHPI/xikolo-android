@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import de.xikolo.App;
 import de.xikolo.events.base.Event;
-import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.models.Item;
 import de.xikolo.models.WebSocketMessage;
 import de.xikolo.utils.NotificationUtil;
@@ -85,8 +85,8 @@ public class SecondScreenManager {
         }
     }
 
-    private JobCallback courseCallback(final WebSocketMessage message) {
-        return new JobCallback() {
+    private RequestJobCallback courseCallback(final WebSocketMessage message) {
+        return new RequestJobCallback() {
             @Override
             protected void onSuccess() {
                 itemManager.requestItemsWithContentForSection(sectionId, itemCallback(message));
@@ -99,8 +99,8 @@ public class SecondScreenManager {
         };
     }
 
-    private JobCallback itemCallback(final WebSocketMessage message) {
-        return new JobCallback() {
+    private RequestJobCallback itemCallback(final WebSocketMessage message) {
+        return new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 Item item = Item.get(itemId);
@@ -114,8 +114,8 @@ public class SecondScreenManager {
         };
     }
 
-    private JobCallback subtitleCallback(final WebSocketMessage message) {
-        return new JobCallback() {
+    private RequestJobCallback subtitleCallback(final WebSocketMessage message) {
+        return new RequestJobCallback() {
             @Override
             protected void onSuccess() {
                 Item item = Item.get(itemId);

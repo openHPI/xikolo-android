@@ -13,9 +13,8 @@ import android.util.Log;
 
 import de.xikolo.App;
 import de.xikolo.controllers.dialogs.PermissionsDialog;
-import de.xikolo.managers.base.BaseManager;
 
-public class PermissionManager extends BaseManager {
+public class PermissionManager {
 
     public static final String TAG = PermissionManager.class.getSimpleName();
 

@@ -21,7 +21,6 @@ import de.xikolo.events.DownloadDeletedEvent;
 import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
-import de.xikolo.managers.base.BaseManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Download;
 import de.xikolo.models.Item;
@@ -35,7 +34,7 @@ import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.ToastUtil;
 import io.realm.Realm;
 
-public class DownloadManager extends BaseManager {
+public class DownloadManager {
 
     public static final String TAG = DownloadManager.class.getSimpleName();
 

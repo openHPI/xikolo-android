@@ -319,19 +319,19 @@ object LanalyticsUtil {
 
     fun Lanalytics.Event.track() {
         val application = App.getInstance()
-        if (UserManager.isAuthorized() && FeatureToggle.tracking()) {
+        if (UserManager.isAuthorized && FeatureToggle.tracking()) {
             val tracker = application.lanalytics.defaultTracker
-            tracker.send(this, UserManager.getToken())
+            tracker.send(this, UserManager.token)
             Log.i("Lanalytics", "Created tracking event " + this.verb)
         }
-        if (UserManager.isAuthorized() && !FeatureToggle.tracking()) Log.d("Lanalytics", "Would have created tracking event " + this.verb)
+        if (UserManager.isAuthorized && !FeatureToggle.tracking()) Log.d("Lanalytics", "Would have created tracking event " + this.verb)
     }
 
     private fun createEventBuilder(): Lanalytics.Event.Builder {
         val application = App.getInstance()
         val builder = Lanalytics.Event.Builder(application)
 
-        if (UserManager.isAuthorized()) {
+        if (UserManager.isAuthorized) {
             val userStorage = UserStorage()
             builder.setUser(userStorage.userId)
         }

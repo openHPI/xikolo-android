@@ -3,6 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
 android {
     buildToolsVersion rootProject.buildToolsVersion
     compileSdkVersion rootProject.compileSdkVersion
