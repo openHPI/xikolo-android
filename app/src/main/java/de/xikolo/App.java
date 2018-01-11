@@ -7,8 +7,11 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 
+import com.evernote.android.job.JobManager;
+
 import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
+import de.xikolo.jobs.base.ScheduledJobFactory;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
@@ -63,10 +66,15 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        configureJobManager();
         configureRealm();
         configureDefaultSettings();
         configureWebView();
         configureSecondScreenManager();
+    }
+
+    private void configureJobManager() {
+        JobManager.create(this).addJobCreator(new ScheduledJobFactory());
     }
 
     private void configureRealm() {

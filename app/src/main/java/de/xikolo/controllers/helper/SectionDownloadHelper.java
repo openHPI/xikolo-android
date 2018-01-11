@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import de.xikolo.controllers.dialogs.MobileDownloadDialog;
 import de.xikolo.controllers.dialogs.ModuleDownloadDialog;
 import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
@@ -78,7 +78,7 @@ public class SectionDownloadHelper {
         final ProgressDialog dialog = ProgressDialog.getInstance();
         dialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);
 
-        itemManager.requestItemsWithContentForSection(section.id, new JobCallback() {
+        itemManager.requestItemsWithContentForSection(section.id, new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 dialog.dismiss();

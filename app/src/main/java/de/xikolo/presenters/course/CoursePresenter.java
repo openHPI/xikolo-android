@@ -2,7 +2,7 @@ package de.xikolo.presenters.course;
 
 import android.net.Uri;
 
-import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
@@ -113,7 +113,7 @@ public class CoursePresenter extends Presenter<CourseView> {
         if (getView() != null) {
             getView().showProgressDialog();
         }
-        courseManager.requestCourse(courseId, new JobCallback() {
+        courseManager.requestCourse(courseId, new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
@@ -134,7 +134,7 @@ public class CoursePresenter extends Presenter<CourseView> {
 
     public void unenroll(final String courseId) {
         getViewOrThrow().showProgressDialog();
-        courseManager.deleteEnrollment(Enrollment.getForCourse(courseId).id, new JobCallback() {
+        courseManager.deleteEnrollment(Enrollment.getForCourse(courseId).id, new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {

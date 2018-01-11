@@ -1,13 +1,13 @@
 package de.xikolo.presenters.base;
 
-import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.RequestJobCallback;
 
 public abstract class LoadingStatePresenter<V extends LoadingStateView> extends Presenter<V> {
 
     public abstract void onRefresh();
 
-    protected JobCallback getDefaultJobCallback(final boolean userRequest) {
-        return new JobCallback() {
+    protected RequestJobCallback getDefaultJobCallback(final boolean userRequest) {
+        return new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {

@@ -1,13 +1,13 @@
 package de.xikolo.presenters.course;
 
-import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 
-import static de.xikolo.jobs.base.JobCallback.ErrorCode.NO_NETWORK;
+import static de.xikolo.jobs.base.RequestJobCallback.ErrorCode.NO_NETWORK;
 
 public class CourseDetailsPresenter extends LoadingStatePresenter<CourseDetailsView> {
 
@@ -69,7 +69,7 @@ public class CourseDetailsPresenter extends LoadingStatePresenter<CourseDetailsV
     public void enroll() {
         getViewOrThrow().showBlockingProgress();
 
-        courseManager.createEnrollment(courseId, new JobCallback() {
+        courseManager.createEnrollment(courseId, new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {

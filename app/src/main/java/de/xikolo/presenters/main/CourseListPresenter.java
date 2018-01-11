@@ -2,7 +2,7 @@ package de.xikolo.presenters.main;
 
 import java.util.List;
 
-import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
@@ -12,7 +12,7 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-import static de.xikolo.jobs.base.JobCallback.ErrorCode.NO_NETWORK;
+import static de.xikolo.jobs.base.RequestJobCallback.ErrorCode.NO_NETWORK;
 
 public abstract class CourseListPresenter extends LoadingStatePresenter<CourseListView> {
 
@@ -93,7 +93,7 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
     public void onEnrollButtonClicked(final String courseId) {
         getViewOrThrow().showBlockingProgress();
 
-        courseManager.createEnrollment(courseId, new JobCallback() {
+        courseManager.createEnrollment(courseId, new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {

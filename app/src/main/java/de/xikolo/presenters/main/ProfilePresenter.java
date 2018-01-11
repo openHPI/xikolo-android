@@ -1,6 +1,6 @@
 package de.xikolo.presenters.main;
 
-import de.xikolo.jobs.base.JobCallback;
+import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Enrollment;
@@ -76,7 +76,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
         if (getView() != null) {
             getView().showProgress();
         }
-        userManager.requestUserWithProfile(new JobCallback() {
+        userManager.requestUserWithProfile(new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 requestEnrollmentList(userRequest);
@@ -101,7 +101,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
     }
 
     private void requestEnrollmentList(final boolean userRequest) {
-        courseManager.requestEnrollmentList(new JobCallback() {
+        courseManager.requestEnrollmentList(new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
