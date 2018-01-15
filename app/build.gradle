@@ -26,71 +26,37 @@ android {
         resValue "integer", "realm_schema_version", rootProject.realmSchemaVersion.toString()
     }
 
-    flavorDimensions "brand", "build"
-
     productFlavors.all {
         ext.appName = null
         ext.appHost = null
     }
 
-    productFlavors {
-        regular {
-            dimension "build"
-        }
-        fast {
-            // faster dev builds
-            minSdkVersion 21
-            dimension "build"
-        }
+    flavorDimensions "brand"
 
+    productFlavors {
         openHPI {
             applicationId "de.xikolo.openhpi"
             buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_HPI"
             appName = "openHPI"
             appHost = "open.hpi.de"
-            dimension "brand"
-        }
-        openHPI_CN {
-            applicationId "de.xikolo.openhpi.cn"
-            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_HPI_CN"
-            appName = "openHPI CN"
-            appHost = "openhpi.cn"
-            dimension "brand"
         }
         openSAP {
             applicationId "de.xikolo.opensap"
             buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_SAP"
             appName = "openSAP"
             appHost = "open.sap.com"
-            dimension "brand"
         }
         moocHouse {
             applicationId "de.xikolo.moochouse"
             buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.MOOC_HOUSE"
             appName = "mooc.house"
             appHost = "mooc.house"
-            dimension "brand"
-        }
-        moocHouse_CN {
-            applicationId "de.xikolo.moochouse.cn"
-            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.MOOC_HOUSE_CN"
-            appName = "cnMOOC.house"
-            appHost = "cnmooc.house"
-            dimension "brand"
-        }
-        openUNE {
-            applicationId "de.xikolo.openune"
-            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_UNE"
-            appName = "openUNE"
-            appHost = "openune.cn"
-            dimension "brand"
         }
         openWHO {
             applicationId "de.xikolo.openwho"
             buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_WHO"
             appName = "OpenWHO"
             appHost = "openwho.org"
-            dimension "brand"
         }
     }
     signingConfigs {
@@ -103,12 +69,6 @@ android {
                 keyAlias props.RELEASE_KEY_ALIAS_OPENHPI
                 keyPassword props.RELEASE_KEY_PASSWORD_OPENHPI
             }
-            openHPI_CN {
-                storeFile rootProject.file(props.RELEASE_STORE_FILE)
-                storePassword props.RELEASE_STORE_PASSWORD
-                keyAlias props.RELEASE_KEY_ALIAS_OPENHPI_CN
-                keyPassword props.RELEASE_KEY_PASSWORD_OPENHPI_CN
-            }
             openSAP {
                 storeFile rootProject.file(props.RELEASE_STORE_FILE)
                 storePassword props.RELEASE_STORE_PASSWORD
@@ -120,18 +80,6 @@ android {
                 storePassword props.RELEASE_STORE_PASSWORD
                 keyAlias props.RELEASE_KEY_ALIAS_MOOCHOUSE
                 keyPassword props.RELEASE_KEY_PASSWORD_MOOCHOUSE
-            }
-            moocHouse_CN {
-                storeFile rootProject.file(props.RELEASE_STORE_FILE)
-                storePassword props.RELEASE_STORE_PASSWORD
-                keyAlias props.RELEASE_KEY_ALIAS_MOOCHOUSE_CN
-                keyPassword props.RELEASE_KEY_PASSWORD_MOOCHOUSE_CN
-            }
-            openUNE {
-                storeFile rootProject.file(props.RELEASE_STORE_FILE)
-                storePassword props.RELEASE_STORE_PASSWORD
-                keyAlias props.RELEASE_KEY_ALIAS_OPENUNE
-                keyPassword props.RELEASE_KEY_PASSWORD_OPENUNE
             }
             openWHO {
                 storeFile rootProject.file(props.RELEASE_STORE_FILE)
@@ -151,11 +99,8 @@ android {
 
             if (rootProject.file('signing.properties').exists()) {
                 productFlavors.openHPI.signingConfig signingConfigs.openHPI
-                productFlavors.openHPI_CN.signingConfig signingConfigs.openHPI_CN
                 productFlavors.openSAP.signingConfig signingConfigs.openSAP
                 productFlavors.moocHouse.signingConfig signingConfigs.moocHouse
-                productFlavors.moocHouse_CN.signingConfig signingConfigs.moocHouse_CN
-                productFlavors.openUNE.signingConfig signingConfigs.openUNE
                 productFlavors.openWHO.signingConfig signingConfigs.openWHO
             }
         }
@@ -179,12 +124,6 @@ android {
         variant.resValue "string", "app_name", name
         variant.resValue "string", "app_host", host
         variant.resValue "string", "service_download", name + " Download Service"
-    }
-    variantFilter { variant ->
-        def names = variant.flavors*.name
-        if (variant.buildType.name == "release" && names.contains("fast")) {
-            setIgnore(true)
-        }
     }
     lintOptions {
         abortOnError false

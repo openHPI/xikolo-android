@@ -37,13 +37,6 @@ public class Config {
                 TERMS_OF_USE_URL = "";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604";
                 break;
-            case OPEN_HPI_CN:
-                COPYRIGHT_URL = "https://hpi.de/";
-                IMPRINT_URL = "https://openhpi.cn/pages/imprint?locale=cn";
-                PRIVACY_URL = "https://openhpi.cn/pages/privacy?locale=cn";
-                TERMS_OF_USE_URL = "";
-                CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604";
-                break;
             case OPEN_SAP:
                 COPYRIGHT_URL = "http://go.sap.com/corporate/en/legal/copyright.html";
                 IMPRINT_URL = "http://go.sap.com/corporate/en/legal/impressum.html";
@@ -55,20 +48,6 @@ public class Config {
                 COPYRIGHT_URL = "http://who.int/";
                 IMPRINT_URL = "https://openwho.org/pages/imprint";
                 PRIVACY_URL = "https://openwho.org/pages/privacy";
-                TERMS_OF_USE_URL = "";
-                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
-                break;
-            case OPEN_UNE:
-                COPYRIGHT_URL = "http://www.guofudata.com/";
-                IMPRINT_URL = "https://openune.cn/pages/imprint";
-                PRIVACY_URL = "https://openune.cn/pages/privacy";
-                TERMS_OF_USE_URL = "";
-                CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
-                break;
-            case MOOC_HOUSE_CN:
-                COPYRIGHT_URL = "http://www.guofudata.com/";
-                IMPRINT_URL = "https://cnmooc.house/pages/imprint?locale=cn";
-                PRIVACY_URL = "https://cnmooc.house/pages/privacy?locale=cn";
                 TERMS_OF_USE_URL = "";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;

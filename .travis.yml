@@ -25,5 +25,5 @@ env:
 
 script:
    - >
-       ./gradlew assemble${FLAVOR}RegularDebug test${FLAVOR}RegularDebugUnitTest connected${FLAVOR}RegularDebugAndroidTest
-       && ./gradlew assemble${FLAVOR}RegularRelease test${FLAVOR}RegularReleaseUnitTest
+       ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest connected${FLAVOR}DebugAndroidTest
+       && ./gradlew assemble${FLAVOR}Release test${FLAVOR}ReleaseUnitTest
