@@ -18,12 +18,12 @@ android:
     - extra-google-m2repository
 
 env:
-  - FLAVOR="openHPI"
-  - FLAVOR="openSAP"
-  - FLAVOR="moocHouse"
-  - FLAVOR="openWHO"
+  - FLAVOR="openhpi"
+  - FLAVOR="opensap"
+  - FLAVOR="moochouse"
+  - FLAVOR="openwho"
 
 script:
    - >
-       ./gradlew assemble${FLAVOR}RegularDebug test${FLAVOR}RegularDebugUnitTest connected${FLAVOR}RegularDebugAndroidTest
-       && ./gradlew assemble${FLAVOR}RegularRelease test${FLAVOR}RegularReleaseUnitTest
+       ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest connected${FLAVOR}DebugAndroidTest
+       && ./gradlew assemble${FLAVOR}Release test${FLAVOR}ReleaseUnitTest

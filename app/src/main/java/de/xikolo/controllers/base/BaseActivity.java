@@ -114,7 +114,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         }
 
         // tint menu icons dark on mooc.house, cause toolbar has light background
-        if (BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE || BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE_CN) {
+        if (BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE) {
             for (int i = 0; i < menu.size(); i++) {
                 MenuItem item = menu.getItem(i);
                 if (item.getIcon() != null && item.getItemId() != R.id.media_route_menu_item) {
