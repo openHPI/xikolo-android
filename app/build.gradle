@@ -34,25 +34,25 @@ android {
     flavorDimensions "brand"
 
     productFlavors {
-        openHPI {
+        openhpi {
             applicationId "de.xikolo.openhpi"
             buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_HPI"
             appName = "openHPI"
             appHost = "open.hpi.de"
         }
-        openSAP {
+        opensap {
             applicationId "de.xikolo.opensap"
             buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_SAP"
             appName = "openSAP"
             appHost = "open.sap.com"
         }
-        moocHouse {
+        moochouse {
             applicationId "de.xikolo.moochouse"
             buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.MOOC_HOUSE"
             appName = "mooc.house"
             appHost = "mooc.house"
         }
-        openWHO {
+        openwho {
             applicationId "de.xikolo.openwho"
             buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_WHO"
             appName = "OpenWHO"
@@ -63,25 +63,25 @@ android {
         if (rootProject.file('signing.properties').exists()) {
             def props = new Properties()
             props.load(new FileInputStream(rootProject.file('signing.properties')))
-            openHPI {
+            openhpi {
                 storeFile rootProject.file(props.RELEASE_STORE_FILE)
                 storePassword props.RELEASE_STORE_PASSWORD
                 keyAlias props.RELEASE_KEY_ALIAS_OPENHPI
                 keyPassword props.RELEASE_KEY_PASSWORD_OPENHPI
             }
-            openSAP {
+            opensap {
                 storeFile rootProject.file(props.RELEASE_STORE_FILE)
                 storePassword props.RELEASE_STORE_PASSWORD
                 keyAlias props.RELEASE_KEY_ALIAS_OPENSAP
                 keyPassword props.RELEASE_KEY_PASSWORD_OPENSAP
             }
-            moocHouse {
+            moochouse {
                 storeFile rootProject.file(props.RELEASE_STORE_FILE)
                 storePassword props.RELEASE_STORE_PASSWORD
                 keyAlias props.RELEASE_KEY_ALIAS_MOOCHOUSE
                 keyPassword props.RELEASE_KEY_PASSWORD_MOOCHOUSE
             }
-            openWHO {
+            openwho {
                 storeFile rootProject.file(props.RELEASE_STORE_FILE)
                 storePassword props.RELEASE_STORE_PASSWORD
                 keyAlias props.RELEASE_KEY_ALIAS_OPENWHO
@@ -98,10 +98,10 @@ android {
             buildConfigField "de.xikolo.config.BuildType", "X_TYPE", "de.xikolo.config.BuildType.RELEASE"
 
             if (rootProject.file('signing.properties').exists()) {
-                productFlavors.openHPI.signingConfig signingConfigs.openHPI
-                productFlavors.openSAP.signingConfig signingConfigs.openSAP
-                productFlavors.moocHouse.signingConfig signingConfigs.moocHouse
-                productFlavors.openWHO.signingConfig signingConfigs.openWHO
+                productFlavors.openhpi.signingConfig signingConfigs.openhpi
+                productFlavors.opensap.signingConfig signingConfigs.opensap
+                productFlavors.moochouse.signingConfig signingConfigs.moochouse
+                productFlavors.openwho.signingConfig signingConfigs.openwho
             }
         }
         debug {

@@ -18,10 +18,10 @@ android:
     - extra-google-m2repository
 
 env:
-  - FLAVOR="openHPI"
-  - FLAVOR="openSAP"
-  - FLAVOR="moocHouse"
-  - FLAVOR="openWHO"
+  - FLAVOR="openhpi"
+  - FLAVOR="opensap"
+  - FLAVOR="moochouse"
+  - FLAVOR="openwho"
 
 script:
    - >
