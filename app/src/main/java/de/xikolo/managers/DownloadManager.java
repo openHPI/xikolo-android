@@ -81,7 +81,7 @@ public class DownloadManager {
                 if (downloadExists(filePath)) {
                     ToastUtil.show(R.string.toast_file_already_downloaded);
                     return false;
-                } else {
+                } else if (url != null) {
                     FileUtil.createFolderIfNotExists(new File(filePath.substring(0, filePath.lastIndexOf(File.separator))));
 
                     Bundle bundle = new Bundle();
@@ -97,6 +97,9 @@ public class DownloadManager {
                     EventBus.getDefault().post(new DownloadStartedEvent(itemId, type));
 
                     return true;
+                } else {
+                    Log.i(TAG, "URL is null, nothing to download");
+                    return false;
                 }
             } else {
                 pendingAction = PendingAction.START;
