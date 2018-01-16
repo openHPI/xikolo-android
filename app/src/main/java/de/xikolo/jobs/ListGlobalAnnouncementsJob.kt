@@ -2,9 +2,8 @@ package de.xikolo.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.jobs.base.RequestJobCallback
 import de.xikolo.jobs.base.RequestJob
-import de.xikolo.managers.UserManager
+import de.xikolo.jobs.base.RequestJobCallback
 import de.xikolo.models.Announcement
 import de.xikolo.models.base.Sync
 import de.xikolo.network.ApiService
@@ -17,11 +16,8 @@ class ListGlobalAnnouncementsJob(callback: RequestJobCallback) : RequestJob(call
     }
 
     override suspend fun onRun() {
-        val response = if (UserManager.isAuthorized) {
-            ApiService.getInstance().listGlobalAnnouncementsWithCourses().awaitResponse()
-        } else {
-            ApiService.getInstance().listGlobalAnnouncements().awaitResponse()
-        }
+        // includes course announcements if auth is provided
+        val response = ApiService.getInstance().listGlobalAnnouncements().awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Announcements received")

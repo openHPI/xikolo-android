@@ -78,9 +78,6 @@ interface ApiServiceInterface {
     @GET("announcements?filter[global]=true")
     fun listGlobalAnnouncements(): Call<Array<Announcement.JsonModel>>
 
-    @GET("announcements?filter[global]=true")
-    fun listGlobalAnnouncementsWithCourses(): Call<Array<Announcement.JsonModel>>
-
     @GET("announcements")
     fun listCourseAnnouncements(@Query("filter[course]") courseId: String): Call<Array<Announcement.JsonModel>>
 
