@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
+apply plugin: 'io.fabric'
 
 kotlin {
     experimental {
@@ -142,3 +143,5 @@ android {
 }
 
 apply from: 'dependencies.gradle'
+// should be added at the bottom
+apply plugin: 'com.google.gms.google-services'
