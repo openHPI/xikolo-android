@@ -1,0 +1,22 @@
+afterEvaluate {
+    android.applicationVariants.all { variant ->
+        def variantName = "${variant.flavorName.capitalize()}${variant.buildType.name.capitalize()}"
+        def taskName = "linkGoogleServices$variantName"
+
+        task(taskName) {
+            group 'Build'
+            description "Creates and links a google-services-release.json file to the corresponding $variantName file."
+
+            doLast {
+                if (variant.buildType.name == "debug") {
+                    println "Hello $variant.flavorName debug"
+                }
+                if (variant.buildType.name == "release") {
+                    println "Hello $variant.flavorName release"
+                }
+            }
+        }
+
+        variant.preBuild.dependsOn(taskName)
+    }
+}

@@ -143,5 +143,6 @@ android {
 }
 
 apply from: 'dependencies.gradle'
+apply from: 'google-services.gradle'
 // should be added at the bottom
 apply plugin: 'com.google.gms.google-services'
