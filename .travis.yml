@@ -24,6 +24,4 @@ env:
   - FLAVOR="openwho"
 
 script:
-   - >
-       ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest connected${FLAVOR}DebugAndroidTest
-       && ./gradlew assemble${FLAVOR}Release test${FLAVOR}ReleaseUnitTest
+   - ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest connected${FLAVOR}DebugAndroidTest
