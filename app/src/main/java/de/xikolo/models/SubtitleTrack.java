@@ -39,14 +39,19 @@ public class SubtitleTrack extends RealmObject {
 
     public List<SubtitleCue> listCues() {
         Realm realm = Realm.getDefaultInstance();
-        List<SubtitleCue> list = realm.where(SubtitleCue.class).equalTo("subtitleId", id).findAllSorted("identifier");
+        List<SubtitleCue> list = realm.where(SubtitleCue.class)
+                .equalTo("subtitleId", id)
+                .sort("identifier")
+                .findAll();
         realm.close();
         return list;
     }
 
     public static List<SubtitleTrack> listForVideoId(String videoId) {
         Realm realm = Realm.getDefaultInstance();
-        List<SubtitleTrack> list = realm.where(SubtitleTrack.class).equalTo("videoId", videoId).findAll();
+        List<SubtitleTrack> list = realm.where(SubtitleTrack.class)
+                .equalTo("videoId", videoId)
+                .findAll();
         realm.close();
         return list;
     }

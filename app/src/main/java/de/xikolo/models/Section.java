@@ -47,7 +47,8 @@ public class Section extends RealmObject {
         RealmResults<Section> sectionList = realm
                 .where(Section.class)
                 .equalTo("courseId", courseId)
-                .findAllSorted("position");
+                .sort("position")
+                .findAll();
         realm.close();
         return sectionList;
     }
@@ -64,7 +65,8 @@ public class Section extends RealmObject {
         List<Item> items = realm.where(Item.class)
                 .equalTo("sectionId", id)
                 .equalTo("accessible", true)
-                .findAllSorted("position");
+                .sort("position")
+                .findAll();
         realm.close();
         return items;
     }

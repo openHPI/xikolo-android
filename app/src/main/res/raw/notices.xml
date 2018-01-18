@@ -1,8 +1,26 @@
 <notices>
     <notice>
+        <name>Kotlin</name>
+        <url>https://github.com/JetBrains/kotlin/</url>
+        <copyright>Copyright (c) 2010-2018 JetBrains s.r.o.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
         <name>OkHttp</name>
         <url>http://square.github.io/okhttp/</url>
         <copyright>Copyright (c) 2016 Square, Inc.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Java-WebSocket</name>
+        <url>http://java-websocket.org/</url>
+        <copyright>Copyright (c) 2010-2018 Nathan Rajlich</copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>Android Http Download Manager</name>
+        <url>https://github.com/Coolerfall/Android-HttpDownloadManager/</url>
+        <copyright>Copyright (c) 2014-2016 Vincent Cheung</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
@@ -12,27 +30,15 @@
         <license>BSD 2-Clause License</license>
     </notice>
     <notice>
-        <name>Android Priority Job Queue</name>
-        <url>https://github.com/yigit/android-priority-jobqueue/</url>
-        <copyright>Copyright (c) 2013 Path, Inc.; 2014 Google, Inc.</copyright>
-        <license>MIT License</license>
+        <name>Android-Job</name>
+        <url>https://github.com/evernote/android-job/</url>
+        <copyright>Copyright (c) 2007-2017 Evernote Corporation</copyright>
+        <license>Apache Software License 2.0</license>
     </notice>
     <notice>
         <name>EventBus</name>
         <url>http://greenrobot.org/eventbus/</url>
-        <copyright>Copyright (c) 2012-2016 Markus Junginger, greenrobot</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
-        <name>Java-WebSocket</name>
-        <url>http://java-websocket.org/</url>
-        <copyright>Copyright (c) 2010-2012 Nathan Rajlich</copyright>
-        <license>MIT License</license>
-    </notice>
-    <notice>
-        <name>Android PdfViewer</name>
-        <url>https://github.com/barteksc/AndroidPdfViewer/</url>
-        <copyright>Copyright (c) 2016 Bartosz Schiller</copyright>
+        <copyright>Copyright (c) 2012-2017 Markus Junginger, greenrobot</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
@@ -42,27 +48,81 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>AutoValue</name>
-        <url>https://github.com/google/auto/</url>
-        <copyright>Copyright (c) 2013 Google, Inc.</copyright>
+        <name>Retrofit</name>
+        <url>https://github.com/square/retrofit/</url>
+        <copyright>Copyright (c) 2013 Square, Inc.</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>AutoValue: Parcel Extension</name>
-        <url>https://github.com/rharter/auto-value-parcel/</url>
-        <copyright>Copyright (c) 2015 Ryan Harter</copyright>
+        <name>Moshi</name>
+        <url>https://github.com/square/moshi/</url>
+        <copyright>Copyright (c) 2015 Square, Inc.</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>AutoValue: Gson Extension</name>
-        <url>https://github.com/rharter/auto-value-gson/</url>
-        <copyright>Copyright (c) 2015 Ryan Harter</copyright>
+        <name>Moshi-JsonAPI</name>
+        <url>https://github.com/kamikat/moshi-jsonapi/</url>
+        <copyright>Copyright (c) 2017 kamikat@banana.moe</copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>Android PdfViewer</name>
+        <url>https://github.com/barteksc/AndroidPdfViewer/</url>
+        <copyright>Copyright (c) 2017 Bartosz Schiller</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
         <name>LicensesDialog</name>
         <url>https://github.com/PSDev/LicensesDialog/</url>
-        <copyright>Copyright (c) 2013-2016 Philip Schiffer</copyright>
+        <copyright>Copyright (c) 2013-2017 Philip Schiffer</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Bypass</name>
+        <url>https://github.com/Uncodin/bypass/</url>
+        <copyright>Copyright (c) 2015 Uncodin</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Bypasses</name>
+        <url>https://github.com/Commit451/bypasses/</url>
+        <copyright>Copyright (c) 2017 Commit 451</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>ExoPlayer</name>
+        <url>https://github.com/google/ExoPlayer/</url>
+        <copyright>Copyright (c) 2014 Google, Inc.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>ExoMedia</name>
+        <url>https://github.com/brianwernick/ExoMedia/</url>
+        <copyright>Copyright (c) 2015-2017 Brian Wernick</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Butter Knife</name>
+        <url>https://github.com/JakeWharton/butterknife/</url>
+        <copyright>Copyright (c) 2013 Jake Wharton</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>AutoBundle</name>
+        <url>https://github.com/yatatsu/AutoBundle/</url>
+        <copyright>Copyright (c) 2015 Kitagawa, Tatsuya</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>AutoBundle</name>
+        <url>https://github.com/yatatsu/AutoBundle/</url>
+        <copyright>Copyright (c) 2015 Kitagawa, Tatsuya</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Realm</name>
+        <url>https://github.com/realm/realm-java/</url>
+        <copyright>Copyright (c) 2011-2017 Realm Inc.</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>

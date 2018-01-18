@@ -1,6 +1,7 @@
 package de.xikolo.config;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 
 import com.bumptech.glide.annotation.GlideExtension;
 import com.bumptech.glide.annotation.GlideOption;
@@ -11,6 +12,7 @@ public class GlideApiExtension {
 
     private GlideApiExtension() { }
 
+    @NonNull
     @GlideOption
     public static RequestOptions noPlaceholders(RequestOptions options) {
         return options
@@ -19,6 +21,7 @@ public class GlideApiExtension {
                 .fallback(0);
     }
 
+    @NonNull
     @GlideOption
     public static RequestOptions allPlaceholders(RequestOptions options, @DrawableRes int resourceId) {
         return options

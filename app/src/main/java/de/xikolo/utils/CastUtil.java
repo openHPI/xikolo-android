@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaLoadOptions;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
@@ -114,7 +115,12 @@ public class CastUtil {
                 }
             });
 
-            return remoteMediaClient.load(buildCastMetadata(video), autoPlay, video.progress);
+            return remoteMediaClient.load(
+                    buildCastMetadata(video),
+                    new MediaLoadOptions.Builder()
+                            .setAutoplay(autoPlay)
+                            .setPlayPosition(video.progress)
+                            .build());
         } else {
             return null;
         }
