@@ -60,33 +60,38 @@ android {
             appHost = "openwho.org"
         }
     }
+
+    def signingFile = rootProject.file('signing.properties')
+    def signingProperties = new Properties().load(new FileInputStream(signingFile))
+
     signingConfigs {
-        if (rootProject.file('signing.properties').exists()) {
-            def props = new Properties()
-            props.load(new FileInputStream(rootProject.file('signing.properties')))
+        if (signingProperties != null) {
+            def keystoreFile = rootProject.file(signingProperties.RELEASE_STORE_FILE)
+            def keystorePassword = signingProperties.RELEASE_STORE_PASSWORD
+
             openhpi {
-                storeFile rootProject.file(props.RELEASE_STORE_FILE)
-                storePassword props.RELEASE_STORE_PASSWORD
-                keyAlias props.RELEASE_KEY_ALIAS_OPENHPI
-                keyPassword props.RELEASE_KEY_PASSWORD_OPENHPI
+                storeFile keystoreFile
+                storePassword keystorePassword
+                keyAlias signingProperties.RELEASE_KEY_ALIAS_OPENHPI
+                keyPassword signingProperties.RELEASE_KEY_PASSWORD_OPENHPI
             }
             opensap {
-                storeFile rootProject.file(props.RELEASE_STORE_FILE)
-                storePassword props.RELEASE_STORE_PASSWORD
-                keyAlias props.RELEASE_KEY_ALIAS_OPENSAP
-                keyPassword props.RELEASE_KEY_PASSWORD_OPENSAP
+                storeFile keystoreFile
+                storePassword keystorePassword
+                keyAlias signingProperties.RELEASE_KEY_ALIAS_OPENSAP
+                keyPassword signingProperties.RELEASE_KEY_PASSWORD_OPENSAP
             }
             moochouse {
-                storeFile rootProject.file(props.RELEASE_STORE_FILE)
-                storePassword props.RELEASE_STORE_PASSWORD
-                keyAlias props.RELEASE_KEY_ALIAS_MOOCHOUSE
-                keyPassword props.RELEASE_KEY_PASSWORD_MOOCHOUSE
+                storeFile keystoreFile
+                storePassword keystorePassword
+                keyAlias signingProperties.RELEASE_KEY_ALIAS_MOOCHOUSE
+                keyPassword signingProperties.RELEASE_KEY_PASSWORD_MOOCHOUSE
             }
             openwho {
-                storeFile rootProject.file(props.RELEASE_STORE_FILE)
-                storePassword props.RELEASE_STORE_PASSWORD
-                keyAlias props.RELEASE_KEY_ALIAS_OPENWHO
-                keyPassword props.RELEASE_KEY_PASSWORD_OPENWHO
+                storeFile keystoreFile
+                storePassword keystorePassword
+                keyAlias signingProperties.RELEASE_KEY_ALIAS_OPENWHO
+                keyPassword signingProperties.RELEASE_KEY_PASSWORD_OPENWHO
             }
         }
     }
@@ -98,7 +103,7 @@ android {
             debuggable false
             buildConfigField "de.xikolo.config.BuildType", "X_TYPE", "de.xikolo.config.BuildType.RELEASE"
 
-            if (rootProject.file('signing.properties').exists()) {
+            if (signingProperties != null) {
                 productFlavors.openhpi.signingConfig signingConfigs.openhpi
                 productFlavors.opensap.signingConfig signingConfigs.opensap
                 productFlavors.moochouse.signingConfig signingConfigs.moochouse
