@@ -1,2 +1,2 @@
 secret.txt filter=git-crypt diff=git-crypt
-release/secret3.txt filter=git-crypt diff=git-crypt
+**/release/secret4.txt filter=git-crypt diff=git-crypt
