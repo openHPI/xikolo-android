@@ -33,8 +33,6 @@ Thumbs.db
 build/
 *.iml
 
-*.jks
-*.keystore
-signing.properties
+*.key
 
 !gradle-wrapper.jar
