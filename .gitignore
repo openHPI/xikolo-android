@@ -33,4 +33,6 @@ Thumbs.db
 build/
 *.iml
 
+*.key
+
 !gradle-wrapper.jar

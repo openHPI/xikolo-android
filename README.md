@@ -13,9 +13,21 @@ Clone git repository:
 git clone --recursive https://github.com/openHPI/xikolo-android
 ```
 
-## Development
+### Development
 
 Please use the [Android Studio](https://developer.android.com/sdk/) IDE, since we rely on the Gradle build system.
+
+### Release Builds
+
+Signing credentials are protected with [`git-crypt`](https://github.com/AGWA/git-crypt/). To compile release builds, [install](https://www.agwa.name/projects/git-crypt/) `git-crypt`:
+```
+brew install git-crypt
+```
+And unlock the encrypted files:
+```
+git-crypt unlock /path/to/xikolo-android.key
+```
+The keyfile is managed by the openHPI team and should never be made public or added to the repository.
 
 ## Version History
 
