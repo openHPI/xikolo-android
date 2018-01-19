@@ -19,10 +19,6 @@
 
     <color name="apptheme_second_26">#42226CA9</color>
 
-    <color name="apptheme_login_bg">@color/apptheme_second</color>
-    <color name="apptheme_login_gradient_start">#2da9b1</color>
-    <color name="apptheme_login_gradient_end">#1a4c7d</color>
-
     <color name="apptheme_splash_background">#4A4A4A</color>
 
 </resources>

@@ -24,8 +24,6 @@
     <!-- toolbar with 40% black overlay -->
     <color name="apptheme_statusbar">#07446d</color>
 
-    <color name="apptheme_login_gradient_start">@color/apptheme_main_light</color>
-
     <color name="apptheme_placeholder_gradient_start">@color/apptheme_main_light</color>
 
     <color name="apptheme_splash_background">@color/apptheme_main</color>

@@ -77,7 +77,7 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
         textCredentials.setText(String.format(getString(R.string.login_with_credentials), Config.HOST));
 
         GlideApp.with(this)
-                .load(R.drawable.login_header)
+                .load(R.drawable.login_header_v2)
                 .dontAnimate()
                 .noPlaceholders()
                 .fitCenter()

@@ -45,11 +45,6 @@
 
     <color name="navi_text">@color/text_main</color>
 
-    <color name="apptheme_login_bg">@color/background_main</color>
-    <color name="apptheme_login_text">@color/text_main</color>
-    <color name="apptheme_login_gradient_start">@color/background_main</color>
-    <color name="apptheme_login_gradient_end">@color/background_main</color>
-
     <color name="offline_mode_toolbar">#cccccc</color>
     <color name="offline_mode_statusbar">#7a7a7a</color>
 

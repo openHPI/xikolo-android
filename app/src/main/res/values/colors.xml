@@ -58,10 +58,8 @@
     <!-- toolbar with 40% black overlay -->
     <color name="apptheme_statusbar">@color/apptheme_main_dark</color>
 
-    <color name="apptheme_login_bg">@color/apptheme_main</color>
-    <color name="apptheme_login_text">@color/white</color>
-    <color name="apptheme_login_gradient_start">@color/apptheme_third_60</color>
-    <color name="apptheme_login_gradient_end">@color/apptheme_second_60</color>
+    <color name="apptheme_login_bg">@color/background_main</color>
+    <color name="apptheme_login_text">@color/text_main</color>
 
     <color name="apptheme_placeholder_gradient_start">@color/apptheme_third_60</color>
     <color name="apptheme_placeholder_gradient_end">@color/apptheme_second_60</color>
