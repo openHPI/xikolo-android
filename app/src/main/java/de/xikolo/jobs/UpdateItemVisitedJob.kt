@@ -10,7 +10,7 @@ import de.xikolo.models.base.Local
 import de.xikolo.models.base.Sync
 import de.xikolo.network.ApiService
 
-class UpdateItemVisitedJob() : ScheduledJob(Precondition.AUTH) {
+class UpdateItemVisitedJob : ScheduledJob(Precondition.AUTH) {
 
     companion object {
         val TAG: String = UpdateItemVisitedJob::class.java.simpleName

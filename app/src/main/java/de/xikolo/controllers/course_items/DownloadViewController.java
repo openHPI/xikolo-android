@@ -87,13 +87,13 @@ public class DownloadViewController {
         LayoutInflater inflater = LayoutInflater.from(App.getInstance());
         layout = inflater.inflate(R.layout.container_download, null);
 
-        textFileSize = (TextView) layout.findViewById(R.id.textFileSize);
-        textFileName = (TextView) layout.findViewById(R.id.textFileName);
+        textFileSize = layout.findViewById(R.id.textFileSize);
+        textFileName = layout.findViewById(R.id.textFileName);
 
         final ApplicationPreferences appPreferences = new ApplicationPreferences();
 
         viewDownloadStart = layout.findViewById(R.id.downloadStartContainer);
-        buttonDownloadStart = (IconButton) layout.findViewById(R.id.buttonDownloadStart);
+        buttonDownloadStart = layout.findViewById(R.id.buttonDownloadStart);
         buttonDownloadStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,8 +118,8 @@ public class DownloadViewController {
         });
 
         viewDownloadRunning = layout.findViewById(R.id.downloadRunningContainer);
-        progressBarDownload = (ProgressBar) layout.findViewById(R.id.progressDownload);
-        buttonDownloadCancel = (TextView) layout.findViewById(R.id.buttonDownloadCancel);
+        progressBarDownload = layout.findViewById(R.id.progressDownload);
+        buttonDownloadCancel = layout.findViewById(R.id.buttonDownloadCancel);
         buttonDownloadCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,8 +133,8 @@ public class DownloadViewController {
         });
 
         viewDownloadEnd = layout.findViewById(R.id.downloadEndContainer);
-        buttonOpenDownload = (Button) layout.findViewById(R.id.buttonDownloadOpen);
-        buttonDeleteDownload = (Button) layout.findViewById(R.id.buttonDownloadDelete);
+        buttonOpenDownload = layout.findViewById(R.id.buttonDownloadOpen);
+        buttonDeleteDownload = layout.findViewById(R.id.buttonDownloadDelete);
         buttonDeleteDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

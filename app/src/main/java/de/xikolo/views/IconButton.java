@@ -31,8 +31,8 @@ public class IconButton extends RelativeLayout {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.icon_button, this, true);
 
-        label = (TextView) layout.findViewById(R.id.label);
-        icon = (TextView) layout.findViewById(R.id.icon);
+        label = layout.findViewById(R.id.label);
+        icon = layout.findViewById(R.id.icon);
 
         label.setText(labelText);
         label.setTextColor(labelColor);

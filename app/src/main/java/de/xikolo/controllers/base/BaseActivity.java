@@ -220,7 +220,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     protected void setupActionBar(boolean translucentActionbar) {
         this.translucentActionbar = translucentActionbar;
-        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar tb = findViewById(R.id.toolbar);
         if (tb != null) {
             setSupportActionBar(tb);
         }
@@ -234,9 +234,9 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
             actionBar.setHomeButtonEnabled(true);
         }
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        contentLayout = (CoordinatorLayout) findViewById(R.id.contentLayout);
-        appBar = (AppBarLayout) findViewById(R.id.appbar);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        contentLayout = findViewById(R.id.contentLayout);
+        appBar = findViewById(R.id.appbar);
         setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
     }
 

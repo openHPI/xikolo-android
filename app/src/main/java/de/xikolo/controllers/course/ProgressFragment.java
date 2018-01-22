@@ -47,7 +47,7 @@ public class ProgressFragment extends LoadingStatePresenterFragment<ProgressPres
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.content_view);
+        RecyclerView recyclerView = view.findViewById(R.id.content_view);
 
         adapter = new ProgressListAdapter(getActivity());
 

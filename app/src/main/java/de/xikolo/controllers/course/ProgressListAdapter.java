@@ -145,10 +145,10 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
     }
 
     private void setupExerciseProgressView(View view, float base, float percent, @StringRes int label, @StringRes int icon, String iconFont) {
-        TextView textCount = (TextView) view.findViewById(R.id.text_count);
-        TextView textPercentage = (TextView) view.findViewById(R.id.text_percentage);
-        CustomFontTextView iconView = (CustomFontTextView) view.findViewById(R.id.icon);
-        ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress);
+        TextView textCount = view.findViewById(R.id.text_count);
+        TextView textPercentage = view.findViewById(R.id.text_percentage);
+        CustomFontTextView iconView = view.findViewById(R.id.icon);
+        ProgressBar progress = view.findViewById(R.id.progress);
 
         iconView.setText(context.getString(icon));
         iconView.setCustomFont(context, iconFont);

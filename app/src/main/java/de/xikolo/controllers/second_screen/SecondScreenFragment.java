@@ -251,13 +251,13 @@ public class SecondScreenFragment extends BaseFragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View layout = inflater.inflate(R.layout.item_second_screen, null);
 
-        TextView textTitle = (TextView) layout.findViewById(R.id.text_action_title);
+        TextView textTitle = layout.findViewById(R.id.text_action_title);
         textTitle.setText(getContext().getString(title));
 
-        TextView textDescription = (TextView) layout.findViewById(R.id.text_action_description);
+        TextView textDescription = layout.findViewById(R.id.text_action_description);
         textDescription.setText(getContext().getString(description));
 
-        TextView textIcon = (TextView) layout.findViewById(R.id.text_icon_action);
+        TextView textIcon = layout.findViewById(R.id.text_icon_action);
         textIcon.setText(getContext().getString(icon));
 
         return layout;

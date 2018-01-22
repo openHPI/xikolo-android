@@ -56,7 +56,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
         setupActionBar();
 
         // Initialize the ViewPager and set an adapter
-        viewpager = (ViewPager) findViewById(R.id.viewpager);
+        viewpager = findViewById(R.id.viewpager);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
         viewpager.setOffscreenPageLimit(2);
 
         // Bind the tabs to the ViewPager
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = findViewById(R.id.tabs);
         if (tabLayout != null) {
             tabLayout.setupWithViewPager(viewpager);
 
@@ -162,7 +162,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
         public View getCustomTabView(int position, int currentPosition, ViewGroup parent) {
             final View layout = getLayoutInflater().inflate(R.layout.container_custom_tab, parent, false);
 
-            TextView label = (TextView) layout.findViewById(R.id.tabLabel);
+            TextView label = layout.findViewById(R.id.tabLabel);
             View unseenIndicator = layout.findViewById(R.id.unseenIndicator);
 
             if (position != currentPosition) {
@@ -242,7 +242,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
             viewpager.setCurrentItem(tabLayout.getSelectedTabPosition(), true);
             View view = tab.getCustomView();
             if (view != null) {
-                TextView label = (TextView) view.findViewById(R.id.tabLabel);
+                TextView label = view.findViewById(R.id.tabLabel);
                 View unseenIndicator = view.findViewById(R.id.unseenIndicator);
 
                 label.setAlpha(opaque);
@@ -259,7 +259,7 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
         public void onTabUnselected(TabLayout.Tab tab) {
             View view = tab.getCustomView();
             if (view != null) {
-                TextView label = (TextView) view.findViewById(R.id.tabLabel);
+                TextView label = view.findViewById(R.id.tabLabel);
                 View unseenIndicator = view.findViewById(R.id.unseenIndicator);
 
                 label.setAlpha(transparent);

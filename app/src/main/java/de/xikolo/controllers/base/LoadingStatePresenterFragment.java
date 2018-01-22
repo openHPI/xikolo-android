@@ -26,7 +26,7 @@ public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresen
         // inflate generic loading state view
         ViewGroup loadingStateView = (ViewGroup) inflater.inflate(R.layout.fragment_loading_state, container, false);
         // inflate content view inside
-        ViewStub contentView = (ViewStub) loadingStateView.findViewById(R.id.content_view);
+        ViewStub contentView = loadingStateView.findViewById(R.id.content_view);
         contentView.setLayoutResource(getLayoutResource());
         contentView.inflate();
         // return complete view

@@ -65,7 +65,7 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_downloads, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.content_view);
+        RecyclerView recyclerView = layout.findViewById(R.id.content_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

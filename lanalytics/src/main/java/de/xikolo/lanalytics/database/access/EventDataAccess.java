@@ -10,7 +10,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.lanalytics.database.DatabaseHelper;
@@ -36,8 +35,8 @@ public class EventDataAccess extends DataAccess<Lanalytics.Event> {
                 .setUser(cursor.getString(i++))
                 .setVerb(cursor.getString(i++))
                 .setResource(cursor.getString(i++), cursor.getString(i++))
-                .putAllResults((Map<String, String>) gson.fromJson(cursor.getString(i++), typeOfHashMap))
-                .putAllContexts((Map<String, String>) gson.fromJson(cursor.getString(i++), typeOfHashMap))
+                .putAllResults(gson.fromJson(cursor.getString(i++), typeOfHashMap))
+                .putAllContexts(gson.fromJson(cursor.getString(i++), typeOfHashMap))
                 .setTimestamp(cursor.getString(i++))
                 .setOnlyWifi(cursor.getInt(i) != 0)
                 .build();

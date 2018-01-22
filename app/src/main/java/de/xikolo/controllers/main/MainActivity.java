@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity
         // Set up the drawer.
         navigationFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout),
+                findViewById(R.id.drawer_layout),
                 toolbar);
 
         if (Config.DEBUG) {

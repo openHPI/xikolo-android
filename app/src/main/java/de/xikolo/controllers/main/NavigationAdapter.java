@@ -229,8 +229,8 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
         public BaseNavigationViewHolder(View view) {
             super(view);
 
-            textIcon = (CustomFontTextView) view.findViewById(R.id.textIcon);
-            textTitle = (TextView) view.findViewById(R.id.textLabel);
+            textIcon = view.findViewById(R.id.textIcon);
+            textTitle = view.findViewById(R.id.textLabel);
 
             view.setOnClickListener(this);
         }
@@ -257,9 +257,9 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
             viewLogin = view.findViewById(R.id.containerLogin);
             viewProfile = view.findViewById(R.id.containerProfile);
-            textName = (TextView) view.findViewById(R.id.textName);
-            textEmail = (TextView) view.findViewById(R.id.textEmail);
-            imageProfile = (ImageView) view.findViewById(R.id.imgProfile);
+            textName = view.findViewById(R.id.textName);
+            textEmail = view.findViewById(R.id.textEmail);
+            imageProfile = view.findViewById(R.id.imgProfile);
 
             setStatusBarPadding(viewLogin);
             setStatusBarPadding(viewProfile);
@@ -281,7 +281,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
         public CounterNavigationViewHolder(View view) {
             super(view);
 
-            textCounter = (TextView) view.findViewById(R.id.textCounter);
+            textCounter = view.findViewById(R.id.textCounter);
         }
 
     }

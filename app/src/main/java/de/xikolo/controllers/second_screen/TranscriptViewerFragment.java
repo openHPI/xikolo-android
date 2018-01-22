@@ -141,7 +141,7 @@ public class TranscriptViewerFragment extends BaseFragment implements ChooseLang
         if (syncScroll && layoutManager != null) {
             int position = subtitles.get(0).getTextPosition(currentTime);
             if (position >= 0) {
-                AppBarLayout appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar);
+                AppBarLayout appBarLayout = getActivity().findViewById(R.id.appbar);
                 appBarLayout.setExpanded(true, false);
                 layoutManager.scrollToPositionWithOffset(position, AndroidDimenUtil.getActionBarHeight() * 2);
             }

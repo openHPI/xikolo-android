@@ -62,7 +62,7 @@ public class WebViewFragment extends LoadingStatePresenterFragment implements We
 
             view = LayoutInflater.from(mutableContextWrapper).inflate(R.layout.fragment_loading_state, container, false);
             // inflate content view inside
-            ViewStub contentView = (ViewStub) view.findViewById(R.id.content_view);
+            ViewStub contentView = view.findViewById(R.id.content_view);
             contentView.setLayoutResource(getLayoutResource());
             contentView.inflate();
 
