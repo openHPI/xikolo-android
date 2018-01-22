@@ -72,13 +72,13 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             NAV_ITEMS.add(NAV_SECOND_SCREEN = new NavigationItem(
                     R.string.icon_second_screen,
                     R.string.title_section_second_screen,
-                    NavigationItem.ViewType.MAIN,
+                    NavigationItem.ViewType.SUB,
                     NAV_ITEMS.size()));
         } else {
             NAV_SECOND_SCREEN = new NavigationItem(
                     R.string.icon_second_screen,
                     R.string.title_section_second_screen,
-                    NavigationItem.ViewType.MAIN,
+                    NavigationItem.ViewType.SUB,
                     -99);
         }
 
