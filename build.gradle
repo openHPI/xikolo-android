@@ -5,7 +5,7 @@ buildscript {
         // shared build properties
         kotlinVersion       = '1.2.20'
         buildToolsVersion   = '27.0.3'
-        minSdkVersion       = 15
+        minSdkVersion       = 16
         targetSdkVersion    = 27
         compileSdkVersion   = 27
 
