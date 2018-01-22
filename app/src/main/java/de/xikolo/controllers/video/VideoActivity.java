@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -189,9 +190,21 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                 getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
                 int systemBarHeight = size.y - displaymetrics.heightPixels;
 
-                videoHelper.getControllerView().setPadding(0,
+                int paddingLeft;
+                int paddingRight;
+                if (Build.VERSION.SDK_INT >= 25) {
+                    int rotation = getWindowManager().getDefaultDisplay().getRotation();
+                    paddingLeft = rotation == Surface.ROTATION_270 ? size.x - displaymetrics.widthPixels: 0;
+                    paddingRight = rotation == Surface.ROTATION_90 ? size.x - displaymetrics.widthPixels : 0;
+                } else {
+                    paddingLeft = 0;
+                    paddingRight = size.x - displaymetrics.widthPixels;
+                }
+
+                videoHelper.getControllerView().setPadding(
+                        paddingLeft,
                         videoOffset > statusBarHeight ? videoOffset : statusBarHeight,
-                        size.x - displaymetrics.widthPixels,
+                        paddingRight,
                         videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
 
                 videoMetadataView.setVisibility(View.GONE);
