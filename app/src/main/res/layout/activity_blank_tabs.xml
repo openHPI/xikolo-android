@@ -24,7 +24,7 @@
                 style="@style/TabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/apptheme_main"
+                android:background="@color/apptheme_toolbar"
                 android:elevation="4dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark"
                 app:tabGravity="fill"
