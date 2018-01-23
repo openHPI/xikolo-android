@@ -151,7 +151,7 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
     public void onDeleteButtonClicked(final DownloadsAdapter.FolderItem item) {
         final ApplicationPreferences appPreferences = new ApplicationPreferences();
 
-        if (appPreferences.confirmBeforeDeleting()) {
+        if (appPreferences.getConfirmBeforeDeleting()) {
             ConfirmDeleteDialog dialog = ConfirmDeleteDialog.getInstance(true);
             dialog.setConfirmDeleteDialogListener(new ConfirmDeleteDialog.ConfirmDeleteDialogListener() {
                 @Override

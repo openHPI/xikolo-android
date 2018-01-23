@@ -47,13 +47,13 @@ class UserManager {
         val TAG: String = UserManager::class.java.simpleName
 
         @JvmStatic
-        val token: String
+        val token: String?
             get() {
                 return UserStorage().accessToken
             }
 
         @JvmStatic
-        val userId: String
+        val userId: String?
             get() {
                 return UserStorage().userId
             }
@@ -73,7 +73,7 @@ class UserManager {
             userStorage.delete()
 
             val appPreferences = ApplicationPreferences()
-            appPreferences.clear()
+            appPreferences.delete()
 
             application.lanalytics.deleteData()
 

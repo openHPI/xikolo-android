@@ -22,8 +22,8 @@ class CreateAccessTokenJob(private val email: String, private val password: Stri
             if (Config.DEBUG) Log.i(TAG, "AccessToken created")
 
             val userStorage = UserStorage()
-            userStorage.saveAccessToken(token.token)
-            userStorage.saveUserId(token.userId)
+            userStorage.accessToken = token.token
+            userStorage.userId = token.userId
 
             callback?.success()
         } else {

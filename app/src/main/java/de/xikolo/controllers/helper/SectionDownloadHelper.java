@@ -53,7 +53,7 @@ public class SectionDownloadHelper {
                             permissionDialog.setMobileDownloadDialogListener(new MobileDownloadDialog.MobileDownloadDialogListener() {
                                 @Override
                                 public void onDialogPositiveClick(DialogFragment dialog) {
-                                    appPreferences.setIsDownloadNetworkLimitedOnMobile(false);
+                                    appPreferences.setDownloadNetworkLimitedOnMobile(false);
                                     startSectionDownloads(course, section);
                                 }
                             });

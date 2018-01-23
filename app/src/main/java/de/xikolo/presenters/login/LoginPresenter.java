@@ -46,7 +46,7 @@ public class LoginPresenter extends Presenter<LoginView> {
         getViewOrThrow().showProgressDialog();
 
         UserStorage userStorage = new UserStorage();
-        userStorage.saveAccessToken(token);
+        userStorage.setAccessToken(token);
 
         userManager.requestUserWithProfile(profileCallback());
     }

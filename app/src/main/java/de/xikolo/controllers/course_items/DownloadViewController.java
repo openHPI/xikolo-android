@@ -103,7 +103,7 @@ public class DownloadViewController {
                         dialog.setMobileDownloadDialogListener(new MobileDownloadDialog.MobileDownloadDialogListener() {
                             @Override
                             public void onDialogPositiveClick(DialogFragment dialog) {
-                                appPreferences.setIsDownloadNetworkLimitedOnMobile(false);
+                                appPreferences.setDownloadNetworkLimitedOnMobile(false);
                                 startDownload();
                             }
                         });
@@ -138,7 +138,7 @@ public class DownloadViewController {
         buttonDeleteDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (appPreferences.confirmBeforeDeleting()) {
+                if (appPreferences.getConfirmBeforeDeleting()) {
                     ConfirmDeleteDialog dialog = ConfirmDeleteDialog.getInstance(false);
                     dialog.setConfirmDeleteDialogListener(new ConfirmDeleteDialog.ConfirmDeleteDialogListener() {
                         @Override

@@ -241,7 +241,7 @@ public class NotificationUtil extends ContextWrapper {
         if (title != null) {
             notificationStorage.deleteDownloadNotification(title);
         } else if (intent.getStringExtra(NOTIFICATION_DELETED_KEY_DOWNLOAD_ALL) != null) {
-            notificationStorage.deleteAllDownloadNotifications();
+            notificationStorage.delete();
         }
     }
 
