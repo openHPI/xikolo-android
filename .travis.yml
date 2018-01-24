@@ -3,6 +3,8 @@ language: android
 jdk: oraclejdk8
 
 sudo: required # more memory
+dist: trusty
+group: deprecated-2017Q4
 
 before_install:
   - yes | sdkmanager "platforms;android-27"
