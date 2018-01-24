@@ -1,5 +1,7 @@
 package de.xikolo.presenters.course_items;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.List;
 
 import de.xikolo.managers.ItemManager;
@@ -37,6 +39,9 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         this.index = index;
         this.lastTrackedIndex = -1;
 
+        Crashlytics.setString("course_id", courseId);
+        Crashlytics.setString("section_id", sectionId);
+
         loadModels();
     }
 
@@ -72,6 +77,8 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
         index = position;
         Item item = itemList.get(position);
         itemManager.updateItemVisited(item.id);
+
+        Crashlytics.setString("item_id", item.id);
 
         if (lastTrackedIndex != index) LanalyticsUtil.trackVisitedItem(item.id, courseId, sectionId, item.contentType);
         lastTrackedIndex = index;

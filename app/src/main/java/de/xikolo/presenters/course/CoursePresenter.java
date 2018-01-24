@@ -2,6 +2,8 @@ package de.xikolo.presenters.course;
 
 import android.net.Uri;
 
+import com.crashlytics.android.Crashlytics;
+
 import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
@@ -54,6 +56,8 @@ public class CoursePresenter extends Presenter<CourseView> {
         courseId = id;
         courseTab = tab;
 
+        Crashlytics.setString("course_id", id);
+
         if (isViewAttached()) {
             setupCourse(Course.get(courseId));
         }
@@ -105,19 +109,20 @@ public class CoursePresenter extends Presenter<CourseView> {
     }
 
     public void handleDeepLink(Uri uri) {
-        courseId = DeepLinkingUtil.getCourseIdentifierFromResumeUri(uri);
-        courseTab = DeepLinkingUtil.getTab(uri.getPath());
+        String identifier = DeepLinkingUtil.getCourseIdentifierFromResumeUri(uri);
+        int tab = DeepLinkingUtil.getTab(uri.getPath());
 
-        initCourse(courseId, courseTab);
+        Crashlytics.setString("deep_link", uri.toString());
 
         if (getView() != null) {
             getView().showProgressDialog();
         }
-        courseManager.requestCourse(courseId, new RequestJobCallback() {
+        courseManager.requestCourse(identifier, new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
                     getView().hideProgressDialog();
+                    initCourse(Course.find(identifier).id, tab);
                 }
             }
 

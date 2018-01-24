@@ -91,6 +91,19 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         return model;
     }
 
+    public static Course find(String identifier) {
+        Realm realm = Realm.getDefaultInstance();
+        Course model = realm.where(Course.class)
+                .beginGroup()
+                    .equalTo("id", identifier)
+                    .or()
+                    .equalTo("slug", identifier)
+                .endGroup()
+                .findFirst();
+        realm.close();
+        return model;
+    }
+
     @Override
     public JsonModel convertToJsonResource() {
         Course.JsonModel model = new Course.JsonModel();
