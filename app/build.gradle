@@ -62,7 +62,8 @@ android {
     }
 
     def signingFile = rootProject.file('signing.properties')
-    def signingProperties = new Properties().load(new FileInputStream(signingFile))
+    def signingProperties = new Properties()
+    signingProperties.load(new FileInputStream(signingFile))
 
     signingConfigs {
         if (signingProperties != null) {
