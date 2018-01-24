@@ -8,7 +8,7 @@ import java.util.*
 
 class NotificationStorage : BaseStorage(PREF_NOTIFICATIONS, Context.MODE_PRIVATE) {
 
-    val downloadNotifications: MutableList<String>
+    val downloadNotifications: MutableList<String>?
         get() {
             val json = getString(DOWNLOAD_NOTIFICATIONS)
             val type = object : TypeToken<ArrayList<String>>() {}.type
@@ -28,7 +28,7 @@ class NotificationStorage : BaseStorage(PREF_NOTIFICATIONS, Context.MODE_PRIVATE
 
     fun deleteDownloadNotification(notification: String) {
         val notifications = downloadNotifications
-        notifications.remove(notification)
+        notifications?.remove(notification)
         putString(DOWNLOAD_NOTIFICATIONS, Gson().toJson(notifications))
     }
 
