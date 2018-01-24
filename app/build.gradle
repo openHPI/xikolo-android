@@ -66,7 +66,7 @@ android {
     signingProperties.load(new FileInputStream(signingFile))
 
     signingConfigs {
-        if (signingProperties != null) {
+        if (signingProperties.RELEASE_STORE_FILE != null) {
             def keystoreFile = rootProject.file(signingProperties.RELEASE_STORE_FILE)
             def keystorePassword = signingProperties.RELEASE_STORE_PASSWORD
 
@@ -104,7 +104,7 @@ android {
             debuggable false
             buildConfigField "de.xikolo.config.BuildType", "X_TYPE", "de.xikolo.config.BuildType.RELEASE"
 
-            if (signingProperties != null) {
+            if (signingProperties.RELEASE_STORE_FILE != null) {
                 productFlavors.openhpi.signingConfig signingConfigs.openhpi
                 productFlavors.opensap.signingConfig signingConfigs.opensap
                 productFlavors.moochouse.signingConfig signingConfigs.moochouse
