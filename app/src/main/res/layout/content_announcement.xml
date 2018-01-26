@@ -17,7 +17,7 @@
             android:paddingRight="16dp"
             android:paddingTop="16dp"
             android:textColor="@color/text_second"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/text"
@@ -25,13 +25,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/date"
+            android:lineSpacingExtra="4dp"
             android:paddingBottom="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="4dp"
             android:textColor="@color/text_main"
             android:textColorLink="@color/apptheme_second"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/course_button"
@@ -40,10 +41,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/text"
+            android:layout_marginBottom="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/btn_enter_course"
+            android:text="@string/btn_continue_course"
             android:visibility="gone" />
 
     </RelativeLayout>

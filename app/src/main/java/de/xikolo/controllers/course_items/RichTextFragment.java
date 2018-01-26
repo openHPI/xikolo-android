@@ -15,6 +15,7 @@ import butterknife.OnClick;
 import de.xikolo.R;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.webview.WebViewActivityAutoBundle;
+import de.xikolo.models.Item;
 import de.xikolo.models.RichText;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course_items.RichTextPresenter;
@@ -30,6 +31,7 @@ public class RichTextFragment extends LoadingStatePresenterFragment<RichTextPres
     @AutoBundleField String sectionId;
     @AutoBundleField String itemId;
 
+    @BindView(R.id.title) TextView title;
     @BindView(R.id.text) TextView text;
 
     @Override
@@ -49,7 +51,8 @@ public class RichTextFragment extends LoadingStatePresenterFragment<RichTextPres
     }
 
     @Override
-    public void setupView(RichText richText) {
+    public void setupView(Item item, RichText richText) {
+        title.setText(item.title);
         MarkdownUtil.formatAndSet(richText.text, text);
     }
 

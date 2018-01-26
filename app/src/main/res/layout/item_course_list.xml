@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentTop="true">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -49,10 +49,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/imageContainer"
-            android:paddingBottom="4pt"
-            android:paddingLeft="4pt"
-            android:paddingRight="4pt"
-            android:paddingTop="4pt">
+            android:paddingBottom="2pt"
+            android:paddingLeft="2pt"
+            android:paddingRight="2pt"
+            android:paddingTop="2pt">
 
             <TextView
                 android:id="@+id/textTitle"
@@ -60,11 +60,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-medium"
-                android:maxLines="1"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/textTeacher"
@@ -72,10 +73,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textTitle"
-                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/apptheme_main"
-                android:textSize="14sp" />
+                android:textColor="@color/text_second"
+                android:textSize="12sp" />
 
             <de.xikolo.views.CustomFontTextView
                 android:id="@+id/textDateIcon"
@@ -83,10 +87,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textTeacher"
+                android:layout_marginLeft="12dp"
                 android:layout_marginRight="4dp"
+                android:layout_marginTop="12dp"
                 android:maxLines="1"
                 android:text="@string/icon_cal"
-                android:textColor="@color/text_second"
+                android:textColor="@color/text_main_icon"
                 android:textSize="20sp"
                 res:customFont="xikolo.ttf" />
 
@@ -96,9 +102,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textTeacher"
                 android:layout_marginRight="8dp"
+                android:layout_marginTop="12dp"
                 android:layout_toRightOf="@+id/textDateIcon"
                 android:singleLine="true"
-                android:textColor="@color/text_second"
                 android:textSize="14sp" />
 
             <de.xikolo.views.CustomFontTextView
@@ -107,10 +113,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textTeacher"
                 android:layout_marginRight="4dp"
+                android:layout_marginTop="12dp"
                 android:layout_toRightOf="@+id/textDate"
                 android:maxLines="1"
                 android:text="@string/icon_lang"
-                android:textColor="@color/text_second"
+                android:textColor="@color/text_main_icon"
                 android:textSize="20sp"
                 res:customFont="xikolo.ttf" />
 
@@ -119,9 +126,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textTeacher"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="12dp"
                 android:layout_toRightOf="@+id/textLangIcon"
                 android:maxLines="1"
-                android:textColor="@color/text_second"
                 android:textSize="14sp" />
 
             <TextView
@@ -130,21 +138,38 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textDateIcon"
-                android:layout_marginTop="8dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="12dp"
                 android:ellipsize="end"
+                android:lineSpacingExtra="4dp"
                 android:maxLines="3"
-                android:textColor="@color/text_second"
                 android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/btnEnroll"
-                style="@style/Button"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textDescription"
-                android:layout_marginTop="16dp"
-                android:text="@string/btn_enroll_me" />
+                android:layout_marginTop="8dp"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_course_action"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/button_course_details"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_course_details" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 

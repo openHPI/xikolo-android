@@ -53,8 +53,8 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
-            android:textColor="@color/apptheme_main"
-            android:textSize="16sp" />
+            android:textColor="@color/text_second"
+            android:textSize="12sp" />
 
         <de.xikolo.views.CustomFontTextView
             android:id="@+id/text_date_icon"
@@ -67,7 +67,7 @@
             android:paddingLeft="16dp"
             android:paddingTop="8dp"
             android:text="@string/icon_cal"
-            android:textColor="@color/text_second"
+            android:textColor="@color/text_main_icon"
             android:textSize="20sp"
             res:customFont="xikolo.ttf" />
 
@@ -80,7 +80,7 @@
             android:maxLines="1"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
-            android:textColor="@color/text_second"
+            android:textColor="@color/text_main"
             android:textSize="14sp" />
 
         <de.xikolo.views.CustomFontTextView
@@ -94,7 +94,7 @@
             android:paddingLeft="16dp"
             android:paddingTop="8dp"
             android:text="@string/icon_lang"
-            android:textColor="@color/text_second"
+            android:textColor="@color/text_main_icon"
             android:textSize="20sp"
             res:customFont="xikolo.ttf" />
 
@@ -107,7 +107,7 @@
             android:maxLines="1"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
-            android:textColor="@color/text_second"
+            android:textColor="@color/text_main"
             android:textSize="14sp" />
 
         <TextView
@@ -116,13 +116,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/text_lang_icon"
+            android:lineSpacingExtra="4dp"
             android:paddingBottom="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
             android:textColor="@color/text_main"
             android:textColorLink="@color/apptheme_second"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
     </RelativeLayout>
 

@@ -40,14 +40,14 @@
                 android:id="@+id/text_notification_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_second"
-                android:textSize="16sp" />
+                android:textColor="@color/text_main"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/text_notification_summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_second"
+                android:textColor="@color/text_main"
                 android:textSize="14sp" />
 
         </LinearLayout>

@@ -31,7 +31,7 @@ public class RichTextPresenter extends ItemPresenter<RichTextView> {
                 if (result.size() > 0) {
                     richText = realm.copyFromRealm(result.first());
                     getViewOrThrow().showContent();
-                    getViewOrThrow().setupView(richText);
+                    getViewOrThrow().setupView(item, richText);
                 }
             }
         });

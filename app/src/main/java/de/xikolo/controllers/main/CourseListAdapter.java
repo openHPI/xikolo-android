@@ -110,6 +110,12 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             viewHolder.textTeacher.setText(course.teachers);
             viewHolder.textLanguage.setText(course.getFormattedLanguage());
 
+            if (course.teachers == null || "".equals(course.teachers)) {
+                viewHolder.textTeacher.setVisibility(View.GONE);
+            } else {
+                viewHolder.textTeacher.setVisibility(View.VISIBLE);
+            }
+
             if (courseFilter == Course.Filter.ALL) {
                 viewHolder.textDescription.setText(course.shortAbstract);
                 viewHolder.textDescription.setVisibility(View.VISIBLE);
@@ -142,48 +148,31 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             GlideApp.with(fragment).load(course.imageUrl).into(viewHolder.image);
 
+            viewHolder.buttonCourseAction.setEnabled(true);
+
+            viewHolder.buttonCourseDetails.setVisibility(View.VISIBLE);
+            viewHolder.buttonCourseDetails.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+
             if (course.isEnrolled() && course.accessible) {
-                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.onEnterButtonClicked(course.id);
-                    }
-                });
-                viewHolder.buttonEnroll.setText(context.getString(R.string.btn_enter_course));
-                viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.onEnterButtonClicked(course.id);
-                    }
-                });
+                viewHolder.layout.setOnClickListener(v -> callback.onContinueButtonClicked(course.id));
+
+                viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_continue_course));
+                viewHolder.buttonCourseAction.setOnClickListener(v -> callback.onContinueButtonClicked(course.id));
+
+                viewHolder.buttonCourseDetails.setVisibility(View.GONE);
+
             } else if (course.isEnrolled() && !course.accessible) {
-                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.onDetailButtonClicked(course.id);
-                    }
-                });
-                viewHolder.buttonEnroll.setText(context.getString(R.string.btn_starts_soon));
-                viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.onDetailButtonClicked(course.id);
-                    }
-                });
+                viewHolder.layout.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+
+                viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_starts_soon));
+                viewHolder.buttonCourseAction.setEnabled(false);
+                viewHolder.buttonCourseAction.setClickable(false);
+
             } else {
-                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.onDetailButtonClicked(course.id);
-                    }
-                });
-                viewHolder.buttonEnroll.setText(context.getString(R.string.btn_enroll_me));
-                viewHolder.buttonEnroll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.onEnrollButtonClicked(course.id);
-                    }
-                });
+                viewHolder.layout.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+
+                viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_enroll));
+                viewHolder.buttonCourseAction.setOnClickListener(v -> callback.onEnrollButtonClicked(course.id));
             }
         }
     }
@@ -192,7 +181,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         void onEnrollButtonClicked(String courseId);
 
-        void onEnterButtonClicked(String courseId);
+        void onContinueButtonClicked(String courseId);
 
         void onDetailButtonClicked(String courseId);
 
@@ -207,7 +196,8 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @BindView(R.id.textLanguage) TextView textLanguage;
         @BindView(R.id.textDescription) TextView textDescription;
         @BindView(R.id.imageView) ImageView image;
-        @BindView(R.id.btnEnroll) Button buttonEnroll;
+        @BindView(R.id.button_course_action) Button buttonCourseAction;
+        @BindView(R.id.button_course_details) Button buttonCourseDetails;
         @BindView(R.id.textBanner) TextView textBanner;
 
         public CourseViewHolder(View view) {

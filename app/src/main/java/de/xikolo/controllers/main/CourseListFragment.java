@@ -71,7 +71,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
             }
 
             @Override
-            public void onEnterButtonClicked(String courseId) {
+            public void onContinueButtonClicked(String courseId) {
                 presenter.onCourseEnterButtonClicked(courseId);
             }
 
@@ -81,7 +81,6 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
             }
         }, filter);
 
-        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(courseListAdapter);
 
         recyclerView.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

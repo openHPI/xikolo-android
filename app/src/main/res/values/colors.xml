@@ -1,12 +1,13 @@
 <resources>
 
     <color name="text_main">#DE000000</color>
+    <color name="text_main_icon">#C4000000</color>
     <color name="text_second">#8A000000</color>
     <color name="text_light">#61000000</color>
 
     <color name="text_light_26">#1f000000</color>
 
-    <color name="background_main">#fff3f3f3</color>
+    <color name="background_main">#fafafa</color>
     <color name="background_light_gray">#cacaca</color>
 
     <color name="video_overlay_gradient_black">#99000000</color>

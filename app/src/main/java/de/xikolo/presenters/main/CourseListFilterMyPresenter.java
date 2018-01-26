@@ -20,13 +20,17 @@ public class CourseListFilterMyPresenter extends CourseListPresenter {
         } else {
             List<Course> subList = courseManager.listCurrentAndPastCoursesWithEnrollment(realm);
             if (subList.size() > 0) {
-                courseList.add(App.getInstance().getString(R.string.header_my_current_courses),
-                        subList);
+                courseList.add(
+                        App.getInstance().getString(R.string.header_my_current_courses),
+                        subList
+                );
             }
             subList = courseManager.listFutureCoursesWithEnrollment(realm);
             if (subList.size() > 0) {
-                courseList.add(App.getInstance().getString(R.string.header_my_future_courses),
-                        subList);
+                courseList.add(
+                        App.getInstance().getString(R.string.header_my_future_courses),
+                        subList
+                );
             }
         }
 

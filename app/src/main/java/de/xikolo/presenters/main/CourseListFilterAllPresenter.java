@@ -18,24 +18,22 @@ public class CourseListFilterAllPresenter extends CourseListPresenter {
         if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
             subList = courseManager.listCurrentAndPastCourses(realm);
             if (subList.size() > 0) {
-                courseList.add(App.getInstance().getString(R.string.header_current_courses),
-                        subList);
-            }
-            subList = courseManager.listFutureCourses(realm);
-            if (subList.size() > 0) {
-                courseList.add(App.getInstance().getString(R.string.header_future_courses),
-                        subList);
+                courseList.add(null, subList);
             }
         } else {
             subList = courseManager.listCurrentAndFutureCourses(realm);
             if (subList.size() > 0) {
-                courseList.add(App.getInstance().getString(R.string.header_current_and_upcoming_courses),
-                        subList);
+                courseList.add(
+                        App.getInstance().getString(R.string.header_current_and_upcoming_courses),
+                        subList
+                );
             }
             subList = courseManager.listPastCourses(realm);
             if (subList.size() > 0) {
-                courseList.add(App.getInstance().getString(R.string.header_self_paced_courses),
-                        subList);
+                courseList.add(
+                        App.getInstance().getString(R.string.header_self_paced_courses),
+                        subList
+                );
             }
         }
 

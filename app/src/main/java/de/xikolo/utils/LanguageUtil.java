@@ -12,6 +12,8 @@ public class LanguageUtil {
                 return context.getString(R.string.lang_en);
             case "de":
                 return context.getString(R.string.lang_de);
+            case "fr":
+                return context.getString(R.string.lang_fr);
             case "cn":
                 return context.getString(R.string.lang_zh);
             default:

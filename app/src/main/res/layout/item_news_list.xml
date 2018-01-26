@@ -36,12 +36,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/title"
-        android:fontFamily="sans-serif-medium"
         android:maxLines="1"
         android:paddingLeft="16dp"
         android:paddingTop="2dp"
         android:textColor="@color/text_second"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/bullet"
@@ -70,7 +69,7 @@
         android:maxLines="1"
         android:paddingRight="16dp"
         android:textColor="@color/apptheme_main"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/text"
@@ -79,12 +78,13 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/date"
         android:ellipsize="end"
+        android:lineSpacingExtra="2dp"
         android:maxLines="3"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="2dp"
-        android:textColor="@color/text_second"
+        android:textColor="@color/text_main"
         android:textSize="14sp" />
 
 </RelativeLayout>

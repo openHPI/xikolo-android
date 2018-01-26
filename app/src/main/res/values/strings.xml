@@ -44,8 +44,9 @@
     <string name="tab_recap">Recap</string>
 
     <!-- -->
-    <string name="btn_enroll_me">Enroll me for this course</string>
-    <string name="btn_enter_course">Enter course</string>
+    <string name="btn_enroll">Enroll for course</string>
+    <string name="btn_continue_course">Continue course</string>
+    <string name="btn_course_details">Show details</string>
     <string name="btn_starts_soon">Course has not yet started</string>
     <string name="btn_play_cast">&#xe652;\n Play on Cast device</string>
     <string name="btn_display_issues">Display issues?</string>
@@ -258,6 +259,7 @@
     <!-- -->
     <string name="lang_en">English</string>
     <string name="lang_de">German</string>
+    <string name="lang_fr">French</string>
     <string name="lang_zh">Chinese</string>
 
 </resources>

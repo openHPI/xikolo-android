@@ -36,8 +36,8 @@
     <string name="tab_collab_space">学习小组</string>
 
     <!-- -->
-    <string name="btn_enroll_me">注册该课程</string>
-    <string name="btn_enter_course">进入课程</string>
+    <string name="btn_enroll">注册该课程</string>
+    <string name="btn_continue_course">进入课程</string>
     <string name="btn_starts_soon">课程未开始</string>
 
     <!-- -->
@@ -186,6 +186,7 @@
     <!-- -->
     <string name="lang_en">English</string>
     <string name="lang_de">German</string>
+    <string name="lang_fr">French</string>
     <string name="lang_zh">中文</string>
 
 </resources>
