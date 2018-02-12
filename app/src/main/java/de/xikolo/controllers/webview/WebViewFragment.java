@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 
+import com.crashlytics.android.Crashlytics;
 import com.yatatsu.autobundle.AutoBundleField;
 
 import de.xikolo.App;
@@ -92,8 +93,14 @@ public class WebViewFragment extends LoadingStatePresenterFragment implements We
         super.onDestroyView();
 
         if (getRetainInstance() && view.getParent() instanceof ViewGroup) {
-            ((ViewGroup) view.getParent()).removeView(view);
-            mutableContextWrapper.setBaseContext(App.getInstance());
+            try {
+                ((ViewGroup) view.getParent()).removeView(view);
+                mutableContextWrapper.setBaseContext(App.getInstance());
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                view = null;
+                mutableContextWrapper = null;
+            }
         }
     }
 

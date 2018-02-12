@@ -3,7 +3,12 @@ package de.xikolo.controllers.main;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onError(ErrorCode code) {
+            protected void onError(@NotNull ErrorCode code) {
                 switch (code) {
                     case NO_NETWORK:
                         startApp();
@@ -53,7 +58,7 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onDeprecated(Date deprecationDate) {
+            protected void onDeprecated(@NonNull Date deprecationDate) {
                 Date now = new Date();
                 long distance = deprecationDate.getTime() - now.getTime();
                 long days = TimeUnit.DAYS.convert(distance, TimeUnit.MILLISECONDS);
@@ -80,7 +85,7 @@ public class SplashActivity extends AppCompatActivity {
                 closeApp();
             }
         });
-        dialog.show(getSupportFragmentManager(), ApiVersionExpiredDialog.TAG);
+        showDialog(dialog, ApiVersionExpiredDialog.TAG);
     }
 
     private void showApiVersionDeprecatedDialog(Date deprecationDate) {
@@ -96,29 +101,19 @@ public class SplashActivity extends AppCompatActivity {
                 startApp();
             }
         });
-        dialog.show(getSupportFragmentManager(), ApiVersionDeprecatedDialog.TAG);
+        showDialog(dialog, ApiVersionDeprecatedDialog.TAG);
     }
 
     private void showServerMaintenanceDialog() {
         ServerMaintenanceDialog dialog = new ServerMaintenanceDialog();
-        dialog.setDialogListener(new ServerMaintenanceDialog.ServerMaintenanceDialogListener() {
-            @Override
-            public void onDismissed() {
-                closeApp();
-            }
-        });
-        dialog.show(getSupportFragmentManager(), ServerMaintenanceDialog.TAG);
+        dialog.setDialogListener(this::closeApp);
+        showDialog(dialog, ServerMaintenanceDialog.TAG);
     }
 
     private void showServerErrorDialog() {
         ServerErrorDialog dialog = new ServerErrorDialog();
-        dialog.setDialogListener(new ServerErrorDialog.ServerErrorDialogListener() {
-            @Override
-            public void onDismissed() {
-                closeApp();
-            }
-        });
-        dialog.show(getSupportFragmentManager(), ServerErrorDialog.TAG);
+        dialog.setDialogListener(this::closeApp);
+        showDialog(dialog, ServerErrorDialog.TAG);
     }
 
     private void startApp() {
@@ -139,6 +134,13 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
         finish();
+    }
+
+    // bug fix workaround
+    private void showDialog(DialogFragment dialogFragment, String tag) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(dialogFragment, tag);
+        ft.commitAllowingStateLoss();
     }
 
 }
