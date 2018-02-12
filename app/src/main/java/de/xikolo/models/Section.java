@@ -9,7 +9,6 @@ import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.utils.DateUtil;
 import io.realm.Realm;
 import io.realm.RealmObject;
-import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
 import moe.banana.jsonapi2.HasOne;
@@ -38,26 +37,29 @@ public class Section extends RealmObject {
     public static Section get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Section model = realm.where(Section.class).equalTo("id", id).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }
 
     public static List<Section> listForCourse(String courseId) {
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Section> sectionList = realm
+        List<Section> sectionList = realm
                 .where(Section.class)
                 .equalTo("courseId", courseId)
                 .sort("position")
                 .findAll();
+        if (sectionList != null) sectionList = realm.copyFromRealm(sectionList);
         realm.close();
         return sectionList;
     }
 
     public Course getCourse() {
         Realm realm = Realm.getDefaultInstance();
-        Course course = realm.where(Course.class).equalTo("id", courseId).findFirst();
+        Course model = realm.where(Course.class).equalTo("id", courseId).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
-        return course;
+        return model;
     }
 
     public List<Item> getAccessibleItems() {
@@ -67,19 +69,21 @@ public class Section extends RealmObject {
                 .equalTo("accessible", true)
                 .sort("position")
                 .findAll();
+        if (items != null) items = realm.copyFromRealm(items);
         realm.close();
         return items;
     }
 
     public boolean hasDownloadableContent() {
         Realm realm = Realm.getDefaultInstance();
-        List<Item> items = realm.where(Item.class)
+        int size = realm.where(Item.class)
                 .equalTo("sectionId", id)
                 .equalTo("accessible", true)
                 .equalTo("contentType", Item.TYPE_VIDEO)
-                .findAll();
+                .findAll()
+                .size();
         realm.close();
-        return items.size() > 0;
+        return size > 0;
     }
 
     @JsonApi(type = "course-sections")

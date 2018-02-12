@@ -43,6 +43,7 @@ public class SubtitleTrack extends RealmObject {
                 .equalTo("subtitleId", id)
                 .sort("identifier")
                 .findAll();
+        if (list != null) list = realm.copyFromRealm(list);
         realm.close();
         return list;
     }
@@ -52,6 +53,7 @@ public class SubtitleTrack extends RealmObject {
         List<SubtitleTrack> list = realm.where(SubtitleTrack.class)
                 .equalTo("videoId", videoId)
                 .findAll();
+        if (list != null) list = realm.copyFromRealm(list);
         realm.close();
         return list;
     }

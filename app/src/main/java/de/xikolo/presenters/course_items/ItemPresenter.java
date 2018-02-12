@@ -44,13 +44,13 @@ public class ItemPresenter<V extends LoadingStateView> extends LoadingStatePrese
 
     protected void loadModels() {
         if (course == null) {
-            course = realm.copyFromRealm(Course.get(courseId));
+            course = Course.get(courseId);
         }
         if (section == null) {
-            section = realm.copyFromRealm(Section.get(sectionId));
+            section = Section.get(sectionId);
         }
         if (item == null) {
-            item = realm.copyFromRealm(Item.get(itemId));
+            item = Item.get(itemId);
         }
     }
 

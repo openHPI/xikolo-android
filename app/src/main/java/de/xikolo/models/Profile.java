@@ -26,6 +26,7 @@ public class Profile extends RealmObject {
     public static Profile get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Profile model = realm.where(Profile.class).equalTo("id", id).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }

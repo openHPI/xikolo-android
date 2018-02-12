@@ -42,6 +42,7 @@ public class Video extends RealmObject {
     public static Video get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Video model = realm.where(Video.class).equalTo("id", id).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }
@@ -49,6 +50,7 @@ public class Video extends RealmObject {
     public static Video getForContentId(String contentId) {
         Realm realm = Realm.getDefaultInstance();
         Video model = realm.where(Video.class).equalTo("id", contentId).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }

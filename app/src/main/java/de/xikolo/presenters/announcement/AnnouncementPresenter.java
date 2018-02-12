@@ -67,7 +67,7 @@ public class AnnouncementPresenter extends LoadingStatePresenter<AnnouncementVie
 
     private void loadModels() {
         if (announcement == null) {
-            announcement = realm.copyFromRealm(Announcement.get(announcementId));
+            announcement = Announcement.get(announcementId);
         }
     }
 

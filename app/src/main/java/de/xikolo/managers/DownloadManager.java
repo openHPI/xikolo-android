@@ -32,7 +32,6 @@ import de.xikolo.utils.ExternalStorageUtil;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.ToastUtil;
-import io.realm.Realm;
 
 public class DownloadManager {
 
@@ -275,10 +274,8 @@ public class DownloadManager {
     }
 
     private String getDownloadUrl(String itemId, DownloadUtil.VideoAssetType type) {
-        Realm realm = Realm.getDefaultInstance();
         Item item = Item.get(itemId);
-        Video video = realm.copyFromRealm(Video.getForContentId(item.contentId));
-        realm.close();
+        Video video = Video.getForContentId(item.contentId);
         return DownloadUtil.getVideoAssetUrl(type, video);
     }
 

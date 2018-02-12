@@ -34,6 +34,7 @@ public class SectionProgress extends RealmObject {
     public static SectionProgress get(String id) {
         Realm realm = Realm.getDefaultInstance();
         SectionProgress model = realm.where(SectionProgress.class).equalTo("id", id).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }

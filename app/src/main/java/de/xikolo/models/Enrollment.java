@@ -26,6 +26,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
     public static Enrollment get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Enrollment model = realm.where(Enrollment.class).equalTo("id", id).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }
@@ -33,6 +34,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
     public static Enrollment getForCourse(String courseId) {
         Realm realm = Realm.getDefaultInstance();
         Enrollment model = realm.where(Enrollment.class).equalTo("courseId", courseId).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }

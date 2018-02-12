@@ -33,6 +33,7 @@ public class Announcement extends RealmObject {
     public static Announcement get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Announcement model = realm.where(Announcement.class).equalTo("id", id).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }

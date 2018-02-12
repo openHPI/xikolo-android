@@ -25,6 +25,7 @@ public class User extends RealmObject {
     public static User get(String id) {
         Realm realm = Realm.getDefaultInstance();
         User model = realm.where(User.class).equalTo("id", id).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }

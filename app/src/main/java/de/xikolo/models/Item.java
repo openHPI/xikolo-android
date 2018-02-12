@@ -46,41 +46,44 @@ public class Item extends RealmObject {
     public static Item get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Item model = realm.where(Item.class).equalTo("id", id).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }
 
     public Section getSection() {
         Realm realm = Realm.getDefaultInstance();
-        Section section = realm.where(Section.class).equalTo("id", sectionId).findFirst();
+        Section model = realm.where(Section.class).equalTo("id", sectionId).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
-        return section;
+        return model;
     }
 
     public RealmObject getContent() {
         Realm realm = Realm.getDefaultInstance();
 
-        RealmObject content = null;
+        RealmObject model = null;
         switch (contentType) {
             case TYPE_TEXT:
-                content = realm.where(RichText.class).equalTo("id", contentId).findFirst();
+                model = realm.where(RichText.class).equalTo("id", contentId).findFirst();
                 break;
             case TYPE_VIDEO:
-                content = realm.where(Video.class).equalTo("id", contentId).findFirst();
+                model = realm.where(Video.class).equalTo("id", contentId).findFirst();
                 break;
             case TYPE_QUIZ:
-                content = realm.where(Quiz.class).equalTo("id", contentId).findFirst();
+                model = realm.where(Quiz.class).equalTo("id", contentId).findFirst();
                 break;
             case TYPE_LTI:
-                content = realm.where(LtiExercise.class).equalTo("id", contentId).findFirst();
+                model = realm.where(LtiExercise.class).equalTo("id", contentId).findFirst();
                 break;
             case TYPE_PEER:
-                content = realm.where(PeerAssessment.class).equalTo("id", contentId).findFirst();
+                model = realm.where(PeerAssessment.class).equalTo("id", contentId).findFirst();
                 break;
         }
 
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
-        return content;
+        return model;
     }
 
     public static final String TYPE_TEXT = "rich_text";

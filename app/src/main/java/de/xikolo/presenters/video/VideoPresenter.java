@@ -41,7 +41,7 @@ public class VideoPresenter extends Presenter<VideoView> {
     public void onViewAttached(VideoView view) {
         super.onViewAttached(view);
 
-        getViewOrThrow().setupVideo(course, section, item, realm.copyFromRealm(video));
+        getViewOrThrow().setupVideo(course, section, item, video);
     }
 
     @Override

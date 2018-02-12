@@ -26,6 +26,7 @@ public class CourseProgress extends RealmObject {
     public static CourseProgress get(String id) {
         Realm realm = Realm.getDefaultInstance();
         CourseProgress model = realm.where(CourseProgress.class).equalTo("id", id).findFirst();
+        if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
     }
