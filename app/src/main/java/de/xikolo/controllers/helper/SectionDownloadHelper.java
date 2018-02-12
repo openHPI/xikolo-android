@@ -81,7 +81,7 @@ public class SectionDownloadHelper {
         itemManager.requestItemsWithContentForSection(section.id, new RequestJobCallback() {
             @Override
             public void onSuccess() {
-                dialog.dismiss();
+                dialog.dismissAllowingStateLoss();
                 for (Item item : section.getAccessibleItems()) {
                     if (Item.TYPE_VIDEO.equals(item.contentType)) {
                         if (sdVideo) {
