@@ -23,4 +23,6 @@ public interface CourseView extends View {
 
     void setupView(Course course, int courseTab);
 
+    void shareLink(String url);
+
 }

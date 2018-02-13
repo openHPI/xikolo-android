@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -118,6 +119,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.unenroll, menu);
+        inflater.inflate(R.menu.share, menu);
         super.onCreateOptionsMenu(menu);
         return true;
     }
@@ -144,6 +146,9 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+            case R.id.action_share:
+                presenter.onShareClicked();
+                return true;
             case R.id.action_unenroll:
                 UnenrollDialog dialog = new UnenrollDialog();
                 dialog.setUnenrollDialogListener(this);
@@ -151,6 +156,15 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void shareLink(String url) {
+        ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setChooserTitle(getString(R.string.action_share))
+                .setText(url)
+                .startChooser();
     }
 
     @Override

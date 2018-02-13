@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.crashlytics.android.Crashlytics;
 
+import de.xikolo.config.Config;
 import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
@@ -135,6 +136,12 @@ public class CoursePresenter extends Presenter<CourseView> {
                 }
             }
         });
+    }
+
+    public void onShareClicked() {
+        if (isViewAttached()) {
+            getView().shareLink(Config.HOST_URL + "courses/" + Course.get(courseId).slug);
+        }
     }
 
     public void unenroll(final String courseId) {

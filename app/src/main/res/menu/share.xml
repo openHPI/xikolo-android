@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_download"
-        android:icon="@drawable/ic_download_white_24dp"
-        android:orderInCategory="90"
-        android:title="@string/download_all_content"
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_variant_white_24dp"
+        android:orderInCategory="100"
+        android:title="@string/action_share"
         app:showAsAction="ifRoom" />
 
 </menu>
-
