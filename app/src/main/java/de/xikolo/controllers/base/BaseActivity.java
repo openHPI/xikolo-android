@@ -33,9 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import de.xikolo.App;
-import de.xikolo.BuildConfig;
 import de.xikolo.R;
-import de.xikolo.config.BuildFlavor;
 import de.xikolo.config.FeatureToggle;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.events.PermissionDeniedEvent;
@@ -113,15 +111,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
                     R.id.media_route_menu_item);
         }
 
-        // tint menu icons dark on mooc.house, cause toolbar has light background
-        if (BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE) {
-            for (int i = 0; i < menu.size(); i++) {
-                MenuItem item = menu.getItem(i);
-                if (item.getIcon() != null && item.getItemId() != R.id.media_route_menu_item) {
-                    TintUtil.tintMenuIconDark(this, item);
-                }
-            }
-        }
+        TintUtil.tintMenu(this, menu);
 
         return true;
     }
