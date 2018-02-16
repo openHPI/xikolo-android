@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -39,6 +38,7 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course.CoursePresenter;
 import de.xikolo.presenters.course.CoursePresenterFactory;
 import de.xikolo.presenters.course.CourseView;
+import de.xikolo.utils.ShareUtil;
 import de.xikolo.utils.ToastUtil;
 
 public class CourseActivity extends BasePresenterActivity<CoursePresenter, CourseView> implements CourseView, UnenrollDialog.UnenrollDialogListener {
@@ -147,7 +147,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_share:
-                presenter.onShareClicked();
+                ShareUtil.shareCourseLink(this, courseId);
                 return true;
             case R.id.action_unenroll:
                 UnenrollDialog dialog = new UnenrollDialog();
@@ -156,15 +156,6 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void shareLink(String url) {
-        ShareCompat.IntentBuilder.from(this)
-                .setType("text/plain")
-                .setChooserTitle(getString(R.string.action_share))
-                .setText(url)
-                .startChooser();
     }
 
     @Override

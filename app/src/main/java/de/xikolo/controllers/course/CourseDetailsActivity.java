@@ -6,7 +6,10 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
+import android.support.v4.app.NavUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,6 +22,7 @@ import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.models.Course;
 import de.xikolo.utils.AndroidDimenUtil;
+import de.xikolo.utils.ShareUtil;
 
 public class CourseDetailsActivity extends BaseActivity {
 
@@ -62,12 +66,7 @@ public class CourseDetailsActivity extends BaseActivity {
         if (course.enrollable && !course.isEnrolled()) {
             stubBottom.setLayoutResource(R.layout.content_enroll_button);
             Button enrollButton = (Button) stubBottom.inflate();
-            enrollButton.setOnClickListener(new Button.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    fragment.onEnrollButtonClicked();
-                }
-            });
+            enrollButton.setOnClickListener(view -> fragment.onEnrollButtonClicked());
         }
     }
 
@@ -77,6 +76,28 @@ public class CourseDetailsActivity extends BaseActivity {
         lp.height = AndroidDimenUtil.getActionBarHeight() + AndroidDimenUtil.getStatusBarHeight();
         collapsingToolbar.setTitleEnabled(false);
         toolbar.setTitle(title);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.share, menu);
+        super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.action_share:
+                ShareUtil.shareCourseLink(this, courseId);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

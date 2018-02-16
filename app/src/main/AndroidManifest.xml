@@ -40,6 +40,10 @@
             android:label="CancelDownloadsReceiver" />
 
         <receiver
+            android:name=".utils.ShareBroadcastReceiver"
+            android:label="ShareBroadcastReceiver" />
+
+        <receiver
             android:name=".receivers.NotificationDeletedReceiver"
             android:exported="false"
             android:label="NotificationDeletedReceiver">
