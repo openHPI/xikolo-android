@@ -16,9 +16,19 @@ public class CourseListFilterAllPresenter extends CourseListPresenter {
         List<Course> subList;
 
         if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+            subList = courseManager.listFutureCourses(realm);
+            if (subList.size() > 0) {
+                courseList.add(
+                        App.getInstance().getString(R.string.header_future_courses),
+                        subList
+                );
+            }
             subList = courseManager.listCurrentAndPastCourses(realm);
             if (subList.size() > 0) {
-                courseList.add(null, subList);
+                courseList.add(App.getInstance().getString(
+                        R.string.header_self_paced_courses),
+                        subList
+                );
             }
         } else {
             subList = courseManager.listCurrentAndFutureCourses(realm);
