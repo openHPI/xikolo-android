@@ -38,6 +38,7 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course.CoursePresenter;
 import de.xikolo.presenters.course.CoursePresenterFactory;
 import de.xikolo.presenters.course.CourseView;
+import de.xikolo.utils.ShareUtil;
 import de.xikolo.utils.ToastUtil;
 
 public class CourseActivity extends BasePresenterActivity<CoursePresenter, CourseView> implements CourseView, UnenrollDialog.UnenrollDialogListener {
@@ -118,6 +119,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.unenroll, menu);
+        inflater.inflate(R.menu.share, menu);
         super.onCreateOptionsMenu(menu);
         return true;
     }
@@ -143,6 +145,9 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
         switch (itemId) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.action_share:
+                ShareUtil.shareCourseLink(this, courseId);
                 return true;
             case R.id.action_unenroll:
                 UnenrollDialog dialog = new UnenrollDialog();

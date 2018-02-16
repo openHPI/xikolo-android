@@ -151,7 +151,11 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         }
 
         if (DateUtil.isPast(startDate) && endDate == null) {
-            return context.getString(R.string.course_date_self_paced);
+            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                return context.getString(R.string.course_date_self_paced);
+            } else {
+                return String.format(context.getString(R.string.course_date_since), dateOut.format(startDate));
+            }
         }
 
         if (DateUtil.isFuture(startDate) && endDate == null) {

@@ -170,6 +170,8 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
                     return false;
                 }
             });
+
+            super.onCreateOptionsMenu(menu, inflater);
         }
     }
 

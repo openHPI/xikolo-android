@@ -315,6 +315,20 @@ object LanalyticsUtil {
                 .track()
     }
 
+    // Share
+
+    @JvmStatic
+    fun trackShareCourseLink(courseId: String, service: String? = null) {
+        val builder = createEventBuilder()
+            .setResource(courseId, "course")
+            .setVerb("SHARE_BUTTON_CLICK")
+            .setOnlyWifi(true)
+
+        service?.let { builder.putContext("service", service) }
+
+        builder.build().track()
+    }
+
     // Misc
 
     fun Lanalytics.Event.track() {

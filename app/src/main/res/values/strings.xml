@@ -33,6 +33,7 @@
     <string name="action_unenroll">Un-enroll</string>
     <string name="action_language">Change language</string>
     <string name="action_search">Search</string>
+    <string name="action_share">Share course</string>
 
     <!-- -->
     <string name="tab_learnings">Learnings</string>

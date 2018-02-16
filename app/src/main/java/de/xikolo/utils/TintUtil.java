@@ -5,11 +5,26 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.config.BuildFlavor;
 
 public class TintUtil {
+
+    public static void tintMenu(Context context, Menu menu) {
+        // tint menu icons dark on mooc.house, cause toolbar has light background
+        if (BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE) {
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem item = menu.getItem(i);
+                if (item.getIcon() != null && item.getItemId() != R.id.media_route_menu_item) {
+                    TintUtil.tintMenuIconDark(context, item);
+                }
+            }
+        }
+    }
 
     public static void tintMenuIcon(Context context, MenuItem item, @ColorRes int color) {
         Drawable normalDrawable = item.getIcon();
