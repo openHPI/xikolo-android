@@ -223,6 +223,11 @@
     <string name="settings_title_build">Build version</string>
     <string name="settings_summary_build">Version:</string>
 
+    <string name="settings_send_app_feedback">Send app feedback</string>
+    <string name="settings_send_app_feedback_mail_address" translatable="false">mobile-feedback@hpi.de</string>
+    <string name="settings_send_app_feedback_subject" translatable="false"> %s | App Feedback</string>
+    <string name="settings_send_app_feedback_message" translatable="false">\n\n\n\n------------------------------\nSystem Info\n------------------------------\nplatform: Android\nos version: %s\ndevice: %s\napp name: %s\napp version: %s\napp build: %s</string>
+
     <string name="settings_title_storage">Choose storage</string>
     <string name="settings_title_storage_internal">Internal</string>
     <string name="settings_title_storage_external">SD Card</string>
