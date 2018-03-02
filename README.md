@@ -43,14 +43,3 @@ Please push a git [tag](https://github.com/openHPI/xikolo-android/tags) for ever
 ## Contributing
 
 Please feel free to help us with the ongoing development of this app. See open [issues](https://github.com/openHPI/xikolo-android/issues) to get some inspiration and open a Merge Request as soon as you are ready to go.
-
-### Contributors
-
-- Jan Renz
-- Tobias Rohloff
-- Jonas Müller
-- Bjarne Sievers
-
-### Chinese Localization
-
-- Sheng Luo
