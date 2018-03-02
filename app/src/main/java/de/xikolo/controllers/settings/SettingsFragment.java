@@ -119,6 +119,15 @@ public class SettingsFragment extends PreferenceFragment {
             }
         });
 
+        Preference sendFeedback = findPreference(getString(R.string.preference_send_feedback));
+        sendFeedback.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startFeedbackIntent();
+                return true;
+            }
+        });
+
         loginOut = findPreference(getString(R.string.preference_login_out));
         if (UserManager.isAuthorized()) {
             buildLogoutView(loginOut);
@@ -170,6 +179,22 @@ public class SettingsFragment extends PreferenceFragment {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
+    }
+
+    private void startFeedbackIntent(){
+        String osVersion = String.valueOf(Build.VERSION.RELEASE);
+        String deviceName = String.format("%s %s",Build.MANUFACTURER, Build.MODEL);
+        String brand = getResources().getString(R.string.app_name);
+        String versionName = BuildConfig.VERSION_NAME;
+        String buildId = String.valueOf(BuildConfig.VERSION_CODE);
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getResources().getString(R.string.settings_send_app_feedback_mail_address)});
+        intent.putExtra(Intent.EXTRA_SUBJECT, String.format(getResources().getString(R.string.settings_send_app_feedback_subject), brand));
+        intent.putExtra(Intent.EXTRA_TEXT, String.format(getResources().getString(R.string.settings_send_app_feedback_message), osVersion, deviceName, brand, versionName, buildId));
+
+        startActivity(Intent.createChooser(intent, getResources().getString(R.string.settings_send_app_feedback)));
     }
 
     @Override

@@ -216,6 +216,8 @@
     <string name="settings_privacy">Hinweise zum Datenschutz</string>
     <string name="settings_terms_of_use">Nutzungsbedingungen</string>
 
+    <string name="settings_send_app_feedback">Feedback zur App senden</string>
+
     <!-- -->
     <string name="second_screen_introduction_title">Probieren Sie Second Screen aus!</string>
     <string name="second_screen_introduction_text">Der Second Screen Modus ist eine neue Beta-Funktionalität, die es Ihnen ermöglicht zusätzliche Inhalte auf ihrem mobilen Gerät zu entdecken, während Sie Video-Lektionen auf Ihrem Computer schauen. Um zu starten, spielen Sie einfach eine Video-Lektion in dem Browser Ihres Computers ab. Verfügbare Inhalte und Funktionen werden dann hier erscheinen.</string>

@@ -69,6 +69,10 @@
             android:summary="@string/settings_summary_build"
             android:title="@string/settings_title_build" />
 
+        <android.support.v7.preference.Preference
+            android:key="@string/preference_send_feedback"
+            android:title="@string/settings_send_app_feedback" />
+
         <android.support.v7.preference.Preference android:key="@string/preference_login_out" />
 
     </android.support.v7.preference.PreferenceCategory>
