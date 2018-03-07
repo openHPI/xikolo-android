@@ -91,7 +91,6 @@ public class Config {
     public static final String RESET = "reset/" + NEW;
     public static final String COURSES = "courses/";
     public static final String DISCUSSIONS = "pinboard/";
-    public static final String COLLAB_SPACE = "learning_rooms/";
     public static final String ITEMS = "items/";
     public static final String RECAP = "learn?course_id=";
 
