@@ -8,6 +8,7 @@ import java.io.IOException;
 import de.xikolo.config.Config;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Announcement;
+import de.xikolo.models.Channel;
 import de.xikolo.models.Course;
 import de.xikolo.models.CourseProgress;
 import de.xikolo.models.Enrollment;
@@ -79,6 +80,7 @@ public abstract class ApiService {
 
             JsonAdapter.Factory jsonApiAdapterFactory = ResourceAdapterFactory.builder()
                     .add(Course.JsonModel.class)
+                    .add(Channel.JsonModel.class)
                     .add(Section.JsonModel.class)
                     .add(Item.JsonModel.class)
                     .add(Enrollment.JsonModel.class)
