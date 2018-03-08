@@ -34,28 +34,28 @@ public class Config {
                 COPYRIGHT_URL = "https://hpi.de/";
                 IMPRINT_URL = "https://open.hpi.de/pages/imprint";
                 PRIVACY_URL = "https://open.hpi.de/pages/privacy";
-                TERMS_OF_USE_URL = "";
+                TERMS_OF_USE_URL = null;
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604";
                 break;
             case OPEN_SAP:
-                COPYRIGHT_URL = "http://go.sap.com/corporate/en/legal/copyright.html";
-                IMPRINT_URL = "http://go.sap.com/corporate/en/legal/impressum.html";
-                PRIVACY_URL = "http://go.sap.com/corporate/en/legal/privacy.html";
-                TERMS_OF_USE_URL = "http://go.sap.com/corporate/en/legal/terms-of-use.html";
+                COPYRIGHT_URL = "http://sap.com/corporate-en/legal/copyright/index.epx";
+                IMPRINT_URL = "http://sap.com/corporate-en/legal/impressum.epx";
+                PRIVACY_URL = "http://sap.com/corporate/en/legal/privacy.html";
+                TERMS_OF_USE_URL = "http://sap.com/corporate-en/about/legal/terms-of-use.html";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "2C63C05D";
                 break;
             case OPEN_WHO:
                 COPYRIGHT_URL = "http://who.int/";
-                IMPRINT_URL = "https://openwho.org/pages/imprint";
-                PRIVACY_URL = "https://openwho.org/pages/privacy";
-                TERMS_OF_USE_URL = "";
+                IMPRINT_URL = null;
+                PRIVACY_URL = null;
+                TERMS_OF_USE_URL = "https://openwho.org/pages/terms_of_use";
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
             default: // MOOC_HOUSE
                 COPYRIGHT_URL = "https://hpi.de/";
                 IMPRINT_URL = "https://mooc.house/pages/imprint";
                 PRIVACY_URL = "https://mooc.house/pages/privacy";
-                TERMS_OF_USE_URL = "";
+                TERMS_OF_USE_URL = null;
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
                 break;
         }
@@ -91,7 +91,6 @@ public class Config {
     public static final String RESET = "reset/" + NEW;
     public static final String COURSES = "courses/";
     public static final String DISCUSSIONS = "pinboard/";
-    public static final String COLLAB_SPACE = "learning_rooms/";
     public static final String ITEMS = "items/";
     public static final String RECAP = "learn?course_id=";
 

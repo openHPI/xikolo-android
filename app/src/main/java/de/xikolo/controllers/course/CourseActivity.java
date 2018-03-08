@@ -229,7 +229,6 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
             TITLES.add(getString(R.string.tab_learnings));
             TITLES.add(getString(R.string.tab_discussions));
             TITLES.add(getString(R.string.tab_progress));
-            TITLES.add(getString(R.string.tab_collab_space));
             TITLES.add(getString(R.string.tab_course_details));
             TITLES.add(getString(R.string.tab_announcements));
 
@@ -274,12 +273,6 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                         break;
                     case Course.TAB_PROGRESS:
                         fragment = ProgressFragmentAutoBundle.builder(courseId).build();
-                        break;
-                    case Course.TAB_COLLAB_SPACE:
-                        fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.COLLAB_SPACE)
-                                .inAppLinksEnabled(true)
-                                .externalLinksEnabled(false)
-                                .build();
                         break;
                     case Course.TAB_COURSE_DETAILS:
                         fragment = CourseDetailsFragmentAutoBundle.builder(courseId).build();

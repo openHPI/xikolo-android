@@ -19,7 +19,7 @@ public abstract class BaseFragment extends Fragment {
     protected CastContext castContext;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {

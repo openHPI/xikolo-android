@@ -75,9 +75,6 @@ public class CoursePresenter extends Presenter<CourseView> {
                 case Course.TAB_PROGRESS:
                     LanalyticsUtil.trackVisitedProgress(courseId);
                     break;
-                case Course.TAB_COLLAB_SPACE:
-                    LanalyticsUtil.trackVisitedLearningRooms(courseId);
-                    break;
                 case Course.TAB_COURSE_DETAILS:
                     break;
                 case Course.TAB_ANNOUNCEMENTS:

@@ -4,6 +4,8 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import de.xikolo.config.Config;
 import de.xikolo.managers.UserManager;
@@ -58,7 +60,11 @@ public abstract class ApiService {
                             String xikoloVersionExtension = "; xikolo-version=" + Config.XIKOLO_API_VERSION;
 
                             // plain json calls
-                            if (original.url().encodedPath().equals("/api/v2/authenticate")) {
+                            List plainJson = Arrays.asList(
+                                    "/api/v2/authenticate",
+                                    "/api/v2/osap_5th_birthday"
+                            );
+                            if (plainJson.contains(original.url().encodedPath())) {
                                 mediaType = Config.MEDIA_TYPE_JSON;
                                 xikoloVersionExtension = "";
                             }
