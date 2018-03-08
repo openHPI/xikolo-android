@@ -47,8 +47,6 @@ public class DeepLinkingUtil {
             return Course.TAB_DISCUSSIONS;
         } else if (courseRoute.endsWith(ROUTE_PROGRESS)) {
             return Course.TAB_PROGRESS;
-        } else if (courseRoute.endsWith(ROUTE_LEARNING_ROOMS)) {
-            return Course.TAB_COLLAB_SPACE;
         } else if (courseRoute.endsWith(ROUTE_ANNOUNCEMENTS)) {
             return Course.TAB_ANNOUNCEMENTS;
         }
