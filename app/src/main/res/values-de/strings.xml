@@ -48,6 +48,7 @@
     <string name="btn_enroll">Für den Kurs einschreiben</string>
     <string name="btn_continue_course">Kurs fortsetzen</string>
     <string name="btn_course_details">Details zeigen</string>
+    <string name="btn_channel_courses">Kurse anzeigen</string>
     <string name="btn_starts_soon">Kurs hat noch nicht begonnen</string>
     <string name="btn_display_issues">Darstellungsprobleme?</string>
 

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:res="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    res:cardCornerRadius="2dp"
+    res:cardPreventCornerOverlap="true"
+    res:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="fill_parent"
+            android:layout_height="160dp"
+            android:layout_gravity="center_horizontal|top"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/imageView"
+            android:paddingBottom="2pt"
+            android:paddingLeft="2pt"
+            android:paddingRight="2pt"
+            android:paddingTop="2pt">
+
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="20sp" />
+
+            <de.xikolo.views.CustomFontTextView
+                android:id="@+id/textLangIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textTitle"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="12dp"
+                android:maxLines="1"
+                android:text="@string/icon_lang"
+                android:textColor="@color/text_main_icon"
+                android:textSize="20sp"
+                res:customFont="xikolo.ttf" />
+
+            <TextView
+                android:id="@+id/textLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textTitle"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_toRightOf="@+id/textLangIcon"
+                android:maxLines="1"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textLangIcon"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:lineSpacingExtra="4dp"
+                android:maxLines="3"
+                android:textSize="14sp" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pagerCourses"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/button_channel_courses"
+                android:layout_below="@+id/textDescription">
+
+            </android.support.v4.view.ViewPager>
+
+            <Button
+                android:id="@+id/button_channel_courses"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/btn_channel_courses" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

@@ -3,9 +3,7 @@ package de.xikolo.controllers.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,12 +24,14 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.main.ChannelListPresenter;
 import de.xikolo.presenters.main.ChannelListPresenterFactory;
 import de.xikolo.presenters.main.ChannelListView;
+import de.xikolo.views.AutofitRecyclerView;
+import de.xikolo.views.SpaceItemDecoration;
 
 public class ChannelListFragment extends MainFragment<ChannelListPresenter, ChannelListView> implements ChannelListView {
 
     public static final String TAG = ChannelListFragment.class.getSimpleName();
 
-    @BindView(R.id.content_view) RecyclerView recyclerView;
+    @BindView(R.id.content_view) AutofitRecyclerView recyclerView;
 
     private ChannelListAdapter channelListAdapter;
 
@@ -46,7 +46,7 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
 
     @Override
     public int getLayoutResource() {
-        return R.layout.content_news_list;
+        return R.layout.content_channel_list;
     }
 
     @Override
@@ -57,11 +57,35 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(channelListAdapter);
+
+        /*recyclerView.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return channelListAdapter.isHeader(position) ? recyclerView.getSpanCount() : 1;
+            }
+        });*/
+
+        recyclerView.addItemDecoration(new SpaceItemDecoration(
+                getActivity().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
+                getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
+                false,
+                new SpaceItemDecoration.RecyclerViewInfo() {
+                    @Override
+                    public boolean isHeader(int position) {
+                        return false;
+                    }
+
+                    @Override
+                    public int getSpanCount() {
+                        return recyclerView.getSpanCount();
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return channelListAdapter.getItemCount();
+                    }
+                }));
     }
 
     @Override

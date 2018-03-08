@@ -55,7 +55,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 R.string.icon_channels,
                 R.string.title_section_channels,
                 NavigationItem.ViewType.MAIN,
-                NAV_ITEMS.size()));
+                NAV_ITEMS.size())); //ToDo only show when more than one channel available
 
         NAV_ITEMS.add(NAV_ALL_COURSES = new NavigationItem(
                 R.string.icon_courses,
