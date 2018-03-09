@@ -8,4 +8,8 @@ import de.xikolo.presenters.base.LoadingStateView;
 public interface ChannelListView extends LoadingStateView {
 
     void showChannelList(List<Channel> channelList);
+
+    void showCourse(String courseId);
+
+    void showCoursesForChannel(String channelId);
 }

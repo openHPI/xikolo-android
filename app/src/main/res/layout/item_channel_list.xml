@@ -27,10 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/imageView"
-            android:paddingBottom="2pt"
-            android:paddingLeft="2pt"
-            android:paddingRight="2pt"
-            android:paddingTop="2pt">
+            android:padding="2dp">
 
             <TextView
                 android:id="@+id/textTitle"
@@ -84,22 +81,30 @@
                 android:maxLines="3"
                 android:textSize="14sp" />
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pagerCourses"
+            <HorizontalScrollView
+                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/button_channel_courses"
-                android:layout_below="@+id/textDescription">
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textDescription"
+                android:layout_marginLeft="-2dp"
+                android:layout_marginRight="-2dp">
 
-            </android.support.v4.view.ViewPager>
+                <LinearLayout
+                    android:id="@+id/scrollContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="8dp" />
+            </HorizontalScrollView>
 
             <Button
                 android:id="@+id/button_channel_courses"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
+                android:layout_below="@+id/scrollView"
                 android:text="@string/btn_channel_courses" />
 
         </RelativeLayout>

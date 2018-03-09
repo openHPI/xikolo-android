@@ -27,13 +27,13 @@ class ChannelManager {
         return channelListPromise
     }
 
-    //returns true if there are more than two Channels
+    //returns true if there are two or more Channels
     fun hasChannels(realm: Realm) : Boolean {
         val channelList = realm
                 .where(Channel::class.java)
                 .findAll()
 
-        if(channelList.size < 2)
+        if(channelList.count() < 2)
             return false
 
         return true

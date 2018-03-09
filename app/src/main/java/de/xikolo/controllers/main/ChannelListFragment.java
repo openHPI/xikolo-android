@@ -1,5 +1,6 @@
 package de.xikolo.controllers.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -16,7 +18,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import butterknife.BindView;
+import de.xikolo.App;
 import de.xikolo.R;
+import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.models.Channel;
@@ -53,7 +57,17 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        channelListAdapter = new ChannelListAdapter();
+        channelListAdapter = new ChannelListAdapter(new ChannelListAdapter.OnChannelCardClickListener() {
+            @Override
+            public void onShowCoursesClicked(String channelId) {
+                showCoursesForChannel(channelId);
+            }
+
+            @Override
+            public void onCourseClicked(String courseId) {
+                showCourse(courseId);
+            }
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -86,6 +100,17 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
         if (channelListAdapter != null) {
             channelListAdapter.update(channelList);
         }
+    }
+
+    @Override
+    public void showCourse(String courseId) {
+        Intent intent = CourseDetailsActivityAutoBundle.builder(courseId).build(App.getInstance());
+        startActivity(intent);
+    }
+
+    @Override
+    public void showCoursesForChannel(String channelId) {
+        Toast.makeText(App.getInstance(), channelId, Toast.LENGTH_SHORT).show(); //ToDO
     }
 
     @Override

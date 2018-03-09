@@ -171,6 +171,23 @@ class CourseManager {
         return spListPromise
     }
 
+    fun listCoursesForChannel(channelId: String, realm: Realm, listener: RealmChangeListener<RealmResults<Course>>?): RealmResults<*> {
+        if (listener == null) {
+            throw IllegalArgumentException("RealmChangeListener should not be null for async queries.")
+        }
+
+        val courseListPromise = realm
+                .where(Course::class.java)
+                .equalTo("external", false)
+                .equalTo("channelId", channelId)
+                .sort("startDate", Sort.ASCENDING)
+                .findAllAsync()
+
+        courseListPromise.addChangeListener(listener)
+
+        return courseListPromise
+    }
+
     fun countEnrollments(realm: Realm): Long {
         return realm.where(Enrollment::class.java).count()
     }

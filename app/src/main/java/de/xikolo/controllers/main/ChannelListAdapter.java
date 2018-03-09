@@ -1,15 +1,13 @@
 package de.xikolo.controllers.main;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,15 +15,26 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.controllers.de.xikolo.controllers.channels.ChannelListItemPagerFragment;
+import de.xikolo.config.GlideApp;
+import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Channel;
+import de.xikolo.models.Course;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.ChannelViewHolder> {
 
     public static final String TAG = ChannelListAdapter.class.getSimpleName();
 
     private List<Channel> channelList =  new ArrayList<>();
+    private OnChannelCardClickListener callback;
+
+    public ChannelListAdapter(OnChannelCardClickListener callback){
+        this.callback = callback;
+    }
 
     public void update(List<Channel> channelList) {
         this.channelList = channelList;
@@ -55,26 +64,36 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
         holder.textTitle.setText(channel.name);
         holder.textLanguage.setText("English"); //ToDo get from model
-        holder.textDescription.setText("This is some fancy description"); //ToDo get from model
-        holder.buttonChannelCourses.setOnClickListener(v -> {
-            //ToDO do something here
-        });
+        holder.textDescription.setText("This is some fancy description. This channel has some great topics that will enrich your life and make the world a better place."); //ToDo get from model
+        holder.layout.setOnClickListener(v -> callback.onShowCoursesClicked(channel.id));
+        holder.buttonChannelCourses.setOnClickListener(v -> callback.onShowCoursesClicked(channel.id));
 
-        ViewPager pager = holder.pagerCourses;
-        pager.setAdapter(new FragmentStatePagerAdapter(new FragmentActivity().getSupportFragmentManager()) {
+        new CourseManager().listCoursesForChannel(channel.id, Realm.getDefaultInstance(), new RealmChangeListener<RealmResults<Course>>() {
             @Override
-            public int getCount() {
-                return 1; //ToDO
-            }
+            public void onChange(@NonNull RealmResults<Course> courses) {
+                holder.scrollContainer.removeAllViews();
+                for(int i = 0; i < Math.min(5, courses.size()); i++){
+                    Course course = courses.get(i);
+                    GlideApp.with(App.getInstance()).load(course.imageUrl).into(holder.imageView);//ToDo add image from model
 
-            @Override
-            public Fragment getItem(int position) {
-                ChannelListItemPagerFragment fragment = new ChannelListItemPagerFragment();
-                //fragment.setContent(); //ToDO
-                return fragment;
+
+                    View view = LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll, holder.scrollContainer, false);
+                    TextView textTitle = view.findViewById(R.id.textTitle);
+                    textTitle.setText(course.title);
+                    ImageView imageView = view.findViewById(R.id.imageView);
+                    GlideApp.with(App.getInstance()).load(course.imageUrl).into(imageView);
+                    view.setOnClickListener(v -> callback.onCourseClicked(course.id));
+                    holder.scrollContainer.addView(view);
+                }
             }
         });
-        //GlideApp.with(fragment).load(course.imageUrl).into(viewHolder.image);//ToDo add image
+    }
+
+    public interface OnChannelCardClickListener {
+
+        void onShowCoursesClicked(String channelId);
+
+        void onCourseClicked(String courseId);
     }
 
     static class ChannelViewHolder extends RecyclerView.ViewHolder {
@@ -85,7 +104,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         @BindView(R.id.textDescription) TextView textDescription;
         @BindView(R.id.imageView) ImageView imageView;
         @BindView(R.id.button_channel_courses) Button buttonChannelCourses;
-        @BindView(R.id.pagerCourses) ViewPager pagerCourses;
+        @BindView(R.id.scrollContainer) LinearLayout scrollContainer;
 
         public ChannelViewHolder(View view) {
             super(view);
