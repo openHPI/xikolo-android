@@ -34,10 +34,10 @@ public class ChannelListPresenter extends LoadingStatePresenter<ChannelListView>
             requestChannels(false);
         }
 
-        this.channelListPromise = channelManager.listChannels(realm, getChannelListRealmChangeLictener());
+        this.channelListPromise = channelManager.listChannels(realm, getChannelListRealmChangeListener());
     }
 
-    private RealmChangeListener<RealmResults<Channel>> getChannelListRealmChangeLictener() {
+    private RealmChangeListener<RealmResults<Channel>> getChannelListRealmChangeListener() {
         return new RealmChangeListener<RealmResults<Channel>>() {
             @Override
             public void onChange(RealmResults<Channel> results) {
