@@ -112,6 +112,10 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
         this.courseManager = new CourseManager();
     }
 
+    public void disableChannels(){
+        NAV_ITEMS.remove(1);
+    }
+
     @Override
     public int getItemCount() {
         return NAV_ITEMS.size();

@@ -48,6 +48,8 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         setupActionBar();
 
+        boolean showChannels = getIntent().getBooleanExtra("hasChannels", true);
+
         navigationFragment = (NavigationFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
@@ -55,7 +57,8 @@ public class MainActivity extends BaseActivity
         navigationFragment.setUp(
                 R.id.navigation_drawer,
                 findViewById(R.id.drawer_layout),
-                toolbar);
+                toolbar,
+                showChannels);
 
         if (Config.DEBUG) {
             Log.d(TAG, "Build Type: " + BuildConfig.X_TYPE);

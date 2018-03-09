@@ -21,7 +21,7 @@ class ListChannelsJob(callback: RequestJobCallback) : RequestJob(callback) {
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Channels received")
 
-            Sync.Data.with(Channel::class.java, *response.body()!!).run();
+            Sync.Data.with(Channel::class.java, *response.body()!!).run()
 
             callback?.success()
         } else {

@@ -74,7 +74,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 return fragment;
             }
         });
-        //GlideApp.with(fragment).load(course.imageUrl).into(viewHolder.image);
+        //GlideApp.with(fragment).load(course.imageUrl).into(viewHolder.image);//ToDo add image
     }
 
     static class ChannelViewHolder extends RecyclerView.ViewHolder {

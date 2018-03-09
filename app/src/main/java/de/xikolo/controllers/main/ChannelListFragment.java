@@ -59,13 +59,6 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(channelListAdapter);
 
-        /*recyclerView.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return channelListAdapter.isHeader(position) ? recyclerView.getSpanCount() : 1;
-            }
-        });*/
-
         recyclerView.addItemDecoration(new SpaceItemDecoration(
                 getActivity().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
                 getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
