@@ -21,10 +21,8 @@ public class FeatureToggle {
                 || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO || BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE);
     }
 
-    public static boolean HAS_CHANNELS = true;
-
     public static boolean channels(){
-        return HAS_CHANNELS;
+        return BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP;
     }
 
 }
