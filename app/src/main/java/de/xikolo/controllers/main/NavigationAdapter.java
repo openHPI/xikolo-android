@@ -201,7 +201,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
         }
 
-        if (position == NAV_SECOND_SCREEN.getPosition()) {
+        if (position == NAV_SECOND_SCREEN.getPosition() || position == NAV_CHANNELS.getPosition()) {
             viewHolder.textIcon.setCustomFont(context, Config.FONT_MATERIAL);
         } else {
             viewHolder.textIcon.setCustomFont(context, Config.FONT_XIKOLO);
