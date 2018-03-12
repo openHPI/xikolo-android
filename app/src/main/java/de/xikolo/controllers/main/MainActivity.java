@@ -48,8 +48,6 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         setupActionBar();
 
-        boolean showChannels = getIntent().getBooleanExtra("hasChannels", true);
-
         navigationFragment = (NavigationFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
@@ -57,8 +55,7 @@ public class MainActivity extends BaseActivity
         navigationFragment.setUp(
                 R.id.navigation_drawer,
                 findViewById(R.id.drawer_layout),
-                toolbar,
-                showChannels);
+                toolbar);
 
         if (Config.DEBUG) {
             Log.d(TAG, "Build Type: " + BuildConfig.X_TYPE);
@@ -128,6 +125,10 @@ public class MainActivity extends BaseActivity
                 intent = LoginActivityAutoBundle.builder().build(this);
             }
         }
+        if (position == NavigationAdapter.NAV_CHANNELS.getPosition()) {
+            newFragment = new ChannelListFragment();
+            tag = "channels";
+        }
         if (position == NavigationAdapter.NAV_ALL_COURSES.getPosition()) {
             newFragment = CourseListFragmentAutoBundle.builder(Course.Filter.ALL).build();
             tag = "all_courses";
@@ -135,10 +136,6 @@ public class MainActivity extends BaseActivity
         if (position == NavigationAdapter.NAV_MY_COURSES.getPosition()) {
             newFragment = CourseListFragmentAutoBundle.builder(Course.Filter.MY).build();
             tag = "my_courses";
-        }
-        if (position == NavigationAdapter.NAV_CHANNELS.getPosition()) {
-            newFragment = new ChannelListFragment();
-            tag = "channels";
         }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {
             newFragment = new NewsListFragment();

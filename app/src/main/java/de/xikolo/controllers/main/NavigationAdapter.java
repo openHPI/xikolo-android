@@ -51,11 +51,19 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 NavigationItem.ViewType.PROFILE,
                 NAV_ITEMS.size()));
 
-        NAV_ITEMS.add(NAV_CHANNELS = new NavigationItem(
-                R.string.icon_channels,
-                R.string.title_section_channels,
-                NavigationItem.ViewType.MAIN,
-                NAV_ITEMS.size())); //ToDo only show when more than one channel available
+        if (FeatureToggle.channels()) {
+            NAV_ITEMS.add(NAV_CHANNELS = new NavigationItem(
+                    R.string.icon_channels,
+                    R.string.title_section_channels,
+                    NavigationItem.ViewType.MAIN,
+                    NAV_ITEMS.size()));
+        } else {
+            NAV_CHANNELS = new NavigationItem(
+                    R.string.icon_channels,
+                    R.string.title_section_channels,
+                    NavigationItem.ViewType.MAIN,
+                    -98);
+        }
 
         NAV_ITEMS.add(NAV_ALL_COURSES = new NavigationItem(
                 R.string.icon_courses,
@@ -110,10 +118,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
     public NavigationAdapter() {
         this.courseManager = new CourseManager();
-    }
-
-    public void disableChannels(){
-        NAV_ITEMS.remove(1);
     }
 
     @Override

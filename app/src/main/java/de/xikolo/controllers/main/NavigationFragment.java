@@ -147,10 +147,7 @@ public class NavigationFragment extends BasePresenterFragment<NavigationPresente
      * @param fragmentId   The android:id of this fragment in its activity's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
-    public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar, boolean showChannels) {
-        if(!showChannels)
-            adapter.disableChannels();
-
+    public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
         fragmentContainerView = (ViewGroup) getActivity().findViewById(fragmentId).getParent();
         this.drawerLayout = drawerLayout;
 
