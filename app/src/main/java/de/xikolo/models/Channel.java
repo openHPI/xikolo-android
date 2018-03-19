@@ -20,6 +20,8 @@ public class Channel extends RealmObject {
 
     public int position;
 
+    public String description;
+
     public static Channel get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Channel model = realm.where(Channel.class).equalTo("id", id).findFirst();
@@ -39,6 +41,8 @@ public class Channel extends RealmObject {
 
         public int position;
 
+        public String description;
+
         @Override
         public Channel convertToRealmObject() {
             Channel model = new Channel();
@@ -47,6 +51,7 @@ public class Channel extends RealmObject {
             model.slug = slug;
             model.color = color;
             model.position = position;
+            model.description = description;
 
             return model;
         }

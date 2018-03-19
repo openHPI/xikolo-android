@@ -42,37 +42,12 @@
                 android:fontFamily="sans-serif-medium"
                 android:textSize="20sp" />
 
-            <de.xikolo.views.CustomFontTextView
-                android:id="@+id/textLangIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textTitle"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="12dp"
-                android:maxLines="1"
-                android:text="@string/icon_lang"
-                android:textColor="@color/text_main_icon"
-                android:textSize="20sp"
-                res:customFont="xikolo.ttf" />
-
-            <TextView
-                android:id="@+id/textLanguage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textTitle"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="12dp"
-                android:layout_toRightOf="@+id/textLangIcon"
-                android:maxLines="1"
-                android:textSize="14sp" />
-
             <TextView
                 android:id="@+id/textDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/textLangIcon"
+                android:layout_below="@+id/textTitle"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginTop="12dp"

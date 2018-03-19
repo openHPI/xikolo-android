@@ -63,8 +63,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         final Channel channel = channelList.get(position);
 
         holder.textTitle.setText(channel.name);
-        holder.textLanguage.setText("English"); //ToDo get from model
-        holder.textDescription.setText("This is some fancy description. This channel has some great topics that will enrich your life and make the world a better place."); //ToDo get from model
+        holder.textDescription.setText(channel.description);
         holder.layout.setOnClickListener(v -> callback.onShowCoursesClicked(channel.id));
         holder.buttonChannelCourses.setOnClickListener(v -> callback.onShowCoursesClicked(channel.id));
 
@@ -100,7 +99,6 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
         @BindView(R.id.container) ViewGroup layout;
         @BindView(R.id.textTitle) TextView textTitle;
-        @BindView(R.id.textLanguage) TextView textLanguage;
         @BindView(R.id.textDescription) TextView textDescription;
         @BindView(R.id.imageView) ImageView imageView;
         @BindView(R.id.button_channel_courses) Button buttonChannelCourses;
