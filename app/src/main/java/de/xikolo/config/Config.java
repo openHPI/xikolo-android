@@ -2,8 +2,8 @@ package de.xikolo.config;
 
 import com.google.android.gms.cast.CastMediaControlIntent;
 
-import de.xikolo.BuildConfig;
 import de.xikolo.App;
+import de.xikolo.BuildConfig;
 import de.xikolo.R;
 
 public class Config {
@@ -70,6 +70,7 @@ public class Config {
 
     public static final String HEADER_ACCEPT = "Accept";
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
+    public static final String HEADER_ACCEPT_LANGUAGE = "Accept-Language";
 
     public static final String MEDIA_TYPE_JSON = "application/json";
     public static final String MEDIA_TYPE_JSON_API = "application/vnd.api+json";

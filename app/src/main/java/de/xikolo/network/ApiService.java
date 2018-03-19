@@ -6,6 +6,7 @@ import com.squareup.moshi.Moshi;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import de.xikolo.config.Config;
 import de.xikolo.managers.UserManager;
@@ -58,6 +59,7 @@ public abstract class ApiService {
 
                             String mediaType = Config.MEDIA_TYPE_JSON_API;
                             String xikoloVersionExtension = "; xikolo-version=" + Config.XIKOLO_API_VERSION;
+                            String appLanguage = Locale.getDefault().getLanguage();
 
                             // plain json calls
                             List plainJson = Arrays.asList(
@@ -72,7 +74,8 @@ public abstract class ApiService {
                             Request.Builder builder = original.newBuilder()
                                     .header(Config.HEADER_ACCEPT, mediaType + xikoloVersionExtension)
                                     .header(Config.HEADER_CONTENT_TYPE, mediaType)
-                                    .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
+                                    .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE)
+                                    .header(Config.HEADER_ACCEPT_LANGUAGE, appLanguage);
 
                             if (UserManager.isAuthorized()) {
                                 builder.header(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX_JSON_API + UserManager.getToken());
