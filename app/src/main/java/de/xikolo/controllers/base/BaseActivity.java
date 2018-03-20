@@ -2,11 +2,9 @@ package de.xikolo.controllers.base;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.ColorInt;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -277,22 +275,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
                 }
                 if (contentLayout != null) {
                     contentLayout.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
-                }
-            }
-        }
-    }
-
-    protected void setColorSchemeFromInt(@ColorInt int toolbarColor, @ColorInt int statusbarColor) {
-        if (toolbar != null && !translucentActionbar) {
-            toolbar.setBackground(new ColorDrawable(toolbarColor));
-            if (Build.VERSION.SDK_INT >= 21) {
-                if (drawerLayout != null) {
-                    drawerLayout.setStatusBarBackgroundColor(toolbarColor);
-                } else {
-                    getWindow().setStatusBarColor(statusbarColor);
-                }
-                if (contentLayout != null) {
-                    contentLayout.setBackgroundColor(toolbarColor);
                 }
             }
         }
