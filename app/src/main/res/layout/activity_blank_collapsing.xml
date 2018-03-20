@@ -26,7 +26,7 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed|snap"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
                 app:statusBarScrim="?attr/colorPrimary">
 
                 <ImageView
