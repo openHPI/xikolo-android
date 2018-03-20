@@ -64,14 +64,14 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
         holder.textTitle.setText(channel.name);
         holder.textDescription.setText(channel.description);
-        holder.layout.setOnClickListener(v -> callback.onShowCoursesClicked(channel.id));
-        holder.buttonChannelCourses.setOnClickListener(v -> callback.onShowCoursesClicked(channel.id));
+        holder.layout.setOnClickListener(v -> callback.onChannelClicked(channel.id));
+        holder.buttonChannelCourses.setOnClickListener(v -> callback.onChannelClicked(channel.id));
 
         new CourseManager().listCoursesForChannel(channel.id, Realm.getDefaultInstance(), new RealmChangeListener<RealmResults<Course>>() {
             @Override
             public void onChange(@NonNull RealmResults<Course> courses) {
                 holder.scrollContainer.removeAllViews();
-                for(int i = 0; i < Math.min(5, courses.size()); i++){
+                for(int i = 0; i < Math.min(7, courses.size()); i++){
                     Course course = courses.get(i);
                     GlideApp.with(App.getInstance()).load(course.imageUrl).into(holder.imageView);//ToDo add image from model
 
@@ -90,7 +90,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
     public interface OnChannelCardClickListener {
 
-        void onShowCoursesClicked(String channelId);
+        void onChannelClicked(String channelId);
 
         void onCourseClicked(String courseId);
     }

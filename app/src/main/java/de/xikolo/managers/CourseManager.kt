@@ -112,32 +112,64 @@ class CourseManager {
     }
 
     fun listCurrentAndFutureCourses(realm: Realm): List<Course> = realm
-        .where(Course::class.java)
-        .equalTo("external", false)
-        .greaterThanOrEqualTo("endDate", Date())
-        .sort("startDate", Sort.ASCENDING)
-        .findAll()
+            .where(Course::class.java)
+            .equalTo("external", false)
+            .greaterThanOrEqualTo("endDate", Date())
+            .sort("startDate", Sort.ASCENDING)
+            .findAll()
 
     fun listCurrentAndPastCourses(realm: Realm): List<Course> = realm
-        .where(Course::class.java)
-        .equalTo("external", false)
-        .lessThanOrEqualTo("startDate", Date())
-        .sort("startDate", Sort.DESCENDING)
-        .findAll()
+            .where(Course::class.java)
+            .equalTo("external", false)
+            .lessThanOrEqualTo("startDate", Date())
+            .sort("startDate", Sort.DESCENDING)
+            .findAll()
 
     fun listPastCourses(realm: Realm): List<Course> = realm
-        .where(Course::class.java)
-        .equalTo("external", false)
-        .lessThan("endDate", Date())
-        .sort("startDate", Sort.DESCENDING)
-        .findAll()
+            .where(Course::class.java)
+            .equalTo("external", false)
+            .lessThan("endDate", Date())
+            .sort("startDate", Sort.DESCENDING)
+            .findAll()
 
     fun listFutureCourses(realm: Realm): List<Course> =realm
-        .where(Course::class.java)
-        .equalTo("external", false)
-        .greaterThan("startDate", Date())
-        .sort("startDate", Sort.ASCENDING)
-        .findAll()
+            .where(Course::class.java)
+            .equalTo("external", false)
+            .greaterThan("startDate", Date())
+            .sort("startDate", Sort.ASCENDING)
+            .findAll()
+
+    fun listCurrentAndFutureCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
+            .where(Course::class.java)
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .greaterThanOrEqualTo("endDate", Date())
+            .sort("startDate", Sort.ASCENDING)
+            .findAll()
+
+    fun listCurrentAndPastCoursesForChannel (realm: Realm, channelId: String): List<Course> = realm
+            .where(Course::class.java)
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .lessThanOrEqualTo("startDate", Date())
+            .sort("startDate", Sort.DESCENDING)
+            .findAll()
+
+    fun listPastCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
+            .where(Course::class.java)
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .lessThan("endDate", Date())
+            .sort("startDate", Sort.DESCENDING)
+            .findAll()
+
+    fun listFutureCoursesForChannel(realm: Realm, channelId: String): List<Course> =realm
+            .where(Course::class.java)
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .greaterThan("startDate", Date())
+            .sort("startDate", Sort.ASCENDING)
+            .findAll()
 
     fun listCurrentAndPastCoursesWithEnrollment(realm: Realm): List<Course> = realm
         .where(Course::class.java)
@@ -178,8 +210,9 @@ class CourseManager {
 
         val courseListPromise = realm
                 .where(Course::class.java)
-                .equalTo("external", false)
                 .equalTo("channelId", channelId)
+                .equalTo("external", false)
+                .greaterThanOrEqualTo("endDate", Date())
                 .sort("startDate", Sort.ASCENDING)
                 .findAllAsync()
 

@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -20,6 +19,7 @@ import java.util.List;
 import butterknife.BindView;
 import de.xikolo.App;
 import de.xikolo.R;
+import de.xikolo.controllers.channels.ChannelDetailsActivityAutoBundle;
 import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
@@ -59,8 +59,8 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
 
         channelListAdapter = new ChannelListAdapter(new ChannelListAdapter.OnChannelCardClickListener() {
             @Override
-            public void onShowCoursesClicked(String channelId) {
-                showCoursesForChannel(channelId);
+            public void onChannelClicked(String channelId) {
+                showChannel(channelId);
             }
 
             @Override
@@ -109,8 +109,9 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
     }
 
     @Override
-    public void showCoursesForChannel(String channelId) {
-        Toast.makeText(App.getInstance(), channelId, Toast.LENGTH_SHORT).show(); //ToDO
+    public void showChannel(String channelId) {
+        Intent intent = ChannelDetailsActivityAutoBundle.builder(channelId).build(getActivity());
+        startActivity(intent);
     }
 
     @Override

@@ -9,7 +9,7 @@ public interface ChannelListView extends LoadingStateView {
 
     void showChannelList(List<Channel> channelList);
 
-    void showCourse(String courseId);
+    void showChannel(String channelId);
 
-    void showCoursesForChannel(String channelId);
+    void showCourse(String courseId);
 }

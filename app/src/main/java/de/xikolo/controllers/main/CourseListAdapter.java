@@ -48,7 +48,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void update(SectionList<String, List<Course>> courseList) {
         this.courseList = courseList;
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public boolean isHeader(int position) {
