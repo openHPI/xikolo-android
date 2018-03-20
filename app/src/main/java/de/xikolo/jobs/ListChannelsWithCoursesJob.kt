@@ -22,9 +22,9 @@ class ListChannelsWithCoursesJob(callback: RequestJobCallback) : RequestJob(call
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Channels received")
 
-            val ids = Sync.Data.with(Channel::class.java, *response.body()!!).run()
+            Sync.Data.with(Channel::class.java, *response.body()!!).run()
             Sync.Included.with(Course::class.java, *response.body()!!)
-                .addFilter("channelId", ids)
+                .saveOnly()
                 .run()
 
             callback?.success()

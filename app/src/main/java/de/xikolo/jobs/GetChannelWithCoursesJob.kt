@@ -26,7 +26,7 @@ class GetChannelWithCoursesJob(private val channelId: String, callback: RequestJ
                 .saveOnly()
                 .run()
             Sync.Included.with(Course::class.java, response.body())
-                .addFilter("channelId", channelId)
+                .saveOnly()
                 .run()
 
             callback?.success()
