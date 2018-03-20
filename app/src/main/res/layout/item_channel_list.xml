@@ -26,8 +26,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/imageView"
-            android:padding="2dp">
+            android:layout_below="@+id/imageView">
 
             <TextView
                 android:id="@+id/textTitle"
@@ -53,24 +52,22 @@
                 android:layout_marginTop="12dp"
                 android:ellipsize="end"
                 android:lineSpacingExtra="4dp"
-                android:maxLines="3"
+                android:maxLines="5"
                 android:textSize="14sp" />
 
             <HorizontalScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textDescription"
-                android:layout_marginLeft="-2dp"
-                android:layout_marginRight="-2dp">
+                android:layout_below="@+id/textDescription">
 
                 <LinearLayout
                     android:id="@+id/scrollContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="8dp" />
+                    android:paddingLeft="6dp"
+                    android:paddingTop="16dp" />
             </HorizontalScrollView>
 
             <Button

@@ -2,6 +2,7 @@ package de.xikolo.controllers.channels;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
 
     @AutoBundleField String channelId;
 
+    @BindView(R.id.content_view) NestedScrollView scrollView;
     @BindView(R.id.layout_header) FrameLayout layoutHeader;
     @BindView(R.id.image_channel) ImageView imageChannel;
     @BindView(R.id.text_title) TextView textTitle;

@@ -30,6 +30,8 @@ public class ChannelDetailsActivity extends BaseActivity {
 
     @AutoBundleField String channelId;
 
+    @AutoBundleField(required = false) boolean scrollToCourses = false;
+
     @BindView(R.id.toolbar_image) ImageView imageView;
     @BindView(R.id.appbar) AppBarLayout appBarLayout;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
@@ -63,16 +65,18 @@ public class ChannelDetailsActivity extends BaseActivity {
         if (fragmentManager.findFragmentByTag(tag) == null) {
             final ChannelDetailsFragment fragment = ChannelDetailsFragmentAutoBundle.builder(channelId).build();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.runOnCommit(new Runnable() {
-                @Override
-                public void run() {
-                    final ChannelCoursesListFragment courseListFragment = ChannelCoursesListFragmentAutoBundle.builder(channelId).build();
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.add(fragment.courseListContainer.getId(), courseListFragment, String.format("courses_%s", channelId));
-                    transaction.commit();
-                }
-            });
+            transaction.runOnCommit(() -> {
+                final ChannelCoursesListFragment courseListFragment = ChannelCoursesListFragmentAutoBundle.builder(channelId).build();
+                FragmentManager fragmentManager1 = getSupportFragmentManager();
+                FragmentTransaction transaction1 = fragmentManager1.beginTransaction();
+                transaction1.replace(fragment.courseListContainer.getId(), courseListFragment, String.format("courses_%s", channelId));
+                fragment.getView().post(() -> {
+                    if(scrollToCourses) {
+                        fragment.scrollView.scrollTo(0, fragment.courseListContainer.getTop());
+                    }
+                    });
+                transaction1.commit();
+                });
             transaction.replace(R.id.content, fragment, tag);
             transaction.commit();
         }

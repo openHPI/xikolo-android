@@ -1,6 +1,8 @@
 package de.xikolo.controllers.main;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +86,10 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                     view.setOnClickListener(v -> callback.onCourseClicked(course.id));
                     holder.scrollContainer.addView(view);
                 }
+                View view = LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll_more, holder.scrollContainer, false);
+                ((CardView) view).setCardBackgroundColor(Color.parseColor(channel.color));
+                view.setOnClickListener(v -> callback.onMoreCoursesClicked(channel.id));
+                holder.scrollContainer.addView(view);
             }
         });
     }
@@ -93,6 +99,8 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         void onChannelClicked(String channelId);
 
         void onCourseClicked(String courseId);
+
+        void onMoreCoursesClicked(String channelId);
     }
 
     static class ChannelViewHolder extends RecyclerView.ViewHolder {

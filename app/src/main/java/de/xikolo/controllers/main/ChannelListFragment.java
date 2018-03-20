@@ -67,6 +67,11 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
             public void onCourseClicked(String courseId) {
                 showCourse(courseId);
             }
+
+            @Override
+            public void onMoreCoursesClicked(String channelId) {
+                showChannelCourses(channelId);
+            }
         });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -105,6 +110,12 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
     @Override
     public void showCourse(String courseId) {
         Intent intent = CourseDetailsActivityAutoBundle.builder(courseId).build(App.getInstance());
+        startActivity(intent);
+    }
+
+    @Override
+    public void showChannelCourses(String channelId) {
+        Intent intent = ChannelDetailsActivityAutoBundle.builder(channelId).scrollToCourses(true).build(App.getInstance());
         startActivity(intent);
     }
 
