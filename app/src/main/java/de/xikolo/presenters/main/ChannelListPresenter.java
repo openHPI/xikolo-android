@@ -73,7 +73,7 @@ public class ChannelListPresenter extends LoadingStatePresenter<ChannelListView>
         if (getView() != null) {
             getView().showProgress();
         }
-            channelManager.requestChannelList(getDefaultJobCallback(userRequest));
+        channelManager.requestChannelListWithCourses(getDefaultJobCallback(userRequest));
     }
 
 }

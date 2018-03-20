@@ -135,7 +135,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         }
 
         if (channelId != null) {
-            model.channels = new HasOne<>(new Channel.JsonModel().getType(), channelId);
+            model.channel = new HasOne<>(new Channel.JsonModel().getType(), channelId);
         }
 
         return model;
@@ -238,7 +238,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         public HasMany<Section.JsonModel> sections;
 
         @Json(name = "channel")
-        public HasOne<Section.JsonModel> channels; //ToDo really HasOne?
+        public HasOne<Section.JsonModel> channel;
 
         @Override
         public Course convertToRealmObject() {
@@ -267,8 +267,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
                 course.enrollmentId = enrollment.get().getId();
             }
 
-            if (channels != null) {
-                course.channelId = channels.get().getId();
+            if (channel != null) {
+                course.channelId = channel.get().getId();
             }
 
             return course;

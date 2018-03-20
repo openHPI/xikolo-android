@@ -1,7 +1,7 @@
 package de.xikolo.managers
 
-import de.xikolo.jobs.GetChannelJob
-import de.xikolo.jobs.ListChannelsJob
+import de.xikolo.jobs.GetChannelWithCoursesJob
+import de.xikolo.jobs.ListChannelsWithCoursesJob
 import de.xikolo.jobs.base.RequestJobCallback
 import de.xikolo.models.Channel
 import io.realm.Realm
@@ -34,36 +34,25 @@ class ChannelManager {
         }
 
         val channelPromise = realm
-                .where(Channel::class.java)
-                .beginGroup()
+            .where(Channel::class.java)
+            .beginGroup()
                 .equalTo("id", id)
                 .or()
                 .equalTo("slug", id)
-                .endGroup()
-                .findFirstAsync()
+            .endGroup()
+            .findFirstAsync()
 
         channelPromise.addChangeListener(listener)
 
         return channelPromise
     }
 
-    //returns true if there are two or more Channels
-    fun hasChannels(realm: Realm) : Boolean {
-        val channelList = realm
-                .where(Channel::class.java)
-                .findAll()
-
-        if(channelList.count() < 2)
-            return false
-
-        return true
+    fun requestChannelWithCourses(channelId: String, callback: RequestJobCallback) {
+        GetChannelWithCoursesJob(channelId, callback).run()
     }
 
-    fun requestChannel(channelId: String, callback: RequestJobCallback) {
-        GetChannelJob(channelId, callback).run()
+    fun requestChannelListWithCourses(callback: RequestJobCallback) {
+        ListChannelsWithCoursesJob(callback).run()
     }
 
-    fun requestChannelList(callback: RequestJobCallback) {
-        ListChannelsJob(callback).run()
-    }
 }

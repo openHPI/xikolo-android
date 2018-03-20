@@ -4,7 +4,6 @@ import de.xikolo.managers.ChannelManager;
 import de.xikolo.models.Channel;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 
 public class ChannelDetailsPresenter extends LoadingStatePresenter<ChannelDetailsView> {
 
@@ -39,13 +38,10 @@ public class ChannelDetailsPresenter extends LoadingStatePresenter<ChannelDetail
             requestChannel(false);
         }
 
-        channelPromise = channelManager.getChannel(channelId, realm, new RealmChangeListener<Channel>() {
-            @Override
-            public void onChange(Channel c) {
-                channel = c;
-                getViewOrThrow().showContent();
-                getViewOrThrow().setupView(channel);
-            }
+        channelPromise = channelManager.getChannel(channelId, realm, c -> {
+            channel = c;
+            getViewOrThrow().showContent();
+            getViewOrThrow().setupView(channel);
         });
     }
 
@@ -67,7 +63,7 @@ public class ChannelDetailsPresenter extends LoadingStatePresenter<ChannelDetail
         if (getView() != null) {
             getView().showProgress();
         }
-        channelManager.requestChannel(channelId, getDefaultJobCallback(userRequest));
+        channelManager.requestChannelWithCourses(channelId, getDefaultJobCallback(userRequest));
     }
 
 }

@@ -5,23 +5,27 @@ import de.xikolo.config.Config
 import de.xikolo.jobs.base.RequestJob
 import de.xikolo.jobs.base.RequestJobCallback
 import de.xikolo.models.Channel
+import de.xikolo.models.Course
 import de.xikolo.models.base.Sync
 import de.xikolo.network.ApiService
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class ListChannelsJob(callback: RequestJobCallback) : RequestJob(callback) {
+class ListChannelsWithCoursesJob(callback: RequestJobCallback) : RequestJob(callback) {
 
     companion object {
-        val TAG: String = ListChannelsJob::class.java.simpleName
+        val TAG: String = ListChannelsWithCoursesJob::class.java.simpleName
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().listChannels().awaitResponse()
+        val response = ApiService.getInstance().listChannelsWithCourses().awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Channels received")
 
-            Sync.Data.with(Channel::class.java, *response.body()!!).run()
+            val ids = Sync.Data.with(Channel::class.java, *response.body()!!).run()
+            Sync.Included.with(Course::class.java, *response.body()!!)
+                .addFilter("channelId", ids)
+                .run()
 
             callback?.success()
         } else {

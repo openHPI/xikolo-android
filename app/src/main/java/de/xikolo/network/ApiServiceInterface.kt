@@ -13,11 +13,11 @@ interface ApiServiceInterface {
 
     //Channel
 
-    @GET("channels")
-    fun listChannels(): Call<Array<Channel.JsonModel>>
+    @GET("channels?include=courses")
+    fun listChannelsWithCourses(): Call<Array<Channel.JsonModel>>
 
-    @GET("channels/{id}")
-    fun getChannel(@Path("id") id: String): Call<Channel.JsonModel>
+    @GET("channels/{id}?include=courses")
+    fun getChannelWithCourses(@Path("id") id: String): Call<Channel.JsonModel>
 
     // Course
 
