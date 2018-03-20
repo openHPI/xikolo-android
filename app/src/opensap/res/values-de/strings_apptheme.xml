@@ -7,4 +7,6 @@
 
     <string name="login_sso_hint">für SAP-Mitarbeiter, Partner und Kunden</string>
 
+    <string name="title_section_channels">Kursbereiche</string>
+
 </resources>
