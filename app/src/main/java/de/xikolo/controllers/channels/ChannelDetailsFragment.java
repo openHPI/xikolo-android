@@ -70,7 +70,7 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
             layoutHeader.setVisibility(View.GONE);
         }
         else {
-            GlideApp.with(this).load(R.mipmap.ic_launcher_circle).into(imageChannel); //ToDo get from model
+            GlideApp.with(this).load(channel.imageUrl).into(imageChannel);
             textTitle.setText(channel.name);
         }
 

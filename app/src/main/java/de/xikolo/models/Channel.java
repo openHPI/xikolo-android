@@ -1,5 +1,7 @@
 package de.xikolo.models;
 
+import com.squareup.moshi.Json;
+
 import de.xikolo.models.base.RealmAdapter;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -22,6 +24,8 @@ public class Channel extends RealmObject {
 
     public String description;
 
+    public String imageUrl;
+
     public static Channel get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Channel model = realm.where(Channel.class).equalTo("id", id).findFirst();
@@ -43,6 +47,9 @@ public class Channel extends RealmObject {
 
         public String description;
 
+        @Json(name = "mobile_image_url")
+        public String mobileImageUrl;
+
         @Override
         public Channel convertToRealmObject() {
             Channel model = new Channel();
@@ -52,6 +59,7 @@ public class Channel extends RealmObject {
             model.color = color;
             model.position = position;
             model.description = description;
+            model.imageUrl = mobileImageUrl;
 
             return model;
         }

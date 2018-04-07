@@ -56,10 +56,10 @@ public class ChannelDetailsActivity extends BaseActivity {
         String tag = "content";
 
         if(true){//if (channel.image != null) {
-            GlideApp.with(this).load(R.mipmap.ic_launcher_circle).into(imageView);
+            GlideApp.with(this).load(channel.imageUrl).into(imageView);
         } else {
             lockCollapsingToolbar(channel.name);
-        } //ToDO get from model
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {

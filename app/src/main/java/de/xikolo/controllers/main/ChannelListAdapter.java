@@ -75,9 +75,6 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 holder.scrollContainer.removeAllViews();
                 for(int i = 0; i < Math.min(7, courses.size()); i++){
                     Course course = courses.get(i);
-                    GlideApp.with(App.getInstance()).load(course.imageUrl).into(holder.imageView);//ToDo add image from model
-
-
                     View view = LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll, holder.scrollContainer, false);
                     TextView textTitle = view.findViewById(R.id.textTitle);
                     textTitle.setText(course.title);
@@ -86,6 +83,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                     view.setOnClickListener(v -> callback.onCourseClicked(course.id));
                     holder.scrollContainer.addView(view);
                 }
+                GlideApp.with(App.getInstance()).load(channel.imageUrl).into(holder.imageView);
                 View view = LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll_more, holder.scrollContainer, false);
                 ((CardView) view).setCardBackgroundColor(Color.parseColor(channel.color));
                 view.setOnClickListener(v -> callback.onMoreCoursesClicked(channel.id));
