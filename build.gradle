@@ -13,7 +13,7 @@ buildscript {
         versionCode         = 40
 
         xikoloApiVersion    = 3
-        realmSchemaVersion  = 1
+        realmSchemaVersion  = 2
     }
     repositories {
         jcenter()
