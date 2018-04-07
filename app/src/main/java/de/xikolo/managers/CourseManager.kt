@@ -212,8 +212,8 @@ class CourseManager {
                 .where(Course::class.java)
                 .equalTo("channelId", channelId)
                 .equalTo("external", false)
-                .greaterThanOrEqualTo("endDate", Date())
-                .sort("startDate", Sort.ASCENDING)
+                //.greaterThanOrEqualTo("endDate", Date())
+                //.sort("startDate", Sort.ASCENDING) //ToDO which courses shal be displayed?
                 .findAllAsync()
 
         courseListPromise.addChangeListener(listener)

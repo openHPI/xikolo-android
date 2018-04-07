@@ -1,7 +1,6 @@
 package de.xikolo.controllers.main;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,12 +23,12 @@ import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Channel;
 import de.xikolo.models.Course;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.ChannelViewHolder> {
 
     public static final String TAG = ChannelListAdapter.class.getSimpleName();
+
+    public static final int PREVIEW_COURSES_COUNT = 7;
 
     private List<Channel> channelList =  new ArrayList<>();
     private OnChannelCardClickListener callback;
@@ -66,28 +65,38 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
         holder.textTitle.setText(channel.name);
         holder.textDescription.setText(channel.description);
+        GlideApp.with(App.getInstance()).load(channel.imageUrl).into(holder.imageView);
         holder.layout.setOnClickListener(v -> callback.onChannelClicked(channel.id));
         holder.buttonChannelCourses.setOnClickListener(v -> callback.onChannelClicked(channel.id));
 
-        new CourseManager().listCoursesForChannel(channel.id, Realm.getDefaultInstance(), new RealmChangeListener<RealmResults<Course>>() {
-            @Override
-            public void onChange(@NonNull RealmResults<Course> courses) {
-                holder.scrollContainer.removeAllViews();
-                for(int i = 0; i < Math.min(7, courses.size()); i++){
-                    Course course = courses.get(i);
-                    View view = LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll, holder.scrollContainer, false);
-                    TextView textTitle = view.findViewById(R.id.textTitle);
-                    textTitle.setText(course.title);
-                    ImageView imageView = view.findViewById(R.id.imageView);
-                    GlideApp.with(App.getInstance()).load(course.imageUrl).into(imageView);
-                    view.setOnClickListener(v -> callback.onCourseClicked(course.id));
-                    holder.scrollContainer.addView(view);
-                }
-                GlideApp.with(App.getInstance()).load(channel.imageUrl).into(holder.imageView);
-                View view = LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll_more, holder.scrollContainer, false);
-                ((CardView) view).setCardBackgroundColor(Color.parseColor(channel.color));
-                view.setOnClickListener(v -> callback.onMoreCoursesClicked(channel.id));
-                holder.scrollContainer.addView(view);
+        new CourseManager().listCoursesForChannel(channel.id, Realm.getDefaultInstance(), courses -> {
+            holder.scrollContainer.removeAllViews();
+
+            int courseCount = Math.min(PREVIEW_COURSES_COUNT, courses.size());
+
+            for(int i = 0; i < courseCount; i++){
+                Course course = courses.get(i);
+
+                View listItem = LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll, holder.scrollContainer, false);
+
+                TextView textTitle = listItem.findViewById(R.id.textTitle);
+                textTitle.setText(course.title);
+
+                ImageView imageView = listItem.findViewById(R.id.imageView);
+                GlideApp.with(App.getInstance()).load(course.imageUrl).into(imageView);
+
+                listItem.setOnClickListener(v -> callback.onCourseClicked(course.id));
+
+                holder.scrollContainer.addView(listItem);
+            }
+
+            if(courses.size() > PREVIEW_COURSES_COUNT) {
+                CardView showMoreButton = (CardView) LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll_more, holder.scrollContainer, false);
+
+                showMoreButton.setCardBackgroundColor(Color.parseColor(channel.color));
+                showMoreButton.setOnClickListener(v -> callback.onMoreCoursesClicked(channel.id));
+
+                holder.scrollContainer.addView(showMoreButton);
             }
         });
     }
@@ -114,7 +123,5 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
             super(view);
             ButterKnife.bind(this, view);
         }
-
     }
-
 }
