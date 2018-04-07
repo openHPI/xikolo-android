@@ -22,7 +22,7 @@ public class FeatureToggle {
     }
 
     public static boolean channels(){
-        return BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP;
+        return BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO;
     }
 
 }
