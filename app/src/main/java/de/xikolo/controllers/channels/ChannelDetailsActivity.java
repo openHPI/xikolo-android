@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewStub;
 import android.widget.ImageView;
@@ -55,7 +54,7 @@ public class ChannelDetailsActivity extends BaseActivity {
 
         String tag = "content";
 
-        if(true){//if (channel.image != null) {
+        if(channel.imageUrl != null){
             GlideApp.with(this).load(channel.imageUrl).into(imageView);
         } else {
             lockCollapsingToolbar(channel.name);
@@ -63,20 +62,8 @@ public class ChannelDetailsActivity extends BaseActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
-            final ChannelDetailsFragment fragment = ChannelDetailsFragmentAutoBundle.builder(channelId).build();
+            final ChannelDetailsFragment fragment = ChannelDetailsFragmentAutoBundle.builder(channelId).scrollToCourses(scrollToCourses).build();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.runOnCommit(() -> {
-                final ChannelCoursesListFragment courseListFragment = ChannelCoursesListFragmentAutoBundle.builder(channelId).build();
-                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                FragmentTransaction transaction1 = fragmentManager1.beginTransaction();
-                transaction1.replace(fragment.courseListContainer.getId(), courseListFragment, String.format("courses_%s", channelId));
-                fragment.getView().post(() -> {
-                    if(scrollToCourses) {
-                        fragment.scrollView.scrollTo(0, fragment.courseListContainer.getTop());
-                    }
-                    });
-                transaction1.commit();
-                });
             transaction.replace(R.id.content, fragment, tag);
             transaction.commit();
         }
@@ -92,8 +79,6 @@ public class ChannelDetailsActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        //inflater.inflate(R.menu.share, menu);
         super.onCreateOptionsMenu(menu);
         return true;
     }

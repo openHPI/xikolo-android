@@ -213,7 +213,7 @@ class CourseManager {
                 .equalTo("channelId", channelId)
                 .equalTo("external", false)
                 //.greaterThanOrEqualTo("endDate", Date())
-                //.sort("startDate", Sort.ASCENDING) //ToDO which courses shal be displayed?
+                //.sort("startDate", Sort.ASCENDING) //ToDO which courses shall be displayed?
                 .findAllAsync()
 
         courseListPromise.addChangeListener(listener)

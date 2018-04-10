@@ -63,11 +63,17 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
     public void onBindViewHolder(ChannelListAdapter.ChannelViewHolder holder, int position) {
         final Channel channel = channelList.get(position);
 
+        int channelColor = Color.parseColor(channel.color);
+
         holder.textTitle.setText(channel.name);
         holder.textDescription.setText(channel.description);
-        GlideApp.with(App.getInstance()).load(channel.imageUrl).into(holder.imageView);
-        holder.layout.setOnClickListener(v -> callback.onChannelClicked(channel.id));
+        holder.buttonChannelCourses.setTextColor(channelColor);
+
         holder.buttonChannelCourses.setOnClickListener(v -> callback.onChannelClicked(channel.id));
+        holder.layout.setOnClickListener(v -> callback.onChannelClicked(channel.id));
+
+        if(channel.imageUrl != null)
+            GlideApp.with(App.getInstance()).load(channel.imageUrl).into(holder.imageView); //ToDo else?
 
         new CourseManager().listCoursesForChannel(channel.id, Realm.getDefaultInstance(), courses -> {
             holder.scrollContainer.removeAllViews();
@@ -93,7 +99,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
             if(courses.size() > PREVIEW_COURSES_COUNT) {
                 CardView showMoreButton = (CardView) LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll_more, holder.scrollContainer, false);
 
-                showMoreButton.setCardBackgroundColor(Color.parseColor(channel.color));
+                showMoreButton.setCardBackgroundColor(channelColor);
                 showMoreButton.setOnClickListener(v -> callback.onMoreCoursesClicked(channel.id));
 
                 holder.scrollContainer.addView(showMoreButton);
