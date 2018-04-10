@@ -1,11 +1,15 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/content_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbars="vertical">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants">
 
         <FrameLayout
             android:id="@+id/layout_header"
@@ -35,9 +39,9 @@
                 android:gravity="bottom"
                 android:maxLines="2"
                 android:paddingBottom="8dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp"
+                android:layout_marginLeft="@dimen/content_horizontal_margin"
+                android:layout_marginRight="@dimen/content_horizontal_margin"
+                android:layout_marginTop="8dp"
                 android:textColor="@color/white"
                 android:textSize="24sp" />
 
@@ -47,24 +51,28 @@
             android:id="@+id/text_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_header"
             android:lineSpacingExtra="4dp"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="@dimen/content_horizontal_margin"
+            android:layout_marginRight="@dimen/content_horizontal_margin"
+            android:layout_marginTop="16dp"
             android:textColor="@color/text_main"
             android:textColorLink="@color/apptheme_second"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
-        <FrameLayout
-            android:id="@+id/course_list_container"
+        <de.xikolo.views.AutofitRecyclerView
+            android:id="@+id/course_list"
             android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:layout_below="@+id/text_description">
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:columnWidth="400dp"
+            android:focusable="true"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin" />
 
-        </FrameLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

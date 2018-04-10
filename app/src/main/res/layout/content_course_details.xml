@@ -44,15 +44,20 @@
 
         </FrameLayout>
 
+        <View
+            android:id="@+id/space"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:layout_below="@+id/layout_header"/>
+
         <TextView
             android:id="@+id/text_teacher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/layout_header"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
+            android:layout_below="@+id/space"
+            android:layout_marginLeft="@dimen/content_horizontal_margin"
+            android:layout_marginRight="@dimen/content_horizontal_margin"
             android:textColor="@color/text_second"
             android:textSize="12sp" />
 
@@ -62,10 +67,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/text_teacher"
+            android:layout_marginLeft="@dimen/content_horizontal_margin"
             android:layout_marginRight="6dp"
+            android:layout_marginTop="8dp"
             android:maxLines="1"
-            android:paddingLeft="16dp"
-            android:paddingTop="8dp"
             android:text="@string/icon_cal"
             android:textColor="@color/text_main_icon"
             android:textSize="20sp"
@@ -76,23 +81,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_teacher"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/text_date_icon"
-            android:maxLines="1"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
-            android:textColor="@color/text_main"
+            android:singleLine="true"
             android:textSize="14sp" />
 
         <de.xikolo.views.CustomFontTextView
             android:id="@+id/text_lang_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/text_date_icon"
+            android:layout_below="@+id/text_teacher"
             android:layout_marginRight="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/text_date"
             android:maxLines="1"
-            android:paddingLeft="16dp"
-            android:paddingTop="8dp"
             android:text="@string/icon_lang"
             android:textColor="@color/text_main_icon"
             android:textSize="20sp"
@@ -102,12 +105,10 @@
             android:id="@+id/text_language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/text_date_icon"
+            android:layout_below="@+id/text_teacher"
+            android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/text_lang_icon"
             android:maxLines="1"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
-            android:textColor="@color/text_main"
             android:textSize="14sp" />
 
         <TextView
@@ -117,10 +118,9 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/text_lang_icon"
             android:lineSpacingExtra="4dp"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
+            android:layout_marginLeft="@dimen/content_horizontal_margin"
+            android:layout_marginRight="@dimen/content_horizontal_margin"
+            android:layout_marginTop="16dp"
             android:textColor="@color/text_main"
             android:textColorLink="@color/apptheme_second"
             android:textSize="14sp" />
