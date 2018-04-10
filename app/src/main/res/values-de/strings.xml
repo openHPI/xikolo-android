@@ -101,6 +101,10 @@
     <string name="dialog_server_error_message">Beim Kontaktieren des Servers ist ein Problem aufgetreten. Bitte versuche es später noch einmal.</string>
     <string name="dialog_server_error_no">Schließen</string>
 
+    <string name="dialog_birthday_voucher_title">Herzlichen Glückwunsch!</string>
+    <string name="dialog_birthday_voucher_message">Wir schenken Ihnen einen openSAP Kursreaktivierungs-Code! Den Code und eine kurze Anleitung erhalten Sie in Kürze per E-Mail.</string>
+    <string name="dialog_birthday_voucher_ok">OK</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 

@@ -9,9 +9,9 @@ import android.support.v7.app.AlertDialog;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.base.BaseDialogFragment;
 
-public class ServerErrorDialog extends BaseDialogFragment {
+public class BirthdayVoucherDialog extends BaseDialogFragment {
 
-    public static final String TAG = ServerErrorDialog.class.getSimpleName();
+    public static final String TAG = BirthdayVoucherDialog.class.getSimpleName();
 
     private Listener listener;
 
@@ -23,14 +23,11 @@ public class ServerErrorDialog extends BaseDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog)
-                .setTitle(getString(R.string.dialog_server_error_title))
-                .setMessage(getString(R.string.dialog_server_error_message))
-                .setNegativeButton(getString(R.string.dialog_server_error_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (listener != null) {
-                            listener.onDismissed();
-                        }
+                .setTitle(getString(R.string.dialog_birthday_voucher_title))
+                .setMessage(getString(R.string.dialog_birthday_voucher_message))
+                .setPositiveButton(getString(R.string.dialog_birthday_voucher_ok), (dialog, which) -> {
+                    if (listener != null) {
+                        listener.onAccepted();
                     }
                 })
                 .setCancelable(true);
@@ -44,12 +41,12 @@ public class ServerErrorDialog extends BaseDialogFragment {
     @Override
     public void onCancel(DialogInterface dialog) {
         if (listener != null) {
-            listener.onDismissed();
+            listener.onAccepted();
         }
     }
 
     public interface Listener {
-        void onDismissed();
+        void onAccepted();
     }
 
 }

@@ -13,9 +13,9 @@ public class ServerMaintenanceDialog extends BaseDialogFragment {
 
     public static final String TAG = ServerMaintenanceDialog.class.getSimpleName();
 
-    private ServerMaintenanceDialogListener listener;
+    private Listener listener;
 
-    public void setDialogListener(ServerMaintenanceDialogListener listener) {
+    public void setDialogListener(Listener listener) {
         this.listener = listener;
     }
 
@@ -48,7 +48,7 @@ public class ServerMaintenanceDialog extends BaseDialogFragment {
         }
     }
 
-    public interface ServerMaintenanceDialogListener {
+    public interface Listener {
         void onDismissed();
     }
 
