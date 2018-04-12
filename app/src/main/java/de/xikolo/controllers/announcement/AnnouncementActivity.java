@@ -6,6 +6,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.yatatsu.autobundle.AutoBundleField;
@@ -31,6 +32,8 @@ public class AnnouncementActivity extends BaseActivity {
     @BindView(R.id.toolbar_image) ImageView imageView;
     @BindView(appbar) AppBarLayout appBarLayout;
     @BindView(collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.scrim_top) View scrimTop;
+    @BindView(R.id.scrim_bottom) View scrimBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,8 @@ public class AnnouncementActivity extends BaseActivity {
         lp.height = AndroidDimenUtil.getActionBarHeight() + AndroidDimenUtil.getStatusBarHeight();
         collapsingToolbar.setTitleEnabled(false);
         toolbar.setTitle(title);
+        scrimTop.setVisibility(View.INVISIBLE);
+        scrimBottom.setVisibility(View.INVISIBLE);
     }
 
 }

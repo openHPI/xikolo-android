@@ -1,6 +1,5 @@
 package de.xikolo.controllers.channels;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 
@@ -35,6 +35,8 @@ public class ChannelDetailsActivity extends BaseActivity {
     @BindView(R.id.appbar) AppBarLayout appBarLayout;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.stub_bottom) ViewStub stubBottom;
+    @BindView(R.id.scrim_top) View scrimTop;
+    @BindView(R.id.scrim_bottom) View scrimBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,7 @@ public class ChannelDetailsActivity extends BaseActivity {
 
         setTitle(channel.name);
 
-        int color = Color.parseColor(channel.color);
+        int color = channel.getColorOrDefault();
         collapsingToolbar.setContentScrimColor(color);
         collapsingToolbar.setBackgroundColor(color);
         collapsingToolbar.setStatusBarScrimColor(color);
@@ -75,6 +77,8 @@ public class ChannelDetailsActivity extends BaseActivity {
         lp.height = AndroidDimenUtil.getActionBarHeight() + AndroidDimenUtil.getStatusBarHeight();
         collapsingToolbar.setTitleEnabled(false);
         toolbar.setTitle(title);
+        scrimTop.setVisibility(View.INVISIBLE);
+        scrimBottom.setVisibility(View.INVISIBLE);
     }
 
     @Override

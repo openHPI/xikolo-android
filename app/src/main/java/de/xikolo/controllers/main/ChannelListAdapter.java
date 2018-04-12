@@ -1,6 +1,5 @@
 package de.xikolo.controllers.main;
 
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -63,9 +62,12 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
     public void onBindViewHolder(ChannelListAdapter.ChannelViewHolder holder, int position) {
         final Channel channel = channelList.get(position);
 
-        int channelColor = Color.parseColor(channel.color);
+        int channelColor = channel.getColorOrDefault();
 
         holder.textTitle.setText(channel.name);
+
+        holder.textTitle.setTextColor(channelColor);
+
         holder.textDescription.setText(channel.description);
         holder.buttonChannelCourses.setTextColor(channelColor);
 
@@ -73,7 +75,9 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         holder.layout.setOnClickListener(v -> callback.onChannelClicked(channel.id));
 
         if(channel.imageUrl != null)
-            GlideApp.with(App.getInstance()).load(channel.imageUrl).into(holder.imageView); //ToDo else?
+            GlideApp.with(App.getInstance()).load(channel.imageUrl).into(holder.imageView);
+        else
+            holder.imageView.setVisibility(View.GONE);
 
         new CourseManager().listCoursesForChannel(channel.id, Realm.getDefaultInstance(), courses -> {
             holder.scrollContainer.removeAllViews();

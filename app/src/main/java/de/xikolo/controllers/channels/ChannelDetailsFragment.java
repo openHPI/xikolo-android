@@ -1,7 +1,6 @@
 package de.xikolo.controllers.channels;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -140,7 +139,7 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
         MarkdownUtil.formatAndSet(channel.description, textDescription);
 
         if(courseListAdapter != null)
-            courseListAdapter.setButtonColor(Color.parseColor(channel.color));
+            courseListAdapter.setButtonColor(channel.getColorOrDefault());
 
         if(scrollToCourses)
             scrollView.smoothScrollTo(0, courseList.getTop());
