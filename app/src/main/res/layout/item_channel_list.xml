@@ -54,13 +54,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textDescription"
+            android:layout_marginTop="16dp"
             android:scrollbars="none">
 
             <LinearLayout
                 android:id="@+id/scrollContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp" />
