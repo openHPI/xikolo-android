@@ -49,22 +49,23 @@
             android:maxLines="3"
             android:textSize="14sp" />
 
-            <HorizontalScrollView
-                android:id="@+id/scrollView"
+        <HorizontalScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textDescription"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/scrollContainer"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textDescription">
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp" />
 
-                <LinearLayout
-                    android:id="@+id/scrollContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_marginTop="16dp" />
-
-            </HorizontalScrollView>
+        </HorizontalScrollView>
 
             <Button
                 android:id="@+id/button_channel_courses"
