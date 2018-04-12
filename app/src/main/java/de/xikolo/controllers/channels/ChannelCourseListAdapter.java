@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -23,13 +22,19 @@ import de.xikolo.config.BuildFlavor;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.main.CourseListAdapter;
 import de.xikolo.models.Course;
+import de.xikolo.models.base.SectionList;
 import de.xikolo.utils.DateUtil;
+import de.xikolo.utils.MarkdownUtil;
 
 public class ChannelCourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final String TAG = ChannelCourseListAdapter.class.getSimpleName();
 
-    private List<Course> courseList;
+    private static final int ITEM_VIEW_TYPE_META = 0;
+    private static final int ITEM_VIEW_TYPE_HEADER = 1;
+    private static final int ITEM_VIEW_TYPE_ITEM = 2;
+
+    private SectionList<String, List<Course>> courseList;
 
     private CourseListAdapter.OnCourseButtonClickListener callback;
 
@@ -37,15 +42,19 @@ public class ChannelCourseListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private int channelColor = 0;
 
-    public ChannelCourseListAdapter(Fragment fragment, CourseListAdapter.OnCourseButtonClickListener callback) {
+    ChannelCourseListAdapter(Fragment fragment, CourseListAdapter.OnCourseButtonClickListener callback) {
         this.fragment = fragment;
-        this.courseList = new ArrayList<>();
+        this.courseList = new SectionList<>();
         this.callback = callback;
     }
 
-    public void update(List<Course> courseList) {
+    public void update(SectionList<String, List<Course>> courseList) {
         this.courseList = courseList;
         this.notifyDataSetChanged();
+    }
+
+    public boolean isHeader(int position) {
+        return courseList.isHeader(position);
     }
 
     public void clear() {
@@ -59,77 +68,114 @@ public class ChannelCourseListAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if(position == 0)
+            return ITEM_VIEW_TYPE_META;
+        else if (courseList.isHeader(position))
+            return ITEM_VIEW_TYPE_HEADER;
+        else
+            return ITEM_VIEW_TYPE_ITEM;
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_list, parent, false);
-        return new CourseViewHolder(view);
+        switch(viewType) {
+            case ITEM_VIEW_TYPE_META:
+                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_description, parent, false);
+                return new ChannelCourseListAdapter.MetaViewHolder(view1);
+            case ITEM_VIEW_TYPE_HEADER:
+                View view2 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
+                return new ChannelCourseListAdapter.HeaderViewHolder(view2);
+            default:
+                View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_list, parent, false);
+                return new ChannelCourseListAdapter.CourseViewHolder(view3);
+        }
     }
 
     @SuppressWarnings("SetTextI18n")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        CourseViewHolder viewHolder = (CourseViewHolder) holder;
-
-        final Course course = courseList.get(position);
-
-        Context context = App.getInstance();
-
-        viewHolder.textDate.setText(course.getFormattedDate());
-        viewHolder.textTitle.setText(course.title);
-        viewHolder.textTeacher.setText(course.teachers);
-        viewHolder.textLanguage.setText(course.getFormattedLanguage());
-
-        if (course.teachers == null || "".equals(course.teachers)) {
-            viewHolder.textTeacher.setVisibility(View.GONE);
-        } else {
-            viewHolder.textTeacher.setVisibility(View.VISIBLE);
+        if (holder instanceof ChannelCourseListAdapter.MetaViewHolder) {
+            ChannelCourseListAdapter.MetaViewHolder viewHolder = (ChannelCourseListAdapter.MetaViewHolder) holder;
+            if(courseList.getItem(position) != null)
+                MarkdownUtil.formatAndSet((String) courseList.getItem(position), viewHolder.text);
+            else
+                viewHolder.text.setVisibility(View.GONE);
         }
+        else if (holder instanceof ChannelCourseListAdapter.HeaderViewHolder) {
+            ChannelCourseListAdapter.HeaderViewHolder viewHolder = (ChannelCourseListAdapter.HeaderViewHolder) holder;
 
-        viewHolder.textDescription.setText(course.shortAbstract);
-        viewHolder.textDescription.setVisibility(View.VISIBLE);
-
-        if (DateUtil.nowIsBetween(course.startDate, course.endDate)) {
-            viewHolder.textBanner.setVisibility(View.VISIBLE);
-            viewHolder.textBanner.setText(context.getText(R.string.banner_running));
-            viewHolder.textBanner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
+            String header = (String) courseList.getItem(position);
+            if (header == null) {
+                viewHolder.header.setVisibility(View.GONE);
+            } else {
+                viewHolder.header.setText(header);
+                viewHolder.header.setVisibility(View.VISIBLE);
+            }
         } else {
-            viewHolder.textBanner.setVisibility(View.GONE);
-        }
+            ChannelCourseListAdapter.CourseViewHolder viewHolder = (ChannelCourseListAdapter.CourseViewHolder) holder;
 
+            final Course course = (Course) courseList.getItem(position);
 
-        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-            viewHolder.textBanner.setVisibility(View.GONE);
-        }
+            Context context = App.getInstance();
 
-        GlideApp.with(fragment).load(course.imageUrl).into(viewHolder.image);
+            viewHolder.textDate.setText(course.getFormattedDate());
+            viewHolder.textTitle.setText(course.title);
+            viewHolder.textTeacher.setText(course.teachers);
+            viewHolder.textLanguage.setText(course.getFormattedLanguage());
 
-        viewHolder.buttonCourseAction.setTextColor(channelColor);
-        viewHolder.buttonCourseDetails.setTextColor(channelColor);
+            if (course.teachers == null || course.teachers.equals("")) {
+                viewHolder.textTeacher.setVisibility(View.GONE);
+            } else {
+                viewHolder.textTeacher.setVisibility(View.VISIBLE);
+            }
 
-        viewHolder.buttonCourseAction.setEnabled(true);
+            viewHolder.textDescription.setText(course.shortAbstract);
+            viewHolder.textDescription.setVisibility(View.VISIBLE);
 
-        viewHolder.buttonCourseDetails.setVisibility(View.VISIBLE);
-        viewHolder.buttonCourseDetails.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+            if (DateUtil.nowIsBetween(course.startDate, course.endDate)) {
+                viewHolder.textBanner.setVisibility(View.VISIBLE);
+                viewHolder.textBanner.setText(context.getText(R.string.banner_running));
+                viewHolder.textBanner.setBackgroundColor(ContextCompat.getColor(context, R.color.banner_green));
+            } else {
+                viewHolder.textBanner.setVisibility(View.GONE);
+            }
 
-        if (course.isEnrolled() && course.accessible) {
-            viewHolder.layout.setOnClickListener(v -> callback.onContinueButtonClicked(course.id));
+            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                viewHolder.textBanner.setVisibility(View.GONE);
+            }
 
-            viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_continue_course));
-            viewHolder.buttonCourseAction.setOnClickListener(v -> callback.onContinueButtonClicked(course.id));
+            GlideApp.with(fragment).load(course.imageUrl).into(viewHolder.image);
 
-            viewHolder.buttonCourseDetails.setVisibility(View.GONE);
+            viewHolder.buttonCourseAction.setTextColor(channelColor);
+            viewHolder.buttonCourseDetails.setTextColor(channelColor);
 
-        } else if (course.isEnrolled() && !course.accessible) {
-            viewHolder.layout.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+            viewHolder.buttonCourseAction.setEnabled(true);
 
-            viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_starts_soon));
-            viewHolder.buttonCourseAction.setEnabled(false);
-            viewHolder.buttonCourseAction.setClickable(false);
+            viewHolder.buttonCourseDetails.setVisibility(View.VISIBLE);
+            viewHolder.buttonCourseDetails.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
 
-        } else {
-            viewHolder.layout.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+            if (course.isEnrolled() && course.accessible) {
+                viewHolder.layout.setOnClickListener(v -> callback.onContinueButtonClicked(course.id));
 
-            viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_enroll));
-            viewHolder.buttonCourseAction.setOnClickListener(v -> callback.onEnrollButtonClicked(course.id));
+                viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_continue_course));
+                viewHolder.buttonCourseAction.setOnClickListener(v -> callback.onContinueButtonClicked(course.id));
+
+                viewHolder.buttonCourseDetails.setVisibility(View.GONE);
+
+            } else if (course.isEnrolled() && !course.accessible) {
+                viewHolder.layout.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+
+                viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_starts_soon));
+                viewHolder.buttonCourseAction.setEnabled(false);
+                viewHolder.buttonCourseAction.setClickable(false);
+
+            } else {
+                viewHolder.layout.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+
+                viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_enroll));
+                viewHolder.buttonCourseAction.setOnClickListener(v -> callback.onEnrollButtonClicked(course.id));
+            }
         }
     }
 
@@ -151,6 +197,29 @@ public class ChannelCourseListAdapter extends RecyclerView.Adapter<RecyclerView.
         @BindView(R.id.textBanner) TextView textBanner;
 
         public CourseViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+
+    }
+
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.container) ViewGroup container;
+        @BindView(R.id.textHeader) TextView header;
+
+        public HeaderViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+
+    }
+
+    static class MetaViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.text) TextView text;
+
+        public MetaViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }

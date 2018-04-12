@@ -4,13 +4,14 @@ import java.util.List;
 
 import de.xikolo.models.Channel;
 import de.xikolo.models.Course;
+import de.xikolo.models.base.SectionList;
 import de.xikolo.presenters.base.LoadingStateView;
 
 public interface ChannelDetailsView extends LoadingStateView {
 
     void setupView(Channel channel);
 
-    void showCourses(List<Course> courseList);
+    void showContent(SectionList<String, List<Course>> courseList);
 
     void enterCourse(String courseId);
 

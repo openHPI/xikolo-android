@@ -1,15 +1,9 @@
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/content_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbarStyle="outsideOverlay"
-    android:scrollbars="vertical">
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:descendantFocusability="blocksDescendants">
+    android:orientation="vertical">
 
         <FrameLayout
             android:id="@+id/layout_header"
@@ -47,19 +41,6 @@
 
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/text_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lineSpacingExtra="4dp"
-            android:layout_marginBottom="24dp"
-            android:layout_marginLeft="@dimen/content_horizontal_margin"
-            android:layout_marginRight="@dimen/content_horizontal_margin"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/text_main"
-            android:textColorLink="@color/apptheme_second"
-            android:textSize="14sp" />
-
         <de.xikolo.views.AutofitRecyclerView
             android:id="@+id/course_list"
             android:layout_width="match_parent"
@@ -68,11 +49,11 @@
             android:clickable="true"
             android:columnWidth="400dp"
             android:focusable="true"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     </LinearLayout>
-
-</android.support.v4.widget.NestedScrollView>

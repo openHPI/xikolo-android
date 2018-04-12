@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.GridLayoutManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +18,7 @@ import com.yatatsu.autobundle.AutoBundleField;
 import java.util.List;
 
 import butterknife.BindView;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
@@ -27,11 +28,11 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.controllers.main.CourseListAdapter;
 import de.xikolo.models.Channel;
 import de.xikolo.models.Course;
+import de.xikolo.models.base.SectionList;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.channels.ChannelDetailsPresenter;
 import de.xikolo.presenters.channels.ChannelDetailsPresenterFactory;
 import de.xikolo.presenters.channels.ChannelDetailsView;
-import de.xikolo.utils.MarkdownUtil;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
 
@@ -43,11 +44,9 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
 
     @AutoBundleField (required = false) boolean scrollToCourses = false;
 
-    @BindView(R.id.content_view) NestedScrollView scrollView;
     @BindView(R.id.layout_header) FrameLayout layoutHeader;
     @BindView(R.id.image_channel) ImageView imageChannel;
     @BindView(R.id.text_title) TextView textTitle;
-    @BindView(R.id.text_description) TextView textDescription;
     @BindView(R.id.course_list) AutofitRecyclerView courseList;
 
     private ChannelCourseListAdapter courseListAdapter;
@@ -79,16 +78,23 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
             }
         });
 
+        courseList.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return courseListAdapter.isHeader(position) ? courseList.getSpanCount() : 1;
+            }
+        });
+
         courseList.setAdapter(courseListAdapter);
 
         courseList.addItemDecoration(new SpaceItemDecoration(
-                getActivity().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
-                getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
+                App.getInstance().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
+                App.getInstance().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
                 false,
                 new SpaceItemDecoration.RecyclerViewInfo() {
                     @Override
                     public boolean isHeader(int position) {
-                        return false;
+                        return courseListAdapter.isHeader(position);
                     }
 
                     @Override
@@ -101,8 +107,6 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
                         return courseListAdapter.getItemCount();
                     }
                 }));
-
-        courseList.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -136,38 +140,34 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
             textTitle.setText(channel.name);
         }
 
-        MarkdownUtil.formatAndSet(channel.description, textDescription);
-
         if(courseListAdapter != null)
             courseListAdapter.setButtonColor(channel.getColorOrDefault());
-
-        if(scrollToCourses)
-            scrollView.smoothScrollTo(0, courseList.getTop());
     }
 
     @Override
-    public void showCourses(List<Course> courses) {
-        if(courseListAdapter != null) {
+    public void showContent(SectionList<String, List<Course>> courses) {
+        if(courseListAdapter != null)
             courseListAdapter.update(courses);
-            courseListAdapter.notifyDataSetChanged();
-        }
+
+        if(scrollToCourses)
+            courseList.scrollToPosition(1);
     }
 
     @Override
     public void enterCourse(String courseId) {
-        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(getActivity());
+        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.getInstance());
         startActivity(intent);
     }
 
     @Override
     public void enterCourseDetails(String courseId) {
-        Intent intent = CourseDetailsActivityAutoBundle.builder(courseId).build(getActivity());
+        Intent intent = CourseDetailsActivityAutoBundle.builder(courseId).build(App.getInstance());
         startActivity(intent);
     }
 
     @Override
     public void openLogin() {
-        Intent intent = LoginActivityAutoBundle.builder().build(getActivity());
+        Intent intent = LoginActivityAutoBundle.builder().build(App.getInstance());
         startActivity(intent);
     }
 

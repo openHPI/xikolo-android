@@ -16,12 +16,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.App;
+import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.config.BuildFlavor;
 import de.xikolo.config.GlideApp;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Channel;
 import de.xikolo.models.Course;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.ChannelViewHolder> {
 
@@ -79,13 +82,39 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         else
             holder.imageView.setVisibility(View.GONE);
 
-        new CourseManager().listCoursesForChannel(channel.id, Realm.getDefaultInstance(), courses -> {
+        CourseManager courseManager = new CourseManager();
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults coursesPromise = courseManager.listCoursesForChannel(channel.id, Realm.getDefaultInstance(), courses -> {
             holder.scrollContainer.removeAllViews();
 
-            int courseCount = Math.min(PREVIEW_COURSES_COUNT, courses.size());
+            List<Course> courseList = new ArrayList<>();
+            if (courses.size() > 0) {
+                courseList.clear();
+                List<Course> subList;
 
-            for(int i = 0; i < courseCount; i++){
-                Course course = courses.get(i);
+                if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+                    subList = courseManager.listFutureCoursesForChannel(realm, channel.id);
+                    if (subList.size() > 0)
+                        courseList.addAll(subList);
+
+                    subList = courseManager.listCurrentAndPastCoursesForChannel(realm, channel.id);
+                    if (subList.size() > 0)
+                        courseList.addAll(subList);
+                } else {
+                    subList = courseManager.listCurrentAndFutureCoursesForChannel(realm, channel.id);
+                    if (subList.size() > 0)
+                        courseList.addAll(subList);
+
+                    subList = courseManager.listPastCoursesForChannel(realm, channel.id);
+                    if (subList.size() > 0)
+                        courseList.addAll(subList);
+                }
+            }
+
+            int courseCount = Math.min(PREVIEW_COURSES_COUNT, courseList.size());
+
+            for (int i = 0; i < courseCount; i++) {
+                Course course = courseList.get(i);
 
                 View listItem = LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll, holder.scrollContainer, false);
 
@@ -100,7 +129,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 holder.scrollContainer.addView(listItem);
             }
 
-            if(courses.size() > PREVIEW_COURSES_COUNT) {
+            if (courseList.size() > PREVIEW_COURSES_COUNT) {
                 CardView showMoreButton = (CardView) LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll_more, holder.scrollContainer, false);
 
                 showMoreButton.setCardBackgroundColor(channelColor);
