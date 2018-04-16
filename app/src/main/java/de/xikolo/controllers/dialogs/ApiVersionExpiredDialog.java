@@ -13,9 +13,9 @@ public class ApiVersionExpiredDialog extends BaseDialogFragment {
 
     public static final String TAG = ApiVersionExpiredDialog.class.getSimpleName();
 
-    private ApiVersionExpiredDialogListener listener;
+    private Listener listener;
 
-    public void setDialogListener(ApiVersionExpiredDialogListener listener) {
+    public void setDialogListener(Listener listener) {
         this.listener = listener;
     }
 
@@ -56,7 +56,7 @@ public class ApiVersionExpiredDialog extends BaseDialogFragment {
         }
     }
 
-    public interface ApiVersionExpiredDialogListener {
+    public interface Listener {
         void onOpenPlayStoreClicked();
         void onDismissed();
     }

@@ -103,6 +103,10 @@
     <string name="dialog_server_error_message">There was an issue while contacting the server. Please try again later.</string>
     <string name="dialog_server_error_no">Close</string>
 
+    <string name="dialog_birthday_voucher_title">It\'s our fifth anniversary!</string>
+    <string name="dialog_birthday_voucher_message">You\'ve earned a free openSAP reactivation code! Your code and more details will be delivered to your inbox shortly.</string>
+    <string name="dialog_birthday_voucher_ok">OK</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 

@@ -19,11 +19,11 @@ public class ApiVersionDeprecatedDialog extends BaseDialogFragment {
 
     public static final String TAG = ApiVersionDeprecatedDialog.class.getSimpleName();
 
-    private ApiVersionDeprecatedDialogListener listener;
+    private Listener listener;
 
     @AutoBundleField Date deprecationDate;
 
-    public void setDialogListener(ApiVersionDeprecatedDialogListener listener) {
+    public void setDialogListener(Listener listener) {
         this.listener = listener;
     }
 
@@ -65,7 +65,7 @@ public class ApiVersionDeprecatedDialog extends BaseDialogFragment {
         }
     }
 
-    public interface ApiVersionDeprecatedDialogListener {
+    public interface Listener {
         void onOpenPlayStoreClicked();
         void onDismissed();
     }
