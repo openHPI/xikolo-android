@@ -3,7 +3,6 @@ package de.xikolo.controllers.course;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
@@ -20,8 +19,8 @@ import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseActivity;
+import de.xikolo.controllers.helper.CollapsingToolbarHelper;
 import de.xikolo.models.Course;
-import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.ShareUtil;
 
 public class CourseDetailsActivity extends BaseActivity {
@@ -51,7 +50,7 @@ public class CourseDetailsActivity extends BaseActivity {
         if (course.imageUrl != null) {
             GlideApp.with(this).load(course.imageUrl).into(imageView);
         } else {
-            lockCollapsingToolbar(course.title);
+            CollapsingToolbarHelper.lockCollapsingToolbar(course.title, appBarLayout, collapsingToolbar, toolbar, null, null);
         }
 
         final CourseDetailsFragment fragment = CourseDetailsFragmentAutoBundle.builder(courseId).build();
@@ -68,14 +67,6 @@ public class CourseDetailsActivity extends BaseActivity {
             Button enrollButton = (Button) stubBottom.inflate();
             enrollButton.setOnClickListener(view -> fragment.onEnrollButtonClicked());
         }
-    }
-
-    private void lockCollapsingToolbar(String title) {
-        appBarLayout.setExpanded(false, false);
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        lp.height = AndroidDimenUtil.getActionBarHeight() + AndroidDimenUtil.getStatusBarHeight();
-        collapsingToolbar.setTitleEnabled(false);
-        toolbar.setTitle(title);
     }
 
     @Override

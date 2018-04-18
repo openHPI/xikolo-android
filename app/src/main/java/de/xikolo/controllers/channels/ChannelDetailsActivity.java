@@ -3,7 +3,6 @@ package de.xikolo.controllers.channels;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
@@ -19,8 +18,8 @@ import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseActivity;
+import de.xikolo.controllers.helper.CollapsingToolbarHelper;
 import de.xikolo.models.Channel;
-import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.ShareUtil;
 
 public class ChannelDetailsActivity extends BaseActivity {
@@ -47,7 +46,7 @@ public class ChannelDetailsActivity extends BaseActivity {
 
         Channel channel = Channel.get(channelId);
 
-        setTitle(channel.name);
+        setTitle(channel.title);
 
         int color = channel.getColorOrDefault();
         collapsingToolbar.setContentScrimColor(color);
@@ -56,10 +55,10 @@ public class ChannelDetailsActivity extends BaseActivity {
 
         String tag = "content";
 
-        if(channel.imageUrl != null){
+        if (channel.imageUrl != null) {
             GlideApp.with(this).load(channel.imageUrl).into(imageView);
         } else {
-            lockCollapsingToolbar(channel.name);
+            CollapsingToolbarHelper.lockCollapsingToolbar(channel.title, appBarLayout, collapsingToolbar, toolbar, scrimTop, scrimBottom);
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -69,16 +68,6 @@ public class ChannelDetailsActivity extends BaseActivity {
             transaction.replace(R.id.content, fragment, tag);
             transaction.commit();
         }
-    }
-
-    private void lockCollapsingToolbar(String title) {
-        appBarLayout.setExpanded(false, false);
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        lp.height = AndroidDimenUtil.getActionBarHeight() + AndroidDimenUtil.getStatusBarHeight();
-        collapsingToolbar.setTitleEnabled(false);
-        toolbar.setTitle(title);
-        scrimTop.setVisibility(View.INVISIBLE);
-        scrimBottom.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -100,4 +89,5 @@ public class ChannelDetailsActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

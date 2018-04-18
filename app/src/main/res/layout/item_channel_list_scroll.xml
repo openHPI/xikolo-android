@@ -40,8 +40,7 @@
             android:paddingRight="12dp"
             android:paddingTop="16sp"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            tools:text="SAP Leonardo Design-Led Engagements Demystified" />
+            android:textSize="16sp" />
 
     </RelativeLayout>
 

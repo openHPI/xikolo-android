@@ -2,11 +2,13 @@ package de.xikolo.models;
 
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 
 import com.squareup.moshi.Json;
 
 import de.xikolo.App;
 import de.xikolo.R;
+import de.xikolo.config.Config;
 import de.xikolo.models.base.RealmAdapter;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -16,10 +18,12 @@ import moe.banana.jsonapi2.Resource;
 
 public class Channel extends RealmObject {
 
+    public static final String TAG = Channel.class.getSimpleName();
+
     @PrimaryKey
     public String id;
 
-    public String name;
+    public String title;
 
     public String slug;
 
@@ -39,11 +43,15 @@ public class Channel extends RealmObject {
         return model;
     }
 
-    public int getColorOrDefault(){
-        if(color != null)
-            return Color.parseColor(color);
+    public int getColorOrDefault() {
+        if (color != null)
+            try {
+                return Color.parseColor(color);
+            } catch (IllegalArgumentException e) {
+                if (Config.DEBUG) Log.d(TAG, "Channel color '" + color + "' could not be parsed");
+            }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             return App.getInstance().getResources().getColor(R.color.apptheme_main, null);
         else
             return App.getInstance().getResources().getColor(R.color.apptheme_main);
@@ -52,7 +60,7 @@ public class Channel extends RealmObject {
     @JsonApi(type = "channels")
     public static class JsonModel extends Resource implements RealmAdapter<Channel> {
 
-        public String name;
+        public String title;
 
         public String slug;
 
@@ -69,7 +77,7 @@ public class Channel extends RealmObject {
         public Channel convertToRealmObject() {
             Channel model = new Channel();
             model.id = getId();
-            model.name = name;
+            model.title = title;
             model.slug = slug;
             model.color = color;
             model.position = position;

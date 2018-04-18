@@ -3,7 +3,6 @@ package de.xikolo.controllers.announcement;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -15,9 +14,9 @@ import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseActivity;
+import de.xikolo.controllers.helper.CollapsingToolbarHelper;
 import de.xikolo.models.Announcement;
 import de.xikolo.models.Course;
-import de.xikolo.utils.AndroidDimenUtil;
 
 import static de.xikolo.R.id.appbar;
 import static de.xikolo.R.id.collapsing_toolbar;
@@ -52,10 +51,10 @@ public class AnnouncementActivity extends BaseActivity {
             if (course.imageUrl != null) {
                 GlideApp.with(this).load(course.imageUrl).into(imageView);
             } else {
-                lockCollapsingToolbar(announcement.title);
+                CollapsingToolbarHelper.lockCollapsingToolbar(announcement.title, appBarLayout, collapsingToolbar, toolbar, scrimTop, scrimBottom);
             }
         } else {
-            lockCollapsingToolbar(announcement.title);
+            CollapsingToolbarHelper.lockCollapsingToolbar(announcement.title, appBarLayout, collapsingToolbar, toolbar, scrimTop, scrimBottom);
         }
 
         String tag = "content";
@@ -66,16 +65,6 @@ public class AnnouncementActivity extends BaseActivity {
             transaction.replace(R.id.content, AnnouncementFragmentAutoBundle.builder(announcementId, global).build(), tag);
             transaction.commit();
         }
-    }
-
-    private void lockCollapsingToolbar(String title) {
-        appBarLayout.setExpanded(false, false);
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        lp.height = AndroidDimenUtil.getActionBarHeight() + AndroidDimenUtil.getStatusBarHeight();
-        collapsingToolbar.setTitleEnabled(false);
-        toolbar.setTitle(title);
-        scrimTop.setVisibility(View.INVISIBLE);
-        scrimBottom.setVisibility(View.INVISIBLE);
     }
 
 }

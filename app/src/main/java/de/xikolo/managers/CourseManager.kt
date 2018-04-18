@@ -20,8 +20,8 @@ class CourseManager {
         }
 
         val enrollmentListPromise = realm
-                .where(Enrollment::class.java)
-                .findAllAsync()
+            .where(Enrollment::class.java)
+            .findAllAsync()
 
         enrollmentListPromise.addChangeListener(listener)
 
@@ -34,10 +34,10 @@ class CourseManager {
         }
 
         val courseListPromise = realm
-                .where(Course::class.java)
-                .equalTo("external", false)
-                .sort("startDate", Sort.DESCENDING)
-                .findAllAsync()
+            .where(Course::class.java)
+            .equalTo("external", false)
+            .sort("startDate", Sort.DESCENDING)
+            .findAllAsync()
 
         courseListPromise.addChangeListener(listener)
 
@@ -50,11 +50,11 @@ class CourseManager {
         }
 
         val courseListPromise = realm
-                .where(Course::class.java)
-                .equalTo("external", false)
-                .isNotNull("enrollmentId")
-                .sort("startDate", Sort.DESCENDING)
-                .findAllAsync()
+            .where(Course::class.java)
+            .equalTo("external", false)
+            .isNotNull("enrollmentId")
+            .sort("startDate", Sort.DESCENDING)
+            .findAllAsync()
 
         courseListPromise.addChangeListener(listener)
 
@@ -67,9 +67,9 @@ class CourseManager {
         }
 
         var dbQuery = realm
-                .where(Course::class.java)
-                .equalTo("external", false)
-                .beginGroup()
+            .where(Course::class.java)
+            .equalTo("external", false)
+            .beginGroup()
                 .like("title", "*$query*", Case.INSENSITIVE)
                 .or()
                 .like("shortAbstract", "*$query*", Case.INSENSITIVE)
@@ -77,15 +77,15 @@ class CourseManager {
                 .like("description", "*$query*", Case.INSENSITIVE)
                 .or()
                 .like("teachers", "*$query*", Case.INSENSITIVE)
-                .endGroup()
+            .endGroup()
 
         if (withEnrollment) {
             dbQuery = dbQuery.isNotNull("enrollmentId")
         }
 
         val courseListPromise = dbQuery
-                .sort("startDate", Sort.DESCENDING)
-                .findAllAsync()
+            .sort("startDate", Sort.DESCENDING)
+            .findAllAsync()
 
         courseListPromise.addChangeListener(listener)
 
@@ -98,13 +98,13 @@ class CourseManager {
         }
 
         val coursePromise = realm
-                .where(Course::class.java)
-                .beginGroup()
+            .where(Course::class.java)
+            .beginGroup()
                 .equalTo("id", id)
                 .or()
                 .equalTo("slug", id)
-                .endGroup()
-                .findFirstAsync()
+            .endGroup()
+            .findFirstAsync()
 
         coursePromise.addChangeListener(listener)
 
@@ -112,64 +112,64 @@ class CourseManager {
     }
 
     fun listCurrentAndFutureCourses(realm: Realm): List<Course> = realm
-            .where(Course::class.java)
-            .equalTo("external", false)
-            .greaterThanOrEqualTo("endDate", Date())
-            .sort("startDate", Sort.ASCENDING)
-            .findAll()
+        .where(Course::class.java)
+        .equalTo("external", false)
+        .greaterThanOrEqualTo("endDate", Date())
+        .sort("startDate", Sort.ASCENDING)
+        .findAll()
 
     fun listCurrentAndPastCourses(realm: Realm): List<Course> = realm
-            .where(Course::class.java)
-            .equalTo("external", false)
-            .lessThanOrEqualTo("startDate", Date())
-            .sort("startDate", Sort.DESCENDING)
-            .findAll()
+        .where(Course::class.java)
+        .equalTo("external", false)
+        .lessThanOrEqualTo("startDate", Date())
+        .sort("startDate", Sort.DESCENDING)
+        .findAll()
 
     fun listPastCourses(realm: Realm): List<Course> = realm
-            .where(Course::class.java)
-            .equalTo("external", false)
-            .lessThan("endDate", Date())
-            .sort("startDate", Sort.DESCENDING)
-            .findAll()
+        .where(Course::class.java)
+        .equalTo("external", false)
+        .lessThan("endDate", Date())
+        .sort("startDate", Sort.DESCENDING)
+        .findAll()
 
-    fun listFutureCourses(realm: Realm): List<Course> =realm
-            .where(Course::class.java)
-            .equalTo("external", false)
-            .greaterThan("startDate", Date())
-            .sort("startDate", Sort.ASCENDING)
-            .findAll()
+    fun listFutureCourses(realm: Realm): List<Course> = realm
+        .where(Course::class.java)
+        .equalTo("external", false)
+        .greaterThan("startDate", Date())
+        .sort("startDate", Sort.ASCENDING)
+        .findAll()
 
     fun listCurrentAndFutureCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
-            .where(Course::class.java)
-            .equalTo("channelId", channelId)
-            .equalTo("external", false)
-            .greaterThanOrEqualTo("endDate", Date())
-            .sort("startDate", Sort.ASCENDING)
-            .findAll()
+        .where(Course::class.java)
+        .equalTo("channelId", channelId)
+        .equalTo("external", false)
+        .greaterThanOrEqualTo("endDate", Date())
+        .sort("startDate", Sort.ASCENDING)
+        .findAll()
 
-    fun listCurrentAndPastCoursesForChannel (realm: Realm, channelId: String): List<Course> = realm
-            .where(Course::class.java)
-            .equalTo("channelId", channelId)
-            .equalTo("external", false)
-            .lessThanOrEqualTo("startDate", Date())
-            .sort("startDate", Sort.DESCENDING)
-            .findAll()
+    fun listCurrentAndPastCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
+        .where(Course::class.java)
+        .equalTo("channelId", channelId)
+        .equalTo("external", false)
+        .lessThanOrEqualTo("startDate", Date())
+        .sort("startDate", Sort.DESCENDING)
+        .findAll()
 
     fun listPastCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
-            .where(Course::class.java)
-            .equalTo("channelId", channelId)
-            .equalTo("external", false)
-            .lessThan("endDate", Date())
-            .sort("startDate", Sort.DESCENDING)
-            .findAll()
+        .where(Course::class.java)
+        .equalTo("channelId", channelId)
+        .equalTo("external", false)
+        .lessThan("endDate", Date())
+        .sort("startDate", Sort.DESCENDING)
+        .findAll()
 
-    fun listFutureCoursesForChannel(realm: Realm, channelId: String): List<Course> =realm
-            .where(Course::class.java)
-            .equalTo("channelId", channelId)
-            .equalTo("external", false)
-            .greaterThan("startDate", Date())
-            .sort("startDate", Sort.ASCENDING)
-            .findAll()
+    fun listFutureCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
+        .where(Course::class.java)
+        .equalTo("channelId", channelId)
+        .equalTo("external", false)
+        .greaterThan("startDate", Date())
+        .sort("startDate", Sort.ASCENDING)
+        .findAll()
 
     fun listCurrentAndPastCoursesWithEnrollment(realm: Realm): List<Course> = realm
         .where(Course::class.java)
@@ -193,10 +193,10 @@ class CourseManager {
         }
 
         val spListPromise = realm
-                .where(SectionProgress::class.java)
-                .equalTo("courseProgressId", courseId)
-                .sort("position")
-                .findAllAsync()
+            .where(SectionProgress::class.java)
+            .equalTo("courseProgressId", courseId)
+            .sort("position")
+            .findAllAsync()
 
         spListPromise.addChangeListener(listener)
 
@@ -209,11 +209,11 @@ class CourseManager {
         }
 
         val courseListPromise = realm
-                .where(Course::class.java)
-                .equalTo("channelId", channelId)
-                .equalTo("external", false)
-                .sort("startDate", Sort.DESCENDING)
-                .findAllAsync()
+            .where(Course::class.java)
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .sort("startDate", Sort.DESCENDING)
+            .findAllAsync()
 
         courseListPromise.addChangeListener(listener)
 

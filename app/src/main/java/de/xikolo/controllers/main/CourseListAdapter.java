@@ -7,24 +7,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.config.BuildFlavor;
 import de.xikolo.config.GlideApp;
+import de.xikolo.controllers.base.BaseCourseListAdapter;
 import de.xikolo.models.Course;
 import de.xikolo.models.base.SectionList;
 import de.xikolo.utils.DateUtil;
 
-public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CourseListAdapter extends BaseCourseListAdapter {
 
     public static final String TAG = CourseListAdapter.class.getSimpleName();
 
@@ -33,36 +27,11 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private Course.Filter courseFilter;
 
-    private SectionList<String, List<Course>> courseList;
-
-    private OnCourseButtonClickListener callback;
-
-    private Fragment fragment;
-
     public CourseListAdapter(Fragment fragment, OnCourseButtonClickListener callback, Course.Filter courseFilter) {
         this.fragment = fragment;
         this.courseList = new SectionList<>();
         this.callback = callback;
         this.courseFilter = courseFilter;
-    }
-
-    public void update(SectionList<String, List<Course>> courseList) {
-        this.courseList = courseList;
-        this.notifyDataSetChanged();
-    }
-
-    public boolean isHeader(int position) {
-        return courseList.isHeader(position);
-    }
-
-    public void clear() {
-        courseList.clear();
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public int getItemCount() {
-        return courseList.size();
     }
 
     @Override
@@ -175,48 +144,6 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 viewHolder.buttonCourseAction.setOnClickListener(v -> callback.onEnrollButtonClicked(course.id));
             }
         }
-    }
-
-    public interface OnCourseButtonClickListener {
-
-        void onEnrollButtonClicked(String courseId);
-
-        void onContinueButtonClicked(String courseId);
-
-        void onDetailButtonClicked(String courseId);
-
-    }
-
-    static class CourseViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.container) ViewGroup layout;
-        @BindView(R.id.textTitle) TextView textTitle;
-        @BindView(R.id.textTeacher) TextView textTeacher;
-        @BindView(R.id.textDate) TextView textDate;
-        @BindView(R.id.textLanguage) TextView textLanguage;
-        @BindView(R.id.textDescription) TextView textDescription;
-        @BindView(R.id.imageView) ImageView image;
-        @BindView(R.id.button_course_action) Button buttonCourseAction;
-        @BindView(R.id.button_course_details) Button buttonCourseDetails;
-        @BindView(R.id.textBanner) TextView textBanner;
-
-        public CourseViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-        }
-
-    }
-
-    static class HeaderViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.container) ViewGroup container;
-        @BindView(R.id.textHeader) TextView header;
-
-        public HeaderViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-        }
-
     }
 
 }

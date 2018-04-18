@@ -20,8 +20,8 @@ class ChannelManager {
         }
 
         val channelListPromise = realm
-                .where(Channel::class.java)
-                .findAllAsync()
+            .where(Channel::class.java)
+            .findAllAsync()
 
         channelListPromise.addChangeListener(listener)
 

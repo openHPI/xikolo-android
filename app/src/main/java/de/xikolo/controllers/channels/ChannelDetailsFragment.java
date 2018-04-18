@@ -137,7 +137,7 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
         }
         else {
             GlideApp.with(this).load(channel.imageUrl).into(imageChannel);
-            textTitle.setText(channel.name);
+            textTitle.setText(channel.title);
         }
 
         if(courseListAdapter != null)
@@ -145,7 +145,7 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
     }
 
     @Override
-    public void showContent(SectionList<String, List<Course>> courses) {
+    public void showCourseList(SectionList<String, List<Course>> courses) {
         if(courseListAdapter != null)
             courseListAdapter.update(courses);
 

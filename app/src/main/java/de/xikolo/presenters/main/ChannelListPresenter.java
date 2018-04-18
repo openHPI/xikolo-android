@@ -38,14 +38,11 @@ public class ChannelListPresenter extends LoadingStatePresenter<ChannelListView>
     }
 
     private RealmChangeListener<RealmResults<Channel>> getChannelListRealmChangeListener() {
-        return new RealmChangeListener<RealmResults<Channel>>() {
-            @Override
-            public void onChange(RealmResults<Channel> results) {
-                if (results.size() > 0) {
-                    channelList = results;
-                    getViewOrThrow().showContent();
-                    getViewOrThrow().showChannelList(channelList);
-                }
+        return results -> {
+            if (results.size() > 0) {
+                channelList = results;
+                getViewOrThrow().showContent();
+                getViewOrThrow().showChannelList(channelList);
             }
         };
     }

@@ -33,9 +33,9 @@ class UserManager {
         }
 
         val userPromise = realm
-                .where(User::class.java)
-                .equalTo("id", UserManager.userId)
-                .findFirstAsync()
+            .where(User::class.java)
+            .equalTo("id", UserManager.userId)
+            .findFirstAsync()
 
         userPromise.addChangeListener(listener)
 

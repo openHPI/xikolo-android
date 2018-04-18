@@ -67,7 +67,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
         int channelColor = channel.getColorOrDefault();
 
-        holder.textTitle.setText(channel.name);
+        holder.textTitle.setText(channel.title);
 
         holder.textTitle.setTextColor(channelColor);
 

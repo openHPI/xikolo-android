@@ -1,21 +1,9 @@
 package de.xikolo.presenters.main;
 
-import java.util.List;
+import de.xikolo.presenters.base.BaseCourseListView;
 
-import de.xikolo.models.Course;
-import de.xikolo.models.base.SectionList;
-import de.xikolo.presenters.base.LoadingStateView;
-
-public interface CourseListView extends LoadingStateView {
+public interface CourseListView extends BaseCourseListView {
 
     void showNoEnrollmentsMessage();
-
-    void enterCourse(String courseId);
-
-    void enterCourseDetails(String courseId);
-
-    void showCourseList(SectionList<String, List<Course>> courseList);
-
-    void openLogin();
 
 }
