@@ -321,7 +321,7 @@ object LanalyticsUtil {
     fun trackShareCourseLink(courseId: String, service: String? = null) {
         val builder = createEventBuilder()
             .setResource(courseId, "course")
-            .setVerb("SHARE_BUTTON_CLICK")
+            .setVerb("SHARE_COURSE")
             .setOnlyWifi(true)
 
         service?.let { builder.putContext("service", service) }
