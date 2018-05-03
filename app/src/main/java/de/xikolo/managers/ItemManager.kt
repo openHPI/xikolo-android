@@ -21,11 +21,11 @@ class ItemManager {
         }
 
         val itemListPromise = realm
-                .where(Item::class.java)
-                .equalTo("sectionId", sectionId)
-                .equalTo("accessible", true)
-                .sort("position")
-                .findAllAsync()
+            .where(Item::class.java)
+            .equalTo("sectionId", sectionId)
+            .equalTo("accessible", true)
+            .sort("position")
+            .findAllAsync()
 
         itemListPromise.addChangeListener(listener)
 
@@ -38,10 +38,10 @@ class ItemManager {
         }
 
         val itemListPromise = realm
-                .where(Item::class.java)
-                .equalTo("courseId", courseId)
-                .equalTo("accessible", true)
-                .findAllAsync()
+            .where(Item::class.java)
+            .equalTo("courseId", courseId)
+            .equalTo("accessible", true)
+            .findAllAsync()
 
         itemListPromise.addChangeListener(listener)
 
@@ -55,9 +55,9 @@ class ItemManager {
 
         // RealmChangeListener for RealmObject doesn't notify for initial copyToRealm
         val videoPromise = realm
-                .where(Video::class.java)
-                .equalTo("id", contentId)
-                .findAllAsync()
+            .where(Video::class.java)
+            .equalTo("id", contentId)
+            .findAllAsync()
 
         videoPromise.addChangeListener(listener)
 
@@ -71,9 +71,9 @@ class ItemManager {
 
         // RealmChangeListener for RealmObject doesn't notify for initial copyToRealm
         val richTextPromise = realm
-                .where(RichText::class.java)
-                .equalTo("id", contentId)
-                .findAllAsync()
+            .where(RichText::class.java)
+            .equalTo("id", contentId)
+            .findAllAsync()
 
         richTextPromise.addChangeListener(listener)
 

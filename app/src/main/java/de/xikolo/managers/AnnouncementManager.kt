@@ -22,9 +22,9 @@ class AnnouncementManager {
         }
 
         val announcementListPromise = realm
-                .where(Announcement::class.java)
-                .sort("publishedAt", Sort.DESCENDING)
-                .findAllAsync()
+            .where(Announcement::class.java)
+            .sort("publishedAt", Sort.DESCENDING)
+            .findAllAsync()
 
         announcementListPromise.addChangeListener(listener)
 
@@ -37,10 +37,10 @@ class AnnouncementManager {
         }
 
         val announcementListPromise = realm
-                .where(Announcement::class.java)
-                .equalTo("courseId", courseId)
-                .sort("publishedAt", Sort.DESCENDING)
-                .findAllAsync()
+            .where(Announcement::class.java)
+            .equalTo("courseId", courseId)
+            .sort("publishedAt", Sort.DESCENDING)
+            .findAllAsync()
 
         announcementListPromise.addChangeListener(listener)
 

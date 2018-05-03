@@ -21,4 +21,8 @@ public class FeatureToggle {
                 || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO || BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE);
     }
 
+    public static boolean channels() {
+        return BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO || BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE;
+    }
+
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="@dimen/channel_course_list_description_margin"
+        android:layout_marginLeft="@dimen/channel_course_list_description_margin"
+        android:textColor="@color/text_main"
+        android:textColorLink="@color/apptheme_second"
+        android:textSize="14sp" />
+
+</RelativeLayout>

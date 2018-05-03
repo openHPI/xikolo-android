@@ -33,6 +33,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
     public static final NavigationItem NAV_PROFILE;
     public static final NavigationItem NAV_ALL_COURSES;
     public static final NavigationItem NAV_MY_COURSES;
+    public static final NavigationItem NAV_CHANNELS;
     public static final NavigationItem NAV_NEWS;
     public static final NavigationItem NAV_DOWNLOADS;
     public static final NavigationItem NAV_SETTINGS;
@@ -49,6 +50,20 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 R.string.title_section_login,
                 NavigationItem.ViewType.PROFILE,
                 NAV_ITEMS.size()));
+
+        if (FeatureToggle.channels()) {
+            NAV_ITEMS.add(NAV_CHANNELS = new NavigationItem(
+                    R.string.icon_channels,
+                    R.string.title_section_channels,
+                    NavigationItem.ViewType.MAIN,
+                    NAV_ITEMS.size()));
+        } else {
+            NAV_CHANNELS = new NavigationItem(
+                    R.string.icon_channels,
+                    R.string.title_section_channels,
+                    NavigationItem.ViewType.MAIN,
+                    -98);
+        }
 
         NAV_ITEMS.add(NAV_ALL_COURSES = new NavigationItem(
                 R.string.icon_courses,
@@ -186,7 +201,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
         }
 
-        if (position == NAV_SECOND_SCREEN.getPosition()) {
+        if (position == NAV_SECOND_SCREEN.getPosition() || position == NAV_CHANNELS.getPosition()) {
             viewHolder.textIcon.setCustomFont(context, Config.FONT_MATERIAL);
         } else {
             viewHolder.textIcon.setCustomFont(context, Config.FONT_XIKOLO);

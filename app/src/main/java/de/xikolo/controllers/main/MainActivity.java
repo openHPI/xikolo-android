@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 
@@ -125,6 +124,10 @@ public class MainActivity extends BaseActivity
             } else {
                 intent = LoginActivityAutoBundle.builder().build(this);
             }
+        }
+        if (position == NavigationAdapter.NAV_CHANNELS.getPosition()) {
+            newFragment = new ChannelListFragment();
+            tag = "channels";
         }
         if (position == NavigationAdapter.NAV_ALL_COURSES.getPosition()) {
             newFragment = CourseListFragmentAutoBundle.builder(Course.Filter.ALL).build();

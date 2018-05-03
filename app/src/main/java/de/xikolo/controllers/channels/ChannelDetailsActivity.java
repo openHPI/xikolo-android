@@ -1,4 +1,4 @@
-package de.xikolo.controllers.course;
+package de.xikolo.controllers.channels;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -7,10 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewStub;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.yatatsu.autobundle.AutoBundleField;
@@ -20,19 +19,23 @@ import de.xikolo.R;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.controllers.helper.CollapsingToolbarHelper;
-import de.xikolo.models.Course;
+import de.xikolo.models.Channel;
 import de.xikolo.utils.ShareUtil;
 
-public class CourseDetailsActivity extends BaseActivity {
+public class ChannelDetailsActivity extends BaseActivity {
 
-    public static final String TAG = CourseDetailsActivity.class.getSimpleName();
+    public static final String TAG = ChannelDetailsActivity.class.getSimpleName();
 
-    @AutoBundleField String courseId;
+    @AutoBundleField String channelId;
+
+    @AutoBundleField(required = false) boolean scrollToCourses = false;
 
     @BindView(R.id.toolbar_image) ImageView imageView;
     @BindView(R.id.appbar) AppBarLayout appBarLayout;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.stub_bottom) ViewStub stubBottom;
+    @BindView(R.id.scrim_top) View scrimTop;
+    @BindView(R.id.scrim_bottom) View scrimBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,38 +44,34 @@ public class CourseDetailsActivity extends BaseActivity {
         setupActionBar(true);
         enableOfflineModeToolbar(false);
 
-        Course course = Course.get(courseId);
+        Channel channel = Channel.get(channelId);
 
-        setTitle(course.title);
+        setTitle(channel.title);
+
+        int color = channel.getColorOrDefault();
+        collapsingToolbar.setContentScrimColor(color);
+        collapsingToolbar.setBackgroundColor(color);
+        collapsingToolbar.setStatusBarScrimColor(color);
 
         String tag = "content";
 
-        if (course.imageUrl != null) {
-            GlideApp.with(this).load(course.imageUrl).into(imageView);
+        if (channel.imageUrl != null) {
+            GlideApp.with(this).load(channel.imageUrl).into(imageView);
         } else {
-            CollapsingToolbarHelper.lockCollapsingToolbar(course.title, appBarLayout, collapsingToolbar, toolbar, null, null);
+            CollapsingToolbarHelper.lockCollapsingToolbar(channel.title, appBarLayout, collapsingToolbar, toolbar, scrimTop, scrimBottom);
         }
-
-        final CourseDetailsFragment fragment = CourseDetailsFragmentAutoBundle.builder(courseId).build();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
+            final ChannelDetailsFragment fragment = ChannelDetailsFragmentAutoBundle.builder(channelId).scrollToCourses(scrollToCourses).build();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.content, fragment, tag);
             transaction.commit();
-        }
-
-        if (course.enrollable && !course.isEnrolled()) {
-            stubBottom.setLayoutResource(R.layout.content_enroll_button);
-            Button enrollButton = (Button) stubBottom.inflate();
-            enrollButton.setOnClickListener(view -> fragment.onEnrollButtonClicked());
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.share, menu);
         super.onCreateOptionsMenu(menu);
         return true;
     }
@@ -85,7 +84,7 @@ public class CourseDetailsActivity extends BaseActivity {
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_share:
-                ShareUtil.shareCourseLink(this, courseId);
+                ShareUtil.shareCourseLink(this, channelId);
                 return true;
         }
         return super.onOptionsItemSelected(item);

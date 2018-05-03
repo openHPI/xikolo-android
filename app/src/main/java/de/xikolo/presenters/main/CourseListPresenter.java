@@ -1,26 +1,14 @@
 package de.xikolo.presenters.main;
 
-import java.util.List;
-
-import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
-import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.base.SectionList;
-import de.xikolo.presenters.base.LoadingStatePresenter;
+import de.xikolo.presenters.base.BaseCourseListPresenter;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-import static de.xikolo.jobs.base.RequestJobCallback.ErrorCode.NO_NETWORK;
-
-public abstract class CourseListPresenter extends LoadingStatePresenter<CourseListView> {
-
-    protected CourseManager courseManager;
-
-    protected Realm realm;
-
-    protected SectionList<String, List<Course>> courseList;
+public abstract class CourseListPresenter extends BaseCourseListPresenter<CourseListView> {
 
     protected RealmResults courseListPromise;
 
@@ -63,13 +51,10 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
     public void onSearch(final String query, boolean withEnrollment) {
         courseListPromise.removeAllChangeListeners();
         if (query != null && !"".equals(query)) {
-            this.courseListPromise = courseManager.searchCourses(query, withEnrollment, realm, new RealmChangeListener<RealmResults<Course>>() {
-                @Override
-                public void onChange(RealmResults<Course> results) {
-                    courseList.clear();
-                    courseList.add(null, results);
-                    getViewOrThrow().showCourseList(courseList);
-                }
+            this.courseListPromise = courseManager.searchCourses(query, withEnrollment, realm, results -> {
+                courseList.clear();
+                courseList.add(null, results);
+                getViewOrThrow().showCourseList(courseList);
             });
         } else {
             setCourseListPromise();
@@ -79,58 +64,12 @@ public abstract class CourseListPresenter extends LoadingStatePresenter<CourseLi
     protected abstract void setCourseListPromise();
 
     protected RealmChangeListener<RealmResults<Course>> getCourseListChangeListener() {
-        return new RealmChangeListener<RealmResults<Course>>() {
-            @Override
-            public void onChange(RealmResults<Course> results) {
-                if (results.size() > 0) {
-                    getViewOrThrow().showContent();
-                    updateContent();
-                }
+        return results -> {
+            if (results.size() > 0) {
+                getViewOrThrow().showContent();
+                updateContent();
             }
         };
-    }
-
-    public void onEnrollButtonClicked(final String courseId) {
-        getViewOrThrow().showBlockingProgress();
-
-        courseManager.createEnrollment(courseId, new RequestJobCallback() {
-            @Override
-            public void onSuccess() {
-                if (getView() != null) {
-                    getView().hideProgress();
-                    Course course = Course.get(courseId);
-                    if (course.accessible) {
-                        getView().enterCourse(courseId);
-                    }
-                }
-            }
-
-            @Override
-            public void onError(ErrorCode code) {
-                if (getView() != null) {
-                    getView().hideProgress();
-                    if (code == NO_NETWORK) {
-                        getView().showNetworkRequiredMessage();
-                    } else if (code == ErrorCode.NO_AUTH) {
-                        getView().showLoginRequiredMessage();
-                        getView().openLogin();
-                    }
-                }
-            }
-        });
-    }
-
-    public void onCourseEnterButtonClicked(String courseId) {
-        if (!UserManager.isAuthorized()) {
-            getViewOrThrow().showLoginRequiredMessage();
-            getViewOrThrow().openLogin();
-        } else {
-            getViewOrThrow().enterCourse(courseId);
-        }
-    }
-
-    public void onCourseDetailButtonClicked(String courseId) {
-        getViewOrThrow().enterCourseDetails(courseId);
     }
 
     protected abstract void updateContent();

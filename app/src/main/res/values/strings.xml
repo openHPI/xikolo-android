@@ -12,6 +12,8 @@
     <string name="title_section_my_courses">My Courses</string>
     <string name="title_section_second_screen">Second Screen</string>
 
+    <string name="title_section_channels">Channels</string>
+
     <string name="title_section_beta">Beta</string>
 
     <!-- -->
@@ -47,6 +49,7 @@
     <string name="btn_enroll">Enroll for course</string>
     <string name="btn_continue_course">Continue course</string>
     <string name="btn_course_details">Show details</string>
+    <string name="btn_channel_courses">Show more</string>
     <string name="btn_starts_soon">Course has not yet started</string>
     <string name="btn_play_cast">&#xe652;\n Play on Cast device</string>
     <string name="btn_display_issues">Display issues?</string>
