@@ -4,7 +4,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.5"
-    implementation "ru.gildor.coroutines:kotlin-coroutines-retrofit:0.9.0"
+    implementation "ru.gildor.coroutines:kotlin-coroutines-retrofit:0.10.0"
 
     // networking
     def okhttpVersion = '3.10.0'
@@ -25,7 +25,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     // json
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.4'
 
     // json:api
     def retrofitVersion = '2.4.0'
@@ -52,13 +52,12 @@ dependencies {
     kapt           "com.github.yatatsu:autobundle-processor:${autobundleVersion}"
 
     // play services
-    def playVersion = '12.0.1'
-    implementation "com.google.android.gms:play-services-cast-framework:${playVersion}"
-    implementation "com.google.android.gms:play-services-gcm:${playVersion}"
+    implementation "com.google.android.gms:play-services-cast-framework:15.0.1"
+    implementation "com.google.android.gms:play-services-gcm:15.0.1"
 
     // firebase
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.1"
-    implementation "com.google.firebase:firebase-core:${playVersion}"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.9.2"
+    implementation "com.google.firebase:firebase-core:15.0.2"
 
     // support libraries
     def supportVersion = '27.0.2'
