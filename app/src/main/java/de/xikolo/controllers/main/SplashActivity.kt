@@ -5,10 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AppCompatActivity
-import de.xikolo.BuildConfig
-import de.xikolo.config.BuildFlavor
 import de.xikolo.controllers.dialogs.*
-import de.xikolo.jobs.CheckBirthdayVoucherJob
 import de.xikolo.jobs.CheckHealthJob
 import de.xikolo.jobs.base.RequestJobCallback
 import java.util.*
@@ -23,11 +20,7 @@ class SplashActivity : AppCompatActivity() {
     private val healthCheckCallback: RequestJobCallback
         get() = object : RequestJobCallback() {
             override fun onSuccess() {
-                if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP) {
-                    requestBirthdayVoucher()
-                } else {
-                    startApp()
-                }
+                startApp()
             }
 
             override fun onError(code: RequestJobCallback.ErrorCode) {
@@ -49,17 +42,6 @@ class SplashActivity : AppCompatActivity() {
                 } else {
                     startApp()
                 }
-            }
-        }
-
-    private val birthdayVoucherCallback: RequestJobCallback
-        get() = object : RequestJobCallback() {
-            override fun onSuccess() {
-                showBirthdayVoucherDialog()
-            }
-
-            override fun onError(code: RequestJobCallback.ErrorCode) {
-                startApp()
             }
         }
 
@@ -144,16 +126,6 @@ class SplashActivity : AppCompatActivity() {
         val ft = supportFragmentManager.beginTransaction()
         ft.add(dialogFragment, tag)
         ft.commitAllowingStateLoss()
-    }
-
-    private fun requestBirthdayVoucher() {
-        CheckBirthdayVoucherJob(birthdayVoucherCallback).run()
-    }
-
-    private fun showBirthdayVoucherDialog() {
-        val dialog = BirthdayVoucherDialog()
-        dialog.setDialogListener({ this.startApp() })
-        showDialog(dialog, BirthdayVoucherDialog.TAG)
     }
 
 }

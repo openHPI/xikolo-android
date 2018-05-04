@@ -98,9 +98,4 @@ interface ApiServiceInterface {
     @POST("authenticate")
     fun createToken(@Field("email") email: String, @Field("password") password: String): Call<AccessToken>
 
-    // SAP 5th Birthday Special
-
-    @GET("osap_5th_birthday")
-    fun getBirthdayVoucher(): Call<BirthdayVoucher>
-
 }

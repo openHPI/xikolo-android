@@ -63,8 +63,7 @@ public abstract class ApiService {
 
                             // plain json calls
                             List plainJson = Arrays.asList(
-                                    "/api/v2/authenticate",
-                                    "/api/v2/osap_5th_birthday"
+                                    "/api/v2/authenticate"
                             );
                             if (plainJson.contains(original.url().encodedPath())) {
                                 mediaType = Config.MEDIA_TYPE_JSON;
