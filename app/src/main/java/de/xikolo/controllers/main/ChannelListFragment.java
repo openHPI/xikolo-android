@@ -19,10 +19,12 @@ import butterknife.BindView;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.channels.ChannelDetailsActivityAutoBundle;
+import de.xikolo.controllers.course.CourseActivityAutoBundle;
 import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.models.Channel;
+import de.xikolo.models.Course;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.main.ChannelListPresenter;
 import de.xikolo.presenters.main.ChannelListPresenterFactory;
@@ -63,13 +65,13 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
             }
 
             @Override
-            public void onCourseClicked(String courseId) {
-                showCourse(courseId);
+            public void onCourseClicked(Course course) {
+                showCourse(course);
             }
 
             @Override
-            public void onMoreCoursesClicked(String channelId) {
-                showChannelCourses(channelId);
+            public void onMoreCoursesClicked(String channelId, int scrollPosition) {
+                showChannelCourses(channelId, scrollPosition);
             }
         });
 
@@ -105,14 +107,18 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
     }
 
     @Override
-    public void showCourse(String courseId) {
-        Intent intent = CourseDetailsActivityAutoBundle.builder(courseId).build(App.getInstance());
+    public void showCourse(Course course) {
+        Intent intent;
+        if (course.isEnrolled())
+            intent = CourseActivityAutoBundle.builder().courseId(course.id).build(App.getInstance());
+        else
+            intent = CourseDetailsActivityAutoBundle.builder(course.id).build(App.getInstance());
         startActivity(intent);
     }
 
     @Override
-    public void showChannelCourses(String channelId) {
-        Intent intent = ChannelDetailsActivityAutoBundle.builder(channelId).scrollToCourses(true).build(App.getInstance());
+    public void showChannelCourses(String channelId, int scrollPosition) {
+        Intent intent = ChannelDetailsActivityAutoBundle.builder(channelId).scrollToCoursePosition(scrollPosition).build(App.getInstance());
         startActivity(intent);
     }
 
