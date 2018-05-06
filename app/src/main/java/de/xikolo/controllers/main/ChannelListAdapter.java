@@ -1,6 +1,5 @@
 package de.xikolo.controllers.main;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,7 +129,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
             }
 
             if (courseList.size() > PREVIEW_COURSES_COUNT) {
-                CardView showMoreCard = (CardView) LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll_more, holder.scrollContainer, false);
+                View showMoreCard = LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll_more, holder.scrollContainer, false);
 
                 ImageView imageView = showMoreCard.findViewById(R.id.imageView);
                 GlideApp.with(App.getInstance()).load(channel.imageUrl).into(imageView);
@@ -138,6 +137,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 showMoreCard.setOnClickListener(v -> callback.onMoreCoursesClicked(channel.id, courseCount));
 
                 holder.scrollContainer.addView(showMoreCard);
+                holder.scrollContainer.setPadding(holder.scrollContainer.getPaddingLeft(), holder.scrollContainer.getPaddingTop(), 0, holder.scrollContainer.getPaddingBottom());
             }
         });
     }
