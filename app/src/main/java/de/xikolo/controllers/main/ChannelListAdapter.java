@@ -1,6 +1,5 @@
 package de.xikolo.controllers.main;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +31,10 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
     public static final int PREVIEW_COURSES_COUNT = 7;
 
-    private List<Channel> channelList =  new ArrayList<>();
+    private List<Channel> channelList = new ArrayList<>();
     private OnChannelCardClickListener callback;
 
-    public ChannelListAdapter(OnChannelCardClickListener callback){
+    public ChannelListAdapter(OnChannelCardClickListener callback) {
         this.callback = callback;
     }
 
@@ -77,7 +76,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         holder.buttonChannelCourses.setOnClickListener(v -> callback.onChannelClicked(channel.id));
         holder.layout.setOnClickListener(v -> callback.onChannelClicked(channel.id));
 
-        if(channel.imageUrl != null)
+        if (channel.imageUrl != null)
             GlideApp.with(App.getInstance()).load(channel.imageUrl).into(holder.imageView);
         else
             holder.imageView.setVisibility(View.GONE);
@@ -124,18 +123,21 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 ImageView imageView = listItem.findViewById(R.id.imageView);
                 GlideApp.with(App.getInstance()).load(course.imageUrl).into(imageView);
 
-                listItem.setOnClickListener(v -> callback.onCourseClicked(course.id));
+                listItem.setOnClickListener(v -> callback.onCourseClicked(course));
 
                 holder.scrollContainer.addView(listItem);
             }
 
             if (courseList.size() > PREVIEW_COURSES_COUNT) {
-                CardView showMoreButton = (CardView) LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll_more, holder.scrollContainer, false);
+                View showMoreCard = LayoutInflater.from(App.getInstance()).inflate(R.layout.item_channel_list_scroll_more, holder.scrollContainer, false);
 
-                showMoreButton.setCardBackgroundColor(channelColor);
-                showMoreButton.setOnClickListener(v -> callback.onMoreCoursesClicked(channel.id));
+                ImageView imageView = showMoreCard.findViewById(R.id.imageView);
+                GlideApp.with(App.getInstance()).load(channel.imageUrl).into(imageView);
 
-                holder.scrollContainer.addView(showMoreButton);
+                showMoreCard.setOnClickListener(v -> callback.onMoreCoursesClicked(channel.id, courseCount));
+
+                holder.scrollContainer.addView(showMoreCard);
+                holder.scrollContainer.setPadding(holder.scrollContainer.getPaddingLeft(), holder.scrollContainer.getPaddingTop(), 0, holder.scrollContainer.getPaddingBottom());
             }
         });
     }
@@ -144,9 +146,9 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
         void onChannelClicked(String channelId);
 
-        void onCourseClicked(String courseId);
+        void onCourseClicked(Course course);
 
-        void onMoreCoursesClicked(String channelId);
+        void onMoreCoursesClicked(String channelId, int scrollPosition);
     }
 
     static class ChannelViewHolder extends RecyclerView.ViewHolder {

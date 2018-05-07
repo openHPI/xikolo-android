@@ -28,7 +28,8 @@ public class ChannelDetailsActivity extends BaseActivity {
 
     @AutoBundleField String channelId;
 
-    @AutoBundleField(required = false) boolean scrollToCourses = false;
+    //-1 do not scroll to Course
+    @AutoBundleField(required = false) int scrollToCoursePosition = -1;
 
     @BindView(R.id.toolbar_image) ImageView imageView;
     @BindView(R.id.appbar) AppBarLayout appBarLayout;
@@ -63,7 +64,7 @@ public class ChannelDetailsActivity extends BaseActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
-            final ChannelDetailsFragment fragment = ChannelDetailsFragmentAutoBundle.builder(channelId).scrollToCourses(scrollToCourses).build();
+            final ChannelDetailsFragment fragment = ChannelDetailsFragmentAutoBundle.builder(channelId).scrollToCoursePosition(scrollToCoursePosition).build();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.content, fragment, tag);
             transaction.commit();

@@ -3,6 +3,7 @@ package de.xikolo.presenters.main;
 import java.util.List;
 
 import de.xikolo.models.Channel;
+import de.xikolo.models.Course;
 import de.xikolo.presenters.base.LoadingStateView;
 
 public interface ChannelListView extends LoadingStateView {
@@ -11,7 +12,7 @@ public interface ChannelListView extends LoadingStateView {
 
     void showChannel(String channelId);
 
-    void showCourse(String courseId);
+    void showCourse(Course course);
 
-    void showChannelCourses(String courseId);
+    void showChannelCourses(String courseId, int coursePosition);
 }

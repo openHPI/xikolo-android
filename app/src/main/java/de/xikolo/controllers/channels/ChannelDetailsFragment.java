@@ -42,7 +42,8 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
 
     @AutoBundleField String channelId;
 
-    @AutoBundleField (required = false) boolean scrollToCourses = false;
+    //-1 do not scroll to Course
+    @AutoBundleField(required = false) int scrollToCoursePosition = -1;
 
     @BindView(R.id.layout_header) FrameLayout layoutHeader;
     @BindView(R.id.image_channel) ImageView imageChannel;
@@ -134,23 +135,29 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
     public void setupView(Channel channel) {
         if (getActivity() instanceof ChannelDetailsActivity) {
             layoutHeader.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             GlideApp.with(this).load(channel.imageUrl).into(imageChannel);
             textTitle.setText(channel.title);
         }
 
-        if(courseListAdapter != null)
+        if (courseListAdapter != null)
             courseListAdapter.setButtonColor(channel.getColorOrDefault());
     }
 
     @Override
     public void showCourseList(SectionList<String, List<Course>> courses) {
-        if(courseListAdapter != null)
+        if (courseListAdapter != null)
             courseListAdapter.update(courses);
 
-        if(scrollToCourses)
-            courseList.scrollToPosition(1);
+        if (scrollToCoursePosition >= 0) {
+            try {
+                ChannelDetailsActivity a = ((ChannelDetailsActivity) getActivity());
+                if (a != null)
+                    a.appBarLayout.setExpanded(false);
+                courseList.smoothScrollToPosition(scrollToCoursePosition + 3);
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     @Override
