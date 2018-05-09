@@ -162,7 +162,7 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
     private int getPercentage(float state, float max) {
         int percentage;
         if (max > 0) {
-            percentage = (int) (state / (max / 100.));
+            percentage = (int) (state / max * 100);
         } else {
             percentage = 100;
         }
