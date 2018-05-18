@@ -42,7 +42,7 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
 
     @AutoBundleField String channelId;
 
-    //-1 do not scroll to Course
+    // -1 do not scroll to course
     @AutoBundleField(required = false) int scrollToCoursePosition = -1;
 
     @BindView(R.id.layout_header) FrameLayout layoutHeader;

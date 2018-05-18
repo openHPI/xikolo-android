@@ -1,10 +1,16 @@
 package de.xikolo.presenters.channels;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import de.xikolo.App;
+import de.xikolo.BuildConfig;
+import de.xikolo.R;
+import de.xikolo.config.BuildFlavor;
 import de.xikolo.managers.ChannelManager;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Channel;
+import de.xikolo.models.Course;
 import de.xikolo.models.base.SectionList;
 import de.xikolo.presenters.base.BaseCourseListPresenter;
 import io.realm.Realm;
@@ -88,6 +94,44 @@ public class ChannelDetailsPresenter extends BaseCourseListPresenter<ChannelDeta
                 getViewOrThrow().showCourseList(courseList);
             }
         });
+    }
+
+    @Override
+    public void buildCourseList() {
+        List<Course> subList;
+
+        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+            subList = courseManager.listFutureCoursesForChannel(realm, channel.id);
+            if (subList.size() > 0) {
+                courseList.add(
+                        App.getInstance().getString(R.string.header_future_courses),
+                        subList);
+            }
+
+            subList = courseManager.listCurrentAndPastCoursesForChannel(realm, channel.id);
+            if (subList.size() > 0) {
+                courseList.add(
+                        App.getInstance().getString(R.string.header_self_paced_courses),
+                        subList
+                );
+            }
+        } else {
+            subList = courseManager.listCurrentAndFutureCoursesForChannel(realm, channel.id);
+            if (subList.size() > 0) {
+                courseList.add(
+                        App.getInstance().getString(R.string.header_current_and_upcoming_courses),
+                        subList
+                );
+            }
+
+            subList = courseManager.listPastCoursesForChannel(realm, channel.id);
+            if (subList.size() > 0) {
+                courseList.add(
+                        App.getInstance().getString(R.string.header_self_paced_courses),
+                        subList
+                );
+            }
+        }
     }
 
 }

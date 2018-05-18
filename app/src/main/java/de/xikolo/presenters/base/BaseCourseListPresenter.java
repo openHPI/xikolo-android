@@ -79,8 +79,8 @@ public abstract class BaseCourseListPresenter<V extends BaseCourseListView> exte
             }
             subList = courseManager.listCurrentAndPastCourses(realm);
             if (subList.size() > 0) {
-                courseList.add(App.getInstance().getString(
-                        R.string.header_self_paced_courses),
+                courseList.add
+                        (App.getInstance().getString(R.string.header_self_paced_courses),
                         subList
                 );
             }
