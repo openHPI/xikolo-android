@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaLoadOptions;
 import com.google.android.gms.cast.MediaMetadata;
@@ -25,12 +26,17 @@ public class CastUtil {
     public static boolean isConnected() {
         Context context = App.getInstance();
 
-        if (PlayServicesUtil.checkPlayServices(context)) {
-            CastContext castContext = CastContext.getSharedInstance(context);
-            SessionManager sessionManager = castContext.getSessionManager();
+        try {
+            if (PlayServicesUtil.checkPlayServices(context)) {
+                CastContext castContext = CastContext.getSharedInstance(context);
+                SessionManager sessionManager = castContext.getSessionManager();
 
-            return sessionManager.getCurrentCastSession() != null && sessionManager.getCurrentCastSession().isConnected();
-        } else {
+                return sessionManager.getCurrentCastSession() != null && sessionManager.getCurrentCastSession().isConnected();
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
             return false;
         }
     }
@@ -38,11 +44,16 @@ public class CastUtil {
     public static boolean isAvailable() {
         Context context = App.getInstance();
 
-        if (PlayServicesUtil.checkPlayServices(context)) {
-            CastContext castContext = CastContext.getSharedInstance(context);
+        try {
+            if (PlayServicesUtil.checkPlayServices(context)) {
+                CastContext castContext = CastContext.getSharedInstance(context);
 
-            return castContext.getCastState() != CastState.NO_DEVICES_AVAILABLE;
-        } else {
+                return castContext.getCastState() != CastState.NO_DEVICES_AVAILABLE;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
             return false;
         }
     }
@@ -82,12 +93,12 @@ public class CastUtil {
         if (session != null) {
             final RemoteMediaClient remoteMediaClient = session.getRemoteMediaClient();
 
-            remoteMediaClient.addListener(new RemoteMediaClient.Listener() {
+            remoteMediaClient.registerCallback(new RemoteMediaClient.Callback() {
                 @Override
                 public void onStatusUpdated() {
                     Intent intent = new Intent(activity, CastActivity.class);
                     activity.startActivity(intent);
-                    remoteMediaClient.removeListener(this);
+                    remoteMediaClient.unregisterCallback(this);
                 }
 
                 @Override

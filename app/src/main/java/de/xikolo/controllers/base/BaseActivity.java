@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastState;
@@ -54,7 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     protected AppBarLayout appBar;
 
-    protected CastContext castContext;
+    private CastContext castContext;
 
     private DrawerLayout drawerLayout;
 
@@ -83,8 +84,12 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
         offlineModeToolbar = true;
 
-        if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
-            castContext = CastContext.getSharedInstance(this);
+        try {
+            if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
+                castContext = CastContext.getSharedInstance(this);
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
 
         if (overlay == null) {
@@ -104,12 +109,17 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
-            getMenuInflater().inflate(R.menu.cast, menu);
-            mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
-                    getApplicationContext(),
-                    menu,
-                    R.id.media_route_menu_item);
+        try {
+            if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
+                castContext = CastContext.getSharedInstance(this);
+                getMenuInflater().inflate(R.menu.cast, menu);
+                mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
+                        getApplicationContext(),
+                        menu,
+                        R.id.media_route_menu_item);
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
 
         TintUtil.tintMenu(this, menu);
@@ -231,7 +241,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
     }
 
-    protected boolean setupCastMiniController() {
+    private boolean setupCastMiniController() {
         if (PlayServicesUtil.checkPlayServices(this) && findViewById(R.id.miniControllerContainer) != null) {
             View container = findViewById(R.id.miniControllerContainer);
             ViewGroup parent = (ViewGroup) container.getParent();
@@ -322,9 +332,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
-            return CastContext.getSharedInstance(this)
-                    .onDispatchVolumeKeyEventBeforeJellyBean(event)
+        if (PlayServicesUtil.checkPlayServices(getApplicationContext()) && castContext != null) {
+            return castContext.onDispatchVolumeKeyEventBeforeJellyBean(event)
                     || super.dispatchKeyEvent(event);
         } else {
             return super.dispatchKeyEvent(event);

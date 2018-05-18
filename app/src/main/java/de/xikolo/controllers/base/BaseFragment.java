@@ -7,16 +7,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 
-import com.google.android.gms.cast.framework.CastContext;
 import com.yatatsu.autobundle.AutoBundle;
 
 import butterknife.ButterKnife;
-import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.TintUtil;
 
 public abstract class BaseFragment extends Fragment {
-
-    protected CastContext castContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,10 +23,6 @@ public abstract class BaseFragment extends Fragment {
             AutoBundle.bind(this, savedInstanceState);
         } else {
             AutoBundle.bind(this);
-        }
-
-        if (PlayServicesUtil.checkPlayServices(getContext())) {
-            castContext = CastContext.getSharedInstance(getActivity());
         }
     }
 
