@@ -55,7 +55,6 @@ public class CertificatesFragment extends LoadingStatePresenterFragment<Certific
     public void showCertificates(Course course) {
         boolean isEnrolled = course.isEnrolled();
 
-
         container.removeAllViews();
 
         if (course.certificates.qualifiedCertificateAvailable)

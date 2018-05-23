@@ -17,11 +17,15 @@ public class Certificates extends RealmObject {
     public String qualifiedCertificateUrl = null;
 
     public void parseCertificates(Map<String, Map<String, Object>> certificates) {
-        this.confirmationOfParticipationAvailable = (Boolean) certificates.get("confirmation_of_participation").get("available");
-        this.confirmationOfParticipationThreshold = (Double) certificates.get("confirmation_of_participation").get("threshold");
-        this.recordOfAchievementAvailable = (Boolean) certificates.get("record_of_achievement").get("available");
-        this.recordOfAchievementThreshold = (Double) certificates.get("record_of_achievement").get("threshold");
-        this.qualifiedCertificateAvailable = (Boolean) certificates.get("qualified_certificate").get("available");
+        try {
+            this.confirmationOfParticipationAvailable = (Boolean) certificates.get("confirmation_of_participation").get("available");
+            this.confirmationOfParticipationThreshold = (Double) certificates.get("confirmation_of_participation").get("threshold");
+            this.recordOfAchievementAvailable = (Boolean) certificates.get("record_of_achievement").get("available");
+            this.recordOfAchievementThreshold = (Double) certificates.get("record_of_achievement").get("threshold");
+            this.qualifiedCertificateAvailable = (Boolean) certificates.get("qualified_certificate").get("available");
+        } catch (Exception e) {
+            //ToDo what to do?
+        }
     }
 
     public void setCertificateUrls(String confirmationOfParticipationUrl, String recordOfAchievementUrl, String qualifiedCertificateUrl) {
