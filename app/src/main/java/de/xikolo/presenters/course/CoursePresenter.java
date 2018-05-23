@@ -14,6 +14,8 @@ import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import io.realm.Realm;
 
+import static de.xikolo.jobs.base.RequestJobCallback.ErrorCode.NO_NETWORK;
+
 public class CoursePresenter extends Presenter<CourseView> {
 
     public static final String TAG = CoursePresenter.class.getSimpleName();
@@ -26,6 +28,8 @@ public class CoursePresenter extends Presenter<CourseView> {
     private int lastTrackedCourseTab;
 
     private String courseId;
+
+    private Course course;
 
     CoursePresenter() {
         this.courseManager = new CourseManager();
@@ -60,7 +64,8 @@ public class CoursePresenter extends Presenter<CourseView> {
         Crashlytics.setString("course_id", id);
 
         if (isViewAttached()) {
-            setupCourse(Course.get(courseId));
+            course = Course.get(courseId);
+            setupCourse(course);
         }
     }
 
@@ -86,20 +91,18 @@ public class CoursePresenter extends Presenter<CourseView> {
     }
 
     private void setupCourse(Course course) {
-        if (!course.accessible) {
-            getViewOrThrow().showCourseLockedToast();
-            getViewOrThrow().startCourseDetailsActivity(course.id);
-            getViewOrThrow().finishActivity();
-            return;
-        }
-        if (!course.isEnrolled()) {
-            getViewOrThrow().showNotEnrolledToast();
-            getViewOrThrow().startCourseDetailsActivity(course.id);
-            getViewOrThrow().finishActivity();
-            return;
-        }
-
         getViewOrThrow().setupView(course, courseTab);
+
+        if (!course.isEnrolled()) {
+            getViewOrThrow().setEnrollmentFunctionsAvailable(false);
+            getViewOrThrow().showEnrollOption();
+        } else if (course.accessible) {
+            getViewOrThrow().setEnrollmentFunctionsAvailable(true);
+            getViewOrThrow().hideEnrollBar();
+        } else {
+            getViewOrThrow().setEnrollmentFunctionsAvailable(false);
+            getViewOrThrow().showCourseStartsSoon();
+        }
     }
 
     public void handleDeepLink(Uri uri) {
@@ -131,7 +134,34 @@ public class CoursePresenter extends Presenter<CourseView> {
         });
     }
 
-    public void unenroll(final String courseId) {
+    public void enroll() {
+        getViewOrThrow().showProgressDialog();
+
+        courseManager.createEnrollment(courseId, new RequestJobCallback() {
+            @Override
+            public void onSuccess() {
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                    getViewOrThrow().restartActivity();
+                }
+            }
+
+            @Override
+            public void onError(ErrorCode code) {
+                if (getView() != null) {
+                    getView().hideProgressDialog();
+                    if (code == NO_NETWORK) {
+                        getView().showNoNetworkToast();
+                    } else if (code == ErrorCode.NO_AUTH) {
+                        getView().showLoginRequiredMessage();
+                        getView().openLogin();
+                    }
+                }
+            }
+        });
+    }
+
+    public void unenroll() {
         getViewOrThrow().showProgressDialog();
         courseManager.deleteEnrollment(Enrollment.getForCourse(courseId).id, new RequestJobCallback() {
             @Override

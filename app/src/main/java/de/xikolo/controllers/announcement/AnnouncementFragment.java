@@ -70,7 +70,7 @@ public class AnnouncementFragment extends LoadingStatePresenterFragment<Announce
 
     @Override
     public void enterCourse(String courseId) {
-        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(getActivity());
+        Intent intent = CourseActivityAutoBundle.builder(courseId).build(getActivity());
         startActivity(intent);
     }
 

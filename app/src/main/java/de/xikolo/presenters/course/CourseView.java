@@ -13,13 +13,21 @@ public interface CourseView extends View {
 
     void showNoNetworkToast();
 
-    void showCourseLockedToast();
+    void showLoginRequiredMessage();
 
-    void showNotEnrolledToast();
+    void openLogin();
+
+    void setEnrollmentFunctionsAvailable(boolean available);
+
+    void hideEnrollBar();
+
+    void showEnrollOption();
+
+    void showCourseStartsSoon();
 
     void finishActivity();
 
-    void startCourseDetailsActivity(String courseId);
+    void restartActivity();
 
     void setupView(Course course, int courseTab);
 

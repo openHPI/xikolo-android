@@ -43,6 +43,7 @@
     <string name="tab_discussions">Discussions</string>
     <string name="tab_progress">Progress</string>
     <string name="tab_course_details">Course details</string>
+    <string name="tab_course_certificates">Certificates</string>
     <string name="tab_announcements">Announcements</string>
     <string name="tab_documents">Documents</string>
     <string name="tab_recap">Recap</string>
@@ -175,6 +176,12 @@
     <string name="course_date_since">Since %s</string>
     <string name="course_date_self_paced">Self-paced</string>
     <string name="course_date_beginning">Beginning %s</string>
+
+    <string name="course_qualified_certificate_desc">A &#x3C;b&#x3E;qualified certificate&#x3C;/b&#x3E; is issued to those who have booked it and gained a record of achievement.</string>
+    <string name="course_record_of_achievement_desc">A &#x3C;b&#x3E;record of achievement&#x3C;/b&#x3E; is issued to those who have earned more than &#x3C;b&#x3E;%1$.0f&#x3C;/b&#x3E;%% of the maximum number of points for the sum of all graded assignments.</string>
+    <string name="course_confirmation_of_participation_desc">A &#x3C;b&#x3E;confirmation of participation&#x3C;/b&#x3E; is issued to those who have completed at least &#x3C;b&#x3E;%1$.0f&#x3C;/b&#x3E;%% of the course material.</string>
+    <string name="course_certificate_view">View certificate</string>
+    <string name="course_certificate_not_available">Not available</string>
 
     <string name="document_lang">Language: %s</string>
 

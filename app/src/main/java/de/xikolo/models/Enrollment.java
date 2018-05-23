@@ -1,5 +1,7 @@
 package de.xikolo.models;
 
+import java.util.Map;
+
 import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
 import io.realm.Realm;
@@ -20,6 +22,12 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
     public boolean reactivated;
 
     public boolean proctored;
+
+    public String confirmationOfParticipationUrl;
+
+    public String recordOfAchievementUrl;
+
+    public String qualifiedCertificateUrl;
 
     public String courseId;
 
@@ -63,6 +71,8 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
         public boolean proctored;
 
+        public Map<String, String> certificates;
+
         public HasOne<Course.JsonModel> course;
 
         @Override
@@ -72,6 +82,9 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
             enrollment.completed = completed;
             enrollment.reactivated = reactivated;
             enrollment.proctored = proctored;
+            enrollment.confirmationOfParticipationUrl = certificates.get("confirmation_of_participation");
+            enrollment.recordOfAchievementUrl = certificates.get("record_of_achievement");
+            enrollment.qualifiedCertificateUrl = certificates.get("qualified_certificate");
 
             if (course != null) {
                 enrollment.courseId = course.get().getId();

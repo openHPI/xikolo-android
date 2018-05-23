@@ -3,32 +3,39 @@ package de.xikolo.controllers.course;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.Button;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.Config;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
 import de.xikolo.controllers.helper.CacheHelper;
 import de.xikolo.controllers.helper.CourseArea;
+import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.models.Course;
@@ -43,20 +50,28 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
 
     public static final String TAG = CourseActivity.class.getSimpleName();
 
-    @AutoBundleField(required = false) String courseId;
+    @AutoBundleField String courseId;
 
     @BindView(R.id.viewpager) ViewPager viewPager;
     @BindView(R.id.tabs) TabLayout tabLayout;
+    @BindView(R.id.appbar) AppBarLayout appBarLayout;
+    @BindView(R.id.stub_bottom) ViewStub stubBottom;
 
     ProgressDialog progressDialog;
 
     CoursePagerAdapter adapter;
 
+    View enrollBar;
+    Button enrollButton;
+
+    private boolean enrollable = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blank_tabs);
-        setupActionBar();
+        setupActionBar(false);
+        enableOfflineModeToolbar(true);
     }
 
     @Override
@@ -73,7 +88,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                     courseId = cacheController.getCourse().id;
                 }
                 if (courseId != null) {
-                    Intent restartIntent = CourseActivityAutoBundle.builder().courseId(courseId).build(this);
+                    Intent restartIntent = CourseActivityAutoBundle.builder(courseId).build(this);
                     finish();
                     startActivity(restartIntent);
                 }
@@ -86,18 +101,32 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     @Override
     public void setupView(Course course, int courseTab) {
         setTitle(course.title);
+
+        if (stubBottom.getParent() != null) {
+            stubBottom.setLayoutResource(R.layout.content_enroll_button);
+            enrollBar = stubBottom.inflate();
+            enrollButton = enrollBar.findViewById(R.id.button_enroll);
+            enrollButton.setOnClickListener((v) -> presenter.enroll());
+        }
+
         courseId = course.id;
-        adapter = new CoursePagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
+        initAdapter();
         viewPager.setOffscreenPageLimit(2);
 
         // Bind the tabs to the ViewPager
         tabLayout.setupWithViewPager(viewPager);
 
+        viewPager.setCurrentItem(courseTab);
+
+        setEnrollmentFunctionsAvailable(true);
+        hideEnrollBar();
+    }
+
+    private void initAdapter() {
+        adapter = new CoursePagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
         tabLayout.clearOnTabSelectedListeners();
         tabLayout.addOnTabSelectedListener(adapter);
-
-        viewPager.setCurrentItem(courseTab);
     }
 
     @Override
@@ -116,7 +145,10 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.unenroll, menu);
+
+        if (!enrollable)
+            inflater.inflate(R.menu.unenroll, menu);
+
         inflater.inflate(R.menu.share, menu);
         super.onCreateOptionsMenu(menu);
         return true;
@@ -128,11 +160,15 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     public void onNetworkEvent(NetworkStateEvent event) {
         super.onNetworkEvent(event);
 
-        if (tabLayout != null) {
+        if (appBarLayout != null) {
             if (event.isOnline()) {
-                tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_toolbar));
+                toolbar.setSubtitle("");
+                tabLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_toolbar));
+                setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
             } else {
-                tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.offline_mode_toolbar));
+                toolbar.setSubtitle(getString(R.string.offline_mode));
+                tabLayout.setBackgroundColor(getResources().getColor(R.color.offline_mode_toolbar));
+                setColorScheme(R.color.offline_mode_toolbar, R.color.offline_mode_statusbar);
             }
         }
     }
@@ -158,7 +194,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        presenter.unenroll(courseId);
+        presenter.unenroll();
     }
 
     @Override
@@ -192,13 +228,55 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     }
 
     @Override
-    public void showNotEnrolledToast() {
-        ToastUtil.show(R.string.notification_not_enrolled);
+    public void showLoginRequiredMessage() {
+        ToastUtil.show(R.string.toast_please_log_in);
     }
 
     @Override
-    public void showCourseLockedToast() {
-        ToastUtil.show(R.string.notification_course_locked);
+    public void openLogin() {
+        Intent intent = LoginActivityAutoBundle.builder().build(this);
+        startActivity(intent);
+    }
+
+    @Override
+    public void setEnrollmentFunctionsAvailable(boolean available) {
+        initAdapter();
+        if (available)
+            adapter.setHiding(false);
+        else
+            adapter.setHiding(true);
+
+        adapter.notifyDataSetChanged();
+        supportInvalidateOptionsMenu();
+    }
+
+    @Override
+    public void hideEnrollBar() {
+        this.enrollable = false;
+        if (enrollBar != null)
+            enrollBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showEnrollOption() {
+        this.enrollable = true;
+        if (enrollBar != null && enrollButton != null) {
+            enrollBar.setVisibility(View.VISIBLE);
+            enrollButton.setEnabled(true);
+            enrollButton.setClickable(true);
+            enrollButton.setText(R.string.btn_enroll);
+        }
+    }
+
+    @Override
+    public void showCourseStartsSoon() {
+        this.enrollable = false;
+        if (enrollBar != null && enrollButton != null) {
+            enrollBar.setVisibility(View.VISIBLE);
+            enrollButton.setEnabled(false);
+            enrollButton.setClickable(false);
+            enrollButton.setText(R.string.btn_starts_soon);
+        }
     }
 
     @Override
@@ -207,9 +285,10 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     }
 
     @Override
-    public void startCourseDetailsActivity(String courseId) {
-        Intent intent = CourseDetailsActivityAutoBundle.builder(courseId).build(this);
-        startActivity(intent);
+    public void restartActivity() {
+        Intent i = getIntent();
+        finish();
+        startActivity(i);
     }
 
     @NonNull
@@ -220,25 +299,61 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
 
     public class CoursePagerAdapter extends FragmentPagerAdapter implements TabLayout.OnTabSelectedListener {
 
+        private List<String> getTitles(boolean hide) {
+            List<String> titles = new ArrayList<>();
+            if (!hide) {
+                titles.add(getString(R.string.tab_learnings));
+                titles.add(getString(R.string.tab_discussions));
+                titles.add(getString(R.string.tab_progress));
+            }
+            titles.add(getString(R.string.tab_course_details));
+            titles.add(getString(R.string.tab_course_certificates));
+
+            if (!hide) {
+                titles.add(getString(R.string.tab_announcements));
+
+                if (FeatureToggle.recapMode()) {
+                    titles.add(getString(R.string.tab_recap));
+                }
+            }
+
+            return titles;
+        }
+
         private FragmentManager fragmentManager;
+
+        private List<String> TITLES;
+
+        private boolean hiding = false;
 
         public CoursePagerAdapter(FragmentManager fm) {
             super(fm);
             fragmentManager = fm;
+            setHiding(false);
+        }
+
+        public void setHiding(boolean hide) {
+            hiding = hide;
+            TITLES = getTitles(hide);
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return getString(CourseArea.get(position).getTitleRes());
+            return TITLES.get(position);
         }
 
         @Override
         public int getCount() {
-            return CourseArea.getSize();
+            return TITLES.size();
         }
 
         @Override
         public Fragment getItem(int position) {
+            //in case some items are hidden
+            if (hiding) {
+                position += 3;
+            }
+
             // Check if this Fragment already exists.
             // Fragment Name is saved by FragmentPagerAdapter implementation.
             String name = makeFragmentName(R.id.viewpager, position);
@@ -258,7 +373,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                         fragment = ProgressFragmentAutoBundle.builder(courseId).build();
                         break;
                     case COURSE_DETAILS:
-                        fragment = CourseDetailsFragmentAutoBundle.builder(courseId).build();
+                        fragment = DescriptionFragmentAutoBundle.builder(courseId).build();
                         break;
                     case DOCUMENTS:
                         fragment = DocumentListFragmentAutoBundle.builder(courseId).build();

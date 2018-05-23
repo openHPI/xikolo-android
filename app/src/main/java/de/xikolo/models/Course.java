@@ -7,6 +7,7 @@ import com.squareup.moshi.Json;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import de.xikolo.App;
 import de.xikolo.BuildConfig;
@@ -63,6 +64,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
     public String externalUrl;
 
     public String policyUrl;
+
+    public Certificates certificates;
 
     public boolean onDemand;
 
@@ -214,8 +217,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         @Json(name = "policy_url")
         public String policyUrl;
 
-        @Json(name = "qualified_certificate_available")
-        public boolean qualifiedCertificateAvailable;
+        public Map<String, Map<String, Object>> certificates;
 
         @Json(name = "on_demand")
         public boolean onDemand;
@@ -250,6 +252,11 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.external = external;
             course.externalUrl = externalUrl;
             course.policyUrl = policyUrl;
+
+            Certificates c = new Certificates();
+            c.parseCertificates(certificates);
+            course.certificates = c;
+
             course.onDemand = onDemand;
 
             if (enrollment != null) {
