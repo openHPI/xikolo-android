@@ -47,6 +47,12 @@
         <item>x2.0</item>
     </string-array>
 
+    <string name="settings_default_value_storage" translatable="false">@string/settings_title_storage_internal</string>
+    <string-array name="settings_values_storages" translatable="false">
+        <item>@string/settings_title_storage_internal</item>
+        <item>@string/settings_title_storage_external</item>
+    </string-array>
+
     <!-- -->
     <string name="filename_cache_lastcourse" translatable="false">lastCourseExtras</string>
 

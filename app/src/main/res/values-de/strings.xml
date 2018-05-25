@@ -202,6 +202,11 @@
 
     <string name="settings_title_ask_delete">Vor Löschen bestätigen</string>
 
+    <string name="settings_title_storage">Speicherort auswählen</string>
+    <string name="settings_title_storage_internal">Interner Speicher</string>
+    <string name="settings_title_storage_external">SD-Karte</string>
+    <string name="settings_summary_storage">%s</string>
+
     <string name="settings_category_data_usage">Mobile Datennutzung</string>
 
     <string name="settings_title_video_quality">Datennutzung für Videos beschränken</string>
