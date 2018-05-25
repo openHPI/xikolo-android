@@ -65,10 +65,8 @@ public abstract class CourseListPresenter extends BaseCourseListPresenter<Course
 
     protected RealmChangeListener<RealmResults<Course>> getCourseListChangeListener() {
         return results -> {
-            if (results.size() > 0) {
-                getViewOrThrow().showContent();
-                updateContent();
-            }
+            getViewOrThrow().showContent();
+            updateContent();
         };
     }
 
