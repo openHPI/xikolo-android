@@ -78,7 +78,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 NAV_ITEMS.size()));
 
         NAV_ITEMS.add(NAV_CERTIFICATES = new NavigationItem(
-                R.string.icon_courses,
+                R.string.icon_courses, // ToDo logo
                 R.string.title_section_certificates,
                 NavigationItem.ViewType.MAIN,
                 NAV_ITEMS.size()));

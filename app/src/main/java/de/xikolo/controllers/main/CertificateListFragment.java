@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,23 +16,27 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import butterknife.BindView;
+import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle;
+import de.xikolo.controllers.course.CourseActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
-import de.xikolo.models.Announcement;
+import de.xikolo.models.Course;
 import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.presenters.main.NewsListPresenter;
-import de.xikolo.presenters.main.NewsListPresenterFactory;
-import de.xikolo.presenters.main.NewsListView;
+import de.xikolo.presenters.main.CertificateListPresenter;
+import de.xikolo.presenters.main.CertificateListPresenterFactory;
+import de.xikolo.presenters.main.CertificateListView;
+import de.xikolo.utils.IntentUtil;
+import de.xikolo.views.AutofitRecyclerView;
+import de.xikolo.views.SpaceItemDecoration;
 
-public class CertificateListFragment extends MainFragment<NewsListPresenter, NewsListView> implements NewsListView {
+public class CertificateListFragment extends MainFragment<CertificateListPresenter, CertificateListView> implements CertificateListView {
 
     public static final String TAG = CertificateListFragment.class.getSimpleName();
 
-    @BindView(R.id.content_view) RecyclerView recyclerView;
+    @BindView(R.id.content_view) AutofitRecyclerView recyclerView;
 
-    private NewsListAdapter newsListAdapter;
+    private CertificateListAdapter certificateListAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,27 +49,71 @@ public class CertificateListFragment extends MainFragment<NewsListPresenter, New
 
     @Override
     public int getLayoutResource() {
-        return R.layout.content_news_list;
+        return R.layout.content_certificate_list;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        newsListAdapter = new NewsListAdapter(new NewsListAdapter.OnAnnouncementClickListener() {
+        certificateListAdapter = new CertificateListAdapter(new CertificateListAdapter.OnCertificateCardClickListener() {
             @Override
-            public void onAnnouncementClicked(String announcementId) {
-                presenter.onAnnouncementClicked(announcementId);
+            public void onViewCertificateClicked(String url) {
+                IntentUtil.openDoc(App.getInstance(), url);
+            }
+
+            @Override
+            public void onCourseClicked(String courseId) {
+                Intent intent = CourseActivityAutoBundle.builder(courseId).build(App.getInstance());
+                startActivity(intent);
             }
         });
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(newsListAdapter);
+        //ToDo best layout? (rows, spacing etc.)
+
+        recyclerView.setAdapter(certificateListAdapter);
+
+        recyclerView.addItemDecoration(new SpaceItemDecoration(
+                getActivity().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
+                getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
+                false,
+                new SpaceItemDecoration.RecyclerViewInfo() {
+                    @Override
+                    public boolean isHeader(int position) {
+                        return false;
+                    }
+
+                    @Override
+                    public int getSpanCount() {
+                        return 1;
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return certificateListAdapter.getItemCount();
+                    }
+                }));
+    }
+
+    @Override
+    public void showCertificateList(List<Course> coursesWithCertificates) {
+        if (certificateListAdapter != null) {
+            certificateListAdapter.update(coursesWithCertificates);
+        }
+    }
+
+    @Override
+    public void showLoginRequiredMessage() {
+        super.showLoginRequiredMessage();
+        loadingStateHelper.setMessageOnClickListener(v -> activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition()));
+    }
+
+    @Override
+    public void showNoCertificatesMessage() {
+        loadingStateHelper.setMessageTitle(R.string.notification_no_certificates);
+        loadingStateHelper.setMessageSummary(R.string.notification_no_certificates_summary);
+        loadingStateHelper.setMessageOnClickListener(v -> activityCallback.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.getPosition()));
+        loadingStateHelper.showMessage();
     }
 
     @Override
@@ -83,19 +128,6 @@ public class CertificateListFragment extends MainFragment<NewsListPresenter, New
         super.onDestroy();
 
         EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void openAnnouncement(String announcementId) {
-        Intent intent = AnnouncementActivityAutoBundle.builder(announcementId, true).build(getActivity());
-        startActivity(intent);
-    }
-
-    @Override
-    public void showAnnouncementList(List<Announcement> announcementList) {
-        if (newsListAdapter != null) {
-            newsListAdapter.update(announcementList);
-        }
     }
 
     @Override
@@ -118,8 +150,8 @@ public class CertificateListFragment extends MainFragment<NewsListPresenter, New
 
     @NonNull
     @Override
-    protected PresenterFactory<NewsListPresenter> getPresenterFactory() {
-        return new NewsListPresenterFactory();
+    protected PresenterFactory<CertificateListPresenter> getPresenterFactory() {
+        return new CertificateListPresenterFactory();
     }
 
     @SuppressWarnings("unused")
@@ -137,5 +169,4 @@ public class CertificateListFragment extends MainFragment<NewsListPresenter, New
             presenter.onRefresh();
         }
     }
-
 }

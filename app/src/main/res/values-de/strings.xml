@@ -172,6 +172,9 @@
     <string name="course_date_self_paced">Selbststudium</string>
     <string name="course_date_beginning">Ab %s</string>
 
+    <string name="course_qualified_certificate">Qualifiziertes Zertifikat</string>
+    <string name="course_record_of_achievement">Zeugnis</string>
+    <string name="course_confirmation_of_participation">Teilnahmebestätigung</string>
     <string name="course_qualified_certificate_desc">Das &#x3C;b&#x3E;Qualifizierte Zertifikat&#x3C;/b&#x3E; erh&#xE4;lt, wer es gebucht hat und das Zeugnis erhalten hat.</string>
     <string name="course_record_of_achievement_desc">Das &#x3C;b&#x3E;Zeugnis&#x3C;/b&#x3E; erh&#xE4;lt, wer in der Summe aller benoteten Aufgaben mehr als &#x3C;b&#x3E;%1$.0f&#x3C;/b&#x3E;%% der H&#xF6;chstpunktzahl erreicht hat.</string>
     <string name="course_confirmation_of_participation_desc">Die &#x3C;b&#x3E;Teilnahmebest&#xE4;tigung&#x3C;/b&#x3E; erh&#xE4;lt, wer auf zumindest &#x3C;b&#x3E;%1$.0f&#x3C;/b&#x3E;%% der Kursunterlagen zugegriffen hat.</string>
@@ -185,6 +188,8 @@
     <string name="notification_no_network_summary">Dieser Inhalt kann nicht ohne Netzwerk-Verbindung dargestellt werden.</string>
     <string name="notification_no_network_with_offline_mode_summary">Bitte aktualisieren Sie diesen Inhalt mit aktivierter Netzwerk-Verbindung. Danach kann dieser Inhalt offline genutzt werden.</string>
     <string name="notification_no_enrollments">Keine Kurse vorhanden</string>
+    <string name="notification_no_certificates">Keine Zertifikate vorhanden</string>
+    <string name="notification_no_certificates_summary">Anforderungen für ein Zertifikat sind in der Sektion \"Zertifikate\" eines Kurses zu finden.</string>
     <string name="notification_not_enrolled">Sie haben sich noch nicht für diesen Kurs angemeldet</string>
     <string name="notification_no_enrollments_summary">Sie haben sich bisher für keinen Kurs eingetragen.</string>
     <string name="notification_please_login">Anmeldung erforderlich</string>
