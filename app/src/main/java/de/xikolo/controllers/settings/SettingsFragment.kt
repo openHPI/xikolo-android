@@ -18,6 +18,7 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
 import de.xikolo.managers.UserManager
+import de.xikolo.utils.ToastUtil
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -136,6 +137,7 @@ class SettingsFragment : PreferenceFragment() {
             pref.title = getString(R.string.logout)
             pref.setOnPreferenceClickListener { _ ->
                 UserManager.logout()
+                ToastUtil.show(R.string.toast_successful_logout);
                 true
             }
         }
