@@ -206,6 +206,7 @@
     <string name="settings_title_storage_internal">Interner Speicher</string>
     <string name="settings_title_storage_external">SD-Karte</string>
     <string name="settings_summary_storage">%s</string>
+    <string name="settings_storage_addition">(aktueller Speicherort)</string>
 
     <string name="settings_category_data_usage">Mobile Datennutzung</string>
 

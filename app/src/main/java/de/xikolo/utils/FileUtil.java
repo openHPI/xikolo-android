@@ -1,6 +1,5 @@
 package de.xikolo.utils;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
@@ -35,13 +34,14 @@ public class FileUtil {
 
     public static long folderFileNumber(File directory) {
         long files = 0;
-        for (File file : directory.listFiles()) {
-            if (file.isFile()) {
-                files++;
-            } else {
-                files += folderFileNumber(file);
+        if (directory != null)
+            for (File file : directory.listFiles()) {
+                if (file.isFile()) {
+                    files++;
+                } else {
+                    files += folderFileNumber(file);
+                }
             }
-        }
         return files;
     }
 
@@ -82,8 +82,8 @@ public class FileUtil {
         }
     }
 
-    public static String createPublicAppFolderPath(Context c) {
-        File appFolder = new File(StorageUtil.getStorage(c).getAbsolutePath() + File.separator
+    public static String createPublicAppFolderPath(File storage) {
+        File appFolder = new File(storage.getAbsolutePath() + File.separator
                 + App.getInstance().getString(R.string.app_name));
 
         createFolderIfNotExists(appFolder);
