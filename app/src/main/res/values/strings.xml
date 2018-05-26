@@ -254,7 +254,8 @@
     <string name="settings_title_storage">Choose storage</string>
     <string name="settings_title_storage_internal">Internal</string>
     <string name="settings_title_storage_external">SD Card</string>
-    <string name="settings_summary_storage">%1$s free</string>
+    <string name="settings_summary_storage">%1$s: %2$s free.</string>
+    <string name="settings_storage_addition">(currently selected)</string>
 
     <string name="settings_imprint">Imprint</string>
     <string name="settings_privacy">Data Protection</string>

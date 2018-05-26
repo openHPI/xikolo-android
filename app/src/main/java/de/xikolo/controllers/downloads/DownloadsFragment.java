@@ -26,6 +26,7 @@ import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.PermissionManager;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.FileUtil;
+import de.xikolo.utils.StorageUtil;
 import de.xikolo.utils.ToastUtil;
 
 public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DownloadsAdapter.OnDeleteButtonClickedListener {
@@ -108,21 +109,38 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
         if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
             notificationController.showContentView();
 
+            String internalAddition = "", sdcardAddition = "";
+            if (StorageUtil.getStorage(getActivity()).equals(StorageUtil.getSdcardStorage(getActivity())))
+                sdcardAddition = " " + getString(R.string.settings_storage_addition);
+            else
+                internalAddition = " " + getString(R.string.settings_storage_addition);
+
+
             List<DownloadsAdapter.FolderItem> list = new ArrayList<>();
 
-            String appFolder = FileUtil.createPublicAppFolderPath(getActivity());
+            String internalAppFolder = FileUtil.createPublicAppFolderPath(StorageUtil.getInternalStorage(getActivity()));
 
-            DownloadsAdapter.FolderItem total = new DownloadsAdapter.FolderItem(
-                    appFolder.substring(appFolder.lastIndexOf(File.separator) + 1),
-                    appFolder);
-            list.add(total);
+            DownloadsAdapter.FolderItem totalInternal = new DownloadsAdapter.FolderItem(
+                    getString(R.string.settings_title_storage_internal) + internalAddition,
+                    internalAppFolder);
+            list.add(totalInternal);
+
+            File sdcardStorage = StorageUtil.getSdcardStorage(getActivity());
+            if (sdcardStorage != null) {
+                String sdcardAppFolder = FileUtil.createPublicAppFolderPath(sdcardStorage);
+
+                DownloadsAdapter.FolderItem totalSdcard = new DownloadsAdapter.FolderItem(
+                        getString(R.string.settings_title_storage_external) + sdcardAddition,
+                        sdcardAppFolder);
+                list.add(totalSdcard);
+            }
 
             adapter.addItem(getString(R.string.overall), list);
 
-            List<String> folders = downloadManager.getFoldersWithDownloads();
-            if (folders.size() > 0) {
+            List<String> internalFolders = downloadManager.getFoldersWithDownloads(StorageUtil.getInternalStorage(getActivity()));
+            if (internalFolders.size() > 0) {
                 list = new ArrayList<>();
-                for (String folder : folders) {
+                for (String folder : internalFolders) {
                     String name;
                     try {
                         name = folder.substring(folder.lastIndexOf(File.separator) + 1, folder.lastIndexOf("_"));
@@ -132,7 +150,25 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
                     DownloadsAdapter.FolderItem item = new DownloadsAdapter.FolderItem(name, folder);
                     list.add(item);
                 }
-                adapter.addItem(getString(R.string.courses), list);
+                adapter.addItem(getString(R.string.courses) + " " + getString(R.string.settings_title_storage_internal), list);
+            }
+
+            if (sdcardStorage != null) {
+                List<String> sdcardFolders = downloadManager.getFoldersWithDownloads(sdcardStorage);
+                if (sdcardFolders.size() > 0) {
+                    list = new ArrayList<>();
+                    for (String folder : sdcardFolders) {
+                        String name;
+                        try {
+                            name = folder.substring(folder.lastIndexOf(File.separator) + 1, folder.lastIndexOf("_"));
+                        } catch (Exception e) {
+                            name = folder;
+                        }
+                        DownloadsAdapter.FolderItem item = new DownloadsAdapter.FolderItem(name, folder);
+                        list.add(item);
+                    }
+                    adapter.addItem(getString(R.string.courses) + " " + getString(R.string.settings_title_storage_external), list);
+                }
             }
         } else {
             notificationController.setMessageTitle(R.string.dialog_title_permissions);

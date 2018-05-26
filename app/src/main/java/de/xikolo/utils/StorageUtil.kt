@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.support.v4.content.ContextCompat
-import android.support.v7.preference.PreferenceManager
 import de.xikolo.R
+import de.xikolo.storages.ApplicationPreferences
 import java.io.File
 
 object StorageUtil {
@@ -64,7 +64,7 @@ object StorageUtil {
     }
 
     @JvmStatic
-    fun getStoragePreference(c: Context): StorageType = toStorageType(c, PreferenceManager.getDefaultSharedPreferences(c).getString(c.getString(R.string.preference_storage), c.getString(R.string.settings_default_value_storage))!!)
+    fun getStoragePreference(c: Context): StorageType = toStorageType(c, ApplicationPreferences().storage!!)
 
     @JvmStatic
     fun toStorageType(c: Context, s: String): StorageType = if (s == c.getString(R.string.settings_title_storage_external)) StorageType.SDCARD else StorageType.INTERNAL
