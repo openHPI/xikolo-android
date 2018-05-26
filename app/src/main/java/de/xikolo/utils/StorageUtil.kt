@@ -4,10 +4,9 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.support.v4.content.ContextCompat
+import android.support.v7.preference.PreferenceManager
 import de.xikolo.R
-import de.xikolo.storages.ApplicationPreferences
 import java.io.File
-import java.io.IOException
 
 object StorageUtil {
 
@@ -65,68 +64,10 @@ object StorageUtil {
     }
 
     @JvmStatic
-    fun getStoragePreference(c: Context): StorageType = toStorageType(c, ApplicationPreferences().storage!!)
+    fun getStoragePreference(c: Context): StorageType = toStorageType(c, PreferenceManager.getDefaultSharedPreferences(c).getString(c.getString(R.string.preference_storage), c.getString(R.string.settings_default_value_storage))!!)
 
     @JvmStatic
-    fun migrateAsync(from: File?, to: File?, callback: StorageMigrationCallback) {
-        if(from == null || to == null) {
-            callback.onCompleted(false)
-            return
-        }
-
-        Thread(Runnable {
-            if (from.exists()) {
-                callback.onProgressChanged(0)
-                val totalFiles = FileUtil.folderFileNumber(from)
-                val copiedFiles = move(from, to, callback)
-                callback.onCompleted(copiedFiles == totalFiles)
-            } else
-                callback.onCompleted(false)
-        }).start()
-    }
-
-    private fun move(sourceFile: File, destFile: File, callback: StorageUtil.StorageMigrationCallback): Int {
-        var count = 0
-        if (sourceFile.isDirectory) {
-            for (file in sourceFile.listFiles()!!) {
-                count += move(file, File(destFile.absolutePath + File.separator + file.name), callback)
-                callback.onProgressChanged(count)
-            }
-        } else {
-            try {
-                destFile.mkdirs()
-                sourceFile.copyTo(destFile, true)
-                count++
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-        sourceFile.delete()
-
-        return count
-    }
-
-    @JvmStatic
-    fun buildMigrationMessage(c: Context, from: StorageType): String {
-        val currentStorage = getStoragePreference(c)
-        var current = c.getString(R.string.settings_title_storage_internal)
-        if (currentStorage == StorageType.INTERNAL)
-            current = c.getString(R.string.settings_title_storage_external)
-
-        var destination = c.getString(R.string.settings_title_storage_external)
-        if (from == StorageType.SDCARD)
-            destination = c.getString(R.string.settings_title_storage_internal)
-
-        return c.getString(R.string.dialog_storage_migration, current, destination)
-    }
-
-    @JvmStatic
-    fun toStorageType(c: Context, s: String):
-        StorageType =
-            if (s == c.getString(R.string.settings_title_storage_external))
-                StorageType.SDCARD
-            else
-                StorageType.INTERNAL
+    fun toStorageType(c: Context, s: String): StorageType = if (s == c.getString(R.string.settings_title_storage_external)) StorageType.SDCARD else StorageType.INTERNAL
 
     @JvmStatic
     fun buildWriteErrorMessage(c: Context): String {
@@ -135,10 +76,4 @@ object StorageUtil {
             storage = c.getString(R.string.settings_title_storage_external)
         return c.getString(R.string.toast_no_external_write_access, storage)
     }
-
-    interface StorageMigrationCallback {
-        fun onProgressChanged(count: Int)
-        fun onCompleted(success: Boolean)
-    }
-
 }
