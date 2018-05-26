@@ -85,6 +85,7 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public void onRefresh() {
         fetchItems();
+        notificationController.hideProgress();
     }
 
     @SuppressWarnings("unused")
