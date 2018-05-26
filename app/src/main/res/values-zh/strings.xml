@@ -138,7 +138,7 @@
     <string name="toast_please_log_in">请登录。</string>
     <string name="toast_log_in_failed">登录失败，请再次确认您的登录信息。</string>
     <string name="toast_file_already_downloaded">文件已下载。</string>
-    <string name="toast_no_external_write_access">无法将文件写入设备中。</string>
+    <string name="toast_no_external_write_access">无法将文件写入设备中。(%1$s)</string><!-- ToDo I dont know chinese -->
 
     <!-- -->
     <string name="offline_mode">离线模式</string>

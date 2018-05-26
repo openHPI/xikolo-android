@@ -24,6 +24,7 @@
     <string name="preference_login_out" translatable="false">login_out</string>
     <string name="preference_send_feedback" translatable="false">send_feedback</string>
 
+    <string name="preference_category_general" translatable="false">general</string>
     <string name="preference_category_video_playback_speed" translatable="false">category_video_playback_speed</string>
     <string name="preference_category_info" translatable="false">category_info</string>
 

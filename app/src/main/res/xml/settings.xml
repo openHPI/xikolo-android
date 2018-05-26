@@ -1,7 +1,9 @@
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="@string/preference_screen">
 
-    <android.support.v7.preference.PreferenceCategory android:title="@string/settings_category_general">
+    <android.support.v7.preference.PreferenceCategory
+        android:key="@string/preference_category_general"
+        android:title="@string/settings_category_general">
 
         <android.support.v7.preference.CheckBoxPreference
             android:defaultValue="true"

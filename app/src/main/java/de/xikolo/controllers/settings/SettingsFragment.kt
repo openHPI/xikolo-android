@@ -20,6 +20,7 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
 import de.xikolo.managers.UserManager
+import de.xikolo.utils.StorageUtil
 import de.xikolo.utils.ToastUtil
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -64,7 +65,15 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 
-        onSharedPreferenceChanged(prefs, getString(R.string.preference_storage));
+        onSharedPreferenceChanged(prefs, getString(R.string.preference_storage))
+
+        // Android does not support multiple external storages below KITKAT
+        // Determining the states of multiple storages requires LOLLIPOP
+        if (Build.VERSION.SDK_INT < 21 || StorageUtil.getStorages(activity).size < 2) {
+            val general = findPreference(getString(R.string.preference_category_general)) as PreferenceCategory
+            val storagePref = findPreference(getString(R.string.preference_storage))
+            general.removePreference(storagePref)
+        }
 
         if (Build.VERSION.SDK_INT < 23) {
             val screen = findPreference(getString(R.string.preference_screen)) as PreferenceScreen

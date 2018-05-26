@@ -190,7 +190,7 @@
     <string name="toast_log_in_failed">Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten.</string>
     <string name="toast_successful_logout">Erfolgreich abgemeldet.</string>
     <string name="toast_file_already_downloaded">Datei bereits heruntergeladen.</string>
-    <string name="toast_no_external_write_access">Kein Schreibzugriff für externen Speicher.</string>
+    <string name="toast_no_external_write_access">Kein Schreibzugriff für %1$s.</string>
     <string name="toast_no_pdf_viewer_found">Keine Anwendung zum Anzeigen von PDF-Dateien gefunden. Installieren Sie eine und versuchen Sie es erneut.</string>
 
     <!-- -->

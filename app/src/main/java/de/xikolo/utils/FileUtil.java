@@ -1,6 +1,6 @@
 package de.xikolo.utils;
 
-import android.os.Environment;
+import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
@@ -82,8 +82,8 @@ public class FileUtil {
         }
     }
 
-    public static String createPublicAppFolderPath() {
-        File appFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+    public static String createPublicAppFolderPath(Context c) {
+        File appFolder = new File(StorageUtil.getStorage(c).getAbsolutePath() + File.separator
                 + App.getInstance().getString(R.string.app_name));
 
         createFolderIfNotExists(appFolder);
