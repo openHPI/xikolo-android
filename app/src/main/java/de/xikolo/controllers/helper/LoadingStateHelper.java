@@ -52,6 +52,10 @@ public class LoadingStateHelper {
         contentView.setVisibility(View.VISIBLE);
     }
 
+    public void hideContentView() {
+        contentView.setVisibility(View.GONE);
+    }
+
     public boolean isContentViewVisible() {
         return contentView.getVisibility() == View.VISIBLE;
     }

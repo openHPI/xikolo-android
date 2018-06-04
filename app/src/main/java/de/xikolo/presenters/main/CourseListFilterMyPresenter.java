@@ -14,8 +14,10 @@ public class CourseListFilterMyPresenter extends CourseListPresenter {
         courseList.clear();
 
         if (!UserManager.isAuthorized()) {
+            getViewOrThrow().hideContent();
             getViewOrThrow().showLoginRequiredMessage();
         } else if (courseManager.countEnrollments(realm) == 0) {
+            getViewOrThrow().hideContent();
             getViewOrThrow().showNoEnrollmentsMessage();
         } else {
             List<Course> subList = courseManager.listCurrentAndPastCoursesWithEnrollment(realm);
