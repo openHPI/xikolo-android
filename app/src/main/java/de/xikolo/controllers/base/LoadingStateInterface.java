@@ -6,6 +6,8 @@ public interface LoadingStateInterface {
 
     void showContent();
 
+    void hideContent();
+
     void showBlockingProgress();
 
     void showProgress();

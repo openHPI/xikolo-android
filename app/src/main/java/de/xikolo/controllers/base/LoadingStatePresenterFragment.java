@@ -46,6 +46,11 @@ public abstract class LoadingStatePresenterFragment<P extends LoadingStatePresen
     }
 
     @Override
+    public void hideContent() {
+        loadingStateHelper.hideContentView();
+    }
+
+    @Override
     public void showContent() {
         loadingStateHelper.showContentView();
     }

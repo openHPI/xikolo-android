@@ -182,6 +182,7 @@
     <string name="toast_no_network">Bitte aktivieren Sie die Netzwerk-Verbindung.</string>
     <string name="toast_please_log_in">Bitte melden Sie sich an.</string>
     <string name="toast_log_in_failed">Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten.</string>
+    <string name="toast_successful_logout">Erfolgreich abgemeldet.</string>
     <string name="toast_file_already_downloaded">Datei bereits heruntergeladen.</string>
     <string name="toast_no_external_write_access">Kein Schreibzugriff für externen Speicher.</string>
 
