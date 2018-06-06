@@ -3,12 +3,10 @@ package de.xikolo.presenters.main;
 import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
-import de.xikolo.models.Enrollment;
 import de.xikolo.models.Profile;
 import de.xikolo.models.User;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 
@@ -41,22 +39,18 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
             requestUser(false);
         }
 
-        userPromise = userManager.getUser(realm, new RealmChangeListener<User>() {
-            @Override
-            public void onChange(User u) {
-                user = u;
-                profile = Profile.get(user.profileId);
+        userPromise = userManager.getUser(realm, (u) -> {
+            user = u;
+            profile = Profile.get(user.profileId);
 
-                getViewOrThrow().showContent();
-                getViewOrThrow().showUser(user, profile);
+            if (isViewAttached()) {
+                getView().showContent();
+                getView().showUser(user, profile);
             }
         });
 
-        enrollmentListPromise = courseManager.listEnrollments(realm, new RealmChangeListener<RealmResults<Enrollment>>() {
-            @Override
-            public void onChange(RealmResults<Enrollment> enrollments) {
-                getViewOrThrow().showEnrollmentCount(enrollments.size());
-            }
+        enrollmentListPromise = courseManager.listEnrollments(realm, (enrollments) -> {
+            if (isViewAttached()) getView().showEnrollmentCount(enrollments.size());
         });
     }
 

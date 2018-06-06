@@ -9,7 +9,6 @@ import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
@@ -45,20 +44,16 @@ public class LearningsPresenter extends LoadingStatePresenter<LearningsView> {
             requestSectionListWithItems(false);
         }
 
-        coursePromise = courseManager.getCourse(courseId, realm, new RealmChangeListener<Course>() {
-            @Override
-            public void onChange(Course course) {
-                getViewOrThrow().setTitle(course.title);
-            }
+        coursePromise = courseManager.getCourse(courseId, realm, (course) -> {
+            if (isViewAttached()) getView().setTitle(course.title);
         });
 
-        itemsPromise = itemManager.listAccessibleItemsForCourse(courseId, realm, new RealmChangeListener<RealmResults<Item>>() {
-            @Override
-            public void onChange(RealmResults<Item> items) {
-                if (items.size() > 0) {
-                    itemList = items;
-                    getViewOrThrow().showContent();
-                    getViewOrThrow().setupSections(Section.listForCourse(courseId));
+        itemsPromise = itemManager.listAccessibleItemsForCourse(courseId, realm, (items) -> {
+            if (items.size() > 0) {
+                itemList = items;
+                if (isViewAttached()) {
+                    getView().showContent();
+                    getView().setupSections(Section.listForCourse(courseId));
                 }
             }
         });

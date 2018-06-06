@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import de.xikolo.models.Video;
 import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class VideoPreviewPresenter extends ItemPresenter<VideoPreviewView> {
@@ -27,13 +26,12 @@ public class VideoPreviewPresenter extends ItemPresenter<VideoPreviewView> {
             requestItem(false);
         }
 
-        videoPromise = itemManager.getVideoForItem(item.contentId, realm, new RealmChangeListener<RealmResults<Video>>() {
-            @Override
-            public void onChange(RealmResults<Video> result) {
-                if (result.size() > 0) {
-                    video = realm.copyFromRealm(result.first());
-                    getViewOrThrow().showContent();
-                    getViewOrThrow().setupView(course, section, item, video);
+        videoPromise = itemManager.getVideoForItem(item.contentId, realm, (result) -> {
+            if (result.size() > 0) {
+                video = realm.copyFromRealm(result.first());
+                if (isViewAttached()) {
+                    getView().showContent();
+                    getView().setupView(course, section, item, video);
                 }
             }
         });

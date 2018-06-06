@@ -41,8 +41,11 @@ public class ChannelListPresenter extends LoadingStatePresenter<ChannelListView>
         return results -> {
             if (results.size() > 0) {
                 channelList = results;
-                getViewOrThrow().showContent();
-                getViewOrThrow().showChannelList(channelList);
+
+                if (isViewAttached()) {
+                    getView().showContent();
+                    getView().showChannelList(channelList);
+                }
             }
         };
     }

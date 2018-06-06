@@ -3,7 +3,6 @@ package de.xikolo.presenters.course_items;
 import de.xikolo.config.Config;
 import de.xikolo.models.RichText;
 import de.xikolo.utils.LanalyticsUtil;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class RichTextPresenter extends ItemPresenter<RichTextView> {
@@ -25,13 +24,12 @@ public class RichTextPresenter extends ItemPresenter<RichTextView> {
             requestItem(false);
         }
 
-        richTextPromise = itemManager.getRichTextForItem(item.contentId, realm, new RealmChangeListener<RealmResults<RichText>>() {
-            @Override
-            public void onChange(RealmResults<RichText> result) {
-                if (result.size() > 0) {
-                    richText = realm.copyFromRealm(result.first());
-                    getViewOrThrow().showContent();
-                    getViewOrThrow().setupView(item, richText);
+        richTextPromise = itemManager.getRichTextForItem(item.contentId, realm, (result) -> {
+            if (result.size() > 0) {
+                richText = realm.copyFromRealm(result.first());
+                if (isViewAttached()) {
+                    getView().showContent();
+                    getView().setupView(item, richText);
                 }
             }
         });
