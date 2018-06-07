@@ -70,7 +70,6 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
 
     @Override
     public void onStop() {
-        Log.i(TAG, "onStop-" + tag() + (presenter != null));
         if (presenter != null) presenter.onViewDetached();
         super.onStop();
     }
