@@ -55,8 +55,10 @@ public class ChannelDetailsPresenter extends BaseCourseListPresenter<ChannelDeta
 
             coursesPromise = getCoursesPromise();
 
-            getViewOrThrow().showContent();
-            getViewOrThrow().setupView(channel);
+            if (isViewAttached()) {
+                getView().showContent();
+                getView().setupView(channel);
+            }
         });
     }
 
@@ -91,7 +93,7 @@ public class ChannelDetailsPresenter extends BaseCourseListPresenter<ChannelDeta
                 courseList.clear();
                 courseList.add(channel.description, new ArrayList<>());
                 buildCourseList();
-                getViewOrThrow().showCourseList(courseList);
+                getView().showCourseList(courseList);
             }
         });
     }

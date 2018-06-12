@@ -26,6 +26,7 @@ import de.xikolo.models.SectionProgress;
 import de.xikolo.models.SubtitleCue;
 import de.xikolo.models.SubtitleTrack;
 import de.xikolo.models.Video;
+import moe.banana.jsonapi2.JsonApiConverterFactory;
 import moe.banana.jsonapi2.ResourceAdapterFactory;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;

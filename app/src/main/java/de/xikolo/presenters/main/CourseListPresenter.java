@@ -54,7 +54,7 @@ public abstract class CourseListPresenter extends BaseCourseListPresenter<Course
             this.courseListPromise = courseManager.searchCourses(query, withEnrollment, realm, results -> {
                 courseList.clear();
                 courseList.add(null, results);
-                getViewOrThrow().showCourseList(courseList);
+                if (isViewAttached()) getView().showCourseList(courseList);
             });
         } else {
             setCourseListPromise();
@@ -65,8 +65,10 @@ public abstract class CourseListPresenter extends BaseCourseListPresenter<Course
 
     protected RealmChangeListener<RealmResults<Course>> getCourseListChangeListener() {
         return results -> {
-            getViewOrThrow().showContent();
-            updateContent();
+            if (isViewAttached()) {
+                getView().showContent();
+                updateContent();
+            }
         };
     }
 

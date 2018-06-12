@@ -81,10 +81,8 @@ public abstract class Sync<S extends RealmModel, T extends Resource & RealmAdapt
         public String[] run() {
             final List<String> ids = new ArrayList<>();
 
-            Realm realm = Realm.getDefaultInstance();
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
+            try (Realm realmInstance = Realm.getDefaultInstance()) {
+                realmInstance.executeTransaction(realm -> {
                     for (T item : items) {
                         if (beforeCommitCallback != null) {
                             beforeCommitCallback.beforeCommit(realm, item.convertToRealmObject());
@@ -116,9 +114,8 @@ public abstract class Sync<S extends RealmModel, T extends Resource & RealmAdapt
 
                         results.deleteAllFromRealm();
                     } else if (Config.DEBUG) Log.d(TAG, "DATA: Deleted 0 local resources from type " + clazz.getSimpleName());
-                }
-            });
-            realm.close();
+                });
+            }
 
             return ids.toArray(new String[0]);
         }
@@ -127,14 +124,14 @@ public abstract class Sync<S extends RealmModel, T extends Resource & RealmAdapt
 
     public static class Included<S extends RealmModel, T extends Resource & RealmAdapter<S>> extends Sync<S, T> {
 
-        private Document<?> document;
+        private Document document;
 
-        private Included(Class<S> clazz, Document<?> document) {
+        private Included(Class<S> clazz, Document document) {
             super(clazz);
             this.document = document;
         }
 
-        public static <S extends RealmModel> Included<S, ?> with(Class<S> clazz, final Document<?> document) {
+        public static <S extends RealmModel> Included<S, ?> with(Class<S> clazz, final Document document) {
             return new Included<>(clazz, document);
         }
 
@@ -151,10 +148,8 @@ public abstract class Sync<S extends RealmModel, T extends Resource & RealmAdapt
 
             final List<String> ids = new ArrayList<>();
 
-            Realm realm = Realm.getDefaultInstance();
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
+            try (Realm realmInstance = Realm.getDefaultInstance()) {
+                realmInstance.executeTransaction(realm -> {
                     for (Resource resource : document.getIncluded()) {
                         if (resource instanceof RealmAdapter) {
                             RealmAdapter adapter = (RealmAdapter) resource;
@@ -192,9 +187,8 @@ public abstract class Sync<S extends RealmModel, T extends Resource & RealmAdapt
 
                         results.deleteAllFromRealm();
                     } else if (Config.DEBUG) Log.d(TAG, "INCLUDED: Deleted 0 local resources from type " + clazz.getSimpleName());
-                }
-            });
-            realm.close();
+                });
+            }
 
             return ids.toArray(new String[0]);
         }

@@ -1,10 +1,8 @@
 package de.xikolo.presenters.main;
 
 import de.xikolo.managers.AnnouncementManager;
-import de.xikolo.models.Announcement;
 import de.xikolo.presenters.base.Presenter;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class NavigationPresenter extends Presenter<NavigationView> {
@@ -24,11 +22,8 @@ public class NavigationPresenter extends Presenter<NavigationView> {
     public void onViewAttached(NavigationView view) {
         super.onViewAttached(view);
 
-        this.announcementListPromise = announcementManager.listGlobalAnnouncements(realm, new RealmChangeListener<RealmResults<Announcement>>() {
-            @Override
-            public void onChange(RealmResults<Announcement> results) {
-                getViewOrThrow().updateDrawer();
-            }
+        this.announcementListPromise = announcementManager.listGlobalAnnouncements(realm, (announcements) -> {
+            if (isViewAttached()) getView().updateDrawer();
         });
     }
 

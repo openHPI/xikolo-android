@@ -38,6 +38,7 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
     private void initLoader() {
         // LoaderCallbacks as an object, so no hint regarding loader will be leak to the subclasses.
         getLoaderManager().initLoader(loaderId(), null, new LoaderManager.LoaderCallbacks<P>() {
+            @NonNull
             @Override
             public final Loader<P> onCreateLoader(int id, Bundle args) {
                 if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onCreateLoader-" + tag());
@@ -45,14 +46,15 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
             }
 
             @Override
-            public final void onLoadFinished(Loader<P> loader, P presenter) {
+            public final void onLoadFinished(@NonNull Loader<P> loader, P presenter) {
                 if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onLoadFinished-" + tag());
                 BasePresenterFragment.this.presenter = presenter;
+                presenter.onViewAttached(getPresenterView());
                 onPresenterCreatedOrRestored(presenter);
             }
 
             @Override
-            public final void onLoaderReset(Loader<P> loader) {
+            public final void onLoaderReset(@NonNull Loader<P> loader) {
                 if (PRESENTER_LIFECYCLE_LOGGING) Log.i(TAG, "onLoaderReset-" + tag());
                 BasePresenterFragment.this.presenter = null;
                 onPresenterDestroyed();
@@ -63,12 +65,12 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
     @Override
     public void onStart() {
         super.onStart();
-        presenter.onViewAttached(getPresenterView());
+        if (presenter != null) presenter.onViewAttached(getPresenterView());
     }
 
     @Override
     public void onStop() {
-        presenter.onViewDetached();
+        if (presenter != null) presenter.onViewDetached();
         super.onStop();
     }
 
@@ -82,7 +84,7 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
      */
     @NonNull
     protected String tag() {
-        return TAG;
+        return this.getClass().getSimpleName();
     }
 
     /**
@@ -93,7 +95,7 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
     protected abstract PresenterFactory<P> getPresenterFactory();
 
     /**
-     * Hook for subclasses that deliver the {@link Presenter} before its View is attached.
+     * Hook for subclasses that deliver the {@link Presenter} when created or restored.
      * Can be use to initialize the Presenter or simple hold a reference to it.
      */
     protected void onPresenterCreatedOrRestored(@NonNull P presenter) {

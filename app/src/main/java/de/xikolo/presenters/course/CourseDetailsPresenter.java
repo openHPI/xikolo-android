@@ -5,7 +5,6 @@ import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 
 import static de.xikolo.jobs.base.RequestJobCallback.ErrorCode.NO_NETWORK;
 
@@ -42,12 +41,11 @@ public class CourseDetailsPresenter extends LoadingStatePresenter<CourseDetailsV
             requestCourse(false);
         }
 
-        coursePromise = courseManager.getCourse(courseId, realm, new RealmChangeListener<Course>() {
-            @Override
-            public void onChange(Course c) {
-                course = c;
-                getViewOrThrow().showContent();
-                getViewOrThrow().setupView(course);
+        coursePromise = courseManager.getCourse(courseId, realm, (c) -> {
+            course = c;
+            if (isViewAttached()) {
+                getView().showContent();
+                getView().setupView(course);
             }
         });
     }
