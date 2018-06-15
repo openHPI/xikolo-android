@@ -105,6 +105,12 @@
     <string name="dialog_server_error_message">Beim Kontaktieren des Servers ist ein Problem aufgetreten. Bitte versuche es später noch einmal.</string>
     <string name="dialog_server_error_no">Schließen</string>
 
+    <string name="dialog_android_4_deprecation_title">Android 4 Unterstützung wird eingestellt</string>
+    <string name="dialog_android_4_deprecation_message">Aus Sicherheitsgründen endet die Unterstützung für Android 4 am 31. August 2018. Danach wird die App nicht mehr funktionieren. Bitte aktualisieren Sie Ihr Gerät oder verwenden Sie stattdessen die Web-Version.</string>
+    <string name="dialog_android_4_unsupported_title">Android 4 Unterstützung wurde eingestellt</string>
+    <string name="dialog_android_4_unsupported_message">Aus Sicherheitsgründen wurde die Unterstützung für Android 4 beendet. Bitte aktualisieren Sie Ihr Gerät oder verwenden Sie stattdessen die Web-Version.</string>
+    <string name="dialog_android_4_unsupported_no">Schließen</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
