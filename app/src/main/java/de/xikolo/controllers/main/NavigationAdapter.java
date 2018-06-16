@@ -77,12 +77,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 NavigationItem.ViewType.MAIN,
                 NAV_ITEMS.size()));
 
-        NAV_ITEMS.add(NAV_CERTIFICATES = new NavigationItem(
-                R.string.icon_courses, // ToDo logo
-                R.string.title_section_certificates,
-                NavigationItem.ViewType.MAIN,
-                NAV_ITEMS.size()));
-
         NAV_ITEMS.add(NAV_NEWS = new NavigationItem(
                 R.string.icon_news,
                 R.string.title_section_news,
@@ -102,6 +96,12 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                     NavigationItem.ViewType.SUB,
                     -99);
         }
+
+        NAV_ITEMS.add(NAV_CERTIFICATES = new NavigationItem(
+                R.string.icon_certificates,
+                R.string.title_section_certificates,
+                NavigationItem.ViewType.SUB,
+                NAV_ITEMS.size()));
 
         NAV_ITEMS.add(NAV_DOWNLOADS = new NavigationItem(
                 R.string.icon_downloads,
