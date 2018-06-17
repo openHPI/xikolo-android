@@ -66,18 +66,38 @@ public class CertificateListAdapter extends RecyclerView.Adapter<CertificateList
 
         if (!course.certificates.qualifiedCertificateAvailable)
             holder.qualifiedCertificate.setVisibility(View.GONE);
-        if (course.certificates.qualifiedCertificateUrl != null)
+        else
+            holder.qualifiedCertificate.setVisibility(View.VISIBLE);
+
+        if (course.certificates.qualifiedCertificateUrl != null) {
+            holder.qualifiedCertificateButton.setEnabled(true);
             holder.qualifiedCertificateButton.setOnClickListener(v -> callback.onViewCertificateClicked(course.certificates.qualifiedCertificateUrl));
+        } else
+            holder.qualifiedCertificateButton.setEnabled(false);
+
 
         if (!course.certificates.recordOfAchievementAvailable)
             holder.recordOfAchievement.setVisibility(View.GONE);
-        if (course.certificates.recordOfAchievementUrl != null)
+        else
+            holder.recordOfAchievement.setVisibility(View.VISIBLE);
+
+        if (course.certificates.recordOfAchievementUrl != null) {
+            holder.recordOfAchievementButton.setEnabled(true);
             holder.recordOfAchievementButton.setOnClickListener(v -> callback.onViewCertificateClicked(course.certificates.recordOfAchievementUrl));
+        } else
+            holder.recordOfAchievementButton.setEnabled(false);
+
 
         if (!course.certificates.confirmationOfParticipationAvailable)
             holder.confirmationOfParticipation.setVisibility(View.GONE);
-        if (course.certificates.confirmationOfParticipationUrl != null)
+        else
+            holder.confirmationOfParticipation.setVisibility(View.VISIBLE);
+
+        if (course.certificates.confirmationOfParticipationUrl != null) {
+            holder.confirmationOfParticipationButton.setEnabled(true);
             holder.confirmationOfParticipationButton.setOnClickListener(v -> callback.onViewCertificateClicked(course.certificates.confirmationOfParticipationUrl));
+        } else
+            holder.confirmationOfParticipationButton.setEnabled(false);
     }
 
     public interface OnCertificateCardClickListener {

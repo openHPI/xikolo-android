@@ -58,28 +58,34 @@ public class CertificatesFragment extends LoadingStatePresenterFragment<Certific
         container.removeAllViews();
 
         if (course.certificates.qualifiedCertificateAvailable)
-            setupItem(getString(R.string.course_qualified_certificate_desc),
+            setupItem(getString(R.string.course_qualified_certificate),
+                    getString(R.string.course_qualified_certificate_desc),
                     isEnrolled,
                     course.certificates.qualifiedCertificateUrl != null,
                     v -> IntentUtil.openDoc(App.getInstance(), course.certificates.qualifiedCertificateUrl)
             );
 
         if (course.certificates.recordOfAchievementAvailable)
-            setupItem(getString(R.string.course_record_of_achievement_desc, course.certificates.recordOfAchievementThreshold),
+            setupItem(getString(R.string.course_record_of_achievement),
+                    getString(R.string.course_record_of_achievement_desc, course.certificates.recordOfAchievementThreshold),
                     isEnrolled,
                     course.certificates.recordOfAchievementUrl != null,
                     v -> IntentUtil.openDoc(App.getInstance(), course.certificates.recordOfAchievementUrl)
             );
 
         if (course.certificates.confirmationOfParticipationAvailable)
-            setupItem(getString(R.string.course_confirmation_of_participation_desc, course.certificates.confirmationOfParticipationThreshold),
+            setupItem(getString(R.string.course_confirmation_of_participation),
+                    getString(R.string.course_confirmation_of_participation_desc, course.certificates.confirmationOfParticipationThreshold),
                     isEnrolled,
                     course.certificates.confirmationOfParticipationUrl != null,
                     v -> IntentUtil.openDoc(App.getInstance(), course.certificates.confirmationOfParticipationUrl)
             );
     }
 
-    private void setupItem(String text, boolean enrolled, boolean documentAvailable, View.OnClickListener downloadClickListener) {
+    private void setupItem(String header, String text, boolean enrolled, boolean documentAvailable, View.OnClickListener downloadClickListener) {
+        View h = getLayoutInflater().inflate(R.layout.item_section_header, null);
+        ((TextView) h.findViewById(R.id.textHeader)).setText(header);
+
         View v = getLayoutInflater().inflate(R.layout.item_certificate, null);
         ((TextView) v.findViewById(R.id.textContent)).setText(Html.fromHtml(text));
         Button downloadButton = v.findViewById(R.id.button_certificate_download);
@@ -95,6 +101,7 @@ public class CertificatesFragment extends LoadingStatePresenterFragment<Certific
             }
         }
 
+        container.addView(h);
         container.addView(v);
     }
 

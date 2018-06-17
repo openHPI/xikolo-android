@@ -42,18 +42,11 @@
 
         </RelativeLayout>
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/certificateHeader"
-            android:background="@color/background_light_gray" />
-
         <RelativeLayout
             android:id="@+id/qualifiedCertificateContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/divider">
+            android:layout_below="@+id/certificateHeader">
 
             <TextView
                 android:layout_width="match_parent"

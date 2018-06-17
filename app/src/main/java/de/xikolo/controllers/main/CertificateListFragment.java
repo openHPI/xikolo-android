@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,14 +29,13 @@ import de.xikolo.presenters.main.CertificateListPresenter;
 import de.xikolo.presenters.main.CertificateListPresenterFactory;
 import de.xikolo.presenters.main.CertificateListView;
 import de.xikolo.utils.IntentUtil;
-import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
 
 public class CertificateListFragment extends MainFragment<CertificateListPresenter, CertificateListView> implements CertificateListView {
 
     public static final String TAG = CertificateListFragment.class.getSimpleName();
 
-    @BindView(R.id.content_view) AutofitRecyclerView recyclerView;
+    @BindView(R.id.content_view) RecyclerView recyclerView;
 
     private CertificateListAdapter certificateListAdapter;
 
@@ -69,10 +70,7 @@ public class CertificateListFragment extends MainFragment<CertificateListPresent
             }
         });
 
-        //ToDo best layout? (rows, spacing etc.)
-
-        recyclerView.setAdapter(certificateListAdapter);
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(App.getInstance()));
         recyclerView.addItemDecoration(new SpaceItemDecoration(
                 getActivity().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
                 getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
@@ -93,6 +91,7 @@ public class CertificateListFragment extends MainFragment<CertificateListPresent
                         return certificateListAdapter.getItemCount();
                     }
                 }));
+        recyclerView.setAdapter(certificateListAdapter);
     }
 
     @Override
