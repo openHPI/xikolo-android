@@ -24,12 +24,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.events.DownloadCompletedEvent;
+import de.xikolo.managers.UserManager;
 import de.xikolo.models.Download;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.NotificationUtil;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class DownloadService extends Service {
 
@@ -69,6 +72,16 @@ public class DownloadService extends Service {
 
         // Don't use HttpLoggingInterceptor, crashes with OutOfMemoryException!
         OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+
+                    Request.Builder builder = original.newBuilder();
+                    if (original.url().host().equals(getString(R.string.app_host)) && UserManager.isAuthorized()) {
+                        builder.header(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX_JSON_API + UserManager.getToken());
+                    }
+
+                    return chain.proceed(builder.build());
+                })
                 .build();
         downloadClient = new DownloadManager.Builder()
                 .context(this)

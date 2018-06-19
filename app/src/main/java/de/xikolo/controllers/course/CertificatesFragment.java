@@ -1,5 +1,6 @@
 package de.xikolo.controllers.course;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
+import java.io.File;
+import java.io.IOException;
+
 import butterknife.BindView;
 import de.xikolo.App;
 import de.xikolo.R;
@@ -24,6 +28,7 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.course.CertificatesPresenter;
 import de.xikolo.presenters.course.CertificatesPresenterFactory;
 import de.xikolo.presenters.course.CertificatesView;
+import de.xikolo.services.DownloadService;
 import de.xikolo.utils.IntentUtil;
 
 public class CertificatesFragment extends LoadingStatePresenterFragment<CertificatesPresenter, CertificatesView> implements CertificatesView {
@@ -78,8 +83,28 @@ public class CertificatesFragment extends LoadingStatePresenterFragment<Certific
                     getString(R.string.course_confirmation_of_participation_desc, course.certificates.confirmationOfParticipationThreshold),
                     isEnrolled,
                     course.certificates.confirmationOfParticipationUrl != null,
-                    v -> IntentUtil.openDoc(App.getInstance(), course.certificates.confirmationOfParticipationUrl)
-            );
+                    (v) -> {
+                        Intent intent = new Intent(App.getInstance(), DownloadService.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(DownloadService.ARG_TITLE, getString(R.string.course_confirmation_of_participation));
+                        bundle.putString(DownloadService.ARG_URL, course.certificates.confirmationOfParticipationUrl);
+                        try {
+                            File path = File.createTempFile(course.id + "_confirmationofparticipation", "pdf");
+                            path.delete();
+
+                            bundle.putString(DownloadService.ARG_FILE_PATH, path.getAbsolutePath());
+
+                            intent.putExtras(bundle);
+                            App.getInstance().startService(intent);
+                            while (!path.exists()) {
+
+                            }
+                            IntentUtil.openDoc(App.getInstance(), path.getAbsolutePath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    });
     }
 
     private void setupItem(String header, String text, boolean enrolled, boolean documentAvailable, View.OnClickListener downloadClickListener) {
