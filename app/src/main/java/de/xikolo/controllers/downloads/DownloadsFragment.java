@@ -119,7 +119,7 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
 
             List<DownloadsAdapter.FolderItem> list = new ArrayList<>();
 
-            String internalAppFolder = FileUtil.createPublicAppFolderPath(StorageUtil.getInternalStorage(getActivity()));
+            String internalAppFolder = FileUtil.createStorageFolderPath(StorageUtil.getInternalStorage(getActivity()));
 
             DownloadsAdapter.FolderItem totalInternal = new DownloadsAdapter.FolderItem(
                     getString(R.string.settings_title_storage_internal) + internalAddition,
@@ -128,7 +128,7 @@ public class DownloadsFragment extends Fragment implements SwipeRefreshLayout.On
 
             File sdcardStorage = StorageUtil.getSdcardStorage(getActivity());
             if (sdcardStorage != null) {
-                String sdcardAppFolder = FileUtil.createPublicAppFolderPath(sdcardStorage);
+                String sdcardAppFolder = FileUtil.createStorageFolderPath(sdcardStorage);
 
                 DownloadsAdapter.FolderItem totalSdcard = new DownloadsAdapter.FolderItem(
                         getString(R.string.settings_title_storage_external) + sdcardAddition,

@@ -1,5 +1,6 @@
 package de.xikolo.utils;
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -82,11 +83,18 @@ public class FileUtil {
         }
     }
 
-    public static String createPublicAppFolderPath(File storage) {
+    public static String createStorageFolderPath(File storage) {
         File appFolder = new File(storage.getAbsolutePath() + File.separator
-                + App.getInstance().getString(R.string.app_name));
+            + App.getInstance().getString(R.string.app_name));
 
         createFolderIfNotExists(appFolder);
+
+        return appFolder.getAbsolutePath();
+    }
+
+    public static String getPublicAppStorageFolderPath() {
+        File appFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+            + App.getInstance().getString(R.string.app_name));
 
         return appFolder.getAbsolutePath();
     }
@@ -101,21 +109,29 @@ public class FileUtil {
     private static String replaceUmlaute(String input) {
         //replace all lower Umlauts
         String output = input.replace("ü", "ue")
-                .replace("ö", "oe")
-                .replace("ä", "ae")
-                .replace("ß", "ss");
+            .replace("ö", "oe")
+            .replace("ä", "ae")
+            .replace("ß", "ss");
 
         //first replace all capital umlaute in a non-capitalized context (e.g. Übung)
         output = output.replace("Ü(?=[a-zäöüß ])", "Ue")
-                .replace("Ö(?=[a-zäöüß ])", "Oe")
-                .replace("Ä(?=[a-zäöüß ])", "Ae");
+            .replace("Ö(?=[a-zäöüß ])", "Oe")
+            .replace("Ä(?=[a-zäöüß ])", "Ae");
 
         //now replace all the other capital umlaute
         output = output.replace("Ü", "UE")
-                .replace("Ö", "OE")
-                .replace("Ä", "AE");
+            .replace("Ö", "OE")
+            .replace("Ä", "AE");
 
         return output;
     }
 
+    public static int countFilesRecursively(File folder) {
+        if (!folder.isDirectory())
+            return 1;
+        int c = 0;
+        for (File child : folder.listFiles())
+            c += countFilesRecursively(child);
+        return c;
+    }
 }
