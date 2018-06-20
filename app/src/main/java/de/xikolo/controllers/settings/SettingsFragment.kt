@@ -123,9 +123,9 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
             override fun onPreferenceClick(p0: Preference?): Boolean {
                 if (DownloadService.getInstance() != null && DownloadService.getInstance().isDownloading) {
                     ToastUtil.show(R.string.notification_storage_locked)
-                    return false
+                    return true
                 }
-                return true
+                return false
             }
         }
 
