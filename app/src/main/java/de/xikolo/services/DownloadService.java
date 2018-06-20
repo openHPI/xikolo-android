@@ -140,6 +140,11 @@ public class DownloadService extends Service {
         return download != null && (download.state == Download.State.PENDING || download.state == Download.State.RUNNING);
     }
 
+    public synchronized boolean isDownloading() {
+        return downloadMap != null && downloadMap.size() > 0;
+
+    }
+
     public synchronized Download getDownload(String url) {
         if (downloadMap == null || url == null) return null;
 

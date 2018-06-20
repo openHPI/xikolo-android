@@ -87,6 +87,7 @@
 
     <string name="dialog_storage_migration">Im Moment sind Dateien in %1$s gespeichert, sollen diese in %2$s verschoben werden?</string>
     <string name="dialog_storage_migration_confirm">Verschieben</string>
+    <string name="dialog_storage_migration_title">Speichermigration</string>
     <string name="dialog_storage_migration_message">Verschieben der Dateien läuft. Bitte warten Sie bis dies abgeschlossen ist. Entfernen Sie auf keinen Fall den Speicherort.</string>
     <string name="dialog_storage_migration_progress">%1$d von %2$d Dateien verschoben. (%2$d%%)</string>
 
@@ -179,6 +180,8 @@
     <string name="notification_please_login_summary">Bitte melden Sie sich an, um auf diesen Inhalt zuzugreifen.</string>
     <string name="notification_url_invalid">URL fehlerhaft</string>
     <string name="notification_course_locked">Dieser Kurs ist vorerst gesperrt</string>
+
+    <string name="notification_storage_locked">Bitte warten Sie bis der aktuelle Download abgeschlossen ist und versuchen Sie es erneut.</string>
 
     <string name="video_notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>
     <string name="module_notification_no_content">Kein Inhalt verfügbar</string>

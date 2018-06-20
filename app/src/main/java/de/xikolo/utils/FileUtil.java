@@ -33,8 +33,8 @@ public class FileUtil {
         return length;
     }
 
-    public static long folderFileNumber(File directory) {
-        long files = 0;
+    public static int folderFileNumber(File directory) {
+        int files = 0;
         if (directory != null)
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
@@ -124,14 +124,5 @@ public class FileUtil {
             .replace("Ä", "AE");
 
         return output;
-    }
-
-    public static int countFilesRecursively(File folder) {
-        if (!folder.isDirectory())
-            return 1;
-        int c = 0;
-        for (File child : folder.listFiles())
-            c += countFilesRecursively(child);
-        return c;
     }
 }

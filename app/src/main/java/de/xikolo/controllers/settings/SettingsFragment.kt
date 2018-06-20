@@ -1,5 +1,6 @@
 package de.xikolo.controllers.settings
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -13,13 +14,17 @@ import android.support.v7.preference.PreferenceCategory
 import android.support.v7.preference.PreferenceManager
 import android.support.v7.preference.PreferenceScreen
 import de.psdev.licensesdialog.LicensesDialog
+import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
+import de.xikolo.controllers.dialogs.MigrationDialog
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
 import de.xikolo.managers.UserManager
+import de.xikolo.services.DownloadService
+import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
 import de.xikolo.utils.ToastUtil
 import org.greenrobot.eventbus.EventBus
@@ -56,16 +61,73 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key.equals(getString(R.string.preference_storage)))
-            findPreference(getString(R.string.preference_storage)).summary = sharedPreferences?.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))
+        if (key.equals(getString(R.string.preference_storage))) {
+            val newStoragePreference = sharedPreferences?.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
+            findPreference(getString(R.string.preference_storage)).summary = newStoragePreference
+
+            val newStorageType = StorageUtil.toStorageType(App.getInstance(), newStoragePreference)
+            var oldStorageType = StorageUtil.StorageType.INTERNAL
+            var oldStorage = StorageUtil.getInternalStorage(App.getInstance())
+            if (newStorageType == StorageUtil.StorageType.INTERNAL) {
+                oldStorageType = StorageUtil.StorageType.SDCARD
+                oldStorage = StorageUtil.getSdcardStorage(App.getInstance())!!
+            }
+
+            val fileCount = FileUtil.folderFileNumber(oldStorage)
+            if (fileCount > 0) {
+                val dialog = MigrationDialog.getInstance(activity, oldStorageType) {
+                    val progressDialog = ProgressDialog(activity)
+                    progressDialog.setTitle(R.string.app_name)
+                    progressDialog.setMessage(App.getInstance().getString(R.string.dialog_storage_migration_message))
+                    progressDialog.setCancelable(false)
+                    progressDialog.setCanceledOnTouchOutside(false)
+                    progressDialog.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
+                    progressDialog.max = fileCount
+                    progressDialog.show()
+
+                    if (newStorageType == StorageUtil.StorageType.INTERNAL) {
+                        StorageUtil.migrate(StorageUtil.getSdcardStorage(App.getInstance())!!,
+                            StorageUtil.getInternalStorage(App.getInstance()),
+                            object : StorageUtil.StorageMigrationCallback {
+                                override fun onProgressChanged(count: Int) {
+                                    progressDialog.progress = count
+                                    if (count == fileCount)
+                                        progressDialog.hide()
+                                }
+                            })
+                    } else {
+                        StorageUtil.migrate(StorageUtil.getInternalStorage(App.getInstance()),
+                            StorageUtil.getSdcardStorage(App.getInstance())!!,
+                            object : StorageUtil.StorageMigrationCallback {
+                                override fun onProgressChanged(count: Int) {
+                                    progressDialog.progress = count
+                                    if (count == fileCount)
+                                        progressDialog.hide()
+                                }
+                            })
+                    }
+                }
+
+                dialog.show()
+            }
+        }
     }
 
     override fun onCreatePreferences(bundle: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.settings)
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        val prefs = PreferenceManager.getDefaultSharedPreferences(activity)
 
-        onSharedPreferenceChanged(prefs, getString(R.string.preference_storage))
+        findPreference(getString(R.string.preference_storage)).summary = prefs.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
+        findPreference(getString(R.string.preference_storage)).onPreferenceClickListener = object : Preference.OnPreferenceClickListener {
+            override fun onPreferenceClick(p0: Preference?): Boolean {
+                if (DownloadService.getInstance() != null && DownloadService.getInstance().isDownloading) {
+                    ToastUtil.show(R.string.notification_storage_locked)
+                    return false
+                }
+                return true
+            }
+        }
 
         // Android does not support multiple external storages below KITKAT
         // Determining the states of multiple storages requires LOLLIPOP
