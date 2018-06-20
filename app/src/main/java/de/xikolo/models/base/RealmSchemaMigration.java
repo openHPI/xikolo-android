@@ -3,7 +3,6 @@ package de.xikolo.models.base;
 import java.io.File;
 
 import de.xikolo.App;
-import de.xikolo.R;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.StorageUtil;
 import io.realm.DynamicRealm;
@@ -40,10 +39,10 @@ public class RealmSchemaMigration implements RealmMigration {
          */
         if (oldVersion == 2) {
             File oldStorageLocation = new File(FileUtil.getPublicAppStorageFolderPath());
-            int fileCount = FileUtil.countFilesRecursively(oldStorageLocation);
+            int fileCount = FileUtil.folderFileNumber(oldStorageLocation);
             if (oldStorageLocation.exists() && fileCount != 0) {
                 File newStorageLocation = StorageUtil.getStorage(App.getInstance());
-                android.app.ProgressDialog progressDialog = new android.app.ProgressDialog(App.getInstance());
+                /*ProgressDialog progressDialog = new android.app.ProgressDialog(App.getInstance());
                 progressDialog.setTitle(R.string.app_name);
                 progressDialog.setMessage(App.getInstance().getString(R.string.dialog_app_being_prepared));
                 progressDialog.setCancelable(false);
@@ -51,14 +50,16 @@ public class RealmSchemaMigration implements RealmMigration {
                 progressDialog.setMax(fileCount);
                 progressDialog.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL);
 
-                progressDialog.show();
+                progressDialog.show();*/
 
-                StorageUtil.migrate(oldStorageLocation, newStorageLocation, (count, totalFiles) -> {
-                    progressDialog.setProgress(count);
+                StorageUtil.migrate(oldStorageLocation, newStorageLocation, (count) -> {
+                    /*progressDialog.setProgress(count);
 
                     if (count == totalFiles)
-                        progressDialog.hide();
+                        progressDialog.hide();*/
                 });
+
+
             }
         }
     }

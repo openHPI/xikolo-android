@@ -70,25 +70,24 @@ object StorageUtil {
     @JvmStatic
     fun migrate(from: File, to: File, callback: StorageMigrationCallback): Boolean {
         if (from.exists()) {
-            val totalFiles = FileUtil.countFilesRecursively(from)
-            val copiedFiles = move(from, to, totalFiles, callback)
+            val totalFiles = FileUtil.folderFileNumber(from)
+            val copiedFiles = move(from, to, callback)
             return copiedFiles == totalFiles
         }
         return false
     }
 
-    private fun move(sourceFile: File, destFile: File, totalFiles: Int, callback: StorageUtil.StorageMigrationCallback): Int {
+    private fun move(sourceFile: File, destFile: File, callback: StorageUtil.StorageMigrationCallback): Int {
         var count = 0
         if (sourceFile.isDirectory) {
             for (file in sourceFile.listFiles()!!) {
-                count += move(file, File(file.path.substring("temp".length + 1)), totalFiles, callback)
+                count += move(file, destFile, callback)
             }
         } else {
             try {
                 sourceFile.copyTo(destFile, true)
-                sourceFile.delete()
                 count++
-                callback.onProgressChanged(count, totalFiles)
+                callback.onProgressChanged(count)
             } catch (ignored: IOException) {
             }
         }
@@ -97,14 +96,14 @@ object StorageUtil {
     }
 
     @JvmStatic
-    fun buildMigrationMessage(c: Context, to: StorageType): String {
+    fun buildMigrationMessage(c: Context, from: StorageType): String {
         var currentStorage = getStoragePreference(c)
         var current = c.getString(R.string.settings_title_storage_internal)
         if (currentStorage == StorageType.INTERNAL)
             current = c.getString(R.string.settings_title_storage_external)
 
         var destination = c.getString(R.string.settings_title_storage_external)
-        if (to == StorageType.SDCARD)
+        if (from == StorageType.SDCARD)
             destination = c.getString(R.string.settings_title_storage_internal)
 
         return c.getString(R.string.dialog_storage_migration, current, destination)
@@ -122,7 +121,7 @@ object StorageUtil {
     }
 
     interface StorageMigrationCallback {
-        fun onProgressChanged(count: Int, totalFiles: Int)
+        fun onProgressChanged(count: Int)
     }
 
 }
