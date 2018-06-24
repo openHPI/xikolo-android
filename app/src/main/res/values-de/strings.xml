@@ -83,7 +83,7 @@
     <string name="dialog_download_slides_message">Die Slides-Datei wird heruntergeladen.</string>
     <string name="dialog_download_slides_yes">Herunterladen</string>
 
-    <string name="dialog_app_being_prepared">Bitte warten Sie während die App vorbereitet wird. (%1$d%%)</string>
+    <string name="dialog_app_being_prepared">Bitte warten Sie während die App vorbereitet wird.</string>
 
     <string name="dialog_storage_migration">Im Moment sind Dateien in %1$s gespeichert, sollen diese in %2$s verschoben werden?</string>
     <string name="dialog_storage_migration_confirm">Verschieben</string>

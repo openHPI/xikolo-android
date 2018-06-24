@@ -62,7 +62,8 @@ class SplashActivity : AppCompatActivity() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         if (!prefs.contains(getString(R.string.preference_storage))) {
             val progressDialog = ProgressDialog(this)
-            progressDialog.setTitle(R.string.dialog_app_being_prepared)
+            progressDialog.setMessage(getString(R.string.dialog_app_being_prepared))
+            progressDialog.setTitle(R.string.app_name)
             progressDialog.setCancelable(false)
             progressDialog.setCanceledOnTouchOutside(false)
             progressDialog.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
