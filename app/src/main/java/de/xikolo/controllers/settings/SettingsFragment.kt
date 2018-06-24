@@ -87,7 +87,6 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
                     val migrationCallback = object : StorageUtil.StorageMigrationCallback {
                         override fun onProgressChanged(count: Int) {
                             activity.runOnUiThread { progressDialog.progress = count }
-
                         }
 
                         override fun onCompleted(success: Boolean) {
@@ -98,7 +97,6 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
                                     ToastUtil.show(R.string.error_plain)
                                 progressDialog.dismiss()
                             }
-
                         }
                     }
 
@@ -112,8 +110,8 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
                             migrationCallback)
                     }
                 }
-                dialog.show()
 
+                dialog.show()
             }
         }
     }
