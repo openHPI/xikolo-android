@@ -68,31 +68,35 @@ object StorageUtil {
     fun getStoragePreference(c: Context): StorageType = toStorageType(c, ApplicationPreferences().storage!!)
 
     @JvmStatic
-    fun migrate(from: File, to: File, callback: StorageMigrationCallback): Boolean {
-        if (from.exists()) {
-            val totalFiles = FileUtil.folderFileNumber(from)
-            val copiedFiles = move(from, to, callback)
-            return copiedFiles == totalFiles
-        }
-        return false
+    fun migrateAsync(from: File, to: File, callback: StorageMigrationCallback) {
+        Thread(Runnable {
+            copiedFilesCount = 0
+            if (from.exists()) {
+                val totalFiles = FileUtil.folderFileNumber(from)
+                move(from, to, callback)
+                callback.onCompleted(copiedFilesCount == totalFiles)
+            } else
+                callback.onCompleted(false)
+        }).start()
     }
 
-    private fun move(sourceFile: File, destFile: File, callback: StorageUtil.StorageMigrationCallback): Int {
-        var count = 0
+    private var copiedFilesCount = 0
+    private fun move(sourceFile: File, destFile: File, callback: StorageUtil.StorageMigrationCallback) {
         if (sourceFile.isDirectory) {
             for (file in sourceFile.listFiles()!!) {
-                count += move(file, destFile, callback)
+                move(file, File(destFile.absolutePath + File.separator + file.name), callback)
             }
         } else {
             try {
+                destFile.mkdirs()
                 sourceFile.copyTo(destFile, true)
-                count++
-                callback.onProgressChanged(count)
-            } catch (ignored: IOException) {
+                copiedFilesCount++
+                callback.onProgressChanged(copiedFilesCount)
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
         }
         sourceFile.delete()
-        return count
     }
 
     @JvmStatic
@@ -122,6 +126,7 @@ object StorageUtil {
 
     interface StorageMigrationCallback {
         fun onProgressChanged(count: Int)
+        fun onCompleted(success: Boolean)
     }
 
 }
