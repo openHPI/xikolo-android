@@ -50,9 +50,8 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
     }
 
     override fun onResume() {
-        super.onResume()
         preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-
+        super.onResume()
     }
 
     override fun onPause() {
