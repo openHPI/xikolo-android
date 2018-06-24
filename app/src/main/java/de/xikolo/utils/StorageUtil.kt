@@ -73,6 +73,7 @@ object StorageUtil {
             copiedFilesCount = 0
             if (from.exists()) {
                 val totalFiles = FileUtil.folderFileNumber(from)
+                callback.onProgressChanged(copiedFilesCount)
                 move(from, to, callback)
                 callback.onCompleted(copiedFilesCount == totalFiles)
             } else

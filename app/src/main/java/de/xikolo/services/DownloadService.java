@@ -142,7 +142,6 @@ public class DownloadService extends Service {
 
     public synchronized boolean isDownloading() {
         return downloadMap != null && downloadMap.size() > 0;
-
     }
 
     public synchronized Download getDownload(String url) {

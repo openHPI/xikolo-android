@@ -35,7 +35,7 @@ public class FileUtil {
 
     public static int folderFileNumber(File directory) {
         int files = 0;
-        if (directory != null)
+        if (directory != null && directory.exists())
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
                     files++;
