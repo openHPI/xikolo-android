@@ -77,7 +77,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
             if (fileCount > 0) {
                 val dialog = MigrationDialog.getInstance(activity, oldStorageType) {
                     val progressDialog = ProgressDialog(activity)
-                    progressDialog.setTitle(R.string.app_name)
+                    progressDialog.setTitle(R.string.dialog_storage_migration_title)
                     progressDialog.setMessage(App.getInstance().getString(R.string.dialog_storage_migration_message))
                     progressDialog.setCancelable(false)
                     progressDialog.setCanceledOnTouchOutside(false)
@@ -85,30 +85,36 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
                     progressDialog.max = fileCount
                     progressDialog.show()
 
+                    val migrationCallback = object : StorageUtil.StorageMigrationCallback {
+                        override fun onProgressChanged(count: Int) {
+                            activity.runOnUiThread { progressDialog.progress = count }
+
+                        }
+
+                        override fun onCompleted(success: Boolean) {
+                            activity.runOnUiThread {
+                                if (success)
+                                    ToastUtil.show(R.string.dialog_storage_migration_successful)
+                                else
+                                    ToastUtil.show(R.string.error_plain)
+                                progressDialog.dismiss()
+                            }
+
+                        }
+                    }
+
                     if (newStorageType == StorageUtil.StorageType.INTERNAL) {
-                        StorageUtil.migrate(StorageUtil.getSdcardStorage(App.getInstance())!!,
+                        StorageUtil.migrateAsync(StorageUtil.getSdcardStorage(App.getInstance())!!,
                             StorageUtil.getInternalStorage(App.getInstance()),
-                            object : StorageUtil.StorageMigrationCallback {
-                                override fun onProgressChanged(count: Int) {
-                                    progressDialog.progress = count
-                                    if (count == fileCount)
-                                        progressDialog.hide()
-                                }
-                            })
+                            migrationCallback)
                     } else {
-                        StorageUtil.migrate(StorageUtil.getInternalStorage(App.getInstance()),
+                        StorageUtil.migrateAsync(StorageUtil.getInternalStorage(App.getInstance()),
                             StorageUtil.getSdcardStorage(App.getInstance())!!,
-                            object : StorageUtil.StorageMigrationCallback {
-                                override fun onProgressChanged(count: Int) {
-                                    progressDialog.progress = count
-                                    if (count == fileCount)
-                                        progressDialog.hide()
-                                }
-                            })
+                            migrationCallback)
                     }
                 }
-
                 dialog.show()
+
             }
         }
     }
@@ -119,8 +125,8 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         val prefs = PreferenceManager.getDefaultSharedPreferences(activity)
 
         findPreference(getString(R.string.preference_storage)).summary = prefs.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
-        findPreference(getString(R.string.preference_storage)).onPreferenceClickListener = object : Preference.OnPreferenceClickListener {
-            override fun onPreferenceClick(p0: Preference?): Boolean {
+        findPreference(getString(R.string.preference_storage)).onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
+            override fun onPreferenceChange(p0: Preference?, p1: Any?): Boolean {
                 if (DownloadService.getInstance() != null && DownloadService.getInstance().isDownloading) {
                     ToastUtil.show(R.string.notification_storage_locked)
                     return false

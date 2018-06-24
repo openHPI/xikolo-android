@@ -88,8 +88,9 @@
     <string name="dialog_storage_migration">Im Moment sind Dateien in %1$s gespeichert, sollen diese in %2$s verschoben werden?</string>
     <string name="dialog_storage_migration_confirm">Verschieben</string>
     <string name="dialog_storage_migration_title">Speichermigration</string>
-    <string name="dialog_storage_migration_message">Verschieben der Dateien läuft. Bitte warten Sie bis dies abgeschlossen ist. Entfernen Sie auf keinen Fall den Speicherort.</string>
+    <string name="dialog_storage_migration_message">Verschieben der Dateien läuft. Bitte warten Sie bis dies abgeschlossen ist. Entfernen Sie auf keinen Fall das Speichermedium.</string>
     <string name="dialog_storage_migration_progress">%1$d von %2$d Dateien verschoben. (%2$d%%)</string>
+    <string name="dialog_storage_migration_successful">Vorgang erfolgreich abgeschlossen!</string>
 
     <string name="dialog_second_screen_title">Probieren Sie Second Screen aus!</string>
     <string name="dialog_second_screen_message">Entdecken Sie zusätzliche Inhalte auf ihrem mobilen Gerät, während Sie Video-Lektionen auf Ihrem Computer schauen. Um zu starten, spielen Sie einfach eine Video-Lektion in dem Browser Ihres Computers ab.</string>
@@ -212,11 +213,11 @@
 
     <string name="settings_title_ask_delete">Vor Löschen bestätigen</string>
 
-    <string name="settings_title_storage">Speicherort auswählen</string>
+    <string name="settings_title_storage">Speichermedium auswählen</string>
     <string name="settings_title_storage_internal">Interner Speicher</string>
     <string name="settings_title_storage_external">SD-Karte</string>
     <string name="settings_summary_storage">%s</string>
-    <string name="settings_storage_addition">(aktueller Speicherort)</string>
+    <string name="settings_storage_addition">(aktuelles Speichermedium)</string>
 
     <string name="settings_category_data_usage">Mobile Datennutzung</string>
 
