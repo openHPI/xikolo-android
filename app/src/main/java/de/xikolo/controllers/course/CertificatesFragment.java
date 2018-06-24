@@ -96,14 +96,10 @@ public class CertificatesFragment extends LoadingStatePresenterFragment<Certific
 
                             intent.putExtras(bundle);
                             App.getInstance().startService(intent);
-                            while (!path.exists()) {
-
-                            }
                             IntentUtil.openDoc(App.getInstance(), path.getAbsolutePath());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                     });
     }
 

@@ -41,6 +41,7 @@ public class CertificateListPresenter extends LoadingStatePresenter<CertificateL
 
     private RealmChangeListener<RealmResults<Course>> getCourseListRealmChangeListener() {
         return results -> {
+            getViewOrThrow().showContent();
             if (!UserManager.isAuthorized()) {
                 getViewOrThrow().showLoginRequiredMessage();
             } else {
@@ -51,7 +52,7 @@ public class CertificateListPresenter extends LoadingStatePresenter<CertificateL
                         if (c.qualifiedCertificateUrl == null
                                 && c.recordOfAchievementUrl == null
                                 && c.confirmationOfParticipationUrl == null)
-                            i++;//courseList.remove(i); ToDo change
+                            courseList.remove(i); //ToDo change
                         else
                             i++;
                     }
@@ -62,7 +63,6 @@ public class CertificateListPresenter extends LoadingStatePresenter<CertificateL
                         getViewOrThrow().showCertificateList(courseList);
                 }
             }
-            getViewOrThrow().showContent();
         };
     }
 
