@@ -85,7 +85,7 @@
 
     <string name="dialog_app_being_prepared">Bitte warten Sie während die App vorbereitet wird. (%1$d%%)</string>
 
-    <string name="dialog_storage_migration">Im Moment sind Dateien in %1$s gespeichert, sollen diese in %2$s verschoben werden?</string>
+    <string name="dialog_storage_migration">Im Moment sind Dateien in %1$s gespeichert, sollen diese nach %2$s verschoben werden?</string>
     <string name="dialog_storage_migration_confirm">Verschieben</string>
     <string name="dialog_storage_migration_title">Speichermigration</string>
     <string name="dialog_storage_migration_message">Verschieben der Dateien läuft. Bitte warten Sie bis dies abgeschlossen ist. Entfernen Sie auf keinen Fall das Speichermedium.</string>
@@ -216,7 +216,6 @@
     <string name="settings_title_storage">Speichermedium auswählen</string>
     <string name="settings_title_storage_internal">Interner Speicher</string>
     <string name="settings_title_storage_external">SD-Karte</string>
-    <string name="settings_summary_storage">%s</string>
     <string name="settings_storage_addition">(aktuelles Speichermedium)</string>
 
     <string name="settings_category_data_usage">Mobile Datennutzung</string>

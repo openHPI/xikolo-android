@@ -18,7 +18,7 @@ import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.controllers.dialogs.MigrationDialog
+import de.xikolo.controllers.dialogs.StorageMigrationDialog
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
@@ -50,9 +50,8 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
     }
 
     override fun onResume() {
-        super.onResume()
         preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-
+        super.onResume()
     }
 
     override fun onPause() {
@@ -75,46 +74,51 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
 
             val fileCount = FileUtil.folderFileNumber(oldStorage)
             if (fileCount > 0) {
-                val dialog = MigrationDialog.getInstance(activity, oldStorageType) {
-                    val progressDialog = ProgressDialog(activity)
-                    progressDialog.setTitle(R.string.dialog_storage_migration_title)
-                    progressDialog.setMessage(App.getInstance().getString(R.string.dialog_storage_migration_message))
-                    progressDialog.setCancelable(false)
-                    progressDialog.setCanceledOnTouchOutside(false)
-                    progressDialog.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
-                    progressDialog.max = fileCount
-                    progressDialog.show()
+                val dialog = StorageMigrationDialog.getInstance(activity, oldStorageType, object : StorageMigrationDialog.StorageMigrationDialogListener {
+                    override fun onDialogPositiveClick() {
+                        val progressDialog = ProgressDialog(activity)
+                        progressDialog.setTitle(R.string.dialog_storage_migration_title)
+                        progressDialog.setMessage(App.getInstance().getString(R.string.dialog_storage_migration_message))
+                        progressDialog.setCancelable(false)
+                        progressDialog.setCanceledOnTouchOutside(false)
+                        progressDialog.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
+                        progressDialog.max = fileCount
+                        progressDialog.show()
 
-                    val migrationCallback = object : StorageUtil.StorageMigrationCallback {
-                        override fun onProgressChanged(count: Int) {
-                            activity.runOnUiThread { progressDialog.progress = count }
-
-                        }
-
-                        override fun onCompleted(success: Boolean) {
-                            activity.runOnUiThread {
-                                if (success)
-                                    ToastUtil.show(R.string.dialog_storage_migration_successful)
-                                else
-                                    ToastUtil.show(R.string.error_plain)
-                                progressDialog.dismiss()
+                        val migrationCallback = object : StorageUtil.StorageMigrationCallback {
+                            override fun onProgressChanged(count: Int) {
+                                activity.runOnUiThread { progressDialog.progress = count }
                             }
 
+                            override fun onCompleted(success: Boolean) {
+                                activity.runOnUiThread {
+                                    if (success) {
+                                        ToastUtil.show(R.string.dialog_storage_migration_successful)
+                                    } else {
+                                        ToastUtil.show(R.string.error_plain)
+                                    }
+                                    progressDialog.dismiss()
+                                }
+                            }
+                        }
+
+                        if (newStorageType == StorageUtil.StorageType.INTERNAL) {
+                            StorageUtil.migrateAsync(
+                                StorageUtil.getSdcardStorage(App.getInstance())!!,
+                                StorageUtil.getInternalStorage(App.getInstance()),
+                                migrationCallback
+                            )
+                        } else {
+                            StorageUtil.migrateAsync(
+                                StorageUtil.getInternalStorage(App.getInstance()),
+                                StorageUtil.getSdcardStorage(App.getInstance())!!,
+                                migrationCallback
+                            )
                         }
                     }
+                })
 
-                    if (newStorageType == StorageUtil.StorageType.INTERNAL) {
-                        StorageUtil.migrateAsync(StorageUtil.getSdcardStorage(App.getInstance())!!,
-                            StorageUtil.getInternalStorage(App.getInstance()),
-                            migrationCallback)
-                    } else {
-                        StorageUtil.migrateAsync(StorageUtil.getInternalStorage(App.getInstance()),
-                            StorageUtil.getSdcardStorage(App.getInstance())!!,
-                            migrationCallback)
-                    }
-                }
                 dialog.show()
-
             }
         }
     }

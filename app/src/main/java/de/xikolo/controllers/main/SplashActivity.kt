@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AppCompatActivity
 import de.xikolo.R
@@ -54,7 +55,8 @@ class SplashActivity : AppCompatActivity() {
         }
 
     private fun migrateStorage() {
-        if (!ApplicationPreferences().contains(getString(R.string.preference_storage))) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        if (!prefs.contains(getString(R.string.preference_storage))) {
             val old = File(FileUtil.getPublicAppStorageFolderPath())
             val new = File(FileUtil.createStorageFolderPath(StorageUtil.getInternalStorage(this)))
             val fileCount = FileUtil.folderFileNumber(old)
@@ -76,7 +78,7 @@ class SplashActivity : AppCompatActivity() {
                 override fun onCompleted(success: Boolean) {
                     runOnUiThread {
                         progressDialog.dismiss()
-                        ApplicationPreferences().setToDefault(getString(R.string.preference_storage))
+                        ApplicationPreferences().storage = ApplicationPreferences().storage
                         CheckHealthJob(healthCheckCallback).run()
                     }
                 }
