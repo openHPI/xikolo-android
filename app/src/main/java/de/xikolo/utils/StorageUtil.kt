@@ -70,34 +70,35 @@ object StorageUtil {
     @JvmStatic
     fun migrateAsync(from: File, to: File, callback: StorageMigrationCallback) {
         Thread(Runnable {
-            copiedFilesCount = 0
             if (from.exists()) {
+                callback.onProgressChanged(0)
                 val totalFiles = FileUtil.folderFileNumber(from)
-                callback.onProgressChanged(copiedFilesCount)
-                move(from, to, callback)
-                callback.onCompleted(copiedFilesCount == totalFiles)
+                val copiedFiles = move(from, to, callback)
+                callback.onCompleted(copiedFiles == totalFiles)
             } else
                 callback.onCompleted(false)
         }).start()
     }
 
-    private var copiedFilesCount = 0
-    private fun move(sourceFile: File, destFile: File, callback: StorageUtil.StorageMigrationCallback) {
+    private fun move(sourceFile: File, destFile: File, callback: StorageUtil.StorageMigrationCallback): Int {
+        var count = 0
         if (sourceFile.isDirectory) {
             for (file in sourceFile.listFiles()!!) {
-                move(file, File(destFile.absolutePath + File.separator + file.name), callback)
+                count += move(file, File(destFile.absolutePath + File.separator + file.name), callback)
+                callback.onProgressChanged(count)
             }
         } else {
             try {
                 destFile.mkdirs()
                 sourceFile.copyTo(destFile, true)
-                copiedFilesCount++
-                callback.onProgressChanged(copiedFilesCount)
+                count++
             } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
         sourceFile.delete()
+
+        return count
     }
 
     @JvmStatic
@@ -115,7 +116,12 @@ object StorageUtil {
     }
 
     @JvmStatic
-    fun toStorageType(c: Context, s: String): StorageType = if (s == c.getString(R.string.settings_title_storage_external)) StorageType.SDCARD else StorageType.INTERNAL
+    fun toStorageType(c: Context, s: String):
+        StorageType =
+            if (s == c.getString(R.string.settings_title_storage_external))
+                StorageType.SDCARD
+            else
+                StorageType.INTERNAL
 
     @JvmStatic
     fun buildWriteErrorMessage(c: Context): String {

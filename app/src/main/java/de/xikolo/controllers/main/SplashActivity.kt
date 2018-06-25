@@ -34,10 +34,10 @@ class SplashActivity : AppCompatActivity() {
 
             override fun onError(code: RequestJobCallback.ErrorCode) {
                 when (code) {
-                    ErrorCode.NO_NETWORK -> startApp()
-                    ErrorCode.API_VERSION_EXPIRED -> showApiVersionExpiredDialog()
-                    ErrorCode.MAINTENANCE -> showServerMaintenanceDialog()
-                    else -> showServerErrorDialog()
+                    ErrorCode.NO_NETWORK ->             startApp()
+                    ErrorCode.API_VERSION_EXPIRED ->    showApiVersionExpiredDialog()
+                    ErrorCode.MAINTENANCE ->            showServerMaintenanceDialog()
+                    else ->                             showServerErrorDialog()
                 }
             }
 
@@ -55,12 +55,12 @@ class SplashActivity : AppCompatActivity() {
         }
 
     private fun migrateStorage() {
-        val old = File(FileUtil.getPublicAppStorageFolderPath())
-        val new = File(FileUtil.createStorageFolderPath(StorageUtil.getInternalStorage(this)))
-        val fileCount = FileUtil.folderFileNumber(old)
-
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         if (!prefs.contains(getString(R.string.preference_storage))) {
+            val old = File(FileUtil.getPublicAppStorageFolderPath())
+            val new = File(FileUtil.createStorageFolderPath(StorageUtil.getInternalStorage(this)))
+            val fileCount = FileUtil.folderFileNumber(old)
+
             val progressDialog = ProgressDialog(this)
             progressDialog.setMessage(getString(R.string.dialog_app_being_prepared))
             progressDialog.setTitle(R.string.app_name)
@@ -69,7 +69,6 @@ class SplashActivity : AppCompatActivity() {
             progressDialog.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
             progressDialog.max = 100
             progressDialog.show()
-
 
             StorageUtil.migrateAsync(old, new, object : StorageUtil.StorageMigrationCallback {
                 override fun onProgressChanged(count: Int) {
