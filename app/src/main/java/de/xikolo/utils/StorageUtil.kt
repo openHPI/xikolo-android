@@ -68,7 +68,12 @@ object StorageUtil {
     fun getStoragePreference(c: Context): StorageType = toStorageType(c, ApplicationPreferences().storage!!)
 
     @JvmStatic
-    fun migrateAsync(from: File, to: File, callback: StorageMigrationCallback) {
+    fun migrateAsync(from: File?, to: File?, callback: StorageMigrationCallback) {
+        if(from == null || to == null) {
+            callback.onCompleted(false)
+            return
+        }
+
         Thread(Runnable {
             if (from.exists()) {
                 callback.onProgressChanged(0)
@@ -103,7 +108,7 @@ object StorageUtil {
 
     @JvmStatic
     fun buildMigrationMessage(c: Context, from: StorageType): String {
-        var currentStorage = getStoragePreference(c)
+        val currentStorage = getStoragePreference(c)
         var current = c.getString(R.string.settings_title_storage_internal)
         if (currentStorage == StorageType.INTERNAL)
             current = c.getString(R.string.settings_title_storage_external)

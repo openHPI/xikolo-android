@@ -73,4 +73,8 @@ class ApplicationPreferences {
         editor.apply()
     }
 
+    fun contains(key: String) : Boolean = preferences.contains(key)
+
+    fun setToDefault(key: String) = putString(key, getString(key))
+
 }

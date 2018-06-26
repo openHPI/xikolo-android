@@ -104,14 +104,14 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
 
                         if (newStorageType == StorageUtil.StorageType.INTERNAL) {
                             StorageUtil.migrateAsync(
-                                StorageUtil.getSdcardStorage(App.getInstance())!!,
+                                StorageUtil.getSdcardStorage(App.getInstance()),
                                 StorageUtil.getInternalStorage(App.getInstance()),
                                 migrationCallback
                             )
                         } else {
                             StorageUtil.migrateAsync(
                                 StorageUtil.getInternalStorage(App.getInstance()),
-                                StorageUtil.getSdcardStorage(App.getInstance())!!,
+                                StorageUtil.getSdcardStorage(App.getInstance()),
                                 migrationCallback
                             )
                         }
@@ -139,8 +139,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
             }
         }
 
-        // Android does not support multiple external storages below KITKAT
-        // Determining the states of multiple storages requires LOLLIPOP
+        // Multiple external storages are supported in the app starting from LOLLIPOP
         if (Build.VERSION.SDK_INT < 21 || StorageUtil.getStorages(activity).size < 2) {
             val general = findPreference(getString(R.string.preference_category_general)) as PreferenceCategory
             val storagePref = findPreference(getString(R.string.preference_storage))
@@ -240,7 +239,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
             pref.title = getString(R.string.logout)
             pref.setOnPreferenceClickListener { _ ->
                 UserManager.logout()
-                ToastUtil.show(R.string.toast_successful_logout);
+                ToastUtil.show(R.string.toast_successful_logout)
                 true
             }
         }
