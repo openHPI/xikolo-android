@@ -88,12 +88,12 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
     public static Course find(String identifier) {
         Realm realm = Realm.getDefaultInstance();
         Course model = realm.where(Course.class)
-                .beginGroup()
-                    .equalTo("id", identifier)
-                    .or()
-                    .equalTo("slug", identifier)
-                .endGroup()
-                .findFirst();
+            .beginGroup()
+            .equalTo("id", identifier)
+            .or()
+            .equalTo("slug", identifier)
+            .endGroup()
+            .findFirst();
         if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
@@ -217,6 +217,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         @Json(name = "policy_url")
         public String policyUrl;
 
+        // certificates are null if an error occured
         public Map<String, Map<String, Object>> certificates;
 
         @Json(name = "on_demand")
@@ -253,8 +254,13 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.externalUrl = externalUrl;
             course.policyUrl = policyUrl;
 
-            Certificates c = new Certificates();
-            c.parseCertificates(certificates);
+            Certificates c;
+            try {
+                c = new Certificates(certificates);
+            } catch (Exception e) {
+                // set certificates to null in case a NullPointerException or ClassCastException is thrown
+                c = null;
+            }
             course.certificates = c;
 
             course.onDemand = onDemand;

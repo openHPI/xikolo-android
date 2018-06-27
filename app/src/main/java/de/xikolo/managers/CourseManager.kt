@@ -44,6 +44,48 @@ class CourseManager {
         return courseListPromise
     }
 
+    fun listCoursesWithCertificates(realm: Realm): List<Course> {
+        // get course list (copyFromRealm is necessary because otherwise we could not remove items from the list)
+        val courseList = realm.copyFromRealm<Course>(
+            realm.where(Course::class.java)
+                .equalTo("external", false)
+                .sort("startDate", Sort.DESCENDING)
+                .findAll()
+        )
+
+        var i = 0
+        while (i < courseList.size) {
+            if (courseList[i].certificates != null) {
+                // find the enrollment for this course because there the certificate urls are stored
+                val enrollment = realm
+                    .where(Enrollment::class.java)
+                    .equalTo("id", courseList[i].enrollmentId)
+                    .findFirst()
+
+                // set the certificate urls
+                if (enrollment != null) {
+                    courseList[i].certificates.setCertificateUrls(
+                        enrollment.confirmationOfParticipationUrl,
+                        enrollment.recordOfAchievementUrl,
+                        enrollment.qualifiedCertificateUrl)
+                }
+
+                if (courseList[i].certificates.qualifiedCertificateUrl == null
+                    && courseList[i].certificates.recordOfAchievementUrl == null
+                    && courseList[i].certificates.confirmationOfParticipationUrl == null) {
+                    courseList.removeAt(i)
+                } else {
+                    i++
+                }
+            } else {
+                // an error occured while parsing the certificate
+                courseList.removeAt(i)
+            }
+        }
+
+        return courseList
+    }
+
     fun listEnrolledCourses(realm: Realm, listener: RealmChangeListener<RealmResults<Course>>?): RealmResults<*> {
         if (listener == null) {
             throw IllegalArgumentException("RealmChangeListener should not be null for async queries.")
