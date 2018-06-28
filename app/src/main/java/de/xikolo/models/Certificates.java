@@ -16,6 +16,9 @@ public class Certificates extends RealmObject {
     public String recordOfAchievementUrl = null;
     public String qualifiedCertificateUrl = null;
 
+    public Certificates() {
+    }
+
     public Certificates(Map<String, Map<String, Object>> certificates) throws ClassCastException, NullPointerException {
         this.confirmationOfParticipationAvailable = (Boolean) certificates.get("confirmation_of_participation").get("available");
         this.confirmationOfParticipationThreshold = (Double) certificates.get("confirmation_of_participation").get("threshold");
