@@ -36,6 +36,10 @@ import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.DownloadUtil;
 import de.xikolo.views.CustomSizeImageView;
 
+import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.SLIDES;
+import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.VIDEO_HD;
+import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.VIDEO_SD;
+
 public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPreviewPresenter, VideoPreviewView> implements VideoPreviewView {
 
     public static final String TAG = VideoPreviewFragment.class.getSimpleName();
@@ -103,23 +107,19 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
         textTitle.setText(video.title);
 
         linearLayoutDownloads.removeAllViews();
-        hdVideo = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.VIDEO_HD, course, section, item, video);
+
+        hdVideo = new DownloadViewController(getActivity(), DownloadUtil.getDefaultVideoAssetDownload(DownloadUtil.getVideoAssetType(course, section, item, video, VIDEO_HD)));
         linearLayoutDownloads.addView(hdVideo.getLayout());
-        sdVideo = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.VIDEO_SD, course, section, item, video);
+        sdVideo = new DownloadViewController(getActivity(), DownloadUtil.getDefaultVideoAssetDownload(DownloadUtil.getVideoAssetType(course, section, item, video, VIDEO_SD)));
         linearLayoutDownloads.addView(sdVideo.getLayout());
-        slides = new DownloadViewController(getActivity(), DownloadUtil.VideoAssetType.SLIDES, course, section, item, video);
+        slides = new DownloadViewController(getActivity(), DownloadUtil.getDefaultVideoAssetDownload(DownloadUtil.getVideoAssetType(course, section, item, video, SLIDES)));
         linearLayoutDownloads.addView(slides.getLayout());
 
         long minutes = TimeUnit.SECONDS.toMinutes(video.duration);
         long seconds = video.duration - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(video.duration));
         textDuration.setText(getString(R.string.duration, minutes, seconds));
 
-        viewPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.onPlayClicked();
-            }
-        });
+        viewPlay.setOnClickListener(v -> presenter.onPlayClicked());
     }
 
     @Override

@@ -132,13 +132,14 @@ object LanalyticsUtil {
     // Download Events
 
     @JvmStatic
-    fun trackDownloadedFile(videoId: String, courseId: String, sectionId: String, type: DownloadUtil.VideoAssetType) {
-        val verb: String = when (type) {
-            DownloadUtil.VideoAssetType.VIDEO_HD    -> "DOWNLOADED_HD_VIDEO"
-            DownloadUtil.VideoAssetType.VIDEO_SD    -> "DOWNLOADED_SD_VIDEO"
-            DownloadUtil.VideoAssetType.SLIDES      -> "DOWNLOADED_SLIDES"
-            DownloadUtil.VideoAssetType.TRANSCRIPT  -> "DOWNLOADED_TRANSCRIPT"
-            DownloadUtil.VideoAssetType.AUDIO       -> "DOWNLOADED_AUDIO"
+    fun trackDownloadedFile(videoId: String, courseId: String, sectionId: String, type: DownloadUtil.AssetType.CourseAssetType.ItemAssetType) {
+        val verb: String = when (type.type) {
+            DownloadUtil.AbstractItemAsset.VIDEO_HD    -> "DOWNLOADED_HD_VIDEO"
+            DownloadUtil.AbstractItemAsset.VIDEO_SD    -> "DOWNLOADED_SD_VIDEO"
+            DownloadUtil.AbstractItemAsset.SLIDES      -> "DOWNLOADED_SLIDES"
+            DownloadUtil.AbstractItemAsset.TRANSCRIPT  -> "DOWNLOADED_TRANSCRIPT"
+            DownloadUtil.AbstractItemAsset.AUDIO       -> "DOWNLOADED_AUDIO"
+            else                                       -> ""
         }
 
         createEventBuilder()

@@ -27,10 +27,7 @@ import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.events.DownloadDeletedEvent;
 import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.managers.DownloadManager;
-import de.xikolo.models.Course;
 import de.xikolo.models.Download;
-import de.xikolo.models.Item;
-import de.xikolo.models.Section;
 import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.DownloadUtil;
@@ -39,21 +36,22 @@ import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.views.IconButton;
 
+import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.SLIDES;
+import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.TRANSCRIPT;
+import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.VIDEO_HD;
+import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.VIDEO_SD;
+import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.VideoAssetType;
+
 public class DownloadViewController {
 
     public static final String TAG = DownloadViewController.class.getSimpleName();
     private static final int MILLISECONDS = 250;
 
-    private DownloadUtil.VideoAssetType type;
-
     private FragmentActivity activity;
 
-    private Course course;
-    private Section section;
-    private Item item;
-    private Video video;
-
     private DownloadManager downloadManager;
+
+    private DownloadUtil.AssetDownload download;
 
     private View layout;
     private TextView textFileName;
@@ -74,15 +72,12 @@ public class DownloadViewController {
     private int size;
 
     @SuppressWarnings("SetTextI18n")
-    public DownloadViewController(FragmentActivity a, DownloadUtil.VideoAssetType t, Course c, final Section s, Item i, Video v) {
+    public DownloadViewController(FragmentActivity a, DownloadUtil.AssetDownload download) {
         activity = a;
-        type = t;
-        course = c;
-        section = s;
-        item = i;
-        video = v;
 
         this.downloadManager = new DownloadManager(a);
+
+        this.download = download;
 
         LayoutInflater inflater = LayoutInflater.from(App.getInstance());
         layout = inflater.inflate(R.layout.container_download, null);
@@ -94,100 +89,88 @@ public class DownloadViewController {
 
         viewDownloadStart = layout.findViewById(R.id.downloadStartContainer);
         buttonDownloadStart = layout.findViewById(R.id.buttonDownloadStart);
-        buttonDownloadStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (NetworkUtil.isOnline()) {
-                    if (NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_MOBILE && appPreferences.isDownloadNetworkLimitedOnMobile()) {
-                        MobileDownloadDialog dialog = MobileDownloadDialog.getInstance();
-                        dialog.setMobileDownloadDialogListener(new MobileDownloadDialog.MobileDownloadDialogListener() {
-                            @Override
-                            public void onDialogPositiveClick(DialogFragment dialog) {
-                                appPreferences.setDownloadNetworkLimitedOnMobile(false);
-                                startDownload();
-                            }
-                        });
-                        dialog.show(activity.getSupportFragmentManager(), MobileDownloadDialog.TAG);
-                    } else {
+        buttonDownloadStart.setOnClickListener(v -> {
+            if (NetworkUtil.isOnline()) {
+                if (NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_MOBILE && appPreferences.isDownloadNetworkLimitedOnMobile()) {
+                    MobileDownloadDialog dialog = MobileDownloadDialog.getInstance();
+                    dialog.setMobileDownloadDialogListener(dialog1 -> {
+                        appPreferences.setDownloadNetworkLimitedOnMobile(false);
                         startDownload();
-                    }
+                    });
+                    dialog.show(activity.getSupportFragmentManager(), MobileDownloadDialog.TAG);
                 } else {
-                    NetworkUtil.showNoConnectionToast();
+                    startDownload();
                 }
+            } else {
+                NetworkUtil.showNoConnectionToast();
             }
         });
 
         viewDownloadRunning = layout.findViewById(R.id.downloadRunningContainer);
         progressBarDownload = layout.findViewById(R.id.progressDownload);
         buttonDownloadCancel = layout.findViewById(R.id.buttonDownloadCancel);
-        buttonDownloadCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadManager.cancelItemAssetDownload(
-                        DownloadViewController.this.item.id,
-                        DownloadViewController.this.type
-                );
+        buttonDownloadCancel.setOnClickListener(v -> {
+            downloadManager.cancelItemAssetDownload(download);
 
-                showStartState();
-            }
+            showStartState();
         });
 
         viewDownloadEnd = layout.findViewById(R.id.downloadEndContainer);
         buttonOpenDownload = layout.findViewById(R.id.buttonDownloadOpen);
         buttonDeleteDownload = layout.findViewById(R.id.buttonDownloadDelete);
-        buttonDeleteDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (appPreferences.getConfirmBeforeDeleting()) {
-                    ConfirmDeleteDialog dialog = ConfirmDeleteDialog.getInstance(false);
-                    dialog.setConfirmDeleteDialogListener(new ConfirmDeleteDialog.ConfirmDeleteDialogListener() {
-                        @Override
-                        public void onDialogPositiveClick(DialogFragment dialog) {
-                            deleteFile();
-                        }
+        buttonDeleteDownload.setOnClickListener(v -> {
+            if (appPreferences.getConfirmBeforeDeleting()) {
+                ConfirmDeleteDialog dialog = ConfirmDeleteDialog.getInstance(false);
+                dialog.setConfirmDeleteDialogListener(new ConfirmDeleteDialog.ConfirmDeleteDialogListener() {
+                    @Override
+                    public void onDialogPositiveClick(DialogFragment dialog) {
+                        deleteFile();
+                    }
 
-                        @Override
-                        public void onDialogPositiveAndAlwaysClick(DialogFragment dialog) {
-                            appPreferences.setConfirmBeforeDeleting(false);
-                            deleteFile();
-                        }
-                    });
-                    dialog.show(activity.getSupportFragmentManager(), ConfirmDeleteDialog.TAG);
-                } else {
-                    deleteFile();
-                }
+                    @Override
+                    public void onDialogPositiveAndAlwaysClick(DialogFragment dialog) {
+                        appPreferences.setConfirmBeforeDeleting(false);
+                        deleteFile();
+                    }
+                });
+                dialog.show(activity.getSupportFragmentManager(), ConfirmDeleteDialog.TAG);
+            } else {
+                deleteFile();
             }
         });
 
-        switch (type) {
-            case SLIDES:
-                url = video.slidesUrl;
-                size = video.slidesSize;
-                textFileName.setText(App.getInstance().getText(R.string.slides_as_pdf));
-                buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf));
-                openFileAsPdf();
-                break;
-            case TRANSCRIPT:
-                url = video.transcriptUrl;
-                size = video.transcriptSize;
-                textFileName.setText(App.getInstance().getText(R.string.transcript_as_pdf));
-                buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf));
-                openFileAsPdf();
-                break;
-            case VIDEO_HD:
-                url = video.singleStream.hdUrl;
-                size = video.singleStream.hdSize;
-                textFileName.setText(App.getInstance().getText(R.string.video_hd_as_mp4));
-                buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video));
-                buttonOpenDownload.setVisibility(View.GONE);
-                break;
-            case VIDEO_SD:
-                url = video.singleStream.sdUrl;
-                size = video.singleStream.sdSize;
-                textFileName.setText(App.getInstance().getText(R.string.video_sd_as_mp4));
-                buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video));
-                buttonOpenDownload.setVisibility(View.GONE);
-                break;
+        if(download.getAssetType() instanceof DownloadUtil.AssetType.CourseAssetType.ItemAssetType.VideoAssetType) {
+            Video video = ((VideoAssetType) download.getAssetType()).getVideo();
+            switch (download.getAssetType().getType()) {
+                case SLIDES:
+                    url = video.slidesUrl;
+                    size = video.slidesSize;
+                    textFileName.setText(App.getInstance().getText(R.string.slides_as_pdf));
+                    buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf));
+                    openFileAsPdf();
+                    break;
+                case TRANSCRIPT:
+                    url = video.transcriptUrl;
+                    size = video.transcriptSize;
+                    textFileName.setText(App.getInstance().getText(R.string.transcript_as_pdf));
+                    buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf));
+                    openFileAsPdf();
+                    break;
+                case VIDEO_HD:
+                    url = video.singleStream.hdUrl;
+                    size = video.singleStream.hdSize;
+                    textFileName.setText(App.getInstance().getText(R.string.video_hd_as_mp4));
+                    buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video));
+                    buttonOpenDownload.setVisibility(View.GONE);
+                    break;
+                case VIDEO_SD:
+                    url = video.singleStream.sdUrl;
+                    size = video.singleStream.sdSize;
+                    textFileName.setText(App.getInstance().getText(R.string.video_sd_as_mp4));
+                    buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video));
+                    buttonOpenDownload.setVisibility(View.GONE);
+                    break;
+            }
         }
 
         if (url == null) {
@@ -199,22 +182,19 @@ public class DownloadViewController {
         progressBarUpdater = new Runnable() {
             @Override
             public void run() {
-                final Download dl = downloadManager.getDownload(item.id, type);
+                final Download dl = downloadManager.getDownload(download);
 
                 if (dl != null) {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (progressBarUpdaterRunning) {
-                                progressBarDownload.setIndeterminate(false);
-                                if (dl.totalBytes == 0) {
-                                    progressBarDownload.setProgress(0);
-                                } else {
-                                    progressBarDownload.setProgress((int) (dl.bytesWritten * 100 / dl.totalBytes));
-                                }
-                                textFileSize.setText(FileUtil.getFormattedFileSize(dl.bytesWritten) + " / "
-                                        + FileUtil.getFormattedFileSize(dl.totalBytes));
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        if (progressBarUpdaterRunning) {
+                            progressBarDownload.setIndeterminate(false);
+                            if (dl.totalBytes == 0) {
+                                progressBarDownload.setProgress(0);
+                            } else {
+                                progressBarDownload.setProgress((int) (dl.bytesWritten * 100 / dl.totalBytes));
                             }
+                            textFileSize.setText(FileUtil.getFormattedFileSize(dl.bytesWritten) + " / "
+                                    + FileUtil.getFormattedFileSize(dl.totalBytes));
                         }
                     });
                 }
@@ -225,9 +205,9 @@ public class DownloadViewController {
             }
         };
 
-        if (downloadManager.downloadRunning(item.id, type)) {
+        if (downloadManager.downloadRunning(download)) {
             showRunningState();
-        } else if (downloadManager.downloadExists(item.id, type)) {
+        } else if (downloadManager.downloadExists(download)) {
             showEndState();
         } else {
             showStartState();
@@ -240,17 +220,13 @@ public class DownloadViewController {
     }
 
     private void deleteFile() {
-        if (downloadManager.deleteItemAssetDownload(
-                DownloadViewController.this.item.id,
-                DownloadViewController.this.type)) {
+        if (downloadManager.deleteItemAssetDownload(download)) {
             showStartState();
         }
     }
 
     private void startDownload() {
-        if (downloadManager.startItemAssetDownload(
-                DownloadViewController.this.item.id,
-                DownloadViewController.this.type)) {
+        if (downloadManager.startAssetDownload(download)) {
             showRunningState();
         }
     }
@@ -319,7 +295,7 @@ public class DownloadViewController {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadStartedEvent(DownloadStartedEvent event) {
-        if (event.itemId.equals(item.id) && event.type == type && !progressBarUpdaterRunning) {
+        if (event.download.equals(download) && !progressBarUpdaterRunning) {
             showRunningState();
         }
     }
@@ -327,7 +303,7 @@ public class DownloadViewController {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadDeletedEvent(DownloadDeletedEvent event) {
-        if (event.itemId.equals(item.id) && event.type == type && progressBarUpdaterRunning) {
+        if (event.download.equals(download) && progressBarUpdaterRunning) {
             showStartState();
         }
     }
@@ -342,22 +318,20 @@ public class DownloadViewController {
 
     private void openFileAsPdf() {
         buttonOpenDownload.setText(App.getInstance().getResources().getText(R.string.open));
-        buttonOpenDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File pdf = downloadManager.getDownloadFile(item.id, type);
-                Intent target = new Intent(Intent.ACTION_VIEW);
-                target.setDataAndType(FileProviderUtil.getUriForFile(pdf), "application/pdf");
-                target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        buttonOpenDownload.setOnClickListener(v -> {
+            File pdf = downloadManager.getDownloadFile(download);
+            Intent target = new Intent(Intent.ACTION_VIEW);
+            target.setDataAndType(FileProviderUtil.getUriForFile(pdf), "application/pdf");
+            target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                Intent intent = Intent.createChooser(target, null);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                try {
-                    App.getInstance().startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    // Instruct the user to install a PDF reader here, or something
-                }
+            Intent intent = Intent.createChooser(target, null);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                App.getInstance().startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                // Instruct the user to install a PDF reader here, or something
+                //ToDo
             }
         });
     }
