@@ -34,6 +34,7 @@ import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.FileProviderUtil;
 import de.xikolo.utils.FileUtil;
 import de.xikolo.utils.NetworkUtil;
+import de.xikolo.utils.ToastUtil;
 import de.xikolo.views.IconButton;
 
 import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.SLIDES;
@@ -295,7 +296,7 @@ public class DownloadViewController {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadStartedEvent(DownloadStartedEvent event) {
-        if (event.download.equals(download) && !progressBarUpdaterRunning) {
+        if (event.getDownload().equals(download) && !progressBarUpdaterRunning) {
             showRunningState();
         }
     }
@@ -303,7 +304,7 @@ public class DownloadViewController {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadDeletedEvent(DownloadDeletedEvent event) {
-        if (event.download.equals(download) && progressBarUpdaterRunning) {
+        if (event.getDownload().equals(download) && progressBarUpdaterRunning) {
             showStartState();
         }
     }
@@ -330,8 +331,7 @@ public class DownloadViewController {
             try {
                 App.getInstance().startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                // Instruct the user to install a PDF reader here, or something
-                //ToDo
+                ToastUtil.show(R.string.toast_no_pdf_viewer_found);
             }
         });
     }
