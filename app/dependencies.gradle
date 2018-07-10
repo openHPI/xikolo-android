@@ -2,8 +2,8 @@ dependencies {
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
     implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.23.3"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.23.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.23.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.23.4"
     implementation "ru.gildor.coroutines:kotlin-coroutines-retrofit:0.11.0"
 
     // networking
@@ -60,8 +60,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-gcm:15.0.1"
 
     // firebase
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.3"
-    implementation "com.google.firebase:firebase-core:16.0.0"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.9.4"
+    implementation "com.google.firebase:firebase-core:16.0.1"
 
     // support libraries
     def supportVersion = '27.1.1'
