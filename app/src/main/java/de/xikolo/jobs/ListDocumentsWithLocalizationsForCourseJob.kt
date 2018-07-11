@@ -1,14 +1,16 @@
-package de.xikolo.jobs.base
+package de.xikolo.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
+import de.xikolo.jobs.base.NetworkJob
+import de.xikolo.lifecycle.base.NetworkStateLiveData
 import de.xikolo.models.Document
 import de.xikolo.models.DocumentLocalization
 import de.xikolo.models.base.Sync
 import de.xikolo.network.ApiService
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class ListDocumentsWithLocalizationsForCourseJob(private val courseId: String, callback: RequestJobCallback) : RequestJob(callback, Precondition.AUTH) {
+class ListDocumentsWithLocalizationsForCourseJob(private val courseId: String, networkState: NetworkStateLiveData) : NetworkJob(networkState, Precondition.AUTH) {
 
     companion object {
         val TAG: String = ListDocumentsWithLocalizationsForCourseJob::class.java.simpleName
@@ -27,10 +29,10 @@ class ListDocumentsWithLocalizationsForCourseJob(private val courseId: String, c
                 .saveOnly()
                 .run()
 
-            callback?.success()
+            networkState.success()
         } else {
             if (Config.DEBUG) Log.e(TAG, "Error while fetching documents list")
-            callback?.error(RequestJobCallback.ErrorCode.ERROR)
+            networkState.error()
         }
     }
 

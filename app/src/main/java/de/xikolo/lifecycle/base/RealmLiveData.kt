@@ -1,11 +1,11 @@
-package de.xikolo.models.base
+package de.xikolo.lifecycle.base
 
 import android.arch.lifecycle.LiveData
 import io.realm.RealmChangeListener
 import io.realm.RealmModel
 import io.realm.RealmResults
 
-class RealmLiveData <T : RealmModel>(val realmResults: RealmResults<T>) : LiveData<RealmResults<T>>() {
+class RealmLiveData <T : RealmModel>(private val realmResults: RealmResults<T>) : LiveData<RealmResults<T>>() {
 
     private val listener = RealmChangeListener<RealmResults<T>> { results -> value = results }
 
@@ -19,4 +19,4 @@ class RealmLiveData <T : RealmModel>(val realmResults: RealmResults<T>) : LiveDa
 
 }
 
-fun <T: RealmModel> RealmResults<T>.asLiveData() = RealmLiveData<T>(this)
+fun <T: RealmModel> RealmResults<T>.asLiveData() = RealmLiveData(this)

@@ -10,6 +10,10 @@ public class FeatureToggle {
         return BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI;
     }
 
+    public static boolean documents() {
+        return BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO;
+    }
+
     public static boolean secondScreen() {
         return (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP)
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;

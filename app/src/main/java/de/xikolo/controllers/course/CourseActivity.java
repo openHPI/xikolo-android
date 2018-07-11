@@ -230,6 +230,11 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
             TITLES.add(getString(R.string.tab_discussions));
             TITLES.add(getString(R.string.tab_progress));
             TITLES.add(getString(R.string.tab_course_details));
+
+            if (FeatureToggle.documents()) {
+                TITLES.add(getString(R.string.tab_documents));
+            }
+
             TITLES.add(getString(R.string.tab_announcements));
 
             if (FeatureToggle.recapMode()) {
@@ -276,6 +281,9 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                         break;
                     case Course.TAB_COURSE_DETAILS:
                         fragment = CourseDetailsFragmentAutoBundle.builder(courseId).build();
+                        break;
+                    case Course.TAB_DOCUMENTS:
+                        fragment = DocumentsFragmentAutoBundle.builder(courseId).build();
                         break;
                     case Course.TAB_ANNOUNCEMENTS:
                         fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build();

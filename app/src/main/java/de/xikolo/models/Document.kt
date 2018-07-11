@@ -10,7 +10,7 @@ import moe.banana.jsonapi2.HasMany
 import moe.banana.jsonapi2.JsonApi
 import moe.banana.jsonapi2.Resource
 
-class Document : RealmObject() {
+open class Document : RealmObject() {
 
     @PrimaryKey
     var id: String = ""
