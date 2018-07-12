@@ -12,14 +12,11 @@ import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
+import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
-
-import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.SLIDES;
-import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.VIDEO_HD;
-import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.VIDEO_SD;
 
 public class SectionDownloadHelper {
 
@@ -83,13 +80,13 @@ public class SectionDownloadHelper {
                 for (Item item : section.getAccessibleItems()) {
                     if (item.contentType.equals(Item.TYPE_VIDEO)) {
                         if (sdVideo) {
-                            startDownload(DownloadUtil.getItemAssetType(course, section, item, VIDEO_SD));
+                            startDownload(new DownloadUtil.AssetDownload.Course.Item.VideoSD(item, Video.getForContentId(item.contentId)));
                         }
                         if (hdVideo) {
-                            startDownload(DownloadUtil.getItemAssetType(course, section, item, VIDEO_HD));
+                            startDownload(new DownloadUtil.AssetDownload.Course.Item.VideoHD(item, Video.getForContentId(item.contentId)));
                         }
                         if (slides) {
-                            startDownload(DownloadUtil.getItemAssetType(course, section, item, SLIDES));
+                            startDownload(new DownloadUtil.AssetDownload.Course.Item.Slides(item, Video.getForContentId(item.contentId)));
                         }
                     }
                 }
@@ -103,10 +100,10 @@ public class SectionDownloadHelper {
 
     }
 
-    private void startDownload(DownloadUtil.AssetType.CourseAssetType.ItemAssetType type) {
-        if (!downloadManager.downloadExists(DownloadUtil.getDefaultItemAssetDownload(type))
-            && !downloadManager.downloadRunning(DownloadUtil.getDefaultItemAssetDownload(type))) {
-            downloadManager.startAssetDownload(DownloadUtil.getDefaultItemAssetDownload(type));
+    private void startDownload(DownloadUtil.AssetDownload.Course.Item item) {
+        if (!downloadManager.downloadExists(item)
+            && !downloadManager.downloadRunning(item)) {
+            downloadManager.startAssetDownload(item);
         }
     }
 

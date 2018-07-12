@@ -21,10 +21,7 @@ import de.xikolo.events.DownloadDeletedEvent;
 import de.xikolo.events.DownloadStartedEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
-import de.xikolo.models.Course;
 import de.xikolo.models.Download;
-import de.xikolo.models.Item;
-import de.xikolo.models.Section;
 import de.xikolo.services.DownloadService;
 import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.ExternalStorageUtil;
@@ -75,18 +72,15 @@ public class DownloadManager {
                     FileUtil.createFolderIfNotExists(new File(download.getFilePath().substring(0, download.getFilePath().lastIndexOf(File.separator))));
 
                     Bundle bundle = new Bundle();
-                    bundle.putString(DownloadService.ARG_TITLE, download.getAssetType().toString());
+                    bundle.putString(DownloadService.ARG_TITLE, download.getTitle());
                     bundle.putString(DownloadService.ARG_URL, download.getUrl());
                     bundle.putString(DownloadService.ARG_FILE_PATH, download.getFilePath());
 
                     intent.putExtras(bundle);
                     context.startService(intent);
 
-                    if (download.getAssetType() instanceof DownloadUtil.AssetType.CourseAssetType.ItemAssetType) {
-                        Course c = ((DownloadUtil.AssetType.CourseAssetType.ItemAssetType) download.getAssetType()).getCourse();
-                        Section s = ((DownloadUtil.AssetType.CourseAssetType.ItemAssetType) download.getAssetType()).getSection();
-                        Item i = ((DownloadUtil.AssetType.CourseAssetType.ItemAssetType) download.getAssetType()).getItem();
-                        LanalyticsUtil.trackDownloadedFile(c.id, s.id, i.id, (DownloadUtil.AssetType.CourseAssetType.ItemAssetType) download.getAssetType());
+                    if (download instanceof DownloadUtil.AssetDownload.Course.Item) {
+                        LanalyticsUtil.trackDownloadedFile((DownloadUtil.AssetDownload.Course.Item) download);
                     }
 
                     EventBus.getDefault().post(new DownloadStartedEvent(download));

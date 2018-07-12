@@ -9,5 +9,5 @@ class DownloadDeletedEvent(var download: DownloadUtil.AssetDownload) :
             + ": filePath = "
             + download.filePath
             + ", type = "
-            + download.assetType.toString()
+            + download.title
     )

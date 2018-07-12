@@ -32,13 +32,9 @@ import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.SecondScreenManager;
-import de.xikolo.models.Course;
 import de.xikolo.models.Item;
-import de.xikolo.models.Section;
 import de.xikolo.models.Video;
 import de.xikolo.utils.DownloadUtil;
-
-import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.SLIDES;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteListener, OnPageChangeListener {
@@ -53,16 +49,11 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.text_current_page) TextView textCurrentPage;
 
-    @AutoBundleField String courseId;
-    @AutoBundleField String sectionId;
     @AutoBundleField String itemId;
 
     @AutoBundleField(required = false) int currentPage = -1;
 
-    private Course course;
-    private Section section;
-    private Item item;
-    private Video video;
+    private DownloadUtil.AssetDownload.Course.Item.Slides slides;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,10 +71,9 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        course = Course.get(courseId);
-        section = Section.get(sectionId);
-        item = Item.get(itemId);
-        video = Video.getForContentId(item.contentId);
+        Item item = Item.get(itemId);
+        Video video = Video.getForContentId(item.contentId);
+        slides = new DownloadUtil.AssetDownload.Course.Item.Slides(item, video);
 
         fab.setOnClickListener(v -> {
             fab.hide();
@@ -93,14 +83,14 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
             }
         });
 
-        if (downloadManager.downloadExists(DownloadUtil.getDefaultItemAssetDownload(DownloadUtil.getItemAssetType(course, section, item, SLIDES)))) {
+        if (downloadManager.downloadExists(slides)) {
             initSlidesViewer();
         } else {
             DownloadSlidesDialog dialog = DownloadSlidesDialog.getInstance();
             dialog.setListener(new DownloadSlidesDialog.DownloadSlidesDialogListener() {
                 @Override
                 public void onDialogPositiveClick() {
-                    downloadManager.startAssetDownload(DownloadUtil.getDefaultItemAssetDownload(DownloadUtil.getItemAssetType(course, section, item, SLIDES)));
+                    downloadManager.startAssetDownload(slides);
                     progressDialog = ProgressDialog.getInstance();
                     progressDialog.show(getFragmentManager(), ProgressDialog.TAG);
                 }
@@ -115,8 +105,8 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     }
 
     private void initSlidesViewer() {
-        if (downloadManager != null && downloadManager.downloadExists(DownloadUtil.getDefaultItemAssetDownload(DownloadUtil.getItemAssetType(course, section, item, SLIDES)))) {
-            File file = downloadManager.getDownloadFile(DownloadUtil.getDefaultItemAssetDownload(DownloadUtil.getItemAssetType(course, section, item, SLIDES)));
+        if (downloadManager != null && downloadManager.downloadExists(slides)) {
+            File file = downloadManager.getDownloadFile(slides);
             pdfView.fromFile(file)
                 .enableAnnotationRendering(true)
                 .onLoad(this)
@@ -183,7 +173,7 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadCompletedEvent(DownloadCompletedEvent event) {
-        if (event.url.equals(video.slidesUrl)) {
+        if (event.url.equals(slides.getUrl())) {
             if (progressDialog != null && progressDialog.getDialog().isShowing()) {
                 progressDialog.getDialog().cancel();
             }

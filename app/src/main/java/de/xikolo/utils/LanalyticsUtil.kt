@@ -132,23 +132,22 @@ object LanalyticsUtil {
     // Download Events
 
     @JvmStatic
-    fun trackDownloadedFile(videoId: String, courseId: String, sectionId: String, type: DownloadUtil.AssetType.CourseAssetType.ItemAssetType) {
-        val verb: String = when (type.type) {
-            DownloadUtil.AbstractItemAsset.VIDEO_HD    -> "DOWNLOADED_HD_VIDEO"
-            DownloadUtil.AbstractItemAsset.VIDEO_SD    -> "DOWNLOADED_SD_VIDEO"
-            DownloadUtil.AbstractItemAsset.SLIDES      -> "DOWNLOADED_SLIDES"
-            DownloadUtil.AbstractItemAsset.TRANSCRIPT  -> "DOWNLOADED_TRANSCRIPT"
-            DownloadUtil.AbstractItemAsset.AUDIO       -> "DOWNLOADED_AUDIO"
-            else                                       -> ""
+    fun trackDownloadedFile(item: DownloadUtil.AssetDownload.Course.Item) {
+        val verb: String = when (item) {
+            is DownloadUtil.AssetDownload.Course.Item.VideoHD       -> "DOWNLOADED_HD_VIDEO"
+            is DownloadUtil.AssetDownload.Course.Item.VideoSD       -> "DOWNLOADED_SD_VIDEO"
+            is DownloadUtil.AssetDownload.Course.Item.Slides        -> "DOWNLOADED_SLIDES"
+            is DownloadUtil.AssetDownload.Course.Item.Transcript    -> "DOWNLOADED_TRANSCRIPT"
+            is DownloadUtil.AssetDownload.Course.Item.Audio         -> "DOWNLOADED_AUDIO"
         }
 
         createEventBuilder()
-                .setResource(videoId, "video")
-                .setVerb(verb)
-                .putContext(CONTEXT_COURSE_ID, courseId)
-                .putContext(CONTEXT_SECTION_ID, sectionId)
-                .build()
-                .track()
+            .setResource(item.video.id, "video")
+            .setVerb(verb)
+            .putContext(CONTEXT_COURSE_ID, item.course.id)
+            .putContext(CONTEXT_SECTION_ID, item.item.section.id)
+            .build()
+            .track()
     }
 
     @JvmStatic

@@ -36,10 +36,6 @@ import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.DownloadUtil;
 import de.xikolo.views.CustomSizeImageView;
 
-import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.SLIDES;
-import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.VIDEO_HD;
-import static de.xikolo.utils.DownloadUtil.AbstractItemAsset.VIDEO_SD;
-
 public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPreviewPresenter, VideoPreviewView> implements VideoPreviewView {
 
     public static final String TAG = VideoPreviewFragment.class.getSimpleName();
@@ -108,11 +104,11 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
 
         linearLayoutDownloads.removeAllViews();
 
-        hdVideo = new DownloadViewController(getActivity(), DownloadUtil.getDefaultVideoAssetDownload(DownloadUtil.getVideoAssetType(course, section, item, video, VIDEO_HD)));
+        hdVideo = new DownloadViewController(getActivity(), new DownloadUtil.AssetDownload.Course.Item.VideoHD(item, video));
         linearLayoutDownloads.addView(hdVideo.getLayout());
-        sdVideo = new DownloadViewController(getActivity(), DownloadUtil.getDefaultVideoAssetDownload(DownloadUtil.getVideoAssetType(course, section, item, video, VIDEO_SD)));
+        sdVideo = new DownloadViewController(getActivity(), new DownloadUtil.AssetDownload.Course.Item.VideoSD(item, video));
         linearLayoutDownloads.addView(sdVideo.getLayout());
-        slides = new DownloadViewController(getActivity(), DownloadUtil.getDefaultVideoAssetDownload(DownloadUtil.getVideoAssetType(course, section, item, video, SLIDES)));
+        slides = new DownloadViewController(getActivity(), new DownloadUtil.AssetDownload.Course.Item.Slides(item, video));
         linearLayoutDownloads.addView(slides.getLayout());
 
         long minutes = TimeUnit.SECONDS.toMinutes(video.duration);
