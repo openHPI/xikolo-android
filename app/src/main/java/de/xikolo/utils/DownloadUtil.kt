@@ -8,20 +8,20 @@ object DownloadUtil {
 
     // the file path should identify a download uniquely, thus this AssetDownload object can be used as an identifier for downloads
     sealed class AssetDownload(val url: String?, open val fileName: String) {
-        protected open val fileFolder = FileUtil.createPublicAppFolderPath() + File.separator // has to end with separator
+        protected open val fileFolder: String = FileUtil.createPublicAppFolderPath() // must not end with separator
 
         open val title: String
             get() = fileName
 
         val filePath: String
-            get() = fileFolder + fileName
+            get() = fileFolder + File.separator + fileName
 
 
         sealed class Course(url: String?, override val fileName: String, val course: de.xikolo.models.Course) : AssetDownload(url, fileName) {
-            override val fileFolder = super.fileFolder + FileUtil.escapeFilename(course.title) + "_" + FileUtil.escapeFilename(course.id) + File.separator
+            override val fileFolder = super.fileFolder + File.separator + FileUtil.escapeFilename(course.title) + "_" + FileUtil.escapeFilename(course.id)
 
             sealed class Item constructor(url: String?, fileName: String, val item: de.xikolo.models.Item, val video: de.xikolo.models.Video) : Course(url, fileName, item.section.course) {
-                override val fileFolder = super.fileFolder + FileUtil.escapeFilename(item.section.title) + "_" + item.section.id + File.separator
+                override val fileFolder = super.fileFolder + File.separator + FileUtil.escapeFilename(item.section.title) + "_" + item.section.id
                 override val fileName = FileUtil.escapeFilename(item.title) + "_" + fileName
                 abstract val size: Int
 
