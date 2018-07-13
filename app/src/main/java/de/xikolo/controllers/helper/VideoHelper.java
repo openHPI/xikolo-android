@@ -29,11 +29,11 @@ import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
+import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
-import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.PlaybackSpeedUtil;
@@ -295,12 +295,7 @@ public class VideoHelper {
             textPlaybackSpeed.setClickable(false);
         }
 
-        buttonRetry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateVideo(course, module, item, video);
-            }
-        });
+        buttonRetry.setOnClickListener(v -> updateVideo(item, video));
     }
 
     public void play() {
@@ -403,7 +398,7 @@ public class VideoHelper {
         }
 
         saveCurrentPosition();
-        updateVideo(course, module, item, video);
+        updateVideo(item, video);
     }
 
     public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
@@ -427,9 +422,9 @@ public class VideoHelper {
         int connectivityStatus = NetworkUtil.getConnectivityStatus();
         ApplicationPreferences appPreferences = new ApplicationPreferences();
 
-        if (videoDownloadPresent(item.id, DownloadUtil.VideoAssetType.VIDEO_HD)) { // hd video download available
+        if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video))) { // hd video download available
             videoMode = VideoMode.HD;
-        } else if (videoDownloadPresent(item.id, DownloadUtil.VideoAssetType.VIDEO_SD)) { // sd video download available
+        } else if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video))) { // sd video download available
             videoMode = VideoMode.SD;
         } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !appPreferences.isVideoQualityLimitedOnMobile()) {
             videoMode = VideoMode.HD;
@@ -441,32 +436,32 @@ public class VideoHelper {
             currentPlaybackSpeed = appPreferences.getVideoPlaybackSpeed();
         }
 
-        updateVideo(course, module, item, video);
+        updateVideo(item, video);
     }
 
-    private void updateVideo(Course course, Section module, Item item, Video video) {
+    private void updateVideo(Item item, Video video) {
         String stream;
-        DownloadUtil.VideoAssetType videoAssetType;
+        DownloadAsset.Course.Item videoAssetDownload;
 
         viewVideoWarning.setVisibility(View.GONE);
 
         if (videoMode == VideoMode.HD) {
             stream = video.singleStream.hdUrl;
-            videoAssetType = DownloadUtil.VideoAssetType.VIDEO_HD;
+            videoAssetDownload = new DownloadAsset.Course.Item.VideoHD(item, video);
         } else {
             stream = video.singleStream.sdUrl;
-            videoAssetType = DownloadUtil.VideoAssetType.VIDEO_SD;
+            videoAssetDownload = new DownloadAsset.Course.Item.VideoSD(item, video);
         }
 
         viewOfflineHint.setVisibility(View.GONE);
 
-        if (videoDownloadPresent(item.id, videoAssetType)) {
-            setLocalVideoUri(item.id, videoAssetType);
+        if (videoDownloadPresent(videoAssetDownload)) {
+            setLocalVideoUri(videoAssetDownload);
         } else if (NetworkUtil.isOnline()) {
             setVideoUri(stream);
         } else if (videoMode == VideoMode.HD) {
             videoMode = VideoMode.SD;
-            updateVideo(course, module, item, video);
+            updateVideo(item, video);
         } else {
             viewVideoWarning.setVisibility(View.VISIBLE);
             textVideoWarning.setText(activity.getString(R.string.video_notification_no_offline_video));
@@ -475,13 +470,13 @@ public class VideoHelper {
         updateHdSwitchColor();
     }
 
-    private boolean videoDownloadPresent(String itemId, DownloadUtil.VideoAssetType type) {
-        return !downloadManager.downloadRunning(itemId, type)
-                && downloadManager.downloadExists(itemId, type);
+    private boolean videoDownloadPresent(DownloadAsset.Course.Item item) {
+        return !downloadManager.downloadRunning(item)
+            && downloadManager.downloadExists(item);
     }
 
-    private void setLocalVideoUri(String itemId, DownloadUtil.VideoAssetType type) {
-        setVideoUri("file://" + downloadManager.getDownloadFile(itemId, type).getAbsolutePath());
+    private void setLocalVideoUri(DownloadAsset.Course.Item item) {
+        setVideoUri("file://" + downloadManager.getDownloadFile(item));
         viewOfflineHint.setVisibility(View.VISIBLE);
     }
 

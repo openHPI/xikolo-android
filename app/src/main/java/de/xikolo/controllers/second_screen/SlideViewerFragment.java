@@ -3,6 +3,7 @@ package de.xikolo.controllers.second_screen;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -31,11 +32,9 @@ import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.SecondScreenManager;
-import de.xikolo.models.Course;
+import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
-import de.xikolo.models.Section;
 import de.xikolo.models.Video;
-import de.xikolo.utils.DownloadUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteListener, OnPageChangeListener {
@@ -50,16 +49,11 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.text_current_page) TextView textCurrentPage;
 
-    @AutoBundleField String courseId;
-    @AutoBundleField String sectionId;
     @AutoBundleField String itemId;
 
     @AutoBundleField(required = false) int currentPage = -1;
 
-    private Course course;
-    private Section section;
-    private Item item;
-    private Video video;
+    private DownloadAsset.Course.Item.Slides slides;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +63,7 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_slide_viewer, container, false);
     }
 
@@ -77,30 +71,26 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        course = Course.get(courseId);
-        section = Section.get(sectionId);
-        item = Item.get(itemId);
-        video = Video.getForContentId(item.contentId);
+        Item item = Item.get(itemId);
+        Video video = Video.getForContentId(item.contentId);
+        slides = new DownloadAsset.Course.Item.Slides(item, video);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fab.hide();
-                textCurrentPage.setVisibility(View.GONE);
-                if (currentPage >= 0) {
-                    pdfView.jumpTo(currentPage);
-                }
+        fab.setOnClickListener(v -> {
+            fab.hide();
+            textCurrentPage.setVisibility(View.GONE);
+            if (currentPage >= 0) {
+                pdfView.jumpTo(currentPage);
             }
         });
 
-        if (downloadManager.downloadExists(item.id, DownloadUtil.VideoAssetType.SLIDES)) {
+        if (downloadManager.downloadExists(slides)) {
             initSlidesViewer();
         } else {
             DownloadSlidesDialog dialog = DownloadSlidesDialog.getInstance();
             dialog.setListener(new DownloadSlidesDialog.DownloadSlidesDialogListener() {
                 @Override
                 public void onDialogPositiveClick() {
-                    downloadManager.startItemAssetDownload(item.id, DownloadUtil.VideoAssetType.SLIDES);
+                    downloadManager.startAssetDownload(slides);
                     progressDialog = ProgressDialog.getInstance();
                     progressDialog.show(getFragmentManager(), ProgressDialog.TAG);
                 }
@@ -115,14 +105,14 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     }
 
     private void initSlidesViewer() {
-        if (downloadManager != null && downloadManager.downloadExists(item.id, DownloadUtil.VideoAssetType.SLIDES)) {
-            File file = downloadManager.getDownloadFile(item.id, DownloadUtil.VideoAssetType.SLIDES);
+        if (downloadManager != null && downloadManager.downloadExists(slides)) {
+            File file = downloadManager.getDownloadFile(slides);
             pdfView.fromFile(file)
-                    .enableAnnotationRendering(true)
-                    .onLoad(this)
-                    .onPageChange(this)
-                    .scrollHandle(new DefaultScrollHandle(getActivity()))
-                    .load();
+                .enableAnnotationRendering(true)
+                .onLoad(this)
+                .onPageChange(this)
+                .scrollHandle(new DefaultScrollHandle(getActivity()))
+                .load();
         }
     }
 
@@ -183,7 +173,7 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadCompletedEvent(DownloadCompletedEvent event) {
-        if (event.url.equals(video.slidesUrl)) {
+        if (event.url.equals(slides.getUrl())) {
             if (progressDialog != null && progressDialog.getDialog().isShowing()) {
                 progressDialog.getDialog().cancel();
             }

@@ -1,6 +1,6 @@
 package de.xikolo.controllers.helper;
 
-import android.support.v4.app.DialogFragment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
 import de.xikolo.controllers.dialogs.MobileDownloadDialog;
@@ -10,10 +10,11 @@ import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
+import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
+import de.xikolo.models.Video;
 import de.xikolo.storages.ApplicationPreferences;
-import de.xikolo.utils.DownloadUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
 
@@ -36,34 +37,28 @@ public class SectionDownloadHelper {
 
     public void initSectionDownloads(final Course course, final Section section) {
         ModuleDownloadDialog listDialog = ModuleDownloadDialog.getInstance(section.title);
-        listDialog.setModuleDownloadDialogListener(new ModuleDownloadDialog.ModuleDownloadDialogListener() {
-            @Override
-            public void onDialogPositiveClick(DialogFragment dialog, boolean hdVideo, boolean sdVideo, boolean slides) {
-                SectionDownloadHelper.this.hdVideo = hdVideo;
-                SectionDownloadHelper.this.sdVideo = sdVideo;
-                SectionDownloadHelper.this.slides = slides;
+        listDialog.setModuleDownloadDialogListener((dialog, hdVideo, sdVideo, slides) -> {
+            SectionDownloadHelper.this.hdVideo = hdVideo;
+            SectionDownloadHelper.this.sdVideo = sdVideo;
+            SectionDownloadHelper.this.slides = slides;
 
-                final ApplicationPreferences appPreferences = new ApplicationPreferences();
+            final ApplicationPreferences appPreferences = new ApplicationPreferences();
 
-                if (hdVideo || sdVideo || slides) {
-                    if (NetworkUtil.isOnline()) {
-                        if (NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_MOBILE &&
-                                appPreferences.isDownloadNetworkLimitedOnMobile()) {
-                            MobileDownloadDialog permissionDialog = MobileDownloadDialog.getInstance();
-                            permissionDialog.setMobileDownloadDialogListener(new MobileDownloadDialog.MobileDownloadDialogListener() {
-                                @Override
-                                public void onDialogPositiveClick(DialogFragment dialog) {
-                                    appPreferences.setDownloadNetworkLimitedOnMobile(false);
-                                    startSectionDownloads(course, section);
-                                }
-                            });
-                            permissionDialog.show(activity.getSupportFragmentManager(), MobileDownloadDialog.TAG);
-                        } else {
+            if (hdVideo || sdVideo || slides) {
+                if (NetworkUtil.isOnline()) {
+                    if (NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_MOBILE &&
+                            appPreferences.isDownloadNetworkLimitedOnMobile()) {
+                        MobileDownloadDialog permissionDialog = MobileDownloadDialog.getInstance();
+                        permissionDialog.setMobileDownloadDialogListener(dialog1 -> {
+                            appPreferences.setDownloadNetworkLimitedOnMobile(false);
                             startSectionDownloads(course, section);
-                        }
+                        });
+                        permissionDialog.show(activity.getSupportFragmentManager(), MobileDownloadDialog.TAG);
                     } else {
-                        NetworkUtil.showNoConnectionToast();
+                        startSectionDownloads(course, section);
                     }
+                } else {
+                    NetworkUtil.showNoConnectionToast();
                 }
             }
         });
@@ -83,32 +78,32 @@ public class SectionDownloadHelper {
             public void onSuccess() {
                 dialog.dismissAllowingStateLoss();
                 for (Item item : section.getAccessibleItems()) {
-                    if (Item.TYPE_VIDEO.equals(item.contentType)) {
+                    if (item.contentType.equals(Item.TYPE_VIDEO)) {
                         if (sdVideo) {
-                            startDownload(item.id, DownloadUtil.VideoAssetType.VIDEO_SD);
+                            startDownload(new DownloadAsset.Course.Item.VideoSD(item, Video.getForContentId(item.contentId)));
                         }
                         if (hdVideo) {
-                            startDownload(item.id, DownloadUtil.VideoAssetType.VIDEO_HD);
+                            startDownload(new DownloadAsset.Course.Item.VideoHD(item, Video.getForContentId(item.contentId)));
                         }
                         if (slides) {
-                            startDownload(item.id, DownloadUtil.VideoAssetType.SLIDES);
+                            startDownload(new DownloadAsset.Course.Item.Slides(item, Video.getForContentId(item.contentId)));
                         }
                     }
                 }
             }
 
             @Override
-            public void onError(ErrorCode code) {
+            public void onError(@NonNull ErrorCode code) {
                 dialog.dismiss();
             }
         });
 
     }
 
-    private void startDownload(String itemId, DownloadUtil.VideoAssetType type) {
-        if (!downloadManager.downloadExists(itemId, type)
-                && !downloadManager.downloadRunning(itemId, type)) {
-            downloadManager.startItemAssetDownload(itemId, type);
+    private void startDownload(DownloadAsset.Course.Item item) {
+        if (!downloadManager.downloadExists(item)
+            && !downloadManager.downloadRunning(item)) {
+            downloadManager.startAssetDownload(item);
         }
     }
 

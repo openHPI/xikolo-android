@@ -37,7 +37,7 @@ public class SlideViewerActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(tag) == null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            Fragment fragment = SlideViewerFragmentAutoBundle.builder(courseId, sectionId, itemId).build();
+            Fragment fragment = SlideViewerFragmentAutoBundle.builder(itemId).build();
             transaction.replace(R.id.content, fragment, tag);
             transaction.commit();
         }
