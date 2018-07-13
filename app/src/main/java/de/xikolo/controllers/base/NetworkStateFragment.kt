@@ -23,17 +23,22 @@ abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), Loading
 
     private var loadingStateHelper: LoadingStateHelper? = null
 
-    protected val viewModel: T by lazy {
-        ViewModelProviders.of(this, getViewModelFactory()).get(viewModel.javaClass)
-    }
+    protected lateinit var viewModel: T
 
-    private fun getViewModelFactory(): ViewModelProvider.NewInstanceFactory {
-        return object : ViewModelProvider.NewInstanceFactory() {
+    private fun initViewModel() {
+        val vm = createViewModel()
+        val factory = object : ViewModelProvider.NewInstanceFactory() {
             override fun <S : ViewModel?> create(modelClass: Class<S>): S {
                 @Suppress("unchecked_cast")
-                return createViewModel() as S
+                return vm as S
             }
         }
+        viewModel = ViewModelProviders.of(this, factory).get(vm.javaClass)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initViewModel()
     }
 
     abstract fun createViewModel(): T

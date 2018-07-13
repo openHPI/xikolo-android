@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.view.View
 import com.yatatsu.autobundle.AutoBundleField
+import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.lifecycle.DocumentsViewModel
 import de.xikolo.utils.ToastUtil
@@ -17,9 +18,7 @@ class DocumentsFragment : NetworkStateFragment<DocumentsViewModel>() {
         return DocumentsViewModel(courseId)
     }
 
-    override fun getLayoutResource(): Int {
-        return 0
-    }
+    override fun getLayoutResource(): Int = R.layout.content_richtext
 
     override fun setTitle(title: CharSequence?) {
     }
