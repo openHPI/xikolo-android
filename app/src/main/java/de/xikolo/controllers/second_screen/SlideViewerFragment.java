@@ -32,9 +32,9 @@ import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.SecondScreenManager;
+import de.xikolo.models.AssetDownload;
 import de.xikolo.models.Item;
 import de.xikolo.models.Video;
-import de.xikolo.utils.DownloadUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteListener, OnPageChangeListener {
@@ -53,7 +53,7 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
 
     @AutoBundleField(required = false) int currentPage = -1;
 
-    private DownloadUtil.AssetDownload.Course.Item.Slides slides;
+    private AssetDownload.Course.Item.Slides slides;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
 
         Item item = Item.get(itemId);
         Video video = Video.getForContentId(item.contentId);
-        slides = new DownloadUtil.AssetDownload.Course.Item.Slides(item, video);
+        slides = new AssetDownload.Course.Item.Slides(item, video);
 
         fab.setOnClickListener(v -> {
             fab.hide();

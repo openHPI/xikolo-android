@@ -20,14 +20,23 @@ import de.xikolo.events.DownloadCompletedEvent
 import de.xikolo.events.DownloadDeletedEvent
 import de.xikolo.events.DownloadStartedEvent
 import de.xikolo.managers.DownloadManager
+import de.xikolo.models.AssetDownload
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.*
+import de.xikolo.utils.FileProviderUtil
+import de.xikolo.utils.FileUtil
+import de.xikolo.utils.NetworkUtil
+import de.xikolo.utils.ToastUtil
 import de.xikolo.views.IconButton
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class DownloadViewController(private val activity: FragmentActivity, private val download: DownloadUtil.AssetDownload) {
+class DownloadViewController(private val activity: FragmentActivity, private val download: AssetDownload) {
+
+    companion object {
+        val TAG: String = DownloadViewController::class.java.simpleName
+        private const val MILLISECONDS = 250
+    }
 
     private val downloadManager: DownloadManager = DownloadManager(activity)
 
@@ -81,8 +90,7 @@ class DownloadViewController(private val activity: FragmentActivity, private val
         progressBarDownload = layout.findViewById(R.id.progressDownload)
         buttonDownloadCancel = layout.findViewById(R.id.buttonDownloadCancel)
         buttonDownloadCancel.setOnClickListener { _ ->
-            downloadManager.cancelItemAssetDownload(download)
-
+            downloadManager.cancelAssetDownload(download)
             showStartState()
         }
 
@@ -108,26 +116,26 @@ class DownloadViewController(private val activity: FragmentActivity, private val
             }
         }
 
-        if (download is DownloadUtil.AssetDownload.Course.Item) {
+        if (download is AssetDownload.Course.Item) {
             url = download.url
             size = download.size
             when (download) {
-                is DownloadUtil.AssetDownload.Course.Item.Slides -> {
+                is AssetDownload.Course.Item.Slides -> {
                     textFileName.text = App.getInstance().getText(R.string.slides_as_pdf)
                     buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf))
                     openFileAsPdf()
                 }
-                is DownloadUtil.AssetDownload.Course.Item.Transcript -> {
+                is AssetDownload.Course.Item.Transcript -> {
                     textFileName.text = App.getInstance().getText(R.string.transcript_as_pdf)
                     buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf))
                     openFileAsPdf()
                 }
-                is DownloadUtil.AssetDownload.Course.Item.VideoHD -> {
+                is AssetDownload.Course.Item.VideoHD -> {
                     textFileName.text = App.getInstance().getText(R.string.video_hd_as_mp4)
                     buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video))
                     buttonOpenDownload.visibility = View.GONE
                 }
-                is DownloadUtil.AssetDownload.Course.Item.VideoSD -> {
+                is AssetDownload.Course.Item.VideoSD -> {
                     textFileName.text = App.getInstance().getText(R.string.video_sd_as_mp4)
                     buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video))
                     buttonOpenDownload.visibility = View.GONE
@@ -179,7 +187,7 @@ class DownloadViewController(private val activity: FragmentActivity, private val
     }
 
     private fun deleteFile() {
-        if (downloadManager.deleteItemAssetDownload(download)) {
+        if (downloadManager.deleteAssetDownload(download)) {
             showStartState()
         }
     }
@@ -284,11 +292,6 @@ class DownloadViewController(private val activity: FragmentActivity, private val
                 ToastUtil.show(R.string.toast_no_pdf_viewer_found)
             }
         }
-    }
-
-    companion object {
-        val TAG = DownloadViewController::class.java.simpleName
-        private const val MILLISECONDS = 250
     }
 
 }

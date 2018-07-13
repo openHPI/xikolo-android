@@ -7,6 +7,7 @@ import de.xikolo.App
 import de.xikolo.config.FeatureToggle
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.managers.UserManager
+import de.xikolo.models.AssetDownload
 import de.xikolo.storages.UserStorage
 
 object LanalyticsUtil {
@@ -132,13 +133,13 @@ object LanalyticsUtil {
     // Download Events
 
     @JvmStatic
-    fun trackDownloadedFile(item: DownloadUtil.AssetDownload.Course.Item) {
+    fun trackDownloadedFile(item: AssetDownload.Course.Item) {
         val verb: String = when (item) {
-            is DownloadUtil.AssetDownload.Course.Item.VideoHD       -> "DOWNLOADED_HD_VIDEO"
-            is DownloadUtil.AssetDownload.Course.Item.VideoSD       -> "DOWNLOADED_SD_VIDEO"
-            is DownloadUtil.AssetDownload.Course.Item.Slides        -> "DOWNLOADED_SLIDES"
-            is DownloadUtil.AssetDownload.Course.Item.Transcript    -> "DOWNLOADED_TRANSCRIPT"
-            is DownloadUtil.AssetDownload.Course.Item.Audio         -> "DOWNLOADED_AUDIO"
+            is AssetDownload.Course.Item.VideoHD       -> "DOWNLOADED_HD_VIDEO"
+            is AssetDownload.Course.Item.VideoSD       -> "DOWNLOADED_SD_VIDEO"
+            is AssetDownload.Course.Item.Slides        -> "DOWNLOADED_SLIDES"
+            is AssetDownload.Course.Item.Transcript    -> "DOWNLOADED_TRANSCRIPT"
+            is AssetDownload.Course.Item.Audio         -> "DOWNLOADED_AUDIO"
         }
 
         createEventBuilder()
