@@ -3,8 +3,8 @@ package de.xikolo.models
 import de.xikolo.utils.FileUtil
 import java.io.File
 
-// the file path should identify a download uniquely, thus this AssetDownload object can be used as an identifier for downloads
-sealed class AssetDownload(val url: String?, open val fileName: String) {
+// the file path should identify a download uniquely, thus this DownloadAsset object can be used as an identifier for downloads
+sealed class DownloadAsset(val url: String?, open val fileName: String) {
 
     // must not end with separator
     protected open val fileFolder: String = FileUtil.createPublicAppFolderPath()
@@ -15,7 +15,7 @@ sealed class AssetDownload(val url: String?, open val fileName: String) {
     val filePath: String
         get() = fileFolder + File.separator + fileName
 
-    sealed class Course(url: String?, override val fileName: String, val course: de.xikolo.models.Course) : AssetDownload(url, fileName) {
+    sealed class Course(url: String?, override val fileName: String, val course: de.xikolo.models.Course) : DownloadAsset(url, fileName) {
 
         override val fileFolder = super.fileFolder + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
 

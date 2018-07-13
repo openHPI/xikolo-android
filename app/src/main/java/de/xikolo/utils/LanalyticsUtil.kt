@@ -7,7 +7,7 @@ import de.xikolo.App
 import de.xikolo.config.FeatureToggle
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.managers.UserManager
-import de.xikolo.models.AssetDownload
+import de.xikolo.models.DownloadAsset
 import de.xikolo.storages.UserStorage
 
 object LanalyticsUtil {
@@ -133,20 +133,20 @@ object LanalyticsUtil {
     // Download Events
 
     @JvmStatic
-    fun trackDownloadedFile(item: AssetDownload.Course.Item) {
-        val verb: String = when (item) {
-            is AssetDownload.Course.Item.VideoHD       -> "DOWNLOADED_HD_VIDEO"
-            is AssetDownload.Course.Item.VideoSD       -> "DOWNLOADED_SD_VIDEO"
-            is AssetDownload.Course.Item.Slides        -> "DOWNLOADED_SLIDES"
-            is AssetDownload.Course.Item.Transcript    -> "DOWNLOADED_TRANSCRIPT"
-            is AssetDownload.Course.Item.Audio         -> "DOWNLOADED_AUDIO"
+    fun trackDownloadedFile(itemDownloadAsset: DownloadAsset.Course.Item) {
+        val verb: String = when (itemDownloadAsset) {
+            is DownloadAsset.Course.Item.VideoHD       -> "DOWNLOADED_HD_VIDEO"
+            is DownloadAsset.Course.Item.VideoSD       -> "DOWNLOADED_SD_VIDEO"
+            is DownloadAsset.Course.Item.Slides        -> "DOWNLOADED_SLIDES"
+            is DownloadAsset.Course.Item.Transcript    -> "DOWNLOADED_TRANSCRIPT"
+            is DownloadAsset.Course.Item.Audio         -> "DOWNLOADED_AUDIO"
         }
 
         createEventBuilder()
-            .setResource(item.video.id, "video")
+            .setResource(itemDownloadAsset.video.id, "video")
             .setVerb(verb)
-            .putContext(CONTEXT_COURSE_ID, item.course.id)
-            .putContext(CONTEXT_SECTION_ID, item.item.section.id)
+            .putContext(CONTEXT_COURSE_ID, itemDownloadAsset.course.id)
+            .putContext(CONTEXT_SECTION_ID, itemDownloadAsset.item.section.id)
             .build()
             .track()
     }

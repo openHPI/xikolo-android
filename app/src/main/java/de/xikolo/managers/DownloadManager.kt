@@ -12,8 +12,8 @@ import de.xikolo.events.DownloadDeletedEvent
 import de.xikolo.events.DownloadStartedEvent
 import de.xikolo.events.PermissionDeniedEvent
 import de.xikolo.events.PermissionGrantedEvent
-import de.xikolo.models.AssetDownload
 import de.xikolo.models.Download
+import de.xikolo.models.DownloadAsset
 import de.xikolo.services.DownloadService
 import de.xikolo.utils.ExternalStorageUtil
 import de.xikolo.utils.FileUtil
@@ -38,7 +38,7 @@ class DownloadManager(activity: FragmentActivity) {
         EventBus.getDefault().register(this)
     }
 
-    data class PendingAction(val type: ActionType, val download: AssetDownload)
+    data class PendingAction(val type: ActionType, val downloadAsset: DownloadAsset)
 
     enum class ActionType {
         START, DELETE, CANCEL
@@ -66,35 +66,35 @@ class DownloadManager(activity: FragmentActivity) {
             return folders
         }
 
-    fun startAssetDownload(download: AssetDownload): Boolean {
+    fun startAssetDownload(downloadAsset: DownloadAsset): Boolean {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 val context = App.getInstance()
                 val intent = Intent(context, DownloadService::class.java)
 
                 when {
-                    downloadExists(download) -> {
+                    downloadExists(downloadAsset) -> {
                         ToastUtil.show(R.string.toast_file_already_downloaded)
                         return false
                     }
-                    download.url != null -> {
+                    downloadAsset.url != null -> {
                         FileUtil.createFolderIfNotExists(
-                            File(download.filePath.substring(0, download.filePath.lastIndexOf(File.separator)))
+                            File(downloadAsset.filePath.substring(0, downloadAsset.filePath.lastIndexOf(File.separator)))
                         )
 
                         val bundle = Bundle()
-                        bundle.putString(DownloadService.ARG_TITLE, download.title)
-                        bundle.putString(DownloadService.ARG_URL, download.url)
-                        bundle.putString(DownloadService.ARG_FILE_PATH, download.filePath)
+                        bundle.putString(DownloadService.ARG_TITLE, downloadAsset.title)
+                        bundle.putString(DownloadService.ARG_URL, downloadAsset.url)
+                        bundle.putString(DownloadService.ARG_FILE_PATH, downloadAsset.filePath)
 
                         intent.putExtras(bundle)
                         context.startService(intent)
 
-                        if (download is AssetDownload.Course.Item) {
-                            LanalyticsUtil.trackDownloadedFile(download)
+                        if (downloadAsset is DownloadAsset.Course.Item) {
+                            LanalyticsUtil.trackDownloadedFile(downloadAsset)
                         }
 
-                        EventBus.getDefault().post(DownloadStartedEvent(download))
+                        EventBus.getDefault().post(DownloadStartedEvent(downloadAsset))
 
                         return true
                     }
@@ -104,7 +104,7 @@ class DownloadManager(activity: FragmentActivity) {
                     }
                 }
             } else {
-                pendingAction = PendingAction(ActionType.START, download)
+                pendingAction = PendingAction(ActionType.START, downloadAsset)
                 return false
             }
         } else {
@@ -114,20 +114,20 @@ class DownloadManager(activity: FragmentActivity) {
         }
     }
 
-    fun deleteAssetDownload(download: AssetDownload): Boolean {
+    fun deleteAssetDownload(downloadAsset: DownloadAsset): Boolean {
         return if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-                if (Config.DEBUG) Log.d(TAG, "Delete download " + download.filePath)
+                if (Config.DEBUG) Log.d(TAG, "Delete download " + downloadAsset.filePath)
 
-                if (!downloadExists(download)) {
+                if (!downloadExists(downloadAsset)) {
                     false
                 } else {
-                    EventBus.getDefault().post(DownloadDeletedEvent(download))
-                    val dlFile = File(download.filePath)
+                    EventBus.getDefault().post(DownloadDeletedEvent(downloadAsset))
+                    val dlFile = File(downloadAsset.filePath)
                     dlFile.delete()
                 }
             } else {
-                pendingAction = PendingAction(ActionType.DELETE, download)
+                pendingAction = PendingAction(ActionType.DELETE, downloadAsset)
                 false
             }
         } else {
@@ -137,17 +137,17 @@ class DownloadManager(activity: FragmentActivity) {
         }
     }
 
-    fun cancelAssetDownload(download: AssetDownload) {
+    fun cancelAssetDownload(downloadAsset: DownloadAsset) {
         if (ExternalStorageUtil.isExternalStorageWritable()) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-                if (Config.DEBUG) Log.d(TAG, "Cancel download " + download.url!!)
+                if (Config.DEBUG) Log.d(TAG, "Cancel download " + downloadAsset.url!!)
 
                 val downloadService = DownloadService.getInstance()
-                downloadService?.cancelDownload(download.url)
+                downloadService?.cancelDownload(downloadAsset.url)
 
-                deleteAssetDownload(download)
+                deleteAssetDownload(downloadAsset)
             } else {
-                pendingAction = PendingAction(ActionType.CANCEL, download)
+                pendingAction = PendingAction(ActionType.CANCEL, downloadAsset)
             }
         } else {
             Log.w(TAG, "No write access for external storage")
@@ -160,9 +160,9 @@ class DownloadManager(activity: FragmentActivity) {
         if (permissionGrantedEvent.requestCode == PermissionManager.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
             pendingAction?.let {
                 when (it.type) {
-                    ActionType.START -> startAssetDownload(it.download)
-                    ActionType.DELETE -> deleteAssetDownload(it.download)
-                    ActionType.CANCEL -> cancelAssetDownload(it.download)
+                    ActionType.START    -> startAssetDownload(it.downloadAsset)
+                    ActionType.DELETE   -> deleteAssetDownload(it.downloadAsset)
+                    ActionType.CANCEL   -> cancelAssetDownload(it.downloadAsset)
                 }
             }
             pendingAction = null
@@ -176,22 +176,22 @@ class DownloadManager(activity: FragmentActivity) {
         }
     }
 
-    fun getDownload(download: AssetDownload): Download? =
-        DownloadService.getInstance()?.getDownload(download.url)
+    fun getDownload(downloadAsset: DownloadAsset): Download? =
+        DownloadService.getInstance()?.getDownload(downloadAsset.url)
 
-    fun downloadRunning(download: AssetDownload): Boolean =
-        downloadRunning(download.url)
+    fun downloadRunning(downloadAsset: DownloadAsset): Boolean =
+        downloadRunning(downloadAsset.url)
 
     fun downloadRunning(url: String?): Boolean =
         DownloadService.getInstance()?.isDownloading(url) == true
 
-    fun downloadExists(download: AssetDownload): Boolean {
-        val file = File(download.filePath)
+    fun downloadExists(downloadAsset: DownloadAsset): Boolean {
+        val file = File(downloadAsset.filePath)
         return file.isFile && file.exists()
     }
 
-    fun getDownloadFile(download: AssetDownload): File? {
-        val file = File(download.filePath)
+    fun getDownloadFile(downloadAsset: DownloadAsset): File? {
+        val file = File(downloadAsset.filePath)
 
         return if (file.isFile && file.exists()) {
             file

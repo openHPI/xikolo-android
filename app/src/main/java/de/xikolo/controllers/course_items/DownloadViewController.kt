@@ -20,7 +20,7 @@ import de.xikolo.events.DownloadCompletedEvent
 import de.xikolo.events.DownloadDeletedEvent
 import de.xikolo.events.DownloadStartedEvent
 import de.xikolo.managers.DownloadManager
-import de.xikolo.models.AssetDownload
+import de.xikolo.models.DownloadAsset
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.FileProviderUtil
 import de.xikolo.utils.FileUtil
@@ -31,7 +31,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class DownloadViewController(private val activity: FragmentActivity, private val download: AssetDownload) {
+class DownloadViewController(private val activity: FragmentActivity, private val downloadAsset: DownloadAsset) {
 
     companion object {
         val TAG: String = DownloadViewController::class.java.simpleName
@@ -90,7 +90,7 @@ class DownloadViewController(private val activity: FragmentActivity, private val
         progressBarDownload = layout.findViewById(R.id.progressDownload)
         buttonDownloadCancel = layout.findViewById(R.id.buttonDownloadCancel)
         buttonDownloadCancel.setOnClickListener { _ ->
-            downloadManager.cancelAssetDownload(download)
+            downloadManager.cancelAssetDownload(downloadAsset)
             showStartState()
         }
 
@@ -116,26 +116,26 @@ class DownloadViewController(private val activity: FragmentActivity, private val
             }
         }
 
-        if (download is AssetDownload.Course.Item) {
-            url = download.url
-            size = download.size
-            when (download) {
-                is AssetDownload.Course.Item.Slides -> {
+        if (downloadAsset is DownloadAsset.Course.Item) {
+            url = downloadAsset.url
+            size = downloadAsset.size
+            when (downloadAsset) {
+                is DownloadAsset.Course.Item.Slides -> {
                     textFileName.text = App.getInstance().getText(R.string.slides_as_pdf)
                     buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf))
                     openFileAsPdf()
                 }
-                is AssetDownload.Course.Item.Transcript -> {
+                is DownloadAsset.Course.Item.Transcript -> {
                     textFileName.text = App.getInstance().getText(R.string.transcript_as_pdf)
                     buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf))
                     openFileAsPdf()
                 }
-                is AssetDownload.Course.Item.VideoHD -> {
+                is DownloadAsset.Course.Item.VideoHD -> {
                     textFileName.text = App.getInstance().getText(R.string.video_hd_as_mp4)
                     buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video))
                     buttonOpenDownload.visibility = View.GONE
                 }
-                is AssetDownload.Course.Item.VideoSD -> {
+                is DownloadAsset.Course.Item.VideoSD -> {
                     textFileName.text = App.getInstance().getText(R.string.video_sd_as_mp4)
                     buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video))
                     buttonOpenDownload.visibility = View.GONE
@@ -151,7 +151,7 @@ class DownloadViewController(private val activity: FragmentActivity, private val
 
         progressBarUpdater = object : Runnable {
             override fun run() {
-                val dl = downloadManager.getDownload(download)
+                val dl = downloadManager.getDownload(downloadAsset)
 
                 if (dl != null) {
                     Handler(Looper.getMainLooper()).post {
@@ -175,9 +175,9 @@ class DownloadViewController(private val activity: FragmentActivity, private val
         }
 
         when {
-            downloadManager.downloadRunning(download)   -> showRunningState()
-            downloadManager.downloadExists(download)    -> showEndState()
-            else                                        -> showStartState()
+            downloadManager.downloadRunning(downloadAsset)   -> showRunningState()
+            downloadManager.downloadExists(downloadAsset)    -> showEndState()
+            else                                             -> showStartState()
         }
 
     }
@@ -187,13 +187,13 @@ class DownloadViewController(private val activity: FragmentActivity, private val
     }
 
     private fun deleteFile() {
-        if (downloadManager.deleteAssetDownload(download)) {
+        if (downloadManager.deleteAssetDownload(downloadAsset)) {
             showStartState()
         }
     }
 
     private fun startDownload() {
-        if (downloadManager.startAssetDownload(download)) {
+        if (downloadManager.startAssetDownload(downloadAsset)) {
             showRunningState()
         }
     }
@@ -256,14 +256,14 @@ class DownloadViewController(private val activity: FragmentActivity, private val
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDownloadStartedEvent(event: DownloadStartedEvent) {
-        if (event.download == download && !progressBarUpdaterRunning) {
+        if (event.downloadAsset == downloadAsset && !progressBarUpdaterRunning) {
             showRunningState()
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDownloadDeletedEvent(event: DownloadDeletedEvent) {
-        if (event.download == download && progressBarUpdaterRunning) {
+        if (event.downloadAsset == downloadAsset && progressBarUpdaterRunning) {
             showStartState()
         }
     }
@@ -278,7 +278,7 @@ class DownloadViewController(private val activity: FragmentActivity, private val
     private fun openFileAsPdf() {
         buttonOpenDownload.text = App.getInstance().resources.getText(R.string.open)
         buttonOpenDownload.setOnClickListener { _ ->
-            val pdf = downloadManager.getDownloadFile(download)
+            val pdf = downloadManager.getDownloadFile(downloadAsset)
             val target = Intent(Intent.ACTION_VIEW)
             target.setDataAndType(FileProviderUtil.getUriForFile(pdf), "application/pdf")
             target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)

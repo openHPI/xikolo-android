@@ -24,7 +24,7 @@ import de.xikolo.R;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.video.VideoActivityAutoBundle;
-import de.xikolo.models.AssetDownload;
+import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -104,11 +104,11 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
 
         linearLayoutDownloads.removeAllViews();
 
-        hdVideo = new DownloadViewController(getActivity(), new AssetDownload.Course.Item.VideoHD(item, video));
+        hdVideo = new DownloadViewController(getActivity(), new DownloadAsset.Course.Item.VideoHD(item, video));
         linearLayoutDownloads.addView(hdVideo.getLayout());
-        sdVideo = new DownloadViewController(getActivity(), new AssetDownload.Course.Item.VideoSD(item, video));
+        sdVideo = new DownloadViewController(getActivity(), new DownloadAsset.Course.Item.VideoSD(item, video));
         linearLayoutDownloads.addView(sdVideo.getLayout());
-        slides = new DownloadViewController(getActivity(), new AssetDownload.Course.Item.Slides(item, video));
+        slides = new DownloadViewController(getActivity(), new DownloadAsset.Course.Item.Slides(item, video));
         linearLayoutDownloads.addView(slides.getLayout());
 
         long minutes = TimeUnit.SECONDS.toMinutes(video.duration);

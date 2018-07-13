@@ -9,8 +9,8 @@ import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.ItemManager;
-import de.xikolo.models.AssetDownload;
 import de.xikolo.models.Course;
+import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
@@ -80,13 +80,13 @@ public class SectionDownloadHelper {
                 for (Item item : section.getAccessibleItems()) {
                     if (item.contentType.equals(Item.TYPE_VIDEO)) {
                         if (sdVideo) {
-                            startDownload(new AssetDownload.Course.Item.VideoSD(item, Video.getForContentId(item.contentId)));
+                            startDownload(new DownloadAsset.Course.Item.VideoSD(item, Video.getForContentId(item.contentId)));
                         }
                         if (hdVideo) {
-                            startDownload(new AssetDownload.Course.Item.VideoHD(item, Video.getForContentId(item.contentId)));
+                            startDownload(new DownloadAsset.Course.Item.VideoHD(item, Video.getForContentId(item.contentId)));
                         }
                         if (slides) {
-                            startDownload(new AssetDownload.Course.Item.Slides(item, Video.getForContentId(item.contentId)));
+                            startDownload(new DownloadAsset.Course.Item.Slides(item, Video.getForContentId(item.contentId)));
                         }
                     }
                 }
@@ -100,7 +100,7 @@ public class SectionDownloadHelper {
 
     }
 
-    private void startDownload(AssetDownload.Course.Item item) {
+    private void startDownload(DownloadAsset.Course.Item item) {
         if (!downloadManager.downloadExists(item)
             && !downloadManager.downloadRunning(item)) {
             downloadManager.startAssetDownload(item);

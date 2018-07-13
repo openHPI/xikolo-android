@@ -28,8 +28,8 @@ import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.managers.DownloadManager;
-import de.xikolo.models.AssetDownload;
 import de.xikolo.models.Course;
+import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
@@ -422,9 +422,9 @@ public class VideoHelper {
         int connectivityStatus = NetworkUtil.getConnectivityStatus();
         ApplicationPreferences appPreferences = new ApplicationPreferences();
 
-        if (videoDownloadPresent(new AssetDownload.Course.Item.VideoHD(item, video))) { // hd video download available
+        if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video))) { // hd video download available
             videoMode = VideoMode.HD;
-        } else if (videoDownloadPresent(new AssetDownload.Course.Item.VideoSD(item, video))) { // sd video download available
+        } else if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video))) { // sd video download available
             videoMode = VideoMode.SD;
         } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !appPreferences.isVideoQualityLimitedOnMobile()) {
             videoMode = VideoMode.HD;
@@ -441,16 +441,16 @@ public class VideoHelper {
 
     private void updateVideo(Item item, Video video) {
         String stream;
-        AssetDownload.Course.Item videoAssetDownload;
+        DownloadAsset.Course.Item videoAssetDownload;
 
         viewVideoWarning.setVisibility(View.GONE);
 
         if (videoMode == VideoMode.HD) {
             stream = video.singleStream.hdUrl;
-            videoAssetDownload = new AssetDownload.Course.Item.VideoHD(item, video);
+            videoAssetDownload = new DownloadAsset.Course.Item.VideoHD(item, video);
         } else {
             stream = video.singleStream.sdUrl;
-            videoAssetDownload = new AssetDownload.Course.Item.VideoSD(item, video);
+            videoAssetDownload = new DownloadAsset.Course.Item.VideoSD(item, video);
         }
 
         viewOfflineHint.setVisibility(View.GONE);
@@ -470,12 +470,12 @@ public class VideoHelper {
         updateHdSwitchColor();
     }
 
-    private boolean videoDownloadPresent(AssetDownload.Course.Item item) {
+    private boolean videoDownloadPresent(DownloadAsset.Course.Item item) {
         return !downloadManager.downloadRunning(item)
             && downloadManager.downloadExists(item);
     }
 
-    private void setLocalVideoUri(AssetDownload.Course.Item item) {
+    private void setLocalVideoUri(DownloadAsset.Course.Item item) {
         setVideoUri("file://" + downloadManager.getDownloadFile(item));
         viewOfflineHint.setVisibility(View.VISIBLE);
     }
