@@ -85,9 +85,7 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
+    protected void onPresenterCreatedOrRestored(@NonNull LoginPresenter presenter) {
         if (token != null) {
             presenter.externalLoginCallback(token);
         }

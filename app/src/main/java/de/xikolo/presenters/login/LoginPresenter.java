@@ -43,7 +43,9 @@ public class LoginPresenter extends Presenter<LoginView> {
     }
 
     public void externalLoginCallback(String token) {
-        getViewOrThrow().showProgressDialog();
+        if (getView() != null) {
+            getView().showProgressDialog();
+        }
 
         UserStorage userStorage = new UserStorage();
         userStorage.setAccessToken(token);
