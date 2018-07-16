@@ -10,7 +10,7 @@ import de.xikolo.models.base.Sync
 import de.xikolo.network.ApiService
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class ListDocumentsWithLocalizationsForCourseJob(private val courseId: String, networkState: NetworkStateLiveData) : NetworkJob(networkState, Precondition.AUTH) {
+class ListDocumentsWithLocalizationsForCourseJob(private val courseId: String, userRequest: Boolean, networkState: NetworkStateLiveData) : NetworkJob(networkState, userRequest, Precondition.AUTH) {
 
     companion object {
         val TAG: String = ListDocumentsWithLocalizationsForCourseJob::class.java.simpleName
@@ -29,10 +29,10 @@ class ListDocumentsWithLocalizationsForCourseJob(private val courseId: String, n
                 .saveOnly()
                 .run()
 
-            networkState.success()
+            success()
         } else {
             if (Config.DEBUG) Log.e(TAG, "Error while fetching documents list")
-            networkState.error()
+            error()
         }
     }
 

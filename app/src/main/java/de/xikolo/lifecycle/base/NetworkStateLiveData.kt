@@ -8,15 +8,15 @@ import org.greenrobot.eventbus.EventBus
 
 class NetworkStateLiveData : LiveData<NetworkState>() {
 
-    fun success() {
-        error(NetworkCode.SUCCESS)
+    fun success(userRequest: Boolean) {
+        state(NetworkCode.SUCCESS, userRequest)
     }
 
-    fun error() {
-        error(NetworkCode.ERROR)
+    fun error(userRequest: Boolean) {
+        state(NetworkCode.ERROR, userRequest)
     }
 
-    fun state(code: NetworkCode, userRequest: Boolean = false) {
+    fun state(code: NetworkCode, userRequest: Boolean) {
         when (code) {
             NetworkCode.SUCCESS    -> EventBus.getDefault().postSticky(NetworkStateEvent(true))
             NetworkCode.NO_NETWORK -> EventBus.getDefault().postSticky(NetworkStateEvent(false))

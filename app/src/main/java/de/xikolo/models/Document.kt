@@ -1,7 +1,6 @@
 package de.xikolo.models
 
 import com.squareup.moshi.Json
-
 import de.xikolo.models.base.RealmAdapter
 import io.realm.RealmList
 import io.realm.RealmObject

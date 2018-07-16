@@ -6,16 +6,16 @@ import de.xikolo.managers.UserManager
 import de.xikolo.utils.NetworkUtil
 import kotlinx.coroutines.experimental.launch
 
-abstract class NetworkJob(protected val networkState: NetworkStateLiveData, private vararg val preconditions: Precondition) {
+abstract class NetworkJob(private val networkState: NetworkStateLiveData, private val userRequest: Boolean, private vararg val preconditions: Precondition) {
 
     fun run() {
         if (preconditions.contains(Precondition.AUTH) && !UserManager.isAuthorized) {
-            networkState.state(NetworkCode.NO_AUTH)
+            networkState.state(NetworkCode.NO_AUTH, userRequest)
             return
         }
 
         if (!NetworkUtil.isOnline()) {
-            networkState.state(NetworkCode.NO_NETWORK)
+            networkState.state(NetworkCode.NO_NETWORK, userRequest)
             return
         }
 
@@ -23,10 +23,14 @@ abstract class NetworkJob(protected val networkState: NetworkStateLiveData, priv
             try {
                 onRun()
             } catch (e: Throwable) {
-                networkState.state(NetworkCode.ERROR)
+                networkState.state(NetworkCode.ERROR, userRequest)
             }
         }
     }
+
+    fun success() = networkState.success(userRequest)
+
+    fun error() = networkState.error(userRequest)
 
     protected abstract suspend fun onRun()
 

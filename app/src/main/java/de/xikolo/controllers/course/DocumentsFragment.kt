@@ -26,7 +26,7 @@ class DocumentsFragment : NetworkStateFragment<DocumentsViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.documents.observe(this, Observer {
+        viewModel.getDocumentsForCourse().observe(this, Observer {
             ToastUtil.show("${it?.size} documents received for course!")
         })
     }

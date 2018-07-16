@@ -43,11 +43,7 @@ abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), Loading
 
     abstract fun createViewModel(): T
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // inflate generic loading state view
         val loadingStateView = inflater.inflate(R.layout.fragment_loading_state, container, false) as ViewGroup
         // inflate content view inside
@@ -66,10 +62,9 @@ abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), Loading
         viewModel.networkState.observe(this, Observer {
             hideProgress()
             when (it?.code) {
-                NetworkCode.SUCCESS                   -> hideProgress()
                 NetworkCode.NO_NETWORK                -> if (it.userRequest || !contentViewVisible) showNetworkRequiredMessage()
                 NetworkCode.ERROR, NetworkCode.CANCEL -> showErrorMessage()
-                else                                  -> {}
+                else                                  -> Unit
             }
         })
 

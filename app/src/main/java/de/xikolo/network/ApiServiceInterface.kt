@@ -94,7 +94,7 @@ interface ApiServiceInterface {
 
     // Documents
 
-    @GET("documents?include=localizations")
+    @GET("documents?include=localizations,courses")
     fun listDocumentsWithLocalizationsForCourse(@Query("filter[course]") courseId: String): Call<Array<Document.JsonModel>>
 
     // Token
