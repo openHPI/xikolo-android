@@ -15,11 +15,10 @@ import de.xikolo.R
 import de.xikolo.controllers.helper.LoadingStateHelper
 import de.xikolo.lifecycle.base.BaseViewModel
 import de.xikolo.lifecycle.base.NetworkCode
-import de.xikolo.presenters.base.LoadingStateView
 import de.xikolo.utils.NetworkUtil
 import de.xikolo.utils.ToastUtil
 
-abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), LoadingStateView, SwipeRefreshLayout.OnRefreshListener {
+abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), LoadingStateInterface, SwipeRefreshLayout.OnRefreshListener {
 
     private var loadingStateHelper: LoadingStateHelper? = null
 
@@ -60,8 +59,9 @@ abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), Loading
         loadingStateHelper = LoadingStateHelper(activity, view, this)
 
         viewModel.networkState.observe(this, Observer {
-            hideProgress()
+            if (it?.code != NetworkCode.STARTED) hideProgress()
             when (it?.code) {
+                NetworkCode.STARTED                   -> showProgress()
                 NetworkCode.NO_NETWORK                -> if (it.userRequest || !contentViewVisible) showNetworkRequiredMessage()
                 NetworkCode.ERROR, NetworkCode.CANCEL -> showErrorMessage()
                 else                                  -> Unit

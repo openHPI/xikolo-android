@@ -20,9 +20,6 @@ class DocumentsFragment : NetworkStateFragment<DocumentsViewModel>() {
 
     override fun getLayoutResource(): Int = R.layout.content_richtext
 
-    override fun setTitle(title: CharSequence?) {
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

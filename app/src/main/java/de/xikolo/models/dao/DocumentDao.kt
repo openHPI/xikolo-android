@@ -7,15 +7,8 @@ import de.xikolo.models.Document
 import de.xikolo.models.DocumentLocalization
 import de.xikolo.models.dao.base.BaseDao
 import io.realm.Realm
-import io.realm.RealmResults
 
 class DocumentDao(realm: Realm) : BaseDao(realm) {
-
-    fun getDocuments(): LiveData<RealmResults<Document>> =
-        realm
-            .where(Document::class.java)
-            .findAllAsync()
-            .asLiveData()
 
     fun getDocumentsForCourse(courseId: String): LiveData<List<Document>> =
         // Workaround since Realm cannot query arrays of primitives yet
@@ -31,7 +24,7 @@ class DocumentDao(realm: Realm) : BaseDao(realm) {
             }
         }
 
-    fun getLocalizationsForDocument(documentId: String): LiveData<RealmResults<DocumentLocalization>> =
+    fun getLocalizationsForDocument(documentId: String): LiveData<List<DocumentLocalization>> =
         realm
             .where(DocumentLocalization::class.java)
             .equalTo("documentId", documentId)

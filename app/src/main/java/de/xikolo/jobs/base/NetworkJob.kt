@@ -21,6 +21,7 @@ abstract class NetworkJob(private val networkState: NetworkStateLiveData, privat
 
         launch {
             try {
+                networkState.state(NetworkCode.STARTED, userRequest)
                 onRun()
             } catch (e: Throwable) {
                 networkState.state(NetworkCode.ERROR, userRequest)

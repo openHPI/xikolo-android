@@ -5,6 +5,8 @@ import io.realm.Realm
 
 abstract class BaseViewModel : ViewModel() {
 
+    private var firstCreate = true
+
     val realm: Realm by lazy {
         Realm.getDefaultInstance()
     }
@@ -13,13 +15,20 @@ abstract class BaseViewModel : ViewModel() {
         NetworkStateLiveData()
     }
 
+    open fun onCreate() {
+        if (firstCreate) {
+            firstCreate = false
+            onFirstCreate()
+        }
+    }
+
+    open fun onFirstCreate() {}
+
+    abstract fun onRefresh()
+
     override fun onCleared() {
         realm.close()
         super.onCleared()
     }
-
-    abstract fun onCreate()
-
-    abstract fun onRefresh()
 
 }

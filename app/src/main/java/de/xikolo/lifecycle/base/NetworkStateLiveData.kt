@@ -20,7 +20,7 @@ class NetworkStateLiveData : LiveData<NetworkState>() {
         when (code) {
             NetworkCode.SUCCESS    -> EventBus.getDefault().postSticky(NetworkStateEvent(true))
             NetworkCode.NO_NETWORK -> EventBus.getDefault().postSticky(NetworkStateEvent(false))
-            else -> {}
+            else -> Unit
         }
 
         launch(UI) {
@@ -33,5 +33,5 @@ class NetworkStateLiveData : LiveData<NetworkState>() {
 data class NetworkState(val code: NetworkCode, val userRequest: Boolean = false)
 
 enum class NetworkCode {
-    SUCCESS, ERROR, CANCEL, NO_NETWORK, NO_AUTH, MAINTENANCE, API_VERSION_EXPIRED
+    STARTED, SUCCESS, ERROR, CANCEL, NO_NETWORK, NO_AUTH, MAINTENANCE, API_VERSION_EXPIRED
 }
