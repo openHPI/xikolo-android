@@ -7,6 +7,7 @@ import de.xikolo.models.Document
 import de.xikolo.models.DocumentLocalization
 import de.xikolo.models.dao.base.BaseDao
 import io.realm.Realm
+import io.realm.kotlin.where
 
 class DocumentDao(realm: Realm) : BaseDao(realm) {
 
@@ -16,7 +17,7 @@ class DocumentDao(realm: Realm) : BaseDao(realm) {
         MediatorLiveData<List<Document>>().also { mediator ->
             mediator.addSource(
                 realm
-                    .where(Document::class.java)
+                    .where<Document>()
                     .findAllAsync()
                     .asLiveData()
             ) { documents ->
@@ -24,10 +25,9 @@ class DocumentDao(realm: Realm) : BaseDao(realm) {
             }
         }
 
-    fun getLocalizationsForDocument(documentId: String): LiveData<List<DocumentLocalization>> =
+    fun getLocalizations(): LiveData<List<DocumentLocalization>> =
         realm
-            .where(DocumentLocalization::class.java)
-            .equalTo("documentId", documentId)
+            .where<DocumentLocalization>()
             .findAllAsync()
             .asLiveData()
 

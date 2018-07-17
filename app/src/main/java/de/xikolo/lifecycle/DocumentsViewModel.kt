@@ -11,11 +11,13 @@ open class DocumentsViewModel(val courseId: String) : BaseViewModel() {
 
     private val documentDao = DocumentDao(realm)
 
-    fun getDocumentsForCourse(): LiveData<List<Document>> =
+    val documentsForCourse: LiveData<List<Document>> by lazy {
         documentDao.getDocumentsForCourse(courseId)
+    }
 
-    fun getLocalizationsForDocument(documentId: String): LiveData<List<DocumentLocalization>> =
-        documentDao.getLocalizationsForDocument(documentId)
+    val localizations: LiveData<List<DocumentLocalization>> by lazy {
+        documentDao.getLocalizations()
+    }
 
     override fun onFirstCreate() {
         requestDocuments(false)

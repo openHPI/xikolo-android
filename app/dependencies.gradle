@@ -5,6 +5,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.24.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.24.0"
     implementation "ru.gildor.coroutines:kotlin-coroutines-retrofit:0.12.0"
+    implementation "com.github.vicpinm:krealmextensions:2.2.0"
 
     // networking
     def okhttpVersion = '3.11.0'

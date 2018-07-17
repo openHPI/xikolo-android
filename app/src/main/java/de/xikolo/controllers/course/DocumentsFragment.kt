@@ -1,13 +1,13 @@
 package de.xikolo.controllers.course
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.view.View
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.lifecycle.DocumentsViewModel
-import de.xikolo.utils.ToastUtil
+import de.xikolo.lifecycle.base.nonNull
+import de.xikolo.lifecycle.base.observe
 
 class DocumentsFragment : NetworkStateFragment<DocumentsViewModel>() {
 
@@ -23,9 +23,19 @@ class DocumentsFragment : NetworkStateFragment<DocumentsViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getDocumentsForCourse().observe(this, Observer {
-            ToastUtil.show("${it?.size} documents received for course!")
-        })
+        viewModel.documentsForCourse
+            .nonNull()
+            .observe(this) { showDocuments() }
+
+        viewModel.localizations
+            .nonNull()
+            .observe(this) { showDocuments() }
+    }
+
+    private fun showDocuments() {
+        viewModel.documentsForCourse.value?.let {documents ->
+            // display list view
+        }
     }
 
 }
