@@ -98,15 +98,11 @@ class DownloadManager(activity: FragmentActivity) {
                 if (Config.DEBUG) Log.d(TAG, "Delete download " + downloadAsset.filePath)
 
                 if (!downloadExists(downloadAsset)) {
-                    File(downloadAsset.filePath + ".tmp").delete() // delete temporary files
-                    deleteEmptyFolderStructure(File(downloadAsset.filePath))
+                    StorageUtil.cleanStorage(File(downloadAsset.filePath))
                     false
                 } else {
                     EventBus.getDefault().post(DownloadDeletedEvent(downloadAsset))
-                    val dlFile = File(downloadAsset.filePath)
-                    val result = dlFile.delete()
-                    deleteEmptyFolderStructure(dlFile)
-                    return result
+                    return File(downloadAsset.filePath).delete()
                 }
             } else {
                 pendingAction = PendingAction(ActionType.DELETE, downloadAsset)
@@ -136,18 +132,6 @@ class DownloadManager(activity: FragmentActivity) {
             val msg = StorageUtil.buildWriteErrorMessage(App.getInstance())
             Log.w(TAG, msg)
             ToastUtil.show(msg)
-        }
-    }
-
-    //deletes empty folder structure
-    private fun deleteEmptyFolderStructure(directory: File) {
-        var dir = directory
-        if (!dir.isDirectory)
-            dir = dir.parentFile
-
-        if (dir.listFiles() != null && dir.listFiles().isEmpty()) {
-            dir.delete()
-            deleteEmptyFolderStructure(dir.parentFile)
         }
     }
 

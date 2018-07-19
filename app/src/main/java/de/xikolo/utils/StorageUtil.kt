@@ -68,13 +68,18 @@ object StorageUtil {
 
     // moves the contents of the folder 'from' to the folder 'to'
     @JvmStatic
-    fun migrateAsync(from: File, to: File, callback: StorageMigrationCallback) {
+    fun migrateAsync(from: File?, to: File?, callback: StorageMigrationCallback) {
+        if (from == null || to == null) {
+            callback.onCompleted(false)
+            return
+        }
+
         Thread(Runnable {
             if (from.exists()) {
                 callback.onProgressChanged(0)
                 val totalFiles = FileUtil.folderFileNumber(from)
                 var copiedFiles = 0
-                for(file in from.listFiles())
+                for (file in from.listFiles())
                     copiedFiles += move(file, File(to.absolutePath + File.separator + file.name), callback)
                 callback.onCompleted(copiedFiles == totalFiles)
             } else
@@ -103,9 +108,32 @@ object StorageUtil {
         return count
     }
 
+    // removes empty folder structures and temporary files as well as old item files
+    @JvmStatic
+    fun cleanStorage(file: File) {
+        if (file.isDirectory) {
+            val children = file.listFiles()
+            if (children != null && !children.isEmpty()) {
+                for (child in children) {
+                    cleanStorage(child)
+                }
+            } else {
+                file.delete()
+            }
+        } else {
+            if (file.extension.endsWith("tmp")
+                || file.name.endsWith("slides.pdf")
+                || file.name.endsWith("transcript.pdf")
+                || file.name.endsWith("video_hd.mp4")
+                || file.name.endsWith("video_sd.mp4")
+                || file.name.endsWith("audio.mp3")
+            ) file.delete()
+        }
+    }
+
     @JvmStatic
     fun buildMigrationMessage(c: Context, from: StorageType): String {
-        var currentStorage = getStoragePreference(c)
+        val currentStorage = getStoragePreference(c)
         var current = c.getString(R.string.settings_title_storage_internal)
         if (currentStorage == StorageType.INTERNAL)
             current = c.getString(R.string.settings_title_storage_external)
@@ -120,10 +148,10 @@ object StorageUtil {
     @JvmStatic
     fun toStorageType(c: Context, s: String):
         StorageType =
-            if (s == c.getString(R.string.settings_title_storage_external))
-                StorageType.SDCARD
-            else
-                StorageType.INTERNAL
+        if (s == c.getString(R.string.settings_title_storage_external))
+            StorageType.SDCARD
+        else
+            StorageType.INTERNAL
 
     @JvmStatic
     fun buildWriteErrorMessage(c: Context): String {
