@@ -59,7 +59,6 @@ object StorageUtil {
                 val sdCard = getSdcardStorage(c)
                 return sdCard ?: getInternalStorage(c)
             }
-            StorageUtil.StorageType.INTERNAL -> return getInternalStorage(c)
             else -> return getInternalStorage(c)
         }
     }
@@ -67,13 +66,16 @@ object StorageUtil {
     @JvmStatic
     fun getStoragePreference(c: Context): StorageType = toStorageType(c, ApplicationPreferences().storage!!)
 
+    // moves the contents of the folder 'from' to the folder 'to'
     @JvmStatic
     fun migrateAsync(from: File, to: File, callback: StorageMigrationCallback) {
         Thread(Runnable {
             if (from.exists()) {
                 callback.onProgressChanged(0)
                 val totalFiles = FileUtil.folderFileNumber(from)
-                val copiedFiles = move(from, to, callback)
+                var copiedFiles = 0
+                for(file in from.listFiles())
+                    copiedFiles += move(file, File(to.absolutePath + File.separator + file.name), callback)
                 callback.onCompleted(copiedFiles == totalFiles)
             } else
                 callback.onCompleted(false)

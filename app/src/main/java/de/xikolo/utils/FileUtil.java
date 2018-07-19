@@ -84,12 +84,8 @@ public class FileUtil {
     }
 
     public static String createStorageFolderPath(File storage) {
-        File appFolder = new File(storage.getAbsolutePath() + File.separator
-            + App.getInstance().getString(R.string.app_name));
-
-        createFolderIfNotExists(appFolder);
-
-        return appFolder.getAbsolutePath();
+        createFolderIfNotExists(storage);
+        return storage.getAbsolutePath();
     }
 
     public static String getPublicAppStorageFolderPath() {

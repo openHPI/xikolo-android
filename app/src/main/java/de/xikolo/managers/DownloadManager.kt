@@ -2,7 +2,6 @@ package de.xikolo.managers
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.support.v4.app.FragmentActivity
 import android.util.Log
 import de.xikolo.App
@@ -15,9 +14,9 @@ import de.xikolo.events.PermissionGrantedEvent
 import de.xikolo.models.Download
 import de.xikolo.models.DownloadAsset
 import de.xikolo.services.DownloadService
-import de.xikolo.utils.ExternalStorageUtil
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.LanalyticsUtil
+import de.xikolo.utils.StorageUtil
 import de.xikolo.utils.ToastUtil
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -44,30 +43,8 @@ class DownloadManager(activity: FragmentActivity) {
         START, DELETE, CANCEL
     }
 
-    val foldersWithDownloads: List<String>
-        get() {
-            val folders = ArrayList<String>()
-
-            val publicAppFolder = File(
-                Environment.getExternalStorageDirectory().absolutePath
-                        + File.separator
-                        + App.getInstance().getString(R.string.app_name)
-            )
-
-            if (publicAppFolder.isDirectory) {
-                val files = publicAppFolder.listFiles()
-                for (file in files) {
-                    if (file.isDirectory) {
-                        folders.add(file.absolutePath)
-                    }
-                }
-            }
-
-            return folders
-        }
-
     fun startAssetDownload(downloadAsset: DownloadAsset): Boolean {
-        if (ExternalStorageUtil.isExternalStorageWritable()) {
+        if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 val context = App.getInstance()
                 val intent = Intent(context, DownloadService::class.java)
@@ -108,37 +85,43 @@ class DownloadManager(activity: FragmentActivity) {
                 return false
             }
         } else {
-            Log.w(TAG, "No write access for external storage")
-            ToastUtil.show(R.string.toast_no_external_write_access)
+            val msg = StorageUtil.buildWriteErrorMessage(App.getInstance())
+            Log.w(TAG, msg)
+            ToastUtil.show(msg)
             return false
         }
     }
 
     fun deleteAssetDownload(downloadAsset: DownloadAsset): Boolean {
-        return if (ExternalStorageUtil.isExternalStorageWritable()) {
+        return if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 if (Config.DEBUG) Log.d(TAG, "Delete download " + downloadAsset.filePath)
 
                 if (!downloadExists(downloadAsset)) {
+                    File(downloadAsset.filePath + ".tmp").delete() // delete temporary files
+                    deleteEmptyFolderStructure(File(downloadAsset.filePath))
                     false
                 } else {
                     EventBus.getDefault().post(DownloadDeletedEvent(downloadAsset))
                     val dlFile = File(downloadAsset.filePath)
-                    dlFile.delete()
+                    val result = dlFile.delete()
+                    deleteEmptyFolderStructure(dlFile)
+                    return result
                 }
             } else {
                 pendingAction = PendingAction(ActionType.DELETE, downloadAsset)
                 false
             }
         } else {
-            Log.w(TAG, "No write access for external storage")
-            ToastUtil.show(R.string.toast_no_external_write_access)
-            false
+            val msg = StorageUtil.buildWriteErrorMessage(App.getInstance())
+            Log.w(TAG, msg)
+            ToastUtil.show(msg)
+            return false
         }
     }
 
     fun cancelAssetDownload(downloadAsset: DownloadAsset) {
-        if (ExternalStorageUtil.isExternalStorageWritable()) {
+        if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 if (Config.DEBUG) Log.d(TAG, "Cancel download " + downloadAsset.url!!)
 
@@ -150,9 +133,39 @@ class DownloadManager(activity: FragmentActivity) {
                 pendingAction = PendingAction(ActionType.CANCEL, downloadAsset)
             }
         } else {
-            Log.w(TAG, "No write access for external storage")
-            ToastUtil.show(R.string.toast_no_external_write_access)
+            val msg = StorageUtil.buildWriteErrorMessage(App.getInstance())
+            Log.w(TAG, msg)
+            ToastUtil.show(msg)
         }
+    }
+
+    //deletes empty folder structure
+    private fun deleteEmptyFolderStructure(directory: File) {
+        var dir = directory
+        if (!dir.isDirectory)
+            dir = dir.parentFile
+
+        if (dir.listFiles() != null && dir.listFiles().isEmpty()) {
+            dir.delete()
+            deleteEmptyFolderStructure(dir.parentFile)
+        }
+    }
+
+    fun getFoldersWithDownloads(storage: File): List<String> {
+        val folders = ArrayList<String>()
+
+        val publicAppFolder = File(storage.absolutePath)
+
+        if (publicAppFolder.isDirectory) {
+            val files = publicAppFolder.listFiles()
+            for (file in files) {
+                if (file.isDirectory) {
+                    folders.add(file.absolutePath)
+                }
+            }
+        }
+
+        return folders
     }
 
     @Subscribe
