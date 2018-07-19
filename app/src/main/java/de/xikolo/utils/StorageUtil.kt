@@ -114,11 +114,12 @@ object StorageUtil {
     fun cleanStorage(file: File) {
         if (file.isDirectory) {
             val children = file.listFiles()
-            if (children != null && !children.isEmpty()) {
+            if (children != null) {
                 for (child in children) {
                     cleanStorage(child)
                 }
-            } else {
+            }
+            if (file.listFiles().isEmpty()) {
                 file.delete()
             }
         } else {
