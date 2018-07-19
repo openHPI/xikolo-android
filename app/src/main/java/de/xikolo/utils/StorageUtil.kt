@@ -150,10 +150,10 @@ object StorageUtil {
     @JvmStatic
     fun toStorageType(c: Context, s: String):
         StorageType =
-        if (s == c.getString(R.string.settings_title_storage_external))
-            StorageType.SDCARD
-        else
-            StorageType.INTERNAL
+            if (s == c.getString(R.string.settings_title_storage_external))
+                StorageType.SDCARD
+            else
+                StorageType.INTERNAL
 
     @JvmStatic
     fun buildWriteErrorMessage(c: Context): String {
