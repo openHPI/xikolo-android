@@ -72,6 +72,9 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
                 oldStorage = StorageUtil.getSdcardStorage(App.getInstance())!!
             }
 
+            // clean up before
+            StorageUtil.cleanStorage(oldStorage)
+
             val fileCount = FileUtil.folderFileNumber(oldStorage)
             if (fileCount > 0) {
                 val dialog = StorageMigrationDialog.getInstance(activity, oldStorageType, object : StorageMigrationDialog.StorageMigrationDialogListener {

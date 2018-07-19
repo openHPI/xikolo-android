@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Environment
 import android.support.v4.content.ContextCompat
 import de.xikolo.R
+import de.xikolo.services.DownloadService
 import de.xikolo.storages.ApplicationPreferences
 import java.io.File
 import java.io.IOException
@@ -121,7 +122,7 @@ object StorageUtil {
                 file.delete()
             }
         } else {
-            if (file.extension.endsWith("tmp")
+            if ((file.extension.endsWith("tmp") && !DownloadService.getInstance().isDownloading)
                 || file.name.endsWith("slides.pdf")
                 || file.name.endsWith("transcript.pdf")
                 || file.name.endsWith("video_hd.mp4")
