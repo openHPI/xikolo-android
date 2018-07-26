@@ -33,15 +33,16 @@ public class FileUtil {
         return length;
     }
 
-    public static long folderFileNumber(File directory) {
-        long files = 0;
-        for (File file : directory.listFiles()) {
-            if (file.isFile()) {
-                files++;
-            } else {
-                files += folderFileNumber(file);
+    public static int folderFileNumber(File directory) {
+        int files = 0;
+        if (directory != null)
+            for (File file : directory.listFiles()) {
+                if (file.isFile()) {
+                    files++;
+                } else {
+                    files += folderFileNumber(file);
+                }
             }
-        }
         return files;
     }
 
@@ -82,11 +83,14 @@ public class FileUtil {
         }
     }
 
-    public static String createPublicAppFolderPath() {
-        File appFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                + App.getInstance().getString(R.string.app_name));
+    public static String createStorageFolderPath(File storage) {
+        createFolderIfNotExists(storage);
+        return storage.getAbsolutePath();
+    }
 
-        createFolderIfNotExists(appFolder);
+    public static String getPublicAppStorageFolderPath() {
+        File appFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+            + App.getInstance().getString(R.string.app_name));
 
         return appFolder.getAbsolutePath();
     }
@@ -101,21 +105,20 @@ public class FileUtil {
     private static String replaceUmlaute(String input) {
         //replace all lower Umlauts
         String output = input.replace("ü", "ue")
-                .replace("ö", "oe")
-                .replace("ä", "ae")
-                .replace("ß", "ss");
+            .replace("ö", "oe")
+            .replace("ä", "ae")
+            .replace("ß", "ss");
 
         //first replace all capital umlaute in a non-capitalized context (e.g. Übung)
         output = output.replace("Ü(?=[a-zäöüß ])", "Ue")
-                .replace("Ö(?=[a-zäöüß ])", "Oe")
-                .replace("Ä(?=[a-zäöüß ])", "Ae");
+            .replace("Ö(?=[a-zäöüß ])", "Oe")
+            .replace("Ä(?=[a-zäöüß ])", "Ae");
 
         //now replace all the other capital umlaute
         output = output.replace("Ü", "UE")
-                .replace("Ö", "OE")
-                .replace("Ä", "AE");
+            .replace("Ö", "OE")
+            .replace("Ä", "AE");
 
         return output;
     }
-
 }

@@ -83,6 +83,14 @@
     <string name="dialog_download_slides_message">Die Slides-Datei wird heruntergeladen.</string>
     <string name="dialog_download_slides_yes">Herunterladen</string>
 
+    <string name="dialog_app_being_prepared">Bitte warten Sie während die App vorbereitet wird.</string>
+
+    <string name="dialog_storage_migration">Im Moment sind Dateien in %1$s gespeichert, sollen diese nach %2$s verschoben werden?</string>
+    <string name="dialog_storage_migration_confirm">Verschieben</string>
+    <string name="dialog_storage_migration_title">Speichermigration</string>
+    <string name="dialog_storage_migration_message">Verschieben der Dateien läuft. Bitte warten Sie bis dies abgeschlossen ist. Entfernen Sie auf keinen Fall das Speichermedium.</string>
+    <string name="dialog_storage_migration_successful">Vorgang erfolgreich abgeschlossen!</string>
+
     <string name="dialog_second_screen_title">Probieren Sie Second Screen aus!</string>
     <string name="dialog_second_screen_message">Entdecken Sie zusätzliche Inhalte auf ihrem mobilen Gerät, während Sie Video-Lektionen auf Ihrem Computer schauen. Um zu starten, spielen Sie einfach eine Video-Lektion in dem Browser Ihres Computers ab.</string>
     <string name="dialog_second_screen_yes">Öffnen</string>
@@ -173,6 +181,8 @@
     <string name="notification_url_invalid">URL fehlerhaft</string>
     <string name="notification_course_locked">Dieser Kurs ist vorerst gesperrt</string>
 
+    <string name="notification_storage_locked">Bitte warten Sie bis der aktuelle Download abgeschlossen ist und versuchen Sie es erneut.</string>
+
     <string name="video_notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>
     <string name="module_notification_no_content">Kein Inhalt verfügbar</string>
 
@@ -190,7 +200,7 @@
     <string name="toast_log_in_failed">Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten.</string>
     <string name="toast_successful_logout">Erfolgreich abgemeldet.</string>
     <string name="toast_file_already_downloaded">Datei bereits heruntergeladen.</string>
-    <string name="toast_no_external_write_access">Kein Schreibzugriff für externen Speicher.</string>
+    <string name="toast_no_external_write_access">Kein Schreibzugriff für %1$s.</string>
     <string name="toast_no_pdf_viewer_found">Keine Anwendung zum Anzeigen von PDF-Dateien gefunden. Installieren Sie eine und versuchen Sie es erneut.</string>
 
     <!-- -->
@@ -201,6 +211,11 @@
     <string name="settings_category_general">Allgemein</string>
 
     <string name="settings_title_ask_delete">Vor Löschen bestätigen</string>
+
+    <string name="settings_title_storage">Speichermedium auswählen</string>
+    <string name="settings_title_storage_internal">Interner Speicher</string>
+    <string name="settings_title_storage_external">SD-Karte</string>
+    <string name="settings_storage_addition">(aktuelles Speichermedium)</string>
 
     <string name="settings_category_data_usage">Mobile Datennutzung</string>
 

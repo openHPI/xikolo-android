@@ -11,9 +11,13 @@ import de.xikolo.utils.PlaybackSpeedUtil
 class ApplicationPreferences {
 
     private val preferences: SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(App.getInstance())
+        PreferenceManager.getDefaultSharedPreferences(App.getInstance())
 
     private val context: Context = App.getInstance()
+
+    var storage: String?
+        get() = getString(context.getString(R.string.preference_storage), context.getString(R.string.settings_default_value_storage))
+        set(value) = putString(context.getString(R.string.preference_storage), value)
 
     var isVideoQualityLimitedOnMobile: Boolean
         get() = getBoolean(context.getString(R.string.preference_video_quality))
@@ -25,8 +29,8 @@ class ApplicationPreferences {
 
     var videoPlaybackSpeed: PlaybackSpeedUtil?
         get() = PlaybackSpeedUtil.get(getString(
-                context.getString(R.string.preference_video_playback_speed),
-                context.getString(R.string.settings_default_value_video_playback_speed)
+            context.getString(R.string.preference_video_playback_speed),
+            context.getString(R.string.settings_default_value_video_playback_speed)
         ))
         set(speed) = putString(context.getString(R.string.preference_video_playback_speed), speed.toString())
 
@@ -55,7 +59,7 @@ class ApplicationPreferences {
         editor.apply()
     }
 
-    private fun getString(key: String, defValue: String? = null) : String? = preferences.getString(key, defValue)
+    private fun getString(key: String, defValue: String? = null): String? = preferences.getString(key, defValue)
 
     private fun putString(key: String, value: String?) {
         val editor = preferences.edit()
@@ -68,5 +72,9 @@ class ApplicationPreferences {
         editor.clear()
         editor.apply()
     }
+
+    fun contains(key: String) : Boolean = preferences.contains(key)
+
+    fun setToDefault(key: String, default: String) = putString(key, getString(key, default))
 
 }

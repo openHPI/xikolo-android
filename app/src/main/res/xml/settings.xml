@@ -1,12 +1,21 @@
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="@string/preference_screen">
 
-    <android.support.v7.preference.PreferenceCategory android:title="@string/settings_category_general">
+    <android.support.v7.preference.PreferenceCategory
+        android:key="@string/preference_category_general"
+        android:title="@string/settings_category_general">
 
         <android.support.v7.preference.CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/preference_confirm_delete"
             android:title="@string/settings_title_ask_delete" />
+
+        <android.support.v7.preference.ListPreference
+            android:defaultValue="@string/settings_default_value_storage"
+            android:entries="@array/settings_values_storages"
+            android:entryValues="@array/settings_values_storages"
+            android:key="@string/preference_storage"
+            android:title="@string/settings_title_storage" />
 
     </android.support.v7.preference.PreferenceCategory>
 
@@ -40,8 +49,9 @@
 
     </android.support.v7.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory android:title="@string/settings_category_about"
-        android:key="@string/preference_category_info">
+    <android.support.v7.preference.PreferenceCategory
+        android:key="@string/preference_category_info"
+        android:title="@string/settings_category_about">
 
         <android.support.v7.preference.Preference
             android:key="@string/preference_copyright"

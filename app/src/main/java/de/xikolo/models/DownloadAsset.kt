@@ -1,13 +1,15 @@
 package de.xikolo.models
 
+import de.xikolo.App
 import de.xikolo.utils.FileUtil
+import de.xikolo.utils.StorageUtil
 import java.io.File
 
 // the file path should identify a download uniquely, thus this DownloadAsset object can be used as an identifier for downloads
-sealed class DownloadAsset(val url: String?, open val fileName: String) {
+sealed class DownloadAsset(val url: String?, open val fileName: String, val storage: File = StorageUtil.getStorage(App.getInstance())) {
 
     // must not end with separator
-    protected open val fileFolder: String = FileUtil.createPublicAppFolderPath()
+    protected open val fileFolder: String = storage.absolutePath
 
     open val title: String
         get() = fileName
