@@ -1,28 +1,28 @@
 package de.xikolo.controllers.base
 
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.v4.widget.SwipeRefreshLayout
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewStub
+import android.view.*
 import de.xikolo.R
-import de.xikolo.controllers.helper.LoadingStateHelper
+import de.xikolo.controllers.helper.NetworkStateHelper
 import de.xikolo.lifecycle.base.BaseViewModel
 import de.xikolo.lifecycle.base.NetworkCode
+import de.xikolo.lifecycle.base.observe
 import de.xikolo.utils.NetworkUtil
 import de.xikolo.utils.ToastUtil
 
-abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), LoadingStateInterface, SwipeRefreshLayout.OnRefreshListener {
+abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    private var loadingStateHelper: LoadingStateHelper? = null
+    private lateinit var networkStateHelper: NetworkStateHelper
 
     protected lateinit var viewModel: T
+
+    abstract val layoutResource: Int
 
     private fun initViewModel() {
         val vm = createViewModel()
@@ -43,30 +43,45 @@ abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), Loading
     abstract fun createViewModel(): T
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // inflate generic loading state view
-        val loadingStateView = inflater.inflate(R.layout.fragment_loading_state, container, false) as ViewGroup
+        // inflate generic network state view
+        val networkStateView = inflater.inflate(R.layout.fragment_loading_state, container, false) as ViewGroup
         // inflate content view inside
-        val contentView = loadingStateView.findViewById<ViewStub>(R.id.content_view)
+        val contentView = networkStateView.findViewById<ViewStub>(R.id.content_view)
         contentView.layoutResource = layoutResource
         contentView.inflate()
         // return complete view
-        return loadingStateView
+        return networkStateView
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.refresh, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val itemId = item?.itemId
+        when (itemId) {
+            R.id.action_refresh -> {
+                onRefresh()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadingStateHelper = LoadingStateHelper(activity, view, this)
+        networkStateHelper = NetworkStateHelper(activity, view, this)
 
-        viewModel.networkState.observe(this, Observer {
-            if (it?.code != NetworkCode.STARTED) hideProgress()
-            when (it?.code) {
-                NetworkCode.STARTED                   -> showProgress()
-                NetworkCode.NO_NETWORK                -> if (it.userRequest || !contentViewVisible) showNetworkRequiredMessage()
+        viewModel.networkState.observe(this) {
+            if (it.code != NetworkCode.STARTED) hideAnyProgress()
+            when (it.code) {
+                NetworkCode.STARTED                   -> showAnyProgress()
+                NetworkCode.NO_NETWORK                -> if (it.userRequest || !networkStateHelper.contentViewVisible) showNetworkRequired()
                 NetworkCode.ERROR, NetworkCode.CANCEL -> showErrorMessage()
                 else                                  -> Unit
             }
-        })
+        }
 
         viewModel.onCreate()
     }
@@ -75,71 +90,67 @@ abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), Loading
         viewModel.onRefresh()
     }
 
-    override fun hideContent() {
-        loadingStateHelper?.hideContentView()
+    fun hideContent() {
+        networkStateHelper.hideContent()
     }
 
-    override fun showContent() {
-        loadingStateHelper?.showContentView()
+    fun showContent() {
+        networkStateHelper.showContent()
     }
 
-    override fun showBlockingProgress() {
-        loadingStateHelper?.showBlockingProgress()
+    fun showBlockingProgress() {
+        networkStateHelper.showBlockingProgress()
     }
 
-    override fun showProgress() {
-        loadingStateHelper?.showProgress()
+    fun showAnyProgress() {
+        networkStateHelper.showAnyProgress()
     }
 
-    override fun hideProgress() {
-        loadingStateHelper?.hideProgress()
+    fun hideAnyProgress() {
+        networkStateHelper.hideAnyProgress()
     }
 
-    override fun showNetworkRequiredMessage() {
-        loadingStateHelper?.let {
-            if (it.isContentViewVisible) {
-                NetworkUtil.showNoConnectionToast()
-            } else {
-                it.setMessageTitle(R.string.notification_no_network)
-                it.setMessageSummary(R.string.notification_no_network_summary)
-                it.showMessage()
-            }
+    fun showNetworkRequired() {
+        if (networkStateHelper.contentViewVisible) {
+            NetworkUtil.showNoConnectionToast()
+        } else {
+            networkStateHelper.setMessageTitle(R.string.notification_no_network)
+            networkStateHelper.setMessageSummary(R.string.notification_no_network_summary)
+            networkStateHelper.showMessage()
         }
     }
 
-    override fun showLoginRequiredMessage() {
-        loadingStateHelper?.let {
-            if (it.isContentViewVisible) {
-                ToastUtil.show(R.string.toast_please_log_in)
-            } else {
-                it.setMessageTitle(R.string.notification_please_login)
-                it.setMessageSummary(R.string.notification_please_login_summary)
-                it.showMessage()
-            }
+    fun showLoginRequired() {
+        if (networkStateHelper.contentViewVisible) {
+            ToastUtil.show(R.string.toast_please_log_in)
+        } else {
+            networkStateHelper.setMessageTitle(R.string.notification_please_login)
+            networkStateHelper.setMessageSummary(R.string.notification_please_login_summary)
+            networkStateHelper.showMessage()
         }
     }
 
-    override fun showErrorMessage() {
-        loadingStateHelper?.let {
-            if (it.isContentViewVisible) {
-                ToastUtil.show(R.string.error)
-            } else {
-                it.setMessageTitle(R.string.error)
-                it.setMessageSummary(null)
-                it.showMessage()
-            }
+    fun showErrorMessage() {
+        if (networkStateHelper.contentViewVisible) {
+            ToastUtil.show(R.string.error)
+        } else {
+            networkStateHelper.setMessageTitle(R.string.error)
+            networkStateHelper.setMessageSummary(null)
+            networkStateHelper.showMessage()
         }
     }
 
-    override fun hideMessage() {
-        loadingStateHelper?.hideMessage()
+    fun hideMessage() {
+        networkStateHelper.hideMessage()
     }
 
-    override fun isContentViewVisible(): Boolean {
-        return contentViewVisible
+    fun showEmptyMessage(@StringRes title: Int, @StringRes summary: Int = 0) {
+        if (!networkStateHelper.anyProgressVisible) {
+            hideContent()
+            networkStateHelper.setMessageTitle(title)
+            networkStateHelper.setMessageSummary(summary)
+            networkStateHelper.showMessage()
+        }
     }
-
-    val contentViewVisible: Boolean
-        get() = loadingStateHelper?.isContentViewVisible == true
 
 }

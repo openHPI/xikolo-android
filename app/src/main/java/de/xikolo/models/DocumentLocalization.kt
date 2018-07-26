@@ -11,7 +11,7 @@ import moe.banana.jsonapi2.Resource
 open class DocumentLocalization : RealmObject() {
 
     @PrimaryKey
-    var id: String = ""
+    var id: String? = null
 
     var title: String? = null
 

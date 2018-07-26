@@ -283,7 +283,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                         fragment = CourseDetailsFragmentAutoBundle.builder(courseId).build();
                         break;
                     case Course.TAB_DOCUMENTS:
-                        fragment = DocumentsFragmentAutoBundle.builder(courseId).build();
+                        fragment = DocumentListFragmentAutoBundle.builder(courseId).build();
                         break;
                     case Course.TAB_ANNOUNCEMENTS:
                         fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build();

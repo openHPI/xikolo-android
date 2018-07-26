@@ -18,3 +18,10 @@ fun <T> NonNullMediatorLiveData<T>.observe(owner: LifecycleOwner, observer: (t: 
     })
     return observer
 }
+
+fun <T> LiveData<T>.observe(owner: LifecycleOwner, observer: (t: T) -> Unit): (t: T) -> Unit {
+    this.observe(owner, android.arch.lifecycle.Observer {
+        it?.let(observer)
+    })
+    return observer
+}

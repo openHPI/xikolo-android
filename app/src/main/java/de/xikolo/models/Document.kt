@@ -13,7 +13,7 @@ import moe.banana.jsonapi2.Resource
 open class Document : RealmObject() {
 
     @PrimaryKey
-    var id: String = ""
+    var id: String? = null
 
     var title: String? = null
 

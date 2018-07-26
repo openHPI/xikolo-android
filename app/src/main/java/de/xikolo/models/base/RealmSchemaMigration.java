@@ -27,6 +27,25 @@ public class RealmSchemaMigration implements RealmMigration {
             schema.get("Course")
                 .addField("channelId", String.class);
         }
+
+        if (oldVersion == 2) {
+            schema.create("Document")
+                .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+                .addField("title", String.class)
+                .addField("description", String.class)
+                .addRealmListField("tags", String.class)
+                .addField("isPublic", boolean.class)
+                .addRealmListField("courseIds", String.class);
+
+            schema.create("DocumentLocalization")
+                .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+                .addField("title", String.class)
+                .addField("description", String.class)
+                .addField("language", String.class)
+                .addField("revision", int.class)
+                .addField("fileUrl", String.class)
+                .addField("documentId", String.class);
+        }
     }
 
 }

@@ -292,4 +292,7 @@
     <string name="lang_fr">French</string>
     <string name="lang_zh">Chinese</string>
 
+    <!-- -->
+    <string name="empty_message_documents_title">No documents available for this course</string>
+
 </resources>

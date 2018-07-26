@@ -129,11 +129,22 @@ public class LoadingStateHelper {
     }
 
     public void setMessageSummary(String summary) {
+        if (summary == null) {
+            textSummary.setVisibility(View.GONE);
+        } else {
+            textSummary.setVisibility(View.VISIBLE);
+        }
         textSummary.setText(summary);
     }
 
     public void setMessageSummary(int summary) {
-        textSummary.setText(App.getInstance().getResources().getString(summary));
+        if (summary == 0) {
+            textSummary.setText(null);
+            textSummary.setVisibility(View.GONE);
+        } else {
+            textSummary.setText(App.getInstance().getResources().getString(summary));
+            textSummary.setVisibility(View.VISIBLE);
+        }
     }
 
     public void enableSwipeRefresh(boolean enabled) {
