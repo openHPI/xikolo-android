@@ -1,17 +1,21 @@
 package de.xikolo.controllers.course
 
+import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.R
+import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.models.Document
+import de.xikolo.models.DownloadAsset
 import java.util.*
 
-class DocumentListAdapter : RecyclerView.Adapter<DocumentListAdapter.DocumentViewHolder>() {
+class DocumentListAdapter(val activity: FragmentActivity) : RecyclerView.Adapter<DocumentListAdapter.DocumentViewHolder>() {
 
     companion object {
         val TAG: String = DocumentListAdapter::class.java.simpleName
@@ -38,6 +42,14 @@ class DocumentListAdapter : RecyclerView.Adapter<DocumentListAdapter.DocumentVie
 
         holder.title.text = document.title
         holder.description.text = document.description
+
+        holder.downloadsLayout.removeAllViews()
+        document.localizations.forEach { l ->
+            holder.downloadsLayout.addView(
+                DownloadViewHelper(activity, DownloadAsset.Document(document, l))
+                    .view
+            )
+        }
     }
 
     class DocumentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -47,6 +59,9 @@ class DocumentListAdapter : RecyclerView.Adapter<DocumentListAdapter.DocumentVie
 
         @BindView(R.id.description)
         lateinit var description: TextView
+
+        @BindView(R.id.downloads_layout)
+        lateinit var downloadsLayout: LinearLayout
 
         init {
             ButterKnife.bind(this, view)

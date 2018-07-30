@@ -9,9 +9,8 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/unseen_indicator"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:paddingLeft="16dp"
@@ -26,11 +25,22 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/title"
         android:lineSpacingExtra="2dp"
-        android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="2dp"
         android:textColor="@color/text_main"
         android:textSize="14sp" />
+
+    <LinearLayout
+        android:id="@+id/downloads_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/description"
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp" />
 
 </RelativeLayout>

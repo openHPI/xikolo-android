@@ -27,7 +27,8 @@ dependencies {
 
     // json
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.moshi:moshi:1.6.0'
+    def moshiVersion = '1.6.0'
+    implementation "com.squareup.moshi:moshi:${moshiVersion}"
 
     // json:api
     def retrofitVersion = '2.4.0'

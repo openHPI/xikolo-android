@@ -36,7 +36,7 @@ open class DocumentLocalization : RealmObject() {
 
         var revision: Int = 0
 
-        @Json(name = "file_url")
+        @field:Json(name = "file_url")
         var fileUrl: String? = null
 
         var document: HasOne<Document.JsonModel>? = null

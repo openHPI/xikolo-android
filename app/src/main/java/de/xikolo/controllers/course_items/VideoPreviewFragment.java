@@ -23,6 +23,7 @@ import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
+import de.xikolo.controllers.helper.DownloadViewHelper;
 import de.xikolo.controllers.video.VideoActivityAutoBundle;
 import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Course;
@@ -52,9 +53,9 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
     @BindView(R.id.playButton) View viewPlay;
     @BindView(R.id.videoMetadata) ViewGroup videoMetadata;
 
-    DownloadViewController hdVideo;
-    DownloadViewController sdVideo;
-    DownloadViewController slides;
+    DownloadViewHelper hdVideo;
+    DownloadViewHelper sdVideo;
+    DownloadViewHelper slides;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,12 +105,12 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
 
         linearLayoutDownloads.removeAllViews();
 
-        hdVideo = new DownloadViewController(getActivity(), new DownloadAsset.Course.Item.VideoHD(item, video));
-        linearLayoutDownloads.addView(hdVideo.getLayout());
-        sdVideo = new DownloadViewController(getActivity(), new DownloadAsset.Course.Item.VideoSD(item, video));
-        linearLayoutDownloads.addView(sdVideo.getLayout());
-        slides = new DownloadViewController(getActivity(), new DownloadAsset.Course.Item.Slides(item, video));
-        linearLayoutDownloads.addView(slides.getLayout());
+        hdVideo = new DownloadViewHelper(getActivity(), new DownloadAsset.Course.Item.VideoHD(item, video));
+        linearLayoutDownloads.addView(hdVideo.getView());
+        sdVideo = new DownloadViewHelper(getActivity(), new DownloadAsset.Course.Item.VideoSD(item, video));
+        linearLayoutDownloads.addView(sdVideo.getView());
+        slides = new DownloadViewHelper(getActivity(), new DownloadAsset.Course.Item.Slides(item, video));
+        linearLayoutDownloads.addView(slides.getView());
 
         long minutes = TimeUnit.SECONDS.toMinutes(video.duration);
         long seconds = video.duration - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(video.duration));

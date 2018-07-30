@@ -20,7 +20,7 @@ class DocumentListFragment : NetworkStateFragment<DocumentsViewModel>() {
     @BindView(R.id.content_view)
     internal lateinit var recyclerView: RecyclerView
 
-    private var documentListAdapter: DocumentListAdapter = DocumentListAdapter()
+    private lateinit var documentListAdapter: DocumentListAdapter
 
     override fun createViewModel(): DocumentsViewModel {
         return DocumentsViewModel(courseId)
@@ -38,8 +38,11 @@ class DocumentListFragment : NetworkStateFragment<DocumentsViewModel>() {
             layoutManager.orientation
         )
         recyclerView.addItemDecoration(dividerItemDecoration)
-        recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = documentListAdapter
+
+        activity?.let { a ->
+            documentListAdapter = DocumentListAdapter(a)
+            recyclerView.adapter = documentListAdapter
+        }
 
         viewModel.documentsForCourse
             .observe(this) { showDocuments() }

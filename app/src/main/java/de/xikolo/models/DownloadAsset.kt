@@ -17,9 +17,20 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, val stor
     val filePath: String
         get() = fileFolder + File.separator + fileName
 
+    class Document(
+        document: de.xikolo.models.Document,
+        documentLocalization: DocumentLocalization
+    ) : DownloadAsset(
+        documentLocalization.fileUrl,
+        documentLocalization.language + "_" + documentLocalization.revision + "_" + documentLocalization.id + ".pdf"
+    ) {
+        override val fileFolder = super.fileFolder + File.separator + "Documents" + File.separator + FileUtil.escapeFilename(document.title) + "_" + document.id
+        override val title = "Document \"" + document.title + "\" (" + documentLocalization.language + ")"
+    }
+
     sealed class Course(url: String?, override val fileName: String, val course: de.xikolo.models.Course) : DownloadAsset(url, fileName) {
 
-        override val fileFolder = super.fileFolder + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
+        override val fileFolder = super.fileFolder + File.separator + "Courses" + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
 
         sealed class Item(url: String?, fileName: String, val item: de.xikolo.models.Item, val video: Video) : Course(url, fileName, item.section.course) {
 
