@@ -4,28 +4,28 @@
         <shape android:shape="rectangle">
             <solid android:color="@color/button_gray" />
             <stroke android:width="2px" android:color="@color/outlined_button_stroke" />
-            <corners android:radius="4dp" />
+            <corners android:radius="@dimen/corner_radius" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/button_gray" />
             <stroke android:width="2px" android:color="@color/outlined_button_stroke" />
-            <corners android:radius="4dp" />
+            <corners android:radius="@dimen/corner_radius" />
         </shape>
     </item>
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
             <solid android:color="@color/transparent" />
             <stroke android:width="2px" android:color="@color/outlined_button_stroke" />
-            <corners android:radius="4dp" />
+            <corners android:radius="@dimen/corner_radius" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/transparent" />
             <stroke android:width="2px" android:color="@color/outlined_button_stroke" />
-            <corners android:radius="4dp" />
+            <corners android:radius="@dimen/corner_radius" />
         </shape>
     </item>
 </selector>

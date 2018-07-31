@@ -4,7 +4,7 @@
     android:id="@+id/container"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="2dp"
+    app:cardCornerRadius="@dimen/corner_radius"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 
