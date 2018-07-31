@@ -21,6 +21,18 @@ public class FileUtil {
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
+    public static String getFormattedFileSize(File file) {
+        return getFormattedFileSize(fileSize(file));
+    }
+
+    public static long fileSize(File file) {
+        long length = 0;
+        if (file != null && file.isFile()) {
+            length = file.length();
+        }
+        return length;
+    }
+
     public static long folderSize(File directory) {
         long length = 0;
         for (File file : directory.listFiles()) {

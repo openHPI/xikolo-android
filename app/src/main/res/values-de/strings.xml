@@ -42,6 +42,7 @@
     <string name="tab_discussions">Diskussionen</string>
     <string name="tab_progress">Fortschritt</string>
     <string name="tab_course_details">Kursdetails</string>
+    <string name="tab_documents">Dokumente</string>
     <string name="tab_announcements">Neuigkeiten</string>
 
     <!-- -->
@@ -168,6 +169,8 @@
     <string name="course_date_since">Seit %s</string>
     <string name="course_date_self_paced">Selbststudium</string>
     <string name="course_date_beginning">Ab %s</string>
+
+    <string name="document_lang">Sprache: %s</string>
 
     <!-- -->
     <string name="notification_no_network">Bitte Netzwerk-Verbindung aktivieren</string>

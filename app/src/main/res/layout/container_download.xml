@@ -15,7 +15,7 @@
         android:paddingTop="8dp"
         android:singleLine="true"
         android:textColor="@color/text_main"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/textFileSize"
@@ -28,7 +28,7 @@
         android:singleLine="true"
         android:text="--"
         android:textColor="@color/text_main"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                 android:text="@string/icon_cancel"
                 android:textColor="@color/text_main"
                 android:textSize="26sp"
-                app:customFont="xikolo.ttf" />
+                app:customFont="materialdesign.ttf" />
 
             <ProgressBar
                 android:id="@+id/progressDownload"

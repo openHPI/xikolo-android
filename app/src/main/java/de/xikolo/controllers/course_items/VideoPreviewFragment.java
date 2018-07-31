@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,8 +26,8 @@ import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.helper.DownloadViewHelper;
 import de.xikolo.controllers.video.VideoActivityAutoBundle;
-import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Course;
+import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
@@ -105,12 +106,29 @@ public class VideoPreviewFragment extends LoadingStatePresenterFragment<VideoPre
 
         linearLayoutDownloads.removeAllViews();
 
-        hdVideo = new DownloadViewHelper(getActivity(), new DownloadAsset.Course.Item.VideoHD(item, video));
-        linearLayoutDownloads.addView(hdVideo.getView());
-        sdVideo = new DownloadViewHelper(getActivity(), new DownloadAsset.Course.Item.VideoSD(item, video));
-        linearLayoutDownloads.addView(sdVideo.getView());
-        slides = new DownloadViewHelper(getActivity(), new DownloadAsset.Course.Item.Slides(item, video));
-        linearLayoutDownloads.addView(slides.getView());
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            hdVideo = new DownloadViewHelper(
+                    activity,
+                    new DownloadAsset.Course.Item.VideoHD(item, video),
+                    activity.getText(R.string.video_hd_as_mp4)
+            );
+            linearLayoutDownloads.addView(hdVideo.getView());
+
+            sdVideo = new DownloadViewHelper(
+                    activity,
+                    new DownloadAsset.Course.Item.VideoSD(item, video),
+                    activity.getText(R.string.video_sd_as_mp4)
+            );
+            linearLayoutDownloads.addView(sdVideo.getView());
+
+            slides = new DownloadViewHelper(
+                    activity,
+                    new DownloadAsset.Course.Item.Slides(item, video),
+                    activity.getText(R.string.slides_as_pdf)
+            );
+            linearLayoutDownloads.addView(slides.getView());
+        }
 
         long minutes = TimeUnit.SECONDS.toMinutes(video.duration);
         long seconds = video.duration - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(video.duration));

@@ -1,7 +1,7 @@
 package de.xikolo.jobs.base
 
-import de.xikolo.lifecycle.base.NetworkCode
-import de.xikolo.lifecycle.base.NetworkStateLiveData
+import de.xikolo.view_models.base.NetworkCode
+import de.xikolo.view_models.base.NetworkStateLiveData
 import de.xikolo.managers.UserManager
 import de.xikolo.utils.NetworkUtil
 import kotlinx.coroutines.experimental.launch

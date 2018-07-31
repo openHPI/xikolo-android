@@ -3,7 +3,7 @@ package de.xikolo.jobs
 import android.util.Log
 import de.xikolo.config.Config
 import de.xikolo.jobs.base.NetworkJob
-import de.xikolo.lifecycle.base.NetworkStateLiveData
+import de.xikolo.view_models.base.NetworkStateLiveData
 import de.xikolo.models.Document
 import de.xikolo.models.DocumentLocalization
 import de.xikolo.models.base.Sync

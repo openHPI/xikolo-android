@@ -175,6 +175,8 @@
     <string name="course_date_self_paced">Self-paced</string>
     <string name="course_date_beginning">Beginning %s</string>
 
+    <string name="document_lang">Language: %s</string>
+
     <!-- -->
     <string name="notification_no_network">Please enable network connection</string>
     <string name="notification_no_network_summary">This content cannot by displayed without network connection.</string>

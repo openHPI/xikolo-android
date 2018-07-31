@@ -8,7 +8,6 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -33,7 +32,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class DownloadViewHelper @JvmOverloads constructor(private val activity: FragmentActivity, private val downloadAsset: DownloadAsset, root: ViewGroup? = null) {
+class DownloadViewHelper @JvmOverloads constructor(private val activity: FragmentActivity, private val downloadAsset: DownloadAsset, title: CharSequence? = null) {
 
     companion object {
         val TAG: String = DownloadViewHelper::class.java.simpleName
@@ -78,11 +77,11 @@ class DownloadViewHelper @JvmOverloads constructor(private val activity: Fragmen
     private var progressBarUpdaterRunning = false
 
     private var url: String? = null
-    private var size: Int = 0
+    private var size: Long = 0L
 
     init {
         val inflater = LayoutInflater.from(App.getInstance())
-        view = inflater.inflate(R.layout.container_download, root)
+        view = inflater.inflate(R.layout.container_download, null)
 
         ButterKnife.bind(this, view)
 
@@ -129,31 +128,24 @@ class DownloadViewHelper @JvmOverloads constructor(private val activity: Fragmen
             }
         }
 
-        textFileName.text = downloadAsset.title
+        if (title != null) {
+            textFileName.text = title
+        } else {
+            textFileName.text = downloadAsset.title
+        }
+
         buttonOpenDownload.visibility = View.GONE
 
+        size = downloadAsset.size
+
         when (downloadAsset) {
-            is DownloadAsset.Course.Item -> {
-                size = downloadAsset.size
-                when (downloadAsset) {
-                    is DownloadAsset.Course.Item.Slides -> {
-                        textFileName.text = App.getInstance().getText(R.string.slides_as_pdf)
-                        openFileAsPdf()
-                    }
-                    is DownloadAsset.Course.Item.Transcript -> {
-                        textFileName.text = App.getInstance().getText(R.string.transcript_as_pdf)
-                        openFileAsPdf()
-                    }
-                    is DownloadAsset.Course.Item.VideoHD -> {
-                        textFileName.text = App.getInstance().getText(R.string.video_hd_as_mp4)
-                    }
-                    is DownloadAsset.Course.Item.VideoSD -> {
-                        textFileName.text = App.getInstance().getText(R.string.video_sd_as_mp4)
-                    }
-                }
+            is DownloadAsset.Course.Item.Slides -> {
+                openFileAsPdf()
+            }
+            is DownloadAsset.Course.Item.Transcript -> {
+                openFileAsPdf()
             }
             is DownloadAsset.Document -> {
-                textFileName.text = downloadAsset.title
                 openFileAsPdf()
             }
         }
@@ -223,13 +215,20 @@ class DownloadViewHelper @JvmOverloads constructor(private val activity: Fragmen
         progressBarDownload.isIndeterminate = true
         progressBarUpdaterRunning = false
 
-        textFileSize.text = FileUtil.getFormattedFileSize(size.toLong())
+        if (size != 0L) {
+            textFileSize.visibility = View.VISIBLE
+            textFileSize.text = FileUtil.getFormattedFileSize(size)
+        } else {
+            textFileSize.visibility = View.GONE
+        }
     }
 
     private fun showRunningState() {
         viewDownloadStart.visibility = View.INVISIBLE
         viewDownloadRunning.visibility = View.VISIBLE
         viewDownloadEnd.visibility = View.INVISIBLE
+
+        textFileSize.visibility = View.VISIBLE
 
         progressBarUpdaterRunning = true
         Thread(progressBarUpdater).start()
@@ -240,7 +239,15 @@ class DownloadViewHelper @JvmOverloads constructor(private val activity: Fragmen
         viewDownloadRunning.visibility = View.INVISIBLE
         viewDownloadEnd.visibility = View.VISIBLE
 
-        textFileSize.text = FileUtil.getFormattedFileSize(size.toLong())
+        textFileSize.visibility = View.VISIBLE
+
+        if (size != 0L) {
+            textFileSize.text = FileUtil.getFormattedFileSize(size)
+        } else {
+            textFileSize.text = FileUtil.getFormattedFileSize(
+                downloadManager.getDownloadFile(downloadAsset)
+            )
+        }
 
         progressBarUpdaterRunning = false
     }
