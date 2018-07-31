@@ -16,13 +16,13 @@ import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.controllers.downloads.DownloadsActivity;
+import de.xikolo.controllers.helper.CourseListFilter;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.controllers.second_screen.SecondScreenActivity;
 import de.xikolo.controllers.settings.SettingsActivity;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.managers.UserManager;
-import de.xikolo.models.Course;
 import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.PlayServicesUtil;
@@ -130,11 +130,11 @@ public class MainActivity extends BaseActivity
             tag = "channels";
         }
         if (position == NavigationAdapter.NAV_ALL_COURSES.getPosition()) {
-            newFragment = CourseListFragmentAutoBundle.builder(Course.Filter.ALL).build();
+            newFragment = CourseListFragmentAutoBundle.builder(CourseListFilter.ALL).build();
             tag = "all_courses";
         }
         if (position == NavigationAdapter.NAV_MY_COURSES.getPosition()) {
-            newFragment = CourseListFragmentAutoBundle.builder(Course.Filter.MY).build();
+            newFragment = CourseListFragmentAutoBundle.builder(CourseListFilter.MY).build();
             tag = "my_courses";
         }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {

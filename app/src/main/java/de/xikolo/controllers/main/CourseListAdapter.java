@@ -14,6 +14,7 @@ import de.xikolo.R;
 import de.xikolo.config.BuildFlavor;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseCourseListAdapter;
+import de.xikolo.controllers.helper.CourseListFilter;
 import de.xikolo.models.Course;
 import de.xikolo.models.base.SectionList;
 import de.xikolo.utils.DateUtil;
@@ -25,9 +26,9 @@ public class CourseListAdapter extends BaseCourseListAdapter {
     private static final int ITEM_VIEW_TYPE_HEADER = 0;
     private static final int ITEM_VIEW_TYPE_ITEM = 1;
 
-    private Course.Filter courseFilter;
+    private CourseListFilter courseFilter;
 
-    public CourseListAdapter(Fragment fragment, OnCourseButtonClickListener callback, Course.Filter courseFilter) {
+    public CourseListAdapter(Fragment fragment, OnCourseButtonClickListener callback, CourseListFilter courseFilter) {
         this.fragment = fragment;
         this.courseList = new SectionList<>();
         this.callback = callback;
@@ -85,7 +86,7 @@ public class CourseListAdapter extends BaseCourseListAdapter {
                 viewHolder.textTeacher.setVisibility(View.VISIBLE);
             }
 
-            if (courseFilter == Course.Filter.ALL) {
+            if (courseFilter == CourseListFilter.ALL) {
                 viewHolder.textDescription.setText(course.shortAbstract);
                 viewHolder.textDescription.setVisibility(View.VISIBLE);
 

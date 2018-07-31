@@ -23,6 +23,7 @@ import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.course.CourseActivityAutoBundle;
 import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
+import de.xikolo.controllers.helper.CourseListFilter;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
@@ -40,7 +41,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
 
     public static final String TAG = CourseListFragment.class.getSimpleName();
 
-    @AutoBundleField Course.Filter filter;
+    @AutoBundleField CourseListFilter filter;
 
     @BindView(R.id.content_view) AutofitRecyclerView recyclerView;
 
@@ -116,7 +117,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     public void onStart() {
         super.onStart();
 
-        if (filter == Course.Filter.ALL) {
+        if (filter == CourseListFilter.ALL) {
             activityCallback.onFragmentAttached(NavigationAdapter.NAV_ALL_COURSES.getPosition(), getString(R.string.title_section_all_courses));
         } else {
             activityCallback.onFragmentAttached(NavigationAdapter.NAV_MY_COURSES.getPosition(), getString(R.string.title_section_my_courses));
@@ -160,13 +161,13 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    presenter.onSearch(query, filter == Course.Filter.MY);
+                    presenter.onSearch(query, filter == CourseListFilter.MY);
                     return false;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    presenter.onSearch(newText, filter == Course.Filter.MY);
+                    presenter.onSearch(newText, filter == CourseListFilter.MY);
                     return false;
                 }
             });
@@ -195,7 +196,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     @NonNull
     @Override
     protected PresenterFactory<CourseListPresenter> getPresenterFactory() {
-        return filter == Course.Filter.ALL ? new CourseListFilterAllPresenterFactory() : new CourseListFilterMyPresenterFactory();
+        return filter == CourseListFilter.ALL ? new CourseListFilterAllPresenterFactory() : new CourseListFilterMyPresenterFactory();
     }
 
     @Override

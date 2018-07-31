@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.crashlytics.android.Crashlytics;
 
+import de.xikolo.controllers.helper.CourseArea;
 import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
@@ -29,7 +30,7 @@ public class CoursePresenter extends Presenter<CourseView> {
     CoursePresenter() {
         this.courseManager = new CourseManager();
         this.realm = Realm.getDefaultInstance();
-        this.courseTab = Course.TAB_LEARNINGS;
+        this.courseTab = CourseArea.LEARNINGS.getIndex();
 
         lastTrackedCourseTab = -1;
     }
@@ -66,21 +67,17 @@ public class CoursePresenter extends Presenter<CourseView> {
     public void setCourseTab(int tab) {
         courseTab = tab;
         if (lastTrackedCourseTab != courseTab) {
-            switch (tab) {
-                case Course.TAB_LEARNINGS:
-                    break;
-                case Course.TAB_DISCUSSIONS:
+            switch (CourseArea.get(tab)) {
+                case DISCUSSIONS:
                     LanalyticsUtil.trackVisitedPinboard(courseId);
                     break;
-                case Course.TAB_PROGRESS:
+                case PROGRESS:
                     LanalyticsUtil.trackVisitedProgress(courseId);
                     break;
-                case Course.TAB_COURSE_DETAILS:
-                    break;
-                case Course.TAB_ANNOUNCEMENTS:
+                case ANNOUNCEMENTS:
                     LanalyticsUtil.trackVisitedAnnouncements(courseId);
                     break;
-                case Course.TAB_RECAP:
+                case RECAP:
                     LanalyticsUtil.trackVisitedRecap(courseId);
                     break;
             }
