@@ -50,7 +50,7 @@
     <string name="btn_course_details">Details zeigen</string>
     <string name="btn_channel_courses">Mehr anzeigen</string>
     <string name="btn_channel_slider_more">Mehr Kurse anzeigen</string>
-    <string name="btn_starts_soon">Kurs hat noch nicht begonnen</string>
+    <string name="btn_starts_soon">Noch nicht gestartet</string>
     <string name="btn_display_issues">Darstellungsprobleme?</string>
 
     <!-- -->

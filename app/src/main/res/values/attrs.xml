@@ -13,16 +13,8 @@
         <attr name="circularImageViewStyle" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="IconButton">
-        <attr name="labelText" format="string" localization="suggested" />
-        <attr name="labelColor" format="color" />
-        <attr name="iconText" format="string" />
-        <attr name="iconColor" format="color" />
-    </declare-styleable>
-
     <declare-styleable name="ScrimInsetsFrameLayout">
         <attr name="insetFg" format="color|reference"/>
     </declare-styleable>
 
 </resources>
-

@@ -45,9 +45,10 @@
 
     <color name="progress_green">#80B600</color>
 
-    <color name="button_gray">#5a6065</color>
-    <!-- 30% white overlay -->
-    <color name="button_gray_light">#8c9094</color>
+    <color name="button_contained_disabled_bg">#e5e5e5</color>
+    <color name="button_contained_disabled_text">#888888</color>
+    <color name="button_gray">#99c4c4c4</color>
+    <color name="outlined_button_stroke">#c4c4c4</color>
 
     <!-- this is needed as preference_category_material layout is using this color as the text color -->
     <color name="preference_fallback_accent_color">@color/apptheme_second</color>

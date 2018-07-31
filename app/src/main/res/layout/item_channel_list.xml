@@ -69,11 +69,15 @@
 
             <Button
                 android:id="@+id/button_channel_courses"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/ButtonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/scrollView"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="2dp"
                 android:text="@string/btn_channel_courses" />
 
         </RelativeLayout>

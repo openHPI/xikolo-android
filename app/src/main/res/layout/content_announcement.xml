@@ -36,7 +36,7 @@
 
         <Button
             android:id="@+id/course_button"
-            style="@style/Button"
+            style="@style/ButtonContained"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

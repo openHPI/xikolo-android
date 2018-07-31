@@ -29,7 +29,6 @@ import de.xikolo.utils.FileProviderUtil
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.NetworkUtil
 import de.xikolo.utils.ToastUtil
-import de.xikolo.views.IconButton
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -55,7 +54,7 @@ class DownloadViewHelper @JvmOverloads constructor(private val activity: Fragmen
     lateinit var viewDownloadStart: View
 
     @BindView(R.id.buttonDownloadStart)
-    lateinit var buttonDownloadStart: IconButton
+    lateinit var buttonDownloadStart: Button
 
     @BindView(R.id.downloadRunningContainer)
     lateinit var viewDownloadRunning: View
@@ -131,7 +130,6 @@ class DownloadViewHelper @JvmOverloads constructor(private val activity: Fragmen
         }
 
         textFileName.text = downloadAsset.title
-        buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download))
         buttonOpenDownload.visibility = View.GONE
 
         when (downloadAsset) {
@@ -140,27 +138,22 @@ class DownloadViewHelper @JvmOverloads constructor(private val activity: Fragmen
                 when (downloadAsset) {
                     is DownloadAsset.Course.Item.Slides -> {
                         textFileName.text = App.getInstance().getText(R.string.slides_as_pdf)
-                        buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf))
                         openFileAsPdf()
                     }
                     is DownloadAsset.Course.Item.Transcript -> {
                         textFileName.text = App.getInstance().getText(R.string.transcript_as_pdf)
-                        buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf))
                         openFileAsPdf()
                     }
                     is DownloadAsset.Course.Item.VideoHD -> {
                         textFileName.text = App.getInstance().getText(R.string.video_hd_as_mp4)
-                        buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video))
                     }
                     is DownloadAsset.Course.Item.VideoSD -> {
                         textFileName.text = App.getInstance().getText(R.string.video_sd_as_mp4)
-                        buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video))
                     }
                 }
             }
             is DownloadAsset.Document -> {
                 textFileName.text = downloadAsset.title
-                buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf))
                 openFileAsPdf()
             }
         }

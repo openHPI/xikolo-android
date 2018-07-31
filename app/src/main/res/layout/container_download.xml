@@ -41,20 +41,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <de.xikolo.views.IconButton
+            <Button
                 android:id="@+id/buttonDownloadStart"
+                style="@style/ButtonOutlined"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:background="@drawable/button_main"
-                android:elevation="1dp"
-                android:minHeight="36dp"
-                android:minWidth="88dp"
-                android:translationZ="1dp"
-                app:labelText="@string/download" />
+                android:text="@string/download" />
 
         </RelativeLayout>
 
@@ -97,8 +93,8 @@
             android:gravity="right">
 
             <Button
-                android:id="@+id/buttonDownloadDelete"
-                style="@style/Button"
+                android:id="@+id/buttonDownloadOpen"
+                style="@style/ButtonOutlined"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -106,20 +102,18 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="4dp"
-                android:background="@drawable/button_gray"
-                android:text="@string/delete" />
+                android:text="@string/open" />
 
             <Button
-                android:id="@+id/buttonDownloadOpen"
-                style="@style/Button"
+                android:id="@+id/buttonDownloadDelete"
+                style="@style/ButtonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:layout_toLeftOf="@+id/buttonDownloadDelete"
-                android:background="@drawable/button_main"
-                android:text="@string/open" />
+                android:layout_toLeftOf="@+id/buttonDownloadOpen"
+                android:text="@string/delete" />
 
         </RelativeLayout>
 

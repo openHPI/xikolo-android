@@ -52,7 +52,7 @@
     <string name="btn_course_details">Show details</string>
     <string name="btn_channel_courses">Show more</string>
     <string name="btn_channel_slider_more">Show more courses</string>
-    <string name="btn_starts_soon">Course has not yet started</string>
+    <string name="btn_starts_soon">Not yet started</string>
     <string name="btn_play_cast">&#xe652;\n Play on Cast device</string>
     <string name="btn_display_issues">Display issues?</string>
 

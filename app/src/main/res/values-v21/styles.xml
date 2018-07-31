@@ -1,18 +1,34 @@
 <resources>
 
-    <style name="Button">
-        <item name="android:textColor">@color/white</item>
+    <style name="ButtonContained">
+        <item name="android:textColor">@color/button_contained_color</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
         <item name="android:minWidth">88dp</item>
         <item name="android:minHeight">36dp</item>
-        <item name="android:elevation">2dp</item>
-        <item name="android:translationZ">0dp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:stateListAnimator">@null</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:background">@drawable/button_main</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:translationZ">0dp</item>
+        <item name="android:background">@drawable/button_contained</item>
+    </style>
+
+    <style name="ButtonOutlined" parent="ButtonContained">
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:translationZ">0dp</item>
+        <item name="android:background">@drawable/button_outlined</item>
+    </style>
+
+    <style name="ButtonText" parent="ButtonContained">
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:translationZ">0dp</item>
+        <item name="android:background">@drawable/button_text</item>
     </style>
 
 </resources>
