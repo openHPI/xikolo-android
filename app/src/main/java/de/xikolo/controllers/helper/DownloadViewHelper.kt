@@ -32,7 +32,11 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class DownloadViewHelper @JvmOverloads constructor(private val activity: FragmentActivity, private val downloadAsset: DownloadAsset, title: CharSequence? = null) {
+class DownloadViewHelper(
+    private val activity: FragmentActivity,
+    private val downloadAsset: DownloadAsset,
+    title: CharSequence? = null
+) {
 
     companion object {
         val TAG: String = DownloadViewHelper::class.java.simpleName
@@ -137,18 +141,6 @@ class DownloadViewHelper @JvmOverloads constructor(private val activity: Fragmen
         buttonOpenDownload.visibility = View.GONE
 
         size = downloadAsset.size
-
-        when (downloadAsset) {
-            is DownloadAsset.Course.Item.Slides -> {
-                openFileAsPdf()
-            }
-            is DownloadAsset.Course.Item.Transcript -> {
-                openFileAsPdf()
-            }
-            is DownloadAsset.Document -> {
-                openFileAsPdf()
-            }
-        }
 
         url = downloadAsset.url
         if (url == null) {
@@ -280,10 +272,12 @@ class DownloadViewHelper @JvmOverloads constructor(private val activity: Fragmen
         }
     }
 
-    private fun openFileAsPdf() {
+    fun openFileAsPdf(onClick: () -> Unit = {}) {
         buttonOpenDownload.text = App.getInstance().resources.getText(R.string.open)
         buttonOpenDownload.visibility = View.VISIBLE
         buttonOpenDownload.setOnClickListener { _ ->
+            onClick.invoke()
+
             val pdf = downloadManager.getDownloadFile(downloadAsset)
             val target = Intent(Intent.ACTION_VIEW)
             target.setDataAndType(FileProviderUtil.getUriForFile(pdf), "application/pdf")
@@ -297,6 +291,14 @@ class DownloadViewHelper @JvmOverloads constructor(private val activity: Fragmen
             } catch (e: ActivityNotFoundException) {
                 ToastUtil.show(R.string.toast_no_pdf_viewer_found)
             }
+        }
+    }
+
+    fun openFileAsVideo(onClick: () -> Unit = {}) {
+        buttonOpenDownload.text = App.getInstance().resources.getText(R.string.play)
+        buttonOpenDownload.visibility = View.VISIBLE
+        buttonOpenDownload.setOnClickListener { _ ->
+            onClick.invoke()
         }
     }
 

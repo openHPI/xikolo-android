@@ -45,13 +45,13 @@ class DocumentListAdapter(val activity: FragmentActivity) : RecyclerView.Adapter
 
         holder.downloadsLayout.removeAllViews()
         document.localizations.forEach { l ->
-            holder.downloadsLayout.addView(
-                DownloadViewHelper(
-                    activity,
-                    DownloadAsset.Document(document, l),
-                    String.format(activity.getString(R.string.document_lang), l.language)
-                ).view
+            val downloadViewHelper = DownloadViewHelper(
+                activity,
+                DownloadAsset.Document(document, l),
+                String.format(activity.getString(R.string.document_lang), l.language)
             )
+            downloadViewHelper.openFileAsPdf()
+            holder.downloadsLayout.addView(downloadViewHelper.view)
         }
     }
 
