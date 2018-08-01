@@ -10,9 +10,9 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.view.*
 import de.xikolo.R
 import de.xikolo.controllers.helper.NetworkStateHelper
-import de.xikolo.view_models.base.BaseViewModel
-import de.xikolo.view_models.base.NetworkCode
-import de.xikolo.view_models.base.observe
+import de.xikolo.viewmodels.base.BaseViewModel
+import de.xikolo.viewmodels.base.NetworkCode
+import de.xikolo.viewmodels.base.observe
 import de.xikolo.utils.NetworkUtil
 import de.xikolo.utils.ToastUtil
 

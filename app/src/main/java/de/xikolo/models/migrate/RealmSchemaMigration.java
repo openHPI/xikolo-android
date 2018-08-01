@@ -1,4 +1,4 @@
-package de.xikolo.models.base;
+package de.xikolo.models.migrate;
 
 import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;

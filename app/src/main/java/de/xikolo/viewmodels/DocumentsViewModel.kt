@@ -1,11 +1,11 @@
-package de.xikolo.view_models
+package de.xikolo.viewmodels
 
 import android.arch.lifecycle.LiveData
 import de.xikolo.jobs.ListDocumentsWithLocalizationsForCourseJob
 import de.xikolo.models.Document
 import de.xikolo.models.DocumentLocalization
 import de.xikolo.models.dao.DocumentDao
-import de.xikolo.view_models.base.BaseViewModel
+import de.xikolo.viewmodels.base.BaseViewModel
 
 open class DocumentsViewModel(val courseId: String) : BaseViewModel() {
 

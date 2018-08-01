@@ -1,4 +1,4 @@
-package de.xikolo.view_models.base
+package de.xikolo.viewmodels.base
 
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LiveData
