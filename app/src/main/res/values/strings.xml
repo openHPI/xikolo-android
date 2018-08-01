@@ -254,7 +254,7 @@
     <string name="settings_send_app_feedback_message" translatable="false">\n\n\n\n------------------------------\nSystem Info\n------------------------------\nplatform: Android\nos version: %s\ndevice: %s\napp name: %s\napp version: %s\napp build: %s</string>
 
     <string name="settings_title_storage">Choose storage</string>
-    <string name="settings_title_storage_internal">Internal</string>
+    <string name="settings_title_storage_internal">Internal Storage</string>
     <string name="settings_title_storage_external">SD Card</string>
     <string name="settings_summary_storage">%1$s: %2$s free.</string>
     <string name="settings_storage_addition">(currently selected)</string>
