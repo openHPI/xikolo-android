@@ -1,7 +1,11 @@
 package de.xikolo.presenters.course;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
+import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Enrollment;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
@@ -36,6 +40,9 @@ public class CertificatesPresenter extends LoadingStatePresenter<CertificatesVie
             requestCourse(false);
 
         course = Course.find(courseId);
+
+        List<DownloadAsset.Course.Certificate> certificates = new ArrayList<>();
+
         if (course.isEnrolled())
             enrollmentPromise = courseManager.listEnrollments(realm, e -> {
                 Enrollment enrollment = e.where().equalTo("id", course.enrollmentId).findFirst();
@@ -46,12 +53,12 @@ public class CertificatesPresenter extends LoadingStatePresenter<CertificatesVie
                                 enrollment.confirmationOfParticipationUrl,
                                 enrollment.recordOfAchievementUrl,
                                 enrollment.qualifiedCertificateUrl);
-                    getViewOrThrow().showCertificates(course);
+                    getViewOrThrow().showCertificates(course, certificates);
                 }
             });
         else {
             getViewOrThrow().showContent();
-            getViewOrThrow().showCertificates(course);
+            getViewOrThrow().showCertificates(course, certificates);
         }
     }
 

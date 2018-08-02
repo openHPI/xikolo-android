@@ -257,10 +257,13 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             Certificates c;
             try {
                 c = new Certificates(certificates);
-            } catch (Exception e) {
-                // set certificates to null in case a NullPointerException or ClassCastException is thrown
+            } catch (ClassCastException e) { // set certificates to null in case a NullPointerException or ClassCastException is thrown
                 c = null;
             }
+            catch(NullPointerException e) {
+                c = null;
+            }
+
             course.certificates = c;
 
             course.onDemand = onDemand;
