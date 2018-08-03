@@ -111,12 +111,12 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
                     }
                 }
 
-                fun buildTotalItem(appFolder: String, suffix: String): DownloadsAdapter.FolderItem {
+                fun buildTotalItem(appFolder: String, title: String): DownloadsAdapter.FolderItem {
                     // clean up the storage before fetching items
                     StorageUtil.cleanStorage(File(appFolder))
 
                      return DownloadsAdapter.FolderItem(
-                        getString(R.string.settings_title_storage_internal) + suffix,
+                        title,
                         appFolder
                     )
                 }
@@ -125,13 +125,13 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
 
                 list.add(buildTotalItem(
                     FileUtil.createStorageFolderPath(StorageUtil.getInternalStorage(activity)),
-                    internalAddition
+                    getString(R.string.settings_title_storage_internal) + internalAddition
                 ))
 
                 StorageUtil.getSdcardStorage(activity)?.let { sdcardStorage ->
                     list.add(buildTotalItem(
                         FileUtil.createStorageFolderPath(sdcardStorage),
-                        sdcardAddition
+                        getString(R.string.settings_title_storage_external) + sdcardAddition
                     ))
                 }
 
@@ -144,13 +144,13 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
 
                     list.add(buildTotalItem(
                         StorageUtil.getInternalStorage(activity).absolutePath + File.separator + "Documents",
-                        internalAddition
+                        getString(R.string.settings_title_storage_internal) + internalAddition
                     ))
 
                     StorageUtil.getSdcardStorage(activity)?.let { sdcardStorage ->
                         list.add(buildTotalItem(
                             sdcardStorage.absolutePath + File.separator + "Documents",
-                            sdcardAddition
+                            getString(R.string.settings_title_storage_external) + sdcardAddition
                         ))
                     }
 

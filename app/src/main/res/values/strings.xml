@@ -47,8 +47,8 @@
     <string name="tab_recap">Recap</string>
 
     <!-- -->
-    <string name="btn_enroll">Enroll for course</string>
-    <string name="btn_continue_course">Continue course</string>
+    <string name="btn_enroll">Enroll</string>
+    <string name="btn_continue_course">Continue</string>
     <string name="btn_course_details">Show details</string>
     <string name="btn_channel_courses">Show more</string>
     <string name="btn_channel_slider_more">Show more courses</string>

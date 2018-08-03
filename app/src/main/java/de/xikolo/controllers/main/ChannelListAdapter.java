@@ -23,7 +23,6 @@ import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Channel;
 import de.xikolo.models.Course;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.ChannelViewHolder> {
 
@@ -82,8 +81,8 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
             holder.imageView.setVisibility(View.GONE);
 
         CourseManager courseManager = new CourseManager();
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults coursesPromise = courseManager.listCoursesForChannel(channel.id, Realm.getDefaultInstance(), courses -> {
+        courseManager.listCoursesForChannel(channel.id, Realm.getDefaultInstance(), courses -> {
+            Realm realm = Realm.getDefaultInstance();
             holder.scrollContainer.removeAllViews();
 
             List<Course> courseList = new ArrayList<>();
@@ -136,9 +135,21 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
                 showMoreCard.setOnClickListener(v -> callback.onMoreCoursesClicked(channel.id, courseCount));
 
+                View card = showMoreCard.findViewById(R.id.card_view);
+                ViewGroup.LayoutParams params = card.getLayoutParams();
+                params.width += App.getInstance().getResources().getDimension(R.dimen.corner_radius);
+                card.setLayoutParams(params);
+
                 holder.scrollContainer.addView(showMoreCard);
-                holder.scrollContainer.setPadding(holder.scrollContainer.getPaddingLeft(), holder.scrollContainer.getPaddingTop(), 0, holder.scrollContainer.getPaddingBottom());
+                holder.scrollContainer.setPadding(
+                        holder.scrollContainer.getPaddingLeft(),
+                        holder.scrollContainer.getPaddingTop(),
+                        0,
+                        holder.scrollContainer.getPaddingBottom()
+                );
             }
+
+            realm.close();
         });
     }
 

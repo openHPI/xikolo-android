@@ -52,7 +52,7 @@ class DocumentListFragment : NetworkStateFragment<DocumentsViewModel>() {
     }
 
     private fun showDocuments() {
-        viewModel.documentsForCourse.value?.let {documents ->
+        viewModel.documentsForCourse.value?.let { documents ->
             if (documents.isEmpty()) {
                 showEmptyMessage(R.string.empty_message_documents_title)
             } else {
