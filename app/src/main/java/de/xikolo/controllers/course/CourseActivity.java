@@ -25,6 +25,7 @@ import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
+import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
 import de.xikolo.controllers.helper.CacheHelper;
 import de.xikolo.controllers.helper.CourseArea;
@@ -38,7 +39,7 @@ import de.xikolo.presenters.course.CourseView;
 import de.xikolo.utils.ShareUtil;
 import de.xikolo.utils.ToastUtil;
 
-public class CourseActivity extends BasePresenterActivity<CoursePresenter, CourseView> implements CourseView, UnenrollDialog.UnenrollDialogListener {
+public class CourseActivity extends BasePresenterActivity<CoursePresenter, CourseView> implements CourseView, UnenrollDialog.Listener {
 
     public static final String TAG = CourseActivity.class.getSimpleName();
 
@@ -148,7 +149,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                 return true;
             case R.id.action_unenroll:
                 UnenrollDialog dialog = new UnenrollDialog();
-                dialog.setUnenrollDialogListener(this);
+                dialog.setListener(this);
                 dialog.show(getSupportFragmentManager(), UnenrollDialog.TAG);
                 return true;
         }
@@ -168,7 +169,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     @Override
     public void showProgressDialog() {
         if (progressDialog == null) {
-            progressDialog = ProgressDialog.getInstance();
+            progressDialog = ProgressDialogAutoBundle.builder().build();
         }
         progressDialog.show(getSupportFragmentManager(), ProgressDialog.TAG);
     }

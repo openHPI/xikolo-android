@@ -1,7 +1,9 @@
 package de.xikolo.controllers.base;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +43,7 @@ import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
 import de.xikolo.managers.UserManager;
+import de.xikolo.receivers.NetworkChangeReceiver;
 import de.xikolo.utils.NotificationUtil;
 import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.TintUtil;
@@ -69,6 +72,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     private boolean translucentActionbar = false;
 
+    private NetworkChangeReceiver networkChangeReceiver;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +88,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         app = App.getInstance();
 
         offlineModeToolbar = true;
+
+        networkChangeReceiver = new NetworkChangeReceiver();
 
         try {
             if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
@@ -153,14 +160,14 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     @Override
     protected void onResume() {
         super.onResume();
-
+        registerReceiver(networkChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         app.startCookieSyncManager();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
+        unregisterReceiver(networkChangeReceiver);
         app.syncCookieSyncManager();
         app.stopCookieSyncManager();
     }
@@ -187,22 +194,14 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
             overlay.remove();
         }
         if ((mediaRouteMenuItem != null) && mediaRouteMenuItem.isVisible()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mediaRouteMenuItem != null && mediaRouteMenuItem.isVisible()) {
-                        overlay = new IntroductoryOverlay.Builder(BaseActivity.this, mediaRouteMenuItem)
-                                .setTitleText(R.string.intro_overlay_text)
-                                .setSingleTime()
-                                .setOnOverlayDismissedListener(new IntroductoryOverlay.OnOverlayDismissedListener() {
-                                    @Override
-                                    public void onOverlayDismissed() {
-                                        overlay = null;
-                                    }
-                                })
-                                .build();
-                        overlay.show();
-                    }
+            new Handler().postDelayed(() -> {
+                if (mediaRouteMenuItem != null && mediaRouteMenuItem.isVisible()) {
+                    overlay = new IntroductoryOverlay.Builder(BaseActivity.this, mediaRouteMenuItem)
+                            .setTitleText(R.string.intro_overlay_text)
+                            .setSingleTime()
+                            .setOnOverlayDismissedListener(() -> overlay = null)
+                            .build();
+                    overlay.show();
                 }
             }, 1000);
         }

@@ -29,6 +29,7 @@ import de.xikolo.R;
 import de.xikolo.controllers.base.BaseFragment;
 import de.xikolo.controllers.dialogs.DownloadSlidesDialog;
 import de.xikolo.controllers.dialogs.ProgressDialog;
+import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
 import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.SecondScreenManager;
@@ -86,12 +87,12 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
         if (downloadManager.downloadExists(slides)) {
             initSlidesViewer();
         } else {
-            DownloadSlidesDialog dialog = DownloadSlidesDialog.getInstance();
-            dialog.setListener(new DownloadSlidesDialog.DownloadSlidesDialogListener() {
+            DownloadSlidesDialog dialog = new DownloadSlidesDialog();
+            dialog.setListener(new DownloadSlidesDialog.Listener() {
                 @Override
                 public void onDialogPositiveClick() {
                     downloadManager.startAssetDownload(slides);
-                    progressDialog = ProgressDialog.getInstance();
+                    progressDialog = ProgressDialogAutoBundle.builder().build();
                     progressDialog.show(getFragmentManager(), ProgressDialog.TAG);
                 }
 

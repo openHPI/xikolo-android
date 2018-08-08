@@ -52,7 +52,7 @@ public class WebSocketManager {
      * Init WebSocket connection if not already opened.
      */
     public void initConnection(String token) {
-        if (webSocketClient == null || (!isConnected() && !isConnecting())) {
+        if (webSocketClient == null || (!isConnected())) {
             Map<String, String> headers = new HashMap<>();
             headers.put(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX + token);
 
@@ -65,9 +65,9 @@ public class WebSocketManager {
 
                 @Override
                 public void onMessage(String message) {
-                    if (Config.DEBUG) {
+//                    if (Config.DEBUG) {
 //                        Log.d(TAG, "WebSocket received message: " + message);
-                    }
+//                    }
                     EventBus.getDefault().post(new WebSocketMessageEvent(message));
                 }
 
@@ -118,10 +118,6 @@ public class WebSocketManager {
 
     public boolean isConnected() {
         return webSocketClient != null && webSocketClient.getReadyState() == WebSocket.READYSTATE.OPEN;
-    }
-
-    private boolean isConnecting() {
-        return webSocketClient != null && webSocketClient.getReadyState() == WebSocket.READYSTATE.CONNECTING;
     }
 
     @SuppressWarnings("unused")

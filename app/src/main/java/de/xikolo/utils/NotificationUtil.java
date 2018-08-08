@@ -219,12 +219,10 @@ public class NotificationUtil extends ContextWrapper {
         stackBuilder.addParentStack(parentActivityClass);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        return resultPendingIntent;
+        return stackBuilder.getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
     }
 
     private PendingIntent createDownloadCompletedDeleteIntent(String extraKey, String extraValue) {

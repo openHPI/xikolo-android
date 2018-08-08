@@ -16,6 +16,7 @@ import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog
+import de.xikolo.controllers.dialogs.ConfirmDeleteDialogAutoBundle
 import de.xikolo.controllers.dialogs.MobileDownloadDialog
 import de.xikolo.events.AllDownloadsCancelledEvent
 import de.xikolo.events.DownloadCompletedEvent
@@ -94,10 +95,12 @@ class DownloadViewHelper(
         buttonDownloadStart.setOnClickListener { _ ->
             if (NetworkUtil.isOnline()) {
                 if (NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_MOBILE && appPreferences.isDownloadNetworkLimitedOnMobile) {
-                    val dialog = MobileDownloadDialog.getInstance()
-                    dialog.setMobileDownloadDialogListener { _ ->
-                        appPreferences.isDownloadNetworkLimitedOnMobile = false
-                        startDownload()
+                    val dialog = MobileDownloadDialog()
+                    dialog.listener = object : MobileDownloadDialog.Listener {
+                        override fun onDialogPositiveClick(dialog: DialogFragment) {
+                            appPreferences.isDownloadNetworkLimitedOnMobile = false
+                            startDownload()
+                        }
                     }
                     dialog.show(activity.supportFragmentManager, MobileDownloadDialog.TAG)
                 } else {
@@ -115,8 +118,8 @@ class DownloadViewHelper(
 
         buttonDeleteDownload.setOnClickListener { _ ->
             if (appPreferences.confirmBeforeDeleting) {
-                val dialog = ConfirmDeleteDialog.getInstance(false)
-                dialog.setConfirmDeleteDialogListener(object : ConfirmDeleteDialog.ConfirmDeleteDialogListener {
+                val dialog = ConfirmDeleteDialogAutoBundle.builder(false).build()
+                dialog.listener = object : ConfirmDeleteDialog.Listener {
                     override fun onDialogPositiveClick(dialog: DialogFragment) {
                         deleteFile()
                     }
@@ -125,7 +128,7 @@ class DownloadViewHelper(
                         appPreferences.confirmBeforeDeleting = false
                         deleteFile()
                     }
-                })
+                }
                 dialog.show(activity.supportFragmentManager, ConfirmDeleteDialog.TAG)
             } else {
                 deleteFile()
@@ -265,6 +268,7 @@ class DownloadViewHelper(
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAllDownloadCancelledEvent(event: AllDownloadsCancelledEvent) {
         if (progressBarUpdaterRunning) {

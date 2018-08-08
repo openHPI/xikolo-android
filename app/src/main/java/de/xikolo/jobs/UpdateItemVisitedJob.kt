@@ -17,7 +17,7 @@ class UpdateItemVisitedJob : ScheduledJob(Precondition.AUTH) {
 
         @JvmStatic
         fun schedule(itemId: String): Int {
-            if (Config.DEBUG) Log.i(TAG, TAG + " scheduled | item.id " + itemId)
+            if (Config.DEBUG) Log.i(TAG, "$TAG scheduled | item.id $itemId")
 
             Local.Update.with(Item::class.java, itemId)
                     .setBeforeCommitCallback { _, model -> model.visited = true }

@@ -12,6 +12,7 @@ import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.dialogs.ProgressDialog;
+import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
 import de.xikolo.views.CustomFontTextView;
 
 @SuppressWarnings("unused")
@@ -71,7 +72,7 @@ public class LoadingStateHelper {
     }
 
     public void showBlockingProgress() {
-        progressDialog = ProgressDialog.getInstance();
+        progressDialog = ProgressDialogAutoBundle.builder().build();
         progressDialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);
     }
 

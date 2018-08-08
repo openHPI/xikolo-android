@@ -120,11 +120,6 @@ public class CourseItemsActivity extends BasePresenterActivity<CourseItemsPresen
     }
 
     @Override
-    public void setTitle(CharSequence title) {
-        super.setTitle(title);
-    }
-
-    @Override
     @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onNetworkEvent(NetworkStateEvent event) {

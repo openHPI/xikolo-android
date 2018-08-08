@@ -19,22 +19,22 @@ object StorageUtil {
     /* Checks if external storage is available for read and write */
     @JvmStatic
     fun isStorageWritable(storage: File): Boolean {
-        val state: String
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            state = Environment.getExternalStorageState(storage)
-        else
-            state = Environment.getExternalStorageState()
+        val state = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Environment.getExternalStorageState(storage)
+        } else {
+            Environment.getExternalStorageState()
+        }
         return state == Environment.MEDIA_MOUNTED
     }
 
     /* Checks if external storage is available to at least read */
     @JvmStatic
     fun isStorageReadable(storage: File): Boolean {
-        val state: String
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            state = Environment.getExternalStorageState(storage)
-        else
-            state = Environment.getExternalStorageState()
+        val state = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Environment.getExternalStorageState(storage)
+        } else {
+            Environment.getExternalStorageState()
+        }
         return state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY
     }
 
@@ -55,12 +55,12 @@ object StorageUtil {
     @JvmStatic
     fun getStorage(c: Context): File {
         val type = getStoragePreference(c)
-        when (type) {
+        return when (type) {
             StorageUtil.StorageType.SDCARD -> {
                 val sdCard = getSdcardStorage(c)
-                return sdCard ?: getInternalStorage(c)
+                sdCard ?: getInternalStorage(c)
             }
-            else -> return getInternalStorage(c)
+            else -> getInternalStorage(c)
         }
     }
 

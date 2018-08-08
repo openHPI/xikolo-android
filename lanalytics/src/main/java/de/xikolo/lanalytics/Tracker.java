@@ -37,15 +37,12 @@ public class Tracker {
     public void send(final Lanalytics.Event event, String token) {
         this.token = token;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Logger.d(Lanalytics.TAG, "Track event " + event.verb);
+        new Thread(() -> {
+            Logger.d(Lanalytics.TAG, "Track event " + event.verb);
 
-                eventDataAccess.add(event);
+            eventDataAccess.add(event);
 
-                startSending();
-            }
+            startSending();
         }).start();
     }
 

@@ -7,18 +7,15 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
-import android.support.v14.preference.PreferenceFragment
 import android.support.v4.content.ContextCompat
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceCategory
-import android.support.v7.preference.PreferenceManager
-import android.support.v7.preference.PreferenceScreen
+import android.support.v7.preference.*
 import de.psdev.licensesdialog.LicensesDialog
 import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
+import de.xikolo.controllers.dialogs.StorageMigrationDialogAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
@@ -32,14 +29,10 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
-class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
         val TAG: String = SettingsFragment::class.java.simpleName
-
-        fun newInstance(): PreferenceFragment {
-            return SettingsFragment()
-        }
     }
 
     private var loginOut: Preference? = null
@@ -77,7 +70,8 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
 
             val fileCount = FileUtil.folderFileNumber(oldStorage)
             if (fileCount > 0) {
-                val dialog = StorageMigrationDialog.getInstance(activity, oldStorageType, object : StorageMigrationDialog.StorageMigrationDialogListener {
+                val dialog = StorageMigrationDialogAutoBundle.builder(oldStorageType).build()
+                dialog.listener = object : StorageMigrationDialog.Listener {
                     override fun onDialogPositiveClick() {
                         val progressDialog = ProgressDialog(activity)
                         progressDialog.setTitle(R.string.dialog_storage_migration_title)
@@ -90,11 +84,11 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
 
                         val migrationCallback = object : StorageUtil.StorageMigrationCallback {
                             override fun onProgressChanged(count: Int) {
-                                activity.runOnUiThread { progressDialog.progress = count }
+                                activity?.runOnUiThread { progressDialog.progress = count }
                             }
 
                             override fun onCompleted(success: Boolean) {
-                                activity.runOnUiThread {
+                                activity?.runOnUiThread {
                                     if (success) {
                                         ToastUtil.show(R.string.dialog_storage_migration_successful)
                                     } else {
@@ -119,9 +113,10 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
                             )
                         }
                     }
-                })
+                }
 
-                dialog.show()
+
+                dialog.show(activity?.supportFragmentManager, StorageMigrationDialog.TAG)
             }
         }
     }
@@ -132,19 +127,18 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         val prefs = PreferenceManager.getDefaultSharedPreferences(activity)
 
         findPreference(getString(R.string.preference_storage)).summary = prefs.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
-        findPreference(getString(R.string.preference_storage)).onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
-            override fun onPreferenceChange(p0: Preference?, p1: Any?): Boolean {
-                if (DownloadService.getInstance() != null && DownloadService.getInstance().isDownloading) {
-                    ToastUtil.show(R.string.notification_storage_locked)
-                    return false
+        findPreference(getString(R.string.preference_storage)).onPreferenceChangeListener =
+                Preference.OnPreferenceChangeListener { _, _ ->
+                    if (DownloadService.getInstance() != null && DownloadService.getInstance().isDownloading) {
+                        ToastUtil.show(R.string.notification_storage_locked)
+                        return@OnPreferenceChangeListener false
+                    }
+                    true
                 }
-                return true
-            }
-        }
 
         // Android does not support multiple external storages below KITKAT
         // Determining the states of multiple storages requires LOLLIPOP
-        if (Build.VERSION.SDK_INT < 21 || StorageUtil.getStorages(activity).size < 2) {
+        if (Build.VERSION.SDK_INT < 21 || StorageUtil.getStorages(App.getInstance()).size < 2) {
             val general = findPreference(getString(R.string.preference_category_general)) as PreferenceCategory
             val storagePref = findPreference(getString(R.string.preference_storage))
             general.removePreference(storagePref)
@@ -231,7 +225,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         if (pref != null) {
             pref.title = getString(R.string.login)
             pref.setOnPreferenceClickListener { _ ->
-                val intent = LoginActivityAutoBundle.builder().build(activity)
+                val intent = LoginActivityAutoBundle.builder().build(activity!!)
                 startActivity(intent)
                 true
             }
@@ -243,17 +237,19 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
             pref.title = getString(R.string.logout)
             pref.setOnPreferenceClickListener { _ ->
                 UserManager.logout()
-                ToastUtil.show(R.string.toast_successful_logout);
+                ToastUtil.show(R.string.toast_successful_logout)
                 true
             }
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLoginEvent(event: LoginEvent) {
         buildLogoutView(loginOut)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLogoutEvent(event: LogoutEvent) {
         buildLoginView(loginOut)
@@ -261,7 +257,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
 
     private fun openUrl(url: String) {
         val customTabsIntent = CustomTabsIntent.Builder()
-            .setToolbarColor(ContextCompat.getColor(activity, R.color.apptheme_main))
+            .setToolbarColor(ContextCompat.getColor(App.getInstance(), R.color.apptheme_main))
             .build()
         customTabsIntent.launchUrl(activity, Uri.parse(url))
     }

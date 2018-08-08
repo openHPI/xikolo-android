@@ -55,12 +55,7 @@ public class NewsListFragment extends MainFragment<NewsListPresenter, NewsListVi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        newsListAdapter = new NewsListAdapter(new NewsListAdapter.OnAnnouncementClickListener() {
-            @Override
-            public void onAnnouncementClicked(String announcementId) {
-                presenter.onAnnouncementClicked(announcementId);
-            }
-        });
+        newsListAdapter = new NewsListAdapter((announcementId) -> presenter.onAnnouncementClicked(announcementId));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);

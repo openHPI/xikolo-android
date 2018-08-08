@@ -176,7 +176,6 @@
     <string name="settings_title_storage">请选择存储位置</string>
     <string name="settings_title_storage_internal">内置存储器</string>
     <string name="settings_title_storage_external">SD卡</string>
-    <string name="settings_summary_storage">可用空间 %1$s </string>
 
     <string name="settings_imprint">法律声明</string>
     <string name="settings_privacy">隐私和数据保护</string>

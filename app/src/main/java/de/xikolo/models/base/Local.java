@@ -32,36 +32,33 @@ public abstract class Local<S extends RealmModel, T extends Resource & RealmAdap
         @Override
         public String[] run() {
             Realm realm = Realm.getDefaultInstance();
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    RealmQuery<S> deleteQuery = realm.where(clazz);
-                    if (ids.length > 0) {
-                        deleteQuery.in("id", ids);
-                    }
-                    if (filters != null) {
-                        for (Pair<String, String> filter : filters) {
-                            deleteQuery.equalTo(filter.first, filter.second);
-                        }
-                    }
-                    if (inFilters != null) {
-                        for (Pair<String, String[]> filter : inFilters) {
-                            deleteQuery.in(filter.first, filter.second);
-                        }
-                    }
-
-                    RealmResults<S> results = deleteQuery.findAll();
-
-                    if (beforeCommitCallback != null) {
-                        for (S result : results) {
-                            beforeCommitCallback.beforeCommit(realm, result);
-                        }
-                    }
-
-                    if (Config.DEBUG) Log.d(TAG, "DELETE: Deleted " + results.size() + " local resources from type " + clazz.getSimpleName());
-
-                    results.deleteAllFromRealm();
+            realm.executeTransaction((r) -> {
+                RealmQuery<S> deleteQuery = r.where(clazz);
+                if (ids.length > 0) {
+                    deleteQuery.in("id", ids);
                 }
+                if (filters != null) {
+                    for (Pair<String, String> filter : filters) {
+                        deleteQuery.equalTo(filter.first, filter.second);
+                    }
+                }
+                if (inFilters != null) {
+                    for (Pair<String, String[]> filter : inFilters) {
+                        deleteQuery.in(filter.first, filter.second);
+                    }
+                }
+
+                RealmResults<S> results = deleteQuery.findAll();
+
+                if (beforeCommitCallback != null) {
+                    for (S result : results) {
+                        beforeCommitCallback.beforeCommit(r, result);
+                    }
+                }
+
+                if (Config.DEBUG) Log.d(TAG, "DELETE: Deleted " + results.size() + " local resources from type " + clazz.getSimpleName());
+
+                results.deleteAllFromRealm();
             });
             realm.close();
 
@@ -86,36 +83,33 @@ public abstract class Local<S extends RealmModel, T extends Resource & RealmAdap
         @Override
         public String[] run() {
             Realm realm = Realm.getDefaultInstance();
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    RealmQuery<S> updateQuery = realm.where(clazz);
-                    if (ids.length > 0) {
-                        updateQuery.in("id", ids);
-                    }
-                    if (filters != null) {
-                        for (Pair<String, String> filter : filters) {
-                            updateQuery.equalTo(filter.first, filter.second);
-                        }
-                    }
-                    if (inFilters != null) {
-                        for (Pair<String, String[]> filter : inFilters) {
-                            updateQuery.in(filter.first, filter.second);
-                        }
-                    }
-
-                    RealmResults<S> results = updateQuery.findAll();
-
-                    if (beforeCommitCallback != null) {
-                        for (S result : results) {
-                            beforeCommitCallback.beforeCommit(realm, result);
-                        }
-                    }
-
-                    realm.copyToRealmOrUpdate(results);
-
-                    if (Config.DEBUG) Log.d(TAG, "UPDATE: Saved " + results.size() + " local resources from type " + clazz.getSimpleName());
+            realm.executeTransaction((r) -> {
+                RealmQuery<S> updateQuery = r.where(clazz);
+                if (ids.length > 0) {
+                    updateQuery.in("id", ids);
                 }
+                if (filters != null) {
+                    for (Pair<String, String> filter : filters) {
+                        updateQuery.equalTo(filter.first, filter.second);
+                    }
+                }
+                if (inFilters != null) {
+                    for (Pair<String, String[]> filter : inFilters) {
+                        updateQuery.in(filter.first, filter.second);
+                    }
+                }
+
+                RealmResults<S> results = updateQuery.findAll();
+
+                if (beforeCommitCallback != null) {
+                    for (S result : results) {
+                        beforeCommitCallback.beforeCommit(r, result);
+                    }
+                }
+
+                r.copyToRealmOrUpdate(results);
+
+                if (Config.DEBUG) Log.d(TAG, "UPDATE: Saved " + results.size() + " local resources from type " + clazz.getSimpleName());
             });
             realm.close();
 

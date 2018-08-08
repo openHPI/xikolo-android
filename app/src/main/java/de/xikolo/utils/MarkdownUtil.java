@@ -118,7 +118,7 @@ public class MarkdownUtil {
                     }
                 }
 
-            }.execute();
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             return result;
         }

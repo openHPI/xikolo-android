@@ -134,7 +134,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun showApiVersionExpiredDialog() {
         val dialog = ApiVersionExpiredDialog()
-        dialog.setDialogListener(object : ApiVersionExpiredDialog.Listener {
+        dialog.listener = object : ApiVersionExpiredDialog.Listener {
             override fun onOpenPlayStoreClicked() {
                 openPlayStore()
             }
@@ -142,13 +142,13 @@ class SplashActivity : AppCompatActivity() {
             override fun onDismissed() {
                 closeApp()
             }
-        })
+        }
         showDialog(dialog, ApiVersionExpiredDialog.TAG)
     }
 
     private fun showApiVersionDeprecatedDialog(deprecationDate: Date) {
         val dialog = ApiVersionDeprecatedDialogAutoBundle.builder(deprecationDate).build()
-        dialog.setDialogListener(object : ApiVersionDeprecatedDialog.Listener {
+        dialog.listener = object : ApiVersionDeprecatedDialog.Listener {
             override fun onOpenPlayStoreClicked() {
                 openPlayStore()
             }
@@ -156,19 +156,27 @@ class SplashActivity : AppCompatActivity() {
             override fun onDismissed() {
                 startApp()
             }
-        })
+        }
         showDialog(dialog, ApiVersionDeprecatedDialog.TAG)
     }
 
     private fun showServerMaintenanceDialog() {
         val dialog = ServerMaintenanceDialog()
-        dialog.setDialogListener({ this.closeApp() })
+        dialog.listener = object : ServerMaintenanceDialog.Listener {
+            override fun onDismissed() {
+                closeApp()
+            }
+        }
         showDialog(dialog, ServerMaintenanceDialog.TAG)
     }
 
     private fun showServerErrorDialog() {
         val dialog = ServerErrorDialog()
-        dialog.setDialogListener({ this.closeApp() })
+        dialog.listener = object : ServerErrorDialog.Listener {
+            override fun onDismissed() {
+                closeApp()
+            }
+        }
         showDialog(dialog, ServerErrorDialog.TAG)
     }
 

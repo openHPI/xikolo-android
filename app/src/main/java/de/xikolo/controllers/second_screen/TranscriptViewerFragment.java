@@ -37,7 +37,7 @@ import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.TimeUtil;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class TranscriptViewerFragment extends BaseFragment implements ChooseLanguageDialog.ChooseLanguageDialogListener {
+public class TranscriptViewerFragment extends BaseFragment implements ChooseLanguageDialog.Listener {
 
     public static final String TAG = TranscriptViewerFragment.class.getSimpleName();
 
@@ -99,13 +99,10 @@ public class TranscriptViewerFragment extends BaseFragment implements ChooseLang
         });
 
         actionButton.setVisibility(View.GONE);
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actionButton.hide();
-                syncScroll = true;
-                performScroll();
-            }
+        actionButton.setOnClickListener((v) -> {
+            actionButton.hide();
+            syncScroll = true;
+            performScroll();
         });
 
         if (currentTime > 0) {
@@ -179,12 +176,12 @@ public class TranscriptViewerFragment extends BaseFragment implements ChooseLang
 
     private void showLanguageDialog() {
         ChooseLanguageDialog dialog = ChooseLanguageDialogAutoBundle.builder(video.id).build();
-        dialog.setMobileDownloadDialogListener(this);
+        dialog.setListener(this);
         dialog.show(getActivity().getSupportFragmentManager(), ChooseLanguageDialog.TAG);
     }
 
     @Override
-    public void onDialogItemClick(int position) {
+    public void onItemClick(int position) {
         if (adapter != null) {
             adapter.updateSubtitles(subtitles.get(position).listCues());
             performScroll();

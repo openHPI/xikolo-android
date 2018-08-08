@@ -112,36 +112,30 @@ public class SecondScreenFragment extends BaseFragment {
 
             // pdf
             if (video.slidesUrl != null) {
-                viewSlides.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = SlideViewerActivityAutoBundle.builder(
-                                event.courseId,
-                                event.sectionId,
-                                event.itemId
-                        ).build(getActivity());
-                        startActivity(intent);
+                viewSlides.setOnClickListener((v) -> {
+                    Intent intent = SlideViewerActivityAutoBundle.builder(
+                            event.courseId,
+                            event.sectionId,
+                            event.itemId
+                    ).build(getActivity());
+                    startActivity(intent);
 
-                        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.SLIDES_VISITED, event.itemId, event.courseId, event.sectionId);
-                    }
+                    LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.SLIDES_VISITED, event.itemId, event.courseId, event.sectionId);
                 });
                 viewSlides.setVisibility(View.VISIBLE);
             }
 
             // transcript
             if (SubtitleTrack.listForVideoId(video.id).size() > 0) {
-                viewTranscript.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = TranscriptViewerActivityAutoBundle.builder(
-                                event.courseId,
-                                event.sectionId,
-                                event.itemId
-                        ).build(getActivity());
-                        startActivity(intent);
+                viewTranscript.setOnClickListener((v) -> {
+                    Intent intent = TranscriptViewerActivityAutoBundle.builder(
+                            event.courseId,
+                            event.sectionId,
+                            event.itemId
+                    ).build(getActivity());
+                    startActivity(intent);
 
-                        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.TRANSCRIPT_VISITED, event.itemId, event.courseId, event.sectionId);
-                    }
+                    LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.TRANSCRIPT_VISITED, event.itemId, event.courseId, event.sectionId);
                 });
                 viewTranscript.setVisibility(View.VISIBLE);
             }
@@ -160,44 +154,38 @@ public class SecondScreenFragment extends BaseFragment {
                 }
 
                 if (nextItem != null && Item.EXERCISE_TYPE_SELFTEST.equals(nextItem.exerciseType)) {
-                    viewQuiz.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = QuizActivityAutoBundle.builder(
-                                    item.title + " - " + getString(R.string.second_screen_action_title_quiz),
-                                    Config.HOST_URL + "go/items/" + nextItem.id,
-                                    true,
-                                    false,
-                                    event.courseId,
-                                    event.sectionId,
-                                    event.itemId
-                            ).build(getActivity());
-                            startActivity(intent);
+                    viewQuiz.setOnClickListener((v) -> {
+                        Intent intent = QuizActivityAutoBundle.builder(
+                                item.title + " - " + getString(R.string.second_screen_action_title_quiz),
+                                Config.HOST_URL + "go/items/" + nextItem.id,
+                                true,
+                                false,
+                                event.courseId,
+                                event.sectionId,
+                                event.itemId
+                        ).build(getActivity());
+                        startActivity(intent);
 
-                            LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.QUIZ_VISITED, event.itemId, event.courseId, event.sectionId);
-                        }
+                        LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.QUIZ_VISITED, event.itemId, event.courseId, event.sectionId);
                     });
                     viewQuiz.setVisibility(View.VISIBLE);
                 }
             }
 
             // pinboard
-            viewPinboard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = PinboardActivityAutoBundle.builder(
-                            item.title + " - " + getString(R.string.tab_discussions),
-                            Config.HOST_URL + "go/items/" + item.id + "/pinboard",
-                            true,
-                            false,
-                            event.courseId,
-                            event.sectionId,
-                            event.itemId
-                    ).build(getActivity());
-                    startActivity(intent);
+            viewPinboard.setOnClickListener((v) -> {
+                Intent intent = PinboardActivityAutoBundle.builder(
+                        item.title + " - " + getString(R.string.tab_discussions),
+                        Config.HOST_URL + "go/items/" + item.id + "/pinboard",
+                        true,
+                        false,
+                        event.courseId,
+                        event.sectionId,
+                        event.itemId
+                ).build(getActivity());
+                startActivity(intent);
 
-                    LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.PINBOARD_VISITED, event.itemId, event.courseId, event.sectionId);
-                }
+                LanalyticsUtil.trackSecondScreenEvent(LanalyticsUtil.SecondScreenEvent.PINBOARD_VISITED, event.itemId, event.courseId, event.sectionId);
             });
             viewPinboard.setVisibility(View.VISIBLE);
         }

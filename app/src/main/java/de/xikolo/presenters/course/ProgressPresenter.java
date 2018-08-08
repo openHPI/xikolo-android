@@ -7,7 +7,6 @@ import de.xikolo.models.CourseProgress;
 import de.xikolo.models.SectionProgress;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class ProgressPresenter extends LoadingStatePresenter<ProgressView> {
@@ -38,16 +37,13 @@ public class ProgressPresenter extends LoadingStatePresenter<ProgressView> {
             requestCourseProgressWithSections(false);
         }
 
-        spPromise = courseManager.listSectionProgressesForCourse(courseId, realm, new RealmChangeListener<RealmResults<SectionProgress>>() {
-            @Override
-            public void onChange(RealmResults<SectionProgress> sectionProgresses) {
-                spList = sectionProgresses;
-                CourseProgress cp = CourseProgress.get(courseId);
+        spPromise = courseManager.listSectionProgressesForCourse(courseId, realm, (sectionProgresses) -> {
+            spList = sectionProgresses;
+            CourseProgress cp = CourseProgress.get(courseId);
 
-                if (getView() != null && cp != null && spList.size() > 0) {
-                    getView().setupView(cp, spList);
-                    getView().showContent();
-                }
+            if (getView() != null && cp != null && spList.size() > 0) {
+                getView().setupView(cp, spList);
+                getView().showContent();
             }
         });
     }

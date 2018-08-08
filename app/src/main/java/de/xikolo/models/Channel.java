@@ -1,7 +1,7 @@
 package de.xikolo.models;
 
 import android.graphics.Color;
-import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.squareup.moshi.Json;
@@ -51,10 +51,7 @@ public class Channel extends RealmObject {
                 if (Config.DEBUG) Log.d(TAG, "Channel color '" + color + "' could not be parsed");
             }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            return App.getInstance().getResources().getColor(R.color.apptheme_main, null);
-        else
-            return App.getInstance().getResources().getColor(R.color.apptheme_main);
+        return ContextCompat.getColor(App.getInstance(), R.color.apptheme_main);
     }
 
     @JsonApi(type = "channels")

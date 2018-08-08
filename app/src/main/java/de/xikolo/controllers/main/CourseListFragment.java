@@ -202,24 +202,16 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     @Override
     public void showLoginRequiredMessage() {
         super.showLoginRequiredMessage();
-        loadingStateHelper.setMessageOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition());
-            }
-        });
+        loadingStateHelper.setMessageOnClickListener((v) -> activityCallback
+                .selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition()));
     }
 
     @Override
     public void showNoEnrollmentsMessage() {
         loadingStateHelper.setMessageTitle(R.string.notification_no_enrollments);
         loadingStateHelper.setMessageSummary(R.string.notification_no_enrollments_summary);
-        loadingStateHelper.setMessageOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activityCallback.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.getPosition());
-            }
-        });
+        loadingStateHelper.setMessageOnClickListener((v) -> activityCallback
+                .selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.getPosition()));
         loadingStateHelper.showMessage();
     }
 
