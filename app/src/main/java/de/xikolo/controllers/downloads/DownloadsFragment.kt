@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import de.xikolo.R
 import de.xikolo.config.FeatureToggle
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog
+import de.xikolo.controllers.dialogs.ConfirmDeleteDialogAutoBundle
 import de.xikolo.controllers.helper.LoadingStateHelper
 import de.xikolo.events.PermissionDeniedEvent
 import de.xikolo.events.PermissionGrantedEvent
@@ -219,9 +220,8 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
             val appPreferences = ApplicationPreferences()
 
             if (appPreferences.confirmBeforeDeleting) {
-                val dialog = ConfirmDeleteDialog.getInstance(true)
-                dialog.setConfirmDeleteDialogListener(object :
-                    ConfirmDeleteDialog.ConfirmDeleteDialogListener {
+                val dialog = ConfirmDeleteDialogAutoBundle.builder(true).build()
+                dialog.listener = object : ConfirmDeleteDialog.Listener {
                     override fun onDialogPositiveClick(dialog: DialogFragment) {
                         deleteFolder(item)
                     }
@@ -230,7 +230,7 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
                         appPreferences.confirmBeforeDeleting = false
                         deleteFolder(item)
                     }
-                })
+                }
                 dialog.show(activity.supportFragmentManager, ConfirmDeleteDialog.TAG)
             } else {
                 deleteFolder(item)

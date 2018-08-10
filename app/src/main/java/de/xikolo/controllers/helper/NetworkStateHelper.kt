@@ -12,6 +12,7 @@ import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.ProgressDialog
+import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle
 import de.xikolo.views.CustomFontTextView
 
 class NetworkStateHelper(private val activity: FragmentActivity?, view: View, onRefreshListener: SwipeRefreshLayout.OnRefreshListener) {
@@ -96,7 +97,7 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
 
     fun showBlockingProgress() {
         activity?.let {
-            progressDialog = ProgressDialog.getInstance()
+            progressDialog = ProgressDialogAutoBundle.builder().build()
             progressDialog?.show(it.supportFragmentManager, ProgressDialog.TAG)
         }
     }
