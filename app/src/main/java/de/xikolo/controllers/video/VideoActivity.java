@@ -81,17 +81,14 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             }
         });
 
-        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if (Build.VERSION.SDK_INT >= 17) {
-                    if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                        videoHelper.show();
-                    }
-                } else {
-                    if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
-                        videoHelper.show();
-                    }
+        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener((visibility) -> {
+            if (Build.VERSION.SDK_INT >= 17) {
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    videoHelper.show();
+                }
+            } else {
+                if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+                    videoHelper.show();
                 }
             }
         });

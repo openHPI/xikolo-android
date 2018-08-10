@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <color name="text_main">#DE000000</color>
     <color name="text_main_icon">#C4000000</color>
@@ -51,7 +51,7 @@
     <color name="outlined_button_stroke">#c4c4c4</color>
 
     <!-- this is needed as preference_category_material layout is using this color as the text color -->
-    <color name="preference_fallback_accent_color">@color/apptheme_second</color>
+    <color name="preference_fallback_accent_color" tools:override="true">@color/apptheme_second</color>
 
     <color name="bg_pdf_pager">#805a6065</color>
 

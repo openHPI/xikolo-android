@@ -111,21 +111,11 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         TypedValue outValue = new TypedValue();
         activity.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
         holder.layout.setForeground(ContextCompat.getDrawable(activity, outValue.resourceId));
-        holder.layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sectionClickListener.onSectionClicked(section.id);
-            }
-        });
+        holder.layout.setOnClickListener((view) -> sectionClickListener.onSectionClicked(section.id));
 
         if (section.hasDownloadableContent()) {
             holder.viewDownloadButton.setVisibility(View.VISIBLE);
-            holder.viewDownloadButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sectionClickListener.onSectionDownloadClicked(section.id);
-                }
-            });
+            holder.viewDownloadButton.setOnClickListener((view) -> sectionClickListener.onSectionDownloadClicked(section.id));
         } else {
             holder.viewDownloadButton.setVisibility(View.GONE);
         }

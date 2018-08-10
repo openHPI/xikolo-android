@@ -68,12 +68,9 @@ public class Lanalytics {
     }
 
     public void deleteData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                getDefaultTracker().stopSending();
-                databaseHelper.deleteDatabase();
-            }
+        new Thread(() -> {
+            getDefaultTracker().stopSending();
+            databaseHelper.deleteDatabase();
         }).start();
     }
 

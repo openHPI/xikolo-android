@@ -59,12 +59,7 @@ public class AnnouncementFragment extends LoadingStatePresenterFragment<Announce
     @Override
     public void enableCourseButton() {
         courseButton.setVisibility(View.VISIBLE);
-        courseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.onCourseButtonClicked();
-            }
-        });
+        courseButton.setOnClickListener((v) -> presenter.onCourseButtonClicked());
     }
 
     @NonNull

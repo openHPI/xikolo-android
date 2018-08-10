@@ -28,14 +28,6 @@
             android:value="@integer/google_play_services_version" />
 
         <receiver
-            android:name=".receivers.NetworkChangeReceiver"
-            android:label="NetworkChangeReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
             android:name=".receivers.CancelDownloadsReceiver"
             android:label="CancelDownloadsReceiver" />
 

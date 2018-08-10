@@ -5,7 +5,9 @@ import android.support.v4.app.FragmentActivity;
 
 import de.xikolo.controllers.dialogs.MobileDownloadDialog;
 import de.xikolo.controllers.dialogs.ModuleDownloadDialog;
+import de.xikolo.controllers.dialogs.ModuleDownloadDialogAutoBundle;
 import de.xikolo.controllers.dialogs.ProgressDialog;
+import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
 import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.ItemManager;
@@ -36,8 +38,8 @@ public class SectionDownloadHelper {
     }
 
     public void initSectionDownloads(final Course course, final Section section) {
-        ModuleDownloadDialog listDialog = ModuleDownloadDialog.getInstance(section.title);
-        listDialog.setModuleDownloadDialogListener((dialog, hdVideo, sdVideo, slides) -> {
+        ModuleDownloadDialog listDialog = ModuleDownloadDialogAutoBundle.builder(section.title).build();
+        listDialog.setListener((dialog, hdVideo, sdVideo, slides) -> {
             SectionDownloadHelper.this.hdVideo = hdVideo;
             SectionDownloadHelper.this.sdVideo = sdVideo;
             SectionDownloadHelper.this.slides = slides;
@@ -48,8 +50,8 @@ public class SectionDownloadHelper {
                 if (NetworkUtil.isOnline()) {
                     if (NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_MOBILE &&
                             appPreferences.isDownloadNetworkLimitedOnMobile()) {
-                        MobileDownloadDialog permissionDialog = MobileDownloadDialog.getInstance();
-                        permissionDialog.setMobileDownloadDialogListener(dialog1 -> {
+                        MobileDownloadDialog permissionDialog = new MobileDownloadDialog();
+                        permissionDialog.setListener(dialog1 -> {
                             appPreferences.setDownloadNetworkLimitedOnMobile(false);
                             startSectionDownloads(course, section);
                         });
@@ -70,7 +72,7 @@ public class SectionDownloadHelper {
 
         LanalyticsUtil.trackDownloadedSection(section.id, course.id, hdVideo, sdVideo, slides);
 
-        final ProgressDialog dialog = ProgressDialog.getInstance();
+        final ProgressDialog dialog = ProgressDialogAutoBundle.builder().build();
         dialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);
 
         itemManager.requestItemsWithContentForSection(section.id, new RequestJobCallback() {

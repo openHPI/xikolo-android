@@ -18,7 +18,6 @@ import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
 import de.xikolo.config.GlideApp;
-import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Announcement;
 import de.xikolo.models.Profile;
@@ -110,15 +109,9 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 NAV_ITEMS.size()));
     }
 
-    private CourseManager courseManager;
-
     private int checkedItem = -1;
 
     private OnItemClickListener itemClickListener;
-
-    public NavigationAdapter() {
-        this.courseManager = new CourseManager();
-    }
 
     @Override
     public int getItemCount() {

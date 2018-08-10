@@ -20,10 +20,10 @@ class SettingsActivity : BaseActivity() {
 
         val tag = "settings"
 
-        val fragmentManager = fragmentManager
+        val fragmentManager = supportFragmentManager
         if (fragmentManager.findFragmentByTag(tag) == null) {
             val transaction = fragmentManager.beginTransaction()
-            transaction.replace(R.id.content, SettingsFragment.newInstance(), tag)
+            transaction.replace(R.id.content, SettingsFragment(), tag)
             transaction.commit()
         }
     }

@@ -76,12 +76,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
             holder.viewUnseenIndicator.setVisibility(View.GONE);
             holder.layout.setEnabled(false);
         } else {
-            holder.layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClicked(section.id, holder.getAdapterPosition());
-                }
-            });
+            holder.layout.setOnClickListener((view) -> listener.onItemClicked(section.id, holder.getAdapterPosition()));
         }
     }
 

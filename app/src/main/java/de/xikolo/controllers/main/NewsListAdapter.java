@@ -90,12 +90,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.Announ
             holder.unseenIndicator.setVisibility(View.VISIBLE);
         }
 
-        holder.layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onAnnouncementClicked(announcement.id);
-            }
-        });
+        holder.layout.setOnClickListener((V) -> callback.onAnnouncementClicked(announcement.id));
     }
 
     public interface OnAnnouncementClickListener {

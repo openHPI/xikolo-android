@@ -52,12 +52,7 @@ public class AnnouncementListFragment extends LoadingStatePresenterFragment<News
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        newsListAdapter = new NewsListAdapter(new NewsListAdapter.OnAnnouncementClickListener() {
-            @Override
-            public void onAnnouncementClicked(String announcementId) {
-                presenter.onAnnouncementClicked(announcementId);
-            }
-        }, false);
+        newsListAdapter = new NewsListAdapter((announcementId) -> presenter.onAnnouncementClicked(announcementId), false);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);

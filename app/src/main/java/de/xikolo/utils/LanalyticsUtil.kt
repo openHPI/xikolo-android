@@ -45,7 +45,7 @@ object LanalyticsUtil {
             val application = App.getInstance()
 
             val contextData = application.lanalytics.defaultContextData
-            contextData.put(CONTEXT_CLIENT_ID, application.clientId)
+            contextData[CONTEXT_CLIENT_ID] = application.clientId
 
             val gson = Gson()
             return gson.toJson(contextData)

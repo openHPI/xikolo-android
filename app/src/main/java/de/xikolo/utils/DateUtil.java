@@ -46,14 +46,7 @@ public class DateUtil {
 
     public static boolean isPast(Date date) {
         Date dateNow = new Date();
-
-        if (date == null) {
-            return false;
-        } else if (dateNow.after(date)) {
-            return true;
-        }
-
-        return false;
+        return date != null && dateNow.after(date);
     }
 
     public static boolean isFuture(String date) {
@@ -62,14 +55,7 @@ public class DateUtil {
 
     public static boolean isFuture(Date date) {
         Date dateNow = new Date();
-
-        if (date == null) {
-            return false;
-        } else if (dateNow.before(date)) {
-            return true;
-        }
-
-        return false;
+        return date != null && dateNow.before(date);
     }
 
     public static Date parse(String date) {

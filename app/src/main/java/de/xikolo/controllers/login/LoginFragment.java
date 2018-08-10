@@ -31,6 +31,7 @@ import de.xikolo.config.Config;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BasePresenterFragment;
 import de.xikolo.controllers.dialogs.ProgressDialog;
+import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
 import de.xikolo.managers.UserManager;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.login.LoginPresenter;
@@ -170,7 +171,7 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
     @Override
     public void showProgressDialog() {
         if (progressDialog == null) {
-            progressDialog = ProgressDialog.getInstance();
+            progressDialog = ProgressDialogAutoBundle.builder().build();
         }
         progressDialog.show(getChildFragmentManager(), ProgressDialog.TAG);
     }

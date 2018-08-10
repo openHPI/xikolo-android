@@ -73,6 +73,7 @@ public abstract class Sync<S extends RealmModel, T extends Resource & RealmAdapt
             this.items = items;
         }
 
+        @SafeVarargs
         public static <S extends RealmModel, T extends Resource & RealmAdapter<S>> Data<S, T> with(Class<S> clazz, final T... items) {
             return new Data<>(clazz, items);
         }
@@ -157,6 +158,7 @@ public abstract class Sync<S extends RealmModel, T extends Resource & RealmAdapt
                             RealmModel model = adapter.convertToRealmObject();
                             if (model.getClass() == clazz) {
                                 if (beforeCommitCallback != null) {
+                                    //noinspection unchecked
                                     beforeCommitCallback.beforeCommit(realm, (S) model);
                                 }
                                 realm.copyToRealmOrUpdate(model);

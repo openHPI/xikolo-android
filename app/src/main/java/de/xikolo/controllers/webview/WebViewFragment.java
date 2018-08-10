@@ -25,7 +25,6 @@ import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.helper.WebViewHelper;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.presenters.base.LoadingStatePresenter;
-import de.xikolo.presenters.base.Presenter;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
@@ -168,14 +167,9 @@ public class WebViewFragment extends LoadingStatePresenterFragment implements We
     @NonNull
     @Override
     protected PresenterFactory getPresenterFactory() {
-        return new PresenterFactory() {
+        return () -> new LoadingStatePresenter() {
             @Override
-            public Presenter create() {
-                return new LoadingStatePresenter() {
-                    @Override
-                    public void onRefresh() {}
-                };
-            }
+            public void onRefresh() { }
         };
     }
 

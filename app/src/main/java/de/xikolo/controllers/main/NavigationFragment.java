@@ -108,12 +108,9 @@ public class NavigationFragment extends BasePresenterFragment<NavigationPresente
                              Bundle savedInstanceState) {
         adapter = new NavigationAdapter();
 
-        adapter.setOnItemClickListener(new NavigationAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                selectItem(position);
-                adapter.notifyDataSetChanged();
-            }
+        adapter.setOnItemClickListener((view, position) -> {
+            selectItem(position);
+            adapter.notifyDataSetChanged();
         });
         adapter.setItemChecked(currentSelectedPosition);
 
@@ -209,12 +206,7 @@ public class NavigationFragment extends BasePresenterFragment<NavigationPresente
         }
 
         // Defer code dependent on restoration of previous instance state.
-        this.drawerLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                drawerToggle.syncState();
-            }
-        });
+        this.drawerLayout.post(() -> drawerToggle.syncState());
 
         this.drawerLayout.addDrawerListener(drawerToggle);
     }
