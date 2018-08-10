@@ -92,6 +92,11 @@ interface ApiServiceInterface {
     @PATCH("announcements/{id}")
     fun updateAnnouncement(@Path("id") id: String, @Body item: Announcement.JsonModel): Call<Announcement.JsonModel>
 
+    // Documents
+
+    @GET("documents?include=localizations,courses")
+    fun listDocumentsWithLocalizationsForCourse(@Query("filter[course]") courseId: String): Call<Array<Document.JsonModel>>
+
     // Token
 
     @FormUrlEncoded

@@ -37,7 +37,7 @@
 
         <Button
             android:id="@+id/fallback_button"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/ButtonOutlined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

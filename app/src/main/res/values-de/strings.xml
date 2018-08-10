@@ -42,15 +42,16 @@
     <string name="tab_discussions">Diskussionen</string>
     <string name="tab_progress">Fortschritt</string>
     <string name="tab_course_details">Kursdetails</string>
+    <string name="tab_documents">Dokumente</string>
     <string name="tab_announcements">Neuigkeiten</string>
 
     <!-- -->
-    <string name="btn_enroll">Für den Kurs einschreiben</string>
-    <string name="btn_continue_course">Kurs fortsetzen</string>
+    <string name="btn_enroll">Einschreiben</string>
+    <string name="btn_continue_course">Fortsetzen</string>
     <string name="btn_course_details">Details zeigen</string>
     <string name="btn_channel_courses">Mehr anzeigen</string>
     <string name="btn_channel_slider_more">Mehr Kurse anzeigen</string>
-    <string name="btn_starts_soon">Kurs hat noch nicht begonnen</string>
+    <string name="btn_starts_soon">Noch nicht gestartet</string>
     <string name="btn_display_issues">Darstellungsprobleme?</string>
 
     <!-- -->
@@ -168,6 +169,8 @@
     <string name="course_date_since">Seit %s</string>
     <string name="course_date_self_paced">Selbststudium</string>
     <string name="course_date_beginning">Ab %s</string>
+
+    <string name="document_lang">Sprache: %s</string>
 
     <!-- -->
     <string name="notification_no_network">Bitte Netzwerk-Verbindung aktivieren</string>

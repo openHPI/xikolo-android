@@ -26,7 +26,6 @@
     <string name="icon_hd" translatable="false">&#xe657;</string>
     <string name="icon_download_video" translatable="false">&#xe662;</string>
     <string name="icon_download_pdf" translatable="false">&#xe660;</string>
-    <string name="icon_cancel" translatable="false">&#xe643;</string>
     <string name="icon_locked" translatable="false">&#xe62b;</string>
     <string name="icon_restricted" translatable="false">&#xe645;</string>
     <string name="icon_bonus" translatable="false">&#xe671;</string>
@@ -36,6 +35,7 @@
     <!-- materialdesign.ttf from https://materialdesignicons.com/ -->
     <string name="icon_download" translatable="false">&#xf1da;</string>
     <string name="icon_delete" translatable="false">&#xf1c0;</string>
+    <string name="icon_cancel" translatable="false">&#xf156;</string> <!-- close -->
     <string name="icon_visited" translatable="false">&#xf134;</string> <!-- checkbox-marked-circle-outline -->
     <string name="icon_channels" translatable="false">&#xf43b;</string> <!-- radio-tower -->
     <string name="icon_second_screen" translatable="false">&#xf121;</string> <!-- cellphone-link -->

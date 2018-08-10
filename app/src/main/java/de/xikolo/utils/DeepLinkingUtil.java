@@ -2,7 +2,7 @@ package de.xikolo.utils;
 
 import android.net.Uri;
 
-import de.xikolo.models.Course;
+import de.xikolo.controllers.helper.CourseArea;
 
 public class DeepLinkingUtil {
 
@@ -42,16 +42,16 @@ public class DeepLinkingUtil {
     public static int getTab(String courseRoute) {
 
         if (courseRoute.endsWith(ROUTE_RESUME)) {
-            return Course.TAB_LEARNINGS;
+            return CourseArea.LEARNINGS.getIndex();
         } else if (courseRoute.endsWith(ROUTE_PINBOARD)) {
-            return Course.TAB_DISCUSSIONS;
+            return CourseArea.DISCUSSIONS.getIndex();
         } else if (courseRoute.endsWith(ROUTE_PROGRESS)) {
-            return Course.TAB_PROGRESS;
+            return CourseArea.PROGRESS.getIndex();
         } else if (courseRoute.endsWith(ROUTE_ANNOUNCEMENTS)) {
-            return Course.TAB_ANNOUNCEMENTS;
+            return CourseArea.ANNOUNCEMENTS.getIndex();
         }
 
-        return Course.TAB_LEARNINGS;
+        return CourseArea.LEARNINGS.getIndex();
     }
 
     public static Type getType(Uri uri) {

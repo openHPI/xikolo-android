@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    res:cardCornerRadius="2dp"
+    res:cardCornerRadius="@dimen/corner_radius"
     res:cardPreventCornerOverlap="true"
     res:cardUseCompatPadding="true">
 
@@ -141,27 +141,31 @@
                 android:textSize="14sp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
                 android:layout_below="@+id/textDescription"
-                android:paddingLeft="4dp"
                 android:gravity="bottom"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/button_course_action"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                android:orientation="horizontal"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp">
 
                 <Button
                     android:id="@+id/button_course_details"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    style="@style/ButtonText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_course_details" />
+
+                <Button
+                    android:id="@+id/button_course_action"
+                    style="@style/ButtonOutlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp" />
 
             </LinearLayout>
 

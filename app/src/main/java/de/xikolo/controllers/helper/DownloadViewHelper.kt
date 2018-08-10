@@ -1,4 +1,4 @@
-package de.xikolo.controllers.course_items
+package de.xikolo.controllers.helper
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -11,6 +11,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import butterknife.BindView
+import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog
@@ -26,49 +28,69 @@ import de.xikolo.utils.FileProviderUtil
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.NetworkUtil
 import de.xikolo.utils.ToastUtil
-import de.xikolo.views.IconButton
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class DownloadViewController(private val activity: FragmentActivity, private val downloadAsset: DownloadAsset) {
+class DownloadViewHelper(
+    private val activity: FragmentActivity,
+    private val downloadAsset: DownloadAsset,
+    title: CharSequence? = null
+) {
 
     companion object {
-        val TAG: String = DownloadViewController::class.java.simpleName
-        private const val MILLISECONDS = 250
+        val TAG: String = DownloadViewHelper::class.java.simpleName
+        private const val MILLISECONDS = 250L
     }
 
     private val downloadManager: DownloadManager = DownloadManager(activity)
 
-    val layout: View
-    private val textFileName: TextView
-    private val textFileSize: TextView
-    private val viewDownloadStart: View?
-    private val buttonDownloadStart: IconButton
-    private val viewDownloadRunning: View?
-    private val buttonDownloadCancel: TextView
-    private val progressBarDownload: ProgressBar
-    private val viewDownloadEnd: View?
-    private val buttonOpenDownload: Button
-    private val buttonDeleteDownload: Button
+    val view: View
+
+    @BindView(R.id.textFileName)
+    lateinit var textFileName: TextView
+
+    @BindView(R.id.textFileSize)
+    lateinit var textFileSize: TextView
+
+    @BindView(R.id.downloadStartContainer)
+    lateinit var viewDownloadStart: View
+
+    @BindView(R.id.buttonDownloadStart)
+    lateinit var buttonDownloadStart: Button
+
+    @BindView(R.id.downloadRunningContainer)
+    lateinit var viewDownloadRunning: View
+
+    @BindView(R.id.buttonDownloadCancel)
+    lateinit var buttonDownloadCancel: TextView
+
+    @BindView(R.id.progressDownload)
+    lateinit var progressBarDownload: ProgressBar
+
+    @BindView(R.id.downloadEndContainer)
+    lateinit var viewDownloadEnd: View
+
+    @BindView(R.id.buttonDownloadOpen)
+    lateinit var buttonOpenDownload: Button
+
+    @BindView(R.id.buttonDownloadDelete)
+    lateinit var buttonDeleteDownload: Button
 
     private val progressBarUpdater: Runnable
     private var progressBarUpdaterRunning = false
 
     private var url: String? = null
-    private var size: Int = 0
+    private var size: Long = 0L
 
     init {
         val inflater = LayoutInflater.from(App.getInstance())
-        layout = inflater.inflate(R.layout.container_download, null)
+        view = inflater.inflate(R.layout.container_download, null)
 
-        textFileSize = layout.findViewById(R.id.textFileSize)
-        textFileName = layout.findViewById(R.id.textFileName)
+        ButterKnife.bind(this, view)
 
         val appPreferences = ApplicationPreferences()
 
-        viewDownloadStart = layout.findViewById(R.id.downloadStartContainer)
-        buttonDownloadStart = layout.findViewById(R.id.buttonDownloadStart)
         buttonDownloadStart.setOnClickListener { _ ->
             if (NetworkUtil.isOnline()) {
                 if (NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_MOBILE && appPreferences.isDownloadNetworkLimitedOnMobile) {
@@ -86,17 +108,11 @@ class DownloadViewController(private val activity: FragmentActivity, private val
             }
         }
 
-        viewDownloadRunning = layout.findViewById(R.id.downloadRunningContainer)
-        progressBarDownload = layout.findViewById(R.id.progressDownload)
-        buttonDownloadCancel = layout.findViewById(R.id.buttonDownloadCancel)
         buttonDownloadCancel.setOnClickListener { _ ->
             downloadManager.cancelAssetDownload(downloadAsset)
             showStartState()
         }
 
-        viewDownloadEnd = layout.findViewById(R.id.downloadEndContainer)
-        buttonOpenDownload = layout.findViewById(R.id.buttonDownloadOpen)
-        buttonDeleteDownload = layout.findViewById(R.id.buttonDownloadDelete)
         buttonDeleteDownload.setOnClickListener { _ ->
             if (appPreferences.confirmBeforeDeleting) {
                 val dialog = ConfirmDeleteDialog.getInstance(false)
@@ -116,35 +132,19 @@ class DownloadViewController(private val activity: FragmentActivity, private val
             }
         }
 
-        if (downloadAsset is DownloadAsset.Course.Item) {
-            url = downloadAsset.url
-            size = downloadAsset.size
-            when (downloadAsset) {
-                is DownloadAsset.Course.Item.Slides -> {
-                    textFileName.text = App.getInstance().getText(R.string.slides_as_pdf)
-                    buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf))
-                    openFileAsPdf()
-                }
-                is DownloadAsset.Course.Item.Transcript -> {
-                    textFileName.text = App.getInstance().getText(R.string.transcript_as_pdf)
-                    buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_pdf))
-                    openFileAsPdf()
-                }
-                is DownloadAsset.Course.Item.VideoHD -> {
-                    textFileName.text = App.getInstance().getText(R.string.video_hd_as_mp4)
-                    buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video))
-                    buttonOpenDownload.visibility = View.GONE
-                }
-                is DownloadAsset.Course.Item.VideoSD -> {
-                    textFileName.text = App.getInstance().getText(R.string.video_sd_as_mp4)
-                    buttonDownloadStart.setIconText(App.getInstance().getText(R.string.icon_download_video))
-                    buttonOpenDownload.visibility = View.GONE
-                }
-            }
+        if (title != null) {
+            textFileName.text = title
+        } else {
+            textFileName.text = downloadAsset.title
         }
 
+        buttonOpenDownload.visibility = View.GONE
+
+        size = downloadAsset.size
+
+        url = downloadAsset.url
         if (url == null) {
-            layout.visibility = View.GONE
+            view.visibility = View.GONE
         }
 
         EventBus.getDefault().register(this)
@@ -169,7 +169,7 @@ class DownloadViewController(private val activity: FragmentActivity, private val
                 }
 
                 if (progressBarUpdaterRunning) {
-                    progressBarDownload.postDelayed(this, MILLISECONDS.toLong())
+                    progressBarDownload.postDelayed(this, MILLISECONDS)
                 }
             }
         }
@@ -199,50 +199,47 @@ class DownloadViewController(private val activity: FragmentActivity, private val
     }
 
     private fun showStartState() {
-        if (viewDownloadStart != null) {
-            viewDownloadStart.visibility = View.VISIBLE
-        }
-        if (viewDownloadRunning != null) {
-            viewDownloadRunning.visibility = View.INVISIBLE
-        }
-        if (viewDownloadEnd != null) {
-            viewDownloadEnd.visibility = View.INVISIBLE
-        }
+        viewDownloadStart.visibility = View.VISIBLE
+        viewDownloadRunning.visibility = View.INVISIBLE
+        viewDownloadEnd.visibility = View.INVISIBLE
 
         progressBarDownload.progress = 0
         progressBarDownload.isIndeterminate = true
         progressBarUpdaterRunning = false
 
-        textFileSize.text = FileUtil.getFormattedFileSize(size.toLong())
+        if (size != 0L) {
+            textFileSize.visibility = View.VISIBLE
+            textFileSize.text = FileUtil.getFormattedFileSize(size)
+        } else {
+            textFileSize.visibility = View.GONE
+        }
     }
 
     private fun showRunningState() {
-        if (viewDownloadStart != null) {
-            viewDownloadStart.visibility = View.INVISIBLE
-        }
-        if (viewDownloadRunning != null) {
-            viewDownloadRunning.visibility = View.VISIBLE
-        }
-        if (viewDownloadEnd != null) {
-            viewDownloadEnd.visibility = View.INVISIBLE
-        }
+        viewDownloadStart.visibility = View.INVISIBLE
+        viewDownloadRunning.visibility = View.VISIBLE
+        viewDownloadEnd.visibility = View.INVISIBLE
+
+        textFileSize.visibility = View.VISIBLE
 
         progressBarUpdaterRunning = true
         Thread(progressBarUpdater).start()
     }
 
     private fun showEndState() {
-        if (viewDownloadStart != null) {
-            viewDownloadStart.visibility = View.INVISIBLE
-        }
-        if (viewDownloadRunning != null) {
-            viewDownloadRunning.visibility = View.INVISIBLE
-        }
-        if (viewDownloadEnd != null) {
-            viewDownloadEnd.visibility = View.VISIBLE
-        }
+        viewDownloadStart.visibility = View.INVISIBLE
+        viewDownloadRunning.visibility = View.INVISIBLE
+        viewDownloadEnd.visibility = View.VISIBLE
 
-        textFileSize.text = FileUtil.getFormattedFileSize(size.toLong())
+        textFileSize.visibility = View.VISIBLE
+
+        if (size != 0L) {
+            textFileSize.text = FileUtil.getFormattedFileSize(size)
+        } else {
+            textFileSize.text = FileUtil.getFormattedFileSize(
+                downloadManager.getDownloadFile(downloadAsset)
+            )
+        }
 
         progressBarUpdaterRunning = false
     }
@@ -275,9 +272,12 @@ class DownloadViewController(private val activity: FragmentActivity, private val
         }
     }
 
-    private fun openFileAsPdf() {
+    fun openFileAsPdf(onClick: () -> Unit = {}) {
         buttonOpenDownload.text = App.getInstance().resources.getText(R.string.open)
+        buttonOpenDownload.visibility = View.VISIBLE
         buttonOpenDownload.setOnClickListener { _ ->
+            onClick.invoke()
+
             val pdf = downloadManager.getDownloadFile(downloadAsset)
             val target = Intent(Intent.ACTION_VIEW)
             target.setDataAndType(FileProviderUtil.getUriForFile(pdf), "application/pdf")
@@ -291,6 +291,14 @@ class DownloadViewController(private val activity: FragmentActivity, private val
             } catch (e: ActivityNotFoundException) {
                 ToastUtil.show(R.string.toast_no_pdf_viewer_found)
             }
+        }
+    }
+
+    fun openFileAsVideo(onClick: () -> Unit = {}) {
+        buttonOpenDownload.text = App.getInstance().resources.getText(R.string.play)
+        buttonOpenDownload.visibility = View.VISIBLE
+        buttonOpenDownload.setOnClickListener { _ ->
+            onClick.invoke()
         }
     }
 

@@ -43,15 +43,16 @@
     <string name="tab_progress">Progress</string>
     <string name="tab_course_details">Course details</string>
     <string name="tab_announcements">Announcements</string>
+    <string name="tab_documents">Documents</string>
     <string name="tab_recap">Recap</string>
 
     <!-- -->
-    <string name="btn_enroll">Enroll for course</string>
-    <string name="btn_continue_course">Continue course</string>
+    <string name="btn_enroll">Enroll</string>
+    <string name="btn_continue_course">Continue</string>
     <string name="btn_course_details">Show details</string>
     <string name="btn_channel_courses">Show more</string>
     <string name="btn_channel_slider_more">Show more courses</string>
-    <string name="btn_starts_soon">Course has not yet started</string>
+    <string name="btn_starts_soon">Not yet started</string>
     <string name="btn_play_cast">&#xe652;\n Play on Cast device</string>
     <string name="btn_display_issues">Display issues?</string>
 
@@ -174,6 +175,8 @@
     <string name="course_date_self_paced">Self-paced</string>
     <string name="course_date_beginning">Beginning %s</string>
 
+    <string name="document_lang">Language: %s</string>
+
     <!-- -->
     <string name="notification_no_network">Please enable network connection</string>
     <string name="notification_no_network_summary">This content cannot by displayed without network connection.</string>
@@ -251,7 +254,7 @@
     <string name="settings_send_app_feedback_message" translatable="false">\n\n\n\n------------------------------\nSystem Info\n------------------------------\nplatform: Android\nos version: %s\ndevice: %s\napp name: %s\napp version: %s\napp build: %s</string>
 
     <string name="settings_title_storage">Choose storage</string>
-    <string name="settings_title_storage_internal">Internal</string>
+    <string name="settings_title_storage_internal">Internal Storage</string>
     <string name="settings_title_storage_external">SD Card</string>
     <string name="settings_summary_storage">%1$s: %2$s free.</string>
     <string name="settings_storage_addition">(currently selected)</string>
@@ -290,5 +293,8 @@
     <string name="lang_de">German</string>
     <string name="lang_fr">French</string>
     <string name="lang_zh">Chinese</string>
+
+    <!-- -->
+    <string name="empty_message_documents_title">No documents available for this course</string>
 
 </resources>

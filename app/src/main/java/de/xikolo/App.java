@@ -15,7 +15,7 @@ import de.xikolo.jobs.base.ScheduledJobFactory;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
-import de.xikolo.models.base.RealmSchemaMigration;
+import de.xikolo.models.migrate.RealmSchemaMigration;
 import de.xikolo.utils.ClientUtil;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;

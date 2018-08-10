@@ -84,10 +84,11 @@ public abstract class Sync<S extends RealmModel, T extends Resource & RealmAdapt
             try (Realm realmInstance = Realm.getDefaultInstance()) {
                 realmInstance.executeTransaction(realm -> {
                     for (T item : items) {
+                        S model = item.convertToRealmObject();
                         if (beforeCommitCallback != null) {
-                            beforeCommitCallback.beforeCommit(realm, item.convertToRealmObject());
+                            beforeCommitCallback.beforeCommit(realm, model);
                         }
-                        realm.copyToRealmOrUpdate(item.convertToRealmObject());
+                        realm.copyToRealmOrUpdate(model);
                         ids.add(item.getId());
                     }
 

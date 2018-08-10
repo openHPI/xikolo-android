@@ -5,6 +5,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.24.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.24.0"
     implementation "ru.gildor.coroutines:kotlin-coroutines-retrofit:0.12.0"
+    implementation "com.github.vicpinm:krealmextensions:2.2.0"
 
     // networking
     def okhttpVersion = '3.11.0'
@@ -26,7 +27,8 @@ dependencies {
 
     // json
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.moshi:moshi:1.6.0'
+    def moshiVersion = '1.6.0'
+    implementation "com.squareup.moshi:moshi:${moshiVersion}"
 
     // json:api
     def retrofitVersion = '2.4.0'
@@ -73,6 +75,10 @@ dependencies {
     implementation "com.android.support:design:${supportVersion}"
     implementation "com.android.support:preference-v14:${supportVersion}"
     implementation "com.android.support:customtabs:${supportVersion}"
+
+    // lifecycle
+    def lifecycle_version = "1.1.1"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
 
     // multidex support
     implementation 'com.android.support:multidex:1.0.3'

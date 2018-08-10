@@ -3,7 +3,6 @@ package de.xikolo.network;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -14,6 +13,8 @@ import de.xikolo.models.Announcement;
 import de.xikolo.models.Channel;
 import de.xikolo.models.Course;
 import de.xikolo.models.CourseProgress;
+import de.xikolo.models.Document;
+import de.xikolo.models.DocumentLocalization;
 import de.xikolo.models.Enrollment;
 import de.xikolo.models.Item;
 import de.xikolo.models.LtiExercise;
@@ -28,10 +29,8 @@ import de.xikolo.models.SubtitleTrack;
 import de.xikolo.models.Video;
 import moe.banana.jsonapi2.JsonApiConverterFactory;
 import moe.banana.jsonapi2.ResourceAdapterFactory;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
@@ -53,36 +52,33 @@ public abstract class ApiService {
             }
 
             OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(new Interceptor() {
-                        @Override
-                        public Response intercept(Interceptor.Chain chain) throws IOException {
-                            Request original = chain.request();
+                    .addInterceptor(chain -> {
+                        Request original = chain.request();
 
-                            String mediaType = Config.MEDIA_TYPE_JSON_API;
-                            String xikoloVersionExtension = "; xikolo-version=" + Config.XIKOLO_API_VERSION;
-                            String appLanguage = Locale.getDefault().getLanguage();
+                        String mediaType = Config.MEDIA_TYPE_JSON_API;
+                        String xikoloVersionExtension = "; xikolo-version=" + Config.XIKOLO_API_VERSION;
+                        String appLanguage = Locale.getDefault().getLanguage();
 
-                            // plain json calls
-                            List plainJson = Arrays.asList(
-                                    "/api/v2/authenticate"
-                            );
-                            if (plainJson.contains(original.url().encodedPath())) {
-                                mediaType = Config.MEDIA_TYPE_JSON;
-                                xikoloVersionExtension = "";
-                            }
-
-                            Request.Builder builder = original.newBuilder()
-                                    .header(Config.HEADER_ACCEPT, mediaType + xikoloVersionExtension)
-                                    .header(Config.HEADER_CONTENT_TYPE, mediaType)
-                                    .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE)
-                                    .header(Config.HEADER_ACCEPT_LANGUAGE, appLanguage);
-
-                            if (UserManager.isAuthorized()) {
-                                builder.header(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX_JSON_API + UserManager.getToken());
-                            }
-
-                            return chain.proceed(builder.build());
+                        // plain json calls
+                        List plainJson = Arrays.asList(
+                                "/api/v2/authenticate"
+                        );
+                        if (plainJson.contains(original.url().encodedPath())) {
+                            mediaType = Config.MEDIA_TYPE_JSON;
+                            xikoloVersionExtension = "";
                         }
+
+                        Request.Builder builder = original.newBuilder()
+                                .header(Config.HEADER_ACCEPT, mediaType + xikoloVersionExtension)
+                                .header(Config.HEADER_CONTENT_TYPE, mediaType)
+                                .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE)
+                                .header(Config.HEADER_ACCEPT_LANGUAGE, appLanguage);
+
+                        if (UserManager.isAuthorized()) {
+                            builder.header(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX_JSON_API + UserManager.getToken());
+                        }
+
+                        return chain.proceed(builder.build());
                     })
                     .addInterceptor(logging)
                     .build();
@@ -104,6 +100,8 @@ public abstract class ApiService {
                     .add(SubtitleTrack.JsonModel.class)
                     .add(SubtitleCue.JsonModel.class)
                     .add(Announcement.JsonModel.class)
+                    .add(Document.JsonModel.class)
+                    .add(DocumentLocalization.JsonModel.class)
                     .build();
 
             Moshi moshi = new Moshi.Builder()

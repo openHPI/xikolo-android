@@ -56,7 +56,9 @@ class SplashActivity : AppCompatActivity() {
     private fun migrateStorage() {
         if (!ApplicationPreferences().contains(getString(R.string.preference_storage))) {
             val old = File(FileUtil.getPublicAppStorageFolderPath())
-            val new = File(FileUtil.createStorageFolderPath(StorageUtil.getInternalStorage(this)))
+            val new = File(FileUtil.createStorageFolderPath(
+                File(StorageUtil.getInternalStorage(this).absolutePath + File.separator + "Courses"))
+            )
             val fileCount = FileUtil.folderFileNumber(old)
 
             val progressDialog = ProgressDialog(this)

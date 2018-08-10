@@ -20,17 +20,14 @@ import com.yatatsu.autobundle.AutoBundleField;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.Config;
-import de.xikolo.config.FeatureToggle;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
 import de.xikolo.controllers.helper.CacheHelper;
+import de.xikolo.controllers.helper.CourseArea;
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.models.Course;
@@ -222,21 +219,6 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
 
     public class CoursePagerAdapter extends FragmentPagerAdapter implements TabLayout.OnTabSelectedListener {
 
-        private final List<String> TITLES;
-
-        {
-            TITLES = new ArrayList<>();
-            TITLES.add(getString(R.string.tab_learnings));
-            TITLES.add(getString(R.string.tab_discussions));
-            TITLES.add(getString(R.string.tab_progress));
-            TITLES.add(getString(R.string.tab_course_details));
-            TITLES.add(getString(R.string.tab_announcements));
-
-            if (FeatureToggle.recapMode()) {
-                TITLES.add(getString(R.string.tab_recap));
-            }
-        }
-
         private FragmentManager fragmentManager;
 
         public CoursePagerAdapter(FragmentManager fm) {
@@ -246,12 +228,12 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return TITLES.get(position);
+            return getString(CourseArea.get(position).getTitleRes());
         }
 
         @Override
         public int getCount() {
-            return TITLES.size();
+            return CourseArea.getSize();
         }
 
         @Override
@@ -261,26 +243,29 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
             String name = makeFragmentName(R.id.viewpager, position);
             Fragment fragment = fragmentManager.findFragmentByTag(name);
             if (fragment == null) {
-                switch (position) {
-                    case Course.TAB_LEARNINGS:
+                switch (CourseArea.get(position)) {
+                    case LEARNINGS:
                         fragment = LearningsFragmentAutoBundle.builder(courseId).build();
                         break;
-                    case Course.TAB_DISCUSSIONS:
+                    case DISCUSSIONS:
                         fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)
                                 .build();
                         break;
-                    case Course.TAB_PROGRESS:
+                    case PROGRESS:
                         fragment = ProgressFragmentAutoBundle.builder(courseId).build();
                         break;
-                    case Course.TAB_COURSE_DETAILS:
+                    case COURSE_DETAILS:
                         fragment = CourseDetailsFragmentAutoBundle.builder(courseId).build();
                         break;
-                    case Course.TAB_ANNOUNCEMENTS:
+                    case DOCUMENTS:
+                        fragment = DocumentListFragmentAutoBundle.builder(courseId).build();
+                        break;
+                    case ANNOUNCEMENTS:
                         fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build();
                         break;
-                    case Course.TAB_RECAP:
+                    case RECAP:
                         fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
                                 .inAppLinksEnabled(true)
                                 .externalLinksEnabled(false)

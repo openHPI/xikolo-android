@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="false"
-            app:cardCornerRadius="2dp"
+            app:cardCornerRadius="@dimen/corner_radius"
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="true">
 
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:visibility="gone"
-            app:cardCornerRadius="2dp"
+            app:cardCornerRadius="@dimen/corner_radius"
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="true">
 
@@ -168,7 +168,7 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:visibility="gone"
-            app:cardCornerRadius="2dp"
+            app:cardCornerRadius="@dimen/corner_radius"
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="true">
 
