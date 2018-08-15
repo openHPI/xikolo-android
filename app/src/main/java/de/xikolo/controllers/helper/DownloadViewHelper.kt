@@ -33,11 +33,17 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+/**
+ * When the url of the downloadAsset is null, the errorMessage is shown where the download button usually is and the UI will be disabled.
+ * If errorMessage is null (and the url too), the whole view will be hidden.
+ * If the url is not null, errorMessage has no effect.
+ */
 class DownloadViewHelper(
     private val activity: FragmentActivity,
     private val downloadAsset: DownloadAsset,
     title: CharSequence? = null,
-    description: String? = null
+    description: String? = null,
+    errorMessage: String? = App.getInstance().getString(R.string.not_available)
 ) {
 
     companion object {
@@ -145,7 +151,7 @@ class DownloadViewHelper(
             textFileName.text = downloadAsset.title
         }
 
-        if(description != null) {
+        if (description != null) {
             textDescription.text = description
             textDescription.visibility = View.VISIBLE
         } else {
@@ -158,7 +164,13 @@ class DownloadViewHelper(
 
         url = downloadAsset.url
         if (url == null) {
-            view.visibility = View.GONE
+            view.isEnabled = false
+            buttonDownloadStart.isEnabled = false
+
+            if (errorMessage != null)
+                buttonDownloadStart.text = errorMessage
+            else
+                view.visibility = View.GONE
         }
 
         EventBus.getDefault().register(this)
@@ -189,9 +201,9 @@ class DownloadViewHelper(
         }
 
         when {
-            downloadManager.downloadRunning(downloadAsset)   -> showRunningState()
-            downloadManager.downloadExists(downloadAsset)    -> showEndState()
-            else                                             -> showStartState()
+            downloadManager.downloadRunning(downloadAsset) -> showRunningState()
+            downloadManager.downloadExists(downloadAsset) -> showEndState()
+            else -> showStartState()
         }
 
     }

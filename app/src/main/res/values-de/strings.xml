@@ -161,6 +161,8 @@
     <string name="intro_overlay_text">Berühren, um Videos auf den Fernseher zu casten</string>
     <string name="user_name">%1$s %2$s</string>
     <string name="or">oder</string>
+    <string name="not_available">Nicht verfügbar</string>
+
 
     <string name="self_test_points">%1$.1f von %2$.1f Selbsttest-Punkten</string>
     <string name="assignments_points">%1$.1f von %2$.1f Hausaufgaben-Punkten</string>
@@ -179,7 +181,7 @@
     <string name="course_record_of_achievement_desc">Das Zeugnis erhält, wer in der Summe aller benoteten Aufgaben mehr als %1$.0f%% der Höchstpunktzahl erreicht hat.</string>
     <string name="course_confirmation_of_participation_desc">Die Teilnahmebestätigung erhält, wer auf zumindest %1$.0f%% der Kursunterlagen zugegriffen hat.</string>
     <string name="course_certificate_view">Ansehen</string>
-    <string name="course_certificate_not_available">Nicht Verfügbar</string>
+    <string name="course_certificate_not_achieved">Noch nicht erreicht</string>
 
     <string name="document_lang">Sprache: %s</string>
 

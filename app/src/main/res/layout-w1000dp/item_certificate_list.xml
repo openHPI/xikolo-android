@@ -51,10 +51,10 @@
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/card_vertical_margin"
+                android:layout_marginBottom="16dp"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/card_horizontal_margin"
-                android:paddingRight="@dimen/card_horizontal_margin">
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
             </LinearLayout>
         </LinearLayout>

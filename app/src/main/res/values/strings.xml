@@ -166,6 +166,7 @@
     <string name="login_sso">SSO</string>
     <string name="login_sso_hint">SSO Login</string>
     <string name="ok">OK</string>
+    <string name="not_available">Not available</string>
 
     <string name="self_test_points">%1$.1f of %2$.1f self-test points</string>
     <string name="assignments_points">%1$.1f of %2$.1f assignment points</string>
@@ -184,7 +185,7 @@
     <string name="course_record_of_achievement_desc">A record of achievement is issued to those who have earned more than %1$.0f%% of the maximum number of points for the sum of all graded assignments.</string>
     <string name="course_confirmation_of_participation_desc">A confirmation of participation is issued to those who have completed at least %1$.0f%% of the course material.</string>
     <string name="course_certificate_view">View</string>
-    <string name="course_certificate_not_available">Not available</string>
+    <string name="course_certificate_not_achieved">Not yet achieved</string>
 
     <string name="document_lang">Language: %s</string>
 

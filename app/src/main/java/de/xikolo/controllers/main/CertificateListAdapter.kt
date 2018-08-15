@@ -52,6 +52,8 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
         else
             holder.courseImage.visibility = View.GONE
 
+        holder.container.removeAllViews()
+
         if (course.certificates.confirmationOfParticipation.available) {
             val downloadViewHelper = DownloadViewHelper(
                 fragment.activity!!,
@@ -60,7 +62,8 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                     course
                 ),
                 App.getInstance().getString(R.string.course_confirmation_of_participation),
-                String.format(App.getInstance().getString(R.string.course_confirmation_of_participation_desc), course.certificates.confirmationOfParticipation.threshold)
+                null,
+                App.getInstance().getString(R.string.course_certificate_not_achieved)
             )
             holder.container.addView(downloadViewHelper.view)
             downloadViewHelper.openFileAsPdf()
@@ -74,7 +77,8 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                     course
                 ),
                 App.getInstance().getString(R.string.course_record_of_achievement),
-                String.format(App.getInstance().getString(R.string.course_record_of_achievement_desc), course.certificates.recordOfAchievement.threshold)
+                null,
+                App.getInstance().getString(R.string.course_certificate_not_achieved)
             )
             holder.container.addView(downloadViewHelper.view)
             downloadViewHelper.openFileAsPdf()
@@ -88,7 +92,8 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                     course
                 ),
                 App.getInstance().getString(R.string.course_qualified_certificate),
-                String.format(App.getInstance().getString(R.string.course_qualified_certificate_desc))
+                null,
+                App.getInstance().getString(R.string.course_certificate_not_achieved)
             )
             holder.container.addView(downloadViewHelper.view)
             downloadViewHelper.openFileAsPdf()
