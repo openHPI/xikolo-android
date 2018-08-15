@@ -7,7 +7,6 @@ import com.squareup.moshi.Json;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Map;
 
 import de.xikolo.App;
 import de.xikolo.BuildConfig;
@@ -15,6 +14,7 @@ import de.xikolo.R;
 import de.xikolo.config.BuildFlavor;
 import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
+import de.xikolo.models.certificates.Certificates;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.LanguageUtil;
@@ -217,8 +217,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         @Json(name = "policy_url")
         public String policyUrl;
 
-        // certificates are null if an error occured
-        public Map<String, Map<String, Object>> certificates;
+        public Certificates.JsonModel certificates;
 
         @Json(name = "on_demand")
         public boolean onDemand;
@@ -253,19 +252,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.external = external;
             course.externalUrl = externalUrl;
             course.policyUrl = policyUrl;
-
-            Certificates c;
-            try {
-                c = new Certificates(certificates);
-            } catch (ClassCastException e) { // set certificates to null in case a NullPointerException or ClassCastException is thrown
-                c = null;
-            }
-            catch(NullPointerException e) {
-                c = null;
-            }
-
-            course.certificates = c;
-
+            course.certificates = certificates.convertToRealmObject();
             course.onDemand = onDemand;
 
             if (enrollment != null) {

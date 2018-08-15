@@ -32,6 +32,7 @@ import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
+import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
 import de.xikolo.controllers.dialogs.UnenrollDialog;
 import de.xikolo.controllers.helper.CacheHelper;
 import de.xikolo.controllers.helper.CourseArea;
@@ -365,9 +366,9 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                         break;
                     case DISCUSSIONS:
                         fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
-                                .inAppLinksEnabled(true)
-                                .externalLinksEnabled(false)
-                                .build();
+                            .inAppLinksEnabled(true)
+                            .externalLinksEnabled(false)
+                            .build();
                         break;
                     case PROGRESS:
                         fragment = ProgressFragmentAutoBundle.builder(courseId).build();
@@ -383,9 +384,9 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                         break;
                     case RECAP:
                         fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
-                                .inAppLinksEnabled(true)
-                                .externalLinksEnabled(false)
-                                .build();
+                            .inAppLinksEnabled(true)
+                            .externalLinksEnabled(false)
+                            .build();
                         break;
                 }
             }

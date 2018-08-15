@@ -1,15 +1,9 @@
 package de.xikolo.presenters.course;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
-import de.xikolo.models.DownloadAsset;
-import de.xikolo.models.Enrollment;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class CertificatesPresenter extends LoadingStatePresenter<CertificatesView> {
 
@@ -22,9 +16,6 @@ public class CertificatesPresenter extends LoadingStatePresenter<CertificatesVie
     private Course course;
 
     private String courseId;
-
-    private RealmResults<?> enrollmentPromise;
-
 
     CertificatesPresenter(String courseId) {
         this.courseManager = new CourseManager();
@@ -41,34 +32,13 @@ public class CertificatesPresenter extends LoadingStatePresenter<CertificatesVie
 
         course = Course.find(courseId);
 
-        List<DownloadAsset.Course.Certificate> certificates = new ArrayList<>();
-
-        if (course.isEnrolled())
-            enrollmentPromise = courseManager.listEnrollments(realm, e -> {
-                Enrollment enrollment = e.where().equalTo("id", course.enrollmentId).findFirst();
-                if (getView() != null) {
-                    getViewOrThrow().showContent();
-                    if (enrollment != null)
-                        course.certificates.setCertificateUrls(
-                                enrollment.confirmationOfParticipationUrl,
-                                enrollment.recordOfAchievementUrl,
-                                enrollment.qualifiedCertificateUrl);
-                    getViewOrThrow().showCertificates(course, certificates);
-                }
-            });
-        else {
-            getViewOrThrow().showContent();
-            getViewOrThrow().showCertificates(course, certificates);
-        }
+        getViewOrThrow().showContent();
+        getViewOrThrow().showCertificates(course);
     }
 
     @Override
     public void onViewDetached() {
         super.onViewDetached();
-
-        if (enrollmentPromise != null) {
-            enrollmentPromise.removeAllChangeListeners();
-        }
     }
 
     @Override

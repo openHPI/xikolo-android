@@ -55,24 +55,24 @@ class CourseManager {
 
         var i = 0
         while (i < courseList.size) {
-            if (courseList[i].certificates != null) {
+            val course = courseList[i]
+            if (course.certificates != null) {
                 // find the enrollment for this course because there the certificate urls are stored
                 val enrollment = realm
                     .where(Enrollment::class.java)
-                    .equalTo("id", courseList[i].enrollmentId)
+                    .equalTo("id", course.enrollmentId)
                     .findFirst()
 
                 // set the certificate urls
-                if (enrollment != null) {
-                    courseList[i].certificates.setCertificateUrls(
-                        enrollment.confirmationOfParticipationUrl,
-                        enrollment.recordOfAchievementUrl,
-                        enrollment.qualifiedCertificateUrl)
+                if (enrollment != null && course.certificates != null) {
+                    course.certificates.confirmationOfParticipation?.url = enrollment.confirmationOfParticipationUrl
+                    course.certificates.recordOfAchievement?.url = enrollment.recordOfAchievementUrl
+                    course.certificates.qualifiedCertificate?.url = enrollment.qualifiedCertificateUrl
                 }
 
-                if (courseList[i].certificates.qualifiedCertificateUrl == null
-                    && courseList[i].certificates.recordOfAchievementUrl == null
-                    && courseList[i].certificates.confirmationOfParticipationUrl == null) {
+                if (courseList[i].certificates.qualifiedCertificate?.url == null
+                    && courseList[i].certificates.recordOfAchievement?.url == null
+                    && courseList[i].certificates.confirmationOfParticipation?.url == null) {
                     courseList.removeAt(i)
                 } else {
                     i++
@@ -112,13 +112,13 @@ class CourseManager {
             .where(Course::class.java)
             .equalTo("external", false)
             .beginGroup()
-                .like("title", "*$query*", Case.INSENSITIVE)
-                .or()
-                .like("shortAbstract", "*$query*", Case.INSENSITIVE)
-                .or()
-                .like("description", "*$query*", Case.INSENSITIVE)
-                .or()
-                .like("teachers", "*$query*", Case.INSENSITIVE)
+            .like("title", "*$query*", Case.INSENSITIVE)
+            .or()
+            .like("shortAbstract", "*$query*", Case.INSENSITIVE)
+            .or()
+            .like("description", "*$query*", Case.INSENSITIVE)
+            .or()
+            .like("teachers", "*$query*", Case.INSENSITIVE)
             .endGroup()
 
         if (withEnrollment) {
@@ -142,9 +142,9 @@ class CourseManager {
         val coursePromise = realm
             .where(Course::class.java)
             .beginGroup()
-                .equalTo("id", id)
-                .or()
-                .equalTo("slug", id)
+            .equalTo("id", id)
+            .or()
+            .equalTo("slug", id)
             .endGroup()
             .findFirstAsync()
 

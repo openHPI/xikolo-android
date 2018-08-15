@@ -31,6 +31,22 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, val stor
         override val title = "Document (" + documentLocalization.language + "): " + document.title
     }
 
+    sealed class Certificate(url: String?, fileName: String, course: de.xikolo.models.Course) : DownloadAsset(url, fileName) {
+        override val fileFolder = super.fileFolder + File.separator + "certificates" + File.separator + course.id
+
+        class ConfirmationOfParticipation(url: String?, course: de.xikolo.models.Course) : Certificate(url, "confirmation_of_participation.pdf", course) {
+            override val title = App.getInstance().getString(R.string.course_confirmation_of_participation)
+        }
+
+        class RecordOfAchievement(url: String?, course: de.xikolo.models.Course) : Certificate(url, "record_of_achievement.pdf", course) {
+            override val title = App.getInstance().getString(R.string.course_record_of_achievement)
+        }
+
+        class QualifiedCertificate(url: String?, course: de.xikolo.models.Course) : Certificate(url, "qualified_certificate.pdf", course) {
+            override val title = App.getInstance().getString(R.string.course_qualified_certificate)
+        }
+    }
+
     sealed class Course(url: String?, override val fileName: String, val course: de.xikolo.models.Course) : DownloadAsset(url, fileName) {
 
         override val fileFolder = super.fileFolder + File.separator + "Courses" + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
@@ -66,22 +82,6 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, val stor
                 override val size = video.transcriptSize.toLong()
             }
 
-        }
-
-        sealed class Certificate(url: String?, fileName: String, course: de.xikolo.models.Course) : Course(url, fileName, course){
-            override val fileFolder = super.fileFolder + File.separator + "certificates"
-
-            class ConfirmationOfParticipation(url: String?, course: de.xikolo.models.Course, val threshold: Double) : Certificate(url, "confirmation_of_participation.pdf", course){
-                override val title = App.getInstance().getString(R.string.course_confirmation_of_participation)
-            }
-
-            class RecordOfAchievement(url: String?, course: de.xikolo.models.Course, val threshold: Double) : Certificate(url, "record_of_achievement.pdf", course){
-                override val title = App.getInstance().getString(R.string.course_record_of_achievement)
-            }
-
-            class QualifiedCertificate(url: String?, course: de.xikolo.models.Course) : Certificate(url, "qualified_certificate.pdf", course){
-                override val title = App.getInstance().getString(R.string.course_qualified_certificate)
-            }
         }
 
     }
