@@ -180,9 +180,9 @@
     <string name="course_qualified_certificate">Qualified certificate</string>
     <string name="course_record_of_achievement">Record of achievement</string>
     <string name="course_confirmation_of_participation">Confirmation of participation</string>
-    <string name="course_qualified_certificate_desc">A &#x3C;b&#x3E;qualified certificate&#x3C;/b&#x3E; is issued to those who have booked it and gained a record of achievement.</string>
-    <string name="course_record_of_achievement_desc">A &#x3C;b&#x3E;record of achievement&#x3C;/b&#x3E; is issued to those who have earned more than &#x3C;b&#x3E;%1$.0f&#x3C;/b&#x3E;%% of the maximum number of points for the sum of all graded assignments.</string>
-    <string name="course_confirmation_of_participation_desc">A &#x3C;b&#x3E;confirmation of participation&#x3C;/b&#x3E; is issued to those who have completed at least &#x3C;b&#x3E;%1$.0f&#x3C;/b&#x3E;%% of the course material.</string>
+    <string name="course_qualified_certificate_desc">A qualified certificate is issued to those who have booked it and gained a record of achievement.</string>
+    <string name="course_record_of_achievement_desc">A record of achievement is issued to those who have earned more than %1$.0f%% of the maximum number of points for the sum of all graded assignments.</string>
+    <string name="course_confirmation_of_participation_desc">A confirmation of participation is issued to those who have completed at least %1$.0f%% of the course material.</string>
     <string name="course_certificate_view">View</string>
     <string name="course_certificate_not_available">Not available</string>
 

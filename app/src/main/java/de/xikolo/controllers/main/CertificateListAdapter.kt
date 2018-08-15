@@ -4,19 +4,20 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.RelativeLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.config.GlideApp
+import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.models.Course
+import de.xikolo.models.DownloadAsset
 import java.util.*
 
-class CertificateListAdapter(private val callback: OnCertificateCardClickListener) : RecyclerView.Adapter<CertificateListAdapter.CertificateViewHolder>() {
+class CertificateListAdapter(private val fragment: CertificateListFragment, private val callback: OnCertificateCardClickListener) : RecyclerView.Adapter<CertificateListAdapter.CertificateViewHolder>() {
 
     private var courseList: MutableList<Course> = ArrayList()
 
@@ -51,40 +52,47 @@ class CertificateListAdapter(private val callback: OnCertificateCardClickListene
         else
             holder.courseImage.visibility = View.GONE
 
-        if (!course.certificates.qualifiedCertificate.available)
-            holder.qualifiedCertificate.visibility = View.GONE
-        else
-            holder.qualifiedCertificate.visibility = View.VISIBLE
+        if (course.certificates.confirmationOfParticipation.available) {
+            val downloadViewHelper = DownloadViewHelper(
+                fragment.activity!!,
+                DownloadAsset.Certificate.ConfirmationOfParticipation(
+                    course.certificates.confirmationOfParticipation.url,
+                    course
+                ),
+                App.getInstance().getString(R.string.course_confirmation_of_participation),
+                String.format(App.getInstance().getString(R.string.course_confirmation_of_participation_desc), course.certificates.confirmationOfParticipation.threshold)
+            )
+            holder.container.addView(downloadViewHelper.view)
+            downloadViewHelper.openFileAsPdf()
+        }
 
-        if (course.certificates.qualifiedCertificate.url != null) {
-            holder.qualifiedCertificateButton.isEnabled = true
-            holder.qualifiedCertificateButton.setOnClickListener { v -> callback.onViewCertificateClicked(course.certificates.qualifiedCertificate!!.url) }
-        } else
-            holder.qualifiedCertificateButton.isEnabled = false
+        if (course.certificates.recordOfAchievement.available) {
+            val downloadViewHelper = DownloadViewHelper(
+                fragment.activity!!,
+                DownloadAsset.Certificate.RecordOfAchievement(
+                    course.certificates.recordOfAchievement.url,
+                    course
+                ),
+                App.getInstance().getString(R.string.course_record_of_achievement),
+                String.format(App.getInstance().getString(R.string.course_record_of_achievement_desc), course.certificates.recordOfAchievement.threshold)
+            )
+            holder.container.addView(downloadViewHelper.view)
+            downloadViewHelper.openFileAsPdf()
+        }
 
-
-        if (!course.certificates.recordOfAchievement.available)
-            holder.recordOfAchievement.visibility = View.GONE
-        else
-            holder.recordOfAchievement.visibility = View.VISIBLE
-
-        if (course.certificates.recordOfAchievement.url != null) {
-            holder.recordOfAchievementButton.isEnabled = true
-            holder.recordOfAchievementButton.setOnClickListener { _ -> callback.onViewCertificateClicked(course.certificates.recordOfAchievement!!.url) }
-        } else
-            holder.recordOfAchievementButton.isEnabled = false
-
-
-        if (!course.certificates.confirmationOfParticipation.available)
-            holder.confirmationOfParticipation.visibility = View.GONE
-        else
-            holder.confirmationOfParticipation.visibility = View.VISIBLE
-
-        if (course.certificates.confirmationOfParticipation.url != null) {
-            holder.confirmationOfParticipationButton.isEnabled = true
-            holder.confirmationOfParticipationButton.setOnClickListener { _ -> callback.onViewCertificateClicked(course.certificates.confirmationOfParticipation!!.url) }
-        } else
-            holder.confirmationOfParticipationButton.isEnabled = false
+        if (course.certificates.qualifiedCertificate.available) {
+            val downloadViewHelper = DownloadViewHelper(
+                fragment.activity!!,
+                DownloadAsset.Certificate.QualifiedCertificate(
+                    course.certificates.qualifiedCertificate.url,
+                    course
+                ),
+                App.getInstance().getString(R.string.course_qualified_certificate),
+                String.format(App.getInstance().getString(R.string.course_qualified_certificate_desc))
+            )
+            holder.container.addView(downloadViewHelper.view)
+            downloadViewHelper.openFileAsPdf()
+        }
     }
 
     interface OnCertificateCardClickListener {
@@ -105,23 +113,8 @@ class CertificateListAdapter(private val callback: OnCertificateCardClickListene
         @BindView(R.id.textTitle)
         lateinit var textTitle: TextView
 
-        @BindView(R.id.qualifiedCertificateContainer)
-        lateinit var qualifiedCertificate: RelativeLayout
-
-        @BindView(R.id.qualifiedCertificateButton)
-        lateinit var qualifiedCertificateButton: Button
-
-        @BindView(R.id.recordOfAchievementContainer)
-        lateinit var recordOfAchievement: RelativeLayout
-
-        @BindView(R.id.recordOfAchievementButton)
-        lateinit var recordOfAchievementButton: Button
-
-        @BindView(R.id.confirmationOfParticipationContainer)
-        lateinit var confirmationOfParticipation: RelativeLayout
-
-        @BindView(R.id.confirmationOfParticipationButton)
-        lateinit var confirmationOfParticipationButton: Button
+        @BindView(R.id.container)
+        lateinit var container: LinearLayout
 
         init {
             ButterKnife.bind(this, view)

@@ -28,7 +28,6 @@ import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.main.CertificateListPresenter;
 import de.xikolo.presenters.main.CertificateListPresenterFactory;
 import de.xikolo.presenters.main.CertificateListView;
-import de.xikolo.utils.IntentUtil;
 import de.xikolo.views.SpaceItemDecoration;
 
 public class CertificateListFragment extends MainFragment<CertificateListPresenter, CertificateListView> implements CertificateListView {
@@ -57,10 +56,9 @@ public class CertificateListFragment extends MainFragment<CertificateListPresent
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        certificateListAdapter = new CertificateListAdapter(new CertificateListAdapter.OnCertificateCardClickListener() {
+        certificateListAdapter = new CertificateListAdapter(this, new CertificateListAdapter.OnCertificateCardClickListener() {
             @Override
             public void onViewCertificateClicked(String url) {
-                IntentUtil.openDoc(App.getInstance(), url);
             }
 
             @Override
@@ -72,25 +70,25 @@ public class CertificateListFragment extends MainFragment<CertificateListPresent
 
         recyclerView.setLayoutManager(new LinearLayoutManager(App.getInstance()));
         recyclerView.addItemDecoration(new SpaceItemDecoration(
-                getActivity().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
-                getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
-                false,
-                new SpaceItemDecoration.RecyclerViewInfo() {
-                    @Override
-                    public boolean isHeader(int position) {
-                        return false;
-                    }
+            getActivity().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
+            getActivity().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
+            false,
+            new SpaceItemDecoration.RecyclerViewInfo() {
+                @Override
+                public boolean isHeader(int position) {
+                    return false;
+                }
 
-                    @Override
-                    public int getSpanCount() {
-                        return 1;
-                    }
+                @Override
+                public int getSpanCount() {
+                    return 1;
+                }
 
-                    @Override
-                    public int getItemCount() {
-                        return certificateListAdapter.getItemCount();
-                    }
-                }));
+                @Override
+                public int getItemCount() {
+                    return certificateListAdapter.getItemCount();
+                }
+            }));
         recyclerView.setAdapter(certificateListAdapter);
     }
 

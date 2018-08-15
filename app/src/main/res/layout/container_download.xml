@@ -30,10 +30,22 @@
         android:textColor="@color/text_main"
         android:textSize="12sp" />
 
+    <TextView
+        android:id="@+id/textDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textFileName"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:paddingTop="8dp"
+        android:textColor="@color/text_main"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textFileName"
+        android:layout_below="@+id/textDescription"
         android:gravity="center">
 
         <RelativeLayout

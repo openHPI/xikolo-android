@@ -6,21 +6,21 @@
     android:gravity="center_horizontal">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        res:cardCornerRadius="2dp"
+        res:cardCornerRadius="@dimen/corner_radius"
         res:cardPreventCornerOverlap="true"
         res:cardUseCompatPadding="true">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/certificateHeader"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground">
@@ -47,85 +47,17 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/qualifiedCertificateContainer"
+            <LinearLayout
+                android:id="@+id/container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/certificateHeader">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/card_vertical_margin"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/card_horizontal_margin"
+                android:paddingRight="@dimen/card_horizontal_margin">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_toLeftOf="@+id/qualifiedCertificateButton"
-                    android:text="@string/course_qualified_certificate"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/qualifiedCertificateButton"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="@string/course_certificate_view" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/recordOfAchievementContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/qualifiedCertificateContainer">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_toLeftOf="@+id/recordOfAchievementButton"
-                    android:text="@string/course_record_of_achievement"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/recordOfAchievementButton"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="@string/course_certificate_view" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/confirmationOfParticipationContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/recordOfAchievementContainer">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_toLeftOf="@+id/confirmationOfParticipationButton"
-                    android:text="@string/course_confirmation_of_participation"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/confirmationOfParticipationButton"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="@string/course_certificate_view" />
-
-            </RelativeLayout>
-
-        </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 

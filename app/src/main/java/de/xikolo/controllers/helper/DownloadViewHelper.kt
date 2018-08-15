@@ -36,7 +36,8 @@ import org.greenrobot.eventbus.ThreadMode
 class DownloadViewHelper(
     private val activity: FragmentActivity,
     private val downloadAsset: DownloadAsset,
-    title: CharSequence? = null
+    title: CharSequence? = null,
+    description: String? = null
 ) {
 
     companion object {
@@ -53,6 +54,9 @@ class DownloadViewHelper(
 
     @BindView(R.id.textFileSize)
     lateinit var textFileSize: TextView
+
+    @BindView(R.id.textDescription)
+    lateinit var textDescription: TextView
 
     @BindView(R.id.downloadStartContainer)
     lateinit var viewDownloadStart: View
@@ -139,6 +143,13 @@ class DownloadViewHelper(
             textFileName.text = title
         } else {
             textFileName.text = downloadAsset.title
+        }
+
+        if(description != null) {
+            textDescription.text = description
+            textDescription.visibility = View.VISIBLE
+        } else {
+            textDescription.visibility = View.GONE
         }
 
         buttonOpenDownload.visibility = View.GONE
