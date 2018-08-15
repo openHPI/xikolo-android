@@ -23,13 +23,9 @@ import com.yatatsu.autobundle.AutoBundleField;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.Config;
-import de.xikolo.config.FeatureToggle;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
@@ -242,10 +238,10 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     @Override
     public void setEnrollmentFunctionsAvailable(boolean available) {
         initAdapter();
-        if (available)
+        /*if (available)
             adapter.setHiding(false);
         else
-            adapter.setHiding(true);
+            adapter.setHiding(true);*/
 
         adapter.notifyDataSetChanged();
         supportInvalidateOptionsMenu();
@@ -300,61 +296,25 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
 
     public class CoursePagerAdapter extends FragmentPagerAdapter implements TabLayout.OnTabSelectedListener {
 
-        private List<String> getTitles(boolean hide) {
-            List<String> titles = new ArrayList<>();
-            if (!hide) {
-                titles.add(getString(R.string.tab_learnings));
-                titles.add(getString(R.string.tab_discussions));
-                titles.add(getString(R.string.tab_progress));
-            }
-            titles.add(getString(R.string.tab_course_details));
-            titles.add(getString(R.string.tab_course_certificates));
-
-            if (!hide) {
-                titles.add(getString(R.string.tab_announcements));
-
-                if (FeatureToggle.recapMode()) {
-                    titles.add(getString(R.string.tab_recap));
-                }
-            }
-
-            return titles;
-        }
-
         private FragmentManager fragmentManager;
-
-        private List<String> TITLES;
-
-        private boolean hiding = false;
 
         public CoursePagerAdapter(FragmentManager fm) {
             super(fm);
             fragmentManager = fm;
-            setHiding(false);
-        }
-
-        public void setHiding(boolean hide) {
-            hiding = hide;
-            TITLES = getTitles(hide);
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return TITLES.get(position);
+            return getString(CourseArea.get(position).getTitleRes());
         }
 
         @Override
         public int getCount() {
-            return TITLES.size();
+            return CourseArea.getSize();
         }
 
         @Override
         public Fragment getItem(int position) {
-            //in case some items are hidden
-            if (hiding) {
-                position += 3;
-            }
-
             // Check if this Fragment already exists.
             // Fragment Name is saved by FragmentPagerAdapter implementation.
             String name = makeFragmentName(R.id.viewpager, position);
@@ -375,6 +335,9 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
                         break;
                     case COURSE_DETAILS:
                         fragment = DescriptionFragmentAutoBundle.builder(courseId).build();
+                        break;
+                    case CERTIFICATES:
+                        fragment = CertificatesFragmentAutoBundle.builder(courseId).build();
                         break;
                     case DOCUMENTS:
                         fragment = DocumentListFragmentAutoBundle.builder(courseId).build();
