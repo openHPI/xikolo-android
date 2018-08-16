@@ -40,8 +40,10 @@ public class CourseDescriptionPresenter extends LoadingStatePresenter<CourseDesc
 
         coursePromise = courseManager.getCourse(courseId, realm, c -> {
             course = c;
-            getViewOrThrow().showContent();
-            getViewOrThrow().setupView(course);
+            if (getView() != null) {
+                getViewOrThrow().showContent();
+                getViewOrThrow().setupView(course);
+            }
         });
     }
 

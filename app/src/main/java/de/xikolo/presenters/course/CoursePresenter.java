@@ -24,27 +24,23 @@ public class CoursePresenter extends Presenter<CourseView> {
 
     private Realm realm;
 
-    private int courseTab;
-    private int lastTrackedCourseTab;
-
-    private String courseId;
-
     private Course course;
+
+    private CourseArea courseTab = CourseArea.LEARNINGS;
+
+    private CourseArea lastTrackedCourseTab;
 
     CoursePresenter() {
         this.courseManager = new CourseManager();
         this.realm = Realm.getDefaultInstance();
-        this.courseTab = CourseArea.LEARNINGS.getIndex();
-
-        lastTrackedCourseTab = -1;
     }
 
     @Override
     public void onViewAttached(CourseView v) {
         super.onViewAttached(v);
 
-        if (courseId != null) {
-            initCourse(courseId);
+        if (course != null) {
+            initCourse(course.id);
         }
     }
 
@@ -57,33 +53,33 @@ public class CoursePresenter extends Presenter<CourseView> {
         initCourse(id, courseTab);
     }
 
-    private void initCourse(String id, int tab) {
-        courseId = id;
+    private void initCourse(String id, CourseArea tab) {
+        //courseId = id;
         courseTab = tab;
 
         Crashlytics.setString("course_id", id);
 
         if (isViewAttached()) {
-            course = Course.get(courseId);
+            course = Course.get(id);//
             setupCourse(course);
         }
     }
 
-    public void setCourseTab(int tab) {
+    public void setCourseTab(CourseArea tab) {
         courseTab = tab;
         if (lastTrackedCourseTab != courseTab) {
-            switch (CourseArea.get(tab)) {
+            switch (tab) {
                 case DISCUSSIONS:
-                    LanalyticsUtil.trackVisitedPinboard(courseId);
+                    LanalyticsUtil.trackVisitedPinboard(course.id);
                     break;
                 case PROGRESS:
-                    LanalyticsUtil.trackVisitedProgress(courseId);
+                    LanalyticsUtil.trackVisitedProgress(course.id);
                     break;
                 case ANNOUNCEMENTS:
-                    LanalyticsUtil.trackVisitedAnnouncements(courseId);
+                    LanalyticsUtil.trackVisitedAnnouncements(course.id);
                     break;
                 case RECAP:
-                    LanalyticsUtil.trackVisitedRecap(courseId);
+                    LanalyticsUtil.trackVisitedRecap(course.id);
                     break;
             }
         }
@@ -94,20 +90,20 @@ public class CoursePresenter extends Presenter<CourseView> {
         getViewOrThrow().setupView(course, courseTab);
 
         if (!course.isEnrolled()) {
-            getViewOrThrow().setEnrollmentFunctionsAvailable(false);
-            getViewOrThrow().showEnrollOption();
+            getViewOrThrow().setAreaState(CourseArea.Locked.INSTANCE);
+            getViewOrThrow().showEnrollBar();
         } else if (course.accessible) {
-            getViewOrThrow().setEnrollmentFunctionsAvailable(true);
+            getViewOrThrow().setAreaState(CourseArea.All.INSTANCE);
             getViewOrThrow().hideEnrollBar();
         } else {
-            getViewOrThrow().setEnrollmentFunctionsAvailable(false);
+            getViewOrThrow().setAreaState(CourseArea.Locked.INSTANCE);
             getViewOrThrow().showCourseStartsSoon();
         }
     }
 
     public void handleDeepLink(Uri uri) {
         String identifier = DeepLinkingUtil.getCourseIdentifierFromResumeUri(uri);
-        int tab = DeepLinkingUtil.getTab(uri.getPath());
+        CourseArea tab = DeepLinkingUtil.getTab(uri.getPath());
 
         Crashlytics.setString("deep_link", uri.toString());
 
@@ -137,12 +133,12 @@ public class CoursePresenter extends Presenter<CourseView> {
     public void enroll() {
         getViewOrThrow().showProgressDialog();
 
-        courseManager.createEnrollment(courseId, new RequestJobCallback() {
+        courseManager.createEnrollment(course.id, new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {
                     getView().hideProgressDialog();
-                    getViewOrThrow().restartActivity();
+                    getView().restartActivity();
                 }
             }
 
@@ -163,7 +159,7 @@ public class CoursePresenter extends Presenter<CourseView> {
 
     public void unenroll() {
         getViewOrThrow().showProgressDialog();
-        courseManager.deleteEnrollment(Enrollment.getForCourse(courseId).id, new RequestJobCallback() {
+        courseManager.deleteEnrollment(Enrollment.getForCourse(course.id).id, new RequestJobCallback() {
             @Override
             public void onSuccess() {
                 if (getView() != null) {

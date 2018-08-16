@@ -1,5 +1,6 @@
 package de.xikolo.presenters.course;
 
+import de.xikolo.controllers.helper.CourseArea;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.base.View;
 
@@ -17,18 +18,18 @@ public interface CourseView extends View {
 
     void openLogin();
 
-    void setEnrollmentFunctionsAvailable(boolean available);
+    void setAreaState(CourseArea.State state);
+
+    void showEnrollBar();
 
     void hideEnrollBar();
 
-    void showEnrollOption();
-
     void showCourseStartsSoon();
-
-    void finishActivity();
 
     void restartActivity();
 
-    void setupView(Course course, int courseTab);
+    void finishActivity();
+
+    void setupView(Course course, CourseArea courseTab);
 
 }

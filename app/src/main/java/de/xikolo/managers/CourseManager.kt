@@ -44,48 +44,6 @@ class CourseManager {
         return courseListPromise
     }
 
-    fun listCoursesWithCertificates(realm: Realm): List<Course> {
-        // get course list (copyFromRealm is necessary because otherwise we could not remove items from the list)
-        val courseList = realm.copyFromRealm<Course>(
-            realm.where(Course::class.java)
-                .equalTo("external", false)
-                .sort("startDate", Sort.DESCENDING)
-                .findAll()
-        )
-
-        var i = 0
-        while (i < courseList.size) {
-            val course = courseList[i]
-            if (course.certificates != null) {
-                // find the enrollment for this course because there the certificate urls are stored
-                val enrollment = realm
-                    .where(Enrollment::class.java)
-                    .equalTo("id", course.enrollmentId)
-                    .findFirst()
-
-                // set the certificate urls
-                if (enrollment != null && course.certificates != null) {
-                    course.certificates.confirmationOfParticipation?.url = enrollment.confirmationOfParticipationUrl
-                    course.certificates.recordOfAchievement?.url = enrollment.recordOfAchievementUrl
-                    course.certificates.qualifiedCertificate?.url = enrollment.qualifiedCertificateUrl
-                }
-
-                if (courseList[i].certificates.qualifiedCertificate?.url == null
-                    && courseList[i].certificates.recordOfAchievement?.url == null
-                    && courseList[i].certificates.confirmationOfParticipation?.url == null) {
-                    courseList.removeAt(i)
-                } else {
-                    i++
-                }
-            } else {
-                // an error occured while parsing the certificate
-                courseList.removeAt(i)
-            }
-        }
-
-        return courseList
-    }
-
     fun listEnrolledCourses(realm: Realm, listener: RealmChangeListener<RealmResults<Course>>?): RealmResults<*> {
         if (listener == null) {
             throw IllegalArgumentException("RealmChangeListener should not be null for async queries.")

@@ -6,6 +6,7 @@ import java.util.List;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
+import de.xikolo.models.Enrollment;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
 
@@ -31,16 +32,28 @@ public class CertificateListPresenter extends LoadingStatePresenter<CertificateL
             requestCourses(false);
         }
 
-        this.courseList = courseManager.listCoursesWithCertificates(realm);
-        getViewOrThrow().showContent();
-        if (!UserManager.isAuthorized()) {
-            getViewOrThrow().showLoginRequiredMessage();
-        } else {
-            if (courseList.size() == 0)
-                getViewOrThrow().showNoCertificatesMessage();
-            else
-                getViewOrThrow().showCertificateList(courseList);
-        }
+        courseManager.listCourses(realm, courses -> {
+            courseList = realm.copyFromRealm(courses);
+            for (int i = 0; i < courseList.size(); i++) {
+                Enrollment e = Enrollment.getForCourse(courseList.get(i).id);
+                if (e != null)
+                    if (e.confirmationOfParticipationUrl != null
+                        || e.recordOfAchievementUrl != null
+                        || e.qualifiedCertificateUrl != null)
+                        continue;
+                courseList.remove(i);
+                i--;
+            }
+            getViewOrThrow().showContent();
+            if (!UserManager.isAuthorized()) {
+                getViewOrThrow().showLoginRequiredMessage();
+            } else {
+                if (courseList.size() == 0)
+                    getViewOrThrow().showNoCertificatesMessage();
+                else
+                    getViewOrThrow().showCertificateList(courseList);
+            }
+        });
     }
 
     @Override

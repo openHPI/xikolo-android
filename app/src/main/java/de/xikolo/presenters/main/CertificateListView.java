@@ -7,7 +7,7 @@ import de.xikolo.presenters.base.LoadingStateView;
 
 public interface CertificateListView extends LoadingStateView {
 
-    void showCertificateList(List<Course> coursesWithCertificates);
+    void showCertificateList(List<Course> courses);
 
     void showNoCertificatesMessage();
 

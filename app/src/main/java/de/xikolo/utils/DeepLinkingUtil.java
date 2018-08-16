@@ -39,19 +39,19 @@ public class DeepLinkingUtil {
         return path;
     }
 
-    public static int getTab(String courseRoute) {
+    public static CourseArea getTab(String courseRoute) {
 
         if (courseRoute.endsWith(ROUTE_RESUME)) {
-            return CourseArea.LEARNINGS.getIndex();
+            return CourseArea.LEARNINGS;
         } else if (courseRoute.endsWith(ROUTE_PINBOARD)) {
-            return CourseArea.DISCUSSIONS.getIndex();
+            return CourseArea.DISCUSSIONS;
         } else if (courseRoute.endsWith(ROUTE_PROGRESS)) {
-            return CourseArea.PROGRESS.getIndex();
+            return CourseArea.PROGRESS;
         } else if (courseRoute.endsWith(ROUTE_ANNOUNCEMENTS)) {
-            return CourseArea.ANNOUNCEMENTS.getIndex();
+            return CourseArea.ANNOUNCEMENTS;
         }
 
-        return CourseArea.LEARNINGS.getIndex();
+        return CourseArea.LEARNINGS;
     }
 
     public static Type getType(Uri uri) {

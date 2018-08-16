@@ -93,9 +93,9 @@ public class CertificateListFragment extends MainFragment<CertificateListPresent
     }
 
     @Override
-    public void showCertificateList(List<Course> coursesWithCertificates) {
+    public void showCertificateList(List<Course> courses) {
         if (certificateListAdapter != null) {
-            certificateListAdapter.update(coursesWithCertificates);
+            certificateListAdapter.update(courses);
         }
     }
 

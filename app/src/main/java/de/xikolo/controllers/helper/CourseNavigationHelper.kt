@@ -19,7 +19,7 @@ enum class CourseArea(@StringRes val titleRes: Int) {
     ANNOUNCEMENTS(R.string.tab_announcements),
     RECAP(R.string.tab_recap);
 
-    abstract class Helper {
+    abstract class State {
 
         protected val areas: MutableList<CourseArea> = mutableListOf()
 
@@ -32,7 +32,7 @@ enum class CourseArea(@StringRes val titleRes: Int) {
 
     }
 
-    object All : Helper() {
+    object All : State() {
         init {
             areas.add(CourseArea.LEARNINGS)
             areas.add(CourseArea.DISCUSSIONS)
@@ -45,7 +45,7 @@ enum class CourseArea(@StringRes val titleRes: Int) {
         }
     }
 
-    object Locked : Helper() {
+    object Locked : State() {
         init {
             areas.add(CourseArea.COURSE_DETAILS)
             areas.add(CourseArea.CERTIFICATES)

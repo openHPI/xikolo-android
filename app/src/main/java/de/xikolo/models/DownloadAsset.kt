@@ -35,15 +35,15 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, val stor
         override val fileFolder = super.fileFolder + File.separator + "Certificates" + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
 
         class ConfirmationOfParticipation(url: String?, course: de.xikolo.models.Course) : Certificate(url, "confirmation_of_participation.pdf", course) {
-            override val title = App.getInstance().getString(R.string.course_confirmation_of_participation)
+            override val title = App.getInstance().getString(R.string.course_confirmation_of_participation) + ": " + course.title
         }
 
         class RecordOfAchievement(url: String?, course: de.xikolo.models.Course) : Certificate(url, "record_of_achievement.pdf", course) {
-            override val title = App.getInstance().getString(R.string.course_record_of_achievement)
+            override val title = App.getInstance().getString(R.string.course_record_of_achievement) + ": " + course.title
         }
 
         class QualifiedCertificate(url: String?, course: de.xikolo.models.Course) : Certificate(url, "qualified_certificate.pdf", course) {
-            override val title = App.getInstance().getString(R.string.course_qualified_certificate)
+            override val title = App.getInstance().getString(R.string.course_qualified_certificate) + ": " + course.title
         }
     }
 

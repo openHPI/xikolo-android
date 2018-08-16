@@ -217,7 +217,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         @Json(name = "policy_url")
         public String policyUrl;
 
-        public Certificates.JsonModel certificates;
+        public Certificates certificates;
 
         @Json(name = "on_demand")
         public boolean onDemand;
@@ -252,7 +252,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.external = external;
             course.externalUrl = externalUrl;
             course.policyUrl = policyUrl;
-            course.certificates = certificates.convertToRealmObject();
+            course.certificates = certificates;
             course.onDemand = onDemand;
 
             if (enrollment != null) {

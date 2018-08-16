@@ -7,6 +7,4 @@ public class RecordOfAchievement extends RealmObject {
     public boolean available;
 
     public double threshold;
-
-    public String url;
 }

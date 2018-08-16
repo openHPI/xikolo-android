@@ -7,6 +7,4 @@ public class ConfirmationOfParticipation extends RealmObject {
     public boolean available;
 
     public double threshold;
-
-    public String url;
 }

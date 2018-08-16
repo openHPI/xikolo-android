@@ -14,6 +14,7 @@ import de.xikolo.controllers.base.LoadingStatePresenterFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.models.Course
 import de.xikolo.models.DownloadAsset
+import de.xikolo.models.Enrollment
 import de.xikolo.presenters.base.PresenterFactory
 import de.xikolo.presenters.course.CertificatesPresenter
 import de.xikolo.presenters.course.CertificatesPresenterFactory
@@ -48,86 +49,50 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
     }
 
     override fun showCertificates(course: Course) {
-        val isEnrolled = course.isEnrolled
-
         container.removeAllViews()
+
+        var errorMessage: String = getString(R.string.course_certificate_not_achieved)
+        if (!course.isEnrolled)
+            errorMessage = ""
 
         if (activity != null) {
             if (course.certificates.confirmationOfParticipation.available) {
                 val confirmationOfParticipationView = DownloadViewHelper(
                     activity!!,
-                    DownloadAsset.Certificate.ConfirmationOfParticipation(course.certificates.confirmationOfParticipation.url, course),
-                    getString(R.string.course_confirmation_of_participation)
+                    DownloadAsset.Certificate.ConfirmationOfParticipation(Enrollment.getForCourse(course.id)?.confirmationOfParticipationUrl, course),
+                    getString(R.string.course_confirmation_of_participation),
+                    String.format(getString(R.string.course_confirmation_of_participation_desc), course.certificates.confirmationOfParticipation.threshold),
+                    errorMessage
                 )
+                confirmationOfParticipationView.openFileAsPdf()
                 container.addView(confirmationOfParticipationView.view)
             }
 
             if (course.certificates.recordOfAchievement.available) {
                 val recordOfAchievementView = DownloadViewHelper(
                     activity!!,
-                    DownloadAsset.Certificate.RecordOfAchievement(course.certificates.recordOfAchievement.url, course),
-                    getString(R.string.course_record_of_achievement)
+                    DownloadAsset.Certificate.RecordOfAchievement(Enrollment.getForCourse(course.id)?.recordOfAchievementUrl, course),
+                    getString(R.string.course_record_of_achievement),
+                    String.format(getString(R.string.course_record_of_achievement_desc), course.certificates.recordOfAchievement.threshold),
+                    errorMessage
                 )
+                recordOfAchievementView.openFileAsPdf()
                 container.addView(recordOfAchievementView.view)
             }
 
             if (course.certificates.qualifiedCertificate.available) {
                 val qualifiedCertificateView = DownloadViewHelper(
                     activity!!,
-                    DownloadAsset.Certificate.QualifiedCertificate(course.certificates.qualifiedCertificate.url, course),
-                    getString(R.string.course_qualified_certificate)
+                    DownloadAsset.Certificate.QualifiedCertificate(Enrollment.getForCourse(course.id)?.qualifiedCertificateUrl, course),
+                    getString(R.string.course_qualified_certificate),
+                    getString(R.string.course_qualified_certificate_desc),
+                    errorMessage
                 )
+                qualifiedCertificateView.openFileAsPdf()
                 container.addView(qualifiedCertificateView.view)
             }
         }
-
-        /*for(DownloadAsset.Course.Certificate certificate : certificates){
-            if(certificate instanceof DownloadAsset.Course.Certificate.ConfirmationOfParticipation){
-                setupItem(getString(R.string.course_confirmation_of_participation),
-                    getString(R.string.course_confirmation_of_participation_desc, ((DownloadAsset.Course.Certificate.ConfirmationOfParticipation) certificate).getThreshold()),
-                    isEnrolled,
-                    certificate
-                    );
-            }
-            else if(certificate instanceof DownloadAsset.Course.Certificate.RecordOfAchievement){
-                setupItem(getString(R.string.course_record_of_achievement),
-                    getString(R.string.course_record_of_achievement_desc, ((DownloadAsset.Course.Certificate.RecordOfAchievement) certificate).getThreshold()),
-                    isEnrolled,
-                    certificate
-                );
-            }
-            else if(certificate instanceof DownloadAsset.Course.Certificate.QualifiedCertificate){
-                setupItem(getString(R.string.course_qualified_certificate),
-                    getString(R.string.course_qualified_certificate_desc),
-                    isEnrolled,
-                    certificate
-                );
-            }
-        }*/
     }
-
-    /*private fun setupItem(header: String, text: String, enrolled: Boolean, certificate: DownloadAsset.Certificate) {
-        val h = layoutInflater.inflate(R.layout.item_section_header, null)
-        (h.findViewById<View>(R.id.textHeader) as TextView).text = header
-
-        val v = layoutInflater.inflate(R.layout.item_certificate, null)
-        (v.findViewById<View>(R.id.textContent) as TextView).text = Html.fromHtml(text)
-        val downloadButton = v.findViewById<Button>(R.id.button_certificate_download)
-        if (certificate.url != null) {
-            downloadButton.setText(R.string.course_certificate_view)
-            downloadButton.setOnClickListener { view -> IntentUtil.openDoc(App.getInstance(), certificate.url!!) }
-        } else {
-            if (enrolled) {
-                downloadButton.isEnabled = false
-                downloadButton.setText(R.string.course_certificate_not_available)
-            } else {
-                downloadButton.visibility = View.GONE
-            }
-        }
-
-        container!!.addView(h)
-        container!!.addView(v)
-    }*/
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater!!.inflate(R.menu.refresh, menu)

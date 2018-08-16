@@ -54,14 +54,16 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     @BindView(R.id.appbar) AppBarLayout appBarLayout;
     @BindView(R.id.stub_bottom) ViewStub stubBottom;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
-    CoursePagerAdapter adapter;
+    private CoursePagerAdapter adapter;
 
-    View enrollBar;
-    Button enrollButton;
+    private View enrollBar;
+    private Button enrollButton;
 
-    private boolean enrollable = true;
+    private CourseArea.State areaState = CourseArea.All.INSTANCE;
+
+    private boolean enrolled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,37 +98,6 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     }
 
     @Override
-    public void setupView(Course course, int courseTab) {
-        setTitle(course.title);
-
-        if (stubBottom.getParent() != null) {
-            stubBottom.setLayoutResource(R.layout.content_enroll_button);
-            enrollBar = stubBottom.inflate();
-            enrollButton = enrollBar.findViewById(R.id.button_enroll);
-            enrollButton.setOnClickListener((v) -> presenter.enroll());
-        }
-
-        courseId = course.id;
-        initAdapter();
-        viewPager.setOffscreenPageLimit(2);
-
-        // Bind the tabs to the ViewPager
-        tabLayout.setupWithViewPager(viewPager);
-
-        viewPager.setCurrentItem(courseTab);
-
-        setEnrollmentFunctionsAvailable(true);
-        hideEnrollBar();
-    }
-
-    private void initAdapter() {
-        adapter = new CoursePagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-        tabLayout.clearOnTabSelectedListeners();
-        tabLayout.addOnTabSelectedListener(adapter);
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
@@ -143,31 +114,12 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
 
-        if (!enrollable)
+        if (enrolled)
             inflater.inflate(R.menu.unenroll, menu);
 
         inflater.inflate(R.menu.share, menu);
         super.onCreateOptionsMenu(menu);
         return true;
-    }
-
-    @Override
-    @SuppressWarnings("unused")
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onNetworkEvent(NetworkStateEvent event) {
-        super.onNetworkEvent(event);
-
-        if (appBarLayout != null) {
-            if (event.isOnline()) {
-                toolbar.setSubtitle("");
-                tabLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_toolbar));
-                setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
-            } else {
-                toolbar.setSubtitle(getString(R.string.offline_mode));
-                tabLayout.setBackgroundColor(getResources().getColor(R.color.offline_mode_toolbar));
-                setColorScheme(R.color.offline_mode_toolbar, R.color.offline_mode_statusbar);
-            }
-        }
     }
 
     @Override
@@ -190,13 +142,85 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     }
 
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
+    public void onDialogPositiveClick(@NonNull DialogFragment dialog) {
         presenter.unenroll();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         adapter.getItem(viewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void setupView(Course course, CourseArea courseTab) {
+        setTitle(course.title);
+
+        if (stubBottom.getParent() != null) {
+            stubBottom.setLayoutResource(R.layout.content_enroll_button);
+            enrollBar = stubBottom.inflate();
+            enrollButton = enrollBar.findViewById(R.id.button_enroll);
+            enrollButton.setOnClickListener((v) -> presenter.enroll());
+        }
+
+        courseId = course.id;
+
+        adapter = new CoursePagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+
+        tabLayout.clearOnTabSelectedListeners();
+        tabLayout.addOnTabSelectedListener(adapter);
+        tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.setCurrentItem(areaState.indexOf(courseTab));
+
+        hideEnrollBar();
+    }
+
+    @Override
+    public void setAreaState(CourseArea.State state) {
+        areaState = state;
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void hideEnrollBar() {
+        enrolled = true;
+        if (enrollBar != null)
+            enrollBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showEnrollBar() {
+        enrolled = false;
+        if (enrollBar != null && enrollButton != null) {
+            enrollBar.setVisibility(View.VISIBLE);
+            enrollButton.setEnabled(true);
+            enrollButton.setClickable(true);
+            enrollButton.setText(R.string.btn_enroll);
+        }
+    }
+
+    @Override
+    public void showCourseStartsSoon() {
+        enrolled = true;
+        if (enrollBar != null && enrollButton != null) {
+            enrollBar.setVisibility(View.VISIBLE);
+            enrollButton.setEnabled(false);
+            enrollButton.setClickable(false);
+            enrollButton.setText(R.string.btn_starts_soon);
+        }
+    }
+
+    @Override
+    public void finishActivity() {
+        finish();
+    }
+
+    @Override
+    public void restartActivity() {
+        Intent i = getIntent();
+        finish();
+        startActivity(i);
     }
 
     @Override
@@ -236,56 +260,22 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     }
 
     @Override
-    public void setEnrollmentFunctionsAvailable(boolean available) {
-        initAdapter();
-        /*if (available)
-            adapter.setHiding(false);
-        else
-            adapter.setHiding(true);*/
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onNetworkEvent(NetworkStateEvent event) {
+        super.onNetworkEvent(event);
 
-        adapter.notifyDataSetChanged();
-        supportInvalidateOptionsMenu();
-    }
-
-    @Override
-    public void hideEnrollBar() {
-        this.enrollable = false;
-        if (enrollBar != null)
-            enrollBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showEnrollOption() {
-        this.enrollable = true;
-        if (enrollBar != null && enrollButton != null) {
-            enrollBar.setVisibility(View.VISIBLE);
-            enrollButton.setEnabled(true);
-            enrollButton.setClickable(true);
-            enrollButton.setText(R.string.btn_enroll);
+        if (appBarLayout != null) {
+            if (event.isOnline()) {
+                toolbar.setSubtitle("");
+                tabLayout.setBackgroundColor(getResources().getColor(R.color.apptheme_toolbar));
+                setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
+            } else {
+                toolbar.setSubtitle(getString(R.string.offline_mode));
+                tabLayout.setBackgroundColor(getResources().getColor(R.color.offline_mode_toolbar));
+                setColorScheme(R.color.offline_mode_toolbar, R.color.offline_mode_statusbar);
+            }
         }
-    }
-
-    @Override
-    public void showCourseStartsSoon() {
-        this.enrollable = false;
-        if (enrollBar != null && enrollButton != null) {
-            enrollBar.setVisibility(View.VISIBLE);
-            enrollButton.setEnabled(false);
-            enrollButton.setClickable(false);
-            enrollButton.setText(R.string.btn_starts_soon);
-        }
-    }
-
-    @Override
-    public void finishActivity() {
-        finish();
-    }
-
-    @Override
-    public void restartActivity() {
-        Intent i = getIntent();
-        finish();
-        startActivity(i);
     }
 
     @NonNull
@@ -298,19 +288,19 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
 
         private FragmentManager fragmentManager;
 
-        public CoursePagerAdapter(FragmentManager fm) {
+        CoursePagerAdapter(FragmentManager fm) {
             super(fm);
             fragmentManager = fm;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return getString(CourseArea.get(position).getTitleRes());
+            return getString(areaState.get(position).getTitleRes());
         }
 
         @Override
         public int getCount() {
-            return CourseArea.getSize();
+            return areaState.getSize();
         }
 
         @Override
@@ -320,7 +310,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
             String name = makeFragmentName(R.id.viewpager, position);
             Fragment fragment = fragmentManager.findFragmentByTag(name);
             if (fragment == null) {
-                switch (CourseArea.get(position)) {
+                switch (areaState.get(position)) {
                     case LEARNINGS:
                         fragment = LearningsFragmentAutoBundle.builder(courseId).build();
                         break;
@@ -364,7 +354,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
         public void onTabSelected(TabLayout.Tab tab) {
             int tabPosition = tabLayout.getSelectedTabPosition();
             viewPager.setCurrentItem(tabPosition, true);
-            presenter.setCourseTab(tabPosition);
+            presenter.setCourseTab(areaState.get(tabPosition));
         }
 
         @Override
