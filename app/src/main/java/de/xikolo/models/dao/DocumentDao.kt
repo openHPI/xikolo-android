@@ -2,10 +2,10 @@ package de.xikolo.models.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import de.xikolo.viewmodels.base.asLiveData
 import de.xikolo.models.Document
 import de.xikolo.models.DocumentLocalization
 import de.xikolo.models.dao.base.BaseDao
+import de.xikolo.viewmodels.base.asLiveData
 import io.realm.Realm
 import io.realm.kotlin.where
 
@@ -18,6 +18,7 @@ class DocumentDao(realm: Realm) : BaseDao(realm) {
             mediator.addSource(
                 realm
                     .where<Document>()
+                    .equalTo("isPublic", true)
                     .findAllAsync()
                     .asLiveData()
             ) { documents ->

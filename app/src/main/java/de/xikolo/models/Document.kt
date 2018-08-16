@@ -37,7 +37,7 @@ open class Document : RealmObject() {
 
         var tags: List<String>? = null
 
-        @Json(name = "public")
+        @field:Json(name = "public")
         var isPublic: Boolean = false
 
         var courses: HasMany<Course.JsonModel>? = null
