@@ -1,10 +1,7 @@
 package de.xikolo.models;
 
-import com.squareup.moshi.Json;
-
 import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
-import de.xikolo.models.certificates.CertificateUrls;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -23,7 +20,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
     public boolean proctored;
 
-    public CertificateUrls certificateUrls;
+    public EnrollmentCertificates certificates;
 
     public String courseId;
 
@@ -50,7 +47,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
         model.completed = completed;
         model.proctored = proctored;
         model.reactivated = reactivated;
-        model.certificateUrls = certificateUrls;
+        model.certificates = certificates;
 
         if (courseId != null) {
             model.course = new HasOne<>(new Course.JsonModel().getType(), courseId);
@@ -68,8 +65,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
         public boolean proctored;
 
-        @Json(name = "certificates")
-        public CertificateUrls certificateUrls;
+        public EnrollmentCertificates certificates;
 
         public HasOne<Course.JsonModel> course;
 
@@ -80,7 +76,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
             enrollment.completed = completed;
             enrollment.reactivated = reactivated;
             enrollment.proctored = proctored;
-            enrollment.certificateUrls = certificateUrls;
+            enrollment.certificates = certificates;
 
             if (course != null) {
                 enrollment.courseId = course.get().getId();

@@ -1,8 +1,8 @@
-package de.xikolo.models.certificates;
+package de.xikolo.models;
 
 import io.realm.RealmObject;
 
-public class RecordOfAchievement extends RealmObject {
+public class CourseCertificateDetails extends RealmObject {
 
     public boolean available;
 

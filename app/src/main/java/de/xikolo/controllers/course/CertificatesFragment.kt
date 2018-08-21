@@ -54,7 +54,7 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
             if (course.certificates.confirmationOfParticipation.available) {
                 val confirmationOfParticipationDownloadView = DownloadViewHelper(
                     activity!!,
-                    DownloadAsset.Certificate.ConfirmationOfParticipation(enrollment?.certificateUrls?.confirmationOfParticipation, course),
+                    DownloadAsset.Certificate.ConfirmationOfParticipation(enrollment?.certificates?.confirmationOfParticipationUrl, course),
                     getString(R.string.course_confirmation_of_participation),
                     String.format(getString(R.string.course_confirmation_of_participation_desc), course.certificates.confirmationOfParticipation.threshold),
                     errorMessage
@@ -66,7 +66,7 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
             if (course.certificates.recordOfAchievement.available) {
                 val recordOfAchievementDownloadView = DownloadViewHelper(
                     activity!!,
-                    DownloadAsset.Certificate.RecordOfAchievement(enrollment?.certificateUrls?.recordOfAchievement, course),
+                    DownloadAsset.Certificate.RecordOfAchievement(enrollment?.certificates?.recordOfAchievementUrl, course),
                     getString(R.string.course_record_of_achievement),
                     String.format(getString(R.string.course_record_of_achievement_desc), course.certificates.recordOfAchievement.threshold),
                     errorMessage
@@ -78,7 +78,7 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
             if (course.certificates.qualifiedCertificate.available) {
                 val qualifiedCertificateDownloadView = DownloadViewHelper(
                     activity!!,
-                    DownloadAsset.Certificate.QualifiedCertificate(enrollment?.certificateUrls?.qualifiedCertificate, course),
+                    DownloadAsset.Certificate.QualifiedCertificate(enrollment?.certificates?.qualifiedCertificateUrl, course),
                     getString(R.string.course_qualified_certificate),
                     getString(R.string.course_qualified_certificate_desc),
                     errorMessage

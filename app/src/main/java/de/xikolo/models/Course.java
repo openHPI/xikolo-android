@@ -14,7 +14,6 @@ import de.xikolo.R;
 import de.xikolo.config.BuildFlavor;
 import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
-import de.xikolo.models.certificates.Certificates;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.LanguageUtil;
@@ -65,7 +64,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
     public String policyUrl;
 
-    public Certificates certificates;
+    public CourseCertificates certificates;
 
     public boolean onDemand;
 
@@ -217,7 +216,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         @Json(name = "policy_url")
         public String policyUrl;
 
-        public Certificates certificates;
+        public CourseCertificates certificates;
 
         @Json(name = "on_demand")
         public boolean onDemand;

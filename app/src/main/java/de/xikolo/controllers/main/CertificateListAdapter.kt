@@ -65,7 +65,7 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                 val downloadViewHelper = DownloadViewHelper(
                     fragment.activity!!,
                     DownloadAsset.Certificate.ConfirmationOfParticipation(
-                        enrollment.certificateUrls.confirmationOfParticipation,
+                        enrollment.certificates.confirmationOfParticipationUrl,
                         course
                     ),
                     App.getInstance().getString(R.string.course_confirmation_of_participation),
@@ -80,7 +80,7 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                 val downloadViewHelper = DownloadViewHelper(
                     fragment.activity!!,
                     DownloadAsset.Certificate.RecordOfAchievement(
-                        enrollment.certificateUrls.recordOfAchievement,
+                        enrollment.certificates.recordOfAchievementUrl,
                         course
                     ),
                     App.getInstance().getString(R.string.course_record_of_achievement),
@@ -95,7 +95,7 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                 val downloadViewHelper = DownloadViewHelper(
                     fragment.activity!!,
                     DownloadAsset.Certificate.QualifiedCertificate(
-                        enrollment.certificateUrls.qualifiedCertificate,
+                        enrollment.certificates.qualifiedCertificateUrl,
                         course
                     ),
                     App.getInstance().getString(R.string.course_qualified_certificate),

@@ -53,10 +53,10 @@ public class CertificateListPresenter extends LoadingStatePresenter<CertificateL
             for (int i = 0; i < courseList.size(); i++) {
                 Enrollment e = Enrollment.getForCourse(courseList.get(i).id);
                 if (e == null
-                    || e.certificateUrls == null
-                    || (e.certificateUrls.confirmationOfParticipation == null
-                    && e.certificateUrls.recordOfAchievement == null
-                    && e.certificateUrls.qualifiedCertificate == null)) {
+                    || e.certificates == null
+                    || (e.certificates.confirmationOfParticipationUrl == null
+                    && e.certificates.recordOfAchievementUrl == null
+                    && e.certificates.qualifiedCertificateUrl == null)) {
                     courseList.remove(i);
                     i--;
                 }
