@@ -43,7 +43,7 @@
     <string name="tab_discussions">Diskussionen</string>
     <string name="tab_progress">Fortschritt</string>
     <string name="tab_course_details">Kursdetails</string>
-    <string name="tab_course_certificates">Zertifikate</string>
+    <string name="tab_certificates">Zertifikate</string>
     <string name="tab_documents">Dokumente</string>
     <string name="tab_announcements">Neuigkeiten</string>
 

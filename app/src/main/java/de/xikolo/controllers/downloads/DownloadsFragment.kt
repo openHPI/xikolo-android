@@ -116,7 +116,7 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
                     // clean up the storage before fetching items
                     StorageUtil.cleanStorage(File(appFolder))
 
-                     return DownloadsAdapter.FolderItem(
+                    return DownloadsAdapter.FolderItem(
                         title,
                         appFolder
                     )
@@ -157,6 +157,24 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
 
                     adapter?.addItem(getString(R.string.tab_documents), list)
                 }
+
+                // certificates
+
+                list = ArrayList()
+
+                list.add(buildTotalItem(
+                    StorageUtil.getInternalStorage(activity).absolutePath + File.separator + "Certificates",
+                    getString(R.string.settings_title_storage_internal) + internalAddition
+                ))
+
+                StorageUtil.getSdcardStorage(activity)?.let { sdcardStorage ->
+                    list.add(buildTotalItem(
+                        sdcardStorage.absolutePath + File.separator + "Certificates",
+                        getString(R.string.settings_title_storage_external) + sdcardAddition
+                    ))
+                }
+
+                adapter?.addItem(getString(R.string.tab_certificates), list)
 
                 // course folders
 
