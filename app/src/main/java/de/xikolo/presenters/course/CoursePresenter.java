@@ -15,8 +15,6 @@ import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import io.realm.Realm;
 
-import static de.xikolo.jobs.base.RequestJobCallback.ErrorCode.NO_NETWORK;
-
 public class CoursePresenter extends Presenter<CourseView> {
 
     public static final String TAG = CoursePresenter.class.getSimpleName();
@@ -55,7 +53,6 @@ public class CoursePresenter extends Presenter<CourseView> {
     }
 
     private void initCourse(String id, CourseArea tab) {
-        //courseId = id;
         courseTab = tab;
 
         Crashlytics.setString("course_id", id);
@@ -147,7 +144,7 @@ public class CoursePresenter extends Presenter<CourseView> {
             public void onError(@NonNull ErrorCode code) {
                 if (getView() != null) {
                     getView().hideProgressDialog();
-                    if (code == NO_NETWORK) {
+                    if (code == ErrorCode.NO_NETWORK) {
                         getView().showNoNetworkToast();
                     } else if (code == ErrorCode.NO_AUTH) {
                         getView().showLoginRequiredMessage();

@@ -9,14 +9,17 @@ import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class CertificateListPresenter extends LoadingStatePresenter<CertificateListView> {
 
-    protected CourseManager courseManager;
+    private CourseManager courseManager;
 
-    protected Realm realm;
+    private Realm realm;
 
-    protected List<Course> courseList;
+    private List<Course> courseList;
+
+    private RealmResults coursePromise;
 
     CertificateListPresenter() {
         this.courseManager = new CourseManager();
@@ -35,22 +38,31 @@ public class CertificateListPresenter extends LoadingStatePresenter<CertificateL
         update();
     }
 
-    private void update(){
-        courseManager.listCourses(realm, courses -> {
+    @Override
+    public void onViewDetached() {
+        super.onViewDetached();
+
+        if (coursePromise != null) {
+            coursePromise.removeAllChangeListeners();
+        }
+    }
+
+    private void update() {
+        coursePromise = courseManager.listCourses(realm, courses -> {
             courseList = realm.copyFromRealm(courses);
             for (int i = 0; i < courseList.size(); i++) {
                 Enrollment e = Enrollment.getForCourse(courseList.get(i).id);
-                if (e != null)
-                    if (e.certificateUrls != null)
-                        if (e.certificateUrls.confirmationOfParticipation != null
-                            || e.certificateUrls.recordOfAchievement != null
-                            || e.certificateUrls.qualifiedCertificate != null)
-                            continue;
-                courseList.remove(i);
-                i--;
+                if (e == null
+                    || e.certificateUrls == null
+                    || (e.certificateUrls.confirmationOfParticipation == null
+                    && e.certificateUrls.recordOfAchievement == null
+                    && e.certificateUrls.qualifiedCertificate == null)) {
+                    courseList.remove(i);
+                    i--;
+                }
             }
 
-            if(getView() != null) {
+            if (getView() != null) {
                 getView().showContent();
                 if (!UserManager.isAuthorized()) {
                     getView().hideContent();
