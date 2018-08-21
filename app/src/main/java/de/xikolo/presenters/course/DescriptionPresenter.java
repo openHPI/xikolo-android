@@ -5,9 +5,9 @@ import de.xikolo.models.Course;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
 
-public class CourseDescriptionPresenter extends LoadingStatePresenter<CourseDescriptionView> {
+public class DescriptionPresenter extends LoadingStatePresenter<DescriptionView> {
 
-    public static final String TAG = CourseDescriptionPresenter.class.getSimpleName();
+    public static final String TAG = DescriptionPresenter.class.getSimpleName();
 
     private CourseManager courseManager;
 
@@ -19,7 +19,7 @@ public class CourseDescriptionPresenter extends LoadingStatePresenter<CourseDesc
 
     private Course course;
 
-    CourseDescriptionPresenter(String courseId) {
+    DescriptionPresenter(String courseId) {
         this.courseManager = new CourseManager();
         this.realm = Realm.getDefaultInstance();
         this.courseId = courseId;
@@ -31,7 +31,7 @@ public class CourseDescriptionPresenter extends LoadingStatePresenter<CourseDesc
     }
 
     @Override
-    public void onViewAttached(CourseDescriptionView v) {
+    public void onViewAttached(DescriptionView v) {
         super.onViewAttached(v);
 
         if (course == null) {

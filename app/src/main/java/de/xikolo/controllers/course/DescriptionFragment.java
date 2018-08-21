@@ -17,12 +17,12 @@ import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.presenters.course.CourseDescriptionPresenter;
-import de.xikolo.presenters.course.CourseDescriptionPresenterFactory;
-import de.xikolo.presenters.course.CourseDescriptionView;
+import de.xikolo.presenters.course.DescriptionPresenter;
+import de.xikolo.presenters.course.DescriptionPresenterFactory;
+import de.xikolo.presenters.course.DescriptionView;
 import de.xikolo.utils.MarkdownUtil;
 
-public class DescriptionFragment extends LoadingStatePresenterFragment<CourseDescriptionPresenter, CourseDescriptionView> implements CourseDescriptionView {
+public class DescriptionFragment extends LoadingStatePresenterFragment<DescriptionPresenter, DescriptionView> implements DescriptionView {
 
     public static final String TAG = DescriptionFragment.class.getSimpleName();
 
@@ -81,8 +81,8 @@ public class DescriptionFragment extends LoadingStatePresenterFragment<CourseDes
 
     @NonNull
     @Override
-    protected PresenterFactory<CourseDescriptionPresenter> getPresenterFactory() {
-        return new CourseDescriptionPresenterFactory(courseId);
+    protected PresenterFactory<DescriptionPresenter> getPresenterFactory() {
+        return new DescriptionPresenterFactory(courseId);
     }
 
 }

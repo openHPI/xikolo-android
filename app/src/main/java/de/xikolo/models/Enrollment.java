@@ -1,16 +1,16 @@
 package de.xikolo.models;
 
-import java.util.Map;
+import com.squareup.moshi.Json;
 
 import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
+import de.xikolo.models.certificates.CertificateUrls;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
 import moe.banana.jsonapi2.JsonApi;
 import moe.banana.jsonapi2.Resource;
-
 
 public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.JsonModel> {
 
@@ -23,11 +23,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
     public boolean proctored;
 
-    public String confirmationOfParticipationUrl;
-
-    public String recordOfAchievementUrl;
-
-    public String qualifiedCertificateUrl;
+    public CertificateUrls certificateUrls;
 
     public String courseId;
 
@@ -54,6 +50,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
         model.completed = completed;
         model.proctored = proctored;
         model.reactivated = reactivated;
+        model.certificateUrls = certificateUrls;
 
         if (courseId != null) {
             model.course = new HasOne<>(new Course.JsonModel().getType(), courseId);
@@ -71,7 +68,8 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
         public boolean proctored;
 
-        public Map<String, String> certificates;
+        @Json(name = "certificates")
+        public CertificateUrls certificateUrls;
 
         public HasOne<Course.JsonModel> course;
 
@@ -82,9 +80,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
             enrollment.completed = completed;
             enrollment.reactivated = reactivated;
             enrollment.proctored = proctored;
-            enrollment.confirmationOfParticipationUrl = certificates.get("confirmation_of_participation");
-            enrollment.recordOfAchievementUrl = certificates.get("record_of_achievement");
-            enrollment.qualifiedCertificateUrl = certificates.get("qualified_certificate");
+            enrollment.certificateUrls = certificateUrls;
 
             if (course != null) {
                 enrollment.courseId = course.get().getId();

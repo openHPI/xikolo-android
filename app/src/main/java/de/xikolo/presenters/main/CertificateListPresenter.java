@@ -32,26 +32,37 @@ public class CertificateListPresenter extends LoadingStatePresenter<CertificateL
             requestCourses(false);
         }
 
+        update();
+    }
+
+    private void update(){
         courseManager.listCourses(realm, courses -> {
             courseList = realm.copyFromRealm(courses);
             for (int i = 0; i < courseList.size(); i++) {
                 Enrollment e = Enrollment.getForCourse(courseList.get(i).id);
                 if (e != null)
-                    if (e.confirmationOfParticipationUrl != null
-                        || e.recordOfAchievementUrl != null
-                        || e.qualifiedCertificateUrl != null)
-                        continue;
+                    if (e.certificateUrls != null)
+                        if (e.certificateUrls.confirmationOfParticipation != null
+                            || e.certificateUrls.recordOfAchievement != null
+                            || e.certificateUrls.qualifiedCertificate != null)
+                            continue;
                 courseList.remove(i);
                 i--;
             }
-            getViewOrThrow().showContent();
-            if (!UserManager.isAuthorized()) {
-                getViewOrThrow().showLoginRequiredMessage();
-            } else {
-                if (courseList.size() == 0)
-                    getViewOrThrow().showNoCertificatesMessage();
-                else
-                    getViewOrThrow().showCertificateList(courseList);
+
+            if(getView() != null) {
+                getView().showContent();
+                if (!UserManager.isAuthorized()) {
+                    getView().hideContent();
+                    getView().showLoginRequiredMessage();
+                } else {
+                    if (courseList.size() == 0) {
+                        getView().showNoCertificatesMessage();
+                        getView().hideContent();
+                    } else {
+                        getView().showCertificateList(courseList);
+                    }
+                }
             }
         });
     }
@@ -64,6 +75,7 @@ public class CertificateListPresenter extends LoadingStatePresenter<CertificateL
     @Override
     public void onRefresh() {
         requestCourses(true);
+        update();
     }
 
     public void requestCourses(boolean userRequest) {

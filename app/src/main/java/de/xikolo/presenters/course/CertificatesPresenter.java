@@ -2,6 +2,7 @@ package de.xikolo.presenters.course;
 
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
+import de.xikolo.models.Enrollment;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import io.realm.Realm;
 
@@ -32,8 +33,10 @@ public class CertificatesPresenter extends LoadingStatePresenter<CertificatesVie
 
         course = Course.find(courseId);
 
+        Enrollment enrollment = Enrollment.getForCourse(course.id);
+
         getViewOrThrow().showContent();
-        getViewOrThrow().showCertificates(course);
+        getViewOrThrow().showCertificates(course, enrollment);
     }
 
     @Override

@@ -4,8 +4,8 @@
     android:gravity="center_horizontal">
 
     <android.support.v4.widget.NestedScrollView
+        style="@style/LimitedWidthView"
         android:id="@+id/content_view"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/content_horizontal_margin">
 

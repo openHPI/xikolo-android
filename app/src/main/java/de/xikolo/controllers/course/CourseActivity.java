@@ -74,6 +74,31 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     }
 
     @Override
+    public void setupView(Course course, CourseArea courseTab) {
+        setTitle(course.title);
+
+        if (stubBottom.getParent() != null) {
+            stubBottom.setLayoutResource(R.layout.content_enroll_button);
+            enrollBar = stubBottom.inflate();
+            enrollButton = enrollBar.findViewById(R.id.button_enroll);
+            enrollButton.setOnClickListener(v -> presenter.enroll());
+        }
+
+        courseId = course.id;
+
+        adapter = new CoursePagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+
+        tabLayout.clearOnTabSelectedListeners();
+        tabLayout.addOnTabSelectedListener(adapter);
+        tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.setCurrentItem(areaState.indexOf(courseTab));
+
+        hideEnrollBar();
+    }
+
+    @Override
     protected void onPresenterCreatedOrRestored(@NonNull CoursePresenter presenter) {
         String action = getIntent().getAction();
 
@@ -152,31 +177,6 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     }
 
     @Override
-    public void setupView(Course course, CourseArea courseTab) {
-        setTitle(course.title);
-
-        if (stubBottom.getParent() != null) {
-            stubBottom.setLayoutResource(R.layout.content_enroll_button);
-            enrollBar = stubBottom.inflate();
-            enrollButton = enrollBar.findViewById(R.id.button_enroll);
-            enrollButton.setOnClickListener((v) -> presenter.enroll());
-        }
-
-        courseId = course.id;
-
-        adapter = new CoursePagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-
-        tabLayout.clearOnTabSelectedListeners();
-        tabLayout.addOnTabSelectedListener(adapter);
-        tabLayout.setupWithViewPager(viewPager);
-
-        viewPager.setCurrentItem(areaState.indexOf(courseTab));
-
-        hideEnrollBar();
-    }
-
-    @Override
     public void setAreaState(CourseArea.State state) {
         areaState = state;
         adapter.notifyDataSetChanged();
@@ -201,7 +201,7 @@ public class CourseActivity extends BasePresenterActivity<CoursePresenter, Cours
     }
 
     @Override
-    public void showCourseStartsSoon() {
+    public void showCourseUnavailableEnrollBar() {
         enrolled = true;
         if (enrollBar != null && enrollButton != null) {
             enrollBar.setVisibility(View.VISIBLE);

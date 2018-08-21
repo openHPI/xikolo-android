@@ -1,6 +1,7 @@
 package de.xikolo.presenters.course;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -97,7 +98,7 @@ public class CoursePresenter extends Presenter<CourseView> {
             getViewOrThrow().hideEnrollBar();
         } else {
             getViewOrThrow().setAreaState(CourseArea.Locked.INSTANCE);
-            getViewOrThrow().showCourseStartsSoon();
+            getViewOrThrow().showCourseUnavailableEnrollBar();
         }
     }
 
@@ -120,7 +121,7 @@ public class CoursePresenter extends Presenter<CourseView> {
             }
 
             @Override
-            public void onError(ErrorCode code) {
+            public void onError(@NonNull ErrorCode code) {
                 if (getView() != null) {
                     getView().hideProgressDialog();
                     getView().showErrorToast();
@@ -143,7 +144,7 @@ public class CoursePresenter extends Presenter<CourseView> {
             }
 
             @Override
-            public void onError(ErrorCode code) {
+            public void onError(@NonNull ErrorCode code) {
                 if (getView() != null) {
                     getView().hideProgressDialog();
                     if (code == NO_NETWORK) {
@@ -169,7 +170,7 @@ public class CoursePresenter extends Presenter<CourseView> {
             }
 
             @Override
-            public void onError(ErrorCode code) {
+            public void onError(@NonNull ErrorCode code) {
                 if (getView() != null) {
                     getView().hideProgressDialog();
                     if (code == ErrorCode.NO_NETWORK) {

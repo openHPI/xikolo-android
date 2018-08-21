@@ -24,7 +24,7 @@ public interface CourseView extends View {
 
     void hideEnrollBar();
 
-    void showCourseStartsSoon();
+    void showCourseUnavailableEnrollBar();
 
     void restartActivity();
 

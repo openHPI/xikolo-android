@@ -36,7 +36,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * When the url of the downloadAsset is null, the errorMessage is shown where the download button usually is and the UI will be disabled.
  * If errorMessage is null (and the url too), the whole view will be hidden.
- * If errorMessag is an empty string, the button will be hidden.
+ * If errorMessage is an empty string, the button will be hidden.
  * If the url is not null, errorMessage has no effect.
  */
 class DownloadViewHelper(
@@ -208,8 +208,8 @@ class DownloadViewHelper(
 
         when {
             downloadManager.downloadRunning(downloadAsset) -> showRunningState()
-            downloadManager.downloadExists(downloadAsset) -> showEndState()
-            else -> showStartState()
+            downloadManager.downloadExists(downloadAsset)  -> showEndState()
+            else                                           -> showStartState()
         }
 
     }

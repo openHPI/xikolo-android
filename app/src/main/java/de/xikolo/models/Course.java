@@ -89,9 +89,9 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         Realm realm = Realm.getDefaultInstance();
         Course model = realm.where(Course.class)
             .beginGroup()
-            .equalTo("id", identifier)
-            .or()
-            .equalTo("slug", identifier)
+                .equalTo("id", identifier)
+                .or()
+                .equalTo("slug", identifier)
             .endGroup()
             .findFirst();
         if (model != null) model = realm.copyFromRealm(model);

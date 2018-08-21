@@ -24,7 +24,6 @@
 
     <dimen name="sheet_text_scrim_height_top">88dp</dimen>
     <dimen name="sheet_text_scrim_height_bottom">88dp</dimen>
-    <dimen name="sheet_text_scrim_height_bottom_tabs">136dp</dimen>
 
     <dimen name="max_width">1000dp</dimen>
 

@@ -20,6 +20,10 @@ import java.util.*
 
 class CertificateListAdapter(private val fragment: CertificateListFragment, private val callback: OnCertificateCardClickListener) : RecyclerView.Adapter<CertificateListAdapter.CertificateViewHolder>() {
 
+    companion object {
+        val TAG = CertificateListAdapter::class.java.simpleName!!
+    }
+
     private var courseList: MutableList<Course> = ArrayList()
 
     fun update(courseList: MutableList<Course>) {
@@ -61,7 +65,7 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                 val downloadViewHelper = DownloadViewHelper(
                     fragment.activity!!,
                     DownloadAsset.Certificate.ConfirmationOfParticipation(
-                        enrollment.confirmationOfParticipationUrl,
+                        enrollment.certificateUrls.confirmationOfParticipation,
                         course
                     ),
                     App.getInstance().getString(R.string.course_confirmation_of_participation),
@@ -76,7 +80,7 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                 val downloadViewHelper = DownloadViewHelper(
                     fragment.activity!!,
                     DownloadAsset.Certificate.RecordOfAchievement(
-                        enrollment.recordOfAchievementUrl,
+                        enrollment.certificateUrls.recordOfAchievement,
                         course
                     ),
                     App.getInstance().getString(R.string.course_record_of_achievement),
@@ -91,7 +95,7 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                 val downloadViewHelper = DownloadViewHelper(
                     fragment.activity!!,
                     DownloadAsset.Certificate.QualifiedCertificate(
-                        enrollment.qualifiedCertificateUrl,
+                        enrollment.certificateUrls.qualifiedCertificate,
                         course
                     ),
                     App.getInstance().getString(R.string.course_qualified_certificate),
@@ -105,8 +109,6 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
     }
 
     interface OnCertificateCardClickListener {
-
-        fun onViewCertificateClicked(url: String?)
 
         fun onCourseClicked(courseId: String)
     }
@@ -128,10 +130,5 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
         init {
             ButterKnife.bind(this, view)
         }
-    }
-
-    companion object {
-
-        val TAG = CertificateListAdapter::class.java.simpleName
     }
 }

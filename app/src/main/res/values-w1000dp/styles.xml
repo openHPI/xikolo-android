@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="LimitedWidthView">
+        <item name="android:layout_width">@dimen/max_width</item>
+    </style>
+
+</resources>

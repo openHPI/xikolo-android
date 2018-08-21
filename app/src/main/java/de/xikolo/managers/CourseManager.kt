@@ -70,13 +70,13 @@ class CourseManager {
             .where(Course::class.java)
             .equalTo("external", false)
             .beginGroup()
-            .like("title", "*$query*", Case.INSENSITIVE)
-            .or()
-            .like("shortAbstract", "*$query*", Case.INSENSITIVE)
-            .or()
-            .like("description", "*$query*", Case.INSENSITIVE)
-            .or()
-            .like("teachers", "*$query*", Case.INSENSITIVE)
+                .like("title", "*$query*", Case.INSENSITIVE)
+                .or()
+                .like("shortAbstract", "*$query*", Case.INSENSITIVE)
+                .or()
+                .like("description", "*$query*", Case.INSENSITIVE)
+                .or()
+                .like("teachers", "*$query*", Case.INSENSITIVE)
             .endGroup()
 
         if (withEnrollment) {
@@ -100,9 +100,9 @@ class CourseManager {
         val coursePromise = realm
             .where(Course::class.java)
             .beginGroup()
-            .equalTo("id", id)
-            .or()
-            .equalTo("slug", id)
+                .equalTo("id", id)
+                .or()
+                .equalTo("slug", id)
             .endGroup()
             .findFirstAsync()
 
