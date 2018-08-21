@@ -7,10 +7,11 @@ import de.xikolo.utils.StorageUtil
 import java.io.File
 
 // the file path should identify a download uniquely, thus this DownloadAsset object can be used as an identifier for downloads
-sealed class DownloadAsset(val url: String?, open val fileName: String, val storage: File = StorageUtil.getStorage(App.getInstance())) {
+sealed class DownloadAsset(val url: String?, open val fileName: String, var storage: File = StorageUtil.getStorage(App.getInstance())) {
 
-    // must not end with separator
-    protected open val fileFolder: String = storage.absolutePath
+    // must not end with separator and always have a getter function, otherwise dynamic storage changes will not work
+    protected open val fileFolder: String
+        get() = storage.absolutePath
 
     open val title: String
         get() = fileName
@@ -21,18 +22,21 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, val stor
         get() = fileFolder + File.separator + fileName
 
     class Document(
-        document: de.xikolo.models.Document,
+        val document: de.xikolo.models.Document,
         documentLocalization: DocumentLocalization
     ) : DownloadAsset(
         documentLocalization.fileUrl,
         documentLocalization.language + "_" + documentLocalization.revision + "_" + documentLocalization.id + ".pdf"
     ) {
-        override val fileFolder = super.fileFolder + File.separator + "Documents" + File.separator + FileUtil.escapeFilename(document.title) + "_" + document.id
+        override val fileFolder
+            get() = super.fileFolder + File.separator + "Documents" + File.separator + FileUtil.escapeFilename(document.title) + "_" + document.id
+
         override val title = "Document (" + documentLocalization.language + "): " + document.title
     }
 
-    sealed class Certificate(url: String?, fileName: String, course: de.xikolo.models.Course) : DownloadAsset(url, fileName) {
-        override val fileFolder = super.fileFolder + File.separator + "Certificates" + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
+    sealed class Certificate(url: String?, fileName: String, val course: de.xikolo.models.Course) : DownloadAsset(url, fileName) {
+        override val fileFolder
+            get() = super.fileFolder + File.separator + "Certificates" + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
 
         class ConfirmationOfParticipation(url: String?, course: de.xikolo.models.Course) : Certificate(url, "confirmation_of_participation.pdf", course) {
             override val title = App.getInstance().getString(R.string.course_confirmation_of_participation) + ": " + course.title
@@ -49,11 +53,13 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, val stor
 
     sealed class Course(url: String?, override val fileName: String, val course: de.xikolo.models.Course) : DownloadAsset(url, fileName) {
 
-        override val fileFolder = super.fileFolder + File.separator + "Courses" + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
+        override val fileFolder
+            get() = super.fileFolder + File.separator + "Courses" + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
 
         sealed class Item(url: String?, fileName: String, val item: de.xikolo.models.Item, val video: Video) : Course(url, fileName, item.section.course) {
 
-            override val fileFolder = super.fileFolder + File.separator + FileUtil.escapeFilename(item.section.title) + "_" + item.section.id
+            override val fileFolder
+                get() = super.fileFolder + File.separator + FileUtil.escapeFilename(item.section.title) + "_" + item.section.id
 
             override val fileName = FileUtil.escapeFilename(item.title) + "_" + fileName
 
@@ -81,9 +87,6 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, val stor
                 override val title = "Audio: " + item.title
                 override val size = video.transcriptSize.toLong()
             }
-
         }
-
     }
-
 }
