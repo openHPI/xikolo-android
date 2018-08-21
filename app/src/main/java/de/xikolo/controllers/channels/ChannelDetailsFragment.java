@@ -151,10 +151,19 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
 
         if (scrollToCoursePosition >= 0) {
             try {
-                ChannelDetailsActivity a = ((ChannelDetailsActivity) getActivity());
-                if (a != null)
-                    a.appBarLayout.setExpanded(false);
-                courseList.smoothScrollToPosition(scrollToCoursePosition + 3);
+                ChannelDetailsActivity activity = ((ChannelDetailsActivity) getActivity());
+                if (activity != null)
+                    activity.appBarLayout.setExpanded(false);
+
+                int headerCount = 0;
+                for(int i = 0; i < scrollToCoursePosition; i++){
+                    if(courseListAdapter.getItemViewType(i) == ChannelCourseListAdapter.ITEM_VIEW_TYPE_HEADER
+                        || courseListAdapter.getItemViewType(i) == ChannelCourseListAdapter.ITEM_VIEW_TYPE_META)
+                        headerCount++;
+                }
+
+                courseList.smoothScrollToPosition(scrollToCoursePosition + headerCount);
+                scrollToCoursePosition = -1;
             } catch (Exception ignored) {
             }
         }
