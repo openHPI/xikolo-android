@@ -52,11 +52,7 @@ public class CertificateListPresenter extends LoadingStatePresenter<CertificateL
             courseList = realm.copyFromRealm(courses);
             for (int i = 0; i < courseList.size(); i++) {
                 Enrollment e = Enrollment.getForCourse(courseList.get(i).id);
-                if (e == null
-                    || e.certificates == null
-                    || (e.certificates.confirmationOfParticipationUrl == null
-                    && e.certificates.recordOfAchievementUrl == null
-                    && e.certificates.qualifiedCertificateUrl == null)) {
+                if (e == null || !e.anyCertificateAchieved()) {
                     courseList.remove(i);
                     i--;
                 }

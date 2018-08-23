@@ -107,7 +107,7 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
 
     @Override
     public void showCourse(Course course) {
-        Intent intent = CourseActivityAutoBundle.builder(course.id).build(App.getInstance());
+        Intent intent = CourseActivityAutoBundle.builder().courseId(course.id).build(App.getInstance());
         startActivity(intent);
     }
 

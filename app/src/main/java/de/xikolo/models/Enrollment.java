@@ -40,6 +40,13 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
         return model;
     }
 
+    public boolean anyCertificateAchieved() {
+        return (certificates != null
+            && (certificates.confirmationOfParticipationUrl != null
+            || certificates.recordOfAchievementUrl != null
+            || certificates.qualifiedCertificateUrl != null));
+    }
+
     @Override
     public JsonModel convertToJsonResource() {
         JsonModel model = new JsonModel();

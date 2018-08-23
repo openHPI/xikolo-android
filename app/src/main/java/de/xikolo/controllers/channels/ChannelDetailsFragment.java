@@ -174,13 +174,13 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
 
     @Override
     public void enterCourse(String courseId) {
-        Intent intent = CourseActivityAutoBundle.builder(courseId).build(App.getInstance());
+        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.getInstance());
         startActivity(intent);
     }
 
     @Override
     public void enterCourseDetails(String courseId) {
-        Intent intent = CourseActivityAutoBundle.builder(courseId).build(App.getInstance());
+        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.getInstance());
         startActivity(intent);
     }
 

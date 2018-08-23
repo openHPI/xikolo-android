@@ -22,7 +22,7 @@ import de.xikolo.presenters.course.CertificatesView
 class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter, CertificatesView>(), CertificatesView {
 
     companion object {
-        val TAG = CertificatesFragment::class.java.simpleName!!
+        val TAG: String = CertificatesFragment::class.java.simpleName
     }
 
     @AutoBundleField
@@ -47,13 +47,14 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
         container.removeAllViews()
 
         var errorMessage: String = getString(R.string.course_certificate_not_achieved)
-        if (!course.isEnrolled)
+        if (!course.isEnrolled) {
             errorMessage = "" // No button will be shown
+        }
 
-        if (activity != null) {
+        activity?.let { activity ->
             if (course.certificates.confirmationOfParticipation.available) {
                 val confirmationOfParticipationDownloadView = DownloadViewHelper(
-                    activity!!,
+                    activity,
                     DownloadAsset.Certificate.ConfirmationOfParticipation(enrollment?.certificates?.confirmationOfParticipationUrl, course),
                     getString(R.string.course_confirmation_of_participation),
                     String.format(getString(R.string.course_confirmation_of_participation_desc), course.certificates.confirmationOfParticipation.threshold),
@@ -65,7 +66,7 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
 
             if (course.certificates.recordOfAchievement.available) {
                 val recordOfAchievementDownloadView = DownloadViewHelper(
-                    activity!!,
+                    activity,
                     DownloadAsset.Certificate.RecordOfAchievement(enrollment?.certificates?.recordOfAchievementUrl, course),
                     getString(R.string.course_record_of_achievement),
                     String.format(getString(R.string.course_record_of_achievement_desc), course.certificates.recordOfAchievement.threshold),
@@ -77,7 +78,7 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
 
             if (course.certificates.qualifiedCertificate.available) {
                 val qualifiedCertificateDownloadView = DownloadViewHelper(
-                    activity!!,
+                    activity,
                     DownloadAsset.Certificate.QualifiedCertificate(enrollment?.certificates?.qualifiedCertificateUrl, course),
                     getString(R.string.course_qualified_certificate),
                     getString(R.string.course_qualified_certificate_desc),
@@ -90,11 +91,11 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.refresh, menu)
+        inflater?.inflate(R.menu.refresh, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val itemId = item!!.itemId
+        val itemId = item?.itemId
         when (itemId) {
             R.id.action_refresh -> {
                 onRefresh()

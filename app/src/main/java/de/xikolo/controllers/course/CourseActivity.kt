@@ -36,11 +36,11 @@ import org.greenrobot.eventbus.ThreadMode
 class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), CourseView, UnenrollDialog.Listener {
 
     companion object {
-        val TAG = CourseActivity::class.java.simpleName!!
+        val TAG: String = CourseActivity::class.java.simpleName
     }
 
-    @AutoBundleField(required = true)
-    var courseId: String = "" // workaround, as AutoBundle does not work with Kotlins non-null types
+    @AutoBundleField(required = false)
+    var courseId: String? = null
 
     @BindView(R.id.viewpager)
     lateinit var viewPager: ViewPager
@@ -53,7 +53,7 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
 
     private var progressDialog: ProgressDialog? = null
 
-    private var adapter: CoursePagerAdapter = CoursePagerAdapter(supportFragmentManager)
+    private var adapter: CoursePagerAdapter? = null
 
     private var enrollBar: View? = null
     private var enrollButton: Button? = null
@@ -75,18 +75,20 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
         if (stubBottom.parent != null) {
             stubBottom.layoutResource = R.layout.content_enroll_button
             enrollBar = stubBottom.inflate()
-            enrollButton = enrollBar!!.findViewById(R.id.button_enroll)
-            enrollButton!!.setOnClickListener { _ -> presenter.enroll() }
+            enrollButton = enrollBar?.findViewById(R.id.button_enroll)
+            enrollButton?.setOnClickListener { _ -> presenter.enroll() }
         }
 
         courseId = course.id
 
         adapter = CoursePagerAdapter(supportFragmentManager)
-        viewPager.adapter = adapter
+        adapter?.let { a ->
+            viewPager.adapter = a
 
-        tabLayout.clearOnTabSelectedListeners()
-        tabLayout.addOnTabSelectedListener(adapter)
-        tabLayout.setupWithViewPager(viewPager)
+            tabLayout.clearOnTabSelectedListeners()
+            tabLayout.addOnTabSelectedListener(a)
+            tabLayout.setupWithViewPager(viewPager)
+        }
 
         viewPager.currentItem = areaState.indexOf(courseTab)
 
@@ -99,14 +101,14 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
         if (action != null && action == Intent.ACTION_VIEW) {
             presenter.handleDeepLink(intent.data)
         } else {
-            if (courseId == "") {
+            if (courseId == null) {
                 val cacheController = CacheHelper()
                 cacheController.readCachedExtras()
                 if (cacheController.course != null) {
                     courseId = cacheController.course.id
                 }
-                if (courseId != "") {
-                    val restartIntent = CourseActivityAutoBundle.builder(courseId).build(this)
+                if (courseId != null) {
+                    val restartIntent = CourseActivityAutoBundle.builder().courseId(courseId).build(this)
                     finish()
                     startActivity(restartIntent)
                 }
@@ -131,8 +133,9 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
 
-        if (enrolled)
+        if (enrolled) {
             inflater.inflate(R.menu.unenroll, menu)
+        }
 
         inflater.inflate(R.menu.share, menu)
         super.onCreateOptionsMenu(menu)
@@ -147,7 +150,7 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
                 return true
             }
             R.id.action_share    -> {
-                ShareUtil.shareCourseLink(this, courseId)
+                ShareUtil.shareCourseLink(this, courseId!!)
                 return true
             }
             R.id.action_unenroll -> {
@@ -165,12 +168,12 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        adapter.getItem(viewPager.currentItem).onActivityResult(requestCode, resultCode, data)
+        adapter?.getItem(viewPager.currentItem)?.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun setAreaState(state: CourseArea.State) {
         areaState = state
-        adapter.notifyDataSetChanged()
+        adapter?.notifyDataSetChanged()
     }
 
     override fun hideEnrollBar() {
@@ -199,21 +202,20 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
     }
 
     override fun restartActivity() {
-        val i = intent
         finish()
-        startActivity(i)
+        startActivity(intent)
     }
 
     override fun showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = ProgressDialogAutoBundle.builder().build()
         }
-        progressDialog!!.show(supportFragmentManager, ProgressDialog.TAG)
+        progressDialog?.show(supportFragmentManager, ProgressDialog.TAG)
     }
 
     override fun hideProgressDialog() {
-        if (progressDialog != null && progressDialog!!.dialog != null && progressDialog!!.dialog.isShowing) {
-            progressDialog!!.dismiss()
+        if (progressDialog?.dialog?.isShowing == true) {
+            progressDialog?.dismiss()
         }
     }
 
@@ -263,23 +265,23 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
             return areaState.size
         }
 
-        override fun getItem(position: Int): Fragment {
+        override fun getItem(position: Int): Fragment? {
             // Check if this Fragment already exists.
             // Fragment Name is saved by FragmentPagerAdapter implementation.
             val name = makeFragmentName(R.id.viewpager, position)
             var fragment: Fragment? = fragmentManager.findFragmentByTag(name)
-            if (fragment == null) {
+            if (fragment == null && courseId != null) {
                 when (areaState.get(position)) {
-                    CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(courseId).build()
+                    CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(courseId!!).build()
                     CourseArea.DISCUSSIONS    -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)
                         .build()
-                    CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(courseId).build()
-                    CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(courseId).build()
-                    CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(courseId).build()
-                    CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(courseId).build()
-                    CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build()
+                    CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(courseId!!).build()
+                    CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(courseId!!).build()
+                    CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(courseId!!).build()
+                    CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(courseId!!).build()
+                    CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(courseId!!).build()
                     CourseArea.RECAP          -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)

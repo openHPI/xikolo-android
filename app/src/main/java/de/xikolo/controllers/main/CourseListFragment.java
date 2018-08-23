@@ -139,13 +139,13 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
 
     @Override
     public void enterCourse(String courseId) {
-        Intent intent = CourseActivityAutoBundle.builder(courseId).build(getActivity());
+        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(getActivity());
         startActivity(intent);
     }
 
     @Override
     public void enterCourseDetails(String courseId) {
-        Intent intent = CourseActivityAutoBundle.builder(courseId).build(getActivity());
+        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(getActivity());
         startActivity(intent);
     }
 

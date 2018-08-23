@@ -21,7 +21,7 @@ import java.util.*
 class CertificateListAdapter(private val fragment: CertificateListFragment, private val callback: OnCertificateCardClickListener) : RecyclerView.Adapter<CertificateListAdapter.CertificateViewHolder>() {
 
     companion object {
-        val TAG = CertificateListAdapter::class.java.simpleName!!
+        val TAG: String = CertificateListAdapter::class.java.simpleName
     }
 
     private var courseList: MutableList<Course> = ArrayList()
@@ -52,33 +52,34 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
 
         holder.header.setOnClickListener { _ -> callback.onCourseClicked(course.id) }
 
-        if (course.imageUrl != null)
+        if (course.imageUrl != null) {
             GlideApp.with(App.getInstance()).load(course.imageUrl).into(holder.courseImage)
-        else
+        } else {
             holder.courseImage.visibility = View.GONE
+        }
 
         holder.container.removeAllViews()
 
-        val enrollment: Enrollment? = Enrollment.getForCourse(course.id)
-        if (enrollment != null) {
-            if (course.certificates.confirmationOfParticipation.available) {
-                val downloadViewHelper = DownloadViewHelper(
-                    fragment.activity!!,
-                    DownloadAsset.Certificate.ConfirmationOfParticipation(
-                        enrollment.certificates.confirmationOfParticipationUrl,
-                        course
-                    ),
-                    App.getInstance().getString(R.string.course_confirmation_of_participation),
-                    null,
-                    App.getInstance().getString(R.string.course_certificate_not_achieved)
-                )
-                holder.container.addView(downloadViewHelper.view)
-                downloadViewHelper.openFileAsPdf()
-            }
+        fragment.activity?.let { activity ->
+            Enrollment.getForCourse(course.id)?.let { enrollment ->
+                if (course.certificates.confirmationOfParticipation.available) {
+                    val downloadViewHelper = DownloadViewHelper(
+                        activity,
+                        DownloadAsset.Certificate.ConfirmationOfParticipation(
+                            enrollment.certificates.confirmationOfParticipationUrl,
+                            course
+                        ),
+                        App.getInstance().getString(R.string.course_confirmation_of_participation),
+                        null,
+                        App.getInstance().getString(R.string.course_certificate_not_achieved)
+                    )
+                    holder.container.addView(downloadViewHelper.view)
+                    downloadViewHelper.openFileAsPdf()
+                }
 
-            if (course.certificates.recordOfAchievement.available) {
-                val downloadViewHelper = DownloadViewHelper(
-                    fragment.activity!!,
+                if (course.certificates.recordOfAchievement.available) {
+                    val downloadViewHelper = DownloadViewHelper(
+                        activity,
                     DownloadAsset.Certificate.RecordOfAchievement(
                         enrollment.certificates.recordOfAchievementUrl,
                         course
@@ -86,14 +87,14 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                     App.getInstance().getString(R.string.course_record_of_achievement),
                     null,
                     App.getInstance().getString(R.string.course_certificate_not_achieved)
-                )
-                holder.container.addView(downloadViewHelper.view)
-                downloadViewHelper.openFileAsPdf()
-            }
+                    )
+                    holder.container.addView(downloadViewHelper.view)
+                    downloadViewHelper.openFileAsPdf()
+                }
 
-            if (course.certificates.qualifiedCertificate.available) {
-                val downloadViewHelper = DownloadViewHelper(
-                    fragment.activity!!,
+                if (course.certificates.qualifiedCertificate.available) {
+                    val downloadViewHelper = DownloadViewHelper(
+                        activity,
                     DownloadAsset.Certificate.QualifiedCertificate(
                         enrollment.certificates.qualifiedCertificateUrl,
                         course
@@ -101,9 +102,10 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                     App.getInstance().getString(R.string.course_qualified_certificate),
                     null,
                     App.getInstance().getString(R.string.course_certificate_not_achieved)
-                )
-                holder.container.addView(downloadViewHelper.view)
-                downloadViewHelper.openFileAsPdf()
+                    )
+                    holder.container.addView(downloadViewHelper.view)
+                    downloadViewHelper.openFileAsPdf()
+                }
             }
         }
     }

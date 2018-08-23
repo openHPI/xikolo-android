@@ -44,7 +44,7 @@ class DownloadViewHelper(
     private val downloadAsset: DownloadAsset,
     title: CharSequence? = null,
     description: String? = null,
-    errorMessage: String? = App.getInstance().getString(R.string.not_available)
+    errorMessage: String? = null
 ) {
 
     companion object {

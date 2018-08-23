@@ -63,10 +63,11 @@ public class DescriptionFragment extends LoadingStatePresenterFragment<Descripti
 
     @Override
     public void setupView(Course course) {
-        if (course.imageUrl != null)
+        if (course.imageUrl != null) {
             GlideApp.with(this).load(course.imageUrl).into(imageView);
-        else
+        } else {
             imageView.setVisibility(View.GONE);
+        }
 
         textDate.setText(course.getFormattedDate());
         textLanguage.setText(course.getFormattedLanguage());
