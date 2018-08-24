@@ -28,9 +28,9 @@ public class ChannelCourseListAdapter extends BaseCourseListAdapter {
 
     public static final String TAG = ChannelCourseListAdapter.class.getSimpleName();
 
-    private static final int ITEM_VIEW_TYPE_META = 0;
-    private static final int ITEM_VIEW_TYPE_HEADER = 1;
-    private static final int ITEM_VIEW_TYPE_ITEM = 2;
+    public static final int ITEM_VIEW_TYPE_META = 0;
+    public static final int ITEM_VIEW_TYPE_HEADER = 1;
+    public static final int ITEM_VIEW_TYPE_ITEM = 2;
 
     private int channelColor = -1;
 

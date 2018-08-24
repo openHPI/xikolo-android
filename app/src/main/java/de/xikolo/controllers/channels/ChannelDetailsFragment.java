@@ -89,25 +89,25 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
         courseList.setAdapter(courseListAdapter);
 
         courseList.addItemDecoration(new SpaceItemDecoration(
-                App.getInstance().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
-                App.getInstance().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
-                false,
-                new SpaceItemDecoration.RecyclerViewInfo() {
-                    @Override
-                    public boolean isHeader(int position) {
-                        return courseListAdapter.isHeader(position);
-                    }
+            App.getInstance().getResources().getDimensionPixelSize(R.dimen.card_horizontal_margin),
+            App.getInstance().getResources().getDimensionPixelSize(R.dimen.card_vertical_margin),
+            false,
+            new SpaceItemDecoration.RecyclerViewInfo() {
+                @Override
+                public boolean isHeader(int position) {
+                    return courseListAdapter.isHeader(position);
+                }
 
-                    @Override
-                    public int getSpanCount() {
-                        return courseList.getSpanCount();
-                    }
+                @Override
+                public int getSpanCount() {
+                    return courseList.getSpanCount();
+                }
 
-                    @Override
-                    public int getItemCount() {
-                        return courseListAdapter.getItemCount();
-                    }
-                }));
+                @Override
+                public int getItemCount() {
+                    return courseListAdapter.getItemCount();
+                }
+            }));
     }
 
     @Override
@@ -140,21 +140,34 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
             textTitle.setText(channel.title);
         }
 
-        if (courseListAdapter != null)
+        if (courseListAdapter != null) {
             courseListAdapter.setButtonColor(channel.getColorOrDefault());
+        }
     }
 
     @Override
     public void showCourseList(SectionList<String, List<Course>> courses) {
-        if (courseListAdapter != null)
+        if (courseListAdapter != null) {
             courseListAdapter.update(courses);
+        }
 
         if (scrollToCoursePosition >= 0) {
             try {
-                ChannelDetailsActivity a = ((ChannelDetailsActivity) getActivity());
-                if (a != null)
-                    a.appBarLayout.setExpanded(false);
-                courseList.smoothScrollToPosition(scrollToCoursePosition + 3);
+                ChannelDetailsActivity activity = ((ChannelDetailsActivity) getActivity());
+                if (activity != null) {
+                    activity.appBarLayout.setExpanded(false);
+                }
+
+                int headerCount = 0;
+                for (int i = 0; i < scrollToCoursePosition; i++) {
+                    if (courseListAdapter.getItemViewType(i) == ChannelCourseListAdapter.ITEM_VIEW_TYPE_HEADER
+                        || courseListAdapter.getItemViewType(i) == ChannelCourseListAdapter.ITEM_VIEW_TYPE_META) {
+                        headerCount++;
+                    }
+                }
+
+                courseList.smoothScrollToPosition(scrollToCoursePosition + headerCount);
+                scrollToCoursePosition = -1;
             } catch (Exception ignored) {
             }
         }
