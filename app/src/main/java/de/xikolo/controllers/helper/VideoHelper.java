@@ -15,11 +15,6 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.devbrackets.android.exomedia.listener.OnBufferUpdateListener;
-import com.devbrackets.android.exomedia.listener.OnCompletionListener;
-import com.devbrackets.android.exomedia.listener.OnErrorListener;
-import com.devbrackets.android.exomedia.listener.OnPreparedListener;
-
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +34,7 @@ import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.PlaybackSpeedUtil;
 import de.xikolo.views.CustomFontTextView;
 import de.xikolo.views.CustomSizeVideoView;
+import de.xikolo.views.ExoPlayerVideoView;
 
 public class VideoHelper {
 
@@ -120,7 +116,7 @@ public class VideoHelper {
 
     private void setupView() {
         videoView.setKeepScreenOn(true);
-        videoView.setOnPreparedListener(new OnPreparedListener() {
+        videoView.setOnPreparedListener(new ExoPlayerVideoView.OnPreparedListener() {
             @Override
             public void onPrepared() {
                 videoProgress.setVisibility(View.GONE);
@@ -143,13 +139,13 @@ public class VideoHelper {
                 new Thread(seekBarUpdater).start();
             }
         });
-        videoView.setOnBufferUpdateListener(new OnBufferUpdateListener() {
+        videoView.setOnBufferUpdateListener(new ExoPlayerVideoView.OnBufferUpdateListener() {
             @Override
             public void onBufferingUpdate(@IntRange(from = 0L, to = 100L) int percent) {
                 seekBar.setSecondaryProgress((int) (seekBar.getMax() * (percent / 100.)));
             }
         });
-        videoView.setOnCompletionListener(new OnCompletionListener() {
+        videoView.setOnCompletionListener(new ExoPlayerVideoView.OnCompletionListener() {
             @Override
             public void onCompletion() {
                 pause();
@@ -157,7 +153,7 @@ public class VideoHelper {
                 show();
             }
         });
-        videoView.setOnErrorListener(new OnErrorListener() {
+        videoView.setOnErrorListener(new ExoPlayerVideoView.OnErrorListener() {
             @Override
             public boolean onError(Exception e) {
                 saveCurrentPosition();
@@ -310,6 +306,7 @@ public class VideoHelper {
     public void pause() {
         buttonPlay.setText(activity.getString(R.string.icon_play));
         videoView.pause();
+        videoView.release();
         isPlaying = false;
         saveCurrentPosition();
     }

@@ -3,9 +3,7 @@ package de.xikolo.views;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.devbrackets.android.exomedia.ui.widget.VideoView;
-
-public class CustomSizeVideoView extends VideoView {
+public class CustomSizeVideoView extends ExoPlayerVideoView {
 
     private int mForceHeight = 0;
     private int mForceWidth = 0;
