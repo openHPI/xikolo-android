@@ -150,6 +150,7 @@ public class VideoHelper {
             public void onCompletion() {
                 pause();
                 buttonPlay.setText(activity.getString(R.string.icon_reload));
+                seekTo(0);
                 show();
             }
         });
