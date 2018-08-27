@@ -17,6 +17,7 @@
     <dimen name="navigation_drawer_width">280dp</dimen>
 
     <dimen name="btn_play_text_size">72sp</dimen>
+    <dimen name="btn_stepping_text_size">48sp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
 

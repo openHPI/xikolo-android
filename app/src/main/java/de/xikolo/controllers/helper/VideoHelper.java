@@ -45,31 +45,27 @@ public class VideoHelper {
     private static final int DEFAULT_TIMEOUT = 3000;
     private static final int FADE_OUT = 1;
 
+    private static final int VIDEO_STEPPING_DURATION = 10000;
+
     private static final int PLAYBACK_PARAMS_SDK_LEVEL = 23;
-
-    private DownloadManager downloadManager;
-
-    private Activity activity;
-
-    private View videoContainer;
-
     @BindView(R.id.videoView) CustomSizeVideoView videoView;
     @BindView(R.id.videoController) View videoController;
     @BindView(R.id.videoProgress) View videoProgress;
     @BindView(R.id.videoSeekBar) SeekBar seekBar;
-
     @BindView(R.id.btnPlay) CustomFontTextView buttonPlay;
+    @BindView(R.id.btnStepForward) CustomFontTextView buttonStepForward;
+    @BindView(R.id.btnStepBackward) CustomFontTextView buttonStepBackward;
     @BindView(R.id.btnRetry) TextView buttonRetry;
-
     @BindView(R.id.currentTime) TextView textCurrentTime;
     @BindView(R.id.totalTime) TextView textTotalTime;
     @BindView(R.id.hdSwitch) CustomFontTextView textHdSwitch;
     @BindView(R.id.playbackSpeed) TextView textPlaybackSpeed;
     @BindView(R.id.offlineHint) View viewOfflineHint;
-
     @BindView(R.id.videoWarning) View viewVideoWarning;
     @BindView(R.id.videoWarningText) TextView textVideoWarning;
-
+    private DownloadManager downloadManager;
+    private Activity activity;
+    private View videoContainer;
     private ControllerListener controllerListener;
 
     private Runnable seekBarUpdater;
@@ -88,11 +84,6 @@ public class VideoHelper {
     private Section module;
     private Item item;
     private Video video;
-
-    private enum VideoMode {
-        SD, HD
-    }
-
     private VideoMode videoMode;
 
     public VideoHelper(FragmentActivity activity, View videoContainer) {
@@ -127,6 +118,9 @@ public class VideoHelper {
                 textTotalTime.setText(getTimeString(getDuration()));
                 textCurrentTime.setText(getTimeString(0));
 
+                buttonStepForward.setVisibility(View.VISIBLE);
+                buttonStepBackward.setVisibility(View.VISIBLE);
+
                 seekTo(video.progress);
 
                 if (Build.VERSION.SDK_INT >= PLAYBACK_PARAMS_SDK_LEVEL) {
@@ -150,6 +144,8 @@ public class VideoHelper {
             public void onCompletion() {
                 pause();
                 buttonPlay.setText(activity.getString(R.string.icon_reload));
+                buttonStepForward.setVisibility(View.GONE);
+                buttonStepBackward.setVisibility(View.GONE);
                 show();
             }
         });
@@ -215,6 +211,33 @@ public class VideoHelper {
                         getQualityString(),
                         getSourceString());
                 }
+            }
+        });
+
+        buttonStepForward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show();
+
+                seekTo(
+                    Math.min(
+                        getCurrentPosition() + VIDEO_STEPPING_DURATION,
+                        getDuration()
+                    )
+                );
+            }
+        });
+
+        buttonStepBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show();
+
+                seekTo(
+                    Math.max(
+                        getCurrentPosition() - VIDEO_STEPPING_DURATION,
+                        0)
+                );
             }
         });
 
@@ -539,6 +562,10 @@ public class VideoHelper {
 
     public void setControllerListener(ControllerListener listener) {
         this.controllerListener = listener;
+    }
+
+    private enum VideoMode {
+        SD, HD
     }
 
     public interface ControllerListener {
