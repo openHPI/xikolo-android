@@ -69,7 +69,7 @@ open class ExoPlayerVideoView : PlayerView {
                     isPreparing = false
                 }
 
-                if (playbackState == Player.STATE_ENDED) {
+                if (playbackState == Player.STATE_ENDED && currentPosition >= duration) {
                     onCompletionListener?.onCompletion()
                 }
             }

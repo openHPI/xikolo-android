@@ -150,7 +150,6 @@ public class VideoHelper {
             public void onCompletion() {
                 pause();
                 buttonPlay.setText(activity.getString(R.string.icon_reload));
-                seekTo(0);
                 show();
             }
         });
@@ -194,22 +193,27 @@ public class VideoHelper {
                     pause();
 
                     LanalyticsUtil.trackVideoPause(item.id,
-                            course.id, module.id,
-                            getCurrentPosition(),
-                            currentPlaybackSpeed.getSpeed(),
-                            activity.getResources().getConfiguration().orientation,
-                            getQualityString(),
-                            getSourceString());
+                        course.id, module.id,
+                        getCurrentPosition(),
+                        currentPlaybackSpeed.getSpeed(),
+                        activity.getResources().getConfiguration().orientation,
+                        getQualityString(),
+                        getSourceString());
                 } else {
+                    if (getCurrentPosition() >= getDuration()) {
+                        // 'replay' button was pressed
+                        seekTo(0);
+                    }
+
                     play();
 
                     LanalyticsUtil.trackVideoPlay(item.id,
-                            course.id, module.id,
-                            getCurrentPosition(),
-                            currentPlaybackSpeed.getSpeed(),
-                            activity.getResources().getConfiguration().orientation,
-                            getQualityString(),
-                            getSourceString());
+                        course.id, module.id,
+                        getCurrentPosition(),
+                        currentPlaybackSpeed.getSpeed(),
+                        activity.getResources().getConfiguration().orientation,
+                        getQualityString(),
+                        getSourceString());
                 }
             }
         });
@@ -234,13 +238,13 @@ public class VideoHelper {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 LanalyticsUtil.trackVideoSeek(item.id,
-                        course.id, module.id,
-                        getCurrentPosition(),
-                        progress,
-                        currentPlaybackSpeed.getSpeed(),
-                        activity.getResources().getConfiguration().orientation,
-                        getQualityString(),
-                        getSourceString());
+                    course.id, module.id,
+                    getCurrentPosition(),
+                    progress,
+                    currentPlaybackSpeed.getSpeed(),
+                    activity.getResources().getConfiguration().orientation,
+                    getQualityString(),
+                    getSourceString());
 
                 userIsSeeking = false;
                 seekTo(progress);
@@ -257,14 +261,14 @@ public class VideoHelper {
                 toggleHdButton();
 
                 LanalyticsUtil.trackVideoChangeQuality(item.id,
-                        course.id, module.id,
-                        position,
-                        currentPlaybackSpeed.getSpeed(),
-                        activity.getResources().getConfiguration().orientation,
-                        oldQuality,
-                        getQualityString(),
-                        oldSource,
-                        getSourceString());
+                    course.id, module.id,
+                    position,
+                    currentPlaybackSpeed.getSpeed(),
+                    activity.getResources().getConfiguration().orientation,
+                    oldQuality,
+                    getQualityString(),
+                    oldSource,
+                    getSourceString());
             }
         });
 
@@ -278,13 +282,13 @@ public class VideoHelper {
                     togglePlaybackSpeed();
 
                     LanalyticsUtil.trackVideoChangeSpeed(item.id,
-                            course.id, module.id,
-                            getCurrentPosition(),
-                            oldSpeed.getSpeed(),
-                            currentPlaybackSpeed.getSpeed(),
-                            activity.getResources().getConfiguration().orientation,
-                            getQualityString(),
-                            getSourceString());
+                        course.id, module.id,
+                        getCurrentPosition(),
+                        oldSpeed.getSpeed(),
+                        currentPlaybackSpeed.getSpeed(),
+                        activity.getResources().getConfiguration().orientation,
+                        getQualityString(),
+                        getSourceString());
                 }
             });
         } else {
@@ -517,9 +521,9 @@ public class VideoHelper {
 
     private String getTimeString(int millis) {
         return String.format(Locale.US, "%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(millis),
-                TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+            TimeUnit.MILLISECONDS.toMinutes(millis),
+            TimeUnit.MILLISECONDS.toSeconds(millis) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
         );
     }
 
