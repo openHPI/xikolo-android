@@ -76,22 +76,24 @@ object StorageUtil {
         }
 
         Thread(Runnable {
-            if (from.exists()) {
+            if (from.exists() && from.listFiles() != null) {
                 callback.onProgressChanged(0)
                 val totalFiles = FileUtil.folderFileNumber(from)
                 var copiedFiles = 0
-                for (file in from.listFiles())
+                for (file in from.listFiles()) {
                     copiedFiles += move(file, File(to.absolutePath + File.separator + file.name), callback)
+                }
                 callback.onCompleted(copiedFiles == totalFiles)
-            } else
+            } else {
                 callback.onCompleted(false)
+            }
         }).start()
     }
 
     private fun move(sourceFile: File, destFile: File, callback: StorageUtil.StorageMigrationCallback): Int {
         var count = 0
-        if (sourceFile.isDirectory) {
-            for (file in sourceFile.listFiles()!!) {
+        if (sourceFile.isDirectory && sourceFile.listFiles() != null) {
+            for (file in sourceFile.listFiles()) {
                 count += move(file, File(destFile.absolutePath + File.separator + file.name), callback)
                 callback.onProgressChanged(count)
             }
