@@ -26,6 +26,8 @@ public class RealmSchemaMigration implements RealmMigration {
 
             schema.get("Course")
                 .addField("channelId", String.class);
+
+            oldVersion++;
         }
 
         if (oldVersion == 2) {
@@ -45,6 +47,8 @@ public class RealmSchemaMigration implements RealmMigration {
                 .addField("revision", int.class)
                 .addField("fileUrl", String.class)
                 .addField("documentId", String.class);
+
+            oldVersion++;
         }
     }
 
