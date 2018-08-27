@@ -19,11 +19,11 @@ import com.google.android.exoplayer2.util.Util
 
 open class ExoPlayerVideoView : PlayerView {
 
-    private lateinit var mContext: Context
-    private lateinit var mPlayer: SimpleExoPlayer
-    private lateinit var mPlayerListener: Player.EventListener
-    private val mBandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter()
-    private var mMediaSource: MediaSource? = null
+    private lateinit var playerContext: Context
+    private lateinit var exoplayer: SimpleExoPlayer
+    private lateinit var playerListener: Player.EventListener
+    private val bandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter()
+    private var mediaSource: MediaSource? = null
 
     var onPreparedListener: OnPreparedListener? = null
 
@@ -54,11 +54,11 @@ open class ExoPlayerVideoView : PlayerView {
     }
 
     private fun setup(context: Context, attrs: AttributeSet?) {
-        mContext = context
-        val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(mBandwidthMeter)
+        playerContext = context
+        val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
         val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-        mPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
-        mPlayerListener = object : Player.EventListener {
+        exoplayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
+        playerListener = object : Player.EventListener {
             override fun onLoadingChanged(isLoading: Boolean) {
                 onBufferUpdateListener?.onBufferingUpdate(player.bufferedPercentage)
             }
@@ -99,9 +99,9 @@ open class ExoPlayerVideoView : PlayerView {
             override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {
             }
         }
-        mPlayer.addListener(mPlayerListener)
+        exoplayer.addListener(playerListener)
 
-        player = mPlayer
+        player = exoplayer
 
         this.useController = false
     }
@@ -122,18 +122,19 @@ open class ExoPlayerVideoView : PlayerView {
         player.playbackParameters = PlaybackParameters(
             speed,
             player.playbackParameters.pitch,
-            player.playbackParameters.skipSilence)
+            player.playbackParameters.skipSilence
+        )
     }
 
     fun setVideoURI(uri: Uri) {
-        val dataSourceFactory = DefaultDataSourceFactory(mContext, Util.getUserAgent(mContext, mContext.packageName), mBandwidthMeter)
-        mMediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+        val dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
+        mediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
         prepare()
     }
 
     private fun prepare() {
         isPreparing = true
-        mPlayer.prepare(mMediaSource)
+        exoplayer.prepare(mediaSource)
     }
 
     fun release() {
