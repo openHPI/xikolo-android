@@ -58,9 +58,9 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
     @BindView(R.id.videoMetadata)
     lateinit var videoMetadata: ViewGroup
 
-    private lateinit var hdVideo: DownloadViewHelper
-    private lateinit var sdVideo: DownloadViewHelper
-    private lateinit var slides: DownloadViewHelper
+    private var hdVideo: DownloadViewHelper? = null
+    private var sdVideo: DownloadViewHelper? = null
+    private var slides: DownloadViewHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,24 +115,24 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
                 DownloadAsset.Course.Item.VideoHD(item, video),
                 activity.getText(R.string.video_hd_as_mp4)
             )
-            hdVideo.openFileAsVideo { presenter.onPlayClicked() }
-            linearLayoutDownloads.addView(hdVideo.view)
+            hdVideo?.openFileAsVideo { presenter.onPlayClicked() }
+            linearLayoutDownloads.addView(hdVideo?.view)
 
             sdVideo = DownloadViewHelper(
                 activity,
                 DownloadAsset.Course.Item.VideoSD(item, video),
                 activity.getText(R.string.video_sd_as_mp4)
             )
-            sdVideo.openFileAsVideo { presenter.onPlayClicked() }
-            linearLayoutDownloads.addView(sdVideo.view)
+            sdVideo?.openFileAsVideo { presenter.onPlayClicked() }
+            linearLayoutDownloads.addView(sdVideo?.view)
 
             slides = DownloadViewHelper(
                 activity,
                 DownloadAsset.Course.Item.Slides(item, video),
                 activity.getText(R.string.slides_as_pdf)
             )
-            slides.openFileAsPdf()
-            linearLayoutDownloads.addView(slides.view)
+            slides?.openFileAsPdf()
+            linearLayoutDownloads.addView(slides?.view)
         }
 
         val minutes = TimeUnit.SECONDS.toMinutes(video.duration.toLong())
@@ -171,9 +171,9 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
     override fun onDestroyView() {
         super.onDestroyView()
 
-        hdVideo.onDestroy()
-        sdVideo.onDestroy()
-        slides.onDestroy()
+        hdVideo?.onDestroy()
+        sdVideo?.onDestroy()
+        slides?.onDestroy()
     }
 
     override fun getPresenterFactory(): PresenterFactory<VideoPreviewPresenter> {
