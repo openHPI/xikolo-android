@@ -31,22 +31,34 @@ public class RealmSchemaMigration implements RealmMigration {
         }
 
         if (oldVersion == 2) {
-            schema.create("Document")
-                .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
-                .addField("title", String.class)
-                .addField("description", String.class)
-                .addRealmListField("tags", String.class)
-                .addField("isPublic", boolean.class)
-                .addRealmListField("courseIds", String.class);
+            // Document and DocumentLocalization were not added for some user,
+            // therefore a fix was provided with the next version.
 
-            schema.create("DocumentLocalization")
-                .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
-                .addField("title", String.class)
-                .addField("description", String.class)
-                .addField("language", String.class)
-                .addField("revision", int.class)
-                .addField("fileUrl", String.class)
-                .addField("documentId", String.class);
+            oldVersion++;
+        }
+
+        if (oldVersion == 3) {
+            // This DB version only fixes the last one.
+            if (!schema.contains("Document")) {
+                schema.create("Document")
+                        .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+                        .addField("title", String.class)
+                        .addField("description", String.class)
+                        .addRealmListField("tags", String.class)
+                        .addField("isPublic", boolean.class)
+                        .addRealmListField("courseIds", String.class);
+            }
+
+            if (!schema.contains("DocumentLocalization")) {
+                schema.create("DocumentLocalization")
+                        .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+                        .addField("title", String.class)
+                        .addField("description", String.class)
+                        .addField("language", String.class)
+                        .addField("revision", int.class)
+                        .addField("fileUrl", String.class)
+                        .addField("documentId", String.class);
+            }
 
             oldVersion++;
         }
