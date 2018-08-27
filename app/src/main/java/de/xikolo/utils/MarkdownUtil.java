@@ -7,11 +7,17 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import de.xikolo.App;
 import de.xikolo.config.Config;
@@ -26,11 +32,53 @@ public class MarkdownUtil {
             Bypass bypass = new Bypass(App.getInstance());
             BypassGlideImageGetter imageGetter = new BypassGlideImageGetter(textView, GlideApp.with(textView.getContext()));
             CharSequence spannable = bypass.markdownToSpannable(markdown, imageGetter);
+
             textView.setText(spannable);
             textView.setMovementMethod(LinkMovementMethod.getInstance());
+
+            fixTextViewUrls(textView);
         } else {
             textView.setText(null);
         }
+    }
+
+    /**
+     * Fix relative links.
+     * @param tv The TextView
+     */
+    private static void fixTextViewUrls(TextView tv) {
+        SpannableString current = (SpannableString)tv.getText();
+        URLSpan[] spans = current.getSpans(0, current.length(), URLSpan.class);
+
+        for (URLSpan span : spans) {
+            int start = current.getSpanStart(span);
+            int end = current.getSpanEnd(span);
+            current.removeSpan(span);
+            current.setSpan(new URLSpanFix(span.getURL()), start, end, 0);
+        }
+    }
+
+    private static class URLSpanFix extends URLSpan {
+
+        URLSpanFix(String url) {
+            super(url);
+        }
+
+        @Override
+        public String getURL() {
+            try {
+                URI uri = new URI(super.getURL());
+
+                if (!uri.isAbsolute()) {
+                    return new URL(new URL(Config.HOST_URL), super.getURL()).toString();
+                }
+            } catch (URISyntaxException | MalformedURLException e) {
+                return super.getURL();
+            }
+
+            return super.getURL();
+        }
+
     }
 
     // taken from https://github.com/Commit451/BypassGlideImageGetter and migrated to glide v4
