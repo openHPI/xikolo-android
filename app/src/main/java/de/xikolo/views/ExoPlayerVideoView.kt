@@ -6,6 +6,7 @@ import android.support.annotation.IntRange
 import android.util.AttributeSet
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -21,6 +22,7 @@ open class ExoPlayerVideoView : PlayerView {
     private lateinit var mPlayer: SimpleExoPlayer
     private val mBandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter()
     private lateinit var mPlayerListener: Player.EventListener
+    private var mMediaSource: MediaSource? = null
 
     public var onPreparedListener: OnPreparedListener? = null
 
@@ -30,11 +32,13 @@ open class ExoPlayerVideoView : PlayerView {
 
     public var onErrorListener: OnErrorListener? = null
 
+    var isPreparing = false;
+
     val duration: Long
-        get() = mPlayer.duration
+        get() = player.duration
 
     val currentPosition: Long
-        get() = mPlayer.currentPosition
+        get() = player.currentPosition
 
     constructor(context: Context) : super(context) {
         setup(context, null)
@@ -59,8 +63,15 @@ open class ExoPlayerVideoView : PlayerView {
             }
 
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                if (playbackState == Player.STATE_READY)
+                if (playbackState == Player.STATE_READY && isPreparing) {
                     onPreparedListener?.onPrepared()
+                    isPreparing = false
+                }
+
+                if (playbackState == Player.STATE_ENDED) {
+                    onCompletionListener?.onCompletion()
+                    player.seekTo(0)
+                }
             }
 
             override fun onPlayerError(error: ExoPlaybackException?) {
@@ -96,37 +107,41 @@ open class ExoPlayerVideoView : PlayerView {
     }
 
     fun start() {
-        mPlayer.playWhenReady = true
+        player.playWhenReady = true
     }
 
     fun pause() {
-        mPlayer.playWhenReady = false
+        player.playWhenReady = false
     }
 
     fun seekTo(position: Long) {
-        mPlayer.seekTo(position)
+        player.seekTo(position)
     }
 
     fun setPlaybackSpeed(speed: Float) {
-        mPlayer.playbackParameters = PlaybackParameters(
+        player.playbackParameters = PlaybackParameters(
             speed,
-            mPlayer.playbackParameters.pitch,
-            mPlayer.playbackParameters.skipSilence)
+            player.playbackParameters.pitch,
+            player.playbackParameters.skipSilence)
     }
 
     fun setVideoURI(uri: Uri) {
         val dataSourceFactory = DefaultDataSourceFactory(mContext, Util.getUserAgent(mContext, mContext.packageName), mBandwidthMeter)
-        val mediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
-        mPlayer.prepare(mediaSource)
-        mPlayer.
+        mMediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+        prepare()
+    }
+
+    fun prepare() {
+        isPreparing = true
+        mPlayer.prepare(mMediaSource)
     }
 
     fun release() {
-        mPlayer.release()
+        player.release()
     }
 
     fun isPlaying(): Boolean {
-        return mPlayer.playWhenReady
+        return player.playWhenReady
     }
 
     interface OnPreparedListener {

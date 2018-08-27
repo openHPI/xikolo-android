@@ -306,9 +306,13 @@ public class VideoHelper {
     public void pause() {
         buttonPlay.setText(activity.getString(R.string.icon_play));
         videoView.pause();
-        videoView.release();
         isPlaying = false;
         saveCurrentPosition();
+    }
+
+    public void release() {
+        pause();
+        videoView.release();
     }
 
     public void seekTo(int progress) {
