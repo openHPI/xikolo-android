@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.support.annotation.IntRange
 import android.util.AttributeSet
+
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
@@ -17,22 +18,22 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 
 open class ExoPlayerVideoView : PlayerView {
-    private lateinit var mContext: Context
 
+    private lateinit var mContext: Context
     private lateinit var mPlayer: SimpleExoPlayer
-    private val mBandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter()
     private lateinit var mPlayerListener: Player.EventListener
+    private val mBandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter()
     private var mMediaSource: MediaSource? = null
 
-    public var onPreparedListener: OnPreparedListener? = null
+    var onPreparedListener: OnPreparedListener? = null
 
-    public var onBufferUpdateListener: OnBufferUpdateListener? = null
+    var onBufferUpdateListener: OnBufferUpdateListener? = null
 
-    public var onCompletionListener: OnCompletionListener? = null
+    var onCompletionListener: OnCompletionListener? = null
 
-    public var onErrorListener: OnErrorListener? = null
+    var onErrorListener: OnErrorListener? = null
 
-    var isPreparing = false;
+    var isPreparing = false
 
     val duration: Long
         get() = player.duration
@@ -59,7 +60,7 @@ open class ExoPlayerVideoView : PlayerView {
         mPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
         mPlayerListener = object : Player.EventListener {
             override fun onLoadingChanged(isLoading: Boolean) {
-                onBufferUpdateListener?.onBufferingUpdate(mPlayer.bufferedPercentage)
+                onBufferUpdateListener?.onBufferingUpdate(player.bufferedPercentage)
             }
 
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -130,7 +131,7 @@ open class ExoPlayerVideoView : PlayerView {
         prepare()
     }
 
-    fun prepare() {
+    private fun prepare() {
         isPreparing = true
         mPlayer.prepare(mMediaSource)
     }
