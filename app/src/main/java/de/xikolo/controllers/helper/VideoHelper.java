@@ -50,22 +50,27 @@ public class VideoHelper {
     private static final int PLAYBACK_PARAMS_SDK_LEVEL = 23;
 
     private DownloadManager downloadManager;
+
     private Activity activity;
+
     private View videoContainer;
 
     @BindView(R.id.videoView) CustomSizeVideoView videoView;
     @BindView(R.id.videoController) View videoController;
     @BindView(R.id.videoProgress) View videoProgress;
     @BindView(R.id.videoSeekBar) SeekBar seekBar;
+
     @BindView(R.id.btnPlay) CustomFontTextView buttonPlay;
     @BindView(R.id.btnStepForward) CustomFontTextView buttonStepForward;
     @BindView(R.id.btnStepBackward) CustomFontTextView buttonStepBackward;
     @BindView(R.id.btnRetry) TextView buttonRetry;
+
     @BindView(R.id.currentTime) TextView textCurrentTime;
     @BindView(R.id.totalTime) TextView textTotalTime;
     @BindView(R.id.hdSwitch) CustomFontTextView textHdSwitch;
     @BindView(R.id.playbackSpeed) TextView textPlaybackSpeed;
     @BindView(R.id.offlineHint) View viewOfflineHint;
+
     @BindView(R.id.videoWarning) View viewVideoWarning;
     @BindView(R.id.videoWarningText) TextView textVideoWarning;
 
@@ -87,11 +92,12 @@ public class VideoHelper {
     private Section module;
     private Item item;
     private Video video;
-    private VideoMode videoMode;
 
     private enum VideoMode {
         SD, HD
     }
+
+    private VideoMode videoMode;
 
     public VideoHelper(FragmentActivity activity, View videoContainer) {
         this.activity = activity;
