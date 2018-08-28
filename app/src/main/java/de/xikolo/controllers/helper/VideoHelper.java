@@ -48,6 +48,11 @@ public class VideoHelper {
     private static final int VIDEO_STEPPING_DURATION = 10000;
 
     private static final int PLAYBACK_PARAMS_SDK_LEVEL = 23;
+
+    private DownloadManager downloadManager;
+    private Activity activity;
+    private View videoContainer;
+
     @BindView(R.id.videoView) CustomSizeVideoView videoView;
     @BindView(R.id.videoController) View videoController;
     @BindView(R.id.videoProgress) View videoProgress;
@@ -63,9 +68,7 @@ public class VideoHelper {
     @BindView(R.id.offlineHint) View viewOfflineHint;
     @BindView(R.id.videoWarning) View viewVideoWarning;
     @BindView(R.id.videoWarningText) TextView textVideoWarning;
-    private DownloadManager downloadManager;
-    private Activity activity;
-    private View videoContainer;
+
     private ControllerListener controllerListener;
 
     private Runnable seekBarUpdater;
@@ -85,6 +88,10 @@ public class VideoHelper {
     private Item item;
     private Video video;
     private VideoMode videoMode;
+
+    private enum VideoMode {
+        SD, HD
+    }
 
     public VideoHelper(FragmentActivity activity, View videoContainer) {
         this.activity = activity;
@@ -218,13 +225,7 @@ public class VideoHelper {
             @Override
             public void onClick(View v) {
                 show();
-
-                seekTo(
-                    Math.min(
-                        getCurrentPosition() + VIDEO_STEPPING_DURATION,
-                        getDuration()
-                    )
-                );
+                stepForward();
             }
         });
 
@@ -232,12 +233,7 @@ public class VideoHelper {
             @Override
             public void onClick(View v) {
                 show();
-
-                seekTo(
-                    Math.max(
-                        getCurrentPosition() - VIDEO_STEPPING_DURATION,
-                        0)
-                );
+                stepBackward();
             }
         });
 
@@ -350,6 +346,23 @@ public class VideoHelper {
         if (!seekBarUpdaterIsRunning) {
             new Thread(seekBarUpdater).start();
         }
+    }
+
+    public void stepForward() {
+        seekTo(
+            Math.min(
+                getCurrentPosition() + VIDEO_STEPPING_DURATION,
+                getDuration()
+            )
+        );
+    }
+
+    public void stepBackward() {
+        seekTo(
+            Math.max(
+                getCurrentPosition() - VIDEO_STEPPING_DURATION,
+                0)
+        );
     }
 
     @TargetApi(23)
@@ -562,10 +575,6 @@ public class VideoHelper {
 
     public void setControllerListener(ControllerListener listener) {
         this.controllerListener = listener;
-    }
-
-    private enum VideoMode {
-        SD, HD
     }
 
     public interface ControllerListener {
