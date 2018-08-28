@@ -206,6 +206,8 @@ public class VideoHelper {
                     if (getCurrentPosition() >= getDuration()) {
                         // 'replay' button was pressed
                         seekTo(0);
+                        buttonStepForward.setVisibility(View.VISIBLE);
+                        buttonStepBackward.setVisibility(View.VISIBLE);
                     }
 
                     play();
