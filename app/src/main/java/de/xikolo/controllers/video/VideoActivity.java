@@ -294,6 +294,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @Override
     public void onBackPressed() {
+        videoHelper.release();
         finish();
     }
 
