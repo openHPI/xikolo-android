@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.*
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.view.Menu
 import android.view.MenuItem
@@ -240,11 +241,11 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
 
         if (event.isOnline) {
             toolbar.subtitle = ""
-            tabLayout.setBackgroundColor(resources.getColor(R.color.apptheme_toolbar))
+            tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_toolbar))
             setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar)
         } else {
             toolbar.subtitle = getString(R.string.offline_mode)
-            tabLayout.setBackgroundColor(resources.getColor(R.color.offline_mode_toolbar))
+            tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.offline_mode_toolbar))
             setColorScheme(R.color.offline_mode_toolbar, R.color.offline_mode_statusbar)
         }
     }

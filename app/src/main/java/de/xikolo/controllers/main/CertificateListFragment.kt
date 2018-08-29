@@ -130,11 +130,13 @@ class CertificateListFragment : MainFragment<CertificateListPresenter, Certifica
         return CertificateListPresenterFactory()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLoginEvent(event: LoginEvent) {
         presenter?.onRefresh()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLogoutEvent(event: LogoutEvent) {
         presenter?.onRefresh()
