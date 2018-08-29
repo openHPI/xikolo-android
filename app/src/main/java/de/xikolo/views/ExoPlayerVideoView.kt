@@ -4,26 +4,28 @@ import android.content.Context
 import android.net.Uri
 import android.support.annotation.IntRange
 import android.util.AttributeSet
-
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.TrackGroupArray
+import com.google.android.exoplayer2.source.*
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.SubtitleView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.util.Util
+
 
 open class ExoPlayerVideoView : PlayerView {
 
     private lateinit var playerContext: Context
     private lateinit var exoplayer: SimpleExoPlayer
     private lateinit var playerListener: Player.EventListener
-    private val bandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter()
-    private var mediaSource: MediaSource? = null
+    private lateinit var dataSourceFactory: DefaultDataSourceFactory
+
+    private var videoMediaSource: MediaSource? = null
+    private var mergedMediaSource: MediaSource? = null
 
     var onPreparedListener: OnPreparedListener? = null
 
@@ -55,9 +57,16 @@ open class ExoPlayerVideoView : PlayerView {
 
     private fun setup(context: Context, attrs: AttributeSet?) {
         playerContext = context
-        val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
-        val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-        exoplayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
+
+        dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), DefaultBandwidthMeter())
+
+        exoplayer = ExoPlayerFactory.newSimpleInstance(
+            context,
+            DefaultTrackSelector(
+                AdaptiveTrackSelection.Factory(DefaultBandwidthMeter())
+            )
+        )
+
         playerListener = object : Player.EventListener {
             override fun onLoadingChanged(isLoading: Boolean) {
                 onBufferUpdateListener?.onBufferingUpdate(player.bufferedPercentage)
@@ -101,6 +110,8 @@ open class ExoPlayerVideoView : PlayerView {
         }
         exoplayer.addListener(playerListener)
 
+        subtitleView.setFractionalTextSize(SubtitleView.DEFAULT_TEXT_SIZE_FRACTION)
+
         player = exoplayer
 
         this.useController = false
@@ -127,14 +138,31 @@ open class ExoPlayerVideoView : PlayerView {
     }
 
     fun setVideoURI(uri: Uri) {
-        val dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
-        mediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+        videoMediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+        mergedMediaSource = videoMediaSource
+        prepare()
+    }
+
+    fun showSubtitles(uri: String, language: String) {
+        val subtitleMediaSource = SingleSampleMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(
+                Uri.parse(uri),
+                Format.createTextSampleFormat(null, MimeTypes.TEXT_VTT, C.SELECTION_FLAG_FORCED, language),
+                C.TIME_UNSET
+            )
+
+        mergedMediaSource = MergingMediaSource(videoMediaSource, subtitleMediaSource)
+        prepare()
+    }
+
+    fun removeSubtitles() {
+        mergedMediaSource = videoMediaSource
         prepare()
     }
 
     private fun prepare() {
         isPreparing = true
-        exoplayer.prepare(mediaSource)
+        exoplayer.prepare(mergedMediaSource)
     }
 
     fun release() {
