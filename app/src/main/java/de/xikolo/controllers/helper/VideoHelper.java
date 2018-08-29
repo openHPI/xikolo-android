@@ -16,7 +16,6 @@ import android.widget.TextView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +29,7 @@ import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
+import de.xikolo.models.VideoSubtitles;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
@@ -124,10 +124,10 @@ public class VideoHelper {
             textTotalTime.setText(getTimeString(getDuration()));
             textCurrentTime.setText(getTimeString(0));
 
-                buttonStepForward.setVisibility(View.VISIBLE);
-                buttonStepBackward.setVisibility(View.VISIBLE);
+            buttonStepForward.setVisibility(View.VISIBLE);
+            buttonStepBackward.setVisibility(View.VISIBLE);
 
-                seekTo(video.progress);
+            seekTo(video.progress);
 
             videoView.setPlaybackSpeed(videoSettingsHelper.getCurrentSpeed().getSpeed());
 
@@ -362,13 +362,13 @@ public class VideoHelper {
 
         this.videoSettingsHelper = new VideoSettingsHelper(
             activity,
-            subtitles,
+            video.subtitles,
             new VideoSettingsHelper.OnSettingsChangeListener() {
                 @Override
-                public void onSubtitleChange(@Nullable SubtitleTrack old, @Nullable SubtitleTrack subtitleTrack) {
-                    if (old != subtitleTrack) {
-                        if (subtitleTrack != null) {
-                            videoView.showSubtitles(subtitleTrack.vttUrl, subtitleTrack.language);
+                public void onSubtitleChange(@Nullable VideoSubtitles old, @Nullable VideoSubtitles videoSubtitles) {
+                    if (old != videoSubtitles) {
+                        if (videoSubtitles != null) {
+                            videoView.showSubtitles(videoSubtitles.vttUrl, videoSubtitles.language);
                         } else {
                             videoView.removeSubtitles();
                         }

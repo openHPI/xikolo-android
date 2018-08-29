@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import de.xikolo.R
-import de.xikolo.models.SubtitleTrack
+import de.xikolo.models.VideoSubtitles
 import de.xikolo.utils.PlaybackSpeedUtil
 import java.util.*
 
-class VideoSettingsHelper(private val context: Context, private val subtitles: List<SubtitleTrack>?, private val changeListener: OnSettingsChangeListener, private val clickListener: OnSettingsClickListener) {
+class VideoSettingsHelper(private val context: Context, private val subtitles: List<VideoSubtitles>?, private val changeListener: OnSettingsChangeListener, private val clickListener: OnSettingsClickListener) {
 
     enum class VideoMode {
         SD, HD
@@ -23,7 +23,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
 
     var currentQuality: VideoMode = VideoMode.HD
     var currentSpeed: PlaybackSpeedUtil = PlaybackSpeedUtil.x10
-    var currentSubtitleTrack: SubtitleTrack? = null
+    var currentVideoSubtitles: VideoSubtitles? = null
 
     fun buildSettingsView(): ViewGroup {
         val list = buildSettingsPanel(null)
@@ -48,8 +48,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
             list.addView(
                 buildSettingsItem(
                     R.string.icon_subtitles,
-                    context.getString(R.string.video_settings_subtitles) + if (currentSubtitleTrack != null)
-                        "  " + context.getString(R.string.video_settings_separator) + "  " + Locale(currentSubtitleTrack?.language).displayLanguage
+                    context.getString(R.string.video_settings_subtitles) + if (currentVideoSubtitles != null)
+                        "  " + context.getString(R.string.video_settings_separator) + "  " + Locale(currentVideoSubtitles?.language).displayLanguage
                     else
                         "",
                     View.OnClickListener { clickListener.onSubtitleClick() },
@@ -118,15 +118,15 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 null,
                 context.getString(R.string.video_settings_subtitles_none),
                 View.OnClickListener {
-                    changeListener.onSubtitleChange(currentSubtitleTrack, null)
-                    currentSubtitleTrack = null
+                    changeListener.onSubtitleChange(currentVideoSubtitles, null)
+                    currentVideoSubtitles = null
                 },
-                currentSubtitleTrack == null
+                currentVideoSubtitles == null
             )
         )
-        for (subtitleTrack in subtitles!!) {
-            var title = Locale(subtitleTrack.language).displayLanguage
-            if (subtitleTrack.createdByMachine) {
+        for (videoSubtitles in subtitles!!) {
+            var title = Locale(videoSubtitles.language).displayLanguage
+            if (videoSubtitles.createdByMachine) {
                 title += " " + context.getString(R.string.video_settings_subtitles_generated)
             }
 
@@ -135,10 +135,10 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                     null,
                     title,
                     View.OnClickListener {
-                        changeListener.onSubtitleChange(currentSubtitleTrack, subtitleTrack)
-                        currentSubtitleTrack = subtitleTrack
+                        changeListener.onSubtitleChange(currentVideoSubtitles, videoSubtitles)
+                        currentVideoSubtitles = videoSubtitles
                     },
-                    currentSubtitleTrack?.id == subtitleTrack.id
+                    currentVideoSubtitles == videoSubtitles
                 )
             )
         }
@@ -203,6 +203,6 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         fun onPlaybackSpeedChange(old: PlaybackSpeedUtil, new: PlaybackSpeedUtil)
 
         // subtitle is null if 'None' is selected
-        fun onSubtitleChange(old: SubtitleTrack?, new: SubtitleTrack?)
+        fun onSubtitleChange(old: VideoSubtitles?, new: VideoSubtitles?)
     }
 }

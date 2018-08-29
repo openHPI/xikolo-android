@@ -132,11 +132,6 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     }
 
     @Override
-    public void showSubtitleLoadingError() {
-        ToastUtil.show(R.string.toast_subtitle_error);
-    }
-
-    @Override
     public void onCastStateChanged(int newState) {
         super.onCastStateChanged(newState);
 
