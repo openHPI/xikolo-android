@@ -178,9 +178,9 @@
     <string name="course_date_self_paced">Self-paced</string>
     <string name="course_date_beginning">Beginning %s</string>
 
-    <string name="course_qualified_certificate">Qualified certificate</string>
-    <string name="course_record_of_achievement">Record of achievement</string>
-    <string name="course_confirmation_of_participation">Confirmation of participation</string>
+    <string name="course_qualified_certificate">Qualified Certificate</string>
+    <string name="course_record_of_achievement">Record of Achievement</string>
+    <string name="course_confirmation_of_participation">Confirmation of Participation</string>
     <string name="course_qualified_certificate_desc">Gain a qualified certificate by booking it and gaining a record of achievement.</string>
     <string name="course_record_of_achievement_desc">Gain a record of achievement by earning more than %1$.0f%% of the maximum number of points from all graded assignments.</string>
     <string name="course_confirmation_of_participation_desc">Gain a confirmation of participation by completing at least %1$.0f%% of the course material.</string>
