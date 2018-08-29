@@ -17,7 +17,6 @@ import android.widget.TextView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -502,13 +501,13 @@ public class VideoHelper {
 
         this.videoSettingsHelper = new VideoSettingsHelper(
             activity,
-            subtitles,
+            video.subtitles,
             new VideoSettingsHelper.OnSettingsChangeListener() {
                 @Override
-                public void onSubtitleChange(@Nullable SubtitleTrack old, @Nullable SubtitleTrack subtitleTrack) {
-                    if (old != subtitleTrack) {
-                        if (subtitleTrack != null) {
-                            videoView.showSubtitles(subtitleTrack.vttUrl, subtitleTrack.language);
+                public void onSubtitleChange(@Nullable VideoSubtitles old, @Nullable VideoSubtitles videoSubtitles) {
+                    if (old != videoSubtitles) {
+                        if (videoSubtitles != null) {
+                            videoView.showSubtitles(videoSubtitles.vttUrl, videoSubtitles.language);
                         } else {
                             videoView.removeSubtitles();
                         }
