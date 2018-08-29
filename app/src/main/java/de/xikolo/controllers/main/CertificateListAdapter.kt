@@ -4,14 +4,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.config.GlideApp
 import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.models.Course
 import de.xikolo.models.DownloadAsset
@@ -50,13 +48,7 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
 
         holder.textTitle.text = course.title
 
-        holder.header.setOnClickListener { _ -> callback.onCourseClicked(course.id) }
-
-        if (course.imageUrl != null) {
-            GlideApp.with(App.getInstance()).load(course.imageUrl).into(holder.courseImage)
-        } else {
-            holder.courseImage.visibility = View.GONE
-        }
+        holder.textTitle.setOnClickListener { _ -> callback.onCourseClicked(course.id) }
 
         holder.container.removeAllViews()
 
@@ -80,13 +72,13 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                 if (course.certificates.recordOfAchievement.available) {
                     val downloadViewHelper = DownloadViewHelper(
                         activity,
-                    DownloadAsset.Certificate.RecordOfAchievement(
-                        enrollment.certificates.recordOfAchievementUrl,
-                        course
-                    ),
-                    App.getInstance().getString(R.string.course_record_of_achievement),
-                    null,
-                    App.getInstance().getString(R.string.course_certificate_not_achieved)
+                        DownloadAsset.Certificate.RecordOfAchievement(
+                            enrollment.certificates.recordOfAchievementUrl,
+                            course
+                        ),
+                        App.getInstance().getString(R.string.course_record_of_achievement),
+                        null,
+                        App.getInstance().getString(R.string.course_certificate_not_achieved)
                     )
                     holder.container.addView(downloadViewHelper.view)
                     downloadViewHelper.openFileAsPdf()
@@ -95,13 +87,13 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                 if (course.certificates.qualifiedCertificate.available) {
                     val downloadViewHelper = DownloadViewHelper(
                         activity,
-                    DownloadAsset.Certificate.QualifiedCertificate(
-                        enrollment.certificates.qualifiedCertificateUrl,
-                        course
-                    ),
-                    App.getInstance().getString(R.string.course_qualified_certificate),
-                    null,
-                    App.getInstance().getString(R.string.course_certificate_not_achieved)
+                        DownloadAsset.Certificate.QualifiedCertificate(
+                            enrollment.certificates.qualifiedCertificateUrl,
+                            course
+                        ),
+                        App.getInstance().getString(R.string.course_qualified_certificate),
+                        null,
+                        App.getInstance().getString(R.string.course_certificate_not_achieved)
                     )
                     holder.container.addView(downloadViewHelper.view)
                     downloadViewHelper.openFileAsPdf()
@@ -116,12 +108,6 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
     }
 
     class CertificateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        @BindView(R.id.certificateHeader)
-        lateinit var header: ViewGroup
-
-        @BindView(R.id.courseImage)
-        lateinit var courseImage: ImageView
 
         @BindView(R.id.textTitle)
         lateinit var textTitle: TextView

@@ -2,6 +2,7 @@ package de.xikolo.controllers.course
 
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.RecyclerView
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +52,7 @@ class DocumentListAdapter(val activity: FragmentActivity) : RecyclerView.Adapter
                 String.format(activity.getString(R.string.document_lang), l.language)
             )
             downloadViewHelper.openFileAsPdf()
+            downloadViewHelper.textFileName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F)
             holder.downloadsLayout.addView(downloadViewHelper.view)
         }
     }

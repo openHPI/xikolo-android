@@ -15,7 +15,7 @@
         android:paddingTop="8dp"
         android:singleLine="true"
         android:textColor="@color/text_main"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/textFileSize"
@@ -27,19 +27,20 @@
         android:paddingTop="8dp"
         android:singleLine="true"
         android:text="--"
-        android:textColor="@color/text_main"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/textDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textFileName"
-        android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/textFileName"
+        android:lineSpacingExtra="2dp"
+        android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:textColor="@color/text_main"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:visibility="gone" />
 
     <FrameLayout

@@ -1,5 +1,6 @@
 package de.xikolo.controllers.course
 
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.widget.NestedScrollView
 import android.view.Menu
@@ -8,6 +9,7 @@ import android.view.MenuItem
 import android.widget.LinearLayout
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
+import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.base.LoadingStatePresenterFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
@@ -60,6 +62,12 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
                     String.format(getString(R.string.course_confirmation_of_participation_desc), course.certificates.confirmationOfParticipation.threshold),
                     errorMessage
                 )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    confirmationOfParticipationDownloadView.textFileName.setTextAppearance(R.style.TextAppearanceMedium)
+                } else {
+                    @Suppress("DEPRECATION")
+                    confirmationOfParticipationDownloadView.textFileName.setTextAppearance(App.getInstance(), R.style.TextAppearanceMedium)
+                }
                 confirmationOfParticipationDownloadView.openFileAsPdf()
                 container.addView(confirmationOfParticipationDownloadView.view)
             }
@@ -72,6 +80,12 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
                     String.format(getString(R.string.course_record_of_achievement_desc), course.certificates.recordOfAchievement.threshold),
                     errorMessage
                 )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    recordOfAchievementDownloadView.textFileName.setTextAppearance(R.style.TextAppearanceMedium)
+                } else {
+                    @Suppress("DEPRECATION")
+                    recordOfAchievementDownloadView.textFileName.setTextAppearance(App.getInstance(), R.style.TextAppearanceMedium)
+                }
                 recordOfAchievementDownloadView.openFileAsPdf()
                 container.addView(recordOfAchievementDownloadView.view)
             }
@@ -84,6 +98,12 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
                     getString(R.string.course_qualified_certificate_desc),
                     errorMessage
                 )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    qualifiedCertificateDownloadView.textFileName.setTextAppearance(R.style.TextAppearanceMedium)
+                } else {
+                    @Suppress("DEPRECATION")
+                    qualifiedCertificateDownloadView.textFileName.setTextAppearance(App.getInstance(), R.style.TextAppearanceMedium)
+                }
                 qualifiedCertificateDownloadView.openFileAsPdf()
                 container.addView(qualifiedCertificateDownloadView.view)
             }

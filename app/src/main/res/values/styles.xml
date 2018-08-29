@@ -60,4 +60,8 @@
         <item name="colorControlActivated">@color/apptheme_main</item>
     </style>
 
+    <style name="TextAppearanceMedium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
 </resources>
