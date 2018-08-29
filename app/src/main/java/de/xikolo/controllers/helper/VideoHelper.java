@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +30,7 @@ import de.xikolo.models.Course;
 import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
+import de.xikolo.models.SubtitleTrack;
 import de.xikolo.models.Video;
 import de.xikolo.models.VideoSubtitles;
 import de.xikolo.storages.ApplicationPreferences;
