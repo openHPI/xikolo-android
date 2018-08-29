@@ -78,6 +78,20 @@
         </RelativeLayout>
 
         <de.xikolo.views.CustomFontTextView
+            android:id="@+id/btnStepBackward"
+            style="@style/TextDropShadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@id/btnPlay"
+            android:text="@string/icon_step_backward"
+            android:textAlignment="center"
+            android:textColor="@color/video_overlay_button"
+            android:textSize="@dimen/btn_stepping_text_size"
+            app:customFont="materialdesign.ttf" />
+
+        <de.xikolo.views.CustomFontTextView
             android:id="@+id/btnPlay"
             style="@style/TextDropShadow"
             android:layout_width="wrap_content"
@@ -88,6 +102,20 @@
             android:textColor="@color/video_overlay_button"
             android:textSize="@dimen/btn_play_text_size"
             app:customFont="xikolo.ttf" />
+
+        <de.xikolo.views.CustomFontTextView
+            android:id="@+id/btnStepForward"
+            style="@style/TextDropShadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@id/btnPlay"
+            android:text="@string/icon_step_forward"
+            android:textAlignment="center"
+            android:textColor="@color/video_overlay_button"
+            android:textSize="@dimen/btn_stepping_text_size"
+            app:customFont="materialdesign.ttf" />
 
         <RelativeLayout
             android:id="@+id/videoFooter"

@@ -33,6 +33,8 @@
     <string name="icon_pinboard" translatable="false">&#xe604;</string>
 
     <!-- materialdesign.ttf from https://materialdesignicons.com/ -->
+    <string name="icon_step_forward" translatable="false">&#xf467;</string>
+    <string name="icon_step_backward" translatable="false">&#xf465;</string>
     <string name="icon_download" translatable="false">&#xf1da;</string>
     <string name="icon_delete" translatable="false">&#xf1c0;</string>
     <string name="icon_cancel" translatable="false">&#xf156;</string> <!-- close -->

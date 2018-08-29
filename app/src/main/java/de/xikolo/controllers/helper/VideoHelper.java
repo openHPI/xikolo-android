@@ -45,6 +45,8 @@ public class VideoHelper {
     private static final int DEFAULT_TIMEOUT = 3000;
     private static final int FADE_OUT = 1;
 
+    private static final int VIDEO_STEPPING_DURATION = 10000;
+
     private static final int PLAYBACK_PARAMS_SDK_LEVEL = 23;
 
     private DownloadManager downloadManager;
@@ -59,6 +61,8 @@ public class VideoHelper {
     @BindView(R.id.videoSeekBar) SeekBar seekBar;
 
     @BindView(R.id.btnPlay) CustomFontTextView buttonPlay;
+    @BindView(R.id.btnStepForward) CustomFontTextView buttonStepForward;
+    @BindView(R.id.btnStepBackward) CustomFontTextView buttonStepBackward;
     @BindView(R.id.btnRetry) TextView buttonRetry;
 
     @BindView(R.id.currentTime) TextView textCurrentTime;
@@ -127,6 +131,9 @@ public class VideoHelper {
                 textTotalTime.setText(getTimeString(getDuration()));
                 textCurrentTime.setText(getTimeString(0));
 
+                buttonStepForward.setVisibility(View.VISIBLE);
+                buttonStepBackward.setVisibility(View.VISIBLE);
+
                 seekTo(video.progress);
 
                 if (Build.VERSION.SDK_INT >= PLAYBACK_PARAMS_SDK_LEVEL) {
@@ -150,6 +157,8 @@ public class VideoHelper {
             public void onCompletion() {
                 pause();
                 buttonPlay.setText(activity.getString(R.string.icon_reload));
+                buttonStepForward.setVisibility(View.GONE);
+                buttonStepBackward.setVisibility(View.GONE);
                 show();
             }
         });
@@ -203,6 +212,8 @@ public class VideoHelper {
                     if (getCurrentPosition() >= getDuration()) {
                         // 'replay' button was pressed
                         seekTo(0);
+                        buttonStepForward.setVisibility(View.VISIBLE);
+                        buttonStepBackward.setVisibility(View.VISIBLE);
                     }
 
                     play();
@@ -215,6 +226,22 @@ public class VideoHelper {
                         getQualityString(),
                         getSourceString());
                 }
+            }
+        });
+
+        buttonStepForward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show();
+                stepForward();
+            }
+        });
+
+        buttonStepBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show();
+                stepBackward();
             }
         });
 
@@ -327,6 +354,23 @@ public class VideoHelper {
         if (!seekBarUpdaterIsRunning) {
             new Thread(seekBarUpdater).start();
         }
+    }
+
+    public void stepForward() {
+        seekTo(
+            Math.min(
+                getCurrentPosition() + VIDEO_STEPPING_DURATION,
+                getDuration()
+            )
+        );
+    }
+
+    public void stepBackward() {
+        seekTo(
+            Math.max(
+                getCurrentPosition() - VIDEO_STEPPING_DURATION,
+                0)
+        );
     }
 
     @TargetApi(23)
