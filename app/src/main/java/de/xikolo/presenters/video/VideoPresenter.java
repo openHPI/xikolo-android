@@ -1,12 +1,9 @@
 package de.xikolo.presenters.video;
 
-import java.util.List;
-
 import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.models.SubtitleTrack;
 import de.xikolo.models.Video;
 import de.xikolo.presenters.base.Presenter;
 import io.realm.Realm;
@@ -28,7 +25,6 @@ public class VideoPresenter extends Presenter<VideoView> {
     private Section section;
     private Item item;
     private Video video;
-    private List<SubtitleTrack> subtitles;
 
     VideoPresenter(String courseId, String sectionId, String itemId, String videoId) {
         this.itemManager = new ItemManager();
