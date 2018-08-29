@@ -13,69 +13,74 @@
     <RelativeLayout
         android:id="@+id/videoController"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone">
+        android:layout_height="fill_parent">
 
         <RelativeLayout
-            android:id="@+id/videoHeader"
-            android:layout_width="fill_parent"
-            android:layout_height="52dp"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/gradient_black_transparent_top"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="4dp">
+            android:id="@+id/videoControls"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <RelativeLayout
-                android:id="@+id/offlineHint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:id="@+id/videoHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="52dp"
                 android:layout_alignParentTop="true"
-                android:visibility="gone">
+                android:background="@drawable/gradient_black_transparent_top"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="4dp">
 
-                <de.xikolo.views.CustomFontTextView
-                    android:id="@+id/offlineIcon"
+                <RelativeLayout
+                    android:id="@+id/offlineHint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginTop="6dp"
-                    android:paddingRight="8dp"
-                    android:text="@string/icon_download_video"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    app:customFont="xikolo.ttf" />
+                    android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/offlineText"
-                    style="bold"
+                    <de.xikolo.views.CustomFontTextView
+                        android:id="@+id/offlineIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="6dp"
+                        android:paddingRight="8dp"
+                        android:text="@string/icon_download_video"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        app:customFont="xikolo.ttf" />
+
+                    <TextView
+                        android:id="@+id/offlineText"
+                        style="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/offlineIcon"
+                        android:text="@string/offline"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <android.support.v7.app.MediaRouteButton
+                    android:id="@+id/video_media_route_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/offlineIcon"
-                    android:text="@string/offline"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="6dp"
+                    android:mediaRouteTypes="user"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:padding="0dp"
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+                    android:visibility="gone" />
 
             </RelativeLayout>
-
-            <android.support.v7.app.MediaRouteButton
-                android:id="@+id/video_media_route_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="6dp"
-                android:mediaRouteTypes="user"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:padding="0dp"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark"
-                android:visibility="gone" />
-
-        </RelativeLayout>
 
         <de.xikolo.views.CustomFontTextView
             android:id="@+id/btnStepBackward"
@@ -127,65 +132,67 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/currentTime"
-                    style="bold"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:paddingRight="8dp"
-                    android:text="--:--"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                <SeekBar
-                    android:id="@+id/videoSeekBar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingBottom="0dp"
-                    android:paddingTop="0dp" />
+                    <TextView
+                        android:id="@+id/currentTime"
+                        style="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="8dp"
+                        android:text="--:--"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/totalTime"
-                    style="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
-                    android:text="--:--"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    <SeekBar
+                        android:id="@+id/videoSeekBar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingBottom="0dp"
+                        android:paddingTop="0dp" />
 
-                <de.xikolo.views.CustomFontTextView
-                    android:id="@+id/hdSwitch"
-                    style="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
-                    android:text="@string/icon_hd"
-                    android:textColor="@color/video_hd_disabled"
-                    android:textSize="24sp"
-                    app:customFont="xikolo.ttf" />
+                    <TextView
+                        android:id="@+id/totalTime"
+                        style="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        android:text="--:--"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/playbackSpeed"
-                    style="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:visibility="gone" />
+                    <de.xikolo.views.CustomFontTextView
+                        android:id="@+id/buttonSettings"
+                        style="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="16dp"
+                        android:text="@string/icon_settings"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+                        app:customFont="xikolo.ttf" />
 
-            </LinearLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/settingsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+        </LinearLayout>
 
     </RelativeLayout>
 

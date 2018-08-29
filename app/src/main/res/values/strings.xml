@@ -230,6 +230,12 @@
     <!-- -->
     <string name="offline_mode">Offline Mode</string>
     <string name="offline">Offline</string>
+    <string name="video_settings_quality">Quality</string>
+    <string name="video_settings_speed">Playback Speed</string>
+    <string name="video_settings_subtitles">Subtitles</string>
+    <string name="video_settings_subtitles_none">None</string>
+    <string name="video_settings_subtitles_generated">automatically generated</string>
+    <string name="video_settings_separator" translatable="false">&#xb7;</string>
 
     <!-- -->
     <string name="media_route_menu_title">CAST</string>

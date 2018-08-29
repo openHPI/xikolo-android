@@ -123,12 +123,17 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         videoHelper.setupVideo(course, section, item, video);
 
         LanalyticsUtil.trackVideoPlay(itemId,
-            courseId, sectionId,
-            video.progress,
-            videoHelper.getCurrentPlaybackSpeed().getSpeed(),
-            getResources().getConfiguration().orientation,
-            videoHelper.getQualityString(),
-            videoHelper.getSourceString());
+                courseId, sectionId,
+                video.progress,
+                videoHelper.getCurrentPlaybackSpeed().getSpeed(),
+                getResources().getConfiguration().orientation,
+            videoHelper.getCurrentQualityString(),
+                videoHelper.getSourceString());
+    }
+
+    @Override
+    public void showSubtitleLoadingError() {
+        ToastUtil.show(R.string.toast_subtitle_error);
     }
 
     @Override
@@ -293,8 +298,9 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @Override
     public void onBackPressed() {
-        videoHelper.release();
-        finish();
+        if (videoHelper.handleBackPress()) {
+            finish();
+        }
     }
 
     @Override
@@ -316,11 +322,11 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         updateVideoView(newConfig.orientation);
 
         LanalyticsUtil.trackVideoChangeOrientation(itemId, courseId, sectionId,
-            videoHelper.getCurrentPosition(),
-            videoHelper.getCurrentPlaybackSpeed().getSpeed(),
-            newConfig.orientation,
-            videoHelper.getQualityString(),
-            videoHelper.getSourceString());
+                videoHelper.getCurrentPosition(),
+                videoHelper.getCurrentPlaybackSpeed().getSpeed(),
+                newConfig.orientation,
+            videoHelper.getCurrentQualityString(),
+                videoHelper.getSourceString());
     }
 
     @NonNull

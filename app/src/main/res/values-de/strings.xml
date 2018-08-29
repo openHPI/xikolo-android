@@ -222,6 +222,11 @@
     <!-- -->
     <string name="offline_mode">Offline-Modus</string>
     <string name="offline">Offline</string>
+    <string name="video_settings_quality">Qualität</string>
+    <string name="video_settings_speed">Wiedergabegeschwindigkeit</string>
+    <string name="video_settings_subtitles">Untertitel</string>
+    <string name="video_settings_subtitles_none">Keine</string>
+    <string name="video_settings_subtitles_generated">automatisch erzeugt</string>
 
     <!-- -->
     <string name="settings_category_general">Allgemein</string>
