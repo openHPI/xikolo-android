@@ -22,8 +22,6 @@ import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastState;
 import com.yatatsu.autobundle.AutoBundleField;
 
-import java.util.List;
-
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.BasePresenterActivity;
@@ -40,7 +38,6 @@ import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.PlayServicesUtil;
-import de.xikolo.utils.ToastUtil;
 
 public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoView> implements VideoView {
 
