@@ -1,11 +1,7 @@
 package de.xikolo.presenters.video;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import de.xikolo.jobs.base.RequestJobCallback;
 import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
@@ -49,24 +45,7 @@ public class VideoPresenter extends Presenter<VideoView> {
     public void onViewAttached(VideoView view) {
         super.onViewAttached(view);
 
-        if (subtitles == null) {
-            itemManager.requestSubtitlesWithCuesForVideo(videoId, new RequestJobCallback() {
-                @Override
-                protected void onSuccess() {
-                    subtitles = SubtitleTrack.listForVideoId(videoId);
-                    getViewOrThrow().setupVideo(course, section, item, video, subtitles);
-                }
-
-                @Override
-                protected void onError(@NotNull ErrorCode code) {
-                    getViewOrThrow().showSubtitleLoadingError();
-                    getViewOrThrow().setupVideo(course, section, item, video, new ArrayList<>(0));
-                }
-            });
-        } else {
-            getViewOrThrow().setupVideo(course, section, item, video, subtitles);
-        }
-
+        getViewOrThrow().setupVideo(course, section, item, video);
     }
 
     @Override
