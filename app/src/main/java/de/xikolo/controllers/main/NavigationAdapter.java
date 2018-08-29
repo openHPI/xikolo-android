@@ -83,25 +83,25 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 NavigationItem.ViewType.MAIN,
                 NAV_ITEMS.size()));
 
+        NAV_ITEMS.add(NAV_CERTIFICATES = new NavigationItem(
+            R.string.icon_certificates,
+            R.string.title_section_certificates,
+            NavigationItem.ViewType.MAIN,
+            NAV_ITEMS.size()));
+
         if (FeatureToggle.secondScreen()) {
             NAV_ITEMS.add(NAV_SECOND_SCREEN = new NavigationItem(
-                    R.string.icon_second_screen,
-                    R.string.title_section_second_screen,
-                    NavigationItem.ViewType.SUB,
-                    NAV_ITEMS.size()));
-        } else {
-            NAV_SECOND_SCREEN = new NavigationItem(
-                    R.string.icon_second_screen,
-                    R.string.title_section_second_screen,
-                    NavigationItem.ViewType.SUB,
-                    -99);
-        }
-
-        NAV_ITEMS.add(NAV_CERTIFICATES = new NavigationItem(
-                R.string.icon_certificates,
-                R.string.title_section_certificates,
+                R.string.icon_second_screen,
+                R.string.title_section_second_screen,
                 NavigationItem.ViewType.SUB,
                 NAV_ITEMS.size()));
+        } else {
+            NAV_SECOND_SCREEN = new NavigationItem(
+                R.string.icon_second_screen,
+                R.string.title_section_second_screen,
+                NavigationItem.ViewType.SUB,
+                -99);
+        }
 
         NAV_ITEMS.add(NAV_DOWNLOADS = new NavigationItem(
                 R.string.icon_downloads,
