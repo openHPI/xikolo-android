@@ -10,7 +10,6 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.ui.SubtitleView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.MimeTypes
@@ -109,8 +108,6 @@ open class ExoPlayerVideoView : PlayerView {
             }
         }
         exoplayer.addListener(playerListener)
-
-        subtitleView.setFractionalTextSize(SubtitleView.DEFAULT_TEXT_SIZE_FRACTION)
 
         player = exoplayer
 
