@@ -100,21 +100,19 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
 
         if (action != null && action == Intent.ACTION_VIEW) {
             presenter.handleDeepLink(intent.data)
-        } else {
-            if (courseId == null) {
-                val cacheController = CacheHelper()
-                cacheController.readCachedExtras()
-                if (cacheController.course != null) {
-                    courseId = cacheController.course.id
-                }
-                if (courseId != null) {
-                    val restartIntent = CourseActivityAutoBundle.builder().courseId(courseId).build(this)
-                    finish()
-                    startActivity(restartIntent)
-                }
-            } else {
-                presenter.initCourse(courseId)
+        } else if (courseId == null) {
+            val cacheController = CacheHelper()
+            cacheController.readCachedExtras()
+            if (cacheController.course != null) {
+                courseId = cacheController.course.id
             }
+            if (courseId != null) {
+                val restartIntent = CourseActivityAutoBundle.builder().courseId(courseId).build(this)
+                finish()
+                startActivity(restartIntent)
+            }
+        } else {
+            presenter.initCourse(courseId)
         }
     }
 
@@ -270,22 +268,24 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
             // Fragment Name is saved by FragmentPagerAdapter implementation.
             val name = makeFragmentName(R.id.viewpager, position)
             var fragment: Fragment? = fragmentManager.findFragmentByTag(name)
-            if (fragment == null && courseId != null) {
-                when (areaState.get(position)) {
-                    CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(courseId!!).build()
-                    CourseArea.DISCUSSIONS    -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
-                        .inAppLinksEnabled(true)
-                        .externalLinksEnabled(false)
-                        .build()
-                    CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(courseId!!).build()
-                    CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(courseId!!).build()
-                    CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(courseId!!).build()
-                    CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(courseId!!).build()
-                    CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(courseId!!).build()
-                    CourseArea.RECAP          -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
-                        .inAppLinksEnabled(true)
-                        .externalLinksEnabled(false)
-                        .build()
+            if (fragment == null) {
+                courseId?.let { courseId ->
+                    when (areaState.get(position)) {
+                        CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(courseId).build()
+                        CourseArea.DISCUSSIONS    -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
+                            .inAppLinksEnabled(true)
+                            .externalLinksEnabled(false)
+                            .build()
+                        CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(courseId).build()
+                        CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(courseId).build()
+                        CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(courseId).build()
+                        CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(courseId).build()
+                        CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build()
+                        CourseArea.RECAP          -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
+                            .inAppLinksEnabled(true)
+                            .externalLinksEnabled(false)
+                            .build()
+                    }
                 }
             }
             return fragment
