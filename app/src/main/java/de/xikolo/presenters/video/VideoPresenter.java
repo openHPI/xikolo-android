@@ -63,6 +63,8 @@ public class VideoPresenter extends Presenter<VideoView> {
                     getViewOrThrow().setupVideo(course, section, item, video, new ArrayList<>(0));
                 }
             });
+        } else {
+            getViewOrThrow().setupVideo(course, section, item, video, subtitles);
         }
 
     }
