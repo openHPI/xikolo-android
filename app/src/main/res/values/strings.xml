@@ -234,7 +234,7 @@
     <string name="video_settings_speed">Playback Speed</string>
     <string name="video_settings_subtitles">Subtitles</string>
     <string name="video_settings_subtitles_none">None</string>
-    <string name="video_settings_subtitles_generated">automatically generated</string>
+    <string name="video_settings_subtitles_generated">(automatically generated)</string>
     <string name="video_settings_separator" translatable="false">&#xb7;</string>
 
     <!-- -->
