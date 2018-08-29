@@ -36,7 +36,6 @@ import de.xikolo.models.Course;
 import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.models.SubtitleTrack;
 import de.xikolo.models.Video;
 import de.xikolo.models.VideoSubtitles;
 import de.xikolo.storages.ApplicationPreferences;
@@ -438,7 +437,7 @@ public class VideoHelper {
         return true;
     }
 
-    public void setupVideo(Course course, Section module, Item item, Video video, List<SubtitleTrack> subtitles) {
+    public void setupVideo(Course course, Section module, Item item, Video video) {
         this.course = course;
         this.module = module;
         this.item = item;
