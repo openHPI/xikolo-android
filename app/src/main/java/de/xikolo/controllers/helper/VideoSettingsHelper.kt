@@ -69,8 +69,9 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 null,
                 VideoMode.HD.toString(),
                 View.OnClickListener {
-                    changeListener.onQualityChange(currentQuality, VideoMode.HD)
+                    val oldQuality = currentQuality
                     currentQuality = VideoMode.HD
+                    changeListener.onQualityChanged(oldQuality, currentQuality)
                 },
                 currentQuality == VideoMode.HD
             )
@@ -80,8 +81,9 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 null,
                 VideoMode.SD.toString(),
                 View.OnClickListener {
-                    changeListener.onQualityChange(currentQuality, VideoMode.SD)
+                    val oldQuality = currentQuality
                     currentQuality = VideoMode.SD
+                    changeListener.onQualityChanged(oldQuality, currentQuality)
                 },
                 currentQuality == VideoMode.SD
             )
@@ -99,8 +101,9 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                     null,
                     speed.toString(),
                     View.OnClickListener {
-                        changeListener.onPlaybackSpeedChange(currentSpeed, speed)
+                        val oldSpeed = currentSpeed
                         currentSpeed = speed
+                        changeListener.onPlaybackSpeedChanged(oldSpeed, currentSpeed)
                     },
                     currentSpeed == speed
                 )
@@ -118,8 +121,9 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 null,
                 context.getString(R.string.video_settings_subtitles_none),
                 View.OnClickListener {
-                    changeListener.onSubtitleChange(currentVideoSubtitles, null)
+                    val oldVideoSubtitles = currentVideoSubtitles
                     currentVideoSubtitles = null
+                    changeListener.onSubtitleChanged(oldVideoSubtitles, currentVideoSubtitles)
                 },
                 currentVideoSubtitles == null
             )
@@ -135,8 +139,9 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                     null,
                     title,
                     View.OnClickListener {
-                        changeListener.onSubtitleChange(currentVideoSubtitles, videoSubtitles)
+                        val oldVideoSubtitles = currentVideoSubtitles
                         currentVideoSubtitles = videoSubtitles
+                        changeListener.onSubtitleChanged(oldVideoSubtitles, currentVideoSubtitles)
                     },
                     currentVideoSubtitles == videoSubtitles
                 )
@@ -198,11 +203,11 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     // also invoked when old value equal to new value
     interface OnSettingsChangeListener {
 
-        fun onQualityChange(old: VideoMode, new: VideoMode)
+        fun onQualityChanged(old: VideoMode, new: VideoMode)
 
-        fun onPlaybackSpeedChange(old: PlaybackSpeedUtil, new: PlaybackSpeedUtil)
+        fun onPlaybackSpeedChanged(old: PlaybackSpeedUtil, new: PlaybackSpeedUtil)
 
         // subtitle is null if 'None' is selected
-        fun onSubtitleChange(old: VideoSubtitles?, new: VideoSubtitles?)
+        fun onSubtitleChanged(old: VideoSubtitles?, new: VideoSubtitles?)
     }
 }

@@ -3,7 +3,6 @@ package de.xikolo.storages
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.v7.preference.PreferenceManager
-
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.utils.PlaybackSpeedUtil
@@ -27,12 +26,29 @@ class ApplicationPreferences {
         get() = getBoolean(context.getString(R.string.preference_download_network))
         set(value) = putBoolean(context.getString(R.string.preference_download_network), value)
 
-    var videoPlaybackSpeed: PlaybackSpeedUtil?
+    var videoPlaybackSpeed: PlaybackSpeedUtil
         get() = PlaybackSpeedUtil.get(getString(
             context.getString(R.string.preference_video_playback_speed),
             context.getString(R.string.settings_default_value_video_playback_speed)
         ))
         set(speed) = putString(context.getString(R.string.preference_video_playback_speed), speed.toString())
+
+    var videoSubtitlesLanguage: String?
+        get() {
+            val language = getString(
+                context.getString(R.string.preference_video_subtitles_language),
+                context.getString(R.string.settings_default_value_video_subtitles_language)
+            )
+            return if (!language.equals(context.getString(R.string.settings_default_value_video_subtitles_language))) language else null
+        }
+        set(language) {
+            val value = language
+                ?: context.getString(R.string.settings_default_value_video_subtitles_language)
+            putString(
+                context.getString(R.string.preference_video_subtitles_language),
+                value
+            )
+        }
 
     var confirmBeforeDeleting: Boolean
         get() = getBoolean(context.getString(R.string.preference_confirm_delete))
@@ -73,7 +89,7 @@ class ApplicationPreferences {
         editor.apply()
     }
 
-    fun contains(key: String) : Boolean = preferences.contains(key)
+    fun contains(key: String): Boolean = preferences.contains(key)
 
     fun setToDefault(key: String, default: String) = putString(key, getString(key, default))
 

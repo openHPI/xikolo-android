@@ -73,6 +73,8 @@ public class VideoHelper {
 
     private Activity activity;
 
+    private ApplicationPreferences applicationPreferences = new ApplicationPreferences();
+
     private View videoContainer;
 
     private ControllerListener controllerListener;
@@ -116,7 +118,7 @@ public class VideoHelper {
     private void setupView() {
         videoView.setKeepScreenOn(true);
         videoView.setOnPreparedListener(() -> {
-            videoProgress.setVisibility(View.GONE);
+            hideProgress();
             viewVideoWarning.setVisibility(View.GONE);
             seekBar.setMax(getDuration());
             show();
@@ -206,20 +208,14 @@ public class VideoHelper {
 
         settingsButton.setOnClickListener(v -> showSettings(videoSettingsHelper.buildSettingsView()));
 
-        buttonStepForward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                show();
-                stepForward();
-            }
+        buttonStepForward.setOnClickListener(v -> {
+            show();
+            stepForward();
         });
 
-        buttonStepBackward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                show();
-                stepBackward();
-            }
+        buttonStepBackward.setOnClickListener(v -> {
+            show();
+            stepBackward();
         });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -258,6 +254,18 @@ public class VideoHelper {
         buttonRetry.setOnClickListener(v -> updateVideo());
     }
 
+    public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
+        return videoSettingsHelper.getCurrentSpeed();
+    }
+
+    public int getCurrentPosition() {
+        return (int) videoView.getCurrentPosition();
+    }
+
+    public int getDuration() {
+        return (int) videoView.getDuration();
+    }
+
     public void play() {
         buttonPlay.setText(activity.getString(R.string.icon_pause));
         videoView.start();
@@ -272,20 +280,6 @@ public class VideoHelper {
         saveCurrentPosition();
     }
 
-    public void release() {
-        pause();
-        videoView.release();
-    }
-
-    public boolean handleBackPress() {
-        if (settingsOpen) {
-            hideSettings();
-            return false;
-        }
-        release();
-        return true;
-    }
-
     private void seekTo(int progress) {
         videoView.seekTo(progress);
         textCurrentTime.setText(getTimeString(progress));
@@ -295,7 +289,7 @@ public class VideoHelper {
         }
     }
 
-    public void stepForward() {
+    private void stepForward() {
         seekTo(
             Math.min(
                 getCurrentPosition() + VIDEO_STEPPING_DURATION,
@@ -304,12 +298,38 @@ public class VideoHelper {
         );
     }
 
-    public void stepBackward() {
+    private void stepBackward() {
         seekTo(
             Math.max(
                 getCurrentPosition() - VIDEO_STEPPING_DURATION,
                 0)
         );
+    }
+
+    private void showSettings(View view) {
+        show(Integer.MAX_VALUE);
+        Animation fadeIn = AnimationUtils.loadAnimation(activity, android.support.design.R.anim.abc_slide_in_bottom);
+        settingsContainer.startAnimation(fadeIn);
+        settingsContainer.setVisibility(View.VISIBLE);
+        settingsContainer.removeAllViews();
+        settingsContainer.addView(view);
+        settingsOpen = true;
+    }
+
+    private void hideSettings() {
+        hide();
+        Animation fadeOut = AnimationUtils.loadAnimation(activity, android.support.design.R.anim.abc_slide_out_bottom);
+        settingsContainer.startAnimation(fadeOut);
+        settingsContainer.setVisibility(View.GONE);
+        settingsOpen = false;
+    }
+
+    public void showProgress() {
+        videoProgress.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress() {
+        videoProgress.setVisibility(View.GONE);
     }
 
     public void show() {
@@ -339,16 +359,14 @@ public class VideoHelper {
         }
     }
 
-    public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
-        return videoSettingsHelper.getCurrentSpeed();
-    }
-
-    public int getCurrentPosition() {
-        return (int) videoView.getCurrentPosition();
-    }
-
-    public int getDuration() {
-        return (int) videoView.getDuration();
+    public boolean handleBackPress() {
+        if (settingsOpen) {
+            hideSettings();
+            return false;
+        }
+        pause();
+        videoView.release();
+        return true;
     }
 
     public void setupVideo(Course course, Section module, Item item, Video video) {
@@ -357,32 +375,28 @@ public class VideoHelper {
         this.item = item;
         this.video = video;
 
-        int connectivityStatus = NetworkUtil.getConnectivityStatus();
-        ApplicationPreferences appPreferences = new ApplicationPreferences();
-
         this.videoSettingsHelper = new VideoSettingsHelper(
             activity,
             video.subtitles,
             new VideoSettingsHelper.OnSettingsChangeListener() {
                 @Override
-                public void onSubtitleChange(@Nullable VideoSubtitles old, @Nullable VideoSubtitles videoSubtitles) {
+                public void onSubtitleChanged(@Nullable VideoSubtitles old, @Nullable VideoSubtitles videoSubtitles) {
                     if (old != videoSubtitles) {
-                        if (videoSubtitles != null) {
-                            videoView.showSubtitles(videoSubtitles.vttUrl, videoSubtitles.language);
-                        } else {
-                            videoView.removeSubtitles();
-                        }
+                        saveCurrentPosition();
+                        showProgress();
+                        updateVideo();
                     }
 
                     hideSettings();
                 }
 
                 @Override
-                public void onQualityChange(@NotNull VideoSettingsHelper.VideoMode old, @NotNull VideoSettingsHelper.VideoMode videoMode) {
+                public void onQualityChanged(@NotNull VideoSettingsHelper.VideoMode old, @NotNull VideoSettingsHelper.VideoMode videoMode) {
                     if (old != videoMode) {
                         String oldSourceString = getSourceString();
 
                         saveCurrentPosition();
+                        showProgress();
                         updateVideo();
 
                         LanalyticsUtil.trackVideoChangeQuality(item.id,
@@ -391,7 +405,7 @@ public class VideoHelper {
                             videoSettingsHelper.getCurrentSpeed().getSpeed(),
                             activity.getResources().getConfiguration().orientation,
                             getQualityString(old),
-                            getQualityString(videoMode),
+                            getCurrentQualityString(),
                             oldSourceString,
                             getSourceString());
                     }
@@ -400,9 +414,11 @@ public class VideoHelper {
                 }
 
                 @Override
-                public void onPlaybackSpeedChange(@NotNull PlaybackSpeedUtil old, @NotNull PlaybackSpeedUtil speed) {
+                public void onPlaybackSpeedChanged(@NotNull PlaybackSpeedUtil old, @NotNull PlaybackSpeedUtil speed) {
                     if (old != speed) {
                         videoView.setPlaybackSpeed(speed.getSpeed());
+
+                        applicationPreferences.setVideoPlaybackSpeed(speed);
 
                         LanalyticsUtil.trackVideoChangeSpeed(item.id,
                             course.id, module.id,
@@ -435,26 +451,37 @@ public class VideoHelper {
             }
         );
 
+        int connectivityStatus = NetworkUtil.getConnectivityStatus();
+
         if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video))) { // hd video download available
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
         } else if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video))) { // sd video download available
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
-        } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !appPreferences.isVideoQualityLimitedOnMobile()) {
+        } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !applicationPreferences.isVideoQualityLimitedOnMobile()) {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
         } else {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
         }
 
-        videoSettingsHelper.setCurrentSpeed(appPreferences.getVideoPlaybackSpeed());
+        videoSettingsHelper.setCurrentSpeed(applicationPreferences.getVideoPlaybackSpeed());
+
+        VideoSubtitles videoSubtitles = null;
+        for (VideoSubtitles v : video.subtitles) {
+            if (v.language.equals(applicationPreferences.getVideoSubtitlesLanguage())) {
+                videoSubtitles = v;
+            }
+        }
+        videoSettingsHelper.setCurrentVideoSubtitles(videoSubtitles);
 
         updateVideo();
     }
 
     private void updateVideo() {
+        viewVideoWarning.setVisibility(View.GONE);
+        viewOfflineHint.setVisibility(View.GONE);
+
         String stream;
         DownloadAsset.Course.Item videoAssetDownload;
-
-        viewVideoWarning.setVisibility(View.GONE);
 
         if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.HD) {
             stream = video.singleStream.hdUrl;
@@ -463,8 +490,6 @@ public class VideoHelper {
             stream = video.singleStream.sdUrl;
             videoAssetDownload = new DownloadAsset.Course.Item.VideoSD(item, video);
         }
-
-        viewOfflineHint.setVisibility(View.GONE);
 
         if (videoDownloadPresent(videoAssetDownload)) {
             setLocalVideoUri(videoAssetDownload);
@@ -477,22 +502,17 @@ public class VideoHelper {
             viewVideoWarning.setVisibility(View.VISIBLE);
             textVideoWarning.setText(activity.getString(R.string.video_notification_no_offline_video));
         }
-    }
 
-    private void showSettings(View view) {
-        Animation fadeIn = AnimationUtils.loadAnimation(activity, android.support.design.R.anim.abc_slide_in_bottom);
-        settingsContainer.startAnimation(fadeIn);
-        settingsContainer.setVisibility(View.VISIBLE);
-        settingsContainer.removeAllViews();
-        settingsContainer.addView(view);
-        settingsOpen = true;
-    }
+        VideoSubtitles currentSubtitles = videoSettingsHelper.getCurrentVideoSubtitles();
+        if (currentSubtitles != null) {
+            videoView.showSubtitles(currentSubtitles.vttUrl, currentSubtitles.language);
+            applicationPreferences.setVideoSubtitlesLanguage(currentSubtitles.language);
+        } else {
+            videoView.removeSubtitles();
+            applicationPreferences.setVideoSubtitlesLanguage(null);
+        }
 
-    private void hideSettings() {
-        Animation fadeOut = AnimationUtils.loadAnimation(activity, android.support.design.R.anim.abc_slide_out_bottom);
-        settingsContainer.startAnimation(fadeOut);
-        settingsContainer.setVisibility(View.GONE);
-        settingsOpen = false;
+        videoView.setPlaybackSpeed(videoSettingsHelper.getCurrentSpeed().getSpeed());
     }
 
     private boolean videoDownloadPresent(DownloadAsset.Course.Item item) {
