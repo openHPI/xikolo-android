@@ -229,6 +229,8 @@ public class VideoHelper {
 
         settingsButton.setOnClickListener(v -> showSettings(videoSettingsHelper.buildSettingsView()));
 
+        settingsButton.setOnClickListener(v -> showSettings(videoSettingsHelper.buildSettingsView()));
+
         buttonStepForward.setOnClickListener(v -> {
             show();
             stepForward();
@@ -525,6 +527,81 @@ public class VideoHelper {
 
         int connectivityStatus = NetworkUtil.getConnectivityStatus();
 
+        this.videoSettingsHelper = new VideoSettingsHelper(
+            activity,
+            subtitles,
+            new VideoSettingsHelper.OnSettingsChangeListener() {
+                @Override
+                public void onSubtitleChange(@Nullable SubtitleTrack old, @Nullable SubtitleTrack subtitleTrack) {
+                    if (old != subtitleTrack) {
+                        if (subtitleTrack != null) {
+                            videoView.showSubtitles(subtitleTrack.vttUrl, subtitleTrack.language);
+                        } else {
+                            videoView.removeSubtitles();
+                        }
+                    }
+
+                    hideSettings();
+                }
+
+                @Override
+                public void onQualityChange(@NotNull VideoSettingsHelper.VideoMode old, @NotNull VideoSettingsHelper.VideoMode videoMode) {
+                    if (old != videoMode) {
+                        String oldSourceString = getSourceString();
+
+                        saveCurrentPosition();
+                        updateVideo();
+
+                        LanalyticsUtil.trackVideoChangeQuality(item.id,
+                            course.id, module.id,
+                            getCurrentPosition(),
+                            videoSettingsHelper.getCurrentSpeed().getSpeed(),
+                            activity.getResources().getConfiguration().orientation,
+                            getQualityString(old),
+                            getQualityString(videoMode),
+                            oldSourceString,
+                            getSourceString());
+                    }
+
+                    hideSettings();
+                }
+
+                @Override
+                public void onPlaybackSpeedChange(@NotNull PlaybackSpeedUtil old, @NotNull PlaybackSpeedUtil speed) {
+                    if (old != speed) {
+                        videoView.setPlaybackSpeed(speed.getSpeed());
+
+                        LanalyticsUtil.trackVideoChangeSpeed(item.id,
+                            course.id, module.id,
+                            getCurrentPosition(),
+                            old.getSpeed(),
+                            speed.getSpeed(),
+                            activity.getResources().getConfiguration().orientation,
+                            getCurrentQualityString(),
+                            getSourceString());
+                    }
+
+                    hideSettings();
+                }
+            },
+            new VideoSettingsHelper.OnSettingsClickListener() {
+                @Override
+                public void onSubtitleClick() {
+                    showSettings(videoSettingsHelper.buildSubtitleView());
+                }
+
+                @Override
+                public void onPlaybackSpeedClick() {
+                    showSettings(videoSettingsHelper.buildPlaybackSpeedView());
+                }
+
+                @Override
+                public void onQualityClick() {
+                    showSettings(videoSettingsHelper.buildQualityView());
+                }
+            }
+        );
+
         if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video))) { // hd video download available
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
         } else if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video))) { // sd video download available
@@ -594,6 +671,7 @@ public class VideoHelper {
             viewVideoWarning.setVisibility(View.VISIBLE);
             textVideoWarning.setText(activity.getString(R.string.video_notification_no_offline_video));
         }
+    }
 
         VideoSubtitles currentSubtitles = videoSettingsHelper.getCurrentVideoSubtitles();
         if (currentSubtitles != null) {
