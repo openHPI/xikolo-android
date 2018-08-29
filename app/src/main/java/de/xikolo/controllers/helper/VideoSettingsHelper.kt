@@ -14,9 +14,14 @@ import de.xikolo.utils.PlaybackSpeedUtil
 import java.util.*
 
 class VideoSettingsHelper(private val context: Context, private val subtitles: List<SubtitleTrack>?, private val changeListener: OnSettingsChangeListener, private val clickListener: OnSettingsClickListener) {
+
+    enum class VideoMode {
+        SD, HD
+    }
+
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    var currentQuality: VideoHelper.VideoMode = VideoHelper.VideoMode.AUTO
+    var currentQuality: VideoMode = VideoMode.HD
     var currentSpeed: PlaybackSpeedUtil = PlaybackSpeedUtil.x10
     var currentSubtitleTrack: SubtitleTrack? = null
 
@@ -62,34 +67,23 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         list.addView(
             buildSettingsItem(
                 null,
-                VideoHelper.VideoMode.AUTO.toString(),
+                VideoMode.HD.toString(),
                 View.OnClickListener {
-                    changeListener.onQualityChange(currentQuality, VideoHelper.VideoMode.AUTO)
-                    currentQuality = VideoHelper.VideoMode.AUTO
+                    changeListener.onQualityChange(currentQuality, VideoMode.HD)
+                    currentQuality = VideoMode.HD
                 },
-                currentQuality == VideoHelper.VideoMode.AUTO
+                currentQuality == VideoMode.HD
             )
         )
         list.addView(
             buildSettingsItem(
                 null,
-                VideoHelper.VideoMode.HD.toString(),
+                VideoMode.SD.toString(),
                 View.OnClickListener {
-                    changeListener.onQualityChange(currentQuality, VideoHelper.VideoMode.HD)
-                    currentQuality = VideoHelper.VideoMode.HD
+                    changeListener.onQualityChange(currentQuality, VideoMode.SD)
+                    currentQuality = VideoMode.SD
                 },
-                currentQuality == VideoHelper.VideoMode.HD
-            )
-        )
-        list.addView(
-            buildSettingsItem(
-                null,
-                VideoHelper.VideoMode.SD.toString(),
-                View.OnClickListener {
-                    changeListener.onQualityChange(currentQuality, VideoHelper.VideoMode.SD)
-                    currentQuality = VideoHelper.VideoMode.SD
-                },
-                currentQuality == VideoHelper.VideoMode.SD
+                currentQuality == VideoMode.SD
             )
         )
 
@@ -204,7 +198,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     // also invoked when old value equal to new value
     interface OnSettingsChangeListener {
 
-        fun onQualityChange(old: VideoHelper.VideoMode, new: VideoHelper.VideoMode)
+        fun onQualityChange(old: VideoMode, new: VideoMode)
 
         fun onPlaybackSpeedChange(old: PlaybackSpeedUtil, new: PlaybackSpeedUtil)
 

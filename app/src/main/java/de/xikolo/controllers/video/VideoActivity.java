@@ -123,12 +123,12 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         videoHelper.setupVideo(course, section, item, video);
 
         LanalyticsUtil.trackVideoPlay(itemId,
-                courseId, sectionId,
-                video.progress,
-                videoHelper.getCurrentPlaybackSpeed().getSpeed(),
-                getResources().getConfiguration().orientation,
+            courseId, sectionId,
+            video.progress,
+            videoHelper.getCurrentPlaybackSpeed().getSpeed(),
+            getResources().getConfiguration().orientation,
             videoHelper.getCurrentQualityString(),
-                videoHelper.getSourceString());
+            videoHelper.getSourceString());
     }
 
     @Override
@@ -322,11 +322,11 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         updateVideoView(newConfig.orientation);
 
         LanalyticsUtil.trackVideoChangeOrientation(itemId, courseId, sectionId,
-                videoHelper.getCurrentPosition(),
-                videoHelper.getCurrentPlaybackSpeed().getSpeed(),
-                newConfig.orientation,
+            videoHelper.getCurrentPosition(),
+            videoHelper.getCurrentPlaybackSpeed().getSpeed(),
+            newConfig.orientation,
             videoHelper.getCurrentQualityString(),
-                videoHelper.getSourceString());
+            videoHelper.getSourceString());
     }
 
     @NonNull
