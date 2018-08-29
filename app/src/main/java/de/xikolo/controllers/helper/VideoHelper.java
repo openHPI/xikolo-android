@@ -14,10 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -310,6 +310,20 @@ public class VideoHelper {
         saveCurrentPosition();
     }
 
+    public void release() {
+        pause();
+        videoView.release();
+    }
+
+    public boolean handleBackPress() {
+        if (settingsOpen) {
+            hideSettings();
+            return false;
+        }
+        release();
+        return true;
+    }
+
     private void seekTo(int progress) {
         videoView.seekTo(progress);
         textCurrentTime.setText(getTimeString(progress));
@@ -383,14 +397,16 @@ public class VideoHelper {
         }
     }
 
-    public boolean handleBackPress() {
-        if (settingsOpen) {
-            hideSettings();
-            return false;
-        }
-        pause();
-        videoView.release();
-        return true;
+    public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
+        return videoSettingsHelper.getCurrentSpeed();
+    }
+
+    public int getCurrentPosition() {
+        return (int) videoView.getCurrentPosition();
+    }
+
+    public int getDuration() {
+        return (int) videoView.getDuration();
     }
 
     public void setupVideo(Course course, Section module, Item item, Video video) {
@@ -483,6 +499,81 @@ public class VideoHelper {
         );
 
         int connectivityStatus = NetworkUtil.getConnectivityStatus();
+
+        this.videoSettingsHelper = new VideoSettingsHelper(
+            activity,
+            subtitles,
+            new VideoSettingsHelper.OnSettingsChangeListener() {
+                @Override
+                public void onSubtitleChange(@Nullable SubtitleTrack old, @Nullable SubtitleTrack subtitleTrack) {
+                    if (old != subtitleTrack) {
+                        if (subtitleTrack != null) {
+                            videoView.showSubtitles(subtitleTrack.vttUrl, subtitleTrack.language);
+                        } else {
+                            videoView.removeSubtitles();
+                        }
+                    }
+
+                    hideSettings();
+                }
+
+                @Override
+                public void onQualityChange(@NotNull VideoSettingsHelper.VideoMode old, @NotNull VideoSettingsHelper.VideoMode videoMode) {
+                    if (old != videoMode) {
+                        String oldSourceString = getSourceString();
+
+                        saveCurrentPosition();
+                        updateVideo();
+
+                        LanalyticsUtil.trackVideoChangeQuality(item.id,
+                            course.id, module.id,
+                            getCurrentPosition(),
+                            videoSettingsHelper.getCurrentSpeed().getSpeed(),
+                            activity.getResources().getConfiguration().orientation,
+                            getQualityString(old),
+                            getQualityString(videoMode),
+                            oldSourceString,
+                            getSourceString());
+                    }
+
+                    hideSettings();
+                }
+
+                @Override
+                public void onPlaybackSpeedChange(@NotNull PlaybackSpeedUtil old, @NotNull PlaybackSpeedUtil speed) {
+                    if (old != speed) {
+                        videoView.setPlaybackSpeed(speed.getSpeed());
+
+                        LanalyticsUtil.trackVideoChangeSpeed(item.id,
+                            course.id, module.id,
+                            getCurrentPosition(),
+                            old.getSpeed(),
+                            speed.getSpeed(),
+                            activity.getResources().getConfiguration().orientation,
+                            getCurrentQualityString(),
+                            getSourceString());
+                    }
+
+                    hideSettings();
+                }
+            },
+            new VideoSettingsHelper.OnSettingsClickListener() {
+                @Override
+                public void onSubtitleClick() {
+                    showSettings(videoSettingsHelper.buildSubtitleView());
+                }
+
+                @Override
+                public void onPlaybackSpeedClick() {
+                    showSettings(videoSettingsHelper.buildPlaybackSpeedView());
+                }
+
+                @Override
+                public void onQualityClick() {
+                    showSettings(videoSettingsHelper.buildQualityView());
+                }
+            }
+        );
 
         if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video))) { // hd video download available
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
@@ -595,7 +686,7 @@ public class VideoHelper {
         } else return null;
     }
 
-    private String getQualityString(VideoSettingsHelper.VideoMode videoMode) {
+    public String getQualityString(VideoSettingsHelper.VideoMode videoMode) {
         return videoMode.name().toLowerCase();
     }
 
