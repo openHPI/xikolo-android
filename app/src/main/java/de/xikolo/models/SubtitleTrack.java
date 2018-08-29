@@ -61,7 +61,6 @@ public class SubtitleTrack extends RealmObject {
     @JsonApi(type = "subtitle-tracks")
     public static class JsonModel extends Resource implements RealmAdapter<SubtitleTrack> {
 
-        @Json(name = "src_lang")
         public String language;
 
         @Json(name = "created_by_machine")
