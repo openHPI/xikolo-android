@@ -2,20 +2,25 @@ package de.xikolo.controllers.helper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.github.rubensousa.previewseekbar.PreviewSeekBar;
+import com.github.rubensousa.previewseekbar.PreviewView;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -54,11 +59,13 @@ public class VideoHelper {
     @BindView(R.id.videoController) View videoController;
     @BindView(R.id.videoControls) View videoControls;
     @BindView(R.id.videoProgress) View videoProgress;
-    @BindView(R.id.videoSeekBar) SeekBar seekBar;
     @BindView(R.id.videoOverlay) View videoOverlay;
 
     @BindView(R.id.settingsContainer) LinearLayout settingsContainer;
     @BindView(R.id.buttonSettings) TextView settingsButton;
+
+    @BindView(R.id.videoSeekBar) PreviewSeekBar seekBar;
+    @BindView(R.id.videoSeekPreviewImage) ImageView previewImage;
 
     @BindView(R.id.btnPlay) CustomFontTextView buttonPlay;
     @BindView(R.id.btnStepForward) CustomFontTextView buttonStepForward;
@@ -89,6 +96,8 @@ public class VideoHelper {
     private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
 
     private boolean seekBarUpdaterIsRunning = false;
+    private HandlerThread seekBarPreviewThread;
+    private Handler seekBarPreviewHandler;
 
     private boolean userIsSeeking = false;
 
@@ -116,6 +125,10 @@ public class VideoHelper {
         });
 
         downloadManager = new DownloadManager(activity);
+
+        seekBarPreviewThread = new HandlerThread(TAG + "/seekbarpreview");
+        seekBarPreviewThread.start();
+        seekBarPreviewHandler = new Handler(seekBarPreviewThread.getLooper());
 
         setupView();
     }
@@ -223,25 +236,33 @@ public class VideoHelper {
             stepBackward();
         });
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            private int progress;
+        seekBar.setPreviewLoader(new com.github.rubensousa.previewseekbar.PreviewLoader() {
+            private static final int PREVIEW_INTERVAL = 50;
+
+            private long lastPreview = 0;
 
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    show();
-                    this.progress = progress;
-                    textCurrentTime.setText(getTimeString(progress));
+            public void loadPreview(long currentPosition, long max) {
+                if (System.currentTimeMillis() - lastPreview > PREVIEW_INTERVAL) {
+                    seekBarPreviewHandler.removeCallbacksAndMessages(null);
+                    seekBarPreviewHandler.postAtFrontOfQueue(() -> {
+                        Bitmap frame = videoView.getFrameAt(currentPosition);
+                        activity.runOnUiThread(() -> previewImage.setImageBitmap(frame));
+                        lastPreview = System.currentTimeMillis();
+                    });
                 }
             }
-
+        });
+        seekBar.addOnPreviewChangeListener(new PreviewView.OnPreviewChangeListener() {
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onStartPreview(PreviewView previewView, int progress) {
                 userIsSeeking = true;
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStopPreview(PreviewView previewView, int progress) {
+                seekBarPreviewHandler.removeCallbacksAndMessages(null);
+
                 LanalyticsUtil.trackVideoSeek(item.id,
                     course.id, module.id,
                     getCurrentPosition(),
@@ -253,6 +274,14 @@ public class VideoHelper {
 
                 userIsSeeking = false;
                 seekTo(progress);
+            }
+
+            @Override
+            public void onPreview(PreviewView previewView, int progress, boolean fromUser) {
+                if (fromUser) {
+                    show();
+                    textCurrentTime.setText(getTimeString(progress));
+                }
             }
         });
 
@@ -322,7 +351,13 @@ public class VideoHelper {
         saveCurrentPosition();
     }
 
-    private void seekTo(int progress) {
+    public void release() {
+        pause();
+        videoView.release();
+        seekBarPreviewThread.quit();
+    }
+
+    public void seekTo(int progress) {
         videoView.seekTo(progress);
         textCurrentTime.setText(getTimeString(progress));
         seekBar.setProgress(progress);
@@ -400,8 +435,7 @@ public class VideoHelper {
             hideSettings();
             return false;
         }
-        pause();
-        videoView.release();
+        release();
         return true;
     }
 
@@ -573,6 +607,7 @@ public class VideoHelper {
         );
 
         int connectivityStatus = NetworkUtil.getConnectivityStatus();
+        ApplicationPreferences appPreferences = new ApplicationPreferences();
 
         if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video))) { // hd video download available
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
@@ -634,6 +669,8 @@ public class VideoHelper {
         }
 
         videoView.setPlaybackSpeed(videoSettingsHelper.getCurrentSpeed().getSpeed());
+
+        seekBar.setPreviewEnabled(videoView.getPreviewAvailable());
     }
 
     private boolean videoDownloadPresent(DownloadAsset.Course.Item item) {

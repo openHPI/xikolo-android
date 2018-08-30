@@ -129,40 +129,52 @@
                 android:textSize="@dimen/btn_stepping_text_size"
                 app:customFont="materialdesign.ttf" />
 
-            <RelativeLayout
-                android:id="@+id/videoFooter"
-                android:layout_width="fill_parent"
-                android:layout_height="52dp"
+        <RelativeLayout
+            android:id="@+id/videoFooter"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/gradient_black_transparent_bottom"
+            android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/currentTime"
+                style="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/gradient_black_transparent_bottom"
-                android:paddingBottom="4dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="8dp"
+                android:text="--:--"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
 
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+            <FrameLayout
+                android:id="@+id/videoSeekPreviewLayout"
+                android:layout_width="160dp"
+                android:layout_height="90dp"
+                android:layout_above="@id/videoSeekBar">
 
-                    <TextView
-                        android:id="@+id/currentTime"
-                        style="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="8dp"
-                        android:text="--:--"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
+                <ImageView
+                    android:id="@+id/videoSeekPreviewImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/apptheme_second" />
 
-                    <SeekBar
-                        android:id="@+id/videoSeekBar"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingBottom="0dp"
-                        android:paddingTop="0dp" />
+            </FrameLayout>
+
+            <com.github.rubensousa.previewseekbar.PreviewSeekBar
+                android:id="@+id/videoSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/currentTime"
+                android:layout_toLeftOf="@id/totalTime"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp"
+                app:previewFrameLayout="@id/videoSeekPreviewLayout" />
 
                     <TextView
                         android:id="@+id/totalTime"

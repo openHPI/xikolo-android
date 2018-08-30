@@ -46,6 +46,7 @@ dependencies {
 
     // video
     implementation 'com.google.android.exoplayer:exoplayer:2.9.0'
+    implementation 'com.github.rubensousa:previewseekbar:2.0.0'
 
     // view binding
     def butterknifeVersion = '8.8.1'
