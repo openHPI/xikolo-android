@@ -227,7 +227,7 @@
     <string name="toast_successful_logout">Logged out successfully.</string>
     <string name="toast_file_already_downloaded">File already downloaded.</string>
     <string name="toast_no_external_write_access">No write access for %1$s.</string>
-    <string name="toast_no_pdf_viewer_found">No application to view PDF\'s found. Install one and try again.</string>
+    <string name="toast_no_file_viewer_found">No application to open this file found.</string>
 
     <!-- -->
     <string name="offline_mode">Offline Mode</string>

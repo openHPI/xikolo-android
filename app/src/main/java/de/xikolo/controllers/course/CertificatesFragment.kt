@@ -1,15 +1,15 @@
 package de.xikolo.controllers.course
 
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.widget.NestedScrollView
+import android.support.v4.widget.TextViewCompat
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.LinearLayout
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
-import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.base.LoadingStatePresenterFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
@@ -48,64 +48,54 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
     override fun showCertificates(course: Course, enrollment: Enrollment?) {
         container.removeAllViews()
 
-        var errorMessage: String = getString(R.string.course_certificate_not_achieved)
-        if (!course.isEnrolled) {
-            errorMessage = "" // No button will be shown
-        }
-
         activity?.let { activity ->
+            val downloadViewHelpers: MutableList<DownloadViewHelper> = ArrayList()
+
             if (course.certificates.confirmationOfParticipation.available) {
-                val confirmationOfParticipationDownloadView = DownloadViewHelper(
+                val dvh = DownloadViewHelper(
                     activity,
-                    DownloadAsset.Certificate.ConfirmationOfParticipation(enrollment?.certificates?.confirmationOfParticipationUrl, course),
+                    DownloadAsset.Certificate.ConfirmationOfParticipation(
+                        enrollment?.certificates?.confirmationOfParticipationUrl,
+                        course
+                    ),
                     getString(R.string.course_confirmation_of_participation),
                     String.format(getString(R.string.course_confirmation_of_participation_desc), course.certificates.confirmationOfParticipation.threshold),
-                    errorMessage
+                    getString(R.string.course_certificate_not_achieved)
                 )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    confirmationOfParticipationDownloadView.textFileName.setTextAppearance(R.style.TextAppearanceMedium)
-                } else {
-                    @Suppress("DEPRECATION")
-                    confirmationOfParticipationDownloadView.textFileName.setTextAppearance(App.getInstance(), R.style.TextAppearanceMedium)
-                }
-                confirmationOfParticipationDownloadView.openFileAsPdf()
-                container.addView(confirmationOfParticipationDownloadView.view)
+
+                downloadViewHelpers.add(dvh)
             }
 
             if (course.certificates.recordOfAchievement.available) {
-                val recordOfAchievementDownloadView = DownloadViewHelper(
+                val dvh = DownloadViewHelper(
                     activity,
                     DownloadAsset.Certificate.RecordOfAchievement(enrollment?.certificates?.recordOfAchievementUrl, course),
                     getString(R.string.course_record_of_achievement),
                     String.format(getString(R.string.course_record_of_achievement_desc), course.certificates.recordOfAchievement.threshold),
-                    errorMessage
+                    getString(R.string.course_certificate_not_achieved)
                 )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    recordOfAchievementDownloadView.textFileName.setTextAppearance(R.style.TextAppearanceMedium)
-                } else {
-                    @Suppress("DEPRECATION")
-                    recordOfAchievementDownloadView.textFileName.setTextAppearance(App.getInstance(), R.style.TextAppearanceMedium)
-                }
-                recordOfAchievementDownloadView.openFileAsPdf()
-                container.addView(recordOfAchievementDownloadView.view)
+
+                downloadViewHelpers.add(dvh)
             }
 
             if (course.certificates.qualifiedCertificate.available) {
-                val qualifiedCertificateDownloadView = DownloadViewHelper(
+                val dvh = DownloadViewHelper(
                     activity,
                     DownloadAsset.Certificate.QualifiedCertificate(enrollment?.certificates?.qualifiedCertificateUrl, course),
                     getString(R.string.course_qualified_certificate),
                     getString(R.string.course_qualified_certificate_desc),
-                    errorMessage
+                    getString(R.string.course_certificate_not_achieved)
                 )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    qualifiedCertificateDownloadView.textFileName.setTextAppearance(R.style.TextAppearanceMedium)
-                } else {
-                    @Suppress("DEPRECATION")
-                    qualifiedCertificateDownloadView.textFileName.setTextAppearance(App.getInstance(), R.style.TextAppearanceMedium)
+
+                downloadViewHelpers.add(dvh)
+            }
+
+            downloadViewHelpers.forEach { dvh ->
+                TextViewCompat.setTextAppearance(dvh.textFileName, R.style.TextAppearanceMedium)
+                if (!course.isEnrolled) {
+                    dvh.buttonDownloadStart.visibility = View.GONE
                 }
-                qualifiedCertificateDownloadView.openFileAsPdf()
-                container.addView(qualifiedCertificateDownloadView.view)
+                container.addView(dvh.view)
             }
         }
     }

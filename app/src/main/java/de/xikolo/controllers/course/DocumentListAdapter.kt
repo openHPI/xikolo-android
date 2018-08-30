@@ -51,7 +51,6 @@ class DocumentListAdapter(val activity: FragmentActivity) : RecyclerView.Adapter
                 DownloadAsset.Document(document, l),
                 String.format(activity.getString(R.string.document_lang), l.language)
             )
-            downloadViewHelper.openFileAsPdf()
             downloadViewHelper.textFileName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F)
             holder.downloadsLayout.addView(downloadViewHelper.view)
         }

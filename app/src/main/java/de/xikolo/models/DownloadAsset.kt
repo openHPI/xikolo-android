@@ -21,6 +21,8 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
     val filePath: String
         get() = fileFolder + File.separator + fileName
 
+    open val mimeType = "application/pdf"
+
     class Document(
         val document: de.xikolo.models.Document,
         documentLocalization: DocumentLocalization
@@ -75,16 +77,19 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
 
             class VideoSD(item: de.xikolo.models.Item, video: Video) : Item(video.singleStream.sdUrl, "video_sd_${item.id}.mp4", item, video) {
                 override val title = "Video (SD): " + item.title
+                override val mimeType = "video/mp4"
                 override val size = video.singleStream.sdSize.toLong()
             }
 
             class VideoHD(item: de.xikolo.models.Item, video: Video) : Item(video.singleStream.hdUrl, "video_hd_${item.id}.mp4", item, video) {
                 override val title = "Video (HD): " + item.title
+                override val mimeType = "video/mp4"
                 override val size = video.singleStream.hdSize.toLong()
             }
 
             class Audio(item: de.xikolo.models.Item, video: Video) : Item(video.audioUrl, "audio_${item.id}.mp3", item, video) {
                 override val title = "Audio: " + item.title
+                override val mimeType = "audio/mpeg"
                 override val size = video.transcriptSize.toLong()
             }
         }

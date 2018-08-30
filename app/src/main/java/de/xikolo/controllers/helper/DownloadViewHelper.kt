@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.support.annotation.StringRes
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.view.LayoutInflater
@@ -34,17 +35,14 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
- * When the url of the downloadAsset is null, the errorMessage is shown where the download button usually is and the UI will be disabled.
- * If errorMessage is null, the whole view will be hidden.
- * If errorMessage is an empty string, only the button will be hidden.
- * If the url is not null, errorMessage has no effect.
+ * When the url of the DownloadAsset's URL is null, the urlNotAvailableMessage is shown and the UI will be disabled.
  */
 class DownloadViewHelper(
     private val activity: FragmentActivity,
     private val downloadAsset: DownloadAsset,
     title: CharSequence? = null,
-    description: String? = null,
-    errorMessage: String? = null
+    description: CharSequence? = null,
+    urlNotAvailableMessage: CharSequence? = null
 ) {
 
     companion object {
@@ -159,8 +157,6 @@ class DownloadViewHelper(
             textDescription.visibility = View.GONE
         }
 
-        buttonOpenDownload.visibility = View.GONE
-
         size = downloadAsset.size
 
         url = downloadAsset.url
@@ -168,14 +164,26 @@ class DownloadViewHelper(
             view.isEnabled = false
             buttonDownloadStart.isEnabled = false
 
-            if (errorMessage != null) {
-                if (errorMessage != "") {
-                    buttonDownloadStart.text = errorMessage
-                } else {
-                    buttonDownloadStart.visibility = View.GONE
-                }
+            if (urlNotAvailableMessage != null) {
+                buttonDownloadStart.text = urlNotAvailableMessage
             } else {
-                view.visibility = View.GONE
+                buttonDownloadStart.text = activity.getString(R.string.not_available)
+            }
+        }
+
+        buttonOpenDownload.setOnClickListener { _ ->
+            val file = downloadManager.getDownloadFile(downloadAsset)
+            val target = Intent(Intent.ACTION_VIEW)
+            target.setDataAndType(FileProviderUtil.getUriForFile(file), downloadAsset.mimeType)
+            target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+            val intent = Intent.createChooser(target, null)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            try {
+                App.getInstance().startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                ToastUtil.show(R.string.toast_no_file_viewer_found)
             }
         }
 
@@ -305,34 +313,9 @@ class DownloadViewHelper(
         }
     }
 
-    fun openFileAsPdf(onClick: () -> Unit = {}) {
-        buttonOpenDownload.text = App.getInstance().resources.getText(R.string.open)
-        buttonOpenDownload.visibility = View.VISIBLE
-        buttonOpenDownload.setOnClickListener { _ ->
-            onClick.invoke()
-
-            val pdf = downloadManager.getDownloadFile(downloadAsset)
-            val target = Intent(Intent.ACTION_VIEW)
-            target.setDataAndType(FileProviderUtil.getUriForFile(pdf), "application/pdf")
-            target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-            target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-            val intent = Intent.createChooser(target, null)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            try {
-                App.getInstance().startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                ToastUtil.show(R.string.toast_no_pdf_viewer_found)
-            }
-        }
-    }
-
-    fun openFileAsVideo(onClick: () -> Unit = {}) {
-        buttonOpenDownload.text = App.getInstance().resources.getText(R.string.play)
-        buttonOpenDownload.visibility = View.VISIBLE
-        buttonOpenDownload.setOnClickListener { _ ->
-            onClick.invoke()
-        }
+    fun onOpenFileClick(@StringRes buttonText: Int, onClick: () -> Unit) {
+        buttonOpenDownload.text = activity.getString(buttonText)
+        buttonOpenDownload.setOnClickListener { onClick.invoke() }
     }
 
 }
