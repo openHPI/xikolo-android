@@ -14,37 +14,42 @@ enum class CourseArea(@StringRes val titleRes: Int) {
     DISCUSSIONS(R.string.tab_discussions),
     PROGRESS(R.string.tab_progress),
     COURSE_DETAILS(R.string.tab_course_details),
+    CERTIFICATES(R.string.tab_certificates),
     DOCUMENTS(R.string.tab_documents),
     ANNOUNCEMENTS(R.string.tab_announcements),
     RECAP(R.string.tab_recap);
 
-    val index: Int
-        get() = indexOf(this)
+    abstract class State {
 
-    companion object {
+        protected val areas: MutableList<CourseArea> = mutableListOf()
 
-        private val areas: MutableList<CourseArea> = mutableListOf()
-
-        init {
-            areas.add(LEARNINGS)
-            areas.add(DISCUSSIONS)
-            areas.add(PROGRESS)
-            areas.add(COURSE_DETAILS)
-            if (FeatureToggle.documents()) areas.add(DOCUMENTS)
-            areas.add(ANNOUNCEMENTS)
-            if (FeatureToggle.recapMode()) areas.add(RECAP)
-        }
-
-        @JvmStatic
         val size: Int
             get() = areas.size
 
-        @JvmStatic
         fun get(index: Int): CourseArea = areas[index]
 
-        @JvmStatic
         fun indexOf(area: CourseArea): Int = areas.indexOf(area)
 
+    }
+
+    object All : State() {
+        init {
+            areas.add(CourseArea.LEARNINGS)
+            areas.add(CourseArea.DISCUSSIONS)
+            areas.add(CourseArea.PROGRESS)
+            areas.add(CourseArea.COURSE_DETAILS)
+            areas.add(CourseArea.CERTIFICATES)
+            if (FeatureToggle.documents()) areas.add(CourseArea.DOCUMENTS)
+            areas.add(CourseArea.ANNOUNCEMENTS)
+            if (FeatureToggle.recapMode()) areas.add(CourseArea.RECAP)
+        }
+    }
+
+    object Locked : State() {
+        init {
+            areas.add(CourseArea.COURSE_DETAILS)
+            areas.add(CourseArea.CERTIFICATES)
+        }
     }
 
 }

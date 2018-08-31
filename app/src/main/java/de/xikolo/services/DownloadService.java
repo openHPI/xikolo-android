@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.xikolo.config.Config;
 import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.models.Download;
+import de.xikolo.network.ApiService;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.NotificationUtil;
 import okhttp3.OkHttpClient;
@@ -69,6 +70,7 @@ public class DownloadService extends Service {
 
         // Don't use HttpLoggingInterceptor, crashes with OutOfMemoryException!
         OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(ApiService.authenticationInterceptor)
                 .build();
         downloadClient = new DownloadManager.Builder()
                 .context(this)

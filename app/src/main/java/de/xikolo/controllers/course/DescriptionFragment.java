@@ -1,13 +1,11 @@
 package de.xikolo.controllers.course;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,24 +15,20 @@ import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
-import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.models.Course;
 import de.xikolo.presenters.base.PresenterFactory;
-import de.xikolo.presenters.course.CourseDetailsPresenter;
-import de.xikolo.presenters.course.CourseDetailsPresenterFactory;
-import de.xikolo.presenters.course.CourseDetailsView;
+import de.xikolo.presenters.course.DescriptionPresenter;
+import de.xikolo.presenters.course.DescriptionPresenterFactory;
+import de.xikolo.presenters.course.DescriptionView;
 import de.xikolo.utils.MarkdownUtil;
-import de.xikolo.utils.ToastUtil;
 
-public class CourseDetailsFragment extends LoadingStatePresenterFragment<CourseDetailsPresenter, CourseDetailsView> implements CourseDetailsView {
+public class DescriptionFragment extends LoadingStatePresenterFragment<DescriptionPresenter, DescriptionView> implements DescriptionView {
 
-    public static final String TAG = CourseDetailsFragment.class.getSimpleName();
+    public static final String TAG = DescriptionFragment.class.getSimpleName();
 
     @AutoBundleField String courseId;
 
-    @BindView(R.id.layout_header) FrameLayout layoutHeader;
-    @BindView(R.id.image_course) ImageView imageCourse;
-    @BindView(R.id.text_title) TextView textTitle;
+    @BindView(R.id.layout_header) ImageView imageView;
     @BindView(R.id.text_teacher) TextView textTeacher;
     @BindView(R.id.text_date) TextView textDate;
     @BindView(R.id.text_language) TextView textLanguage;
@@ -48,7 +42,7 @@ public class CourseDetailsFragment extends LoadingStatePresenterFragment<CourseD
 
     @Override
     public int getLayoutResource() {
-        return R.layout.content_course_details;
+        return R.layout.content_course_description;
     }
 
     @Override
@@ -69,11 +63,10 @@ public class CourseDetailsFragment extends LoadingStatePresenterFragment<CourseD
 
     @Override
     public void setupView(Course course) {
-        if (getActivity() instanceof CourseDetailsActivity) {
-            layoutHeader.setVisibility(View.GONE);
+        if (course.imageUrl != null) {
+            GlideApp.with(this).load(course.imageUrl).into(imageView);
         } else {
-            GlideApp.with(this).load(course.imageUrl).into(imageCourse);
-            textTitle.setText(course.title);
+            imageView.setVisibility(View.GONE);
         }
 
         textDate.setText(course.getFormattedDate());
@@ -87,42 +80,10 @@ public class CourseDetailsFragment extends LoadingStatePresenterFragment<CourseD
         }
     }
 
-    @Override
-    public void enterCourse(String courseId) {
-        getActivity().finish();
-        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(getActivity());
-        startActivity(intent);
-    }
-
-    @Override
-    public void openLogin() {
-        Intent intent = LoginActivityAutoBundle.builder().build(getActivity());
-        startActivity(intent);
-    }
-
-    public void onEnrollButtonClicked() {
-        if (presenter != null) {
-            presenter.enroll();
-        }
-    }
-
-    @Override
-    public void showCourseNotAccessibleToast() {
-        ToastUtil.show(R.string.btn_starts_soon);
-    }
-
-    @Override
-    public void hideEnrollButton() {
-        View button = getActivity().findViewById(R.id.button_enroll);
-        if (button != null) {
-            button.setVisibility(View.GONE);
-        }
-    }
-
     @NonNull
     @Override
-    protected PresenterFactory<CourseDetailsPresenter> getPresenterFactory() {
-        return new CourseDetailsPresenterFactory(courseId);
+    protected PresenterFactory<DescriptionPresenter> getPresenterFactory() {
+        return new DescriptionPresenterFactory(courseId);
     }
 
 }

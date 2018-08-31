@@ -20,7 +20,6 @@ import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.channels.ChannelDetailsActivityAutoBundle;
 import de.xikolo.controllers.course.CourseActivityAutoBundle;
-import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.models.Channel;
@@ -108,11 +107,7 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
 
     @Override
     public void showCourse(Course course) {
-        Intent intent;
-        if (course.isEnrolled())
-            intent = CourseActivityAutoBundle.builder().courseId(course.id).build(App.getInstance());
-        else
-            intent = CourseDetailsActivityAutoBundle.builder(course.id).build(App.getInstance());
+        Intent intent = CourseActivityAutoBundle.builder().courseId(course.id).build(App.getInstance());
         startActivity(intent);
     }
 

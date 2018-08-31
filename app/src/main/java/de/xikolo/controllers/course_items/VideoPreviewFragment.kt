@@ -58,9 +58,7 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
     @BindView(R.id.videoMetadata)
     lateinit var videoMetadata: ViewGroup
 
-    private var hdVideo: DownloadViewHelper? = null
-    private var sdVideo: DownloadViewHelper? = null
-    private var slides: DownloadViewHelper? = null
+    private var downloadViewHelpers: MutableList<DownloadViewHelper> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,31 +106,50 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
         textTitle.text = video.title
 
         linearLayoutDownloads.removeAllViews()
+        downloadViewHelpers.clear()
 
         activity?.let { activity ->
-            hdVideo = DownloadViewHelper(
-                activity,
-                DownloadAsset.Course.Item.VideoHD(item, video),
-                activity.getText(R.string.video_hd_as_mp4)
-            )
-            hdVideo?.openFileAsVideo { presenter.onPlayClicked() }
-            linearLayoutDownloads.addView(hdVideo?.view)
+            if (video.singleStream.hdUrl != null) {
+                val dvh = DownloadViewHelper(
+                    activity,
+                    DownloadAsset.Course.Item.VideoHD(item, video),
+                    activity.getText(R.string.video_hd_as_mp4)
+                )
+                dvh.onOpenFileClick(R.string.play) { presenter.onPlayClicked() }
+                linearLayoutDownloads.addView(dvh.view)
+                downloadViewHelpers.add(dvh)
+            }
 
-            sdVideo = DownloadViewHelper(
-                activity,
-                DownloadAsset.Course.Item.VideoSD(item, video),
-                activity.getText(R.string.video_sd_as_mp4)
-            )
-            sdVideo?.openFileAsVideo { presenter.onPlayClicked() }
-            linearLayoutDownloads.addView(sdVideo?.view)
+            if (video.singleStream.sdUrl != null) {
+                val dvh = DownloadViewHelper(
+                    activity,
+                    DownloadAsset.Course.Item.VideoSD(item, video),
+                    activity.getText(R.string.video_sd_as_mp4)
+                )
+                dvh.onOpenFileClick(R.string.play) { presenter.onPlayClicked() }
+                linearLayoutDownloads.addView(dvh.view)
+                downloadViewHelpers.add(dvh)
+            }
 
-            slides = DownloadViewHelper(
-                activity,
-                DownloadAsset.Course.Item.Slides(item, video),
-                activity.getText(R.string.slides_as_pdf)
-            )
-            slides?.openFileAsPdf()
-            linearLayoutDownloads.addView(slides?.view)
+            if (video.slidesUrl != null) {
+                val dvh = DownloadViewHelper(
+                    activity,
+                    DownloadAsset.Course.Item.Slides(item, video),
+                    activity.getText(R.string.slides_as_pdf)
+                )
+                linearLayoutDownloads.addView(dvh.view)
+                downloadViewHelpers.add(dvh)
+            }
+
+            if (video.transcriptUrl != null) {
+                val dvh = DownloadViewHelper(
+                    activity,
+                    DownloadAsset.Course.Item.Transcript(item, video),
+                    activity.getText(R.string.transcript_as_pdf)
+                )
+                linearLayoutDownloads.addView(dvh.view)
+                downloadViewHelpers.add(dvh)
+            }
         }
 
         val minutes = TimeUnit.SECONDS.toMinutes(video.duration.toLong())
@@ -171,9 +188,7 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
     override fun onDestroyView() {
         super.onDestroyView()
 
-        hdVideo?.onDestroy()
-        sdVideo?.onDestroy()
-        slides?.onDestroy()
+        downloadViewHelpers.forEach { it.onDestroy() }
     }
 
     override fun getPresenterFactory(): PresenterFactory<VideoPreviewPresenter> {

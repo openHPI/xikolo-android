@@ -64,6 +64,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
     public String policyUrl;
 
+    public CourseCertificates certificates;
+
     public boolean onDemand;
 
     public String enrollmentId;
@@ -85,12 +87,12 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
     public static Course find(String identifier) {
         Realm realm = Realm.getDefaultInstance();
         Course model = realm.where(Course.class)
-                .beginGroup()
-                    .equalTo("id", identifier)
-                    .or()
-                    .equalTo("slug", identifier)
-                .endGroup()
-                .findFirst();
+            .beginGroup()
+                .equalTo("id", identifier)
+                .or()
+                .equalTo("slug", identifier)
+            .endGroup()
+            .findFirst();
         if (model != null) model = realm.copyFromRealm(model);
         realm.close();
         return model;
@@ -214,8 +216,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         @Json(name = "policy_url")
         public String policyUrl;
 
-        @Json(name = "qualified_certificate_available")
-        public boolean qualifiedCertificateAvailable;
+        public CourseCertificates certificates;
 
         @Json(name = "on_demand")
         public boolean onDemand;
@@ -250,6 +251,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.external = external;
             course.externalUrl = externalUrl;
             course.policyUrl = policyUrl;
+            course.certificates = certificates;
             course.onDemand = onDemand;
 
             if (enrollment != null) {

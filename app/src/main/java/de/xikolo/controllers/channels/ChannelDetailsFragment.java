@@ -23,7 +23,6 @@ import de.xikolo.R;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.controllers.course.CourseActivityAutoBundle;
-import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.controllers.main.CourseListAdapter;
 import de.xikolo.models.Channel;
@@ -181,7 +180,7 @@ public class ChannelDetailsFragment extends LoadingStatePresenterFragment<Channe
 
     @Override
     public void enterCourseDetails(String courseId) {
-        Intent intent = CourseDetailsActivityAutoBundle.builder(courseId).build(App.getInstance());
+        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.getInstance());
         startActivity(intent);
     }
 

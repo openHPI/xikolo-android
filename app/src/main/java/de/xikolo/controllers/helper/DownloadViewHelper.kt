@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.support.annotation.StringRes
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.view.LayoutInflater
@@ -33,10 +34,15 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+/**
+ * When the url of the DownloadAsset's URL is null, the urlNotAvailableMessage is shown and the UI will be disabled.
+ */
 class DownloadViewHelper(
     private val activity: FragmentActivity,
     private val downloadAsset: DownloadAsset,
-    title: CharSequence? = null
+    title: CharSequence? = null,
+    description: CharSequence? = null,
+    urlNotAvailableMessage: CharSequence? = null
 ) {
 
     companion object {
@@ -53,6 +59,9 @@ class DownloadViewHelper(
 
     @BindView(R.id.textFileSize)
     lateinit var textFileSize: TextView
+
+    @BindView(R.id.textDescription)
+    lateinit var textDescription: TextView
 
     @BindView(R.id.downloadStartContainer)
     lateinit var viewDownloadStart: View
@@ -141,13 +150,41 @@ class DownloadViewHelper(
             textFileName.text = downloadAsset.title
         }
 
-        buttonOpenDownload.visibility = View.GONE
+        if (description != null) {
+            textDescription.text = description
+            textDescription.visibility = View.VISIBLE
+        } else {
+            textDescription.visibility = View.GONE
+        }
 
         size = downloadAsset.size
 
         url = downloadAsset.url
         if (url == null) {
-            view.visibility = View.GONE
+            view.isEnabled = false
+            buttonDownloadStart.isEnabled = false
+
+            if (urlNotAvailableMessage != null) {
+                buttonDownloadStart.text = urlNotAvailableMessage
+            } else {
+                buttonDownloadStart.text = activity.getString(R.string.not_available)
+            }
+        }
+
+        buttonOpenDownload.setOnClickListener { _ ->
+            val file = downloadManager.getDownloadFile(downloadAsset)
+            val target = Intent(Intent.ACTION_VIEW)
+            target.setDataAndType(FileProviderUtil.getUriForFile(file), downloadAsset.mimeType)
+            target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+            val intent = Intent.createChooser(target, null)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            try {
+                App.getInstance().startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                ToastUtil.show(R.string.toast_no_file_viewer_found)
+            }
         }
 
         EventBus.getDefault().register(this)
@@ -178,9 +215,9 @@ class DownloadViewHelper(
         }
 
         when {
-            downloadManager.downloadRunning(downloadAsset)   -> showRunningState()
-            downloadManager.downloadExists(downloadAsset)    -> showEndState()
-            else                                             -> showStartState()
+            downloadManager.downloadRunning(downloadAsset) -> showRunningState()
+            downloadManager.downloadExists(downloadAsset)  -> showEndState()
+            else                                           -> showStartState()
         }
 
     }
@@ -276,34 +313,9 @@ class DownloadViewHelper(
         }
     }
 
-    fun openFileAsPdf(onClick: () -> Unit = {}) {
-        buttonOpenDownload.text = App.getInstance().resources.getText(R.string.open)
-        buttonOpenDownload.visibility = View.VISIBLE
-        buttonOpenDownload.setOnClickListener { _ ->
-            onClick.invoke()
-
-            val pdf = downloadManager.getDownloadFile(downloadAsset)
-            val target = Intent(Intent.ACTION_VIEW)
-            target.setDataAndType(FileProviderUtil.getUriForFile(pdf), "application/pdf")
-            target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-            target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-            val intent = Intent.createChooser(target, null)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            try {
-                App.getInstance().startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                ToastUtil.show(R.string.toast_no_pdf_viewer_found)
-            }
-        }
-    }
-
-    fun openFileAsVideo(onClick: () -> Unit = {}) {
-        buttonOpenDownload.text = App.getInstance().resources.getText(R.string.play)
-        buttonOpenDownload.visibility = View.VISIBLE
-        buttonOpenDownload.setOnClickListener { _ ->
-            onClick.invoke()
-        }
+    fun onOpenFileClick(@StringRes buttonText: Int, onClick: () -> Unit) {
+        buttonOpenDownload.text = activity.getString(buttonText)
+        buttonOpenDownload.setOnClickListener { onClick.invoke() }
     }
 
 }

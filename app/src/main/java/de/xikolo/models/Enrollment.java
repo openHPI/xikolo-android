@@ -9,7 +9,6 @@ import moe.banana.jsonapi2.HasOne;
 import moe.banana.jsonapi2.JsonApi;
 import moe.banana.jsonapi2.Resource;
 
-
 public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.JsonModel> {
 
     @PrimaryKey
@@ -20,6 +19,8 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
     public boolean reactivated;
 
     public boolean proctored;
+
+    public EnrollmentCertificates certificates;
 
     public String courseId;
 
@@ -39,6 +40,13 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
         return model;
     }
 
+    public boolean anyCertificateAchieved() {
+        return (certificates != null
+            && (certificates.confirmationOfParticipationUrl != null
+            || certificates.recordOfAchievementUrl != null
+            || certificates.qualifiedCertificateUrl != null));
+    }
+
     @Override
     public JsonModel convertToJsonResource() {
         JsonModel model = new JsonModel();
@@ -46,6 +54,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
         model.completed = completed;
         model.proctored = proctored;
         model.reactivated = reactivated;
+        model.certificates = certificates;
 
         if (courseId != null) {
             model.course = new HasOne<>(new Course.JsonModel().getType(), courseId);
@@ -63,6 +72,8 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
         public boolean proctored;
 
+        public EnrollmentCertificates certificates;
+
         public HasOne<Course.JsonModel> course;
 
         @Override
@@ -72,6 +83,7 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
             enrollment.completed = completed;
             enrollment.reactivated = reactivated;
             enrollment.proctored = proctored;
+            enrollment.certificates = certificates;
 
             if (course != null) {
                 enrollment.courseId = course.get().getId();

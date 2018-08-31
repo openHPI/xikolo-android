@@ -41,24 +41,48 @@ public class RealmSchemaMigration implements RealmMigration {
             // This DB version only fixes the last one.
             if (!schema.contains("Document")) {
                 schema.create("Document")
-                        .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
-                        .addField("title", String.class)
-                        .addField("description", String.class)
-                        .addRealmListField("tags", String.class)
-                        .addField("isPublic", boolean.class)
-                        .addRealmListField("courseIds", String.class);
+                    .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+                    .addField("title", String.class)
+                    .addField("description", String.class)
+                    .addRealmListField("tags", String.class)
+                    .addField("isPublic", boolean.class)
+                    .addRealmListField("courseIds", String.class);
             }
 
             if (!schema.contains("DocumentLocalization")) {
                 schema.create("DocumentLocalization")
-                        .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
-                        .addField("title", String.class)
-                        .addField("description", String.class)
-                        .addField("language", String.class)
-                        .addField("revision", int.class)
-                        .addField("fileUrl", String.class)
-                        .addField("documentId", String.class);
+                    .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+                    .addField("title", String.class)
+                    .addField("description", String.class)
+                    .addField("language", String.class)
+                    .addField("revision", int.class)
+                    .addField("fileUrl", String.class)
+                    .addField("documentId", String.class);
             }
+
+            oldVersion++;
+        }
+
+        if (oldVersion == 4) {
+            schema.create("CourseCertificateDetails")
+                .addField("available", boolean.class)
+                .addField("threshold", double.class);
+
+            schema.create("CourseCertificates")
+                .addRealmObjectField("confirmationOfParticipationUrl", schema.get("CourseCertificateDetails"))
+                .addRealmObjectField("recordOfAchievementUrl", schema.get("CourseCertificateDetails"))
+                .addRealmObjectField("qualifiedCertificateUrl", schema.get("CourseCertificateDetails"));
+
+            schema.get("Course")
+                .addRealmObjectField("certificates", schema.get("CourseCertificates"));
+
+            schema.create("EnrollmentCertificates")
+                .addField("confirmationOfParticipationUrl", String.class)
+                .addField("recordOfAchievementUrl", String.class)
+                .addField("qualifiedCertificateUrl", String.class);
+
+            schema.get("Enrollment")
+                .addRealmObjectField("certificates", schema.get("EnrollmentCertificates"));
 
             oldVersion++;
         }

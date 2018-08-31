@@ -22,7 +22,6 @@ import java.util.List;
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.course.CourseActivityAutoBundle;
-import de.xikolo.controllers.course.CourseDetailsActivityAutoBundle;
 import de.xikolo.controllers.helper.CourseListFilter;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
@@ -146,7 +145,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
 
     @Override
     public void enterCourseDetails(String courseId) {
-        Intent intent = CourseDetailsActivityAutoBundle.builder(courseId).build(getActivity());
+        Intent intent = CourseActivityAutoBundle.builder().courseId(courseId).build(getActivity());
         startActivity(intent);
     }
 

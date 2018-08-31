@@ -10,6 +10,7 @@
     <string name="title_section_downloads">Downloads</string>
     <string name="title_section_settings">Settings</string>
     <string name="title_section_my_courses">My Courses</string>
+    <string name="title_section_certificates">Certificates</string>
     <string name="title_section_second_screen">Second Screen</string>
 
     <string name="title_section_channels">Channels</string>
@@ -42,6 +43,7 @@
     <string name="tab_discussions">Discussions</string>
     <string name="tab_progress">Progress</string>
     <string name="tab_course_details">Course details</string>
+    <string name="tab_certificates">Certificates</string>
     <string name="tab_announcements">Announcements</string>
     <string name="tab_documents">Documents</string>
     <string name="tab_recap">Recap</string>
@@ -164,6 +166,7 @@
     <string name="login_sso">SSO</string>
     <string name="login_sso_hint">SSO Login</string>
     <string name="ok">OK</string>
+    <string name="not_available">Not available</string>
 
     <string name="self_test_points">%1$.1f of %2$.1f self-test points</string>
     <string name="assignments_points">%1$.1f of %2$.1f assignment points</string>
@@ -175,6 +178,15 @@
     <string name="course_date_self_paced">Self-paced</string>
     <string name="course_date_beginning">Beginning %s</string>
 
+    <string name="course_qualified_certificate">Qualified Certificate</string>
+    <string name="course_record_of_achievement">Record of Achievement</string>
+    <string name="course_confirmation_of_participation">Confirmation of Participation</string>
+    <string name="course_qualified_certificate_desc">Gain a qualified certificate by booking it and gaining a record of achievement.</string>
+    <string name="course_record_of_achievement_desc">Gain a record of achievement by earning more than %1$.0f%% of the maximum number of points from all graded assignments.</string>
+    <string name="course_confirmation_of_participation_desc">Gain a confirmation of participation by completing at least %1$.0f%% of the course material.</string>
+    <string name="course_certificate_view">View</string>
+    <string name="course_certificate_not_achieved">Not yet achieved</string>
+
     <string name="document_lang">Language: %s</string>
 
     <!-- -->
@@ -182,6 +194,8 @@
     <string name="notification_no_network_summary">This content cannot by displayed without network connection.</string>
     <string name="notification_no_network_with_offline_mode_summary">Please update this content with enabled network connection. Afterwards, this content can be used offline.</string>
     <string name="notification_no_enrollments">Please enroll for courses</string>
+    <string name="notification_no_certificates">You do not have any certificates yet.</string>
+    <string name="notification_no_certificates_summary">How to get certificates is specified in the \'Certificates\' section of a course.</string>
     <string name="notification_not_enrolled">You are not enrolled for this course</string>
     <string name="notification_no_enrollments_summary">You enrolled for no courses yet.</string>
     <string name="notification_please_login">Login required</string>
@@ -213,7 +227,7 @@
     <string name="toast_successful_logout">Logged out successfully.</string>
     <string name="toast_file_already_downloaded">File already downloaded.</string>
     <string name="toast_no_external_write_access">No write access for %1$s.</string>
-    <string name="toast_no_pdf_viewer_found">No application to view PDF\'s found. Install one and try again.</string>
+    <string name="toast_no_file_viewer_found">No application to open this file found.</string>
 
     <!-- -->
     <string name="offline_mode">Offline Mode</string>

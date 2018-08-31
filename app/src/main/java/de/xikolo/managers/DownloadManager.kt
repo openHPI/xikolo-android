@@ -183,16 +183,30 @@ class DownloadManager(activity: FragmentActivity) {
         DownloadService.getInstance()?.isDownloading(url) == true
 
     fun downloadExists(downloadAsset: DownloadAsset): Boolean {
-        val file = File(downloadAsset.filePath)
-        return file.isFile && file.exists()
+        return getDownloadFile(downloadAsset) != null
     }
 
     fun getDownloadFile(downloadAsset: DownloadAsset): File? {
-        val file = File(downloadAsset.filePath)
+        val originalStorage: File = downloadAsset.storage
 
-        return if (file.isFile && file.exists()) {
-            file
-        } else null
+        downloadAsset.storage = StorageUtil.getInternalStorage(App.getInstance())
+        val internalFile = File(downloadAsset.filePath)
+        if(internalFile.exists() && internalFile.isFile) {
+            downloadAsset.storage = originalStorage
+            return internalFile
+        }
+
+        val sdcardStorage: File? = StorageUtil.getSdcardStorage(App.getInstance())
+        if(sdcardStorage != null) {
+            downloadAsset.storage = sdcardStorage
+            val sdcardFile = File(downloadAsset.filePath)
+            if (sdcardFile.exists() && sdcardFile.isFile) {
+                downloadAsset.storage = originalStorage
+                return sdcardFile
+            }
+        }
+
+        return null
     }
 
 }
