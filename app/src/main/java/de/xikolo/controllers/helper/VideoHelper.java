@@ -335,14 +335,12 @@ public class VideoHelper {
     }
 
     private void showSettings(View view) {
-        show(Integer.MAX_VALUE);
         settingsContainer.removeAllViews();
         settingsContainer.addView(view);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private void hideSettings() {
-        hide();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
