@@ -684,7 +684,7 @@ public class VideoHelper {
         } else return null;
     }
 
-    public String getQualityString(VideoSettingsHelper.VideoMode videoMode) {
+    private String getQualityString(VideoSettingsHelper.VideoMode videoMode) {
         return videoMode.name().toLowerCase();
     }
 
