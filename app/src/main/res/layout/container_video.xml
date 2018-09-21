@@ -1,5 +1,6 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/videoContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,6 +11,13 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center" />
 
+    <View
+        android:id="@+id/videoOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="@color/black" />
+
     <RelativeLayout
         android:id="@+id/videoController"
         android:layout_width="fill_parent"
@@ -19,7 +27,8 @@
             android:id="@+id/videoControls"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:ignore="UselessParent">
 
             <RelativeLayout
                 android:id="@+id/videoHeader"
@@ -82,55 +91,55 @@
 
             </RelativeLayout>
 
-        <de.xikolo.views.CustomFontTextView
-            android:id="@+id/btnStepBackward"
-            style="@style/TextDropShadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:layout_toLeftOf="@id/btnPlay"
-            android:text="@string/icon_step_backward"
-            android:textAlignment="center"
-            android:textColor="@color/video_overlay_button"
-            android:textSize="@dimen/btn_stepping_text_size"
-            app:customFont="materialdesign.ttf" />
+            <de.xikolo.views.CustomFontTextView
+                android:id="@+id/btnStepBackward"
+                style="@style/TextDropShadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@id/btnPlay"
+                android:text="@string/icon_step_backward"
+                android:textAlignment="center"
+                android:textColor="@color/video_overlay_button"
+                android:textSize="@dimen/btn_stepping_text_size"
+                app:customFont="materialdesign.ttf" />
 
-        <de.xikolo.views.CustomFontTextView
-            android:id="@+id/btnPlay"
-            style="@style/TextDropShadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/icon_play"
-            android:textAlignment="center"
-            android:textColor="@color/video_overlay_button"
-            android:textSize="@dimen/btn_play_text_size"
-            app:customFont="xikolo.ttf" />
+            <de.xikolo.views.CustomFontTextView
+                android:id="@+id/btnPlay"
+                style="@style/TextDropShadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/icon_play"
+                android:textAlignment="center"
+                android:textColor="@color/video_overlay_button"
+                android:textSize="@dimen/btn_play_text_size"
+                app:customFont="xikolo.ttf" />
 
-        <de.xikolo.views.CustomFontTextView
-            android:id="@+id/btnStepForward"
-            style="@style/TextDropShadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/btnPlay"
-            android:text="@string/icon_step_forward"
-            android:textAlignment="center"
-            android:textColor="@color/video_overlay_button"
-            android:textSize="@dimen/btn_stepping_text_size"
-            app:customFont="materialdesign.ttf" />
+            <de.xikolo.views.CustomFontTextView
+                android:id="@+id/btnStepForward"
+                style="@style/TextDropShadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@id/btnPlay"
+                android:text="@string/icon_step_forward"
+                android:textAlignment="center"
+                android:textColor="@color/video_overlay_button"
+                android:textSize="@dimen/btn_stepping_text_size"
+                app:customFont="materialdesign.ttf" />
 
-        <RelativeLayout
-            android:id="@+id/videoFooter"
-            android:layout_width="fill_parent"
-            android:layout_height="52dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/gradient_black_transparent_bottom"
-            android:paddingBottom="4dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            <RelativeLayout
+                android:id="@+id/videoFooter"
+                android:layout_width="fill_parent"
+                android:layout_height="52dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/gradient_black_transparent_bottom"
+                android:paddingBottom="4dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -184,16 +193,6 @@
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/settingsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-        </LinearLayout>
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -243,4 +242,15 @@
 
     </RelativeLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/settingsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:behavior_skipCollapsed="true"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

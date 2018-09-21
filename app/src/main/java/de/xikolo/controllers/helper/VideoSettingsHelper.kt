@@ -1,6 +1,10 @@
 package de.xikolo.controllers.helper
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
@@ -114,7 +118,18 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     }
 
     fun buildSubtitleView(): ViewGroup {
-        val list = buildSettingsPanel(context.getString(R.string.video_settings_subtitles))
+        val list = buildSettingsPanel(
+            context.getString(R.string.video_settings_subtitles),
+            context.getString(R.string.icon_settings),
+            View.OnClickListener {
+                val subtitleSettings =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                        Settings.ACTION_CAPTIONING_SETTINGS
+                    else
+                        Settings.ACTION_ACCESSIBILITY_SETTINGS
+                ContextCompat.startActivity(context, Intent(subtitleSettings), null)
+            }
+        )
 
         list.addView(
             buildSettingsItem(
@@ -151,6 +166,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         return list.parent as ViewGroup
     }
 
+    @SuppressLint("InflateParams")
     private fun buildSettingsPanel(title: String?): ViewGroup {
         val list = inflater
             .inflate(R.layout.content_settings, null)
@@ -166,6 +182,16 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         return list
     }
 
+    private fun buildSettingsPanel(title: String?, icon: String, iconClickListener: View.OnClickListener): ViewGroup {
+        val panel = buildSettingsPanel(title)
+        val iconView = panel.findViewById(R.id.content_settings_icon) as TextView
+        iconView.text = icon
+        iconView.setOnClickListener(iconClickListener)
+        iconView.visibility = View.VISIBLE
+        return panel
+    }
+
+    @SuppressLint("InflateParams")
     private fun buildSettingsItem(@StringRes icon: Int?, title: String, clickListener: View.OnClickListener, active: Boolean): ViewGroup {
         val item = inflater.inflate(R.layout.item_settings, null) as LinearLayout
 

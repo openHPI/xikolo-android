@@ -1,14 +1,15 @@
 package de.xikolo.controllers.helper;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -53,6 +54,7 @@ public class VideoHelper {
     @BindView(R.id.videoControls) View videoControls;
     @BindView(R.id.videoProgress) View videoProgress;
     @BindView(R.id.videoSeekBar) SeekBar seekBar;
+    @BindView(R.id.videoOverlay) View videoOverlay;
 
     @BindView(R.id.settingsContainer) LinearLayout settingsContainer;
     @BindView(R.id.buttonSettings) TextView settingsButton;
@@ -82,6 +84,8 @@ public class VideoHelper {
     private Runnable seekBarUpdater;
 
     private Handler handler = new MessageHandler(this);
+
+    private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
 
     private boolean seekBarUpdaterIsRunning = false;
 
@@ -252,6 +256,30 @@ public class VideoHelper {
         });
 
         buttonRetry.setOnClickListener(v -> updateVideo());
+
+        bottomSheetBehavior = BottomSheetBehavior.from(settingsContainer);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        settingsOpen = false;
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        videoControls.setVisibility(View.GONE);
+                        settingsOpen = true;
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                slideOffset = (slideOffset + 1) / 2f; // 0 if HIDDEN, 1 if EXPANDED
+                videoOverlay.setAlpha(slideOffset * 0.75f);
+                videoControls.setAlpha(1 - slideOffset);
+            }
+        });
     }
 
     public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
@@ -308,20 +336,14 @@ public class VideoHelper {
 
     private void showSettings(View view) {
         show(Integer.MAX_VALUE);
-        Animation fadeIn = AnimationUtils.loadAnimation(activity, android.support.design.R.anim.abc_slide_in_bottom);
-        settingsContainer.startAnimation(fadeIn);
-        settingsContainer.setVisibility(View.VISIBLE);
         settingsContainer.removeAllViews();
         settingsContainer.addView(view);
-        settingsOpen = true;
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private void hideSettings() {
         hide();
-        Animation fadeOut = AnimationUtils.loadAnimation(activity, android.support.design.R.anim.abc_slide_out_bottom);
-        settingsContainer.startAnimation(fadeOut);
-        settingsContainer.setVisibility(View.GONE);
-        settingsOpen = false;
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
     public void showProgress() {
@@ -564,7 +586,7 @@ public class VideoHelper {
         } else return null;
     }
 
-    public String getQualityString(VideoSettingsHelper.VideoMode videoMode) {
+    private String getQualityString(VideoSettingsHelper.VideoMode videoMode) {
         return videoMode.name().toLowerCase();
     }
 
