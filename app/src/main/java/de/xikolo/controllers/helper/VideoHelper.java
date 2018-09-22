@@ -264,6 +264,7 @@ public class VideoHelper {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
+                        hideSettings();
                         settingsOpen = false;
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
@@ -335,12 +336,14 @@ public class VideoHelper {
     }
 
     private void showSettings(View view) {
+        show(Integer.MAX_VALUE);
         settingsContainer.removeAllViews();
         settingsContainer.addView(view);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private void hideSettings() {
+        show();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 

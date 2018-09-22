@@ -1,6 +1,5 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/videoContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -27,8 +26,7 @@
             android:id="@+id/videoControls"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            tools:ignore="UselessParent">
+            android:visibility="gone">
 
             <RelativeLayout
                 android:id="@+id/videoHeader"
@@ -193,6 +191,21 @@
 
         </RelativeLayout>
 
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/settingsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:behavior_hideable="true"
+                app:behavior_skipCollapsed="true"
+                app:layout_behavior="android.support.design.widget.BottomSheetBehavior" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -242,15 +255,4 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/settingsContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:behavior_hideable="true"
-        app:behavior_skipCollapsed="true"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
-
-    </LinearLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>
