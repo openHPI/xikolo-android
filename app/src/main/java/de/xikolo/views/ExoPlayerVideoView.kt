@@ -151,11 +151,11 @@ open class ExoPlayerVideoView : PlayerView {
                 true
             } catch (e1: Exception) {
                 try {
-                    mediaMetadataRetriever?.setDataSource(uri.path)
+                    mediaMetadataRetriever?.setDataSource(uri.toString())
                     true
                 } catch (e2: Exception) {
                     try {
-                        mediaMetadataRetriever?.setDataSource(uri.path, HashMap<String, String>())
+                        mediaMetadataRetriever?.setDataSource(uri.toString(), HashMap<String, String>())
                         true
                     } catch (e3: Exception) {
                         false
