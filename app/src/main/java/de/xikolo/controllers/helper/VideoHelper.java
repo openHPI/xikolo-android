@@ -10,17 +10,18 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.github.rubensousa.previewseekbar.PreviewSeekBar;
 import com.github.rubensousa.previewseekbar.PreviewView;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -65,6 +66,7 @@ public class VideoHelper {
     @BindView(R.id.buttonSettings) TextView settingsButton;
 
     @BindView(R.id.videoSeekBar) PreviewSeekBar seekBar;
+    @BindView(R.id.videoSeekPreviewLayout) FrameLayout previewLayout;
     @BindView(R.id.videoSeekPreviewImage) ImageView previewImage;
 
     @BindView(R.id.btnPlay) CustomFontTextView buttonPlay;
@@ -236,6 +238,7 @@ public class VideoHelper {
             stepBackward();
         });
 
+        seekBar.attachPreviewFrameLayout(previewLayout);
         seekBar.setPreviewLoader(new com.github.rubensousa.previewseekbar.PreviewLoader() {
             private static final int PREVIEW_INTERVAL = 50;
 
@@ -607,7 +610,6 @@ public class VideoHelper {
         );
 
         int connectivityStatus = NetworkUtil.getConnectivityStatus();
-        ApplicationPreferences appPreferences = new ApplicationPreferences();
 
         if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video))) { // hd video download available
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);

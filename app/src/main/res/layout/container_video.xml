@@ -22,6 +22,22 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/settingsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:behavior_hideable="true"
+                app:behavior_skipCollapsed="true"
+                app:layout_behavior="android.support.design.widget.BottomSheetBehavior" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
         <RelativeLayout
             android:id="@+id/videoControls"
             android:layout_width="match_parent"
@@ -129,75 +145,77 @@
                 android:textSize="@dimen/btn_stepping_text_size"
                 app:customFont="materialdesign.ttf" />
 
-        <RelativeLayout
-            android:id="@+id/videoFooter"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/gradient_black_transparent_bottom"
-            android:paddingBottom="4dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
-
-            <TextView
-                android:id="@+id/currentTime"
-                style="bold"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/videoFooter"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                android:paddingRight="8dp"
-                android:text="--:--"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:layout_alignParentBottom="true" >
 
-            <FrameLayout
-                android:id="@+id/videoSeekPreviewLayout"
-                android:layout_width="160dp"
-                android:layout_height="90dp"
-                android:layout_above="@id/videoSeekBar">
-
-                <ImageView
-                    android:id="@+id/videoSeekPreviewImage"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/apptheme_second" />
+                    android:layout_height="52dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/gradient_black_transparent_bottom" />
 
-            </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/videoSeekPreviewLayout"
+                    android:layout_width="160dp"
+                    android:layout_height="90dp"
+                    android:layout_above="@id/videoSeekBar">
 
-            <com.github.rubensousa.previewseekbar.PreviewSeekBar
-                android:id="@+id/videoSeekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/currentTime"
-                android:layout_toLeftOf="@id/totalTime"
-                android:layout_alignParentBottom="true"
-                android:paddingBottom="0dp"
-                android:paddingTop="0dp"
-                app:previewFrameLayout="@id/videoSeekPreviewLayout" />
+                    <ImageView
+                        android:id="@+id/videoSeekPreviewImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/apptheme_second" />
 
-                    <TextView
-                        android:id="@+id/totalTime"
-                        style="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="8dp"
-                        android:text="--:--"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
+                </FrameLayout>
 
-                    <de.xikolo.views.CustomFontTextView
-                        android:id="@+id/buttonSettings"
-                        style="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="16dp"
-                        android:text="@string/icon_settings"
-                        android:textColor="@color/white"
-                        android:textSize="24sp"
-                        app:customFont="xikolo.ttf" />
+                <TextView
+                    android:id="@+id/currentTime"
+                    style="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:padding="8dp"
+                    android:text="--:--"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-                </LinearLayout>
+                <com.github.rubensousa.previewseekbar.PreviewSeekBar
+                    android:id="@+id/videoSeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toRightOf="@id/currentTime"
+                    android:layout_toLeftOf="@id/totalTime"
+                    android:padding="8dp"/>
+
+                <TextView
+                    android:id="@+id/totalTime"
+                    style="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@id/buttonSettings"
+                    android:padding="8dp"
+                    android:text="--:--"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <de.xikolo.views.CustomFontTextView
+                    android:id="@+id/buttonSettings"
+                    style="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="8dp"
+                    android:text="@string/icon_settings"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    app:customFont="xikolo.ttf" />
 
             </RelativeLayout>
 
