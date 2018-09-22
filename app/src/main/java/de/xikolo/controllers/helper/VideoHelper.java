@@ -240,18 +240,24 @@ public class VideoHelper {
 
         seekBar.attachPreviewFrameLayout(previewLayout);
         seekBar.setPreviewLoader(new com.github.rubensousa.previewseekbar.PreviewLoader() {
-            private static final int PREVIEW_INTERVAL = 50;
+            private static final int PREVIEW_INTERVAL = 100;
+            private static final int PREVIEW_POSITION_DIFFERENCE = 5000;
 
             private long lastPreview = 0;
+            private long lastPosition = -1;
 
             @Override
             public void loadPreview(long currentPosition, long max) {
-                if (System.currentTimeMillis() - lastPreview > PREVIEW_INTERVAL) {
+                if (System.currentTimeMillis() - lastPreview > PREVIEW_INTERVAL
+                    && (lastPosition < 0 || Math.abs(currentPosition - lastPosition) > PREVIEW_POSITION_DIFFERENCE)
+                    ) {
                     seekBarPreviewHandler.removeCallbacksAndMessages(null);
                     seekBarPreviewHandler.postAtFrontOfQueue(() -> {
-                        Bitmap frame = videoView.getFrameAt(currentPosition);
+                        final Bitmap frame = videoView.getFrameAt(currentPosition);
                         activity.runOnUiThread(() -> previewImage.setImageBitmap(frame));
+
                         lastPreview = System.currentTimeMillis();
+                        lastPosition = currentPosition;
                     });
                 }
             }
@@ -354,13 +360,13 @@ public class VideoHelper {
         saveCurrentPosition();
     }
 
-    public void release() {
+    private void release() {
         pause();
         videoView.release();
         seekBarPreviewThread.quit();
     }
 
-    public void seekTo(int progress) {
+    private void seekTo(int progress) {
         videoView.seekTo(progress);
         textCurrentTime.setText(getTimeString(progress));
         seekBar.setProgress(progress);
