@@ -3,7 +3,6 @@ package de.xikolo.controllers.helper;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.IntRange;
@@ -47,14 +46,6 @@ public class VideoHelper {
 
     private static final int VIDEO_STEPPING_DURATION = 10000;
 
-    private static final int PLAYBACK_PARAMS_SDK_LEVEL = 23;
-
-    private DownloadManager downloadManager;
-
-    private Activity activity;
-
-    private View videoContainer;
-
     @BindView(R.id.videoView) CustomSizeVideoView videoView;
     @BindView(R.id.videoController) View videoController;
     @BindView(R.id.videoProgress) View videoProgress;
@@ -67,12 +58,19 @@ public class VideoHelper {
 
     @BindView(R.id.currentTime) TextView textCurrentTime;
     @BindView(R.id.totalTime) TextView textTotalTime;
+
     @BindView(R.id.hdSwitch) CustomFontTextView textHdSwitch;
     @BindView(R.id.playbackSpeed) TextView textPlaybackSpeed;
-    @BindView(R.id.offlineHint) View viewOfflineHint;
 
+    @BindView(R.id.offlineHint) View viewOfflineHint;
     @BindView(R.id.videoWarning) View viewVideoWarning;
     @BindView(R.id.videoWarningText) TextView textVideoWarning;
+
+    private DownloadManager downloadManager;
+
+    private Activity activity;
+
+    private View videoContainer;
 
     private ControllerListener controllerListener;
 
@@ -136,9 +134,7 @@ public class VideoHelper {
 
                 seekTo(video.progress);
 
-                if (Build.VERSION.SDK_INT >= PLAYBACK_PARAMS_SDK_LEVEL) {
-                    setPlaybackSpeed(currentPlaybackSpeed);
-                }
+                setPlaybackSpeed(currentPlaybackSpeed);
 
                 isPlaying = true;
                 play();
@@ -299,29 +295,24 @@ public class VideoHelper {
             }
         });
 
-        if (Build.VERSION.SDK_INT >= PLAYBACK_PARAMS_SDK_LEVEL) {
-            textPlaybackSpeed.setVisibility(View.VISIBLE);
-            textPlaybackSpeed.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PlaybackSpeedUtil oldSpeed = currentPlaybackSpeed;
+        textPlaybackSpeed.setVisibility(View.VISIBLE);
+        textPlaybackSpeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlaybackSpeedUtil oldSpeed = currentPlaybackSpeed;
 
-                    togglePlaybackSpeed();
+                togglePlaybackSpeed();
 
-                    LanalyticsUtil.trackVideoChangeSpeed(item.id,
-                        course.id, module.id,
-                        getCurrentPosition(),
-                        oldSpeed.getSpeed(),
-                        currentPlaybackSpeed.getSpeed(),
-                        activity.getResources().getConfiguration().orientation,
-                        getQualityString(),
-                        getSourceString());
-                }
-            });
-        } else {
-            textPlaybackSpeed.setVisibility(View.GONE);
-            textPlaybackSpeed.setClickable(false);
-        }
+                LanalyticsUtil.trackVideoChangeSpeed(item.id,
+                    course.id, module.id,
+                    getCurrentPosition(),
+                    oldSpeed.getSpeed(),
+                    currentPlaybackSpeed.getSpeed(),
+                    activity.getResources().getConfiguration().orientation,
+                    getQualityString(),
+                    getSourceString());
+            }
+        });
 
         buttonRetry.setOnClickListener(v -> updateVideo(item, video));
     }
@@ -482,9 +473,7 @@ public class VideoHelper {
             videoMode = VideoMode.SD;
         }
 
-        if (Build.VERSION.SDK_INT >= PLAYBACK_PARAMS_SDK_LEVEL) {
-            currentPlaybackSpeed = appPreferences.getVideoPlaybackSpeed();
-        }
+        currentPlaybackSpeed = appPreferences.getVideoPlaybackSpeed();
 
         updateVideo(item, video);
     }

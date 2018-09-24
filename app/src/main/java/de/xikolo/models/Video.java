@@ -2,8 +2,11 @@ package de.xikolo.models;
 
 import com.squareup.moshi.Json;
 
+import java.util.List;
+
 import de.xikolo.models.base.RealmAdapter;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.JsonApi;
@@ -35,6 +38,8 @@ public class Video extends RealmObject {
     public int transcriptSize;
 
     public String thumbnailUrl;
+
+    public RealmList<VideoSubtitles> subtitles = new RealmList<>();
 
     // local field
     public int progress = 0;
@@ -88,6 +93,8 @@ public class Video extends RealmObject {
         @Json(name = "thumbnail_url")
         public String thumbnailUrl;
 
+        public List<VideoSubtitles> subtitles;
+
         @Override
         public Video convertToRealmObject() {
             Video video = new Video();
@@ -103,6 +110,7 @@ public class Video extends RealmObject {
             video.transcriptUrl = transcriptUrl;
             video.transcriptSize = transcriptSize;
             video.thumbnailUrl = thumbnailUrl;
+            video.subtitles.addAll(subtitles);
 
             return video;
         }

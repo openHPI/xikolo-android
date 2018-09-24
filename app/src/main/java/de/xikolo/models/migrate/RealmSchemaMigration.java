@@ -86,6 +86,18 @@ public class RealmSchemaMigration implements RealmMigration {
 
             oldVersion++;
         }
+
+        if (oldVersion == 5) {
+            schema.create("VideoSubtitles")
+                .addField("language", String.class)
+                .addField("createdByMachine", boolean.class)
+                .addField("vttUrl", String.class);
+
+            schema.get("Video")
+                .addRealmListField("subtitles", schema.get("VideoSubtitles"));
+
+            oldVersion++;
+        }
     }
 
 }

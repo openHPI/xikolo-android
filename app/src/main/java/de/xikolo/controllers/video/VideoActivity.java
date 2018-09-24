@@ -43,8 +43,6 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     public static final String TAG = VideoActivity.class.getSimpleName();
 
-    private VideoHelper videoHelper;
-
     @AutoBundleField String courseId;
     @AutoBundleField String sectionId;
     @AutoBundleField String itemId;
@@ -55,6 +53,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     @BindView(R.id.videoContainer) View videoContainer;
     @BindView(R.id.video_media_route_button) MediaRouteButton mediaRouteButton;
 
+    private VideoHelper videoHelper;
     private Video video;
 
     @Override
@@ -104,8 +103,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
             Configuration config = getResources().getConfiguration();
             mediaRouteButton.setVisibility(CastUtil.isAvailable()
-                    && config.orientation == Configuration.ORIENTATION_LANDSCAPE
-                    ? View.VISIBLE : View.GONE);
+                && config.orientation == Configuration.ORIENTATION_LANDSCAPE
+                ? View.VISIBLE : View.GONE);
         }
 
         hideSystemBars();
@@ -124,12 +123,12 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         videoHelper.setupVideo(course, section, item, video);
 
         LanalyticsUtil.trackVideoPlay(itemId,
-                courseId, sectionId,
-                video.progress,
-                videoHelper.getCurrentPlaybackSpeed().getSpeed(),
-                getResources().getConfiguration().orientation,
-                videoHelper.getQualityString(),
-                videoHelper.getSourceString());
+            courseId, sectionId,
+            video.progress,
+            videoHelper.getCurrentPlaybackSpeed().getSpeed(),
+            getResources().getConfiguration().orientation,
+            videoHelper.getQualityString(),
+            videoHelper.getSourceString());
     }
 
     @Override
@@ -140,13 +139,13 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             if (mediaRouteButton != null) {
                 Configuration config = getResources().getConfiguration();
                 mediaRouteButton.setVisibility(config.orientation == Configuration.ORIENTATION_LANDSCAPE
-                        ? View.VISIBLE : View.GONE);
+                    ? View.VISIBLE : View.GONE);
             }
         }
 
         if (newState == CastState.CONNECTED && videoHelper != null) {
             LanalyticsUtil.trackVideoPlay(itemId, courseId, sectionId, videoHelper.getCurrentPosition(), 1.0f,
-                    Configuration.ORIENTATION_LANDSCAPE, "hd", "cast");
+                Configuration.ORIENTATION_LANDSCAPE, "hd", "cast");
 
             videoHelper.pause();
             CastUtil.loadMedia(this, video, true);
@@ -165,7 +164,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
                 if (mediaRouteButton != null) {
                     mediaRouteButton.setVisibility(CastUtil.isAvailable()
-                            ? View.VISIBLE : View.GONE);
+                        ? View.VISIBLE : View.GONE);
                 }
 
                 Display display = getWindowManager().getDefaultDisplay();
@@ -191,7 +190,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                 int paddingRight;
                 if (Build.VERSION.SDK_INT >= 25) {
                     int rotation = getWindowManager().getDefaultDisplay().getRotation();
-                    paddingLeft = rotation == Surface.ROTATION_270 ? size.x - displaymetrics.widthPixels: 0;
+                    paddingLeft = rotation == Surface.ROTATION_270 ? size.x - displaymetrics.widthPixels : 0;
                     paddingRight = rotation == Surface.ROTATION_90 ? size.x - displaymetrics.widthPixels : 0;
                 } else {
                     paddingLeft = 0;
@@ -199,10 +198,10 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                 }
 
                 videoHelper.getControllerView().setPadding(
-                        paddingLeft,
-                        videoOffset > statusBarHeight ? videoOffset : statusBarHeight,
-                        paddingRight,
-                        videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
+                    paddingLeft,
+                    videoOffset > statusBarHeight ? videoOffset : statusBarHeight,
+                    paddingRight,
+                    videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
 
                 videoMetadataView.setVisibility(View.GONE);
             } else { // Portrait
@@ -246,14 +245,14 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (Build.VERSION.SDK_INT >= 17) {
                 uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE// API 16
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // API 16
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
-                        | View.SYSTEM_UI_FLAG_LOW_PROFILE // API 14
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN; // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // API 16
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
+                    | View.SYSTEM_UI_FLAG_LOW_PROFILE // API 14
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN; // API 16
             } else {
                 uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
-                        | View.SYSTEM_UI_FLAG_LOW_PROFILE; // API 14
+                    | View.SYSTEM_UI_FLAG_LOW_PROFILE; // API 14
             }
         } else {
             uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
@@ -268,8 +267,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (Build.VERSION.SDK_INT >= 17) {
                 uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE // API 16
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN; // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN; // API 16
             } else {
                 uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
             }
@@ -317,11 +316,11 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         updateVideoView(newConfig.orientation);
 
         LanalyticsUtil.trackVideoChangeOrientation(itemId, courseId, sectionId,
-                videoHelper.getCurrentPosition(),
-                videoHelper.getCurrentPlaybackSpeed().getSpeed(),
-                newConfig.orientation,
-                videoHelper.getQualityString(),
-                videoHelper.getSourceString());
+            videoHelper.getCurrentPosition(),
+            videoHelper.getCurrentPlaybackSpeed().getSpeed(),
+            newConfig.orientation,
+            videoHelper.getQualityString(),
+            videoHelper.getSourceString());
     }
 
     @NonNull
@@ -329,5 +328,4 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     protected PresenterFactory<VideoPresenter> getPresenterFactory() {
         return new VideoPresenterFactory(courseId, sectionId, itemId, videoId);
     }
-
 }
