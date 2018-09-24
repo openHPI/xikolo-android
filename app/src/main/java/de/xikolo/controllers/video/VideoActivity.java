@@ -16,6 +16,8 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.cast.framework.CastButtonFactory;
@@ -30,6 +32,7 @@ import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
+import de.xikolo.models.VideoSubtitles;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.video.VideoPresenter;
 import de.xikolo.presenters.video.VideoPresenterFactory;
@@ -37,6 +40,7 @@ import de.xikolo.presenters.video.VideoView;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
+import de.xikolo.utils.MarkdownUtil;
 import de.xikolo.utils.PlayServicesUtil;
 
 public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoView> implements VideoView {
@@ -50,6 +54,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @BindView(R.id.videoMetadata) View videoMetadataView;
     @BindView(R.id.textTitle) TextView videoTitleText;
+    @BindView(R.id.textDescription) TextView videoDescriptionText;
+    @BindView(R.id.textSubtitles) TextView videoSubtitlesText;
     @BindView(R.id.videoContainer) View videoContainer;
     @BindView(R.id.video_media_route_button) MediaRouteButton mediaRouteButton;
 
@@ -63,7 +69,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         setContentView(R.layout.activity_video);
         setupActionBar();
         enableOfflineModeToolbar(false);
-        setColorScheme(R.color.black, R.color.black);
+        setColorScheme(R.color.transparent, R.color.black);
         actionBar.setTitle("");
         actionBar.setSubtitle("");
 
@@ -101,6 +107,10 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
         hideSystemBars();
 
+        FrameLayout.LayoutParams p = (FrameLayout.LayoutParams) ((RelativeLayout) videoContainer.getParent()).getLayoutParams();
+        p.topMargin = -AndroidDimenUtil.getActionBarHeight();
+
+
         updateVideoView(getResources().getConfiguration().orientation);
     }
 
@@ -110,6 +120,21 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
         if (videoTitleText != null) {
             videoTitleText.setText(item.title);
+        }
+
+        if (videoDescriptionText != null && video.summary != null) {
+            MarkdownUtil.formatAndSet(video.summary, videoDescriptionText);
+            videoSubtitlesText.setVisibility(View.VISIBLE);
+        }
+
+        if (videoSubtitlesText != null && video.subtitles != null && video.subtitles.size() > 0) {
+            StringBuilder text = new StringBuilder(getString(R.string.video_settings_subtitles) + ": ");
+            for (VideoSubtitles subtitles : video.subtitles) {
+                text.append(subtitles.language).append(", ");
+            }
+            text.delete(text.length() - 2, text.length());
+            videoSubtitlesText.setText(text);
+            videoSubtitlesText.setVisibility(View.VISIBLE);
         }
 
         videoHelper.setupVideo(course, section, item, video);
