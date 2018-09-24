@@ -166,7 +166,7 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
         presenter.unenroll()
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         adapter?.getItem(viewPager.currentItem)?.onActivityResult(requestCode, resultCode, data)
     }
 

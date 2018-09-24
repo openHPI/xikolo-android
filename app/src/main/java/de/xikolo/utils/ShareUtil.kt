@@ -56,8 +56,8 @@ object ShareUtil {
 class ShareBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        intent?.let {
-            val packageName = intent.extras.getParcelable<ComponentName>("android.intent.extra.CHOSEN_COMPONENT").packageName
+        intent?.extras?.let { bundle ->
+            val packageName = bundle.getParcelable<ComponentName>("android.intent.extra.CHOSEN_COMPONENT")?.packageName
             val pm = context?.packageManager
             val ai: ApplicationInfo? = try {
                 pm?.getApplicationInfo(packageName, 0)
@@ -66,10 +66,12 @@ class ShareBroadcastReceiver : BroadcastReceiver() {
             }
             val applicationName = if (ai != null) pm?.getApplicationLabel(ai).toString() else packageName
 
-            LanalyticsUtil.trackShareCourseLink(
-                intent.extras.getString("course_id"),
-                applicationName
-            )
+            bundle.getString("course_id")?.let { courseId ->
+                LanalyticsUtil.trackShareCourseLink(
+                    courseId,
+                    applicationName
+                )
+            }
         }
     }
 
