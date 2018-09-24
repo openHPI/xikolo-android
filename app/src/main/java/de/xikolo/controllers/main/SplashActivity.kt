@@ -12,7 +12,6 @@ import de.xikolo.controllers.dialogs.*
 import de.xikolo.jobs.CheckHealthJob
 import de.xikolo.jobs.base.RequestJobCallback
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.DateUtil
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
 import java.io.File
@@ -93,40 +92,13 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            when {
-                DateUtil.isPast("2018-07-15T00:00:00.000") && !ApplicationPreferences().firstAndroid4DeprecationWarningShown -> {
-                    val dialog = Android4DeprecatedDialog()
-                    dialog.listener = object : Android4DeprecatedDialog.Listener {
-                        override fun onConfirmed() {
-                            CheckHealthJob(healthCheckCallback).run()
-                        }
-                    }
-                    showDialog(dialog, Android4DeprecatedDialog.TAG)
-                    ApplicationPreferences().firstAndroid4DeprecationWarningShown = true
-                }
-                DateUtil.isPast("2018-08-15T00:00:00.000") && !ApplicationPreferences().secondAndroid4DeprecationWarningShown -> {
-                    val dialog = Android4DeprecatedDialog()
-                    dialog.listener = object : Android4DeprecatedDialog.Listener {
-                        override fun onConfirmed() {
-                            CheckHealthJob(healthCheckCallback).run()
-                        }
-                    }
-                    showDialog(dialog, Android4DeprecatedDialog.TAG)
-                    ApplicationPreferences().secondAndroid4DeprecationWarningShown = true
-                }
-                DateUtil.isPast("2018-08-31T00:00:00.000") -> {
-                    val dialog = Android4UnsupportedDialog()
-                    dialog.listener = object : Android4UnsupportedDialog.Listener {
-                        override fun onConfirmed() {
-                            closeApp()
-                        }
-                    }
-                    showDialog(dialog, Android4DeprecatedDialog.TAG)
-                }
-                else -> {
-                    migrateStorage()
+            val dialog = Android4UnsupportedDialog()
+            dialog.listener = object : Android4UnsupportedDialog.Listener {
+                override fun onConfirmed() {
+                    closeApp()
                 }
             }
+            showDialog(dialog, Android4UnsupportedDialog.TAG)
         } else {
             migrateStorage()
         }
