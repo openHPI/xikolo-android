@@ -1,6 +1,6 @@
 package de.xikolo.presenters.base;
 
-import de.xikolo.jobs.base.RequestJobCallback;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 
 public abstract class LoadingStatePresenter<V extends LoadingStateView> extends Presenter<V> {
 

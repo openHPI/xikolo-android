@@ -2,9 +2,9 @@ package de.xikolo.managers
 
 import de.xikolo.App
 import de.xikolo.events.LogoutEvent
-import de.xikolo.jobs.CreateAccessTokenJob
-import de.xikolo.jobs.GetUserWithProfileJob
-import de.xikolo.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.CreateAccessTokenJob
+import de.xikolo.network.jobs.GetUserWithProfileJob
+import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.models.User
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.storages.UserStorage

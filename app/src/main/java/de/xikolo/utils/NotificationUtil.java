@@ -19,7 +19,7 @@ import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controllers.downloads.DownloadsActivity;
 import de.xikolo.controllers.main.MainActivity;
-import de.xikolo.controllers.second_screen.SecondScreenActivity;
+import de.xikolo.controllers.secondscreen.SecondScreenActivity;
 import de.xikolo.models.Download;
 import de.xikolo.receivers.CancelDownloadsReceiver;
 import de.xikolo.receivers.NotificationDeletedReceiver;

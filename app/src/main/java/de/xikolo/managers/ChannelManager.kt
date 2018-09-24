@@ -1,8 +1,8 @@
 package de.xikolo.managers
 
-import de.xikolo.jobs.GetChannelWithCoursesJob
-import de.xikolo.jobs.ListChannelsWithCoursesJob
-import de.xikolo.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.GetChannelWithCoursesJob
+import de.xikolo.network.jobs.ListChannelsWithCoursesJob
+import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.models.Channel
 import io.realm.Realm
 import io.realm.RealmChangeListener

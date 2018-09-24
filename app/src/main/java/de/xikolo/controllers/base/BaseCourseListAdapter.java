@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.models.Course;
-import de.xikolo.models.base.SectionList;
+import de.xikolo.utils.SectionList;
 
 public abstract class BaseCourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

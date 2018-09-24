@@ -5,7 +5,7 @@ import org.greenrobot.eventbus.EventBus;
 import de.xikolo.BuildConfig;
 import de.xikolo.config.BuildFlavor;
 import de.xikolo.events.LoginEvent;
-import de.xikolo.jobs.base.RequestJobCallback;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.managers.UserManager;
 import de.xikolo.presenters.base.Presenter;
 import de.xikolo.storages.UserStorage;

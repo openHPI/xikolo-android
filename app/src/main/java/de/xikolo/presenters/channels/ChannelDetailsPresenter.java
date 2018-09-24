@@ -11,7 +11,7 @@ import de.xikolo.managers.ChannelManager;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Channel;
 import de.xikolo.models.Course;
-import de.xikolo.models.base.SectionList;
+import de.xikolo.utils.SectionList;
 import de.xikolo.presenters.base.BaseCourseListPresenter;
 import io.realm.Realm;
 import io.realm.RealmResults;

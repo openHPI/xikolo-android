@@ -9,8 +9,8 @@ import android.support.v4.app.DialogFragment
 import android.support.v7.app.AppCompatActivity
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.*
-import de.xikolo.jobs.CheckHealthJob
-import de.xikolo.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.CheckHealthJob
+import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil

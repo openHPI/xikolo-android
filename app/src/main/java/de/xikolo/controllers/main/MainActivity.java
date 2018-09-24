@@ -18,7 +18,7 @@ import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.controllers.downloads.DownloadsActivity;
 import de.xikolo.controllers.helper.CourseListFilter;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
-import de.xikolo.controllers.second_screen.SecondScreenActivity;
+import de.xikolo.controllers.secondscreen.SecondScreenActivity;
 import de.xikolo.controllers.settings.SettingsActivity;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;

@@ -18,7 +18,7 @@ import java.util.List;
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
-import de.xikolo.controllers.course_items.CourseItemsActivityAutoBundle;
+import de.xikolo.controllers.section.CourseItemsActivityAutoBundle;
 import de.xikolo.controllers.helper.SectionDownloadHelper;
 import de.xikolo.models.Course;
 import de.xikolo.models.Section;

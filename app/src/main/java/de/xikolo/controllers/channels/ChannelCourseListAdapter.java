@@ -20,7 +20,7 @@ import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseCourseListAdapter;
 import de.xikolo.controllers.main.CourseListAdapter;
 import de.xikolo.models.Course;
-import de.xikolo.models.base.SectionList;
+import de.xikolo.utils.SectionList;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.MarkdownUtil;
 

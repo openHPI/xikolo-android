@@ -1,6 +1,6 @@
 package de.xikolo.presenters.main;
 
-import de.xikolo.jobs.base.RequestJobCallback;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Profile;

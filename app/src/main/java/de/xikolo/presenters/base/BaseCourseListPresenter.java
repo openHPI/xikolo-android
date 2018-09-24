@@ -6,14 +6,14 @@ import de.xikolo.App;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.config.BuildFlavor;
-import de.xikolo.jobs.base.RequestJobCallback;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
-import de.xikolo.models.base.SectionList;
+import de.xikolo.utils.SectionList;
 import io.realm.Realm;
 
-import static de.xikolo.jobs.base.RequestJobCallback.ErrorCode.NO_NETWORK;
+import static de.xikolo.network.jobs.base.RequestJobCallback.ErrorCode.NO_NETWORK;
 
 public abstract class BaseCourseListPresenter<V extends BaseCourseListView> extends LoadingStatePresenter<V> {
 

@@ -9,7 +9,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.models.base.SectionList
+import de.xikolo.utils.SectionList
 import de.xikolo.utils.FileUtil
 import java.io.File
 
@@ -21,7 +21,8 @@ class DownloadsAdapter(private val callback: OnDeleteButtonClickedListener) : Re
         private const val ITEM_VIEW_TYPE_ITEM = 1
     }
 
-    private val sectionList: SectionList<String, List<FolderItem>> = SectionList()
+    private val sectionList: SectionList<String, List<FolderItem>> =
+        SectionList()
 
     fun addItem(header: String, folder: List<FolderItem>) {
         if (folder.isNotEmpty()) {

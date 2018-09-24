@@ -27,7 +27,7 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.controllers.main.CourseListAdapter;
 import de.xikolo.models.Channel;
 import de.xikolo.models.Course;
-import de.xikolo.models.base.SectionList;
+import de.xikolo.utils.SectionList;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.channels.ChannelDetailsPresenter;
 import de.xikolo.presenters.channels.ChannelDetailsPresenterFactory;

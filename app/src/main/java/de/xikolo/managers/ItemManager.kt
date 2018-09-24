@@ -1,7 +1,7 @@
 package de.xikolo.managers
 
-import de.xikolo.jobs.*
-import de.xikolo.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.*
+import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.models.Item
 import de.xikolo.models.RichText
 import de.xikolo.models.Video

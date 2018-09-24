@@ -3,7 +3,7 @@ package de.xikolo.presenters.base;
 import java.util.List;
 
 import de.xikolo.models.Course;
-import de.xikolo.models.base.SectionList;
+import de.xikolo.utils.SectionList;
 
 public interface BaseCourseListView extends LoadingStateView {
 

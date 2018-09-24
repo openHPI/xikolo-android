@@ -27,7 +27,7 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.models.Course;
-import de.xikolo.models.base.SectionList;
+import de.xikolo.utils.SectionList;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.main.CourseListFilterAllPresenterFactory;
 import de.xikolo.presenters.main.CourseListFilterMyPresenterFactory;

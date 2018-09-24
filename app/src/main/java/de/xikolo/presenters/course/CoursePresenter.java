@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import com.crashlytics.android.Crashlytics;
 
 import de.xikolo.controllers.helper.CourseArea;
-import de.xikolo.jobs.base.RequestJobCallback;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;

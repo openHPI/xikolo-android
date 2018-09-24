@@ -16,7 +16,7 @@ import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseCourseListAdapter;
 import de.xikolo.controllers.helper.CourseListFilter;
 import de.xikolo.models.Course;
-import de.xikolo.models.base.SectionList;
+import de.xikolo.utils.SectionList;
 import de.xikolo.utils.DateUtil;
 
 public class CourseListAdapter extends BaseCourseListAdapter {

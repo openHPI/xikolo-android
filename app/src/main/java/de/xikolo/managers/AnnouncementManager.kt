@@ -1,9 +1,9 @@
 package de.xikolo.managers
 
-import de.xikolo.jobs.ListCourseAnnouncementsJob
-import de.xikolo.jobs.ListGlobalAnnouncementsJob
-import de.xikolo.jobs.UpdateAnnouncementVisitedJob
-import de.xikolo.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.ListCourseAnnouncementsJob
+import de.xikolo.network.jobs.ListGlobalAnnouncementsJob
+import de.xikolo.network.jobs.UpdateAnnouncementVisitedJob
+import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.models.Announcement
 import io.realm.Realm
 import io.realm.RealmChangeListener

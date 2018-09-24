@@ -8,7 +8,7 @@ import de.xikolo.controllers.dialogs.ModuleDownloadDialog;
 import de.xikolo.controllers.dialogs.ModuleDownloadDialogAutoBundle;
 import de.xikolo.controllers.dialogs.ProgressDialog;
 import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
-import de.xikolo.jobs.base.RequestJobCallback;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;

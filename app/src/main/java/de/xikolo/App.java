@@ -11,7 +11,7 @@ import com.evernote.android.job.JobManager;
 
 import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
-import de.xikolo.jobs.base.ScheduledJobFactory;
+import de.xikolo.network.jobs.base.ScheduledJobFactory;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;

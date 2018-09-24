@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import de.xikolo.App;
 import de.xikolo.events.base.Event;
-import de.xikolo.jobs.base.RequestJobCallback;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.models.Item;
 import de.xikolo.models.WebSocketMessage;
 import de.xikolo.utils.NotificationUtil;
