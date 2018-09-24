@@ -40,12 +40,12 @@ dependencies {
     implementation "moe.banana:moshi-jsonapi-retrofit-converter:${moshijsonapiVersion}"
 
     // user interface
-    implementation 'com.github.barteksc:android-pdf-viewer:2.8.1'
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
     implementation 'com.github.Commit451:bypasses:1.1.0'
 
     // video
-    implementation 'com.google.android.exoplayer:exoplayer:2.8.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
 
     // view binding
     def butterknifeVersion = '8.8.1'
@@ -58,7 +58,7 @@ dependencies {
     kapt           "com.github.yatatsu:autobundle-processor:${autobundleVersion}"
 
     // play services
-    implementation "com.google.android.gms:play-services-cast-framework:16.0.1"
+    implementation "com.google.android.gms:play-services-cast-framework:16.0.2"
     implementation "com.google.android.gms:play-services-gcm:15.0.1"
 
     // firebase
