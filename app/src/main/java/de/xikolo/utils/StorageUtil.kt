@@ -114,7 +114,7 @@ object StorageUtil {
     // removes empty folder structures and temporary files as well as old item files
     @JvmStatic
     fun cleanStorage(file: File) {
-        if (file.isDirectory) {
+        if (file.isDirectory && file.listFiles() != null) {
             val children = file.listFiles()
             if (children != null) {
                 for (child in children) {
