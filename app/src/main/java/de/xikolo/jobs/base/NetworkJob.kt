@@ -1,9 +1,10 @@
 package de.xikolo.jobs.base
 
-import de.xikolo.viewmodels.base.NetworkCode
-import de.xikolo.viewmodels.base.NetworkStateLiveData
 import de.xikolo.managers.UserManager
 import de.xikolo.utils.NetworkUtil
+import de.xikolo.viewmodels.base.NetworkCode
+import de.xikolo.viewmodels.base.NetworkStateLiveData
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.launch
 
 abstract class NetworkJob(private val networkState: NetworkStateLiveData, private val userRequest: Boolean, private vararg val preconditions: Precondition) {
@@ -19,7 +20,7 @@ abstract class NetworkJob(private val networkState: NetworkStateLiveData, privat
             return
         }
 
-        launch {
+        GlobalScope.launch {
             try {
                 networkState.state(NetworkCode.STARTED, userRequest)
                 onRun()

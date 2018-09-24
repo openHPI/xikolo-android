@@ -2,8 +2,8 @@ dependencies {
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
     implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.24.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.24.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.1"
     implementation "ru.gildor.coroutines:kotlin-coroutines-retrofit:0.12.0"
     implementation "com.github.vicpinm:krealmextensions:2.2.0"
 

@@ -3,7 +3,7 @@
 buildscript {
     ext {
         // shared build properties
-        kotlinVersion       = '1.2.60'
+        kotlinVersion       = '1.2.61'
         buildToolsVersion   = '28.0.2'
         minSdkVersion       = 16
         targetSdkVersion    = 28
