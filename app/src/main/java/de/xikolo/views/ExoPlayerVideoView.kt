@@ -9,6 +9,7 @@ import android.util.AttributeSet
 
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.*
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
@@ -141,10 +142,13 @@ open class ExoPlayerVideoView : PlayerView {
         )
     }
 
-    fun setVideoUri(uri: Uri) {
-        val dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
-        videoMediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
-
+    fun setVideoURI(uri: Uri, isHls: Boolean) {
+        videoMediaSource =
+            if(isHls) {
+                HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+            } else {
+                ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+            }
         mergedMediaSource = videoMediaSource
 
         prepare()

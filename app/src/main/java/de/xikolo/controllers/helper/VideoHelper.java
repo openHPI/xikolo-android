@@ -636,18 +636,28 @@ public class VideoHelper {
         viewOfflineHint.setVisibility(View.GONE);
 
         String stream;
-        DownloadAsset.Course.Item videoAssetDownload;
+        DownloadAsset.Course.Item videoAssetDownload = null;
+        boolean isHls = false;
 
-        if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.HD) {
-            stream = video.singleStream.hdUrl;
-            videoAssetDownload = new DownloadAsset.Course.Item.VideoHD(item, video);
-        } else {
-            stream = video.singleStream.sdUrl;
-            videoAssetDownload = new DownloadAsset.Course.Item.VideoSD(item, video);
+        switch (videoSettingsHelper.getCurrentQuality()) {
+            case HD:
+                stream = video.singleStream.hdUrl;
+                videoAssetDownload = new DownloadAsset.Course.Item.VideoHD(item, video);
+                break;
+            case SD:
+                stream = video.singleStream.sdUrl;
+                videoAssetDownload = new DownloadAsset.Course.Item.VideoSD(item, video);
+                break;
+            default: //AUTO
+                stream = video.singleStream.hlsUrl;
+                isHls = true;
+                break;
         }
 
         if (videoDownloadPresent(videoAssetDownload)) {
             setLocalVideoUri(videoAssetDownload);
+        } else if (isHls) {
+            setHlsVideoUri(stream);
         } else if (NetworkUtil.isOnline()) {
             setVideoUri(stream);
         } else if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.HD) {
@@ -691,11 +701,18 @@ public class VideoHelper {
         viewOfflineHint.setVisibility(View.VISIBLE);
     }
 
+    private void setHlsVideoUri(String uri) {
+        if (Config.DEBUG) {
+            Log.i(TAG, "HLS Video HOST_URL: " + uri);
+        }
+        videoView.setVideoURI(Uri.parse(uri), true);
+    }
+
     private void setVideoUri(String uri) {
         if (Config.DEBUG) {
             Log.i(TAG, "Video HOST_URL: " + uri);
         }
-        videoView.setVideoUri(Uri.parse(uri));
+        videoView.setVideoURI(Uri.parse(uri), false);
     }
 
     private void saveCurrentPosition() {
