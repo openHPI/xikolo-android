@@ -41,6 +41,7 @@ open class ExoPlayerVideoView : PlayerView {
     private var isPreparing = false
 
     var previewAvailable = false
+        private set
 
     val duration: Long
         get() = player.duration
