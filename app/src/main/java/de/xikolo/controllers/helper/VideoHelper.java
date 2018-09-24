@@ -612,7 +612,9 @@ public class VideoHelper {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
         } else if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video))) { // sd video download available
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
-        } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !applicationPreferences.isVideoQualityLimitedOnMobile()) {
+        } else if (Config.DEBUG && video.singleStream.hlsUrl != null) {
+            videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.AUTO);
+        } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !appPreferences.isVideoQualityLimitedOnMobile()) {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
         } else {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
@@ -636,31 +638,39 @@ public class VideoHelper {
         viewOfflineHint.setVisibility(View.GONE);
 
         String stream;
-        DownloadAsset.Course.Item videoAssetDownload = null;
-        boolean isHls = false;
+        DownloadAsset.Course.Item videoAssetDownload;
+        boolean isHls;
 
         switch (videoSettingsHelper.getCurrentQuality()) {
             case HD:
                 stream = video.singleStream.hdUrl;
                 videoAssetDownload = new DownloadAsset.Course.Item.VideoHD(item, video);
+                isHls = false;
                 break;
             case SD:
                 stream = video.singleStream.sdUrl;
                 videoAssetDownload = new DownloadAsset.Course.Item.VideoSD(item, video);
+                isHls = false;
                 break;
             default: //AUTO
                 stream = video.singleStream.hlsUrl;
+                videoAssetDownload = null;
                 isHls = true;
                 break;
         }
 
         if (videoDownloadPresent(videoAssetDownload)) {
             setLocalVideoUri(videoAssetDownload);
-        } else if (isHls) {
-            setHlsVideoUri(stream);
-        } else if (NetworkUtil.isOnline()) {
-            setVideoUri(stream);
-        } else if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.HD) {
+        } else if (NetworkUtil.isOnline()) { // device has internet connection
+            if (isHls) {
+                setHlsVideoUri(stream);
+            } else {
+                setVideoUri(stream);
+            }
+        } else if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.AUTO) { // retry with HD instead of HLS
+            videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
+            updateVideo();
+        } else if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.HD) { // retry with SD instead of HD
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
             updateVideo();
         } else {

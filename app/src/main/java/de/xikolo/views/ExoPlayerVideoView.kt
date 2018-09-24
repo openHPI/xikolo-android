@@ -25,7 +25,7 @@ open class ExoPlayerVideoView : PlayerView {
     private lateinit var exoplayer: SimpleExoPlayer
     private lateinit var playerListener: Player.EventListener
     private lateinit var dataSourceFactory: DefaultDataSourceFactory
-    private val bandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter()
+    private lateinit var bandwidthMeter: DefaultBandwidthMeter
 
     private var videoMediaSource: MediaSource? = null
     private var mergedMediaSource: MediaSource? = null
@@ -65,13 +65,15 @@ open class ExoPlayerVideoView : PlayerView {
     private fun setup(context: Context, attrs: AttributeSet?) {
         playerContext = context
 
+        bandwidthMeter = DefaultBandwidthMeter()
         dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
 
         exoplayer = ExoPlayerFactory.newSimpleInstance(
             context,
             DefaultTrackSelector(
                 AdaptiveTrackSelection.Factory()
-            )
+            ),
+            DefaultLoadControl()
         )
 
         playerListener = object : Player.EventListener {
@@ -144,7 +146,7 @@ open class ExoPlayerVideoView : PlayerView {
 
     fun setVideoURI(uri: Uri, isHls: Boolean) {
         videoMediaSource =
-            if(isHls) {
+            if (isHls) {
                 HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
             } else {
                 ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
