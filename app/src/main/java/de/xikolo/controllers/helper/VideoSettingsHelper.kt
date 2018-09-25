@@ -17,7 +17,7 @@ import de.xikolo.models.VideoSubtitles
 import de.xikolo.utils.PlaybackSpeedUtil
 import java.util.*
 
-class VideoSettingsHelper(private val context: Context, private val subtitles: List<VideoSubtitles>?, private val changeListener: OnSettingsChangeListener, private val clickListener: OnSettingsClickListener) {
+class VideoSettingsHelper(private val context: Context, private val subtitles: List<VideoSubtitles>?, private val changeListener: OnSettingsChangeListener, private val clickListener: OnSettingsClickListener, private val qualityOfflineInfo: QualityOfflineInfo) {
 
     enum class VideoMode {
         SD, HD
@@ -35,7 +35,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         list.addView(
             buildSettingsItem(
                 R.string.icon_quality,
-                context.getString(R.string.video_settings_quality) + "  " + context.getString(R.string.video_settings_separator) + "  " + currentQuality.toString(),
+                context.getString(R.string.video_settings_quality) + "  " + context.getString(R.string.video_settings_separator) + "  " + currentQuality.toString() +
+                    if (qualityOfflineInfo.isOfflineAvailable(currentQuality)) " " + context.getString(R.string.video_settings_quality_offline) else "",
                 View.OnClickListener { clickListener.onQualityClick() },
                 false
             )
@@ -71,7 +72,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         list.addView(
             buildSettingsItem(
                 null,
-                VideoMode.HD.toString(),
+                VideoMode.HD.toString() +
+                    if (qualityOfflineInfo.isOfflineAvailable(VideoMode.HD)) " " + context.getString(R.string.video_settings_quality_offline) else "",
                 View.OnClickListener {
                     val oldQuality = currentQuality
                     currentQuality = VideoMode.HD
@@ -83,7 +85,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         list.addView(
             buildSettingsItem(
                 null,
-                VideoMode.SD.toString(),
+                VideoMode.SD.toString() +
+                    if (qualityOfflineInfo.isOfflineAvailable(VideoMode.SD)) " " + context.getString(R.string.video_settings_quality_offline) else "",
                 View.OnClickListener {
                     val oldQuality = currentQuality
                     currentQuality = VideoMode.SD
@@ -144,15 +147,11 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
             )
         )
         for (videoSubtitles in subtitles!!) {
-            var title = Locale(videoSubtitles.language).displayLanguage
-            if (videoSubtitles.createdByMachine) {
-                title += " " + context.getString(R.string.video_settings_subtitles_generated)
-            }
-
             list.addView(
                 buildSettingsItem(
                     null,
-                    title,
+                    Locale(videoSubtitles.language).displayLanguage +
+                        if (videoSubtitles.createdByMachine) " " + context.getString(R.string.video_settings_subtitles_generated) else "",
                     View.OnClickListener {
                         val oldVideoSubtitles = currentVideoSubtitles
                         currentVideoSubtitles = videoSubtitles
@@ -235,5 +234,10 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
 
         // subtitle is null if 'None' is selected
         fun onSubtitleChanged(old: VideoSubtitles?, new: VideoSubtitles?)
+    }
+
+    interface QualityOfflineInfo {
+
+        fun isOfflineAvailable(videoMode: VideoMode): Boolean
     }
 }

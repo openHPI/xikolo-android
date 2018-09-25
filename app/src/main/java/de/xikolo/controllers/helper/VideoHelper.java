@@ -471,6 +471,13 @@ public class VideoHelper {
                 public void onQualityClick() {
                     showSettings(videoSettingsHelper.buildQualityView());
                 }
+            },
+            videoMode -> {
+                if (videoMode == VideoSettingsHelper.VideoMode.HD) {
+                    return videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video));
+                } else {
+                    return videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video));
+                }
             }
         );
 

@@ -231,6 +231,7 @@
     <string name="offline_mode">Offline Mode</string>
     <string name="offline">Offline</string>
     <string name="video_settings_quality">Quality</string>
+    <string name="video_settings_quality_offline">(offline)</string>
     <string name="video_settings_speed">Playback Speed</string>
     <string name="video_settings_subtitles">Subtitles</string>
     <string name="video_settings_subtitles_none">None</string>
