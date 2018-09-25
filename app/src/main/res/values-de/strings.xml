@@ -224,6 +224,7 @@
     <string name="video_settings_subtitles">Untertitel</string>
     <string name="video_settings_subtitles_none">Keine</string>
     <string name="video_settings_subtitles_generated">(automatisch erzeugt)</string>
+    <string name="video_description_unavailable">Für dieses Video ist keine Beschreibung vorhanden.</string>
 
     <!-- -->
     <string name="settings_category_general">Allgemein</string>

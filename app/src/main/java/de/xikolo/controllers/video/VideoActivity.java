@@ -2,6 +2,7 @@ package de.xikolo.controllers.video;
 
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,8 +17,6 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.cast.framework.CastButtonFactory;
@@ -77,11 +76,15 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         videoHelper.setControllerListener(new VideoHelper.ControllerListener() {
             @Override
             public void onControllerShow() {
+                if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                    actionBar.show();
+                }
                 showSystemBars();
             }
 
             @Override
             public void onControllerHide() {
+                actionBar.hide();
                 hideSystemBars();
             }
         });
@@ -107,10 +110,6 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
         hideSystemBars();
 
-        FrameLayout.LayoutParams p = (FrameLayout.LayoutParams) ((RelativeLayout) videoContainer.getParent()).getLayoutParams();
-        p.topMargin = -AndroidDimenUtil.getActionBarHeight();
-
-
         updateVideoView(getResources().getConfiguration().orientation);
     }
 
@@ -122,9 +121,9 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             videoTitleText.setText(item.title);
         }
 
-        if (videoDescriptionText != null && video.summary != null) {
+        if (videoDescriptionText != null && video.summary != null && !video.summary.trim().isEmpty()) {
+            videoDescriptionText.setTypeface(videoDescriptionText.getTypeface(), Typeface.NORMAL);
             MarkdownUtil.formatAndSet(video.summary, videoDescriptionText);
-            videoSubtitlesText.setVisibility(View.VISIBLE);
         }
 
         if (videoSubtitlesText != null && video.subtitles != null && video.subtitles.size() > 0) {
@@ -221,6 +220,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                     videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
 
                 videoMetadataView.setVisibility(View.GONE);
+
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) videoContainer.getParent()).getLayoutParams()).topMargin = 0;
             } else { // Portrait
                 layout.setFitsSystemWindows(false);
 
@@ -249,6 +250,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                 videoHelper.getControllerView().setPadding(0, 0, 0, 0);
 
                 videoMetadataView.setVisibility(View.VISIBLE);
+
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) videoContainer.getParent()).getLayoutParams()).topMargin = -actionBarHeight;
             }
         }
     }

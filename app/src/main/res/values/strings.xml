@@ -233,6 +233,7 @@
     <string name="video_settings_subtitles_none">None</string>
     <string name="video_settings_subtitles_generated">(automatically generated)</string>
     <string name="video_settings_separator" translatable="false">&#xb7;</string>
+    <string name="video_description_unavailable">There is no description available for this video.</string>
 
     <!-- -->
     <string name="media_route_menu_title">CAST</string>
