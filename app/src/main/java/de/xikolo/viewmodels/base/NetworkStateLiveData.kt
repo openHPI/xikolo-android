@@ -2,7 +2,9 @@ package de.xikolo.viewmodels.base
 
 import android.arch.lifecycle.LiveData
 import de.xikolo.events.NetworkStateEvent
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.EventBus
 
@@ -23,7 +25,7 @@ class NetworkStateLiveData : LiveData<NetworkState>() {
             else -> Unit
         }
 
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             value = NetworkState(code, userRequest)
         }
     }

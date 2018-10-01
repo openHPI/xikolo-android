@@ -1,7 +1,9 @@
 package de.xikolo.network.jobs.base
 
 import de.xikolo.events.NetworkStateEvent
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -21,18 +23,18 @@ abstract class RequestJobCallback {
     fun success() {
         EventBus.getDefault().postSticky(NetworkStateEvent(true))
 
-        launch(UI) { onSuccess() }
+        GlobalScope.launch(Dispatchers.Main) { onSuccess() }
     }
 
     fun error(errorCode: ErrorCode) {
         if (errorCode == ErrorCode.NO_NETWORK) {
             EventBus.getDefault().postSticky(NetworkStateEvent(false))
         }
-        launch(UI) { onError(errorCode) }
+        GlobalScope.launch(Dispatchers.Main) { onError(errorCode) }
     }
 
     fun deprecated(deprecationDate: Date) {
-        launch(UI) { onDeprecated(deprecationDate) }
+        GlobalScope.launch(Dispatchers.Main) { onDeprecated(deprecationDate) }
     }
 
 }
