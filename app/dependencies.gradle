@@ -58,11 +58,11 @@ dependencies {
     kapt           "com.github.yatatsu:autobundle-processor:${autobundleVersion}"
 
     // play services
-    implementation "com.google.android.gms:play-services-cast-framework:16.0.2"
-    implementation "com.google.android.gms:play-services-gcm:15.0.1"
+    implementation "com.google.android.gms:play-services-cast-framework:16.0.3"
+    implementation "com.google.android.gms:play-services-gcm:16.0.0"
 
     // firebase
-    implementation "com.google.firebase:firebase-core:16.0.3"
+    implementation "com.google.firebase:firebase-core:16.0.4"
     implementation "com.crashlytics.sdk.android:crashlytics:2.9.5"
 
     // support libraries
