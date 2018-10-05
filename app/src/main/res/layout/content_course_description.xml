@@ -18,12 +18,6 @@
             android:id="@+id/space"
             android:layout_width="match_parent"
             android:layout_height="16dp"
-            android:layout_below="@+id/layout_header" />
-
-        <View
-            android:id="@+id/space"
-            android:layout_width="match_parent"
-            android:layout_height="16dp"
             android:layout_below="@+id/layout_header"/>
 
         <TextView
