@@ -69,9 +69,9 @@ public class RealmSchemaMigration implements RealmMigration {
                 .addField("threshold", double.class);
 
             schema.create("CourseCertificates")
-                .addRealmObjectField("confirmationOfParticipationUrl", schema.get("CourseCertificateDetails"))
-                .addRealmObjectField("recordOfAchievementUrl", schema.get("CourseCertificateDetails"))
-                .addRealmObjectField("qualifiedCertificateUrl", schema.get("CourseCertificateDetails"));
+                .addRealmObjectField("confirmationOfParticipation", schema.get("CourseCertificateDetails"))
+                .addRealmObjectField("recordOfAchievement", schema.get("CourseCertificateDetails"))
+                .addRealmObjectField("qualifiedCertificate", schema.get("CourseCertificateDetails"));
 
             schema.get("Course")
                 .addRealmObjectField("certificates", schema.get("CourseCertificates"));
@@ -84,10 +84,6 @@ public class RealmSchemaMigration implements RealmMigration {
             schema.get("Enrollment")
                 .addRealmObjectField("certificates", schema.get("EnrollmentCertificates"));
 
-            oldVersion++;
-        }
-
-        if (oldVersion == 5) {
             schema.create("VideoSubtitles")
                 .addField("language", String.class)
                 .addField("createdByMachine", boolean.class)

@@ -9,11 +9,11 @@ buildscript {
         targetSdkVersion    = 28
         compileSdkVersion   = 28
 
-        versionName         = '2.2.1'
-        versionCode         = 45
+        versionName         = '2.3'
+        versionCode         = 46
 
         xikoloApiVersion    = 3
-        realmSchemaVersion  = 6
+        realmSchemaVersion  = 5
     }
     repositories {
         jcenter()
