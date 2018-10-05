@@ -136,9 +136,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                     true
                 }
 
-        // Android does not support multiple external storages below KITKAT
-        // Determining the states of multiple storages requires LOLLIPOP
-        if (Build.VERSION.SDK_INT < 21 || StorageUtil.getStorages(App.getInstance()).size < 2) {
+        if (StorageUtil.getStorages(App.getInstance()).size < 2) {
             val general = findPreference(getString(R.string.preference_category_general)) as PreferenceCategory
             val storagePref = findPreference(getString(R.string.preference_storage))
             general.removePreference(storagePref)

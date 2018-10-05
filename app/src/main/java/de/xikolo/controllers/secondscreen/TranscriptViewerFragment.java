@@ -36,7 +36,6 @@ import de.xikolo.models.Video;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.TimeUtil;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class TranscriptViewerFragment extends BaseFragment implements ChooseLanguageDialog.Listener {
 
     public static final String TAG = TranscriptViewerFragment.class.getSimpleName();

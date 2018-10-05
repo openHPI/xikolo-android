@@ -1,7 +1,5 @@
 package de.xikolo.controllers.secondscreen;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,7 +35,6 @@ import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Video;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteListener, OnPageChangeListener {
 
     public static final String TAG = SlideViewerFragment.class.getSimpleName();

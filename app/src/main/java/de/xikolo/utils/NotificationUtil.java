@@ -89,17 +89,11 @@ public class NotificationUtil extends ContextWrapper {
     public void showDownloadCompletedNotification(Download download) {
         NotificationStorage notificationStorage = new NotificationStorage();
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            notificationStorage.addDownloadNotification(download.title);
-            notify(download.title.hashCode(), getDownloadCompletedNotification(download).build());
+        notificationStorage.addDownloadNotification(download.title);
+        notify(download.title.hashCode(), getDownloadCompletedNotification(download).build());
 
-            List<String> downloadList = notificationStorage.getDownloadNotifications();
-            if (downloadList.size() > 1) {
-                showDownloadSummaryNotification(downloadList);
-            }
-        } else { // Notifications with group doesn't work before Lollipop
-            notificationStorage.addDownloadNotification(download.title);
-            List<String> downloadList = notificationStorage.getDownloadNotifications();
+        List<String> downloadList = notificationStorage.getDownloadNotifications();
+        if (downloadList.size() > 1) {
             showDownloadSummaryNotification(downloadList);
         }
     }

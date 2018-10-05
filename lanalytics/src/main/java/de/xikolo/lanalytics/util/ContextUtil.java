@@ -38,16 +38,14 @@ public class ContextUtil {
         }
 
         // screen details
-        DisplayMetrics metrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (Build.VERSION.SDK_INT >= 17) {
+        if (wm != null) {
+            DisplayMetrics metrics = new DisplayMetrics();
             wm.getDefaultDisplay().getRealMetrics(metrics);
-        } else {
-            wm.getDefaultDisplay().getMetrics(metrics);
+            contextMap.put("screen_width", String.valueOf(metrics.widthPixels));
+            contextMap.put("screen_height", String.valueOf(metrics.heightPixels));
+            contextMap.put("screen_density", String.valueOf((int) metrics.density * 160));
         }
-        contextMap.put("screen_width", String.valueOf(metrics.widthPixels));
-        contextMap.put("screen_height", String.valueOf(metrics.heightPixels));
-        contextMap.put("screen_density", String.valueOf((int) metrics.density * 160));
 
         // network details
         String network = "unknown";

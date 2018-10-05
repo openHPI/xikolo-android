@@ -3,7 +3,6 @@ package de.xikolo.controllers.main
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AppCompatActivity
@@ -91,17 +90,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            val dialog = Android4UnsupportedDialog()
-            dialog.listener = object : Android4UnsupportedDialog.Listener {
-                override fun onConfirmed() {
-                    closeApp()
-                }
-            }
-            showDialog(dialog, Android4UnsupportedDialog.TAG)
-        } else {
-            migrateStorage()
-        }
+        migrateStorage()
     }
 
     private fun showApiVersionExpiredDialog() {

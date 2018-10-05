@@ -1,20 +1,16 @@
 package de.xikolo.managers;
 
-import android.annotation.TargetApi;
-import android.os.Build;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import de.xikolo.App;
 import de.xikolo.events.base.Event;
-import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.models.Item;
 import de.xikolo.models.WebSocketMessage;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.utils.NotificationUtil;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SecondScreenManager {
 
     public static final String TAG = SecondScreenManager.class.getSimpleName();

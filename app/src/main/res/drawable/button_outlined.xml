@@ -1,26 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/button_gray">
+    <item android:id="@android:id/mask">
         <shape android:shape="rectangle">
-            <solid android:color="@color/button_gray" />
+            <!-- This color is needed to be set - doesn't affect anything -->
+            <solid android:color="@color/white" />
             <stroke android:width="2px" android:color="@color/outlined_button_stroke" />
             <corners android:radius="@dimen/corner_radius" />
         </shape>
     </item>
-    <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/button_gray" />
-            <stroke android:width="2px" android:color="@color/outlined_button_stroke" />
-            <corners android:radius="@dimen/corner_radius" />
-        </shape>
-    </item>
-    <item android:state_enabled="false">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/transparent" />
-            <stroke android:width="2px" android:color="@color/outlined_button_stroke" />
-            <corners android:radius="@dimen/corner_radius" />
-        </shape>
-    </item>
+    <!-- This is the button background -->
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/transparent" />
@@ -28,4 +17,4 @@
             <corners android:radius="@dimen/corner_radius" />
         </shape>
     </item>
-</selector>
+</ripple>
