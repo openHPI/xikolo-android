@@ -49,7 +49,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 false
             )
         )
-        if (subtitles != null && subtitles.isNotEmpty()) {
+        if (subtitles?.isNotEmpty() == true) {
             list.addView(
                 buildSettingsItem(
                     R.string.icon_subtitles,
