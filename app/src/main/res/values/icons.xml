@@ -24,7 +24,9 @@
     <string name="icon_reload" translatable="false">&#xe65b;</string>
     <string name="icon_fullscreen" translatable="false">&#xe658;</string>
     <string name="icon_quiz" translatable="false">&#xe61d;</string>
-    <string name="icon_hd" translatable="false">&#xe657;</string>
+    <string name="icon_quality" translatable="false">&#xe601;</string>
+    <string name="icon_speed" translatable="false">&#xe66e;</string>
+    <string name="icon_subtitles" translatable="false">&#xe60a;</string>
     <string name="icon_download_video" translatable="false">&#xe662;</string>
     <string name="icon_download_pdf" translatable="false">&#xe660;</string>
     <string name="icon_locked" translatable="false">&#xe62b;</string>

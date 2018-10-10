@@ -127,7 +127,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             video.progress,
             videoHelper.getCurrentPlaybackSpeed().getSpeed(),
             getResources().getConfiguration().orientation,
-            videoHelper.getQualityString(),
+            videoHelper.getCurrentQualityString(),
             videoHelper.getSourceString());
     }
 
@@ -293,8 +293,9 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @Override
     public void onBackPressed() {
-        videoHelper.release();
-        finish();
+        if (videoHelper.handleBackPress()) {
+            finish();
+        }
     }
 
     @Override
@@ -319,7 +320,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             videoHelper.getCurrentPosition(),
             videoHelper.getCurrentPlaybackSpeed().getSpeed(),
             newConfig.orientation,
-            videoHelper.getQualityString(),
+            videoHelper.getCurrentQualityString(),
             videoHelper.getSourceString());
     }
 
