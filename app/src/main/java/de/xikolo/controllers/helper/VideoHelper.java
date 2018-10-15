@@ -321,10 +321,6 @@ public class VideoHelper {
         });
     }
 
-    public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
-        return videoSettingsHelper.getCurrentSpeed();
-    }
-
     public int getCurrentPosition() {
         return (int) videoView.getCurrentPosition();
     }
@@ -335,14 +331,6 @@ public class VideoHelper {
 
     public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
         return videoSettingsHelper.getCurrentSpeed();
-    }
-
-    public int getCurrentPosition() {
-        return (int) videoView.getCurrentPosition();
-    }
-
-    public int getDuration() {
-        return (int) videoView.getDuration();
     }
 
     public void play() {
@@ -536,8 +524,6 @@ public class VideoHelper {
             }
         );
 
-        int connectivityStatus = NetworkUtil.getConnectivityStatus();
-
         this.videoSettingsHelper = new VideoSettingsHelper(
             activity,
             video.subtitles,
@@ -610,6 +596,13 @@ public class VideoHelper {
                 @Override
                 public void onQualityClick() {
                     showSettings(videoSettingsHelper.buildQualityView());
+                }
+            },
+            videoMode -> {
+                if (videoMode == VideoSettingsHelper.VideoMode.HD) {
+                    return videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video));
+                } else {
+                    return videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video));
                 }
             }
         );
