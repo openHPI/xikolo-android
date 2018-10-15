@@ -64,12 +64,12 @@ open class ExoPlayerVideoView : PlayerView {
     private fun setup(context: Context, attrs: AttributeSet?) {
         playerContext = context
 
-        dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), DefaultBandwidthMeter())
+        dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
 
         exoplayer = ExoPlayerFactory.newSimpleInstance(
             context,
             DefaultTrackSelector(
-                AdaptiveTrackSelection.Factory(DefaultBandwidthMeter())
+                AdaptiveTrackSelection.Factory()
             )
         )
 
@@ -141,10 +141,16 @@ open class ExoPlayerVideoView : PlayerView {
         )
     }
 
-    fun setVideoURI(uri: Uri) {
+    fun setVideoUri(uri: Uri) {
         val dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
         videoMediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
 
+        mergedMediaSource = videoMediaSource
+
+        prepare()
+    }
+
+    fun setPreviewUri(uri: Uri) {
         mediaMetadataRetriever = MediaMetadataRetriever()
         previewAvailable =
             try {
@@ -163,10 +169,6 @@ open class ExoPlayerVideoView : PlayerView {
                     }
                 }
             }
-
-        mergedMediaSource = videoMediaSource
-
-        prepare()
     }
 
     fun showSubtitles(uri: String, language: String) {

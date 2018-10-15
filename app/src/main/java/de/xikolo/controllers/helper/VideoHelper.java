@@ -185,8 +185,9 @@ public class VideoHelper {
                         textCurrentTime.setText(getTimeString(getCurrentPosition()));
                     }
                 });
+
                 if (getCurrentPosition() < getDuration()) {
-                    seekBar.postDelayed(this, MILLISECONDS);
+                    seekBarPreviewHandler.postDelayed(this, MILLISECONDS);
                 } else {
                     seekBarUpdaterIsRunning = false;
                 }
@@ -321,16 +322,16 @@ public class VideoHelper {
         });
     }
 
+    public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
+        return videoSettingsHelper.getCurrentSpeed();
+    }
+
     public int getCurrentPosition() {
         return (int) videoView.getCurrentPosition();
     }
 
     public int getDuration() {
         return (int) videoView.getDuration();
-    }
-
-    public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
-        return videoSettingsHelper.getCurrentSpeed();
     }
 
     public void play() {
@@ -670,6 +671,15 @@ public class VideoHelper {
 
         videoView.setPlaybackSpeed(videoSettingsHelper.getCurrentSpeed().getSpeed());
 
+        if (videoDownloadPresent(videoAssetDownload)) {
+            videoView.setPreviewUri(Uri.parse("file://" + downloadManager.getDownloadFile(videoAssetDownload)));
+        } else if (NetworkUtil.isOnline()) {
+            if (video.singleStream.sdUrl != null) {
+                videoView.setPreviewUri(Uri.parse(video.singleStream.sdUrl));
+            } else if (video.singleStream.hdUrl != null) {
+                videoView.setPreviewUri(Uri.parse(video.singleStream.hdUrl));
+            }
+        }
         seekBar.setPreviewEnabled(videoView.getPreviewAvailable());
     }
 
@@ -687,7 +697,7 @@ public class VideoHelper {
         if (Config.DEBUG) {
             Log.i(TAG, "Video HOST_URL: " + uri);
         }
-        videoView.setVideoURI(Uri.parse(uri));
+        videoView.setVideoUri(Uri.parse(uri));
     }
 
     private void saveCurrentPosition() {
