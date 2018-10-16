@@ -6,10 +6,6 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.customtabs.CustomTabsIntent
-import android.support.v4.content.ContextCompat
-import android.support.v7.preference.*
-import de.psdev.licensesdialog.LicensesDialog
 import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
@@ -142,14 +138,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             val general = findPreference(getString(R.string.preference_category_general)) as PreferenceCategory
             val storagePref = findPreference(getString(R.string.preference_storage))
             general.removePreference(storagePref)
-        }
-
-        if (Build.VERSION.SDK_INT < 23) {
-            val screen = findPreference(getString(R.string.preference_screen)) as PreferenceScreen
-            val video = findPreference(getString(R.string.preference_category_video_playback_speed)) as PreferenceCategory
-            val videoPlaybackSpeed = findPreference(getString(R.string.preference_video_playback_speed))
-            video.removePreference(videoPlaybackSpeed)
-            screen.removePreference(video)
         }
 
         val copyright = findPreference(getString(R.string.preference_copyright))
