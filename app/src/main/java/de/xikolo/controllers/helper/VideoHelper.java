@@ -77,7 +77,6 @@ public class VideoHelper {
     @BindView(R.id.currentTime) TextView textCurrentTime;
     @BindView(R.id.totalTime) TextView textTotalTime;
 
-    @BindView(R.id.offlineHint) View viewOfflineHint;
     @BindView(R.id.videoWarning) View viewVideoWarning;
     @BindView(R.id.videoWarningText) TextView textVideoWarning;
 
@@ -102,6 +101,8 @@ public class VideoHelper {
     private Handler seekBarPreviewHandler;
 
     private boolean userIsSeeking = false;
+
+    private boolean isOfflineVideo = false;
 
     private Course course;
     private Section module;
@@ -552,7 +553,7 @@ public class VideoHelper {
 
     private void updateVideo() {
         viewVideoWarning.setVisibility(View.GONE);
-        viewOfflineHint.setVisibility(View.GONE);
+        isOfflineVideo = false;
 
         String stream;
         DownloadAsset.Course.Item videoAssetDownload;
@@ -625,7 +626,7 @@ public class VideoHelper {
 
     private void setLocalVideoUri(DownloadAsset.Course.Item item) {
         setVideoUri("file://" + downloadManager.getDownloadFile(item));
-        viewOfflineHint.setVisibility(View.VISIBLE);
+        isOfflineVideo = true;
     }
 
     private void setHlsVideoUri(String uri) {
@@ -669,9 +670,7 @@ public class VideoHelper {
     }
 
     public String getSourceString() {
-        if (viewOfflineHint != null) {
-            return viewOfflineHint.getVisibility() == View.VISIBLE ? "offline" : "online";
-        } else return null;
+        return isOfflineVideo ? "offline" : "online";
     }
 
     private String getQualityString(VideoSettingsHelper.VideoMode videoMode) {
