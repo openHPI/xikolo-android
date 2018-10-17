@@ -121,7 +121,10 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             videoTitleText.setText(item.title);
         }
 
-        if (videoDescriptionText != null && video.summary != null && !video.summary.trim().isEmpty()) {
+        if (videoDescriptionText != null && video.summary != null
+            && !video.summary.trim().isEmpty()
+            && !video.summary.trim().contentEquals("Enter content")
+            ) {
             videoDescriptionText.setTypeface(videoDescriptionText.getTypeface(), Typeface.NORMAL);
             MarkdownUtil.formatAndSet(video.summary, videoDescriptionText);
         }
