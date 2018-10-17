@@ -19,10 +19,17 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/videoContainer"
+            android:background="@android:drawable/divider_horizontal_bright" />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/videoContainer">
+            android:layout_below="@+id/divider">
 
             <LinearLayout
                 android:id="@+id/videoMetadata"
