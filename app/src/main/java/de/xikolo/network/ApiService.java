@@ -51,6 +51,15 @@ public abstract class ApiService {
         return chain.proceed(builder.build());
     };
 
+    public static final Interceptor userAgentInterceptor = chain -> {
+        Request original = chain.request();
+
+        Request.Builder builder = original.newBuilder()
+            .header(Config.HEADER_USER_AGENT, Config.HEADER_USER_AGENT_VALUE);
+
+        return chain.proceed(builder.build());
+    };
+
     private static ApiServiceInterface service;
 
     private ApiService() {
@@ -91,6 +100,7 @@ public abstract class ApiService {
                     return chain.proceed(builder.build());
                 })
                 .addInterceptor(authenticationInterceptor)
+                .addInterceptor(userAgentInterceptor)
                 .addInterceptor(logging)
                 .build();
 
