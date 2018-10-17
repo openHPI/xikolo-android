@@ -229,8 +229,6 @@ public class VideoHelper {
 
         settingsButton.setOnClickListener(v -> showSettings(videoSettingsHelper.buildSettingsView()));
 
-        settingsButton.setOnClickListener(v -> showSettings(videoSettingsHelper.buildSettingsView()));
-
         buttonStepForward.setOnClickListener(v -> {
             show();
             stepForward();
@@ -323,18 +321,6 @@ public class VideoHelper {
                 videoControls.setAlpha(1 - slideOffset);
             }
         });
-    }
-
-    public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
-        return videoSettingsHelper.getCurrentSpeed();
-    }
-
-    public int getCurrentPosition() {
-        return (int) videoView.getCurrentPosition();
-    }
-
-    public int getDuration() {
-        return (int) videoView.getDuration();
     }
 
     public PlaybackSpeedUtil getCurrentPlaybackSpeed() {
@@ -611,6 +597,13 @@ public class VideoHelper {
                 @Override
                 public void onQualityClick() {
                     showSettings(videoSettingsHelper.buildQualityView());
+                }
+            },
+            videoMode -> {
+                if (videoMode == VideoSettingsHelper.VideoMode.HD) {
+                    return videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video));
+                } else {
+                    return videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video));
                 }
             }
         );
