@@ -6,6 +6,13 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.support.customtabs.CustomTabsIntent
+import android.support.v4.content.ContextCompat
+import android.support.v7.preference.Preference
+import android.support.v7.preference.PreferenceCategory
+import android.support.v7.preference.PreferenceFragmentCompat
+import android.support.v7.preference.PreferenceManager
+import de.psdev.licensesdialog.LicensesDialog
 import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
@@ -124,13 +131,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         findPreference(getString(R.string.preference_storage)).summary = prefs.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
         findPreference(getString(R.string.preference_storage)).onPreferenceChangeListener =
-                Preference.OnPreferenceChangeListener { _, _ ->
-                    if (DownloadService.getInstance() != null && DownloadService.getInstance().isDownloading) {
-                        ToastUtil.show(R.string.notification_storage_locked)
-                        return@OnPreferenceChangeListener false
-                    }
-                    true
+            Preference.OnPreferenceChangeListener { _, _ ->
+                if (DownloadService.getInstance() != null && DownloadService.getInstance().isDownloading) {
+                    ToastUtil.show(R.string.notification_storage_locked)
+                    return@OnPreferenceChangeListener false
                 }
+                true
+            }
 
         // Android does not support multiple external storages below KITKAT
         // Determining the states of multiple storages requires LOLLIPOP
