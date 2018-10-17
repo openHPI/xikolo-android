@@ -614,7 +614,7 @@ public class VideoHelper {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
         } else if (Config.DEBUG && video.singleStream.hlsUrl != null) {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.AUTO);
-        } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !appPreferences.isVideoQualityLimitedOnMobile()) {
+        } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !applicationPreferences.isVideoQualityLimitedOnMobile()) {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
         } else {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
@@ -659,7 +659,7 @@ public class VideoHelper {
                 break;
         }
 
-        if (videoDownloadPresent(videoAssetDownload)) {
+        if (videoAssetDownload != null && videoDownloadPresent(videoAssetDownload)) {
             setLocalVideoUri(videoAssetDownload);
         } else if (NetworkUtil.isOnline()) { // device has internet connection
             if (isHls) {
