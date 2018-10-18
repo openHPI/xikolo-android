@@ -8,7 +8,10 @@ import android.os.Build
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
 import android.support.v4.content.ContextCompat
-import android.support.v7.preference.*
+import android.support.v7.preference.Preference
+import android.support.v7.preference.PreferenceCategory
+import android.support.v7.preference.PreferenceFragmentCompat
+import android.support.v7.preference.PreferenceManager
 import de.psdev.licensesdialog.LicensesDialog
 import de.xikolo.App
 import de.xikolo.BuildConfig
@@ -129,26 +132,18 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         findPreference(getString(R.string.preference_storage)).summary = prefs.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
         findPreference(getString(R.string.preference_storage)).onPreferenceChangeListener =
-                Preference.OnPreferenceChangeListener { _, _ ->
-                    if (DownloadService.getInstance() != null && DownloadService.getInstance().isDownloading) {
-                        ToastUtil.show(R.string.notification_storage_locked)
-                        return@OnPreferenceChangeListener false
-                    }
-                    true
+            Preference.OnPreferenceChangeListener { _, _ ->
+                if (DownloadService.getInstance() != null && DownloadService.getInstance().isDownloading) {
+                    ToastUtil.show(R.string.notification_storage_locked)
+                    return@OnPreferenceChangeListener false
                 }
+                true
+            }
 
         if (StorageUtil.getStorages(App.getInstance()).size < 2) {
             val general = findPreference(getString(R.string.preference_category_general)) as PreferenceCategory
             val storagePref = findPreference(getString(R.string.preference_storage))
             general.removePreference(storagePref)
-        }
-
-        if (Build.VERSION.SDK_INT < 23) {
-            val screen = findPreference(getString(R.string.preference_screen)) as PreferenceScreen
-            val video = findPreference(getString(R.string.preference_category_video_playback_speed)) as PreferenceCategory
-            val videoPlaybackSpeed = findPreference(getString(R.string.preference_video_playback_speed))
-            video.removePreference(videoPlaybackSpeed)
-            screen.removePreference(video)
         }
 
         val copyright = findPreference(getString(R.string.preference_copyright))

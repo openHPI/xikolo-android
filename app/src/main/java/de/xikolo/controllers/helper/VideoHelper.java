@@ -441,8 +441,6 @@ public class VideoHelper {
                     if (old != speed) {
                         videoView.setPlaybackSpeed(speed.getSpeed());
 
-                        applicationPreferences.setVideoPlaybackSpeed(speed);
-
                         LanalyticsUtil.trackVideoChangeSpeed(item.id,
                             course.id, module.id,
                             getCurrentPosition(),
