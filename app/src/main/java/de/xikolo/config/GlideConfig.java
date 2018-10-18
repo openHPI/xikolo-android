@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestOptions;
 import java.io.InputStream;
 
 import de.xikolo.R;
+import de.xikolo.network.ApiService;
 import okhttp3.OkHttpClient;
 
 @SuppressWarnings("unused")
@@ -44,7 +45,9 @@ public class GlideConfig extends AppGlideModule {
 
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
-        OkHttpClient client = new OkHttpClient.Builder().build();
+        OkHttpClient client = new OkHttpClient.Builder()
+            .addInterceptor(ApiService.userAgentInterceptor)
+            .build();
         OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(client);
         registry.replace(GlideUrl.class, InputStream.class, factory);
     }

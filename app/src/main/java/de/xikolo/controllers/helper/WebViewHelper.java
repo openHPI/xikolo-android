@@ -76,6 +76,7 @@ public class WebViewHelper {
     private void setup() {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        webView.getSettings().setUserAgentString(Config.HEADER_USER_AGENT_VALUE);
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override

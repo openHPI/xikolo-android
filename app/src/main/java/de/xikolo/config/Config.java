@@ -1,10 +1,13 @@
 package de.xikolo.config;
 
+import android.os.Build;
+
 import com.google.android.gms.cast.CastMediaControlIntent;
 
 import de.xikolo.App;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
+import de.xikolo.utils.DeviceUtil;
 
 public class Config {
 
@@ -71,6 +74,7 @@ public class Config {
     public static final String HEADER_ACCEPT = "Accept";
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
     public static final String HEADER_ACCEPT_LANGUAGE = "Accept-Language";
+    public static final String HEADER_USER_AGENT = "User-Agent";
 
     public static final String MEDIA_TYPE_JSON = "application/json";
     public static final String MEDIA_TYPE_JSON_API = "application/vnd.api+json";
@@ -81,6 +85,10 @@ public class Config {
 
     public static final String HEADER_USER_PLATFORM = "X-User-Platform";
     public static final String HEADER_USER_PLATFORM_VALUE = "Android";
+    public static final String HEADER_USER_AGENT_VALUE =
+        App.getInstance().getResources().getString(R.string.app_name) + "/" + BuildConfig.VERSION_NAME + " " +
+        "Android/" + Build.VERSION.RELEASE + " " +
+        "(" + DeviceUtil.getDeviceName() + ")";
 
     public static final String HEADER_API_VERSION_EXPIRATION_DATE = "X-Api-Version-Expiration-Date";
 

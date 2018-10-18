@@ -21,6 +21,7 @@ import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
 import de.xikolo.managers.UserManager
 import de.xikolo.services.DownloadService
+import de.xikolo.utils.DeviceUtil
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
 import de.xikolo.utils.ToastUtil
@@ -262,7 +263,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private fun startFeedbackIntent() {
         val osVersion = Build.VERSION.RELEASE.toString()
-        val deviceName = String.format("%s %s", Build.MANUFACTURER, Build.MODEL)
+        val deviceName = DeviceUtil.deviceName
         val brand = resources.getString(R.string.app_name)
         val versionName = BuildConfig.VERSION_NAME
         val buildId = BuildConfig.VERSION_CODE.toString()

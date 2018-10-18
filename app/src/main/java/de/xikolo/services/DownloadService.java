@@ -71,6 +71,7 @@ public class DownloadService extends Service {
         // Don't use HttpLoggingInterceptor, crashes with OutOfMemoryException!
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(ApiService.authenticationInterceptor)
+                .addInterceptor(ApiService.userAgentInterceptor)
                 .build();
         downloadClient = new DownloadManager.Builder()
                 .context(this)
