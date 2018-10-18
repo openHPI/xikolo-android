@@ -1,26 +1,24 @@
 package de.xikolo;
 
-import android.os.Build;
-import android.support.multidex.MultiDexApplication;
+import android.app.Application;
 import android.support.v7.preference.PreferenceManager;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 
 import com.evernote.android.job.JobManager;
 
 import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
-import de.xikolo.network.jobs.base.ScheduledJobFactory;
 import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
 import de.xikolo.models.migrate.RealmSchemaMigration;
+import de.xikolo.network.jobs.base.ScheduledJobFactory;
 import de.xikolo.utils.ClientUtil;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class App extends MultiDexApplication {
+public class App extends Application {
 
     public static final String TAG = App.class.getSimpleName();
 
@@ -90,57 +88,22 @@ public class App extends MultiDexApplication {
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
     }
 
-    @SuppressWarnings("deprecation")
     private void configureWebView() {
-        // Enable WebView Cookies
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            CookieSyncManager.createInstance(this);
-        }
         CookieManager.getInstance().setAcceptCookie(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Config.DEBUG) {
+        if (Config.DEBUG) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
     }
 
-    @SuppressWarnings("deprecation")
-    public void startCookieSyncManager() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            CookieSyncManager.getInstance().startSync();
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    public void stopCookieSyncManager() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            CookieSyncManager.getInstance().stopSync();
-        }
-    }
-
-    @SuppressWarnings("deprecation")
     public void syncCookieSyncManager() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            CookieSyncManager.getInstance().sync();
-        } else {
-            CookieManager.getInstance().flush();
-        }
+        CookieManager.getInstance().flush();
     }
 
-    @SuppressWarnings("deprecation")
     public void clearCookieSyncManager() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            CookieSyncManager cookieSyncMngr = CookieSyncManager.getInstance();
-            cookieSyncMngr.startSync();
-            CookieManager cookieManager = CookieManager.getInstance();
-            cookieManager.removeAllCookie();
-            cookieManager.removeSessionCookie();
-            cookieSyncMngr.stopSync();
-            cookieSyncMngr.sync();
-        } else  {
-            CookieManager.getInstance().removeAllCookies(null);
-            CookieManager.getInstance().removeSessionCookies(null);
-            CookieManager.getInstance().flush();
-        }
+        CookieManager.getInstance().removeAllCookies(null);
+        CookieManager.getInstance().removeSessionCookies(null);
+        CookieManager.getInstance().flush();
     }
 
     public void configureSecondScreenManager() {

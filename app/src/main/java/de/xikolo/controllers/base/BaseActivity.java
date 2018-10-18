@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
@@ -161,7 +160,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     protected void onResume() {
         super.onResume();
         registerReceiver(networkChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        app.startCookieSyncManager();
     }
 
     @Override
@@ -169,7 +167,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         super.onPause();
         unregisterReceiver(networkChangeReceiver);
         app.syncCookieSyncManager();
-        app.stopCookieSyncManager();
     }
 
     @Override
@@ -258,7 +255,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     @SuppressWarnings("unused")
     protected void setActionBarElevation(float elevation) {
-        if (actionBar != null && Build.VERSION.SDK_INT >= 21) {
+        if (actionBar != null) {
             actionBar.setElevation(elevation);
         }
     }
@@ -276,15 +273,13 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     protected void setColorScheme(int toolbarColor, int statusbarColor) {
         if (toolbar != null && !translucentActionbar) {
             toolbar.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
-            if (Build.VERSION.SDK_INT >= 21) {
-                if (drawerLayout != null) {
-                    drawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, toolbarColor));
-                } else {
-                    getWindow().setStatusBarColor(ContextCompat.getColor(this, statusbarColor));
-                }
-                if (contentLayout != null) {
-                    contentLayout.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
-                }
+            if (drawerLayout != null) {
+                drawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, toolbarColor));
+            } else {
+                getWindow().setStatusBarColor(ContextCompat.getColor(this, statusbarColor));
+            }
+            if (contentLayout != null) {
+                contentLayout.setBackgroundColor(ContextCompat.getColor(this, toolbarColor));
             }
         }
     }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/navi_profile_light_bg"
-        android:state_pressed="true" />
-    <item android:drawable="@color/navi_profile_light_bg"
-        android:state_focused="true" />
-    <item android:drawable="@color/navi_profile_bg" />
-</selector>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/navi_profile_light_bg">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/navi_profile_bg" />
+        </shape>
+    </item>
+</ripple>

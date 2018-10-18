@@ -80,9 +80,6 @@ dependencies {
     def lifecycle_version = "1.1.1"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
 
-    // multidex support
-    implementation 'com.android.support:multidex:1.0.3'
-
     // local libraries
     implementation project(path: ':lanalytics', configuration: 'default')
 }

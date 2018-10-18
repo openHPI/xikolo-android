@@ -118,10 +118,6 @@
     <string name="dialog_server_error_message">There was an issue while contacting the server. Please try again later.</string>
     <string name="dialog_server_error_no">Close</string>
 
-    <string name="dialog_android_4_unsupported_title">Android 4 support has been discontinued</string>
-    <string name="dialog_android_4_unsupported_message">For security reasons, support for Android 4 ended. Please upgrade your device or use the web version instead.</string>
-    <string name="dialog_android_4_unsupported_no">Close</string>
-
     <!-- -->
     <string name="title_activity_module">Module</string>
 

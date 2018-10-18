@@ -1,8 +1,6 @@
 package de.xikolo.controllers.secondscreen;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -35,7 +33,6 @@ import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NotificationUtil;
 import de.xikolo.utils.TimeUtil;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class SecondScreenFragment extends BaseFragment {
 
     public static final String TAG = SecondScreenFragment.class.getSimpleName();

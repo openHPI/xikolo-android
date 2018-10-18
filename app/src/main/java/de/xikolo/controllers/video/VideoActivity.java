@@ -81,20 +81,12 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         });
 
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener((visibility) -> {
-            if (Build.VERSION.SDK_INT >= 17) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    videoHelper.show();
-                }
-            } else {
-                if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
-                    videoHelper.show();
-                }
+            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                videoHelper.show();
             }
         });
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
-        }
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
 
         if (mediaRouteButton != null) {
             if (PlayServicesUtil.checkPlayServices(this)) {
@@ -156,7 +148,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     private void updateVideoView(int orientation) {
         View layout = findViewById(R.id.container);
-        if (Build.VERSION.SDK_INT >= 17 && layout != null) {
+        if (layout != null) {
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 layout.setFitsSystemWindows(true);
 
@@ -233,8 +225,6 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
                 videoMetadataView.setVisibility(View.VISIBLE);
             }
-        } else if (layout != null) {
-            layout.setFitsSystemWindows(false);
         }
     }
 
@@ -243,17 +233,12 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         int uiOptions;
         Configuration config = getResources().getConfiguration();
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (Build.VERSION.SDK_INT >= 17) {
-                uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE// API 16
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // API 16
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
-                    | View.SYSTEM_UI_FLAG_LOW_PROFILE // API 14
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN; // API 16
-            } else {
-                uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // API 14
-                    | View.SYSTEM_UI_FLAG_LOW_PROFILE; // API 14
-            }
+            uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
         } else {
             uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
         }
@@ -265,13 +250,9 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         int uiOptions;
         Configuration config = getResources().getConfiguration();
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (Build.VERSION.SDK_INT >= 17) {
-                uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE // API 16
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // API 16
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN; // API 16
-            } else {
-                uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
-            }
+            uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
         } else {
             uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
         }

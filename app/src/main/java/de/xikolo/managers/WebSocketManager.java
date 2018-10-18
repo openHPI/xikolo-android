@@ -1,7 +1,5 @@
 package de.xikolo.managers;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -29,7 +27,6 @@ import de.xikolo.models.WebSocketMessage;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ParserUtil;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class WebSocketManager {
 
     public static final String TAG = WebSocketManager.class.getSimpleName();
