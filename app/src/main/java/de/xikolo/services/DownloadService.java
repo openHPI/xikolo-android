@@ -18,6 +18,7 @@ import com.coolerfall.download.OkHttpDownloader;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,6 +36,8 @@ import okhttp3.OkHttpClient;
 public class DownloadService extends Service {
 
     public static final String TAG = DownloadService.class.getSimpleName();
+
+    public static final String NO_NOTIFICATION = "DownloadService/NO_NOTIFICATION";
 
     public static final String ARG_TITLE = "title";
 
@@ -97,11 +100,14 @@ public class DownloadService extends Service {
         if (Config.DEBUG) Log.d(TAG, "DownloadService start command received");
 
         if (intent != null && intent.getExtras() != null && intent.getExtras().getString(ARG_TITLE) != null) {
-            List<String> titles = getRunningDownloadTitles();
-            titles.add(intent.getExtras().getString(ARG_TITLE));
+            String title = intent.getExtras().getString(ARG_TITLE);
+            if (!title.equals(NO_NOTIFICATION)) {
+                List<String> titles = getRunningDownloadTitles();
+                titles.add(title);
 
-            Notification notification = notificationUtil.getDownloadRunningNotification(titles).build();
-            startForeground(NotificationUtil.DOWNLOAD_RUNNING_NOTIFICATION_ID, notification);
+                Notification notification = notificationUtil.getDownloadRunningNotification(titles).build();
+                startForeground(NotificationUtil.DOWNLOAD_RUNNING_NOTIFICATION_ID, notification);
+            }
 
             // For each start request, send a message to start a job and deliver the
             // start ID so we know which request we're stopping when we finish the job
@@ -145,7 +151,19 @@ public class DownloadService extends Service {
 
     public synchronized boolean isDownloading() {
         return downloadMap != null && downloadMap.size() > 0;
+    }
 
+    public synchronized boolean isDownloadingTempFile(File path) {
+        if (downloadMap == null || path == null) return false;
+
+        for (Download download : downloadMap.values()) {
+            if (path.getAbsolutePath().equals(download.filePath + ".tmp")
+                && isDownloading(download.url)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public synchronized Download getDownload(String url) {
@@ -173,7 +191,7 @@ public class DownloadService extends Service {
         List<String> titles = new ArrayList<>();
 
         for (Download download : downloadMap.values()) {
-            if (isDownloading(download.url)) {
+            if (isDownloading(download.url) && !download.title.equals(NO_NOTIFICATION)) {
                 titles.add(download.title);
             }
         }
@@ -214,7 +232,9 @@ public class DownloadService extends Service {
 
         if (download != null) {
             download.state = Download.State.SUCCESSFUL;
-            notificationUtil.showDownloadCompletedNotification(download);
+            if(!download.title.equals(NO_NOTIFICATION)) {
+                notificationUtil.showDownloadCompletedNotification(download);
+            }
             EventBus.getDefault().post(new DownloadCompletedEvent(download.url));
         }
     }

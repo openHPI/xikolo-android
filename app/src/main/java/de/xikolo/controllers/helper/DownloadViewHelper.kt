@@ -90,8 +90,10 @@ class DownloadViewHelper(
     private val progressBarUpdater: Runnable
     private var progressBarUpdaterRunning = false
 
-    private var url: String? = null
     private var size: Long = 0L
+
+    private val secondaryDownloadAssets: MutableSet<DownloadAsset> = mutableSetOf()
+    var secondaryDownloadListener: SecondaryDownloadListener? = null
 
     init {
         val inflater = LayoutInflater.from(App.getInstance())
@@ -122,6 +124,11 @@ class DownloadViewHelper(
 
         buttonDownloadCancel.setOnClickListener { _ ->
             downloadManager.cancelAssetDownload(downloadAsset)
+            secondaryDownloadAssets.forEach {
+                if (secondaryDownloadListener == null || secondaryDownloadListener!!.onDelete(it, downloadManager)) {
+                    downloadManager.cancelAssetDownload(it)
+                }
+            }
             showStartState()
         }
 
@@ -157,10 +164,7 @@ class DownloadViewHelper(
             textDescription.visibility = View.GONE
         }
 
-        size = downloadAsset.size
-
-        url = downloadAsset.url
-        if (url == null) {
+        if (downloadAsset.url == null) {
             view.isEnabled = false
             buttonDownloadStart.isEnabled = false
 
@@ -196,14 +200,22 @@ class DownloadViewHelper(
                 if (dl != null) {
                     Handler(Looper.getMainLooper()).post {
                         if (progressBarUpdaterRunning) {
+
+                            val bytesWritten = dl.bytesWritten + getSecondaryDownloadsWrittenBytes()
+                            val totalBytes = if (dl.totalBytes > 0) {
+                                dl.totalBytes
+                            } else {
+                                downloadAsset.size
+                            } + getSecondaryDownloadsTotalBytes()
+
                             progressBarDownload.isIndeterminate = false
                             if (dl.totalBytes == 0L) {
                                 progressBarDownload.progress = 0
                             } else {
-                                progressBarDownload.progress = (dl.bytesWritten * 100 / dl.totalBytes).toInt()
+                                progressBarDownload.progress = (bytesWritten * 100 / totalBytes).toInt()
                             }
-                            textFileSize.text = (FileUtil.getFormattedFileSize(dl.bytesWritten) + " / "
-                                + FileUtil.getFormattedFileSize(dl.totalBytes))
+                            textFileSize.text = (FileUtil.getFormattedFileSize(bytesWritten) + " / "
+                                + FileUtil.getFormattedFileSize(totalBytes))
                         }
                     }
                 }
@@ -214,12 +226,17 @@ class DownloadViewHelper(
             }
         }
 
+        updateView()
+    }
+
+    private fun updateView() {
+        size = downloadAsset.size + getSecondaryDownloadsSize()
+
         when {
             downloadManager.downloadRunning(downloadAsset) -> showRunningState()
             downloadManager.downloadExists(downloadAsset)  -> showEndState()
             else                                           -> showStartState()
         }
-
     }
 
     fun onDestroy() {
@@ -228,12 +245,22 @@ class DownloadViewHelper(
 
     private fun deleteFile() {
         if (downloadManager.deleteAssetDownload(downloadAsset)) {
+            secondaryDownloadAssets.forEach {
+                if (secondaryDownloadListener == null || secondaryDownloadListener!!.onDelete(it, downloadManager)) {
+                    downloadManager.deleteAssetDownload(it)
+                }
+            }
             showStartState()
         }
     }
 
     private fun startDownload() {
         if (downloadManager.startAssetDownload(downloadAsset)) {
+            secondaryDownloadAssets.forEach {
+                if (!downloadManager.downloadExists(it)) {
+                    downloadManager.startAssetDownload(it)
+                }
+            }
             showRunningState()
         }
     }
@@ -286,7 +313,7 @@ class DownloadViewHelper(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDownloadCompletedEvent(event: DownloadCompletedEvent) {
-        if (event.url == url) {
+        if (event.url == downloadAsset.url) {
             showEndState()
         }
     }
@@ -316,6 +343,46 @@ class DownloadViewHelper(
     fun onOpenFileClick(@StringRes buttonText: Int, onClick: () -> Unit) {
         buttonOpenDownload.text = activity.getString(buttonText)
         buttonOpenDownload.setOnClickListener { onClick.invoke() }
+    }
+
+    fun addSecondaryDownload(downloadAsset: DownloadAsset) {
+        secondaryDownloadAssets.add(downloadAsset)
+        updateView()
+    }
+
+    interface SecondaryDownloadListener {
+        // returns true if the file shall be deleted, false otherwise
+        fun onDelete(downloadAsset: DownloadAsset, downloadManager: DownloadManager): Boolean
+    }
+
+    private fun getSecondaryDownloadsSize(): Long {
+        var size = 0L
+        secondaryDownloadAssets.forEach { size += it.size }
+        return size
+    }
+
+    private fun getSecondaryDownloadsWrittenBytes(): Long {
+        var size = 0L
+        secondaryDownloadAssets.forEach {
+            val dl = downloadManager.getDownload(it)
+            if (dl != null) {
+                size += dl.bytesWritten
+            }
+        }
+        return size
+    }
+
+    private fun getSecondaryDownloadsTotalBytes(): Long {
+        var size = 0L
+        secondaryDownloadAssets.forEach {
+            val dl = downloadManager.getDownload(it)
+            size += if (dl != null && dl.totalBytes > 0) {
+                dl.totalBytes
+            } else {
+                it.size
+            }
+        }
+        return size
     }
 
 }

@@ -533,7 +533,12 @@ public class VideoHelper {
 
         VideoSubtitles currentSubtitles = videoSettingsHelper.getCurrentVideoSubtitles();
         if (currentSubtitles != null) {
-            videoView.showSubtitles(currentSubtitles.vttUrl, currentSubtitles.language);
+            DownloadAsset.Course.Item.Subtitles downloadAsset = new DownloadAsset.Course.Item.Subtitles(currentSubtitles, item);
+            if (downloadManager.downloadExists(downloadAsset)) {
+                videoView.showSubtitles("file://" + downloadManager.getDownloadFile(downloadAsset).getAbsolutePath(), currentSubtitles.language);
+            } else {
+                videoView.showSubtitles(currentSubtitles.vttUrl, currentSubtitles.language);
+            }
             applicationPreferences.setVideoSubtitlesLanguage(currentSubtitles.language);
         } else {
             videoView.removeSubtitles();

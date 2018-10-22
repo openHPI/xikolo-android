@@ -98,11 +98,11 @@ class DownloadManager(activity: FragmentActivity) {
                 if (Config.DEBUG) Log.d(TAG, "Delete download " + downloadAsset.filePath)
 
                 if (!downloadExists(downloadAsset)) {
-                    StorageUtil.cleanStorage(File(downloadAsset.filePath))
+                    StorageUtil.cleanStorage(File(downloadAsset.filePath).parentFile)
                     false
                 } else {
                     EventBus.getDefault().post(DownloadDeletedEvent(downloadAsset))
-                    return File(downloadAsset.filePath).delete()
+                    return getDownloadFile(downloadAsset)!!.delete()
                 }
             } else {
                 pendingAction = PendingAction(ActionType.DELETE, downloadAsset)
@@ -206,6 +206,7 @@ class DownloadManager(activity: FragmentActivity) {
             }
         }
 
+        downloadAsset.storage = originalStorage
         return null
     }
 

@@ -13,6 +13,7 @@ import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.LoadingStatePresenterFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.controllers.video.VideoActivityAutoBundle
+import de.xikolo.managers.DownloadManager
 import de.xikolo.models.*
 import de.xikolo.presenters.base.PresenterFactory
 import de.xikolo.presenters.section.VideoPreviewPresenter
@@ -115,6 +116,17 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
                     DownloadAsset.Course.Item.VideoHD(item, video),
                     activity.getText(R.string.video_hd_as_mp4)
                 )
+                video.subtitles?.forEach {
+                    dvh.addSecondaryDownload(
+                        DownloadAsset.Course.Item.Subtitles(it, item)
+                    )
+                }
+                dvh.secondaryDownloadListener = object : DownloadViewHelper.SecondaryDownloadListener {
+                    override fun onDelete(downloadAsset: DownloadAsset, downloadManager: DownloadManager): Boolean {
+                        return !downloadManager.downloadExists(DownloadAsset.Course.Item.VideoHD(item, video))
+                            && !downloadManager.downloadExists(DownloadAsset.Course.Item.VideoSD(item, video))
+                    }
+                }
                 dvh.onOpenFileClick(R.string.play) { presenter.onPlayClicked() }
                 linearLayoutDownloads.addView(dvh.view)
                 downloadViewHelpers.add(dvh)
@@ -126,6 +138,17 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
                     DownloadAsset.Course.Item.VideoSD(item, video),
                     activity.getText(R.string.video_sd_as_mp4)
                 )
+                video.subtitles?.forEach {
+                    dvh.addSecondaryDownload(
+                        DownloadAsset.Course.Item.Subtitles(it, item)
+                    )
+                }
+                dvh.secondaryDownloadListener = object : DownloadViewHelper.SecondaryDownloadListener {
+                    override fun onDelete(downloadAsset: DownloadAsset, downloadManager: DownloadManager): Boolean {
+                        return !downloadManager.downloadExists(DownloadAsset.Course.Item.VideoHD(item, video))
+                            && !downloadManager.downloadExists(DownloadAsset.Course.Item.VideoSD(item, video))
+                    }
+                }
                 dvh.onOpenFileClick(R.string.play) { presenter.onPlayClicked() }
                 linearLayoutDownloads.addView(dvh.view)
                 downloadViewHelpers.add(dvh)

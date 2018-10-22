@@ -116,7 +116,7 @@ object StorageUtil {
                 file.delete()
             }
         } else {
-            if ((file.extension.endsWith("tmp") && (DownloadService.getInstance() == null || !DownloadService.getInstance().isDownloading))
+            if ((file.extension.endsWith("tmp") && (DownloadService.getInstance() == null || !DownloadService.getInstance().isDownloadingTempFile(file)))
                 || file.name.endsWith("slides.pdf")
                 || file.name.endsWith("transcript.pdf")
                 || file.name.endsWith("video_hd.mp4")
