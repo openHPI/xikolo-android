@@ -1,5 +1,9 @@
 package de.xikolo.controllers.video;
 
+import android.annotation.TargetApi;
+import android.app.AppOpsManager;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -24,10 +28,13 @@ import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastState;
 import com.yatatsu.autobundle.AutoBundleField;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.VideoHelper;
+import de.xikolo.managers.PermissionManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -42,6 +49,7 @@ import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.MarkdownUtil;
 import de.xikolo.utils.PlayServicesUtil;
+import de.xikolo.utils.ToastUtil;
 
 public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoView> implements VideoView {
 
@@ -337,19 +345,85 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     }
 
     @Override
-    public void onBackPressed() {
-        if (videoHelper.handleBackPress()) {
-            finish();
+    public void onUserLeaveHint() {
+        if (supportsPictureInPicture()) {
+            super.onUserLeaveHint();
+            enterPictureInPicture();
         }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    public void onBackPressed() {
+        if (videoHelper.handleBackPress()) {
+            if (supportsPictureInPicture()) {
+                enterPictureInPicture();
+            } else {
+                super.onBackPressed();
+            }
+        }
+    }
 
+    @Override
+    protected void onStop() {
         if (videoHelper != null) {
             videoHelper.pause();
             presenter.onPause(videoHelper.getCurrentPosition());
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (videoHelper != null) {
+            videoHelper.release();
+        }
+        super.onDestroy();
+    }
+
+    private boolean supportsPictureInPicture() {
+        return Build.VERSION.SDK_INT >= 24 && getPackageManager().hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE);
+    }
+
+    @TargetApi(24)
+    private boolean checkPipPermissions() {
+        if (Build.VERSION.SDK_INT < 26) {
+            return true;
+        }
+
+        try {
+            if (
+                ((AppOpsManager) Objects.requireNonNull(getSystemService(APP_OPS_SERVICE)))
+                    .checkOpNoThrow(
+                        AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
+                        getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA).uid,
+                        getPackageName()
+                    ) == AppOpsManager.MODE_ALLOWED
+                ) {
+                return true;
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
+
+    @TargetApi(24)
+    private void enterPictureInPicture() {
+        if (checkPipPermissions()) {
+            enterPictureInPictureMode();
+        } else {
+            ToastUtil.show("No PIP for you!");
+            PermissionManager.startAppInfo(this);
+        }
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
+        if (isInPictureInPictureMode) {
+            videoHelper.hide();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
+        } else {
+            videoHelper.show();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         }
     }
 
