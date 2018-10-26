@@ -368,7 +368,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     @Override
     public void onBackPressed() {
         if (videoHelper.handleBackPress()) {
-            if (DisplayUtil.supportsPictureInPicture(this)) {
+            if (DisplayUtil.supportsPictureInPicture(this) && videoHelper.getCurrentPosition() < videoHelper.getDuration() - 5000) {
                 enterPip();
             } else {
                 super.onBackPressed();
