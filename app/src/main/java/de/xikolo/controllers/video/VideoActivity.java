@@ -1,11 +1,21 @@
 package de.xikolo.controllers.video;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AppOpsManager;
-import android.content.pm.ActivityInfo;
+import android.app.PendingIntent;
+import android.app.PictureInPictureParams;
+import android.app.RemoteAction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.drawable.Icon;
+import android.net.Uri;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +38,8 @@ import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastState;
 import com.yatatsu.autobundle.AutoBundleField;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import de.xikolo.R;
@@ -49,11 +60,12 @@ import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.MarkdownUtil;
 import de.xikolo.utils.PlayServicesUtil;
-import de.xikolo.utils.ToastUtil;
 
 public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoView> implements VideoView {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
+
+    public static final String ACTION_SWITCH_PLAYBACK_STATE = "switch_playback_state";
 
     @AutoBundleField String courseId;
     @AutoBundleField String sectionId;
@@ -71,6 +83,20 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     private VideoHelper videoHelper;
     private Video video;
+
+    private BroadcastReceiver broadcastReceiver;
+
+    @TargetApi(26)
+    private static void openPipSettings(Activity context) {
+        try {
+            Intent intent = new Intent("android.settings.PICTURE_IN_PICTURE_SETTINGS");
+            Uri uri = Uri.fromParts("package", context.getPackageName(), null);
+            intent.setData(uri);
+            context.startActivity(intent);
+        } catch (RuntimeException e) {
+            PermissionManager.startAppInfo(context);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -346,17 +372,17 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @Override
     public void onUserLeaveHint() {
-        if (supportsPictureInPicture()) {
+        if (supportsPip()) {
             super.onUserLeaveHint();
-            enterPictureInPicture();
+            enterPip();
         }
     }
 
     @Override
     public void onBackPressed() {
         if (videoHelper.handleBackPress()) {
-            if (supportsPictureInPicture()) {
-                enterPictureInPicture();
+            if (supportsPip()) {
+                enterPip();
             } else {
                 super.onBackPressed();
             }
@@ -380,25 +406,19 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         super.onDestroy();
     }
 
-    private boolean supportsPictureInPicture() {
-        return Build.VERSION.SDK_INT >= 24 && getPackageManager().hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE);
+    private boolean supportsPip() {
+        return Build.VERSION.SDK_INT >= 26 && getPackageManager().hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE);
     }
 
-    @TargetApi(24)
-    private boolean checkPipPermissions() {
-        if (Build.VERSION.SDK_INT < 26) {
-            return true;
-        }
-
+    @TargetApi(26)
+    private boolean hasPipPermissions() {
         try {
-            if (
-                ((AppOpsManager) Objects.requireNonNull(getSystemService(APP_OPS_SERVICE)))
-                    .checkOpNoThrow(
-                        AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
-                        getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA).uid,
-                        getPackageName()
-                    ) == AppOpsManager.MODE_ALLOWED
-                ) {
+            AppOpsManager manager = (AppOpsManager) getSystemService(APP_OPS_SERVICE);
+            if (manager != null && manager.checkOpNoThrow(
+                AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
+                getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA).uid,
+                getPackageName()
+            ) == AppOpsManager.MODE_ALLOWED) {
                 return true;
             }
         } catch (Exception ignored) {
@@ -406,24 +426,73 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         return false;
     }
 
-    @TargetApi(24)
-    private void enterPictureInPicture() {
-        if (checkPipPermissions()) {
-            enterPictureInPictureMode();
-        } else {
-            ToastUtil.show("No PIP for you!");
-            PermissionManager.startAppInfo(this);
+    @TargetApi(26)
+    private void enterPip() {
+        if (hasPipPermissions()) {
+            enterPictureInPictureMode(getPipParams(videoHelper.isPlaying()));
         }
     }
 
+    @TargetApi(26)
+    private PictureInPictureParams getPipParams(boolean playing) {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            new Intent(ACTION_SWITCH_PLAYBACK_STATE),
+            0);
+
+        List<RemoteAction> actionList = new ArrayList<>();
+        actionList.add(
+            new RemoteAction(
+                Icon.createWithResource(
+                    this,
+                    playing ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play),
+                playing ? "Pause" : "Play",
+                playing ? "Pause" : "PPlay",
+                pendingIntent
+            )
+        );
+
+        Rect pipBounds = new Rect();
+        pipBounds.set(
+            videoHelper.getVideoContainer().getLeft(),
+            videoHelper.getVideoContainer().getTop(),
+            videoHelper.getVideoContainer().getRight(),
+            videoHelper.getVideoContainer().getBottom()
+        );
+
+        return new PictureInPictureParams.Builder()
+            .setSourceRectHint(pipBounds)
+            .setActions(actionList)
+            .build();
+    }
+
     @Override
+    @TargetApi(26)
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         if (isInPictureInPictureMode) {
             videoHelper.hide();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (intent == null || ACTION_SWITCH_PLAYBACK_STATE.equals(intent.getAction())) {
+                        return;
+                    }
+
+
+                    setPictureInPictureParams(getPipParams(videoHelper.isPlaying()));
+                    if (videoHelper.isPlaying()) {
+                        videoHelper.pause();
+                    } else {
+                        videoHelper.play();
+                    }
+                }
+            };
+            registerReceiver(broadcastReceiver, new IntentFilter(ACTION_SWITCH_PLAYBACK_STATE));
         } else {
             videoHelper.show();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+            unregisterReceiver(broadcastReceiver);
+            broadcastReceiver = null;
         }
     }
 

@@ -354,6 +354,13 @@ public class VideoHelper {
         return (int) videoView.getDuration();
     }
 
+    public boolean isPlaying() {
+        if (videoView != null) {
+            return videoView.isPlaying();
+        }
+        return false;
+    }
+
     public void play() {
         buttonPlay.setText(activity.getString(R.string.icon_pause));
         videoView.start();
