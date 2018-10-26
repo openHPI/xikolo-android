@@ -47,6 +47,10 @@
             android:summary="@string/settings_summary_video_playback_speed"
             android:title="@string/settings_title_video_playback_speed" />
 
+        <android.support.v7.preference.Preference
+            android:key="@string/preference_video_pip"
+            android:title="@string/settings_title_video_pip" />
+
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory

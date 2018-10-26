@@ -1,7 +1,6 @@
 package de.xikolo.controllers.video;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AppOpsManager;
 import android.app.PendingIntent;
 import android.app.PictureInPictureParams;
@@ -45,7 +44,6 @@ import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.VideoHelper;
-import de.xikolo.managers.PermissionManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
@@ -57,6 +55,7 @@ import de.xikolo.presenters.video.VideoPresenterFactory;
 import de.xikolo.presenters.video.VideoView;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.CastUtil;
+import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.MarkdownUtil;
 import de.xikolo.utils.PlayServicesUtil;
@@ -85,18 +84,6 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     private Video video;
 
     private BroadcastReceiver broadcastReceiver;
-
-    @TargetApi(26)
-    private static void openPipSettings(Activity context) {
-        try {
-            Intent intent = new Intent("android.settings.PICTURE_IN_PICTURE_SETTINGS");
-            Uri uri = Uri.fromParts("package", context.getPackageName(), null);
-            intent.setData(uri);
-            context.startActivity(intent);
-        } catch (RuntimeException e) {
-            PermissionManager.startAppInfo(context);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -372,7 +359,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @Override
     public void onUserLeaveHint() {
-        if (supportsPip()) {
+        if (DisplayUtil.supportsPictureInPicture(this)) {
             super.onUserLeaveHint();
             enterPip();
         }
@@ -381,7 +368,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     @Override
     public void onBackPressed() {
         if (videoHelper.handleBackPress()) {
-            if (supportsPip()) {
+            if (DisplayUtil.supportsPictureInPicture(this)) {
                 enterPip();
             } else {
                 super.onBackPressed();
@@ -404,10 +391,6 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             videoHelper.release();
         }
         super.onDestroy();
-    }
-
-    private boolean supportsPip() {
-        return Build.VERSION.SDK_INT >= 26 && getPackageManager().hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE);
     }
 
     @TargetApi(26)

@@ -23,12 +23,10 @@ import de.xikolo.controllers.dialogs.StorageMigrationDialogAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
+import de.xikolo.managers.PermissionManager
 import de.xikolo.managers.UserManager
 import de.xikolo.services.DownloadService
-import de.xikolo.utils.DeviceUtil
-import de.xikolo.utils.FileUtil
-import de.xikolo.utils.StorageUtil
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -143,6 +141,24 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             val general = findPreference(getString(R.string.preference_category_general)) as PreferenceCategory
             val storagePref = findPreference(getString(R.string.preference_storage))
             general.removePreference(storagePref)
+        }
+
+        val pipSettings = findPreference(getString(R.string.preference_video_pip))
+        if(!DisplayUtil.supportsPictureInPicture(App.getInstance())){
+            val video = findPreference(getString(R.string.preference_category_video_playback_speed)) as PreferenceCategory
+            video.removePreference(pipSettings)
+        } else {
+            pipSettings.setOnPreferenceClickListener {
+                try {
+                    val intent = Intent("android.settings.PICTURE_IN_PICTURE_SETTINGS")
+                    val uri = Uri.fromParts("package", activity?.packageName, null)
+                    intent.data = uri
+                    activity?.startActivity(intent)
+                } catch (e: RuntimeException) {
+                    PermissionManager.startAppInfo(activity)
+                }
+                true
+            }
         }
 
         val copyright = findPreference(getString(R.string.preference_copyright))
