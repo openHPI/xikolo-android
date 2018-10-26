@@ -454,6 +454,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     @TargetApi(26)
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         if (isInPictureInPictureMode) {
+            videoHelper.hideSettings();
             videoHelper.hide();
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
