@@ -37,13 +37,13 @@ public class DownloadService extends Service {
 
     public static final String TAG = DownloadService.class.getSimpleName();
 
-    public static final String NO_NOTIFICATION = "DownloadService/NO_NOTIFICATION";
-
     public static final String ARG_TITLE = "title";
 
     public static final String ARG_URL = "url";
 
     public static final String ARG_FILE_PATH = "file_path";
+
+    public static final String ARG_SHOW_NOTIFICATION = "show_notification";
 
     private ServiceHandler serviceHandler;
 
@@ -101,7 +101,7 @@ public class DownloadService extends Service {
 
         if (intent != null && intent.getExtras() != null && intent.getExtras().getString(ARG_TITLE) != null) {
             String title = intent.getExtras().getString(ARG_TITLE);
-            if (!title.equals(NO_NOTIFICATION)) {
+            if (intent.getExtras().getBoolean(ARG_SHOW_NOTIFICATION, true)) {
                 List<String> titles = getRunningDownloadTitles();
                 titles.add(title);
 
@@ -191,7 +191,7 @@ public class DownloadService extends Service {
         List<String> titles = new ArrayList<>();
 
         for (Download download : downloadMap.values()) {
-            if (isDownloading(download.url) && !download.title.equals(NO_NOTIFICATION)) {
+            if (isDownloading(download.url) && download.showNotification) {
                 titles.add(download.title);
             }
         }
@@ -232,7 +232,7 @@ public class DownloadService extends Service {
 
         if (download != null) {
             download.state = Download.State.SUCCESSFUL;
-            if(!download.title.equals(NO_NOTIFICATION)) {
+            if(download.showNotification) {
                 notificationUtil.showDownloadCompletedNotification(download);
             }
             EventBus.getDefault().post(new DownloadCompletedEvent(download.url));
@@ -259,6 +259,7 @@ public class DownloadService extends Service {
             final String title = message.getData().getString(ARG_TITLE);
             final String url = message.getData().getString(ARG_URL);
             final String filePath = message.getData().getString(ARG_FILE_PATH);
+            final boolean showNotification = message.getData().getBoolean(ARG_SHOW_NOTIFICATION);
 
             int allowedNetworkTypes = DownloadRequest.NETWORK_WIFI | DownloadRequest.NETWORK_MOBILE;
             ApplicationPreferences appPreferences = new ApplicationPreferences();
@@ -309,6 +310,7 @@ public class DownloadService extends Service {
             download.title = title;
             download.url = url;
             download.filePath = filePath;
+            download.showNotification = showNotification;
             download.id = downloadClient.add(request);
 
             downloadMap.putIfAbsent(download.id, download);

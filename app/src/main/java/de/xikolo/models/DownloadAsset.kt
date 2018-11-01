@@ -2,7 +2,6 @@ package de.xikolo.models
 
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.services.DownloadService
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
 import java.io.File
@@ -22,6 +21,8 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
         get() = fileFolder + File.separator + fileName
 
     open val mimeType = "application/pdf"
+
+    open val showNotification = true
 
     class Document(
         val document: de.xikolo.models.Document,
@@ -97,7 +98,7 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
                 override val fileFolder
                     get() = super.fileFolder + File.separator + "Subtitles"
 
-                override val title = DownloadService.NO_NOTIFICATION
+                override val showNotification = false
                 override val mimeType = "text/vtt"
             }
         }

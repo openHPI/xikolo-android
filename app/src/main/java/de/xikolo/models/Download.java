@@ -10,6 +10,8 @@ public class Download {
 
     public String filePath;
 
+    public boolean showNotification;
+
     public long totalBytes;
 
     public long bytesWritten;

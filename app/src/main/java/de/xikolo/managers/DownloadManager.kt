@@ -63,6 +63,7 @@ class DownloadManager(activity: FragmentActivity) {
                         bundle.putString(DownloadService.ARG_TITLE, downloadAsset.title)
                         bundle.putString(DownloadService.ARG_URL, downloadAsset.url)
                         bundle.putString(DownloadService.ARG_FILE_PATH, downloadAsset.filePath)
+                        bundle.putBoolean(DownloadService.ARG_SHOW_NOTIFICATION, downloadAsset.showNotification)
 
                         intent.putExtras(bundle)
                         context.startService(intent)
