@@ -176,7 +176,7 @@
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
             android:excludeFromRecents="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:parentActivityName=".controllers.section.CourseItemsActivity"
             android:theme="@style/AppThemeDarkStatusBar">
             <meta-data

@@ -431,7 +431,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                     this,
                     playing ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play),
                 playing ? "Pause" : "Play",
-                playing ? "Pause" : "PPlay",
+                playing ? "Pause" : "Play",
                 pendingIntent
             )
         );
@@ -459,17 +459,16 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    if (intent == null || ACTION_SWITCH_PLAYBACK_STATE.equals(intent.getAction())) {
+                    if (intent == null || !ACTION_SWITCH_PLAYBACK_STATE.equals(intent.getAction())) {
                         return;
                     }
 
-
-                    setPictureInPictureParams(getPipParams(videoHelper.isPlaying()));
                     if (videoHelper.isPlaying()) {
                         videoHelper.pause();
                     } else {
                         videoHelper.play();
                     }
+                    setPictureInPictureParams(getPipParams(videoHelper.isPlaying()));
                 }
             };
             registerReceiver(broadcastReceiver, new IntentFilter(ACTION_SWITCH_PLAYBACK_STATE));
