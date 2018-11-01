@@ -26,4 +26,8 @@ public class FeatureToggle {
         return BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO || BuildConfig.X_FLAVOR == BuildFlavor.MOOC_HOUSE;
     }
 
+    public static boolean hlsVideo() {
+        return Config.DEBUG;
+    }
+
 }

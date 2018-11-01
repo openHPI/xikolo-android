@@ -30,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.config.Config;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.DownloadAsset;
@@ -517,8 +518,10 @@ public class VideoHelper {
             videoMode -> {
                 if (videoMode == VideoSettingsHelper.VideoMode.HD) {
                     return videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video));
-                } else {
+                } else if (videoMode == VideoSettingsHelper.VideoMode.SD) {
                     return videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video));
+                } else {
+                    return false;
                 }
             }
         );
@@ -612,7 +615,7 @@ public class VideoHelper {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
         } else if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video))) { // sd video download available
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
-        } else if (Config.DEBUG && video.singleStream.hlsUrl != null) {
+        } else if (FeatureToggle.hlsVideo() && video.singleStream.hlsUrl != null) {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.AUTO);
         } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !applicationPreferences.isVideoQualityLimitedOnMobile()) {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);

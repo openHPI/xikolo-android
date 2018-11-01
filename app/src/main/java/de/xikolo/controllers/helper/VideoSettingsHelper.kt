@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import de.xikolo.R
+import de.xikolo.config.FeatureToggle
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.utils.PlaybackSpeedUtil
 import java.util.*
@@ -69,6 +70,21 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     fun buildQualityView(): ViewGroup {
         val list = buildSettingsPanel(context.getString(R.string.video_settings_quality))
 
+        if(FeatureToggle.hlsVideo()) {
+            list.addView(
+                buildSettingsItem(
+                    null,
+                    VideoMode.AUTO.title +
+                        if (qualityOfflineInfo.isOfflineAvailable(VideoMode.AUTO)) " " + context.getString(R.string.video_settings_quality_offline) else "",
+                    View.OnClickListener {
+                        val oldQuality = currentQuality
+                        currentQuality = VideoMode.AUTO
+                        changeListener.onQualityChanged(oldQuality, currentQuality)
+                    },
+                    currentQuality == VideoMode.AUTO
+                )
+            )
+        }
         list.addView(
             buildSettingsItem(
                 null,
