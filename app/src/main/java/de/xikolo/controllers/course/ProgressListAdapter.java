@@ -87,7 +87,7 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
 
         holder.textTitle.setText(title);
 
-        if (selftestExercises != null) {
+        if (selftestExercises != null && selftestExercises.pointsPossible > 0) {
             holder.progressSelftest.setVisibility(View.VISIBLE);
             setupExerciseProgressView(
                     holder.progressSelftest,
@@ -101,7 +101,7 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
             holder.progressSelftest.setVisibility(View.GONE);
         }
 
-        if (mainExercises != null) {
+        if (mainExercises != null && mainExercises.pointsPossible > 0) {
             holder.progressMain.setVisibility(View.VISIBLE);
             setupExerciseProgressView(
                     holder.progressMain,
@@ -115,7 +115,7 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
             holder.progressMain.setVisibility(View.GONE);
         }
 
-        if (bonusExercises != null) {
+        if (bonusExercises != null && bonusExercises.pointsPossible > 0) {
             holder.progressBonus.setVisibility(View.VISIBLE);
             setupExerciseProgressView(
                     holder.progressBonus,
@@ -129,7 +129,7 @@ public class ProgressListAdapter extends RecyclerView.Adapter<ProgressListAdapte
             holder.progressBonus.setVisibility(View.GONE);
         }
 
-        if (visits != null) {
+        if (visits != null && visits.itemsAvailable > 0) {
             holder.progressVisits.setVisibility(View.VISIBLE);
             setupExerciseProgressView(
                     holder.progressVisits,

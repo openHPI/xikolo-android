@@ -94,11 +94,11 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         ));
         ViewCompat.setNestedScrollingEnabled(holder.recyclerView, false);
 
-        if (!section.accessible || section.getAccessibleItems().size() == 0) {
-            contentLocked(section, holder);
-        } else {
+        if (section.hasAccessibleItems()) {
             contentAvailable(section, holder);
             itemAdapter.updateItems(section.getAccessibleItems());
+        } else {
+            contentLocked(section, holder);
         }
     }
 

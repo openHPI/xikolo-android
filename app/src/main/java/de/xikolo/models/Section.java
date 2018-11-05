@@ -62,6 +62,10 @@ public class Section extends RealmObject {
         return model;
     }
 
+    public boolean hasAccessibleItems() {
+        return accessible && getAccessibleItems().size() > 0;
+    }
+
     public List<Item> getAccessibleItems() {
         Realm realm = Realm.getDefaultInstance();
         List<Item> items = realm.where(Item.class)
