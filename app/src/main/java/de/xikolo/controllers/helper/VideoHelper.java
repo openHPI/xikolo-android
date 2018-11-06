@@ -2,17 +2,23 @@ package de.xikolo.controllers.helper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.github.rubensousa.previewseekbar.PreviewSeekBar;
+import com.github.rubensousa.previewseekbar.PreviewView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,11 +59,14 @@ public class VideoHelper {
     @BindView(R.id.videoController) View videoController;
     @BindView(R.id.videoControls) View videoControls;
     @BindView(R.id.videoProgress) View videoProgress;
-    @BindView(R.id.videoSeekBar) SeekBar seekBar;
     @BindView(R.id.videoOverlay) View videoOverlay;
 
     @BindView(R.id.settingsContainer) LinearLayout settingsContainer;
     @BindView(R.id.buttonSettings) TextView settingsButton;
+
+    @BindView(R.id.videoSeekBar) PreviewSeekBar seekBar;
+    @BindView(R.id.videoSeekPreviewLayout) FrameLayout previewLayout;
+    @BindView(R.id.videoSeekPreviewImage) ImageView previewImage;
 
     @BindView(R.id.btnPlay) CustomFontTextView buttonPlay;
     @BindView(R.id.btnStepForward) CustomFontTextView buttonStepForward;
@@ -88,6 +97,8 @@ public class VideoHelper {
     private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
 
     private boolean seekBarUpdaterIsRunning = false;
+    private HandlerThread seekBarPreviewThread;
+    private Handler seekBarPreviewHandler;
 
     private boolean userIsSeeking = false;
 
@@ -115,6 +126,10 @@ public class VideoHelper {
         });
 
         downloadManager = new DownloadManager(activity);
+
+        seekBarPreviewThread = new HandlerThread(TAG + "/seekbarpreview");
+        seekBarPreviewThread.start();
+        seekBarPreviewHandler = new Handler(seekBarPreviewThread.getLooper());
 
         setupView();
     }
@@ -170,8 +185,9 @@ public class VideoHelper {
                         textCurrentTime.setText(getTimeString(getCurrentPosition()));
                     }
                 });
+
                 if (getCurrentPosition() < getDuration()) {
-                    seekBar.postDelayed(this, MILLISECONDS);
+                    seekBarPreviewHandler.postDelayed(this, MILLISECONDS);
                 } else {
                     seekBarUpdaterIsRunning = false;
                 }
@@ -222,25 +238,40 @@ public class VideoHelper {
             stepBackward();
         });
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            private int progress;
+        seekBar.attachPreviewFrameLayout(previewLayout);
+        seekBar.setPreviewLoader(new com.github.rubensousa.previewseekbar.PreviewLoader() {
+            private static final int PREVIEW_INTERVAL = 100;
+            private static final int PREVIEW_POSITION_DIFFERENCE = 5000;
+
+            private long lastPreview = 0;
+            private long lastPosition = -1;
 
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    show();
-                    this.progress = progress;
-                    textCurrentTime.setText(getTimeString(progress));
+            public void loadPreview(long currentPosition, long max) {
+                if (System.currentTimeMillis() - lastPreview > PREVIEW_INTERVAL
+                    && (lastPosition < 0 || Math.abs(currentPosition - lastPosition) > PREVIEW_POSITION_DIFFERENCE)
+                    ) {
+                    seekBarPreviewHandler.removeCallbacksAndMessages(null);
+                    seekBarPreviewHandler.postAtFrontOfQueue(() -> {
+                        final Bitmap frame = videoView.getFrameAt(currentPosition);
+                        activity.runOnUiThread(() -> previewImage.setImageBitmap(frame));
+
+                        lastPreview = System.currentTimeMillis();
+                        lastPosition = currentPosition;
+                    });
                 }
             }
-
+        });
+        seekBar.addOnPreviewChangeListener(new PreviewView.OnPreviewChangeListener() {
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onStartPreview(PreviewView previewView, int progress) {
                 userIsSeeking = true;
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStopPreview(PreviewView previewView, int progress) {
+                seekBarPreviewHandler.removeCallbacksAndMessages(null);
+
                 LanalyticsUtil.trackVideoSeek(item.id,
                     course.id, module.id,
                     getCurrentPosition(),
@@ -252,6 +283,14 @@ public class VideoHelper {
 
                 userIsSeeking = false;
                 seekTo(progress);
+            }
+
+            @Override
+            public void onPreview(PreviewView previewView, int progress, boolean fromUser) {
+                if (fromUser) {
+                    show();
+                    textCurrentTime.setText(getTimeString(progress));
+                }
             }
         });
 
@@ -307,6 +346,12 @@ public class VideoHelper {
         buttonPlay.setText(activity.getString(R.string.icon_play));
         videoView.pause();
         saveCurrentPosition();
+    }
+
+    private void release() {
+        pause();
+        videoView.release();
+        seekBarPreviewThread.quit();
     }
 
     private void seekTo(int progress) {
@@ -387,8 +432,7 @@ public class VideoHelper {
             hideSettings();
             return false;
         }
-        pause();
-        videoView.release();
+        release();
         return true;
     }
 
@@ -440,6 +484,89 @@ public class VideoHelper {
                 public void onPlaybackSpeedChanged(@NotNull PlaybackSpeedUtil old, @NotNull PlaybackSpeedUtil speed) {
                     if (old != speed) {
                         videoView.setPlaybackSpeed(speed.getSpeed());
+
+                        LanalyticsUtil.trackVideoChangeSpeed(item.id,
+                            course.id, module.id,
+                            getCurrentPosition(),
+                            old.getSpeed(),
+                            speed.getSpeed(),
+                            activity.getResources().getConfiguration().orientation,
+                            getCurrentQualityString(),
+                            getSourceString());
+                    }
+
+                    hideSettings();
+                }
+            },
+            new VideoSettingsHelper.OnSettingsClickListener() {
+                @Override
+                public void onSubtitleClick() {
+                    showSettings(videoSettingsHelper.buildSubtitleView());
+                }
+
+                @Override
+                public void onPlaybackSpeedClick() {
+                    showSettings(videoSettingsHelper.buildPlaybackSpeedView());
+                }
+
+                @Override
+                public void onQualityClick() {
+                    showSettings(videoSettingsHelper.buildQualityView());
+                }
+            },
+            videoMode -> {
+                if (videoMode == VideoSettingsHelper.VideoMode.HD) {
+                    return videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video));
+                } else {
+                    return videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video));
+                }
+            }
+        );
+
+        this.videoSettingsHelper = new VideoSettingsHelper(
+            activity,
+            video.subtitles,
+            new VideoSettingsHelper.OnSettingsChangeListener() {
+                @Override
+                public void onSubtitleChanged(@Nullable VideoSubtitles old, @Nullable VideoSubtitles videoSubtitles) {
+                    if (old != videoSubtitles) {
+                        saveCurrentPosition();
+                        showProgress();
+                        updateVideo();
+                    }
+
+                    hideSettings();
+                }
+
+                @Override
+                public void onQualityChanged(@NotNull VideoSettingsHelper.VideoMode old, @NotNull VideoSettingsHelper.VideoMode videoMode) {
+                    if (old != videoMode) {
+                        String oldSourceString = getSourceString();
+
+                        saveCurrentPosition();
+                        showProgress();
+                        updateVideo();
+
+                        LanalyticsUtil.trackVideoChangeQuality(item.id,
+                            course.id, module.id,
+                            getCurrentPosition(),
+                            videoSettingsHelper.getCurrentSpeed().getSpeed(),
+                            activity.getResources().getConfiguration().orientation,
+                            getQualityString(old),
+                            getCurrentQualityString(),
+                            oldSourceString,
+                            getSourceString());
+                    }
+
+                    hideSettings();
+                }
+
+                @Override
+                public void onPlaybackSpeedChanged(@NotNull PlaybackSpeedUtil old, @NotNull PlaybackSpeedUtil speed) {
+                    if (old != speed) {
+                        videoView.setPlaybackSpeed(speed.getSpeed());
+
+                        applicationPreferences.setVideoPlaybackSpeed(speed);
 
                         LanalyticsUtil.trackVideoChangeSpeed(item.id,
                             course.id, module.id,
@@ -541,6 +668,17 @@ public class VideoHelper {
         }
 
         videoView.setPlaybackSpeed(videoSettingsHelper.getCurrentSpeed().getSpeed());
+
+        if (videoDownloadPresent(videoAssetDownload)) {
+            videoView.setPreviewUri(Uri.parse("file://" + downloadManager.getDownloadFile(videoAssetDownload)));
+        } else if (NetworkUtil.isOnline()) {
+            if (video.singleStream.sdUrl != null) {
+                videoView.setPreviewUri(Uri.parse(video.singleStream.sdUrl));
+            } else if (video.singleStream.hdUrl != null) {
+                videoView.setPreviewUri(Uri.parse(video.singleStream.hdUrl));
+            }
+        }
+        seekBar.setPreviewEnabled(videoView.getPreviewAvailable());
     }
 
     private boolean videoDownloadPresent(DownloadAsset.Course.Item item) {
@@ -557,7 +695,7 @@ public class VideoHelper {
         if (Config.DEBUG) {
             Log.i(TAG, "Video HOST_URL: " + uri);
         }
-        videoView.setVideoURI(Uri.parse(uri));
+        videoView.setVideoUri(Uri.parse(uri));
     }
 
     private void saveCurrentPosition() {

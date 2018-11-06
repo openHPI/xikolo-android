@@ -1,9 +1,12 @@
 package de.xikolo.views
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.support.annotation.IntRange
 import android.util.AttributeSet
+
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.*
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
@@ -15,16 +18,17 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.util.Util
 
-
 open class ExoPlayerVideoView : PlayerView {
 
     private lateinit var playerContext: Context
     private lateinit var exoplayer: SimpleExoPlayer
     private lateinit var playerListener: Player.EventListener
     private lateinit var dataSourceFactory: DefaultDataSourceFactory
+    private val bandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter()
 
     private var videoMediaSource: MediaSource? = null
     private var mergedMediaSource: MediaSource? = null
+    private var mediaMetadataRetriever: MediaMetadataRetriever? = null
 
     var onPreparedListener: OnPreparedListener? = null
 
@@ -34,7 +38,10 @@ open class ExoPlayerVideoView : PlayerView {
 
     var onErrorListener: OnErrorListener? = null
 
-    var isPreparing = false
+    private var isPreparing = false
+
+    var previewAvailable = false
+        private set
 
     val duration: Long
         get() = player.duration
@@ -57,12 +64,12 @@ open class ExoPlayerVideoView : PlayerView {
     private fun setup(context: Context, attrs: AttributeSet?) {
         playerContext = context
 
-        dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), DefaultBandwidthMeter())
+        dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
 
         exoplayer = ExoPlayerFactory.newSimpleInstance(
             context,
             DefaultTrackSelector(
-                AdaptiveTrackSelection.Factory(DefaultBandwidthMeter())
+                AdaptiveTrackSelection.Factory()
             )
         )
 
@@ -134,10 +141,34 @@ open class ExoPlayerVideoView : PlayerView {
         )
     }
 
-    fun setVideoURI(uri: Uri) {
+    fun setVideoUri(uri: Uri) {
+        val dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
         videoMediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+
         mergedMediaSource = videoMediaSource
+
         prepare()
+    }
+
+    fun setPreviewUri(uri: Uri) {
+        mediaMetadataRetriever = MediaMetadataRetriever()
+        previewAvailable =
+            try {
+                mediaMetadataRetriever?.setDataSource(playerContext, uri)
+                true
+            } catch (e1: Exception) {
+                try {
+                    mediaMetadataRetriever?.setDataSource(uri.toString())
+                    true
+                } catch (e2: Exception) {
+                    try {
+                        mediaMetadataRetriever?.setDataSource(uri.toString(), HashMap<String, String>())
+                        true
+                    } catch (e3: Exception) {
+                        false
+                    }
+                }
+            }
     }
 
     fun showSubtitles(uri: String, language: String) {
@@ -155,6 +186,13 @@ open class ExoPlayerVideoView : PlayerView {
     fun removeSubtitles() {
         mergedMediaSource = videoMediaSource
         prepare()
+    }
+
+    fun getFrameAt(position: Long): Bitmap? {
+        if (previewAvailable) {
+            return mediaMetadataRetriever?.getFrameAtTime(position * 1000)
+        }
+        return null
     }
 
     private fun prepare() {
