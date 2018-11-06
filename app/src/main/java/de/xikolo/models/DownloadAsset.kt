@@ -24,6 +24,8 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
 
     open val showNotification = true
 
+    open val secondaryAssets = mutableSetOf<DownloadAsset>()
+
     class Document(
         val document: de.xikolo.models.Document,
         documentLocalization: DocumentLocalization
