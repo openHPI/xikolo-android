@@ -17,7 +17,6 @@ import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog
-import de.xikolo.controllers.dialogs.ConfirmDeleteDialogAutoBundle
 import de.xikolo.controllers.dialogs.MobileDownloadDialog
 import de.xikolo.events.AllDownloadsCancelledEvent
 import de.xikolo.events.DownloadCompletedEvent
@@ -92,9 +91,6 @@ class DownloadViewHelper(
 
     private var size: Long = 0L
 
-    private val secondaryDownloadAssets: MutableSet<DownloadAsset> = mutableSetOf()
-    var secondaryDownloadListener: SecondaryDownloadListener? = null
-
     init {
         val inflater = LayoutInflater.from(App.getInstance())
         view = inflater.inflate(R.layout.container_download, null)
@@ -124,11 +120,6 @@ class DownloadViewHelper(
 
         buttonDownloadCancel.setOnClickListener { _ ->
             downloadManager.cancelAssetDownload(downloadAsset)
-            secondaryDownloadAssets.forEach {
-                if (secondaryDownloadListener == null || secondaryDownloadListener!!.onDelete(it, downloadManager)) {
-                    downloadManager.cancelAssetDownload(it)
-                }
-            }
             showStartState()
         }
 
@@ -201,12 +192,12 @@ class DownloadViewHelper(
                     Handler(Looper.getMainLooper()).post {
                         if (progressBarUpdaterRunning) {
 
-                            val bytesWritten = dl.bytesWritten + getSecondaryDownloadsWrittenBytes()
+                            val bytesWritten = dl.bytesWritten
                             val totalBytes = if (dl.totalBytes > 0) {
                                 dl.totalBytes
                             } else {
                                 downloadAsset.size
-                            } + getSecondaryDownloadsTotalBytes()
+                            }
 
                             progressBarDownload.isIndeterminate = false
                             if (dl.totalBytes == 0L) {
@@ -226,12 +217,6 @@ class DownloadViewHelper(
             }
         }
 
-        updateView()
-    }
-
-    private fun updateView() {
-        size = downloadAsset.size + getSecondaryDownloadsSize()
-
         when {
             downloadManager.downloadRunning(downloadAsset) -> showRunningState()
             downloadManager.downloadExists(downloadAsset)  -> showEndState()
@@ -245,22 +230,12 @@ class DownloadViewHelper(
 
     private fun deleteFile() {
         if (downloadManager.deleteAssetDownload(downloadAsset)) {
-            secondaryDownloadAssets.forEach {
-                if (secondaryDownloadListener == null || secondaryDownloadListener!!.onDelete(it, downloadManager)) {
-                    downloadManager.deleteAssetDownload(it)
-                }
-            }
             showStartState()
         }
     }
 
     private fun startDownload() {
         if (downloadManager.startAssetDownload(downloadAsset)) {
-            secondaryDownloadAssets.forEach {
-                if (!downloadManager.downloadExists(it)) {
-                    downloadManager.startAssetDownload(it)
-                }
-            }
             showRunningState()
         }
     }
@@ -343,46 +318,6 @@ class DownloadViewHelper(
     fun onOpenFileClick(@StringRes buttonText: Int, onClick: () -> Unit) {
         buttonOpenDownload.text = activity.getString(buttonText)
         buttonOpenDownload.setOnClickListener { onClick.invoke() }
-    }
-
-    fun addSecondaryDownload(downloadAsset: DownloadAsset) {
-        secondaryDownloadAssets.add(downloadAsset)
-        updateView()
-    }
-
-    interface SecondaryDownloadListener {
-        // returns true if the file shall be deleted, false otherwise
-        fun onDelete(downloadAsset: DownloadAsset, downloadManager: DownloadManager): Boolean
-    }
-
-    private fun getSecondaryDownloadsSize(): Long {
-        var size = 0L
-        secondaryDownloadAssets.forEach { size += it.size }
-        return size
-    }
-
-    private fun getSecondaryDownloadsWrittenBytes(): Long {
-        var size = 0L
-        secondaryDownloadAssets.forEach {
-            val dl = downloadManager.getDownload(it)
-            if (dl != null) {
-                size += dl.bytesWritten
-            }
-        }
-        return size
-    }
-
-    private fun getSecondaryDownloadsTotalBytes(): Long {
-        var size = 0L
-        secondaryDownloadAssets.forEach {
-            val dl = downloadManager.getDownload(it)
-            size += if (dl != null && dl.totalBytes > 0) {
-                dl.totalBytes
-            } else {
-                it.size
-            }
-        }
-        return size
     }
 
 }

@@ -74,6 +74,10 @@ class DownloadManager(activity: FragmentActivity) {
 
                         EventBus.getDefault().post(DownloadStartedEvent(downloadAsset))
 
+                        downloadAsset.secondaryAssets.forEach {
+                            startAssetDownload(it)
+                        }
+
                         return true
                     }
                     else -> {
@@ -94,20 +98,27 @@ class DownloadManager(activity: FragmentActivity) {
     }
 
     fun deleteAssetDownload(downloadAsset: DownloadAsset): Boolean {
-        return if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
+        if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 if (Config.DEBUG) Log.d(TAG, "Delete download " + downloadAsset.filePath)
 
                 if (!downloadExists(downloadAsset)) {
                     StorageUtil.cleanStorage(File(downloadAsset.filePath).parentFile)
-                    false
+                    return false
                 } else {
                     EventBus.getDefault().post(DownloadDeletedEvent(downloadAsset))
-                    return getDownloadFile(downloadAsset)!!.delete()
+
+                    if (getDownloadFile(downloadAsset)!!.delete()) {
+                        downloadAsset.secondaryAssets.forEach {
+                            deleteAssetDownload(it)
+                        }
+                        return true
+                    }
+                    return false
                 }
             } else {
                 pendingAction = PendingAction(ActionType.DELETE, downloadAsset)
-                false
+                return false
             }
         } else {
             val msg = StorageUtil.buildWriteErrorMessage(App.getInstance())
@@ -126,6 +137,10 @@ class DownloadManager(activity: FragmentActivity) {
                 downloadService?.cancelDownload(downloadAsset.url)
 
                 deleteAssetDownload(downloadAsset)
+
+                downloadAsset.secondaryAssets.forEach {
+                    cancelAssetDownload(it)
+                }
             } else {
                 pendingAction = PendingAction(ActionType.CANCEL, downloadAsset)
             }
@@ -192,13 +207,13 @@ class DownloadManager(activity: FragmentActivity) {
 
         downloadAsset.storage = StorageUtil.getInternalStorage(App.getInstance())
         val internalFile = File(downloadAsset.filePath)
-        if(internalFile.exists() && internalFile.isFile) {
+        if (internalFile.exists() && internalFile.isFile) {
             downloadAsset.storage = originalStorage
             return internalFile
         }
 
         val sdcardStorage: File? = StorageUtil.getSdcardStorage(App.getInstance())
-        if(sdcardStorage != null) {
+        if (sdcardStorage != null) {
             downloadAsset.storage = sdcardStorage
             val sdcardFile = File(downloadAsset.filePath)
             if (sdcardFile.exists() && sdcardFile.isFile) {
