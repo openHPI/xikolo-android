@@ -44,6 +44,7 @@ import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.PlaybackSpeedUtil;
 import de.xikolo.views.CustomFontTextView;
 import de.xikolo.views.CustomSizeVideoView;
+import de.xikolo.views.ExoPlayerVideoView;
 
 public class VideoHelper {
 
@@ -174,6 +175,18 @@ public class VideoHelper {
             textVideoWarning.setText(activity.getString(R.string.error_plain));
 
             return true;
+        });
+
+        videoView.setOnSeekListener(new ExoPlayerVideoView.OnSeekListener() {
+            @Override
+            public void onSeekStart() {
+                showProgress();
+            }
+
+            @Override
+            public void onSeekProcessed() {
+                hideProgress();
+            }
         });
 
         seekBarUpdater = new Runnable() {
@@ -394,10 +407,12 @@ public class VideoHelper {
     }
 
     public void showProgress() {
+        buttonPlay.setVisibility(View.INVISIBLE);
         videoProgress.setVisibility(View.VISIBLE);
     }
 
     public void hideProgress() {
+        buttonPlay.setVisibility(View.VISIBLE);
         videoProgress.setVisibility(View.GONE);
     }
 

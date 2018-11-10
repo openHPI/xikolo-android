@@ -39,7 +39,11 @@ open class ExoPlayerVideoView : PlayerView {
 
     var onErrorListener: OnErrorListener? = null
 
+    var onSeekListener: OnSeekListener? = null
+
     private var isPreparing = false
+
+    private var isSeekLoading = false
 
     var previewAvailable = false
         private set
@@ -84,6 +88,11 @@ open class ExoPlayerVideoView : PlayerView {
                 if (playbackState == Player.STATE_READY && isPreparing) {
                     onPreparedListener?.onPrepared()
                     isPreparing = false
+                }
+
+                if(playbackState == Player.STATE_READY && isSeekLoading){
+                    onSeekListener?.onSeekProcessed()
+                    isSeekLoading = false
                 }
 
                 if (playbackState == Player.STATE_ENDED && currentPosition >= duration) {
@@ -132,6 +141,8 @@ open class ExoPlayerVideoView : PlayerView {
     }
 
     fun seekTo(position: Long) {
+        onSeekListener?.onSeekStart()
+        isSeekLoading = true
         player.seekTo(position)
     }
 
@@ -227,5 +238,11 @@ open class ExoPlayerVideoView : PlayerView {
 
     interface OnErrorListener {
         fun onError(e: Exception?): Boolean
+    }
+
+    interface OnSeekListener {
+        fun onSeekStart()
+
+        fun onSeekProcessed()
     }
 }
