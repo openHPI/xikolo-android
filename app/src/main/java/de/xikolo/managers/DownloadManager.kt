@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.util.Log
 import de.xikolo.App
-import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.events.DownloadDeletedEvent
 import de.xikolo.events.DownloadStartedEvent
 import de.xikolo.events.PermissionDeniedEvent
 import de.xikolo.events.PermissionGrantedEvent
-import de.xikolo.models.Download
 import de.xikolo.models.DownloadAsset
 import de.xikolo.services.DownloadService
 import de.xikolo.utils.FileUtil
@@ -50,11 +48,8 @@ class DownloadManager(activity: FragmentActivity) {
                 val intent = Intent(context, DownloadService::class.java)
 
                 when {
-                    downloadExists(downloadAsset) -> {
-                        ToastUtil.show(R.string.toast_file_already_downloaded)
-                        return false
-                    }
-                    downloadAsset.url != null -> {
+                    downloadRunning(downloadAsset) || downloadExists(downloadAsset) -> return false
+                    downloadAsset.url != null                                       -> {
                         FileUtil.createFolderIfNotExists(
                             File(downloadAsset.filePath.substring(0, downloadAsset.filePath.lastIndexOf(File.separator)))
                         )
@@ -80,7 +75,7 @@ class DownloadManager(activity: FragmentActivity) {
 
                         return true
                     }
-                    else -> {
+                    else                                                            -> {
                         Log.i(TAG, "URL is null, nothing to download")
                         return false
                     }
@@ -97,7 +92,7 @@ class DownloadManager(activity: FragmentActivity) {
         }
     }
 
-    fun deleteAssetDownload(downloadAsset: DownloadAsset): Boolean {
+    fun deleteAssetDownload(downloadAsset: DownloadAsset, deleteSecondaryDownloads: Boolean = true): Boolean {
         if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 if (Config.DEBUG) Log.d(TAG, "Delete download " + downloadAsset.filePath)
@@ -109,8 +104,12 @@ class DownloadManager(activity: FragmentActivity) {
                     EventBus.getDefault().post(DownloadDeletedEvent(downloadAsset))
 
                     if (getDownloadFile(downloadAsset)!!.delete()) {
-                        downloadAsset.secondaryAssets.forEach {
-                            deleteAssetDownload(it)
+                        if (deleteSecondaryDownloads) {
+                            downloadAsset.secondaryAssets.forEach {
+                                if (downloadAsset.deleteSecondaryAssets(it, this)) {
+                                    deleteAssetDownload(it)
+                                }
+                            }
                         }
                         return true
                     }
@@ -136,7 +135,7 @@ class DownloadManager(activity: FragmentActivity) {
                 val downloadService = DownloadService.getInstance()
                 downloadService?.cancelDownload(downloadAsset.url)
 
-                deleteAssetDownload(downloadAsset)
+                deleteAssetDownload(downloadAsset, false)
 
                 downloadAsset.secondaryAssets.forEach {
                     cancelAssetDownload(it)
@@ -173,9 +172,9 @@ class DownloadManager(activity: FragmentActivity) {
         if (permissionGrantedEvent.requestCode == PermissionManager.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
             pendingAction?.let {
                 when (it.type) {
-                    ActionType.START    -> startAssetDownload(it.downloadAsset)
-                    ActionType.DELETE   -> deleteAssetDownload(it.downloadAsset)
-                    ActionType.CANCEL   -> cancelAssetDownload(it.downloadAsset)
+                    ActionType.START  -> startAssetDownload(it.downloadAsset)
+                    ActionType.DELETE -> deleteAssetDownload(it.downloadAsset)
+                    ActionType.CANCEL -> cancelAssetDownload(it.downloadAsset)
                 }
             }
             pendingAction = null
@@ -189,14 +188,47 @@ class DownloadManager(activity: FragmentActivity) {
         }
     }
 
-    fun getDownload(downloadAsset: DownloadAsset): Download? =
-        DownloadService.getInstance()?.getDownload(downloadAsset.url)
+    fun getDownloadTotalBytes(downloadAsset: DownloadAsset): Long {
+        var totalBytes = 0L
+        val mainDownload = DownloadService.getInstance()?.getDownload(downloadAsset.url)
+        totalBytes +=
+            if (mainDownload != null && mainDownload.totalBytes > 0L)
+                mainDownload.totalBytes
+            else downloadAsset.singleSize
 
-    fun downloadRunning(downloadAsset: DownloadAsset): Boolean =
-        downloadRunning(downloadAsset.url)
+        downloadAsset.secondaryAssets.forEach {
+            val secondaryDownload = DownloadService.getInstance()?.getDownload(it.url)
+            totalBytes +=
+                if (secondaryDownload != null && secondaryDownload.totalBytes > 0L)
+                    secondaryDownload.totalBytes
+                else it.singleSize
+        }
 
-    fun downloadRunning(url: String?): Boolean =
-        DownloadService.getInstance()?.isDownloading(url) == true
+        return totalBytes
+    }
+
+    fun getDownloadWrittenBytes(downloadAsset: DownloadAsset): Long {
+        var writtenBytes = 0L
+        writtenBytes += DownloadService.getInstance()?.getDownload(downloadAsset.url)?.bytesWritten ?: 0L
+
+        downloadAsset.secondaryAssets.forEach {
+            writtenBytes += DownloadService.getInstance()?.getDownload(it.url)?.bytesWritten ?: 0L
+        }
+
+        return writtenBytes
+    }
+
+    fun downloadRunningWithSecondaryAssets(downloadAsset: DownloadAsset): Boolean {
+        var downloading = downloadRunning(downloadAsset)
+        downloadAsset.secondaryAssets.forEach {
+            downloading = downloading || downloadRunningWithSecondaryAssets(it)
+        }
+        return downloading
+    }
+
+    fun downloadRunning(downloadAsset: DownloadAsset): Boolean {
+        return DownloadService.getInstance()?.isDownloading(downloadAsset.url) == true
+    }
 
     fun downloadExists(downloadAsset: DownloadAsset): Boolean {
         return getDownloadFile(downloadAsset) != null

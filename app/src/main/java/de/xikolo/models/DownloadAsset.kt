@@ -2,6 +2,7 @@ package de.xikolo.models
 
 import de.xikolo.App
 import de.xikolo.R
+import de.xikolo.managers.DownloadManager
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
 import java.io.File
@@ -34,6 +35,8 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
     open val showNotification = true
 
     open val secondaryAssets = mutableSetOf<DownloadAsset>()
+
+    open val deleteSecondaryAssets: (DownloadAsset, DownloadManager) -> Boolean = { _, _ -> true }
 
     class Document(
         val document: de.xikolo.models.Document,
@@ -87,16 +90,40 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
                 override val singleSize = video.transcriptSize.toLong()
             }
 
-            class VideoSD(item: de.xikolo.models.Item, video: Video) : Item(video.singleStream.sdUrl, "video_sd_${item.id}.mp4", item) {
+            class VideoSD(item: de.xikolo.models.Item, val video: Video) : Item(video.singleStream.sdUrl, "video_sd_${item.id}.mp4", item) {
                 override val title = "Video (SD): " + item.title
                 override val mimeType = "video/mp4"
                 override val singleSize = video.singleStream.sdSize.toLong()
+
+                override val secondaryAssets: MutableSet<DownloadAsset>
+                    get() {
+                        val subtitles = mutableSetOf<DownloadAsset>()
+                        video.subtitles.forEach {
+                            subtitles.add(Subtitles(it, item))
+                        }
+                        return subtitles
+                    }
+                override val deleteSecondaryAssets: (DownloadAsset, DownloadManager) -> Boolean = { _, downloadManager ->
+                    !downloadManager.downloadExists(VideoSD(item, video)) && !downloadManager.downloadExists(VideoHD(item, video))
+                }
             }
 
-            class VideoHD(item: de.xikolo.models.Item, video: Video) : Item(video.singleStream.hdUrl, "video_hd_${item.id}.mp4", item) {
+            class VideoHD(item: de.xikolo.models.Item, val video: Video) : Item(video.singleStream.hdUrl, "video_hd_${item.id}.mp4", item) {
                 override val title = "Video (HD): " + item.title
                 override val mimeType = "video/mp4"
                 override val singleSize = video.singleStream.hdSize.toLong()
+
+                override val secondaryAssets: MutableSet<DownloadAsset>
+                    get() {
+                        val subtitles = mutableSetOf<DownloadAsset>()
+                        video.subtitles.forEach {
+                            subtitles.add(Subtitles(it, item))
+                        }
+                        return subtitles
+                    }
+                override val deleteSecondaryAssets: (DownloadAsset, DownloadManager) -> Boolean = { _, downloadManager ->
+                    !downloadManager.downloadExists(VideoSD(item, video)) && !downloadManager.downloadExists(VideoHD(item, video))
+                }
             }
 
             class Audio(item: de.xikolo.models.Item, video: Video) : Item(video.audioUrl, "audio_${item.id}.mp3", item) {
