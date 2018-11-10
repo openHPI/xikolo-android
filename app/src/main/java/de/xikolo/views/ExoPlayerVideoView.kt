@@ -72,8 +72,7 @@ open class ExoPlayerVideoView : PlayerView {
             context,
             DefaultTrackSelector(
                 AdaptiveTrackSelection.Factory()
-            ),
-            DefaultLoadControl()
+            )
         )
 
         playerListener = object : Player.EventListener {
