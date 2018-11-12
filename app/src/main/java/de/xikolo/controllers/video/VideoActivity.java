@@ -93,7 +93,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
             @Override
             public void onSettingsSlide(float offset) {
-                float alpha = (offset + 1) / 2f * 0.7f;
+                float alpha = (offset) * 0.7f;
                 if (!Float.isNaN(alpha)) {
                     overlay.setAlpha(alpha);
                 }

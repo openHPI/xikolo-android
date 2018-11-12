@@ -306,14 +306,12 @@ public class VideoHelper {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        hideSettings();
                         settingsOpen = false;
                         if (controllerListener != null) {
                             controllerListener.onSettingsClosed();
                         }
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        videoControls.setVisibility(View.GONE);
                         settingsOpen = true;
                         if (controllerListener != null) {
                             controllerListener.onSettingsOpen();
@@ -390,14 +388,12 @@ public class VideoHelper {
     }
 
     public void showSettings(View view) {
-        show(Integer.MAX_VALUE);
         settingsContainer.removeAllViews();
         settingsContainer.addView(view);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     public void hideSettings() {
-        show();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
