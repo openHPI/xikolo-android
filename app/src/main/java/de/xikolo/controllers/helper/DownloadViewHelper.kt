@@ -240,9 +240,9 @@ class DownloadViewHelper(
         progressBarDownload.isIndeterminate = true
         progressBarUpdaterRunning = false
 
-        if (downloadAsset.size != 0L) {
+        if (downloadAsset.sizeWithSecondaryAssets != 0L) {
             textFileSize.visibility = View.VISIBLE
-            textFileSize.text = FileUtil.getFormattedFileSize(downloadAsset.size)
+            textFileSize.text = FileUtil.getFormattedFileSize(downloadAsset.sizeWithSecondaryAssets)
         } else {
             textFileSize.visibility = View.GONE
         }
@@ -266,8 +266,8 @@ class DownloadViewHelper(
 
         textFileSize.visibility = View.VISIBLE
 
-        if (downloadAsset.size != 0L) {
-            textFileSize.text = FileUtil.getFormattedFileSize(downloadAsset.size)
+        if (downloadAsset.sizeWithSecondaryAssets != 0L) {
+            textFileSize.text = FileUtil.getFormattedFileSize(downloadAsset.sizeWithSecondaryAssets)
         } else {
             textFileSize.text = FileUtil.getFormattedFileSize(
                 downloadManager.getDownloadFile(downloadAsset)

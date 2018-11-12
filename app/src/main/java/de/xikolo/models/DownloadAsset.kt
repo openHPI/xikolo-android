@@ -16,15 +16,15 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
     open val title: String
         get() = fileName
 
-    open val singleSize: Long = 0L
+    open val size: Long = 0L
 
-    val size: Long
+    val sizeWithSecondaryAssets: Long
         get() {
             var secondarySize = 0L
             secondaryAssets.forEach {
-                secondarySize += it.size
+                secondarySize += it.sizeWithSecondaryAssets
             }
-            return singleSize + secondarySize
+            return size + secondarySize
         }
 
     val filePath: String
@@ -82,18 +82,18 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
 
             class Slides(item: de.xikolo.models.Item, video: Video) : Item(video.slidesUrl, "slides_${item.id}.pdf", item) {
                 override val title = "Slides: " + item.title
-                override val singleSize = video.slidesSize.toLong()
+                override val size = video.slidesSize.toLong()
             }
 
             class Transcript(item: de.xikolo.models.Item, video: Video) : Item(video.transcriptUrl, "transcript_${item.id}.pdf", item) {
                 override val title = "Transcript: " + item.title
-                override val singleSize = video.transcriptSize.toLong()
+                override val size = video.transcriptSize.toLong()
             }
 
             class VideoSD(item: de.xikolo.models.Item, val video: Video) : Item(video.singleStream.sdUrl, "video_sd_${item.id}.mp4", item) {
                 override val title = "Video (SD): " + item.title
                 override val mimeType = "video/mp4"
-                override val singleSize = video.singleStream.sdSize.toLong()
+                override val size = video.singleStream.sdSize.toLong()
 
                 override val secondaryAssets: MutableSet<DownloadAsset>
                     get() {
@@ -111,7 +111,7 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
             class VideoHD(item: de.xikolo.models.Item, val video: Video) : Item(video.singleStream.hdUrl, "video_hd_${item.id}.mp4", item) {
                 override val title = "Video (HD): " + item.title
                 override val mimeType = "video/mp4"
-                override val singleSize = video.singleStream.hdSize.toLong()
+                override val size = video.singleStream.hdSize.toLong()
 
                 override val secondaryAssets: MutableSet<DownloadAsset>
                     get() {
@@ -129,7 +129,7 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
             class Audio(item: de.xikolo.models.Item, video: Video) : Item(video.audioUrl, "audio_${item.id}.mp3", item) {
                 override val title = "Audio: " + item.title
                 override val mimeType = "audio/mpeg"
-                override val singleSize = video.audioSize.toLong()
+                override val size = video.audioSize.toLong()
             }
 
             class Subtitles(videoSubtitles: VideoSubtitles, item: de.xikolo.models.Item) : Item(videoSubtitles.vttUrl, "subtitles_${videoSubtitles.language}_${item.id}.vtt", item) {

@@ -194,14 +194,14 @@ class DownloadManager(activity: FragmentActivity) {
         totalBytes +=
             if (mainDownload != null && mainDownload.totalBytes > 0L)
                 mainDownload.totalBytes
-            else downloadAsset.singleSize
+            else downloadAsset.size
 
         downloadAsset.secondaryAssets.forEach {
             val secondaryDownload = DownloadService.getInstance()?.getDownload(it.url)
             totalBytes +=
                 if (secondaryDownload != null && secondaryDownload.totalBytes > 0L)
                     secondaryDownload.totalBytes
-                else it.singleSize
+                else it.size
         }
 
         return totalBytes
