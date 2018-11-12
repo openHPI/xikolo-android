@@ -102,21 +102,13 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             @Override
             public void onSettingsOpen() {
                 overlay.setClickable(true);
-                overlay.setFocusable(true);
-                overlay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        videoHelper.hideSettings();
-                        v.performClick();
-                    }
-                });
+                overlay.setOnClickListener(v -> videoHelper.hideSettings());
             }
 
             @Override
             public void onSettingsClosed() {
                 overlay.setOnClickListener(null);
                 overlay.setClickable(false);
-                overlay.setFocusable(false);
             }
         });
 

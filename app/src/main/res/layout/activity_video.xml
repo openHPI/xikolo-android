@@ -14,13 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
-            android:id="@+id/overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0"
-            android:background="@color/black" />
-
         <include
             android:id="@+id/videoContainer"
             layout="@layout/container_video"
@@ -70,17 +63,18 @@
 
         </ScrollView>
 
+        <View
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0"
+            android:background="@color/black"/>
+
     </RelativeLayout>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_above="@id/settingsContainer"
-            android:background="@android:drawable/divider_horizontal_bright" />
 
         <LinearLayout
             android:id="@+id/settingsContainer"

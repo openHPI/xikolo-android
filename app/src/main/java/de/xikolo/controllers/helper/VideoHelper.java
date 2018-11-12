@@ -60,7 +60,6 @@ public class VideoHelper {
     @BindView(R.id.videoController) View videoController;
     @BindView(R.id.videoControls) View videoControls;
     @BindView(R.id.videoProgress) View videoProgress;
-    @BindView(R.id.videoOverlay) View videoOverlay;
 
     @BindView(R.id.buttonSettings) TextView settingsButton;
 
