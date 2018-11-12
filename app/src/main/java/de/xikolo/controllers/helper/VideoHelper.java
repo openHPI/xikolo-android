@@ -62,7 +62,6 @@ public class VideoHelper {
     @BindView(R.id.videoProgress) View videoProgress;
     @BindView(R.id.videoOverlay) View videoOverlay;
 
-    @BindView(R.id.settingsContainer) LinearLayout settingsContainer;
     @BindView(R.id.buttonSettings) TextView settingsButton;
 
     @BindView(R.id.videoSeekBar) PreviewSeekBar seekBar;
@@ -88,6 +87,8 @@ public class VideoHelper {
 
     private View videoContainer;
 
+    private LinearLayout settingsContainer;
+
     private ControllerListener controllerListener;
 
     private Runnable seekBarUpdater;
@@ -112,9 +113,10 @@ public class VideoHelper {
     private VideoSettingsHelper videoSettingsHelper;
     private boolean settingsOpen = false;
 
-    public VideoHelper(FragmentActivity activity, View videoContainer) {
+    public VideoHelper(FragmentActivity activity, View videoContainer, LinearLayout settingsContainer) {
         this.activity = activity;
         this.videoContainer = videoContainer;
+        this.settingsContainer = settingsContainer;
 
         ButterKnife.bind(this, activity);
 
@@ -307,19 +309,25 @@ public class VideoHelper {
                     case BottomSheetBehavior.STATE_HIDDEN:
                         hideSettings();
                         settingsOpen = false;
+                        if (controllerListener != null) {
+                            controllerListener.onSettingsClosed();
+                        }
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         videoControls.setVisibility(View.GONE);
                         settingsOpen = true;
+                        if (controllerListener != null) {
+                            controllerListener.onSettingsOpen();
+                        }
                         break;
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                slideOffset = (slideOffset + 1) / 2f; // 0 if HIDDEN, 1 if EXPANDED
-                videoOverlay.setAlpha(slideOffset * 0.75f);
-                videoControls.setAlpha(1 - slideOffset);
+                if (controllerListener != null) {
+                    controllerListener.onSettingsSlide(slideOffset);
+                }
             }
         });
     }
@@ -382,14 +390,14 @@ public class VideoHelper {
         );
     }
 
-    private void showSettings(View view) {
+    public void showSettings(View view) {
         show(Integer.MAX_VALUE);
         settingsContainer.removeAllViews();
         settingsContainer.addView(view);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-    private void hideSettings() {
+    public void hideSettings() {
         show();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
@@ -693,6 +701,12 @@ public class VideoHelper {
         void onControllerShow();
 
         void onControllerHide();
+
+        void onSettingsSlide(float offset);
+
+        void onSettingsOpen();
+
+        void onSettingsClosed();
     }
 
     private static class MessageHandler extends Handler {

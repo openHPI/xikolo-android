@@ -17,6 +17,7 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.cast.framework.CastButtonFactory;
@@ -57,6 +58,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     @BindView(R.id.textSubtitles) TextView videoSubtitlesText;
     @BindView(R.id.videoContainer) View videoContainer;
     @BindView(R.id.video_media_route_button) MediaRouteButton mediaRouteButton;
+    @BindView(R.id.settingsContainer) LinearLayout settingsContainer;
+    @BindView(R.id.overlay) View overlay;
 
     private VideoHelper videoHelper;
     private Video video;
@@ -72,7 +75,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         actionBar.setTitle("");
         actionBar.setSubtitle("");
 
-        videoHelper = new VideoHelper(this, videoContainer);
+        videoHelper = new VideoHelper(this, videoContainer, settingsContainer);
         videoHelper.setControllerListener(new VideoHelper.ControllerListener() {
             @Override
             public void onControllerShow() {
@@ -86,6 +89,34 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             public void onControllerHide() {
                 actionBar.hide();
                 hideSystemBars();
+            }
+
+            @Override
+            public void onSettingsSlide(float offset) {
+                float alpha = (offset + 1) / 2f * 0.7f;
+                if (!Float.isNaN(alpha)) {
+                    overlay.setAlpha(alpha);
+                }
+            }
+
+            @Override
+            public void onSettingsOpen() {
+                overlay.setClickable(true);
+                overlay.setFocusable(true);
+                overlay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        videoHelper.hideSettings();
+                        v.performClick();
+                    }
+                });
+            }
+
+            @Override
+            public void onSettingsClosed() {
+                overlay.setOnClickListener(null);
+                overlay.setClickable(false);
+                overlay.setFocusable(false);
             }
         });
 
