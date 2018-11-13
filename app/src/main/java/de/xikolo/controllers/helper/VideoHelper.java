@@ -30,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.config.Config;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.DownloadAsset;
@@ -184,13 +185,13 @@ public class VideoHelper {
                         seekBar.setProgress(getCurrentPosition());
                         textCurrentTime.setText(getTimeString(getCurrentPosition()));
                     }
-                });
 
-                if (getCurrentPosition() < getDuration()) {
-                    seekBarPreviewHandler.postDelayed(this, MILLISECONDS);
-                } else {
-                    seekBarUpdaterIsRunning = false;
-                }
+                    if (getCurrentPosition() < getDuration()) {
+                        seekBarPreviewHandler.postDelayed(this, MILLISECONDS);
+                    } else {
+                        seekBarUpdaterIsRunning = false;
+                    }
+                });
             }
         };
 
@@ -448,17 +449,17 @@ public class VideoHelper {
             new VideoSettingsHelper.OnSettingsChangeListener() {
                 @Override
                 public void onSubtitleChanged(@Nullable VideoSubtitles old, @Nullable VideoSubtitles videoSubtitles) {
+                    hideSettings();
                     if (old != videoSubtitles) {
                         saveCurrentPosition();
                         showProgress();
                         updateVideo();
                     }
-
-                    hideSettings();
                 }
 
                 @Override
                 public void onQualityChanged(@NotNull VideoSettingsHelper.VideoMode old, @NotNull VideoSettingsHelper.VideoMode videoMode) {
+                    hideSettings();
                     if (old != videoMode) {
                         String oldSourceString = getSourceString();
 
@@ -476,12 +477,11 @@ public class VideoHelper {
                             oldSourceString,
                             getSourceString());
                     }
-
-                    hideSettings();
                 }
 
                 @Override
                 public void onPlaybackSpeedChanged(@NotNull PlaybackSpeedUtil old, @NotNull PlaybackSpeedUtil speed) {
+                    hideSettings();
                     if (old != speed) {
                         videoView.setPlaybackSpeed(speed.getSpeed());
 
@@ -494,8 +494,6 @@ public class VideoHelper {
                             getCurrentQualityString(),
                             getSourceString());
                     }
-
-                    hideSettings();
                 }
             },
             new VideoSettingsHelper.OnSettingsClickListener() {
@@ -517,91 +515,10 @@ public class VideoHelper {
             videoMode -> {
                 if (videoMode == VideoSettingsHelper.VideoMode.HD) {
                     return videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video));
-                } else {
+                } else if (videoMode == VideoSettingsHelper.VideoMode.SD) {
                     return videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video));
-                }
-            }
-        );
-
-        this.videoSettingsHelper = new VideoSettingsHelper(
-            activity,
-            video.subtitles,
-            new VideoSettingsHelper.OnSettingsChangeListener() {
-                @Override
-                public void onSubtitleChanged(@Nullable VideoSubtitles old, @Nullable VideoSubtitles videoSubtitles) {
-                    if (old != videoSubtitles) {
-                        saveCurrentPosition();
-                        showProgress();
-                        updateVideo();
-                    }
-
-                    hideSettings();
-                }
-
-                @Override
-                public void onQualityChanged(@NotNull VideoSettingsHelper.VideoMode old, @NotNull VideoSettingsHelper.VideoMode videoMode) {
-                    if (old != videoMode) {
-                        String oldSourceString = getSourceString();
-
-                        saveCurrentPosition();
-                        showProgress();
-                        updateVideo();
-
-                        LanalyticsUtil.trackVideoChangeQuality(item.id,
-                            course.id, module.id,
-                            getCurrentPosition(),
-                            videoSettingsHelper.getCurrentSpeed().getSpeed(),
-                            activity.getResources().getConfiguration().orientation,
-                            getQualityString(old),
-                            getCurrentQualityString(),
-                            oldSourceString,
-                            getSourceString());
-                    }
-
-                    hideSettings();
-                }
-
-                @Override
-                public void onPlaybackSpeedChanged(@NotNull PlaybackSpeedUtil old, @NotNull PlaybackSpeedUtil speed) {
-                    if (old != speed) {
-                        videoView.setPlaybackSpeed(speed.getSpeed());
-
-                        applicationPreferences.setVideoPlaybackSpeed(speed);
-
-                        LanalyticsUtil.trackVideoChangeSpeed(item.id,
-                            course.id, module.id,
-                            getCurrentPosition(),
-                            old.getSpeed(),
-                            speed.getSpeed(),
-                            activity.getResources().getConfiguration().orientation,
-                            getCurrentQualityString(),
-                            getSourceString());
-                    }
-
-                    hideSettings();
-                }
-            },
-            new VideoSettingsHelper.OnSettingsClickListener() {
-                @Override
-                public void onSubtitleClick() {
-                    showSettings(videoSettingsHelper.buildSubtitleView());
-                }
-
-                @Override
-                public void onPlaybackSpeedClick() {
-                    showSettings(videoSettingsHelper.buildPlaybackSpeedView());
-                }
-
-                @Override
-                public void onQualityClick() {
-                    showSettings(videoSettingsHelper.buildQualityView());
-                }
-            },
-            videoMode -> {
-                if (videoMode == VideoSettingsHelper.VideoMode.HD) {
-                    return videoDownloadPresent(new DownloadAsset.Course.Item.VideoHD(item, video));
                 } else {
-                    return videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video));
+                    return false;
                 }
             }
         );
@@ -612,6 +529,8 @@ public class VideoHelper {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
         } else if (videoDownloadPresent(new DownloadAsset.Course.Item.VideoSD(item, video))) { // sd video download available
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
+        } else if (FeatureToggle.hlsVideo() && video.singleStream.hlsUrl != null) {
+            videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.AUTO);
         } else if (connectivityStatus == NetworkUtil.TYPE_WIFI || !applicationPreferences.isVideoQualityLimitedOnMobile()) {
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
         } else {
@@ -637,20 +556,38 @@ public class VideoHelper {
 
         String stream;
         DownloadAsset.Course.Item videoAssetDownload;
+        boolean isHls;
 
-        if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.HD) {
-            stream = video.singleStream.hdUrl;
-            videoAssetDownload = new DownloadAsset.Course.Item.VideoHD(item, video);
-        } else {
-            stream = video.singleStream.sdUrl;
-            videoAssetDownload = new DownloadAsset.Course.Item.VideoSD(item, video);
+        switch (videoSettingsHelper.getCurrentQuality()) {
+            case HD:
+                stream = video.singleStream.hdUrl;
+                videoAssetDownload = new DownloadAsset.Course.Item.VideoHD(item, video);
+                isHls = false;
+                break;
+            case SD:
+                stream = video.singleStream.sdUrl;
+                videoAssetDownload = new DownloadAsset.Course.Item.VideoSD(item, video);
+                isHls = false;
+                break;
+            default: //AUTO
+                stream = video.singleStream.hlsUrl;
+                videoAssetDownload = null;
+                isHls = true;
+                break;
         }
 
-        if (videoDownloadPresent(videoAssetDownload)) {
+        if (videoAssetDownload != null && videoDownloadPresent(videoAssetDownload)) {
             setLocalVideoUri(videoAssetDownload);
-        } else if (NetworkUtil.isOnline()) {
-            setVideoUri(stream);
-        } else if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.HD) {
+        } else if (NetworkUtil.isOnline()) { // device has internet connection
+            if (isHls) {
+                setHlsVideoUri(stream);
+            } else {
+                setVideoUri(stream);
+            }
+        } else if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.AUTO) { // retry with HD instead of HLS
+            videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
+            updateVideo();
+        } else if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.HD) { // retry with SD instead of HD
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
             updateVideo();
         } else {
@@ -669,7 +606,7 @@ public class VideoHelper {
 
         videoView.setPlaybackSpeed(videoSettingsHelper.getCurrentSpeed().getSpeed());
 
-        if (videoDownloadPresent(videoAssetDownload)) {
+        if (videoAssetDownload != null && videoDownloadPresent(videoAssetDownload)) {
             videoView.setPreviewUri(Uri.parse("file://" + downloadManager.getDownloadFile(videoAssetDownload)));
         } else if (NetworkUtil.isOnline()) {
             if (video.singleStream.sdUrl != null) {
@@ -691,11 +628,18 @@ public class VideoHelper {
         viewOfflineHint.setVisibility(View.VISIBLE);
     }
 
+    private void setHlsVideoUri(String uri) {
+        if (Config.DEBUG) {
+            Log.i(TAG, "HLS Video HOST_URL: " + uri);
+        }
+        videoView.setVideoURI(Uri.parse(uri), true);
+    }
+
     private void setVideoUri(String uri) {
         if (Config.DEBUG) {
             Log.i(TAG, "Video HOST_URL: " + uri);
         }
-        videoView.setVideoUri(Uri.parse(uri));
+        videoView.setVideoURI(Uri.parse(uri), false);
     }
 
     private void saveCurrentPosition() {
