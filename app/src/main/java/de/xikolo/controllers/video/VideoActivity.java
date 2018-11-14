@@ -160,6 +160,14 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        if(intent != null) {
+            presenter.onPause(videoHelper.getCurrentPosition());
+            super.onNewIntent(intent);
+        }
+    }
+
+    @Override
     public void setupVideo(Course course, Section section, Item item, Video video) {
         this.video = video;
 
