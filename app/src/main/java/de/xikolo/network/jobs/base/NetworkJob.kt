@@ -4,8 +4,9 @@ import de.xikolo.managers.UserManager
 import de.xikolo.utils.NetworkUtil
 import de.xikolo.viewmodels.base.NetworkCode
 import de.xikolo.viewmodels.base.NetworkStateLiveData
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 abstract class NetworkJob(private val networkState: NetworkStateLiveData, private val userRequest: Boolean, private vararg val preconditions: Precondition) {
 
@@ -20,7 +21,7 @@ abstract class NetworkJob(private val networkState: NetworkStateLiveData, privat
             return
         }
 
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             try {
                 networkState.state(NetworkCode.STARTED, userRequest)
                 onRun()

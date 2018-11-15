@@ -51,18 +51,18 @@ open class ExoPlayerVideoView : PlayerView {
         get() = player.currentPosition
 
     constructor(context: Context) : super(context) {
-        setup(context, null)
+        setup(context)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        setup(context, attrs)
+        setup(context)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        setup(context, attrs)
+        setup(context)
     }
 
-    private fun setup(context: Context, attrs: AttributeSet?) {
+    private fun setup(context: Context) {
         playerContext = context
 
         bandwidthMeter = DefaultBandwidthMeter()

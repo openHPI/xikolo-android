@@ -4,12 +4,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'io.fabric'
 
-kotlin {
-    experimental {
-        coroutines 'enable'
-    }
-}
-
 android {
     buildToolsVersion rootProject.buildToolsVersion
     compileSdkVersion rootProject.compileSdkVersion

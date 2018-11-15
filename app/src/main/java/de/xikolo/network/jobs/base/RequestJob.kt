@@ -4,7 +4,9 @@ import de.xikolo.managers.UserManager
 import de.xikolo.models.*
 import de.xikolo.network.sync.Sync
 import de.xikolo.utils.NetworkUtil
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 abstract class RequestJob(protected val callback: RequestJobCallback?, private vararg val preconditions: Precondition) {
 
@@ -19,7 +21,7 @@ abstract class RequestJob(protected val callback: RequestJobCallback?, private v
             return
         }
 
-        launch {
+        GlobalScope.launch(Dispatchers.IO) {
             try {
                 onRun()
             } catch (e: Throwable) {
