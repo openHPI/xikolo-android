@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AppCompatActivity
+import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.*
 import de.xikolo.network.jobs.CheckHealthJob
@@ -31,10 +32,10 @@ class SplashActivity : AppCompatActivity() {
 
             override fun onError(code: RequestJobCallback.ErrorCode) {
                 when (code) {
-                    ErrorCode.NO_NETWORK ->             startApp()
-                    ErrorCode.API_VERSION_EXPIRED ->    showApiVersionExpiredDialog()
-                    ErrorCode.MAINTENANCE ->            showServerMaintenanceDialog()
-                    else ->                             showServerErrorDialog()
+                    ErrorCode.NO_NETWORK          -> startApp()
+                    ErrorCode.API_VERSION_EXPIRED -> showApiVersionExpiredDialog()
+                    ErrorCode.MAINTENANCE         -> showServerMaintenanceDialog()
+                    else                          -> showServerErrorDialog()
                 }
             }
 
@@ -59,11 +60,11 @@ class SplashActivity : AppCompatActivity() {
             )
             val fileCount = FileUtil.folderFileNumber(old)
 
-            val progressDialog = ProgressDialog(this)
-            progressDialog.setMessage(getString(R.string.dialog_app_being_prepared))
-            progressDialog.setTitle(R.string.app_name)
-            progressDialog.setCancelable(false)
-            progressDialog.setCanceledOnTouchOutside(false)
+            val progressDialog = ProgressDialogAutoBundle.builder()
+                .title(App.getInstance().getString(R.string.app_name))
+                .message(getString(R.string.dialog_app_being_prepared))
+                .build()
+                .dialog as ProgressDialog
             progressDialog.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
             progressDialog.max = 100
             progressDialog.show()

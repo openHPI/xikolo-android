@@ -17,6 +17,7 @@ import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
+import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
 import de.xikolo.controllers.dialogs.StorageMigrationDialogAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
@@ -77,12 +78,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 val dialog = StorageMigrationDialogAutoBundle.builder(oldStorageType).build()
                 dialog.listener = object : StorageMigrationDialog.Listener {
                     override fun onDialogPositiveClick() {
-                        val progressDialog = ProgressDialog(activity)
-                        progressDialog.setTitle(R.string.dialog_storage_migration_title)
-                        progressDialog.setMessage(App.getInstance().getString(R.string.dialog_storage_migration_message))
-                        progressDialog.setCancelable(false)
-                        progressDialog.setCanceledOnTouchOutside(false)
-                        progressDialog.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
+                        val progressDialog = ProgressDialogAutoBundle.builder()
+                            .title(App.getInstance().getString(R.string.dialog_storage_migration_title))
+                            .message(App.getInstance().getString(R.string.dialog_storage_migration_message))
+                            .build()
+                            .dialog as ProgressDialog
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
                         progressDialog.max = fileCount
                         progressDialog.show()
 
