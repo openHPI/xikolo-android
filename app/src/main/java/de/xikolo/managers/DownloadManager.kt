@@ -103,7 +103,7 @@ class DownloadManager(activity: FragmentActivity) {
                 } else {
                     EventBus.getDefault().post(DownloadDeletedEvent(downloadAsset))
 
-                    if (getDownloadFile(downloadAsset)!!.delete()) {
+                    if (getDownloadFile(downloadAsset)?.delete() == true) {
                         if (deleteSecondaryDownloads) {
                             downloadAsset.secondaryAssets.forEach {
                                 if (downloadAsset.deleteSecondaryAssets(it, this)) {
@@ -192,16 +192,20 @@ class DownloadManager(activity: FragmentActivity) {
         var totalBytes = 0L
         val mainDownload = DownloadService.getInstance()?.getDownload(downloadAsset.url)
         totalBytes +=
-            if (mainDownload != null && mainDownload.totalBytes > 0L)
+            if (mainDownload != null && mainDownload.totalBytes > 0L) {
                 mainDownload.totalBytes
-            else downloadAsset.size
+            } else {
+                downloadAsset.size
+            }
 
         downloadAsset.secondaryAssets.forEach {
             val secondaryDownload = DownloadService.getInstance()?.getDownload(it.url)
             totalBytes +=
-                if (secondaryDownload != null && secondaryDownload.totalBytes > 0L)
+                if (secondaryDownload != null && secondaryDownload.totalBytes > 0L) {
                     secondaryDownload.totalBytes
-                else it.size
+                } else {
+                    it.size
+                }
         }
 
         return totalBytes
