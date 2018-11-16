@@ -1,6 +1,5 @@
 package de.xikolo.controllers.settings
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -82,10 +81,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                             .title(App.getInstance().getString(R.string.dialog_storage_migration_title))
                             .message(App.getInstance().getString(R.string.dialog_storage_migration_message))
                             .build()
-                            .dialog as ProgressDialog
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
                         progressDialog.max = fileCount
-                        progressDialog.show()
+                        progressDialog.show(fragmentManager, TAG)
 
                         val migrationCallback = object : StorageUtil.StorageMigrationCallback {
                             override fun onProgressChanged(count: Int) {
