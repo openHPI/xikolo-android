@@ -103,12 +103,14 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             public void onSettingsOpen() {
                 overlay.setClickable(true);
                 overlay.setOnClickListener(v -> videoHelper.hideSettings());
+                videoHelper.show(Integer.MAX_VALUE);
             }
 
             @Override
             public void onSettingsClosed() {
                 overlay.setOnClickListener(null);
                 overlay.setClickable(false);
+                videoHelper.show();
             }
         });
 
@@ -211,7 +213,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
-                display.getRealSize(size); // API 17
+                display.getRealSize(size);
 
                 View videoContainer = videoHelper.getVideoContainer();
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) videoContainer.getLayoutParams();
@@ -248,6 +250,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                 videoMetadataView.setVisibility(View.GONE);
 
                 ((ViewGroup.MarginLayoutParams) ((ViewGroup) videoContainer.getParent()).getLayoutParams()).topMargin = 0;
+
+                settingsContainer.setPadding(0, 0, 0, systemBarHeight);
             } else { // Portrait
                 layout.setFitsSystemWindows(false);
 
@@ -278,6 +282,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                 videoMetadataView.setVisibility(View.VISIBLE);
 
                 ((ViewGroup.MarginLayoutParams) ((ViewGroup) videoContainer.getParent()).getLayoutParams()).topMargin = -actionBarHeight;
+
+                settingsContainer.setPadding(0,0,0,0);
             }
         }
     }
