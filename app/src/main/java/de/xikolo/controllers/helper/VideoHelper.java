@@ -375,7 +375,7 @@ public class VideoHelper {
         saveCurrentPosition();
     }
 
-    private void release() {
+    public void release() {
         pause();
         videoView.release();
         seekBarPreviewThread.quit();
