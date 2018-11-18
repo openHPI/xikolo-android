@@ -19,7 +19,6 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.MediaRouteButton;
 import android.util.DisplayMetrics;
@@ -70,6 +69,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     @AutoBundleField String sectionId;
     @AutoBundleField String itemId;
     @AutoBundleField String videoId;
+    @AutoBundleField(required = false) Intent parentIntent;
 
     @BindView(R.id.videoMetadata) View videoMetadataView;
     @BindView(R.id.textTitle) TextView videoTitleText;
@@ -84,6 +84,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     private Video video;
 
     private BroadcastReceiver broadcastReceiver;
+
+    private boolean backStackLost = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +163,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if(intent != null) {
+        if (intent != null) {
             presenter.onPause(videoHelper.getCurrentPosition());
             super.onNewIntent(intent);
         }
@@ -359,10 +361,18 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
+            navigateUp();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void navigateUp() {
+        if (backStackLost && parentIntent != null) {
+            finishAndRemoveTask();
+            parentIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(parentIntent);
+        }
     }
 
     @Override
@@ -484,6 +494,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             videoHelper.show();
             unregisterReceiver(broadcastReceiver);
             broadcastReceiver = null;
+            backStackLost = true;
         }
     }
 
