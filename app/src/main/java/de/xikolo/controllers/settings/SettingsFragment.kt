@@ -47,6 +47,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onResume() {
         preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        refreshPiPStatus()
         super.onResume()
     }
 
@@ -159,6 +160,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 }
                 true
             }
+            refreshPiPStatus()
         }
 
         val copyright = findPreference(getString(R.string.preference_copyright))
@@ -227,6 +229,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             buildLogoutView(loginOut)
         } else {
             buildLoginView(loginOut)
+        }
+    }
+
+    private fun refreshPiPStatus(){
+        val pipSettings = findPreference(getString(R.string.preference_video_pip))
+        if(!PermissionManager.hasPiPPermission(context)){
+            pipSettings.summary = getString(R.string.settings_summary_video_pip_unavailable)
+        } else {
+            pipSettings.summary = ""
         }
     }
 

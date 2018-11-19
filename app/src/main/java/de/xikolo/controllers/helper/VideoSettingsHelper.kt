@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import de.xikolo.R
 import de.xikolo.config.FeatureToggle
+import de.xikolo.managers.PermissionManager
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.utils.DisplayUtil
 import de.xikolo.utils.PlaybackSpeedUtil
@@ -63,7 +64,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 )
             )
         }
-        if(DisplayUtil.supportsPictureInPicture(context)) {
+        if(DisplayUtil.supportsPictureInPicture(context) && PermissionManager.hasPiPPermission(context)) {
             list.addView(
                 buildSettingsItem(
                     R.string.icon_pip,

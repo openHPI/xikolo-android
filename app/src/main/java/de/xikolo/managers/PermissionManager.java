@@ -2,6 +2,8 @@ package de.xikolo.managers;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AppOpsManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -82,4 +84,18 @@ public class PermissionManager {
         activity.startActivity(intent);
     }
 
+    public static boolean hasPiPPermission(Context context) {
+        try {
+            AppOpsManager manager = ContextCompat.getSystemService(context, AppOpsManager.class);
+            if (manager != null && manager.checkOp(
+                AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
+                context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA).uid,
+                context.getPackageName()
+            ) == AppOpsManager.MODE_ALLOWED) {
+                return true;
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
 }

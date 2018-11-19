@@ -1,7 +1,6 @@
 package de.xikolo.controllers.video;
 
 import android.annotation.TargetApi;
-import android.app.AppOpsManager;
 import android.app.PendingIntent;
 import android.app.PictureInPictureParams;
 import android.app.RemoteAction;
@@ -9,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -417,24 +415,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     }
 
     @TargetApi(26)
-    private boolean hasPipPermissions() {
-        try {
-            AppOpsManager manager = (AppOpsManager) getSystemService(APP_OPS_SERVICE);
-            if (manager != null && manager.checkOpNoThrow(
-                AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
-                getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA).uid,
-                getPackageName()
-            ) == AppOpsManager.MODE_ALLOWED) {
-                return true;
-            }
-        } catch (Exception ignored) {
-        }
-        return false;
-    }
-
-    @TargetApi(26)
     private void enterPip(boolean explicitInteraction) {
-        if ((!hasPipPermissions() || !enterPictureInPictureMode(getPipParams(videoHelper.isPlaying())))
+        if (!enterPictureInPictureMode(getPipParams(videoHelper.isPlaying()))
             && explicitInteraction) {
             ToastUtil.show(R.string.toast_pip_error);
         }
