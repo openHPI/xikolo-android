@@ -459,7 +459,6 @@ public class VideoHelper {
             hideSettings();
             return false;
         }
-        release();
         return true;
     }
 
