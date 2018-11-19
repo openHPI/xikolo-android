@@ -251,7 +251,11 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
                 ((ViewGroup.MarginLayoutParams) ((ViewGroup) videoContainer.getParent()).getLayoutParams()).topMargin = 0;
 
-                settingsContainer.setPadding(0, 0, 0, systemBarHeight);
+                settingsContainer.setPadding(
+                    paddingLeft,
+                    0,
+                    paddingRight,
+                    videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
             } else { // Portrait
                 layout.setFitsSystemWindows(false);
 
