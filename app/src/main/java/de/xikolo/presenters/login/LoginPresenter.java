@@ -23,7 +23,9 @@ public class LoginPresenter extends Presenter<LoginView> {
     @Override
     public void onViewAttached(LoginView view) {
         super.onViewAttached(view);
-        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO || BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP) {
+        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO ||
+            BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP ||
+            BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI) {
             view.showSSOView();
         }
     }
@@ -35,10 +37,13 @@ public class LoginPresenter extends Presenter<LoginView> {
 
     public void onSSOClicked() {
         if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-            getViewOrThrow().startSSOLogin("/auth/who");
+            getViewOrThrow().startSSOLogin("who");
         }
         if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_SAP) {
-            getViewOrThrow().startSSOLogin("/auth/sap");
+            getViewOrThrow().startSSOLogin("sap");
+        }
+        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_HPI) {
+            getViewOrThrow().startSSOLogin("hpi");
         }
     }
 

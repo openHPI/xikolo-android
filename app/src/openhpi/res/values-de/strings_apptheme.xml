@@ -3,4 +3,6 @@
 
     <string name="settings_copyright">&#169; 2012 &#8211; %d Hasso-Plattner-Institut</string>
 
+    <string name="login_sso_hint">für HPI-Studierende und Angestellte</string>
+
 </resources>

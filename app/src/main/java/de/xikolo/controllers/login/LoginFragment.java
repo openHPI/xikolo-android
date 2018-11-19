@@ -162,7 +162,7 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
     @Override
     public void startSSOLogin(String strategy) {
         Intent intent = SsoLoginActivityAutoBundle.builder(
-                Config.HOST_URL + "?in_app=true&redirect_to=" + strategy,
+                Config.HOST_URL + "auth/" + strategy + "?in_app=true&redirect_to=/auth/" + strategy,
                 getString(R.string.login_sso)
         ).build(getActivity());
         startActivity(intent);
