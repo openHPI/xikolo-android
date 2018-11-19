@@ -536,6 +536,14 @@ public class VideoHelper {
                 public void onQualityClick() {
                     showSettings(videoSettingsHelper.buildQualityView());
                 }
+
+                @Override
+                public void onPiPClick() {
+                    hideSettings();
+                    if(controllerListener != null) {
+                        controllerListener.onPiPClick();
+                    }
+                }
             },
             videoMode -> {
                 if (videoMode == VideoSettingsHelper.VideoMode.HD) {
@@ -728,6 +736,8 @@ public class VideoHelper {
         void onSettingsOpen();
 
         void onSettingsClosed();
+
+        void onPiPClick();
     }
 
     private static class MessageHandler extends Handler {

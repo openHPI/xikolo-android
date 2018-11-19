@@ -59,6 +59,7 @@ import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.MarkdownUtil;
 import de.xikolo.utils.PlayServicesUtil;
+import de.xikolo.utils.ToastUtil;
 
 public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoView> implements VideoView {
 
@@ -135,6 +136,11 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                 overlay.setOnClickListener(null);
                 overlay.setClickable(false);
                 videoHelper.show();
+            }
+
+            @Override
+            public void onPiPClick() {
+                enterPip(true);
             }
         });
 
@@ -380,20 +386,16 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @Override
     public void onUserLeaveHint() {
-        if (DisplayUtil.supportsPictureInPicture(this)) {
+        if (DisplayUtil.supportsPictureInPicture(this) && videoHelper.getCurrentPosition() < videoHelper.getDuration() - 5000) {
             super.onUserLeaveHint();
-            enterPip();
+            enterPip(false);
         }
     }
 
     @Override
     public void onBackPressed() {
         if (videoHelper.handleBackPress()) {
-            if (DisplayUtil.supportsPictureInPicture(this) && videoHelper.getCurrentPosition() < videoHelper.getDuration() - 5000) {
-                enterPip();
-            } else {
-                super.onBackPressed();
-            }
+            navigateUp();
         }
     }
 
@@ -431,9 +433,10 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
     }
 
     @TargetApi(26)
-    private void enterPip() {
-        if (hasPipPermissions()) {
-            enterPictureInPictureMode(getPipParams(videoHelper.isPlaying()));
+    private void enterPip(boolean explicitInteraction) {
+        if ((!hasPipPermissions() || !enterPictureInPictureMode(getPipParams(videoHelper.isPlaying())))
+            && explicitInteraction) {
+            ToastUtil.show(R.string.toast_pip_error);
         }
     }
 
