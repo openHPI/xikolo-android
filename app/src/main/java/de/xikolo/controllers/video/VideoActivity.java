@@ -436,8 +436,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                 Icon.createWithResource(
                     this,
                     playing ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play),
-                playing ? "Pause" : "Play",
-                playing ? "Pause" : "Play",
+                playing ? getString(R.string.video_pip_action_pause) : getString(R.string.video_pip_action_play),
+                playing ? getString(R.string.video_pip_action_pause) : getString(R.string.video_pip_action_play),
                 pendingIntent
             )
         );
