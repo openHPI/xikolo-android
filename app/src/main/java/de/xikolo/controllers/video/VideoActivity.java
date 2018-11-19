@@ -19,6 +19,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.MediaRouteButton;
 import android.util.DisplayMetrics;
@@ -372,6 +373,8 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             finishAndRemoveTask();
             parentIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(parentIntent);
+        } else {
+            NavUtils.navigateUpFromSameTask(this);
         }
     }
 
