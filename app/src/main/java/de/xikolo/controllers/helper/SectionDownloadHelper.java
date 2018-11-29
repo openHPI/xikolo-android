@@ -6,9 +6,8 @@ import android.support.v4.app.FragmentActivity;
 import de.xikolo.controllers.dialogs.MobileDownloadDialog;
 import de.xikolo.controllers.dialogs.ModuleDownloadDialog;
 import de.xikolo.controllers.dialogs.ModuleDownloadDialogAutoBundle;
-import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
-import de.xikolo.network.jobs.base.RequestJobCallback;
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate;
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
@@ -16,6 +15,7 @@ import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
@@ -72,8 +72,8 @@ public class SectionDownloadHelper {
 
         LanalyticsUtil.trackDownloadedSection(section.id, course.id, hdVideo, sdVideo, slides);
 
-        final ProgressDialog dialog = ProgressDialogAutoBundle.builder().build();
-        dialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);
+        final ProgressDialogIndeterminate dialog = ProgressDialogIndeterminateAutoBundle.builder().build();
+        dialog.show(activity.getSupportFragmentManager(), ProgressDialogIndeterminate.TAG);
 
         itemManager.requestItemsWithContentForSection(section.id, new RequestJobCallback() {
             @Override

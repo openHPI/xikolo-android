@@ -26,8 +26,8 @@ import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.BaseFragment;
 import de.xikolo.controllers.dialogs.DownloadSlidesDialog;
-import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate;
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle;
 import de.xikolo.events.DownloadCompletedEvent;
 import de.xikolo.managers.DownloadManager;
 import de.xikolo.managers.SecondScreenManager;
@@ -41,7 +41,7 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
 
     private DownloadManager downloadManager;
 
-    private ProgressDialog progressDialog;
+    private ProgressDialogIndeterminate progressDialog;
 
     @BindView(R.id.pdf_view) PDFView pdfView;
     @BindView(R.id.fab) FloatingActionButton fab;
@@ -89,8 +89,8 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
                 @Override
                 public void onDialogPositiveClick() {
                     downloadManager.startAssetDownload(slides);
-                    progressDialog = ProgressDialogAutoBundle.builder().build();
-                    progressDialog.show(getFragmentManager(), ProgressDialog.TAG);
+                    progressDialog = ProgressDialogIndeterminateAutoBundle.builder().build();
+                    progressDialog.show(getFragmentManager(), ProgressDialogIndeterminate.TAG);
                 }
 
                 @Override

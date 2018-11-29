@@ -16,8 +16,8 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.controllers.base.BasePresenterActivity
-import de.xikolo.controllers.dialogs.ProgressDialog
-import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.controllers.dialogs.UnenrollDialog
 import de.xikolo.controllers.helper.CacheHelper
 import de.xikolo.controllers.helper.CourseArea
@@ -52,7 +52,7 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
     @BindView(R.id.stub_bottom)
     lateinit var stubBottom: ViewStub
 
-    private var progressDialog: ProgressDialog? = null
+    private var progressDialog: ProgressDialogIndeterminate? = null
 
     private var adapter: CoursePagerAdapter? = null
 
@@ -207,9 +207,9 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
 
     override fun showProgressDialog() {
         if (progressDialog == null) {
-            progressDialog = ProgressDialogAutoBundle.builder().build()
+            progressDialog = ProgressDialogIndeterminateAutoBundle.builder().build()
         }
-        progressDialog?.show(supportFragmentManager, ProgressDialog.TAG)
+        progressDialog?.show(supportFragmentManager, ProgressDialogIndeterminate.TAG)
     }
 
     override fun hideProgressDialog() {

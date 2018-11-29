@@ -16,7 +16,8 @@ import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle
+import de.xikolo.controllers.dialogs.ProgressDialogHorizontal
+import de.xikolo.controllers.dialogs.ProgressDialogHorizontalAutoBundle
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
 import de.xikolo.controllers.dialogs.StorageMigrationDialogAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
@@ -77,12 +78,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 val dialog = StorageMigrationDialogAutoBundle.builder(oldStorageType).build()
                 dialog.listener = object : StorageMigrationDialog.Listener {
                     override fun onDialogPositiveClick() {
-                        val progressDialog = ProgressDialogAutoBundle.builder()
-                            .title(App.getInstance().getString(R.string.dialog_storage_migration_title))
-                            .message(App.getInstance().getString(R.string.dialog_storage_migration_message))
+                        val progressDialog = ProgressDialogHorizontalAutoBundle.builder()
+                            .title(getString(R.string.dialog_storage_migration_title))
+                            .message(getString(R.string.dialog_storage_migration_message))
                             .build()
                         progressDialog.max = fileCount
-                        progressDialog.show(fragmentManager, TAG)
+                        progressDialog.show(fragmentManager, ProgressDialogHorizontal.TAG)
 
                         val migrationCallback = object : StorageUtil.StorageMigrationCallback {
                             override fun onProgressChanged(count: Int) {
