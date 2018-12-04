@@ -60,9 +60,7 @@ public class VideoHelper {
     @BindView(R.id.videoController) View videoController;
     @BindView(R.id.videoControls) View videoControls;
     @BindView(R.id.videoProgress) View videoProgress;
-    @BindView(R.id.videoOverlay) View videoOverlay;
 
-    @BindView(R.id.settingsContainer) LinearLayout settingsContainer;
     @BindView(R.id.buttonSettings) TextView settingsButton;
 
     @BindView(R.id.videoSeekBar) PreviewSeekBar seekBar;
@@ -77,7 +75,6 @@ public class VideoHelper {
     @BindView(R.id.currentTime) TextView textCurrentTime;
     @BindView(R.id.totalTime) TextView textTotalTime;
 
-    @BindView(R.id.offlineHint) View viewOfflineHint;
     @BindView(R.id.videoWarning) View viewVideoWarning;
     @BindView(R.id.videoWarningText) TextView textVideoWarning;
 
@@ -88,6 +85,8 @@ public class VideoHelper {
     private ApplicationPreferences applicationPreferences = new ApplicationPreferences();
 
     private View videoContainer;
+
+    private LinearLayout settingsContainer;
 
     private ControllerListener controllerListener;
 
@@ -103,6 +102,8 @@ public class VideoHelper {
 
     private boolean userIsSeeking = false;
 
+    private boolean isOfflineVideo = false;
+
     private Course course;
     private Section module;
     private Item item;
@@ -111,9 +112,10 @@ public class VideoHelper {
     private VideoSettingsHelper videoSettingsHelper;
     private boolean settingsOpen = false;
 
-    public VideoHelper(FragmentActivity activity, View videoContainer) {
+    public VideoHelper(FragmentActivity activity, View videoContainer, LinearLayout settingsContainer) {
         this.activity = activity;
         this.videoContainer = videoContainer;
+        this.settingsContainer = settingsContainer;
 
         ButterKnife.bind(this, activity);
 
@@ -304,21 +306,25 @@ public class VideoHelper {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        hideSettings();
                         settingsOpen = false;
+                        if (controllerListener != null) {
+                            controllerListener.onSettingsClosed();
+                        }
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        videoControls.setVisibility(View.GONE);
                         settingsOpen = true;
+                        if (controllerListener != null) {
+                            controllerListener.onSettingsOpen();
+                        }
                         break;
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                slideOffset = (slideOffset + 1) / 2f; // 0 if HIDDEN, 1 if EXPANDED
-                videoOverlay.setAlpha(slideOffset * 0.75f);
-                videoControls.setAlpha(1 - slideOffset);
+                if (controllerListener != null) {
+                    controllerListener.onSettingsSlide(slideOffset);
+                }
             }
         });
     }
@@ -381,15 +387,13 @@ public class VideoHelper {
         );
     }
 
-    private void showSettings(View view) {
-        show(Integer.MAX_VALUE);
+    public void showSettings(View view) {
         settingsContainer.removeAllViews();
         settingsContainer.addView(view);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-    private void hideSettings() {
-        show();
+    public void hideSettings() {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
@@ -552,7 +556,7 @@ public class VideoHelper {
 
     private void updateVideo() {
         viewVideoWarning.setVisibility(View.GONE);
-        viewOfflineHint.setVisibility(View.GONE);
+        isOfflineVideo = false;
 
         String stream;
         DownloadAsset.Course.Item videoAssetDownload;
@@ -625,7 +629,7 @@ public class VideoHelper {
 
     private void setLocalVideoUri(DownloadAsset.Course.Item item) {
         setVideoUri("file://" + downloadManager.getDownloadFile(item));
-        viewOfflineHint.setVisibility(View.VISIBLE);
+        isOfflineVideo = true;
     }
 
     private void setHlsVideoUri(String uri) {
@@ -669,9 +673,7 @@ public class VideoHelper {
     }
 
     public String getSourceString() {
-        if (viewOfflineHint != null) {
-            return viewOfflineHint.getVisibility() == View.VISIBLE ? "offline" : "online";
-        } else return null;
+        return isOfflineVideo ? "offline" : "online";
     }
 
     private String getQualityString(VideoSettingsHelper.VideoMode videoMode) {
@@ -694,6 +696,12 @@ public class VideoHelper {
         void onControllerShow();
 
         void onControllerHide();
+
+        void onSettingsSlide(float offset);
+
+        void onSettingsOpen();
+
+        void onSettingsClosed();
     }
 
     private static class MessageHandler extends Handler {

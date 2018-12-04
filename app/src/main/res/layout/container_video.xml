@@ -10,13 +10,6 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center" />
 
-    <View
-        android:id="@+id/videoOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0"
-        android:background="@color/black" />
-
     <RelativeLayout
         android:id="@+id/videoController"
         android:layout_width="fill_parent"
@@ -35,54 +28,19 @@
                 android:layout_alignParentTop="true"
                 android:background="@drawable/gradient_black_transparent_top"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="4dp">
-
-                <RelativeLayout
-                    android:id="@+id/offlineHint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:visibility="gone">
-
-                    <de.xikolo.views.CustomFontTextView
-                        android:id="@+id/offlineIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="6dp"
-                        android:paddingRight="8dp"
-                        android:text="@string/icon_download_video"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        app:customFont="xikolo.ttf" />
-
-                    <TextView
-                        android:id="@+id/offlineText"
-                        style="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/offlineIcon"
-                        android:text="@string/offline"
-                        android:textAllCaps="true"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
-
-                </RelativeLayout>
+                android:paddingTop="4dp"
+                android:paddingRight="16dp">
 
                 <android.support.v7.app.MediaRouteButton
                     android:id="@+id/video_media_route_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
                     android:layout_marginTop="6dp"
                     android:mediaRouteTypes="user"
-                    android:minHeight="0dp"
                     android:minWidth="0dp"
+                    android:minHeight="0dp"
                     android:padding="0dp"
                     android:theme="@style/ThemeOverlay.AppCompat.Dark"
                     android:visibility="gone" />
@@ -212,21 +170,6 @@
             </RelativeLayout>
 
         </RelativeLayout>
-
-        <android.support.design.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:id="@+id/settingsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:behavior_hideable="true"
-                app:behavior_skipCollapsed="true"
-                app:layout_behavior="android.support.design.widget.BottomSheetBehavior" />
-
-        </android.support.design.widget.CoordinatorLayout>
 
     </RelativeLayout>
 

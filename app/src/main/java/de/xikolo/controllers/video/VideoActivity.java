@@ -2,6 +2,7 @@ package de.xikolo.controllers.video;
 
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.cast.framework.CastButtonFactory;
@@ -30,6 +32,7 @@ import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
+import de.xikolo.models.VideoSubtitles;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.video.VideoPresenter;
 import de.xikolo.presenters.video.VideoPresenterFactory;
@@ -37,6 +40,7 @@ import de.xikolo.presenters.video.VideoView;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
+import de.xikolo.utils.MarkdownUtil;
 import de.xikolo.utils.PlayServicesUtil;
 
 public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoView> implements VideoView {
@@ -50,8 +54,12 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @BindView(R.id.videoMetadata) View videoMetadataView;
     @BindView(R.id.textTitle) TextView videoTitleText;
+    @BindView(R.id.textDescription) TextView videoDescriptionText;
+    @BindView(R.id.textSubtitles) TextView videoSubtitlesText;
     @BindView(R.id.videoContainer) View videoContainer;
     @BindView(R.id.video_media_route_button) MediaRouteButton mediaRouteButton;
+    @BindView(R.id.settingsContainer) LinearLayout settingsContainer;
+    @BindView(R.id.overlay) View overlay;
 
     private VideoHelper videoHelper;
     private Video video;
@@ -63,20 +71,46 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         setContentView(R.layout.activity_video);
         setupActionBar();
         enableOfflineModeToolbar(false);
-        setColorScheme(R.color.black, R.color.black);
+        setColorScheme(R.color.transparent, R.color.black);
         actionBar.setTitle("");
         actionBar.setSubtitle("");
 
-        videoHelper = new VideoHelper(this, videoContainer);
+        videoHelper = new VideoHelper(this, videoContainer, settingsContainer);
         videoHelper.setControllerListener(new VideoHelper.ControllerListener() {
             @Override
             public void onControllerShow() {
+                if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                    actionBar.show();
+                }
                 showSystemBars();
             }
 
             @Override
             public void onControllerHide() {
+                actionBar.hide();
                 hideSystemBars();
+            }
+
+            @Override
+            public void onSettingsSlide(float offset) {
+                float alpha = (offset) * 0.7f;
+                if (!Float.isNaN(alpha)) {
+                    overlay.setAlpha(alpha);
+                }
+            }
+
+            @Override
+            public void onSettingsOpen() {
+                overlay.setClickable(true);
+                overlay.setOnClickListener(v -> videoHelper.hideSettings());
+                videoHelper.show(Integer.MAX_VALUE);
+            }
+
+            @Override
+            public void onSettingsClosed() {
+                overlay.setOnClickListener(null);
+                overlay.setClickable(false);
+                videoHelper.show();
             }
         });
 
@@ -110,6 +144,24 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
         if (videoTitleText != null) {
             videoTitleText.setText(item.title);
+        }
+
+        if (videoDescriptionText != null && video.summary != null
+            && !video.summary.trim().isEmpty()
+            && !video.summary.trim().contentEquals("Enter content")
+            ) {
+            videoDescriptionText.setTypeface(videoDescriptionText.getTypeface(), Typeface.NORMAL);
+            MarkdownUtil.formatAndSet(video.summary, videoDescriptionText);
+        }
+
+        if (videoSubtitlesText != null && video.subtitles != null && video.subtitles.size() > 0) {
+            StringBuilder text = new StringBuilder(getString(R.string.video_settings_subtitles) + ": ");
+            for (VideoSubtitles subtitles : video.subtitles) {
+                text.append(subtitles.language).append(", ");
+            }
+            text.delete(text.length() - 2, text.length());
+            videoSubtitlesText.setText(text);
+            videoSubtitlesText.setVisibility(View.VISIBLE);
         }
 
         videoHelper.setupVideo(course, section, item, video);
@@ -161,7 +213,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
-                display.getRealSize(size); // API 17
+                display.getRealSize(size);
 
                 View videoContainer = videoHelper.getVideoContainer();
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) videoContainer.getLayoutParams();
@@ -196,6 +248,14 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                     videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
 
                 videoMetadataView.setVisibility(View.GONE);
+
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) videoContainer.getParent()).getLayoutParams()).topMargin = 0;
+
+                settingsContainer.setPadding(
+                    paddingLeft,
+                    0,
+                    paddingRight,
+                    videoOffset > systemBarHeight ? videoOffset : systemBarHeight);
             } else { // Portrait
                 layout.setFitsSystemWindows(false);
 
@@ -224,6 +284,10 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                 videoHelper.getControllerView().setPadding(0, 0, 0, 0);
 
                 videoMetadataView.setVisibility(View.VISIBLE);
+
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) videoContainer.getParent()).getLayoutParams()).topMargin = -actionBarHeight;
+
+                settingsContainer.setPadding(0,0,0,0);
             }
         }
     }
