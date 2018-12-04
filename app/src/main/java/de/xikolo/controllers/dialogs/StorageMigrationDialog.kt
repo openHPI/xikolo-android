@@ -24,7 +24,7 @@ class StorageMigrationDialog : BaseDialogFragment() {
             .setTitle(activity!!.getString(R.string.dialog_storage_migration_title))
             .setMessage(StorageUtil.buildMigrationMessage(activity!!, from))
             .setPositiveButton(R.string.dialog_storage_migration_confirm) { _, _ -> listener?.onDialogPositiveClick() }
-            .setNegativeButton(R.string.dialog_negative) { dialog, _ -> dialog.cancel() }
+            .setNegativeButton(R.string.dialog_no) { dialog, _ -> dialog.cancel() }
             .setCancelable(true)
 
         val dialog = builder.create()

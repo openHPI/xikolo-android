@@ -62,6 +62,7 @@
     <string name="dialog_unenroll_yes">Teilnahme beenden</string>
 
     <string name="dialog_negative">Abbrechen</string>
+    <string name="dialog_no">Nein</string>
 
     <string name="dialog_confirm_delete_title">Datei löschen?</string>
     <string name="dialog_confirm_delete_message">Die heruntergeladene Datei wird gelöscht und kann nicht mehr offline genutzt werden.</string>

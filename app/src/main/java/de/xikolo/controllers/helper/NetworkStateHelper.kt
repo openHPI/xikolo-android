@@ -11,8 +11,8 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.controllers.dialogs.ProgressDialog
-import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.views.CustomFontTextView
 
 class NetworkStateHelper(private val activity: FragmentActivity?, view: View, onRefreshListener: SwipeRefreshLayout.OnRefreshListener) {
@@ -38,7 +38,7 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
     @BindView(R.id.text_notification_summary)
     lateinit var textSummary: TextView
 
-    private var progressDialog: ProgressDialog? = null
+    private var progressDialog: ProgressDialogIndeterminate? = null
 
     val contentViewVisible: Boolean
         get() = contentView.visibility == View.VISIBLE
@@ -97,8 +97,8 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
 
     fun showBlockingProgress() {
         activity?.let {
-            progressDialog = ProgressDialogAutoBundle.builder().build()
-            progressDialog?.show(it.supportFragmentManager, ProgressDialog.TAG)
+            progressDialog = ProgressDialogIndeterminateAutoBundle.builder().build()
+            progressDialog?.show(it.supportFragmentManager, ProgressDialogIndeterminate.TAG)
         }
     }
 

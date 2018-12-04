@@ -30,8 +30,8 @@ import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BasePresenterFragment;
-import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate;
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle;
 import de.xikolo.managers.UserManager;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.login.LoginPresenter;
@@ -55,7 +55,7 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
     @BindView(R.id.btnSSO) Button buttonSSO;
     @BindView(R.id.ssoContainer) View containerSSO;
 
-    private ProgressDialog progressDialog;
+    private ProgressDialogIndeterminate progressDialog;
 
     @Nullable
     @Override
@@ -171,9 +171,9 @@ public class LoginFragment extends BasePresenterFragment<LoginPresenter, LoginVi
     @Override
     public void showProgressDialog() {
         if (progressDialog == null) {
-            progressDialog = ProgressDialogAutoBundle.builder().build();
+            progressDialog = ProgressDialogIndeterminateAutoBundle.builder().build();
         }
-        progressDialog.show(getChildFragmentManager(), ProgressDialog.TAG);
+        progressDialog.show(getChildFragmentManager(), ProgressDialogIndeterminate.TAG);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package de.xikolo.controllers.settings
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -17,6 +16,8 @@ import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
+import de.xikolo.controllers.dialogs.ProgressDialogHorizontal
+import de.xikolo.controllers.dialogs.ProgressDialogHorizontalAutoBundle
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
 import de.xikolo.controllers.dialogs.StorageMigrationDialogAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
@@ -77,14 +78,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 val dialog = StorageMigrationDialogAutoBundle.builder(oldStorageType).build()
                 dialog.listener = object : StorageMigrationDialog.Listener {
                     override fun onDialogPositiveClick() {
-                        val progressDialog = ProgressDialog(activity)
-                        progressDialog.setTitle(R.string.dialog_storage_migration_title)
-                        progressDialog.setMessage(App.getInstance().getString(R.string.dialog_storage_migration_message))
-                        progressDialog.setCancelable(false)
-                        progressDialog.setCanceledOnTouchOutside(false)
-                        progressDialog.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
+                        val progressDialog = ProgressDialogHorizontalAutoBundle.builder()
+                            .title(getString(R.string.dialog_storage_migration_title))
+                            .message(getString(R.string.dialog_storage_migration_message))
+                            .build()
                         progressDialog.max = fileCount
-                        progressDialog.show()
+                        progressDialog.show(fragmentManager, ProgressDialogHorizontal.TAG)
 
                         val migrationCallback = object : StorageUtil.StorageMigrationCallback {
                             override fun onProgressChanged(count: Int) {

@@ -64,6 +64,7 @@
     <string name="dialog_unenroll_yes">Un-enroll</string>
 
     <string name="dialog_negative">Cancel</string>
+    <string name="dialog_no">No</string>
 
     <string name="dialog_confirm_delete_title">Delete this file?</string>
     <string name="dialog_confirm_delete_message">The downloaded file will be deleted and can\'t used offline anymore.</string>

@@ -11,15 +11,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.controllers.dialogs.ProgressDialog;
-import de.xikolo.controllers.dialogs.ProgressDialogAutoBundle;
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate;
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle;
 import de.xikolo.views.CustomFontTextView;
 
 @SuppressWarnings("unused")
 public class LoadingStateHelper {
 
     @BindView(R.id.content_view) View contentView;
-    
+
     @BindView(R.id.container_content_message) FrameLayout messageContainer;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
@@ -30,7 +30,7 @@ public class LoadingStateHelper {
 
     private FragmentActivity activity;
 
-    private ProgressDialog progressDialog;
+    private ProgressDialogIndeterminate progressDialog;
 
     public LoadingStateHelper(FragmentActivity activity, View view, SwipeRefreshLayout.OnRefreshListener onRefreshListener) {
         this.activity = activity;
@@ -43,7 +43,7 @@ public class LoadingStateHelper {
         hideMessage();
         hideProgress();
     }
-    
+
     public void showContentView() {
         hideMessage();
         if (progressBar.getVisibility() == View.VISIBLE) {
@@ -72,8 +72,8 @@ public class LoadingStateHelper {
     }
 
     public void showBlockingProgress() {
-        progressDialog = ProgressDialogAutoBundle.builder().build();
-        progressDialog.show(activity.getSupportFragmentManager(), ProgressDialog.TAG);
+        progressDialog = ProgressDialogIndeterminateAutoBundle.builder().build();
+        progressDialog.show(activity.getSupportFragmentManager(), ProgressDialogIndeterminate.TAG);
     }
 
     public void hideProgress() {
