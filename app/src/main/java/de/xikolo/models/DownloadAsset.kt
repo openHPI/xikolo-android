@@ -2,11 +2,11 @@ package de.xikolo.models
 
 import de.xikolo.App
 import de.xikolo.R
+import de.xikolo.managers.DownloadManager
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
 import java.io.File
 
-// the file path should identify a download uniquely, thus this DownloadAsset object can be used as an identifier for downloads
 sealed class DownloadAsset(val url: String?, open val fileName: String, var storage: File = StorageUtil.getStorage(App.getInstance())) {
 
     // must not end with separator and always have a getter function, otherwise dynamic storage changes will not work
@@ -18,10 +18,25 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
 
     open val size: Long = 0L
 
+    val sizeWithSecondaryAssets: Long
+        get() {
+            var secondarySize = 0L
+            secondaryAssets.forEach {
+                secondarySize += it.sizeWithSecondaryAssets
+            }
+            return size + secondarySize
+        }
+
     val filePath: String
         get() = fileFolder + File.separator + fileName
 
     open val mimeType = "application/pdf"
+
+    open val showNotification = true
+
+    open val secondaryAssets = mutableSetOf<DownloadAsset>()
+
+    open val deleteSecondaryAssets: (DownloadAsset, DownloadManager) -> Boolean = { _, _ -> true }
 
     class Document(
         val document: de.xikolo.models.Document,
@@ -58,39 +73,71 @@ sealed class DownloadAsset(val url: String?, open val fileName: String, var stor
         override val fileFolder
             get() = super.fileFolder + File.separator + "Courses" + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
 
-        sealed class Item(url: String?, fileName: String, val item: de.xikolo.models.Item, val video: Video) : Course(url, fileName, item.section.course) {
+        sealed class Item(url: String?, fileName: String, val item: de.xikolo.models.Item) : Course(url, fileName, item.section.course) {
 
             override val fileFolder
                 get() = super.fileFolder + File.separator + FileUtil.escapeFilename(item.section.title) + "_" + item.section.id
 
             override val fileName = FileUtil.escapeFilename(item.title) + "_" + fileName
 
-            class Slides(item: de.xikolo.models.Item, video: Video) : Item(video.slidesUrl, "slides_${item.id}.pdf", item, video) {
+            class Slides(item: de.xikolo.models.Item, video: Video) : Item(video.slidesUrl, "slides_${item.id}.pdf", item) {
                 override val title = "Slides: " + item.title
                 override val size = video.slidesSize.toLong()
             }
 
-            class Transcript(item: de.xikolo.models.Item, video: Video) : Item(video.transcriptUrl, "transcript_${item.id}.pdf", item, video) {
+            class Transcript(item: de.xikolo.models.Item, video: Video) : Item(video.transcriptUrl, "transcript_${item.id}.pdf", item) {
                 override val title = "Transcript: " + item.title
                 override val size = video.transcriptSize.toLong()
             }
 
-            class VideoSD(item: de.xikolo.models.Item, video: Video) : Item(video.singleStream.sdUrl, "video_sd_${item.id}.mp4", item, video) {
+            class VideoSD(item: de.xikolo.models.Item, val video: Video) : Item(video.singleStream.sdUrl, "video_sd_${item.id}.mp4", item) {
                 override val title = "Video (SD): " + item.title
                 override val mimeType = "video/mp4"
                 override val size = video.singleStream.sdSize.toLong()
+
+                override val secondaryAssets: MutableSet<DownloadAsset>
+                    get() {
+                        val subtitles = mutableSetOf<DownloadAsset>()
+                        video.subtitles.forEach {
+                            subtitles.add(Subtitles(it, item))
+                        }
+                        return subtitles
+                    }
+                override val deleteSecondaryAssets: (DownloadAsset, DownloadManager) -> Boolean = { _, downloadManager ->
+                    !downloadManager.downloadExists(VideoSD(item, video)) && !downloadManager.downloadExists(VideoHD(item, video))
+                }
             }
 
-            class VideoHD(item: de.xikolo.models.Item, video: Video) : Item(video.singleStream.hdUrl, "video_hd_${item.id}.mp4", item, video) {
+            class VideoHD(item: de.xikolo.models.Item, val video: Video) : Item(video.singleStream.hdUrl, "video_hd_${item.id}.mp4", item) {
                 override val title = "Video (HD): " + item.title
                 override val mimeType = "video/mp4"
                 override val size = video.singleStream.hdSize.toLong()
+
+                override val secondaryAssets: MutableSet<DownloadAsset>
+                    get() {
+                        val subtitles = mutableSetOf<DownloadAsset>()
+                        video.subtitles.forEach {
+                            subtitles.add(Subtitles(it, item))
+                        }
+                        return subtitles
+                    }
+                override val deleteSecondaryAssets: (DownloadAsset, DownloadManager) -> Boolean = { _, downloadManager ->
+                    !downloadManager.downloadExists(VideoSD(item, video)) && !downloadManager.downloadExists(VideoHD(item, video))
+                }
             }
 
-            class Audio(item: de.xikolo.models.Item, video: Video) : Item(video.audioUrl, "audio_${item.id}.mp3", item, video) {
+            class Audio(item: de.xikolo.models.Item, video: Video) : Item(video.audioUrl, "audio_${item.id}.mp3", item) {
                 override val title = "Audio: " + item.title
                 override val mimeType = "audio/mpeg"
-                override val size = video.transcriptSize.toLong()
+                override val size = video.audioSize.toLong()
+            }
+
+            class Subtitles(videoSubtitles: VideoSubtitles, item: de.xikolo.models.Item) : Item(videoSubtitles.vttUrl, "subtitles_${videoSubtitles.language}_${item.id}.vtt", item) {
+                override val fileFolder
+                    get() = super.fileFolder + File.separator + "Subtitles"
+
+                override val showNotification = false
+                override val mimeType = "text/vtt"
             }
         }
     }

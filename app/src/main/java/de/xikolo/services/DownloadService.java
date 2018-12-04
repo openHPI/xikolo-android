@@ -18,6 +18,7 @@ import com.coolerfall.download.OkHttpDownloader;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,6 +42,8 @@ public class DownloadService extends Service {
     public static final String ARG_URL = "url";
 
     public static final String ARG_FILE_PATH = "file_path";
+
+    public static final String ARG_SHOW_NOTIFICATION = "show_notification";
 
     private ServiceHandler serviceHandler;
 
@@ -97,11 +100,14 @@ public class DownloadService extends Service {
         if (Config.DEBUG) Log.d(TAG, "DownloadService start command received");
 
         if (intent != null && intent.getExtras() != null && intent.getExtras().getString(ARG_TITLE) != null) {
-            List<String> titles = getRunningDownloadTitles();
-            titles.add(intent.getExtras().getString(ARG_TITLE));
+            String title = intent.getExtras().getString(ARG_TITLE);
+            if (intent.getExtras().getBoolean(ARG_SHOW_NOTIFICATION, true)) {
+                List<String> titles = getRunningDownloadTitles();
+                titles.add(title);
 
-            Notification notification = notificationUtil.getDownloadRunningNotification(titles).build();
-            startForeground(NotificationUtil.DOWNLOAD_RUNNING_NOTIFICATION_ID, notification);
+                Notification notification = notificationUtil.getDownloadRunningNotification(titles).build();
+                startForeground(NotificationUtil.DOWNLOAD_RUNNING_NOTIFICATION_ID, notification);
+            }
 
             // For each start request, send a message to start a job and deliver the
             // start ID so we know which request we're stopping when we finish the job
@@ -145,7 +151,19 @@ public class DownloadService extends Service {
 
     public synchronized boolean isDownloading() {
         return downloadMap != null && downloadMap.size() > 0;
+    }
 
+    public synchronized boolean isDownloadingTempFile(File path) {
+        if (downloadMap == null || path == null) return false;
+
+        for (Download download : downloadMap.values()) {
+            if (path.getAbsolutePath().equals(download.filePath + ".tmp")
+                && isDownloading(download.url)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public synchronized Download getDownload(String url) {
@@ -173,7 +191,7 @@ public class DownloadService extends Service {
         List<String> titles = new ArrayList<>();
 
         for (Download download : downloadMap.values()) {
-            if (isDownloading(download.url)) {
+            if (isDownloading(download.url) && download.showNotification) {
                 titles.add(download.title);
             }
         }
@@ -214,7 +232,9 @@ public class DownloadService extends Service {
 
         if (download != null) {
             download.state = Download.State.SUCCESSFUL;
-            notificationUtil.showDownloadCompletedNotification(download);
+            if(download.showNotification) {
+                notificationUtil.showDownloadCompletedNotification(download);
+            }
             EventBus.getDefault().post(new DownloadCompletedEvent(download.url));
         }
     }
@@ -239,6 +259,7 @@ public class DownloadService extends Service {
             final String title = message.getData().getString(ARG_TITLE);
             final String url = message.getData().getString(ARG_URL);
             final String filePath = message.getData().getString(ARG_FILE_PATH);
+            final boolean showNotification = message.getData().getBoolean(ARG_SHOW_NOTIFICATION);
 
             int allowedNetworkTypes = DownloadRequest.NETWORK_WIFI | DownloadRequest.NETWORK_MOBILE;
             ApplicationPreferences appPreferences = new ApplicationPreferences();
@@ -289,6 +310,7 @@ public class DownloadService extends Service {
             download.title = title;
             download.url = url;
             download.filePath = filePath;
+            download.showNotification = showNotification;
             download.id = downloadClient.add(request);
 
             downloadMap.putIfAbsent(download.id, download);

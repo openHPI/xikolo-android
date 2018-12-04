@@ -90,9 +90,6 @@ class DownloadViewHelper(
     private val progressBarUpdater: Runnable
     private var progressBarUpdaterRunning = false
 
-    private var url: String? = null
-    private var size: Long = 0L
-
     init {
         val inflater = LayoutInflater.from(App.getInstance())
         view = inflater.inflate(R.layout.container_download, null)
@@ -157,10 +154,7 @@ class DownloadViewHelper(
             textDescription.visibility = View.GONE
         }
 
-        size = downloadAsset.size
-
-        url = downloadAsset.url
-        if (url == null) {
+        if (downloadAsset.url == null) {
             view.isEnabled = false
             buttonDownloadStart.isEnabled = false
 
@@ -191,20 +185,20 @@ class DownloadViewHelper(
 
         progressBarUpdater = object : Runnable {
             override fun run() {
-                val dl = downloadManager.getDownload(downloadAsset)
+                Handler(Looper.getMainLooper()).post {
+                    if (progressBarUpdaterRunning) {
 
-                if (dl != null) {
-                    Handler(Looper.getMainLooper()).post {
-                        if (progressBarUpdaterRunning) {
-                            progressBarDownload.isIndeterminate = false
-                            if (dl.totalBytes == 0L) {
-                                progressBarDownload.progress = 0
-                            } else {
-                                progressBarDownload.progress = (dl.bytesWritten * 100 / dl.totalBytes).toInt()
-                            }
-                            textFileSize.text = (FileUtil.getFormattedFileSize(dl.bytesWritten) + " / "
-                                + FileUtil.getFormattedFileSize(dl.totalBytes))
+                        val bytesWritten = downloadManager.getDownloadWrittenBytes(downloadAsset)
+                        val totalBytes = downloadManager.getDownloadTotalBytes(downloadAsset)
+
+                        progressBarDownload.isIndeterminate = false
+                        if (totalBytes == 0L) {
+                            progressBarDownload.progress = 0
+                        } else {
+                            progressBarDownload.progress = (bytesWritten * 100 / totalBytes).toInt()
                         }
+                        textFileSize.text = (FileUtil.getFormattedFileSize(bytesWritten) + " / "
+                            + FileUtil.getFormattedFileSize(totalBytes))
                     }
                 }
 
@@ -215,11 +209,10 @@ class DownloadViewHelper(
         }
 
         when {
-            downloadManager.downloadRunning(downloadAsset) -> showRunningState()
-            downloadManager.downloadExists(downloadAsset)  -> showEndState()
-            else                                           -> showStartState()
+            downloadManager.downloadRunningWithSecondaryAssets(downloadAsset) -> showRunningState()
+            downloadManager.downloadExists(downloadAsset)                     -> showEndState()
+            else                                                              -> showStartState()
         }
-
     }
 
     fun onDestroy() {
@@ -247,9 +240,9 @@ class DownloadViewHelper(
         progressBarDownload.isIndeterminate = true
         progressBarUpdaterRunning = false
 
-        if (size != 0L) {
+        if (downloadAsset.sizeWithSecondaryAssets != 0L) {
             textFileSize.visibility = View.VISIBLE
-            textFileSize.text = FileUtil.getFormattedFileSize(size)
+            textFileSize.text = FileUtil.getFormattedFileSize(downloadAsset.sizeWithSecondaryAssets)
         } else {
             textFileSize.visibility = View.GONE
         }
@@ -273,8 +266,8 @@ class DownloadViewHelper(
 
         textFileSize.visibility = View.VISIBLE
 
-        if (size != 0L) {
-            textFileSize.text = FileUtil.getFormattedFileSize(size)
+        if (downloadAsset.sizeWithSecondaryAssets != 0L) {
+            textFileSize.text = FileUtil.getFormattedFileSize(downloadAsset.sizeWithSecondaryAssets)
         } else {
             textFileSize.text = FileUtil.getFormattedFileSize(
                 downloadManager.getDownloadFile(downloadAsset)
@@ -286,7 +279,9 @@ class DownloadViewHelper(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDownloadCompletedEvent(event: DownloadCompletedEvent) {
-        if (event.url == url) {
+        if ((downloadAsset.url == event.url || downloadAsset.secondaryAssets.any { it.url == event.url })
+            && !downloadManager.downloadRunningWithSecondaryAssets(downloadAsset)
+            && downloadManager.downloadExists(downloadAsset)) {
             showEndState()
         }
     }

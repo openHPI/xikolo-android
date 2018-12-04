@@ -140,10 +140,11 @@ object LanalyticsUtil {
             is DownloadAsset.Course.Item.Slides        -> "DOWNLOADED_SLIDES"
             is DownloadAsset.Course.Item.Transcript    -> "DOWNLOADED_TRANSCRIPT"
             is DownloadAsset.Course.Item.Audio         -> "DOWNLOADED_AUDIO"
+            is DownloadAsset.Course.Item.Subtitles     -> "DOWNLOADED_SUBTITLES"
         }
 
         createEventBuilder()
-            .setResource(itemDownloadAsset.video.id, "video")
+            .setResource(itemDownloadAsset.item.id, "video")
             .setVerb(verb)
             .putContext(CONTEXT_COURSE_ID, itemDownloadAsset.course.id)
             .putContext(CONTEXT_SECTION_ID, itemDownloadAsset.item.section.id)
