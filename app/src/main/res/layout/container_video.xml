@@ -177,12 +177,12 @@
         android:id="@+id/videoProgress"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/black">
+        android:background="@color/transparent">
 
         <ProgressBar
-            style="?android:attr/progressBarStyleInverse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleLargeInverse"
+            android:layout_width="@dimen/btn_play_text_size"
+            android:layout_height="@dimen/btn_play_text_size"
             android:layout_centerInParent="true"
             android:visibility="visible" />
 
