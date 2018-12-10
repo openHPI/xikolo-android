@@ -236,9 +236,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
-    private fun refreshPipStatus(){
+    private fun refreshPipStatus() {
         val pipSettings = findPreference(getString(R.string.preference_video_pip))
-        if(!PermissionManager.hasPipPermission(context)){
+        if (!PermissionManager.hasPipPermission(context)) {
             pipSettings.summary = getString(R.string.settings_summary_video_pip_unavailable)
         } else {
             pipSettings.summary = ""
