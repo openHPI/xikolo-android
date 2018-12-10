@@ -223,7 +223,7 @@
     <string name="toast_file_already_downloaded">File already downloaded.</string>
     <string name="toast_no_external_write_access">No write access for %1$s.</string>
     <string name="toast_no_file_viewer_found">No application to open this file found.</string>
-    <string name="toast_pip_error">The application could not enter Picture-in-picture mode.</string>
+    <string name="toast_pip_error">The application could not enter Picture-in-Picture mode.</string>
 
     <!-- -->
     <string name="offline_mode">Offline Mode</string>
@@ -234,7 +234,7 @@
     <string name="video_settings_subtitles">Subtitles</string>
     <string name="video_settings_subtitles_none">None</string>
     <string name="video_settings_subtitles_generated">(automatically generated)</string>
-    <string name="video_settings_pip">Picture-in-picture</string>
+    <string name="video_settings_pip">Picture-in-Picture</string>
     <string name="video_settings_separator" translatable="false">&#xb7;</string>
     <string name="video_description_unavailable">There is no description available for this video.</string>
     <string name="video_pip_action_play" translatable="false">Play</string>
@@ -261,7 +261,7 @@
     <string name="settings_title_video_playback_speed">Video playback speed</string>
     <string name="settings_summary_video_playback_speed">Default speed: %s</string>
 
-    <string name="settings_title_video_pip">Settings for Picture-in-picture</string>
+    <string name="settings_title_video_pip">Settings for Picture-in-Picture</string>
     <string name="settings_summary_video_pip_unavailable">Deactivated or not available</string>
 
     <string name="settings_category_about">About</string>

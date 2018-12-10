@@ -1,8 +1,6 @@
 package de.xikolo.utils;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.util.DisplayMetrics;
 
 public class DisplayUtil {
@@ -23,10 +21,6 @@ public class DisplayUtil {
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
 
         return dpHeight >= 720 || dpWidth >= 720;
-    }
-
-    public static boolean supportsPictureInPicture(Context context) {
-        return Build.VERSION.SDK_INT >= 26 && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE);
     }
 
 }

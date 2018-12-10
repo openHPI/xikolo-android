@@ -538,10 +538,10 @@ public class VideoHelper {
                 }
 
                 @Override
-                public void onPiPClick() {
+                public void onPipClick() {
                     hideSettings();
                     if(controllerListener != null) {
-                        controllerListener.onPiPClick();
+                        controllerListener.onPipClick();
                     }
                 }
             },
@@ -737,7 +737,7 @@ public class VideoHelper {
 
         void onSettingsClosed();
 
-        void onPiPClick();
+        void onPipClick();
     }
 
     private static class MessageHandler extends Handler {

@@ -15,7 +15,6 @@ import de.xikolo.R
 import de.xikolo.config.FeatureToggle
 import de.xikolo.managers.PermissionManager
 import de.xikolo.models.VideoSubtitles
-import de.xikolo.utils.DisplayUtil
 import de.xikolo.utils.PlaybackSpeedUtil
 import java.util.*
 
@@ -64,12 +63,12 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 )
             )
         }
-        if(DisplayUtil.supportsPictureInPicture(context) && PermissionManager.hasPiPPermission(context)) {
+        if(FeatureToggle.pictureInPicture(context) && PermissionManager.hasPipPermission(context)) {
             list.addView(
                 buildSettingsItem(
                     R.string.icon_pip,
                     context.getString(R.string.video_settings_pip),
-                    View.OnClickListener { clickListener.onPiPClick() },
+                    View.OnClickListener { clickListener.onPipClick() },
                     false
                 )
             )
@@ -246,7 +245,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
 
         fun onSubtitleClick()
 
-        fun onPiPClick()
+        fun onPipClick()
     }
 
     // also invoked when old value equal to new value

@@ -11,9 +11,8 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.Icon;
-import android.net.Uri;
 import android.graphics.Typeface;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,6 +39,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import de.xikolo.R;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.VideoHelper;
 import de.xikolo.models.Course;
@@ -53,7 +53,6 @@ import de.xikolo.presenters.video.VideoPresenterFactory;
 import de.xikolo.presenters.video.VideoView;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.CastUtil;
-import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.MarkdownUtil;
 import de.xikolo.utils.PlayServicesUtil;
@@ -137,7 +136,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             }
 
             @Override
-            public void onPiPClick() {
+            public void onPipClick() {
                 enterPip(true);
             }
         });
@@ -384,7 +383,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @Override
     public void onUserLeaveHint() {
-        if (DisplayUtil.supportsPictureInPicture(this) && videoHelper.getCurrentPosition() < videoHelper.getDuration() - 5000) {
+        if (FeatureToggle.pictureInPicture(this) && videoHelper.getCurrentPosition() < videoHelper.getDuration() - 5000) {
             super.onUserLeaveHint();
             enterPip(false);
         }

@@ -16,6 +16,7 @@ import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
+import de.xikolo.config.FeatureToggle
 import de.xikolo.controllers.dialogs.ProgressDialogHorizontal
 import de.xikolo.controllers.dialogs.ProgressDialogHorizontalAutoBundle
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
@@ -26,7 +27,10 @@ import de.xikolo.events.LogoutEvent
 import de.xikolo.managers.PermissionManager
 import de.xikolo.managers.UserManager
 import de.xikolo.services.DownloadService
-import de.xikolo.utils.*
+import de.xikolo.utils.DeviceUtil
+import de.xikolo.utils.FileUtil
+import de.xikolo.utils.StorageUtil
+import de.xikolo.utils.ToastUtil
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -47,7 +51,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onResume() {
         preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-        refreshPiPStatus()
+        refreshPipStatus()
         super.onResume()
     }
 
@@ -145,7 +149,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
 
         val pipSettings = findPreference(getString(R.string.preference_video_pip))
-        if(!DisplayUtil.supportsPictureInPicture(App.getInstance())){
+        if (!FeatureToggle.pictureInPicture(App.getInstance())) {
             val video = findPreference(getString(R.string.preference_category_video_playback_speed)) as PreferenceCategory
             video.removePreference(pipSettings)
         } else {
@@ -160,7 +164,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 }
                 true
             }
-            refreshPiPStatus()
+            refreshPipStatus()
         }
 
         val copyright = findPreference(getString(R.string.preference_copyright))
@@ -232,9 +236,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
-    private fun refreshPiPStatus(){
+    private fun refreshPipStatus(){
         val pipSettings = findPreference(getString(R.string.preference_video_pip))
-        if(!PermissionManager.hasPiPPermission(context)){
+        if(!PermissionManager.hasPipPermission(context)){
             pipSettings.summary = getString(R.string.settings_summary_video_pip_unavailable)
         } else {
             pipSettings.summary = ""
