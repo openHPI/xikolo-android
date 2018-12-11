@@ -19,9 +19,9 @@ import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
 import de.xikolo.config.GlideApp;
 import de.xikolo.managers.UserManager;
-import de.xikolo.models.Announcement;
 import de.xikolo.models.Profile;
 import de.xikolo.models.User;
+import de.xikolo.models.dao.AnnouncementsDao;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.views.CustomFontTextView;
 
@@ -190,7 +190,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
 
-            long count = Announcement.countNotVisited();
+            long count = AnnouncementsDao.Companion.countNotVisited();
             if (count > 0) {
                 counterViewHolder.textCounter.setText(String.valueOf(count));
                 counterViewHolder.textCounter.setVisibility(View.VISIBLE);

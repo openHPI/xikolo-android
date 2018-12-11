@@ -17,6 +17,7 @@ import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.controllers.helper.CollapsingToolbarHelper;
 import de.xikolo.models.Announcement;
 import de.xikolo.models.Course;
+import de.xikolo.models.dao.AnnouncementsDao;
 
 import static de.xikolo.R.id.appbar;
 import static de.xikolo.R.id.collapsing_toolbar;
@@ -41,7 +42,7 @@ public class AnnouncementActivity extends BaseActivity {
         setupActionBar(true);
         enableOfflineModeToolbar(false);
 
-        Announcement announcement = Announcement.get(announcementId);
+        Announcement announcement = AnnouncementsDao.Companion.get(announcementId);
         setTitle(announcement.title);
 
         if (announcement.imageUrl != null) {

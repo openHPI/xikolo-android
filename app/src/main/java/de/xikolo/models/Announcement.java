@@ -6,7 +6,6 @@ import java.util.Date;
 
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.utils.DateUtil;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -29,21 +28,6 @@ public class Announcement extends RealmObject {
     public boolean visited;
 
     public String courseId;
-
-    public static Announcement get(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        Announcement model = realm.where(Announcement.class).equalTo("id", id).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
-    }
-
-    public static long countNotVisited() {
-        Realm realm = Realm.getDefaultInstance();
-        long count = realm.where(Announcement.class).equalTo("visited", false).count();
-        realm.close();
-        return count;
-    }
 
     @JsonApi(type = "announcements")
     public static class JsonModel extends Resource implements RealmAdapter<Announcement> {

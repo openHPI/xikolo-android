@@ -58,7 +58,7 @@ dependencies {
     kapt           "com.github.yatatsu:autobundle-processor:${autobundleVersion}"
 
     // video
-    implementation "com.google.android.exoplayer:exoplayer:2.9.2"
+    implementation "com.google.android.exoplayer:exoplayer:2.9.1"
 
     // play services
     implementation "com.google.android.gms:play-services-cast-framework:16.1.0"

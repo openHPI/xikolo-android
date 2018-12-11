@@ -2,14 +2,15 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.network.jobs.base.RequestJob
-import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.models.Announcement
-import de.xikolo.network.sync.Sync
 import de.xikolo.network.ApiService
+import de.xikolo.network.jobs.base.NetworkJob
+import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.sync.Sync
+import de.xikolo.viewmodels.base.NetworkStateLiveData
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class ListCourseAnnouncementsJob(private val courseId: String, callback: RequestJobCallback) : RequestJob(callback, Precondition.AUTH) {
+class ListCourseAnnouncementsJob(private val courseId: String, userRequest: Boolean, networkState: NetworkStateLiveData) : NetworkJob(networkState, userRequest, Precondition.AUTH) {
 
     companion object {
         val TAG: String = ListCourseAnnouncementsJob::class.java.simpleName
@@ -22,13 +23,13 @@ class ListCourseAnnouncementsJob(private val courseId: String, callback: Request
             if (Config.DEBUG) Log.i(TAG, "Announcements received")
 
             Sync.Data.with(Announcement::class.java, *response.body()!!)
-                    .addFilter("courseId", courseId)
-                    .run()
+                .addFilter("courseId", courseId)
+                .run()
 
-            callback?.success()
+            success()
         } else {
             if (Config.DEBUG) Log.e(TAG, "Error while fetching announcements list")
-            callback?.error(RequestJobCallback.ErrorCode.ERROR)
+            error(RequestJobCallback.ErrorCode.ERROR)
         }
     }
 
