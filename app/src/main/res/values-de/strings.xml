@@ -215,6 +215,7 @@
     <string name="toast_file_already_downloaded">Datei bereits heruntergeladen.</string>
     <string name="toast_no_external_write_access">Kein Schreibzugriff für %1$s.</string>
     <string name="toast_no_file_viewer_found">Keine Anwendung zum Öffnen dieser Datei gefunden.</string>
+    <string name="toast_pip_error">Die Anwendung konnte nicht in den Bild-im-Bild Modus wechseln.</string>
 
     <!-- -->
     <string name="offline_mode">Offline-Modus</string>
@@ -224,6 +225,7 @@
     <string name="video_settings_speed">Wiedergabegeschwindigkeit</string>
     <string name="video_settings_subtitles">Untertitel</string>
     <string name="video_settings_subtitles_none">Keine</string>
+    <string name="video_settings_pip">Bild-im-Bild</string>
     <string name="video_settings_subtitles_generated">(automatisch erzeugt)</string>
     <string name="video_description_unavailable">Für dieses Video ist keine Beschreibung vorhanden.</string>
 
@@ -249,6 +251,9 @@
 
     <string name="settings_title_video_playback_speed">Wiedergabegeschwindigkeit von Videos</string>
     <string name="settings_summary_video_playback_speed">Standard-Geschwindigkeit: %s</string>
+
+    <string name="settings_title_video_pip">Einstellungen für Bild-im-Bild</string>
+    <string name="settings_summary_video_pip_unavailable">Deaktiviert oder nicht verfügbar</string>
 
     <string name="settings_category_about">Info</string>
 

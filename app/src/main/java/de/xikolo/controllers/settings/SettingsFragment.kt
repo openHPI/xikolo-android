@@ -16,6 +16,7 @@ import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
+import de.xikolo.config.FeatureToggle
 import de.xikolo.controllers.dialogs.ProgressDialogHorizontal
 import de.xikolo.controllers.dialogs.ProgressDialogHorizontalAutoBundle
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
@@ -23,6 +24,7 @@ import de.xikolo.controllers.dialogs.StorageMigrationDialogAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
+import de.xikolo.managers.PermissionManager
 import de.xikolo.managers.UserManager
 import de.xikolo.services.DownloadService
 import de.xikolo.utils.DeviceUtil
@@ -49,6 +51,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onResume() {
         preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        refreshPipStatus()
         super.onResume()
     }
 
@@ -145,6 +148,25 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             general.removePreference(storagePref)
         }
 
+        val pipSettings = findPreference(getString(R.string.preference_video_pip))
+        if (!FeatureToggle.pictureInPicture(App.getInstance())) {
+            val video = findPreference(getString(R.string.preference_category_video_playback_speed)) as PreferenceCategory
+            video.removePreference(pipSettings)
+        } else {
+            pipSettings.setOnPreferenceClickListener {
+                try {
+                    val intent = Intent("android.settings.PICTURE_IN_PICTURE_SETTINGS")
+                    val uri = Uri.fromParts("package", activity?.packageName, null)
+                    intent.data = uri
+                    activity?.startActivity(intent)
+                } catch (e: RuntimeException) {
+                    PermissionManager.startAppInfo(activity)
+                }
+                true
+            }
+            refreshPipStatus()
+        }
+
         val copyright = findPreference(getString(R.string.preference_copyright))
         copyright.title = String.format(copyright.title.toString(), Calendar.getInstance().get(Calendar.YEAR))
         copyright.setOnPreferenceClickListener { _ ->
@@ -211,6 +233,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             buildLogoutView(loginOut)
         } else {
             buildLoginView(loginOut)
+        }
+    }
+
+    private fun refreshPipStatus() {
+        val pipSettings = findPreference(getString(R.string.preference_video_pip))
+        if (!PermissionManager.hasPipPermission(context)) {
+            pipSettings.summary = getString(R.string.settings_summary_video_pip_unavailable)
+        } else {
+            pipSettings.summary = ""
         }
     }
 

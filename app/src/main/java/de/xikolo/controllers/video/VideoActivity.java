@@ -1,8 +1,18 @@
 package de.xikolo.controllers.video;
 
+import android.annotation.TargetApi;
+import android.app.PendingIntent;
+import android.app.PictureInPictureParams;
+import android.app.RemoteAction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,8 +34,12 @@ import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastState;
 import com.yatatsu.autobundle.AutoBundleField;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import de.xikolo.R;
+import de.xikolo.config.FeatureToggle;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.VideoHelper;
 import de.xikolo.models.Course;
@@ -42,15 +56,19 @@ import de.xikolo.utils.CastUtil;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.MarkdownUtil;
 import de.xikolo.utils.PlayServicesUtil;
+import de.xikolo.utils.ToastUtil;
 
 public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoView> implements VideoView {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
 
+    public static final String ACTION_SWITCH_PLAYBACK_STATE = "switch_playback_state";
+
     @AutoBundleField String courseId;
     @AutoBundleField String sectionId;
     @AutoBundleField String itemId;
     @AutoBundleField String videoId;
+    @AutoBundleField(required = false) Intent parentIntent;
 
     @BindView(R.id.videoMetadata) View videoMetadataView;
     @BindView(R.id.textTitle) TextView videoTitleText;
@@ -63,6 +81,10 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     private VideoHelper videoHelper;
     private Video video;
+
+    private BroadcastReceiver broadcastReceiver;
+
+    private boolean backStackLost = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +134,11 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
                 overlay.setClickable(false);
                 videoHelper.show();
             }
+
+            @Override
+            public void onPipClick() {
+                enterPip(true);
+            }
         });
 
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener((visibility) -> {
@@ -136,6 +163,14 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         hideSystemBars();
 
         updateVideoView(getResources().getConfiguration().orientation);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent != null) {
+            presenter.onPause(videoHelper.getCurrentPosition());
+            super.onNewIntent(intent);
+        }
     }
 
     @Override
@@ -330,26 +365,123 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
+            navigateUp();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (videoHelper.handleBackPress()) {
-            finish();
+    private void navigateUp() {
+        if (backStackLost && parentIntent != null) {
+            finishAndRemoveTask();
+            parentIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(parentIntent);
+        } else {
+            NavUtils.navigateUpFromSameTask(this);
         }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    public void onUserLeaveHint() {
+        if (FeatureToggle.pictureInPicture(this) && videoHelper.getCurrentPosition() < videoHelper.getDuration() - 5000) {
+            super.onUserLeaveHint();
+            enterPip(false);
+        }
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (videoHelper.handleBackPress()) {
+            navigateUp();
+        }
+    }
+
+    @Override
+    protected void onStop() {
         if (videoHelper != null) {
             videoHelper.pause();
             presenter.onPause(videoHelper.getCurrentPosition());
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (videoHelper != null) {
+            videoHelper.release();
+        }
+        super.onDestroy();
+    }
+
+    @TargetApi(26)
+    private void enterPip(boolean explicitInteraction) {
+        if (!enterPictureInPictureMode(getPipParams(videoHelper.isPlaying()))
+            && explicitInteraction) {
+            ToastUtil.show(R.string.toast_pip_error);
+        }
+    }
+
+    @TargetApi(26)
+    private PictureInPictureParams getPipParams(boolean playing) {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            new Intent(ACTION_SWITCH_PLAYBACK_STATE),
+            0);
+
+        List<RemoteAction> actionList = new ArrayList<>();
+        actionList.add(
+            new RemoteAction(
+                Icon.createWithResource(
+                    this,
+                    playing ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play),
+                playing ? getString(R.string.video_pip_action_pause) : getString(R.string.video_pip_action_play),
+                playing ? getString(R.string.video_pip_action_pause) : getString(R.string.video_pip_action_play),
+                pendingIntent
+            )
+        );
+
+        Rect pipBounds = new Rect();
+        pipBounds.set(
+            videoHelper.getVideoContainer().getLeft(),
+            videoHelper.getVideoContainer().getTop(),
+            videoHelper.getVideoContainer().getRight(),
+            videoHelper.getVideoContainer().getBottom()
+        );
+
+        return new PictureInPictureParams.Builder()
+            .setSourceRectHint(pipBounds)
+            .setActions(actionList)
+            .build();
+    }
+
+    @Override
+    @TargetApi(26)
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
+        if (isInPictureInPictureMode) {
+            videoHelper.hideSettings();
+            videoHelper.hide();
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (intent == null || !ACTION_SWITCH_PLAYBACK_STATE.equals(intent.getAction())) {
+                        return;
+                    }
+
+                    if (videoHelper.isPlaying()) {
+                        videoHelper.pause();
+                    } else {
+                        videoHelper.play();
+                    }
+                    setPictureInPictureParams(getPipParams(videoHelper.isPlaying()));
+                }
+            };
+            registerReceiver(broadcastReceiver, new IntentFilter(ACTION_SWITCH_PLAYBACK_STATE));
+        } else {
+            videoHelper.show();
+            unregisterReceiver(broadcastReceiver);
+            broadcastReceiver = null;
+            backStackLost = true;
         }
     }
 

@@ -137,6 +137,9 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
+        setIntent(intent);
+        AutoBundle.bind(this);
+
         handleIntent(intent);
     }
 

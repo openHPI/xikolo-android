@@ -3,7 +3,6 @@ package de.xikolo.controllers.helper
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.provider.Settings
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
@@ -14,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import de.xikolo.R
 import de.xikolo.config.FeatureToggle
+import de.xikolo.managers.PermissionManager
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.utils.PlaybackSpeedUtil
 import java.util.*
@@ -59,6 +59,16 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                     else
                         "",
                     View.OnClickListener { clickListener.onSubtitleClick() },
+                    false
+                )
+            )
+        }
+        if(FeatureToggle.pictureInPicture(context) && PermissionManager.hasPipPermission(context)) {
+            list.addView(
+                buildSettingsItem(
+                    R.string.icon_pip,
+                    context.getString(R.string.video_settings_pip),
+                    View.OnClickListener { clickListener.onPipClick() },
                     false
                 )
             )
@@ -141,12 +151,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
             context.getString(R.string.video_settings_subtitles),
             context.getString(R.string.icon_settings),
             View.OnClickListener {
-                val subtitleSettings =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                        Settings.ACTION_CAPTIONING_SETTINGS
-                    else
-                        Settings.ACTION_ACCESSIBILITY_SETTINGS
-                ContextCompat.startActivity(context, Intent(subtitleSettings), null)
+                ContextCompat.startActivity(context, Intent(Settings.ACTION_CAPTIONING_SETTINGS), null)
             }
         )
 
@@ -239,6 +244,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         fun onPlaybackSpeedClick()
 
         fun onSubtitleClick()
+
+        fun onPipClick()
     }
 
     // also invoked when old value equal to new value

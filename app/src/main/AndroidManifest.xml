@@ -172,8 +172,11 @@
         </activity>
         <activity
             android:name=".controllers.video.VideoActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
             android:parentActivityName=".controllers.section.CourseItemsActivity"
             android:theme="@style/AppThemeDarkStatusBar">
             <meta-data

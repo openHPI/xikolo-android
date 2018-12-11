@@ -1,5 +1,9 @@
 package de.xikolo.config;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
 import de.xikolo.BuildConfig;
 
 public class FeatureToggle {
@@ -30,4 +34,7 @@ public class FeatureToggle {
         return Config.DEBUG;
     }
 
+    public static boolean pictureInPicture(Context context) {
+        return Build.VERSION.SDK_INT >= 26 && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE);
+    }
 }

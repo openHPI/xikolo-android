@@ -354,6 +354,13 @@ public class VideoHelper {
         return (int) videoView.getDuration();
     }
 
+    public boolean isPlaying() {
+        if (videoView != null) {
+            return videoView.isPlaying();
+        }
+        return false;
+    }
+
     public void play() {
         buttonPlay.setText(activity.getString(R.string.icon_pause));
         videoView.start();
@@ -368,7 +375,7 @@ public class VideoHelper {
         saveCurrentPosition();
     }
 
-    private void release() {
+    public void release() {
         pause();
         videoView.release();
         seekBarPreviewThread.quit();
@@ -452,7 +459,6 @@ public class VideoHelper {
             hideSettings();
             return false;
         }
-        release();
         return true;
     }
 
@@ -529,6 +535,14 @@ public class VideoHelper {
                 @Override
                 public void onQualityClick() {
                     showSettings(videoSettingsHelper.buildQualityView());
+                }
+
+                @Override
+                public void onPipClick() {
+                    hideSettings();
+                    if(controllerListener != null) {
+                        controllerListener.onPipClick();
+                    }
                 }
             },
             videoMode -> {
@@ -722,6 +736,8 @@ public class VideoHelper {
         void onSettingsOpen();
 
         void onSettingsClosed();
+
+        void onPipClick();
     }
 
     private static class MessageHandler extends Handler {

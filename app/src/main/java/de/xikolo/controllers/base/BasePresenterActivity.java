@@ -1,6 +1,7 @@
 package de.xikolo.controllers.base;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
@@ -33,6 +34,14 @@ public abstract class BasePresenterActivity<P extends Presenter<V>, V extends Vi
             this.presenter = ((PresenterLoader<P>) loader).getPresenter();
             onPresenterCreatedOrRestored(presenter);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        getSupportLoaderManager().destroyLoader(loaderId());
+        initLoader();
     }
 
     private void initLoader() {

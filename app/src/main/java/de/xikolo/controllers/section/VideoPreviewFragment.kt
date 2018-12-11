@@ -161,7 +161,7 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
 
     override fun startVideo(video: Video) {
         activity?.let {
-            val intent = VideoActivityAutoBundle.builder(courseId, sectionId, itemId, video.id).build(it)
+            val intent = VideoActivityAutoBundle.builder(courseId, sectionId, itemId, video.id).parentIntent(it.intent).build(it)
             startActivity(intent)
         }
     }
