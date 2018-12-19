@@ -42,7 +42,7 @@ class AnnouncementListAdapter(private val announcementClickListener: (String) ->
         holder.title.text = announcement.title
 
         if (announcement.text != null) {
-            holder.text.text = announcement.text.replace(System.getProperty("line.separator").toRegex(), "") //ToDo File.separator
+            holder.text.text = announcement.text.replace(System.getProperty("line.separator").toRegex(), "")
         } else {
             holder.text.text = null
         }

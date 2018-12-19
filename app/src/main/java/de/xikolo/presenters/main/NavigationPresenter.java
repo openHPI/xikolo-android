@@ -20,7 +20,7 @@ public class NavigationPresenter extends Presenter<NavigationView> {
         super.onViewAttached(view);
 
         if (isViewAttached()) {
-            announcementsDao.getGlobalAnnouncements();   //ToDo right?
+            announcementsDao.getGlobalAnnouncements();   //ToDo observe
             getView().updateDrawer();
         }
     }

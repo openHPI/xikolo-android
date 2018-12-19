@@ -11,7 +11,7 @@ import io.realm.kotlin.where
 class AnnouncementsDao(realm: Realm) : BaseDao(realm) {
 
     companion object {
-        // ToDo hier richtig?
+        // ToDo ins model
         fun get(id: String): Announcement? {
             val realm = Realm.getDefaultInstance()
             var model = realm
