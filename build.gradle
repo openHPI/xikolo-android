@@ -9,8 +9,8 @@ buildscript {
         targetSdkVersion    = 28
         compileSdkVersion   = 28
 
-        versionName         = "2.4"
-        versionCode         = 47
+        versionName         = "2.4.1"
+        versionCode         = 48
 
         xikoloApiVersion    = 3
         realmSchemaVersion  = 5
