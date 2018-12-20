@@ -20,6 +20,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.MediaRouteButton;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.MenuItem;
@@ -39,6 +40,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import de.xikolo.R;
+import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.VideoHelper;
@@ -479,7 +481,13 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
             registerReceiver(broadcastReceiver, new IntentFilter(ACTION_SWITCH_PLAYBACK_STATE));
         } else {
             videoHelper.show();
-            unregisterReceiver(broadcastReceiver);
+            try {
+                unregisterReceiver(broadcastReceiver);
+            } catch (IllegalArgumentException e){
+                if (Config.DEBUG){
+                    Log.w(TAG, "Could not unregister PiP playback control BroadcastReceiver: " + e.toString());
+                }
+            }
             broadcastReceiver = null;
             backStackLost = true;
         }

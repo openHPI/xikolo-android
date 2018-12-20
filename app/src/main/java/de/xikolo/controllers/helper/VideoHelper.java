@@ -540,7 +540,7 @@ public class VideoHelper {
                 @Override
                 public void onPipClick() {
                     hideSettings();
-                    if(controllerListener != null) {
+                    if (controllerListener != null) {
                         controllerListener.onPipClick();
                     }
                 }
@@ -620,12 +620,15 @@ public class VideoHelper {
         } else if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.AUTO) { // retry with HD instead of HLS
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.HD);
             updateVideo();
+            return;
         } else if (videoSettingsHelper.getCurrentQuality() == VideoSettingsHelper.VideoMode.HD) { // retry with SD instead of HD
             videoSettingsHelper.setCurrentQuality(VideoSettingsHelper.VideoMode.SD);
             updateVideo();
+            return;
         } else {
             viewVideoWarning.setVisibility(View.VISIBLE);
             textVideoWarning.setText(activity.getString(R.string.video_notification_no_offline_video));
+            return;
         }
 
         VideoSubtitles currentSubtitles = videoSettingsHelper.getCurrentVideoSubtitles();
