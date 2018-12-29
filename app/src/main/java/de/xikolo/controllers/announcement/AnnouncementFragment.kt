@@ -17,7 +17,6 @@ import de.xikolo.models.Announcement
 import de.xikolo.models.Course
 import de.xikolo.utils.MarkdownUtil
 import de.xikolo.viewmodels.AnnouncementsViewModel
-import de.xikolo.viewmodels.GlobalAnnouncementsViewModel
 import java.text.DateFormat
 import java.util.*
 
@@ -45,7 +44,7 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementsViewModel>() {
     override val layoutResource = R.layout.content_announcement
 
     override fun createViewModel(): AnnouncementsViewModel {
-        return GlobalAnnouncementsViewModel()
+        return AnnouncementsViewModel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
