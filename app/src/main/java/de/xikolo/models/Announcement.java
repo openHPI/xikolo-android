@@ -15,6 +15,21 @@ import moe.banana.jsonapi2.Resource;
 
 public class Announcement extends RealmObject {
 
+    @PrimaryKey
+    public String id;
+
+    public String title;
+
+    public String text;
+
+    public String imageUrl;
+
+    public Date publishedAt;
+
+    public boolean visited;
+
+    public String courseId;
+
     public static Announcement get(String id) {
         Realm realm = Realm.getDefaultInstance();
         Announcement model = realm
@@ -34,21 +49,6 @@ public class Announcement extends RealmObject {
             .equalTo("visited", false)
             .count();
     }
-
-    @PrimaryKey
-    public String id;
-
-    public String title;
-
-    public String text;
-
-    public String imageUrl;
-
-    public Date publishedAt;
-
-    public boolean visited;
-
-    public String courseId;
 
     @JsonApi(type = "announcements")
     public static class JsonModel extends Resource implements RealmAdapter<Announcement> {
