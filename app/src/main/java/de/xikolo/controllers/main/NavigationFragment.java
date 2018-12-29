@@ -318,7 +318,7 @@ public class NavigationFragment extends BasePresenterFragment<NavigationPresente
     @NonNull
     @Override
     protected PresenterFactory<NavigationPresenter> getPresenterFactory() {
-        return new NavigationPresenterFactory();
+        return new NavigationPresenterFactory(this);
     }
 
 }

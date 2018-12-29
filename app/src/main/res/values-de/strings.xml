@@ -303,6 +303,6 @@
     <!-- -->
     <string name="empty_message_documents_title">Für diesen Kurs sind keine Dokumente verfügbar</string>
     <string name="empty_message_global_announcements_title">Keine Neuigkeiten vorhanden</string>
-    <string name="empty_message_course_announcements_title">Für diesen Kurs gibt es keine Neuigkeiten</string> <!-- ToDO -->
+    <string name="empty_message_course_announcements_title">Für diesen Kurs gibt es keine Neuigkeiten</string>
 
 </resources>

@@ -31,7 +31,7 @@ import de.xikolo.presenters.main.ChannelListView;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
 
-public class ChannelListFragment extends MainFragment<ChannelListPresenter, ChannelListView> implements ChannelListView {
+public class ChannelListFragment extends PresenterMainFragment<ChannelListPresenter, ChannelListView> implements ChannelListView {
 
     public static final String TAG = ChannelListFragment.class.getSimpleName();
 
@@ -127,7 +127,9 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
     public void onStart() {
         super.onStart();
 
-        activityCallback.onFragmentAttached(NavigationAdapter.NAV_CHANNELS.getPosition(), getString(R.string.title_section_channels));
+        if (getActivityCallback() != null) {
+            getActivityCallback().onFragmentAttached(NavigationAdapter.NAV_CHANNELS.getPosition(), getString(R.string.title_section_channels));
+        }
     }
 
     @Override
@@ -139,7 +141,7 @@ public class ChannelListFragment extends MainFragment<ChannelListPresenter, Chan
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (activityCallback != null && !activityCallback.isDrawerOpen()) {
+        if (getActivityCallback() != null && !getActivityCallback().isDrawerOpen()) {
             inflater.inflate(R.menu.refresh, menu);
         }
     }

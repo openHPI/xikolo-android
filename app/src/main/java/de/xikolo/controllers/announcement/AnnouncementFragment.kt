@@ -15,7 +15,6 @@ import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Announcement
 import de.xikolo.models.Course
-import de.xikolo.models.dao.AnnouncementsDao
 import de.xikolo.utils.MarkdownUtil
 import de.xikolo.viewmodels.AnnouncementsViewModel
 import de.xikolo.viewmodels.GlobalAnnouncementsViewModel
@@ -57,7 +56,7 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementsViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        announcement = AnnouncementsDao.get(announcementId)
+        announcement = Announcement.get(announcementId)
         announcement?.let {
             showAnnouncement(it)
         }

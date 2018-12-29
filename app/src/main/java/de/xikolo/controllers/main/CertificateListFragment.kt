@@ -23,7 +23,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class CertificateListFragment : MainFragment<CertificateListPresenter, CertificateListView>(), CertificateListView {
+class CertificateListFragment : PresenterMainFragment<CertificateListPresenter, CertificateListView>(), CertificateListView {
 
     companion object {
         val TAG: String = CertificateListFragment::class.java.simpleName
@@ -86,21 +86,21 @@ class CertificateListFragment : MainFragment<CertificateListPresenter, Certifica
     override fun showLoginRequiredMessage() {
         super.showLoginRequiredMessage()
         loadingStateHelper.setMessageOnClickListener { _ ->
-            activityCallback.selectDrawerSection(NavigationAdapter.NAV_PROFILE.position)
+            activityCallback?.selectDrawerSection(NavigationAdapter.NAV_PROFILE.position)
         }
     }
 
     override fun showNoCertificatesMessage() {
         loadingStateHelper.setMessageTitle(R.string.notification_no_certificates)
         loadingStateHelper.setMessageSummary(R.string.notification_no_certificates_summary)
-        loadingStateHelper.setMessageOnClickListener { _ -> activityCallback.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.position) }
+        loadingStateHelper.setMessageOnClickListener { _ -> activityCallback?.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.position) }
         loadingStateHelper.showMessage()
     }
 
     override fun onStart() {
         super.onStart()
 
-        activityCallback.onFragmentAttached(NavigationAdapter.NAV_CERTIFICATES.position, getString(R.string.title_section_certificates))
+        activityCallback?.onFragmentAttached(NavigationAdapter.NAV_CERTIFICATES.position, getString(R.string.title_section_certificates))
     }
 
     override fun onDestroy() {
@@ -110,7 +110,7 @@ class CertificateListFragment : MainFragment<CertificateListPresenter, Certifica
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (activityCallback != null && !activityCallback.isDrawerOpen) {
+        if (activityCallback?.isDrawerOpen == false) {
             inflater?.inflate(R.menu.refresh, menu)
         }
     }

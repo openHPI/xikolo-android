@@ -1,10 +1,11 @@
 package de.xikolo.controllers.main
 
 import android.support.v4.app.Fragment
-import de.xikolo.controllers.base.NetworkStateFragment
-import de.xikolo.viewmodels.base.BaseViewModel
+import de.xikolo.controllers.base.LoadingStatePresenterFragment
+import de.xikolo.presenters.base.LoadingStatePresenter
+import de.xikolo.presenters.base.LoadingStateView
 
-abstract class ViewModelMainFragment<T : BaseViewModel> : NetworkStateFragment<T>(), MainFragment {
+abstract class PresenterMainFragment<P : LoadingStatePresenter<V>, V : LoadingStateView> : LoadingStatePresenterFragment<P, V>(), MainFragment {
 
     override var activityCallback: MainActivityCallback? = null
 

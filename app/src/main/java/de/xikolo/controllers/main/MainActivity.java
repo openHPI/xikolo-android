@@ -29,7 +29,7 @@ import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.PlayServicesUtil;
 
 public class MainActivity extends BaseActivity
-        implements NavigationFragment.NavigationDrawerCallbacks, MainFragment.MainActivityCallback {
+        implements NavigationFragment.NavigationDrawerCallbacks, MainActivityCallback {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         String tag = null;
         Intent intent = null;
-        BaseFragment newFragment = null; // ToDo type? MainFragment | ViewModelMainFragment
+        MainFragment newFragment = null;
         if (position == NavigationAdapter.NAV_PROFILE.getPosition()) {
             if (UserManager.isAuthorized()) {
                 newFragment = new ProfileFragment();
@@ -162,10 +162,10 @@ public class MainActivity extends BaseActivity
             LanalyticsUtil.trackVisitedPreferences();
         }
         if (tag != null) {
-            BaseFragment oldFragment = (BaseFragment) fragmentManager.findFragmentByTag(tag); // ToDo same question as above
+            BaseFragment oldFragment = (BaseFragment) fragmentManager.findFragmentByTag(tag);
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             if (oldFragment == null) {
-                transaction.replace(R.id.container, newFragment, tag);
+                transaction.replace(R.id.container, newFragment.getFragment(), tag);
             } else {
                 transaction.replace(R.id.container, oldFragment, tag);
             }

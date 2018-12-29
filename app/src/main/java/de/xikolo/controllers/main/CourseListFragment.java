@@ -27,16 +27,16 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.LogoutEvent;
 import de.xikolo.models.Course;
-import de.xikolo.utils.SectionList;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.main.CourseListFilterAllPresenterFactory;
 import de.xikolo.presenters.main.CourseListFilterMyPresenterFactory;
 import de.xikolo.presenters.main.CourseListPresenter;
 import de.xikolo.presenters.main.CourseListView;
+import de.xikolo.utils.SectionList;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
 
-public class CourseListFragment extends MainFragment<CourseListPresenter, CourseListView> implements CourseListView {
+public class CourseListFragment extends PresenterMainFragment<CourseListPresenter, CourseListView> implements CourseListView {
 
     public static final String TAG = CourseListFragment.class.getSimpleName();
 
@@ -116,10 +116,12 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     public void onStart() {
         super.onStart();
 
-        if (filter == CourseListFilter.ALL) {
-            activityCallback.onFragmentAttached(NavigationAdapter.NAV_ALL_COURSES.getPosition(), getString(R.string.title_section_all_courses));
-        } else {
-            activityCallback.onFragmentAttached(NavigationAdapter.NAV_MY_COURSES.getPosition(), getString(R.string.title_section_my_courses));
+        if (getActivityCallback() != null) {
+            if (filter == CourseListFilter.ALL) {
+                getActivityCallback().onFragmentAttached(NavigationAdapter.NAV_ALL_COURSES.getPosition(), getString(R.string.title_section_all_courses));
+            } else {
+                getActivityCallback().onFragmentAttached(NavigationAdapter.NAV_MY_COURSES.getPosition(), getString(R.string.title_section_my_courses));
+            }
         }
     }
 
@@ -151,7 +153,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (activityCallback != null && !activityCallback.isDrawerOpen()) {
+        if (getActivityCallback() != null && !getActivityCallback().isDrawerOpen()) {
             inflater.inflate(R.menu.refresh, menu);
             inflater.inflate(R.menu.search, menu);
 
@@ -201,7 +203,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     @Override
     public void showLoginRequiredMessage() {
         super.showLoginRequiredMessage();
-        loadingStateHelper.setMessageOnClickListener((v) -> activityCallback
+        loadingStateHelper.setMessageOnClickListener((v) -> getActivityCallback()
                 .selectDrawerSection(NavigationAdapter.NAV_PROFILE.getPosition()));
     }
 
@@ -209,7 +211,7 @@ public class CourseListFragment extends MainFragment<CourseListPresenter, Course
     public void showNoEnrollmentsMessage() {
         loadingStateHelper.setMessageTitle(R.string.notification_no_enrollments);
         loadingStateHelper.setMessageSummary(R.string.notification_no_enrollments_summary);
-        loadingStateHelper.setMessageOnClickListener((v) -> activityCallback
+        loadingStateHelper.setMessageOnClickListener((v) -> getActivityCallback()
                 .selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.getPosition()));
         loadingStateHelper.showMessage();
     }
