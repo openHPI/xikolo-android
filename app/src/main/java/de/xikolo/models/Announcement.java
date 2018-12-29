@@ -39,15 +39,18 @@ public class Announcement extends RealmObject {
         if (model != null) {
             model = realm.copyFromRealm(model);
         }
+        realm.close();
         return model;
     }
 
-    public static Long countNotVisited() {
+    public static long countNotVisited() {
         Realm realm = Realm.getDefaultInstance();
-        return realm
+        long count = realm
             .where(Announcement.class)
             .equalTo("visited", false)
             .count();
+        realm.close();
+        return count;
     }
 
     @JsonApi(type = "announcements")
