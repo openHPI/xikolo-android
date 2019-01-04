@@ -7,6 +7,7 @@ dist: trusty
 group: deprecated-2017Q4
 
 before_install:
+  - android list targets
   - yes | sdkmanager "platforms;android-28"
 
 android:
