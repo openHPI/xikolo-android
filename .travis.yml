@@ -7,7 +7,6 @@ dist: trusty
 group: deprecated-2017Q4
 
 before_install:
-  - android list targets
   - yes | sdkmanager "platforms;android-28"
 
 android:
@@ -28,8 +27,8 @@ env:
   - FLAVOR="openwho"
 
 before_script: # Emulator Management: Create, Start and Wait
-  - echo no | android create avd  --force --name test --tag google_apis --package system-images;android-28;google_apis;x86 --abi x86
-  - emulator -avd test -no-audio -no-window &
+  - echo no | android create avd  --force --name xikolo --target android-28 --tag google_apis --abi x86
+  - emulator -avd xikolo -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell settings put global window_animation_scale 0 &
   - adb shell settings put global transition_animation_scale 0 &
