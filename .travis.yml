@@ -8,6 +8,7 @@ group: deprecated-2017Q4
 
 before_install:
   - yes | sdkmanager "platforms;android-28"
+  - yes | sdkmanager "platforms;android-25"
 
 android:
   components:
