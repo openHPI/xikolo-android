@@ -19,6 +19,8 @@ android {
 
         resValue "integer", "xikolo_api_version", rootProject.xikoloApiVersion.toString()
         resValue "integer", "realm_schema_version", rootProject.realmSchemaVersion.toString()
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     productFlavors.all {
