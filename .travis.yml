@@ -8,7 +8,6 @@ group: deprecated-2017Q4
 
 before_install:
   - yes | sdkmanager "platforms;android-28"
-  - yes | sdkmanager "platforms;android-25"
 
 android:
   components:
@@ -20,7 +19,7 @@ android:
     - android-25
     - extra-android-m2repository
     - extra-google-m2repository
-    - sys-img-x86-25 # emulator
+    - sys-img-x86-android-25 # emulator
 
 env:
   - FLAVOR="openhpi"
