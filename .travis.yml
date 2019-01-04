@@ -18,7 +18,7 @@ android:
     - android-28
     - extra-android-m2repository
     - extra-google-m2repository
-    - sys-img-x86-google_apis-28 # emulator
+    - sys-img-x86-google_apis-27 # emulator
 
 env:
   - FLAVOR="openhpi"
@@ -27,7 +27,7 @@ env:
   - FLAVOR="openwho"
 
 before_script: # Emulator Management: Create, Start and Wait
-  - echo no | android create avd  --force --name xikolo --target android-28 --tag google_apis --abi x86
+  - echo no | android create avd  --force --name xikolo --target android-27 --tag google_apis --abi x86
   - emulator -avd xikolo -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell settings put global window_animation_scale 0 &
