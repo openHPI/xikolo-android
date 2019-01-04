@@ -28,7 +28,7 @@ env:
   - FLAVOR="openwho"
 
 before_script: # Emulator Management: Create, Start and Wait
-  - android list targets
+  - android list target
   - echo no | android create avd  --force --name xikolo --target android-25 --abi armeabi-v7a # add --tag google_apis when testing against them
   - emulator -avd xikolo -no-audio -no-window &
   - android-wait-for-emulator
