@@ -27,10 +27,10 @@ env:
   - FLAVOR="moochouse"
   - FLAVOR="openwho"
 
-before_script: # Emulator Management: Create, Start and Wait
+before_script: # emulator management: creation and setup
   - android list target # remove later
   - android list device # remove later
-  - echo no | android create avd  --force --name xikolo --target android-25 --tag google_apis --abi armeabi-v7a --device 11 # add/remove --tag google_apis when testing w/wo them
+  - echo no | android create avd  --force --name xikolo --target android-25 --tag google_apis --abi armeabi-v7a --device "Nexus 6" # add/remove --tag google_apis when testing with/without them
   - emulator -avd xikolo -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell settings put global window_animation_scale 0 &
