@@ -27,10 +27,11 @@ android:
     - sys-img-armeabi-v7a-google_apis-26 # emulator
     - sys-img-armeabi-v7a-google_apis-27 # emulator
     - sys-img-armeabi-v7a-google_apis-28 # emulator
-    - sys-img-x86-android-28 # emulator
-    - sys-img-x86_64-android-28 # emulator
-    - sys-img-x86-google_apis-28 # emulator
-    - sys-img-x86_64-google_apis-28 # emulator
+    - sys-img-armeabi-v7a-android-28 # emulator
+    - sys-img-armeabi-v7a-android-27 # emulator
+    - sys-img-armeabi-v7a-android-26 # emulator
+    - sys-img-armeabi-v7a-android-25 # emulator
+    - sys-img-armeabi-v7a-android-25 # emulator
 
 
 
