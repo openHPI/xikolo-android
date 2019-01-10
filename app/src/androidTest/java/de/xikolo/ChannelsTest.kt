@@ -1,4 +1,4 @@
-package de.xikolo.test
+package de.xikolo
 
 
 import androidx.test.espresso.Espresso.onView
@@ -10,13 +10,11 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import de.xikolo.App
-import de.xikolo.R
 import de.xikolo.controllers.main.MainActivity
-import de.xikolo.test.util.NavigationHelper
-import de.xikolo.test.util.NavigationHelper.Companion.WAIT_LOADING_SHORT
-import de.xikolo.test.util.NavigationHelper.Companion.WAIT_UI_INTERACTION
-import de.xikolo.test.util.ViewHierarchyHelper.Companion.childAtPosition
+import de.xikolo.util.NavigationHelper
+import de.xikolo.util.NavigationHelper.Companion.WAIT_LOADING_SHORT
+import de.xikolo.util.NavigationHelper.Companion.WAIT_UI_INTERACTION
+import de.xikolo.util.ViewHierarchyHelper.Companion.childAtPosition
 import org.hamcrest.Matchers.allOf
 import org.junit.Before
 import org.junit.Rule

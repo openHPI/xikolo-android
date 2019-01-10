@@ -1,4 +1,4 @@
-package de.xikolo.test.util
+package de.xikolo.util
 
 import android.view.View
 import android.view.ViewGroup

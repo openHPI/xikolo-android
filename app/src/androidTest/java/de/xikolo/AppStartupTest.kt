@@ -1,12 +1,12 @@
-package de.xikolo.test
+package de.xikolo
 
 
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import de.xikolo.controllers.main.SplashActivity
-import de.xikolo.test.util.AssertionHelper
-import de.xikolo.test.util.NavigationHelper.Companion.WAIT_STARTUP
+import de.xikolo.util.AssertionHelper
+import de.xikolo.util.NavigationHelper.Companion.WAIT_STARTUP
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

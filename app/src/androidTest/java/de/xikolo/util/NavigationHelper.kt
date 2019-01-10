@@ -1,4 +1,4 @@
-package de.xikolo.test.util
+package de.xikolo.util
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
