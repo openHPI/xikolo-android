@@ -22,18 +22,7 @@ android:
     - android-24
     - extra-android-m2repository
     - extra-google-m2repository
-    - sys-img-armeabi-v7a-google_apis-24 # emulator
-    - sys-img-armeabi-v7a-google_apis-25 # emulator
-    - sys-img-armeabi-v7a-google_apis-26 # emulator
-    - sys-img-armeabi-v7a-google_apis-27 # emulator
-    - sys-img-armeabi-v7a-google_apis-28 # emulator
-    - sys-img-armeabi-v7a-android-28 # emulator
-    - sys-img-armeabi-v7a-android-27 # emulator
-    - sys-img-armeabi-v7a-android-26 # emulator
-    - sys-img-armeabi-v7a-android-25 # emulator
-    - sys-img-armeabi-v7a-android-25 # emulator
-
-
+    - sys-img-armeabi-v7a-google_apis-23 # emulator
 
 env:
   - FLAVOR="openhpi"
@@ -44,7 +33,7 @@ env:
 before_script: # emulator management: creation and setup
   - android list target # remove later
   - android list device # remove later
-  - echo no | android create avd  --force --name xikolo --target android-28 --tag google_apis --abi armeabi-v7a --device "Nexus 6" # add/remove --tag google_apis when testing with/without them
+  - echo no | android create avd  --force --name xikolo --target android-23 --tag google_apis --abi armeabi-v7a --device "Nexus 6" # add/remove --tag google_apis when testing with/without them
   - emulator -avd xikolo -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell settings put global window_animation_scale 0 &
