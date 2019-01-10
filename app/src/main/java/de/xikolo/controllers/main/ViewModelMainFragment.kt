@@ -1,15 +1,11 @@
 package de.xikolo.controllers.main
 
-import android.support.v4.app.Fragment
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.viewmodels.base.BaseViewModel
 
-abstract class ViewModelMainFragment<T : BaseViewModel> : NetworkStateFragment<T>(), MainFragment {
+abstract class ViewModelMainFragment<T : BaseViewModel> : NetworkStateFragment<T>() {
 
-    override var activityCallback: MainActivityCallback? = null
-
-    override val fragment: Fragment
-        get() = this
+    var activityCallback: MainActivityCallback? = null
 
     override fun onStart() {
         super.onStart()

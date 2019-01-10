@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         String tag = null;
         Intent intent = null;
-        MainFragment newFragment = null;
+        BaseFragment newFragment = null;
         if (position == NavigationAdapter.NAV_PROFILE.getPosition()) {
             if (UserManager.isAuthorized()) {
                 newFragment = new ProfileFragment();
@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity
             BaseFragment oldFragment = (BaseFragment) fragmentManager.findFragmentByTag(tag);
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             if (oldFragment == null) {
-                transaction.replace(R.id.container, newFragment.getFragment(), tag);
+                transaction.replace(R.id.container, newFragment, tag);
             } else {
                 transaction.replace(R.id.container, oldFragment, tag);
             }

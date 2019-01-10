@@ -21,7 +21,7 @@ import de.xikolo.presenters.main.ProfilePresenterFactory;
 import de.xikolo.presenters.main.ProfileView;
 import de.xikolo.views.CustomSizeImageView;
 
-public class ProfileFragment extends PresenterMainFragment<ProfilePresenter, ProfileView> implements MainFragment, ProfileView {
+public class ProfileFragment extends PresenterMainFragment<ProfilePresenter, ProfileView> implements ProfileView {
 
     public static final String TAG = ProfileFragment.class.getSimpleName();
 
