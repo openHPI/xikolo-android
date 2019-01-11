@@ -1,39 +1,34 @@
 package de.xikolo.presenters.main;
 
-import de.xikolo.managers.AnnouncementManager;
+import android.arch.lifecycle.LifecycleOwner;
+
+import de.xikolo.models.dao.AnnouncementsDao;
 import de.xikolo.presenters.base.Presenter;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class NavigationPresenter extends Presenter<NavigationView> {
 
-    private AnnouncementManager announcementManager;
-
     private Realm realm;
 
-    private RealmResults announcementListPromise;
+    private AnnouncementsDao announcementsDao;
 
-    NavigationPresenter() {
-        this.announcementManager = new AnnouncementManager();
+    private LifecycleOwner lifecycleOwner;
+
+    NavigationPresenter(LifecycleOwner lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
         this.realm = Realm.getDefaultInstance();
+        this.announcementsDao = new AnnouncementsDao(realm);
     }
 
     @Override
     public void onViewAttached(NavigationView view) {
         super.onViewAttached(view);
 
-        this.announcementListPromise = announcementManager.listGlobalAnnouncements(realm, (announcements) -> {
-            if (isViewAttached()) getView().updateDrawer();
+        announcementsDao.getGlobalAnnouncements().observe(lifecycleOwner, announcements -> {
+            if (isViewAttached()) {
+                getView().updateDrawer();
+            }
         });
-    }
-
-    @Override
-    public void onViewDetached() {
-        super.onViewDetached();
-
-        if (announcementListPromise != null) {
-            announcementListPromise.removeAllChangeListeners();
-        }
     }
 
     @Override

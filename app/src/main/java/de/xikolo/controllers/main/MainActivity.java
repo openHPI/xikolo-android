@@ -15,6 +15,7 @@ import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.controllers.base.BaseActivity;
+import de.xikolo.controllers.base.BaseFragment;
 import de.xikolo.controllers.downloads.DownloadsActivity;
 import de.xikolo.controllers.helper.CourseListFilter;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
@@ -28,7 +29,7 @@ import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.PlayServicesUtil;
 
 public class MainActivity extends BaseActivity
-        implements NavigationFragment.NavigationDrawerCallbacks, MainFragment.MainActivityCallback {
+        implements NavigationFragment.NavigationDrawerCallbacks, MainActivityCallback {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -114,7 +115,7 @@ public class MainActivity extends BaseActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         String tag = null;
         Intent intent = null;
-        MainFragment newFragment = null;
+        BaseFragment newFragment = null;
         if (position == NavigationAdapter.NAV_PROFILE.getPosition()) {
             if (UserManager.isAuthorized()) {
                 newFragment = new ProfileFragment();
@@ -161,7 +162,7 @@ public class MainActivity extends BaseActivity
             LanalyticsUtil.trackVisitedPreferences();
         }
         if (tag != null) {
-            MainFragment oldFragment = (MainFragment) fragmentManager.findFragmentByTag(tag);
+            BaseFragment oldFragment = (BaseFragment) fragmentManager.findFragmentByTag(tag);
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             if (oldFragment == null) {
                 transaction.replace(R.id.container, newFragment, tag);

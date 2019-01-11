@@ -21,7 +21,7 @@ import de.xikolo.presenters.main.ProfilePresenterFactory;
 import de.xikolo.presenters.main.ProfileView;
 import de.xikolo.views.CustomSizeImageView;
 
-public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView> implements ProfileView {
+public class ProfileFragment extends PresenterMainFragment<ProfilePresenter, ProfileView> implements ProfileView {
 
     public static final String TAG = ProfileFragment.class.getSimpleName();
 
@@ -90,7 +90,7 @@ public class ProfileFragment extends MainFragment<ProfilePresenter, ProfileView>
     }
 
     private void showHeader(Profile profile) {
-        activityCallback.onFragmentAttached(NavigationAdapter.NAV_PROFILE.getPosition(), profile.firstName + " " + profile.lastName);
+        getActivityCallback().onFragmentAttached(NavigationAdapter.NAV_PROFILE.getPosition(), profile.firstName + " " + profile.lastName);
     }
 
     @Override

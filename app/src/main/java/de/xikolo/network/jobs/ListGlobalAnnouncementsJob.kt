@@ -2,14 +2,14 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.network.jobs.base.RequestJob
-import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.models.Announcement
-import de.xikolo.network.sync.Sync
 import de.xikolo.network.ApiService
+import de.xikolo.network.jobs.base.NetworkJob
+import de.xikolo.network.sync.Sync
+import de.xikolo.viewmodels.base.NetworkStateLiveData
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class ListGlobalAnnouncementsJob(callback: RequestJobCallback) : RequestJob(callback) {
+class ListGlobalAnnouncementsJob(userRequest: Boolean, networkState: NetworkStateLiveData) : NetworkJob(networkState, userRequest) {
 
     companion object {
         val TAG: String = ListGlobalAnnouncementsJob::class.java.simpleName
@@ -24,10 +24,10 @@ class ListGlobalAnnouncementsJob(callback: RequestJobCallback) : RequestJob(call
 
             Sync.Data.with(Announcement::class.java, *response.body()!!).run()
 
-            callback?.success()
+            success()
         } else {
             if (Config.DEBUG) Log.e(TAG, "Error while fetching announcements list")
-            callback?.error(RequestJobCallback.ErrorCode.ERROR)
+            error()
         }
     }
 

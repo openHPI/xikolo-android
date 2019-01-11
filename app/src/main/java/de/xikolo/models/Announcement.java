@@ -32,15 +32,23 @@ public class Announcement extends RealmObject {
 
     public static Announcement get(String id) {
         Realm realm = Realm.getDefaultInstance();
-        Announcement model = realm.where(Announcement.class).equalTo("id", id).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
+        Announcement model = realm
+            .where(Announcement.class)
+            .equalTo("id", id)
+            .findFirst();
+        if (model != null) {
+            model = realm.copyFromRealm(model);
+        }
         realm.close();
         return model;
     }
 
     public static long countNotVisited() {
         Realm realm = Realm.getDefaultInstance();
-        long count = realm.where(Announcement.class).equalTo("visited", false).count();
+        long count = realm
+            .where(Announcement.class)
+            .equalTo("visited", false)
+            .count();
         realm.close();
         return count;
     }
