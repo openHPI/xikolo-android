@@ -109,11 +109,13 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementsViewModel>() {
         return super.onOptionsItemSelected(item)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLoginEvent(event: LoginEvent) {
         onRefresh()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLogoutEvent(event: LogoutEvent) {
         onRefresh()

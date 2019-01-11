@@ -41,8 +41,10 @@ class AnnouncementListAdapter(private val announcementClickListener: (String) ->
 
         holder.title.text = announcement.title
 
-        if (announcement.text != null) {
-            holder.text.text = announcement.text.replace(System.getProperty("line.separator").toRegex(), "")
+        val lineSeparator = System.getProperty("line.separator")
+
+        if (announcement.text != null && lineSeparator != null) {
+            holder.text.text = announcement.text.replace(lineSeparator.toRegex(), "")
         } else {
             holder.text.text = null
         }
