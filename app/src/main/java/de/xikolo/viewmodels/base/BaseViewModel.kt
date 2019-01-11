@@ -1,6 +1,6 @@
 package de.xikolo.viewmodels.base
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import io.realm.Realm
 
 abstract class BaseViewModel : ViewModel() {

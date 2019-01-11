@@ -1,8 +1,8 @@
 package de.xikolo.utils;
 
-import android.support.annotation.StringRes;
 import android.widget.Toast;
 
+import androidx.annotation.StringRes;
 import de.xikolo.App;
 
 public class ToastUtil {

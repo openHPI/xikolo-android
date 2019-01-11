@@ -1,10 +1,6 @@
 package de.xikolo.controllers.course;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +10,10 @@ import com.yatatsu.autobundle.AutoBundleField;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.LoadingStatePresenterFragment;
 import de.xikolo.models.CourseProgress;

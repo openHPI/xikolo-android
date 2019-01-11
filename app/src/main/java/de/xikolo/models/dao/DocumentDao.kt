@@ -1,7 +1,7 @@
 package de.xikolo.models.dao
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import de.xikolo.models.Document
 import de.xikolo.models.DocumentLocalization
 import de.xikolo.models.dao.base.BaseDao

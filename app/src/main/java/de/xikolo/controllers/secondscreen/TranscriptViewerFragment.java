@@ -1,13 +1,6 @@
 package de.xikolo.controllers.secondscreen;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.yatatsu.autobundle.AutoBundleField;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,6 +18,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;

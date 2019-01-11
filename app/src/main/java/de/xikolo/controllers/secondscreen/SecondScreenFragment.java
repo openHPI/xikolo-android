@@ -2,8 +2,6 @@ package de.xikolo.controllers.secondscreen;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +16,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.Config;

@@ -1,19 +1,19 @@
 package de.xikolo.controllers.channels;
 
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.yatatsu.autobundle.AutoBundleField;
 
+import androidx.core.app.NavUtils;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.GlideApp;

@@ -1,6 +1,6 @@
 package de.xikolo.controllers.helper
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import de.xikolo.R
 import de.xikolo.config.FeatureToggle
 

@@ -2,9 +2,6 @@ package de.xikolo.controllers.channels;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +14,9 @@ import com.yatatsu.autobundle.AutoBundleField;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
 import butterknife.BindView;
 import de.xikolo.App;
 import de.xikolo.R;
@@ -27,11 +27,11 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.controllers.main.CourseListAdapter;
 import de.xikolo.models.Channel;
 import de.xikolo.models.Course;
-import de.xikolo.utils.SectionList;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.channels.ChannelDetailsPresenter;
 import de.xikolo.presenters.channels.ChannelDetailsPresenterFactory;
 import de.xikolo.presenters.channels.ChannelDetailsView;
+import de.xikolo.utils.SectionList;
 import de.xikolo.views.AutofitRecyclerView;
 import de.xikolo.views.SpaceItemDecoration;
 

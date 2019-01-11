@@ -1,9 +1,5 @@
 package de.xikolo.controllers.course;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;

@@ -2,12 +2,12 @@ package de.xikolo.controllers.main;
 
 import android.content.res.Configuration;
 import android.graphics.Point;
-import android.support.annotation.NonNull;
 import android.view.Display;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import butterknife.BindView;
 import de.xikolo.App;
 import de.xikolo.R;

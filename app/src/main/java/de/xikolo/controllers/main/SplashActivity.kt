@@ -3,8 +3,9 @@ package de.xikolo.controllers.main
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.DialogFragment
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.*
 import de.xikolo.network.jobs.CheckHealthJob

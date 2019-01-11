@@ -1,15 +1,15 @@
 package de.xikolo.presenters.course;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 
+import androidx.annotation.NonNull;
 import de.xikolo.controllers.helper.CourseArea;
-import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Enrollment;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.presenters.base.Presenter;
 import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;

@@ -2,16 +2,20 @@ package de.xikolo.controllers.course
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.*
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
+import androidx.core.app.*
+import androidx.core.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewStub
 import android.widget.Button
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import butterknife.BindView
+import com.google.android.material.tabs.TabLayout
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config

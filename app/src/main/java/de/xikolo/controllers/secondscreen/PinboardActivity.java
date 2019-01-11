@@ -1,12 +1,12 @@
 package de.xikolo.controllers.secondscreen;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import de.xikolo.R;
 import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle;

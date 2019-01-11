@@ -1,45 +1,45 @@
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="@string/preference_screen">
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:key="@string/preference_category_general"
         android:title="@string/settings_category_general">
 
-        <android.support.v7.preference.CheckBoxPreference
+        <androidx.preference.CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/preference_confirm_delete"
             android:title="@string/settings_title_ask_delete" />
 
-        <android.support.v7.preference.ListPreference
+        <androidx.preference.ListPreference
             android:defaultValue="@string/settings_default_value_storage"
             android:entries="@array/settings_values_storages"
             android:entryValues="@array/settings_values_storages"
             android:key="@string/preference_storage"
             android:title="@string/settings_title_storage" />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory android:title="@string/settings_category_data_usage">
+    <androidx.preference.PreferenceCategory android:title="@string/settings_category_data_usage">
 
-        <android.support.v7.preference.CheckBoxPreference
+        <androidx.preference.CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/preference_video_quality"
             android:summary="@string/settings_summary_video_quality"
             android:title="@string/settings_title_video_quality" />
 
-        <android.support.v7.preference.CheckBoxPreference
+        <androidx.preference.CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/preference_download_network"
             android:summary="@string/settings_summary_download_network"
             android:title="@string/settings_title_download_network" />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:key="@string/preference_category_video_playback_speed"
         android:title="@string/settings_category_video">
 
-        <android.support.v7.preference.ListPreference
+        <androidx.preference.ListPreference
             android:defaultValue="@string/settings_default_value_video_playback_speed"
             android:entries="@array/settings_values_video_playback_speed"
             android:entryValues="@array/settings_values_video_playback_speed"
@@ -47,48 +47,48 @@
             android:summary="@string/settings_summary_video_playback_speed"
             android:title="@string/settings_title_video_playback_speed" />
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="@string/preference_video_pip"
             android:title="@string/settings_title_video_pip" />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:key="@string/preference_category_info"
         android:title="@string/settings_category_about">
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="@string/preference_copyright"
             android:title="@string/settings_copyright" />
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="@string/preference_imprint"
             android:title="@string/settings_imprint" />
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="@string/preference_privacy"
             android:title="@string/settings_privacy" />
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="@string/preference_terms_of_use"
             android:title="@string/settings_terms_of_use" />
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="@string/preference_open_source_licenses"
             android:summary="@string/settings_summary_licenses"
             android:title="@string/settings_title_licenses" />
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="@string/preference_build_version"
             android:summary="@string/settings_summary_build"
             android:title="@string/settings_title_build" />
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="@string/preference_send_feedback"
             android:title="@string/settings_send_app_feedback" />
 
-        <android.support.v7.preference.Preference android:key="@string/preference_login_out" />
+        <androidx.preference.Preference android:key="@string/preference_login_out" />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

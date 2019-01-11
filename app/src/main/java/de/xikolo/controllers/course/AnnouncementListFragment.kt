@@ -1,13 +1,13 @@
 package de.xikolo.controllers.course
 
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
@@ -50,8 +50,7 @@ class AnnouncementListFragment : NetworkStateFragment<AnnouncementsViewModel>() 
 
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
-            layoutManager.orientation)
+        val dividerItemDecoration = DividerItemDecoration(recyclerView.context, layoutManager.orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = announcementListAdapter

@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.support.annotation.IntRange
 import android.util.AttributeSet
+import androidx.annotation.IntRange
 
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.*

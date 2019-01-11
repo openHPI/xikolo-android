@@ -1,8 +1,9 @@
 package de.xikolo.presenters.base;
 
 import android.content.Context;
-import android.support.v4.content.Loader;
 import android.util.Log;
+
+import androidx.loader.content.Loader;
 
 import static de.xikolo.config.Config.PRESENTER_LIFECYCLE_LOGGING;
 

@@ -1,11 +1,11 @@
 package de.xikolo.controllers.helper
 
-import android.support.v4.app.FragmentActivity
-import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import butterknife.BindView
 import butterknife.ButterKnife

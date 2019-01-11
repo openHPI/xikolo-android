@@ -1,7 +1,6 @@
 package de.xikolo.controllers.course;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import com.yatatsu.autobundle.AutoBundleField;
 
+import androidx.annotation.NonNull;
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.GlideApp;

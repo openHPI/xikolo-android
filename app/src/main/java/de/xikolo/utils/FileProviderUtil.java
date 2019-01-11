@@ -1,10 +1,10 @@
 package de.xikolo.utils;
 
 import android.net.Uri;
-import android.support.v4.content.FileProvider;
 
 import java.io.File;
 
+import androidx.core.content.FileProvider;
 import de.xikolo.App;
 import de.xikolo.BuildConfig;
 

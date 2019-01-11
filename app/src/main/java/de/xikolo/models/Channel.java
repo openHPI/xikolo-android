@@ -1,7 +1,7 @@
 package de.xikolo.models;
 
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 
 import com.squareup.moshi.Json;
