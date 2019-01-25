@@ -1,27 +1,26 @@
-package de.xikolo
+package de.xikolo.ui
 
 
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
 import de.xikolo.controllers.main.SplashActivity
-import de.xikolo.util.AssertionHelper
-import de.xikolo.util.NavigationHelper.Companion.WAIT_STARTUP
+import de.xikolo.ui.helper.AssertionHelper
+import de.xikolo.ui.helper.NavigationHelper.Companion.WAIT_STARTUP
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
 @LargeTest
-@RunWith(AndroidJUnit4::class)
 class AppStartupTest {
 
     @Rule
     @JvmField
     var mActivityTestRule = ActivityTestRule(SplashActivity::class.java)
 
+    /**
+     * Tests the app startup process by asserting the main view is shown after a specific timeout.
+     */
     @Test
     fun appStartupTest() {
-        // wait for app startup
         Thread.sleep(WAIT_STARTUP)
 
         AssertionHelper.assertMainShown()

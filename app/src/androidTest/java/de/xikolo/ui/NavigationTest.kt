@@ -1,4 +1,4 @@
-package de.xikolo
+package de.xikolo.ui
 
 
 import androidx.test.espresso.Espresso.onView
@@ -8,19 +8,17 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
+import de.xikolo.R
 import de.xikolo.controllers.main.MainActivity
-import de.xikolo.util.AssertionHelper
-import de.xikolo.util.NavigationHelper
-import de.xikolo.util.NavigationHelper.Companion.WAIT_UI_INTERACTION
+import de.xikolo.ui.helper.AssertionHelper
+import de.xikolo.ui.helper.NavigationHelper
+import de.xikolo.ui.helper.NavigationHelper.Companion.WAIT_UI_INTERACTION
 import org.hamcrest.Matchers.allOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
 @LargeTest
-@RunWith(AndroidJUnit4::class)
 class NavigationTest {
 
     @Rule
@@ -32,6 +30,10 @@ class NavigationTest {
         NavigationHelper.waitForAppStartup()
     }
 
+    /**
+     * Tests the behavior of the navigation drawer.
+     * It consists of opening and closing via the hamburger menu and via swipe gestures.
+     */
     @Test
     fun navigationTest() {
         NavigationHelper.openNavigation()
@@ -44,12 +46,16 @@ class NavigationTest {
         Thread.sleep(WAIT_UI_INTERACTION)
 
         val drawerLayout = onView(
-            allOf(withId(R.id.drawer_layout),
-                isDisplayed()))
+            allOf(
+                withId(R.id.drawer_layout),
+                isDisplayed()
+            )
+        )
 
         drawerLayout.perform(swipeLeft())
         Thread.sleep(WAIT_UI_INTERACTION)
 
         AssertionHelper.assertMainShown()
     }
+
 }

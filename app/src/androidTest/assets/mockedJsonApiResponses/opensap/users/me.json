@@ -1,0 +1,36 @@
+{
+  "data": {
+    "type": "users",
+    "id": "12345678-abcd-1234-abcd-1234567890ab",
+    "links": {
+      "self": "/api/v2/users/12345678-abcd-1234-abcd-1234567890ab"
+    },
+    "attributes": {
+      "name": "Mocked User",
+      "avatar_url": "https://open.sap.com/assets/logo_opensap-76d237a16e93caa8ccf4fc2113cf4abb4efd512fa74d140f966799446d0e4495.png"
+    },
+    "relationships": {
+      "profile": {
+        "data": {
+          "type": "user-profile",
+          "id": "12345678-abcd-1234-abcd-1234567890ab"
+        },
+        "links": {
+          "related": "/api/v2/user-profile/12345678-abcd-1234-abcd-1234567890ab"
+        }
+      }
+    }
+  },
+  "included": [
+    {
+      "type": "user-profile",
+      "id": "12345678-abcd-1234-abcd-1234567890ab",
+      "attributes": {
+        "first_name": "Mocked",
+        "last_name": "User",
+        "display_name": null,
+        "email": "credentials@beingmocked.com"
+      }
+    }
+  ]
+}

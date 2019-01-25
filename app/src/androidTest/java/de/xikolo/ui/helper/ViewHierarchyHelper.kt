@@ -1,4 +1,4 @@
-package de.xikolo.util
+package de.xikolo.ui.helper
 
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +10,12 @@ class ViewHierarchyHelper {
 
     companion object {
 
-        fun childAtPosition(
-            parentMatcher: Matcher<View>, position: Int): Matcher<View> {
-
+        /**
+         * Matches a child at a specific position in its parents view hierarchy.
+         */
+        fun childAtPosition(parentMatcher: Matcher<View>, position: Int): Matcher<View> {
             return object : TypeSafeMatcher<View>() {
+
                 override fun describeTo(description: Description) {
                     description.appendText("Child at position $position in parent ")
                     parentMatcher.describeTo(description)
@@ -21,10 +23,12 @@ class ViewHierarchyHelper {
 
                 public override fun matchesSafely(view: View): Boolean {
                     val parent = view.parent
-                    return parent is ViewGroup && parentMatcher.matches(parent)
+                    return parent is ViewGroup
+                        && parentMatcher.matches(parent)
                         && view == parent.getChildAt(position)
                 }
             }
         }
     }
+
 }

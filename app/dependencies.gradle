@@ -33,6 +33,7 @@ dependencies {
     def retrofitVersion = "2.5.0"
     implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     implementation "com.squareup.retrofit2:converter-moshi:${retrofitVersion}"
+    implementation "com.squareup.retrofit2:retrofit-mock:${retrofitVersion}"
 
     // json
     implementation "com.google.code.gson:gson:2.8.5"
@@ -90,4 +91,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.1'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.1.1'
+    testImplementation 'junit:junit:4.12'
 }

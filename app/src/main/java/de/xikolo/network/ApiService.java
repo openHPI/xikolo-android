@@ -60,6 +60,19 @@ public abstract class ApiService {
         return chain.proceed(builder.build());
     };
 
+    // interceptor doing nothing
+    private static Interceptor mockingInterceptor = chain -> chain.proceed(chain.request());
+
+    public static void enableMocking(Interceptor interceptor) {
+        mockingInterceptor = interceptor;
+        service = null;
+    }
+
+    public static void disableMocking() {
+        mockingInterceptor = chain -> chain.proceed(chain.request());
+        service = null;
+    }
+
     private static ApiServiceInterface service;
 
     private ApiService() {
@@ -101,6 +114,7 @@ public abstract class ApiService {
                 })
                 .addInterceptor(authenticationInterceptor)
                 .addInterceptor(userAgentInterceptor)
+                .addInterceptor(mockingInterceptor)
                 .addInterceptor(logging)
                 .build();
 
