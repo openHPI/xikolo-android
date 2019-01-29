@@ -1,5 +1,6 @@
 package de.xikolo.presenters.course;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.net.Uri;
 
 import com.crashlytics.android.Crashlytics;
@@ -13,6 +14,7 @@ import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.presenters.base.Presenter;
 import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;
+import de.xikolo.viewmodels.CoursesViewModel;
 import io.realm.Realm;
 
 public class CoursePresenter extends Presenter<CourseView> {
@@ -29,9 +31,12 @@ public class CoursePresenter extends Presenter<CourseView> {
 
     private CourseArea lastTrackedCourseTab;
 
-    CoursePresenter() {
+    private LifecycleOwner lifecycleOwner;
+
+    CoursePresenter(LifecycleOwner lifecycleOwner) {
         this.courseManager = new CourseManager();
         this.realm = Realm.getDefaultInstance();
+        this.lifecycleOwner = lifecycleOwner;
     }
 
     @Override
@@ -108,17 +113,16 @@ public class CoursePresenter extends Presenter<CourseView> {
         if (getView() != null) {
             getView().showProgressDialog();
         }
-        courseManager.requestCourse(identifier, new RequestJobCallback() {
-            @Override
-            public void onSuccess() {
+
+        // ToDo this is a workaround for new ViewModel architecture because courseManager.requestCourse does not exist anymore
+        CoursesViewModel viewModel = new CoursesViewModel(identifier);
+        viewModel.getCourse().observe(lifecycleOwner, course -> {
+            if (course != null && course.isValid()) {
                 if (getView() != null) {
                     getView().hideProgressDialog();
                     initCourse(Course.find(identifier).id, tab);
                 }
-            }
-
-            @Override
-            public void onError(@NonNull ErrorCode code) {
+            } else {
                 if (getView() != null) {
                     getView().hideProgressDialog();
                     getView().showErrorToast();
@@ -126,6 +130,7 @@ public class CoursePresenter extends Presenter<CourseView> {
                 }
             }
         });
+        viewModel.onRefresh();
     }
 
     public void enroll() {

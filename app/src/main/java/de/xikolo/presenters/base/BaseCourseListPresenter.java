@@ -2,19 +2,16 @@ package de.xikolo.presenters.base;
 
 import java.util.List;
 
-import de.xikolo.App;
-import de.xikolo.BuildConfig;
-import de.xikolo.R;
-import de.xikolo.config.BuildFlavor;
-import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Course;
+import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.utils.SectionList;
 import io.realm.Realm;
 
 import static de.xikolo.network.jobs.base.RequestJobCallback.ErrorCode.NO_NETWORK;
 
+// ToDo has code duplications with CourseListFragment
 public abstract class BaseCourseListPresenter<V extends BaseCourseListView> extends LoadingStatePresenter<V> {
 
     protected Realm realm;
@@ -67,39 +64,7 @@ public abstract class BaseCourseListPresenter<V extends BaseCourseListView> exte
     }
 
     public void buildCourseList() {
-        List<Course> subList;
-
-        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-            subList = courseManager.listFutureCourses(realm);
-            if (subList.size() > 0) {
-                courseList.add(
-                        App.getInstance().getString(R.string.header_future_courses),
-                        subList
-                );
-            }
-            subList = courseManager.listCurrentAndPastCourses(realm);
-            if (subList.size() > 0) {
-                courseList.add
-                        (App.getInstance().getString(R.string.header_self_paced_courses),
-                        subList
-                );
-            }
-        } else {
-            subList = courseManager.listCurrentAndFutureCourses(realm);
-            if (subList.size() > 0) {
-                courseList.add(
-                        App.getInstance().getString(R.string.header_current_and_upcoming_courses),
-                        subList
-                );
-            }
-            subList = courseManager.listPastCourses(realm);
-            if (subList.size() > 0) {
-                courseList.add(
-                        App.getInstance().getString(R.string.header_self_paced_courses),
-                        subList
-                );
-            }
-        }
+        // ToDo implemented in Channels
     }
 
 }

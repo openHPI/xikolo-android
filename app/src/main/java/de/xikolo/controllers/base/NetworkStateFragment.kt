@@ -104,12 +104,13 @@ abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), SwipeRe
         }
     }
 
-    fun showLoginRequired() {
+    fun showLoginRequired(onClick: () -> Unit = {}) {
         if (networkStateHelper.contentViewVisible) {
             ToastUtil.show(R.string.toast_please_log_in)
         } else {
             networkStateHelper.setMessageTitle(R.string.notification_please_login)
             networkStateHelper.setMessageSummary(R.string.notification_please_login_summary)
+            networkStateHelper.setMessageOnClickListener(View.OnClickListener { onClick() })
             networkStateHelper.showMessage()
         }
     }
@@ -133,6 +134,17 @@ abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), SwipeRe
             hideContent()
             networkStateHelper.setMessageTitle(title)
             networkStateHelper.setMessageSummary(summary)
+            networkStateHelper.showMessage()
+        }
+    }
+
+    fun showMessage(@StringRes title: Int, @StringRes summary: Int, onClick: () -> Unit = {}) {
+        if (networkStateHelper.contentViewVisible) {
+            ToastUtil.show(title)
+        } else {
+            networkStateHelper.setMessageTitle(title)
+            networkStateHelper.setMessageSummary(summary)
+            networkStateHelper.setMessageOnClickListener(View.OnClickListener { onClick() })
             networkStateHelper.showMessage()
         }
     }

@@ -255,7 +255,7 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
     }
 
     override fun getPresenterFactory(): PresenterFactory<CoursePresenter> {
-        return CoursePresenterFactory()
+        return CoursePresenterFactory(this)
     }
 
     inner class CoursePagerAdapter internal constructor(private val fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager), TabLayout.OnTabSelectedListener {

@@ -3,7 +3,6 @@ package de.xikolo.controllers.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,17 +12,16 @@ import de.xikolo.R
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
+import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
-import de.xikolo.presenters.base.PresenterFactory
-import de.xikolo.presenters.main.CertificateListPresenter
-import de.xikolo.presenters.main.CertificateListPresenterFactory
-import de.xikolo.presenters.main.CertificateListView
+import de.xikolo.viewmodels.CoursesViewModel
+import de.xikolo.viewmodels.base.observe
 import de.xikolo.views.SpaceItemDecoration
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class CertificateListFragment : PresenterMainFragment<CertificateListPresenter, CertificateListView>(), CertificateListView {
+class CertificateListFragment : ViewModelMainFragment<CoursesViewModel>() {
 
     companion object {
         val TAG: String = CertificateListFragment::class.java.simpleName
@@ -32,7 +30,13 @@ class CertificateListFragment : PresenterMainFragment<CertificateListPresenter, 
     @BindView(R.id.content_view)
     lateinit var recyclerView: RecyclerView
 
-    private var certificateListAdapter: CertificateListAdapter? = null
+    private lateinit var certificateListAdapter: CertificateListAdapter
+
+    override val layoutResource = R.layout.content_certificate_list
+
+    override fun createViewModel(): CoursesViewModel {
+        return CoursesViewModel(null)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +44,6 @@ class CertificateListFragment : PresenterMainFragment<CertificateListPresenter, 
         setHasOptionsMenu(true)
 
         EventBus.getDefault().register(this)
-    }
-
-    override fun getLayoutResource(): Int {
-        return R.layout.content_certificate_list
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,29 +72,43 @@ class CertificateListFragment : PresenterMainFragment<CertificateListPresenter, 
                     }
 
                     override fun getItemCount(): Int {
-                        return certificateListAdapter!!.itemCount
+                        return certificateListAdapter.itemCount
                     }
                 }))
         }
         recyclerView.adapter = certificateListAdapter
+
+        viewModel.courseList
+            .observe(this) {
+                showCertificateList(
+                    viewModel.coursesWithCertificates
+                )
+            }
     }
 
-    override fun showCertificateList(courses: MutableList<Course>) {
-        certificateListAdapter?.update(courses)
+    private fun showCertificateList(courses: List<Course>) {
+        if (!UserManager.isAuthorized) {
+            hideContent()
+            showLoginRequired()
+        } else if (courses.isEmpty()) {
+            hideContent()
+            showNoCertificatesMessage()
+        } else {
+            certificateListAdapter.update(courses)
+            showContent()
+        }
     }
 
-    override fun showLoginRequiredMessage() {
-        super.showLoginRequiredMessage()
-        loadingStateHelper.setMessageOnClickListener { _ ->
+    private fun showLoginRequired() {
+        super.showLoginRequired {
             activityCallback?.selectDrawerSection(NavigationAdapter.NAV_PROFILE.position)
         }
     }
 
-    override fun showNoCertificatesMessage() {
-        loadingStateHelper.setMessageTitle(R.string.notification_no_certificates)
-        loadingStateHelper.setMessageSummary(R.string.notification_no_certificates_summary)
-        loadingStateHelper.setMessageOnClickListener { _ -> activityCallback?.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.position) }
-        loadingStateHelper.showMessage()
+    private fun showNoCertificatesMessage() {
+        showMessage(R.string.notification_no_certificates, R.string.notification_no_certificates_summary) {
+            activityCallback?.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.position)
+        }
     }
 
     override fun onStart() {
@@ -115,30 +129,15 @@ class CertificateListFragment : PresenterMainFragment<CertificateListPresenter, 
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val itemId = item?.itemId
-        when (itemId) {
-            R.id.action_refresh -> {
-                onRefresh()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun getPresenterFactory(): PresenterFactory<CertificateListPresenter> {
-        return CertificateListPresenterFactory()
-    }
-
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLoginEvent(event: LoginEvent) {
-        presenter?.onRefresh()
+        onRefresh()
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLogoutEvent(event: LogoutEvent) {
-        presenter?.onRefresh()
+        onRefresh()
     }
 }

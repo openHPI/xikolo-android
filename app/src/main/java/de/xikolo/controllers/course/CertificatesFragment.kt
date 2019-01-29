@@ -11,17 +11,15 @@ import androidx.core.widget.TextViewCompat
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
-import de.xikolo.controllers.base.LoadingStatePresenterFragment
+import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.models.Course
 import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Enrollment
-import de.xikolo.presenters.base.PresenterFactory
-import de.xikolo.presenters.course.CertificatesPresenter
-import de.xikolo.presenters.course.CertificatesPresenterFactory
-import de.xikolo.presenters.course.CertificatesView
+import de.xikolo.viewmodels.CoursesViewModel
+import de.xikolo.viewmodels.base.observe
 
-class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter, CertificatesView>(), CertificatesView {
+class CertificatesFragment : NetworkStateFragment<CoursesViewModel>() {
 
     companion object {
         val TAG: String = CertificatesFragment::class.java.simpleName
@@ -36,16 +34,29 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
     @BindView(R.id.container)
     internal lateinit var container: LinearLayout
 
+    override val layoutResource = R.layout.content_certificates
+
+    override fun createViewModel(): CoursesViewModel {
+        return CoursesViewModel(courseId)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun getLayoutResource(): Int {
-        return R.layout.content_certificates
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.course
+            .observe(this) {
+                showCertificates(
+                    it,
+                    Enrollment.getForCourse(it.id)
+                )
+            }
     }
 
-    override fun showCertificates(course: Course, enrollment: Enrollment?) {
+    private fun showCertificates(course: Course, enrollment: Enrollment?) {
         container.removeAllViews()
 
         activity?.let { activity ->
@@ -98,25 +109,7 @@ class CertificatesFragment : LoadingStatePresenterFragment<CertificatesPresenter
                 container.addView(dvh.view)
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.refresh, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val itemId = item?.itemId
-        when (itemId) {
-            R.id.action_refresh -> {
-                onRefresh()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun getPresenterFactory(): PresenterFactory<CertificatesPresenter> {
-        return CertificatesPresenterFactory(courseId)
+        showContent()
     }
 
 }
