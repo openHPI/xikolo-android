@@ -66,13 +66,13 @@ open class CoursesViewModel(val courseId: String?) : BaseViewModel() {
         requestCourseList(true)
     }
 
-    private fun requestCourse(userRequest: Boolean) {
+    fun requestCourse(userRequest: Boolean) {
         if (courseId != null) {
             GetCourseJob(courseId, networkState, userRequest).run()
         }
     }
 
-    private fun requestCourseList(userRequest: Boolean) {
+    fun requestCourseList(userRequest: Boolean) {
         ListCoursesJob(networkState, userRequest).run()
     }
 }

@@ -1,5 +1,6 @@
 package de.xikolo.controllers.main
 
+import android.arch.lifecycle.LiveData
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView
@@ -106,18 +107,26 @@ class CourseListFragment : ViewModelMainFragment<CoursesViewModel>() {
                 }
             }))
 
+        registerObservers()
+    }
+
+    private fun registerObservers() {
         if (filter == CourseListFilter.ALL) {
             viewModel.courseList
                 .observe(this) {
                     // as new course list is loaded into the database it is accessed via the non-async queries
                     buildAndShowCourseList()
                 }
-        } else {
-            viewModel.enrolledCourses
-                .observe(this) {
-                    buildAndShowCourseList()
-                }
         }
+        viewModel.enrolledCourses
+            .observe(this) {
+                buildAndShowCourseList()
+            }
+    }
+
+    private fun unregisterObservers() {
+        viewModel.courseList.removeObservers(this)
+        viewModel.enrolledCourses.removeObservers(this)
     }
 
     override fun onStart() {
@@ -182,14 +191,19 @@ class CourseListFragment : ViewModelMainFragment<CoursesViewModel>() {
     }
 
     fun onSearch(query: String?, withEnrollment: Boolean) {
-        if (query != null && "" != query) {
-            viewModel.searchCourses(query, withEnrollment).observe(this) { results ->
+        unregisterObservers()
+        var searchLiveDataObject: LiveData<List<Course>>? = null
+        if (query != null && query.isNotEmpty()) {
+            searchLiveDataObject = viewModel.searchCourses(query, withEnrollment)
+            searchLiveDataObject.observe(this) { results ->
+                searchLiveDataObject.removeObservers(this)
                 courseList.clear()
                 courseList.add(null, results)
                 showCourseList()
-            } // ToDo can we have the condition here that we are in search mode and the observers in onViewCreated are triggered and reset the course list?
+            }
         } else {
-            buildAndShowCourseList()
+            searchLiveDataObject?.removeObservers(this)
+            registerObservers()
         }
     }
 
