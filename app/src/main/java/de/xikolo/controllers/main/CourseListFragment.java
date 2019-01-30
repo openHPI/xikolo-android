@@ -157,7 +157,23 @@ public class CourseListFragment extends PresenterMainFragment<CourseListPresente
             inflater.inflate(R.menu.refresh, menu);
             inflater.inflate(R.menu.search, menu);
 
-            SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+            MenuItem searchMenuItem = menu.findItem(R.id.search);
+            searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    menu.removeItem(R.id.action_refresh);
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    if (getActivity() != null) {
+                        getActivity().invalidateOptionsMenu();
+                    }
+                    return true;
+                }
+            });
+            SearchView searchView = (SearchView) searchMenuItem.getActionView();
             searchView.setIconifiedByDefault(false);
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
