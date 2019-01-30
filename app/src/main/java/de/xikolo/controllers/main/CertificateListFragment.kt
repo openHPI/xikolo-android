@@ -101,7 +101,7 @@ class CertificateListFragment : ViewModelMainFragment<CourseListViewModel>() {
     }
 
     private fun showLoginRequired() {
-        super.showLoginRequired {
+        showLoginRequired {
             activityCallback?.selectDrawerSection(NavigationAdapter.NAV_PROFILE.position)
         }
     }

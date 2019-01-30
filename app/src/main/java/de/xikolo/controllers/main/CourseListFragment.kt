@@ -237,13 +237,13 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
     }
 
     private fun showLoginRequired() {
-        super.showLoginRequired {
+        showLoginRequired {
             activityCallback?.selectDrawerSection(NavigationAdapter.NAV_PROFILE.position)
         }
     }
 
     private fun showNoEnrollmentsMessage() {
-        super.showMessage(R.string.notification_no_enrollments, R.string.notification_no_enrollments_summary) {
+        showMessage(R.string.notification_no_enrollments, R.string.notification_no_enrollments_summary) {
             activityCallback?.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.position)
         }
     }
