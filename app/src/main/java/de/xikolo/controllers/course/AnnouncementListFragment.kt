@@ -14,6 +14,7 @@ import de.xikolo.R
 import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.main.AnnouncementListAdapter
+import de.xikolo.models.Announcement
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.viewmodels.AnnouncementsViewModel
 import de.xikolo.viewmodels.base.observe
@@ -55,18 +56,18 @@ class AnnouncementListFragment : NetworkStateFragment<AnnouncementsViewModel>() 
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = announcementListAdapter
 
-        viewModel.courseAnnouncements
-            .observe(this) { showAnnouncementList() }
+        viewModel.announcements
+            .observe(this) {
+                showAnnouncementList(it)
+            }
     }
 
-    private fun showAnnouncementList() {
-        viewModel.courseAnnouncements.value?.let { announcements ->
-            if (announcements.isEmpty()) {
-                showEmptyMessage(R.string.empty_message_course_announcements_title)
-            } else {
-                showContent()
-                announcementListAdapter.announcementList = announcements.toMutableList()
-            }
+    private fun showAnnouncementList(announcements: List<Announcement>) {
+        if (announcements.isEmpty()) {
+            showEmptyMessage(R.string.empty_message_course_announcements_title)
+        } else {
+            showContent()
+            announcementListAdapter.announcementList = announcements.toMutableList()
         }
     }
 
