@@ -11,10 +11,10 @@ import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.models.Course
 import de.xikolo.utils.MarkdownUtil
-import de.xikolo.viewmodels.CoursesViewModel
+import de.xikolo.viewmodels.CourseViewModel
 import de.xikolo.viewmodels.base.observe
 
-class DescriptionFragment : NetworkStateFragment<CoursesViewModel>() {
+class DescriptionFragment : NetworkStateFragment<CourseViewModel>() {
 
     companion object {
         val TAG: String = DescriptionFragment::class.java.simpleName
@@ -40,8 +40,8 @@ class DescriptionFragment : NetworkStateFragment<CoursesViewModel>() {
 
     override val layoutResource = R.layout.content_course_description
 
-    override fun createViewModel(): CoursesViewModel {
-        return CoursesViewModel(courseId)
+    override fun createViewModel(): CourseViewModel {
+        return CourseViewModel(courseId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,9 +51,10 @@ class DescriptionFragment : NetworkStateFragment<CoursesViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.course.observe(this) {
-            showDescription(it)
-        }
+        viewModel.course
+            .observe(this) {
+                showDescription(it)
+            }
     }
 
     private fun showDescription(course: Course) {

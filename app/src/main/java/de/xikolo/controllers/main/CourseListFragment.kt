@@ -1,6 +1,5 @@
 package de.xikolo.controllers.main
 
-import android.arch.lifecycle.LiveData
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView
@@ -9,10 +8,7 @@ import android.view.MenuInflater
 import android.view.View
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
-import de.xikolo.App
-import de.xikolo.BuildConfig
 import de.xikolo.R
-import de.xikolo.config.BuildFlavor
 import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.controllers.helper.CourseListFilter
@@ -24,7 +20,7 @@ import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.utils.SectionList
-import de.xikolo.viewmodels.CoursesViewModel
+import de.xikolo.viewmodels.CourseListViewModel
 import de.xikolo.viewmodels.base.observe
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
@@ -32,7 +28,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class CourseListFragment : ViewModelMainFragment<CoursesViewModel>() {
+class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
 
     companion object {
         val TAG: String = CourseListFragment::class.java.simpleName
@@ -48,12 +44,12 @@ class CourseListFragment : ViewModelMainFragment<CoursesViewModel>() {
 
     private val courseManager = CourseManager()
 
-    private val courseList: SectionList<String, List<Course>> = SectionList()
+    private var courseList: SectionList<String, List<Course>> = SectionList()
 
     override val layoutResource = R.layout.content_course_list
 
-    override fun createViewModel(): CoursesViewModel {
-        return CoursesViewModel(null)
+    override fun createViewModel(): CourseListViewModel {
+        return CourseListViewModel(filter)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,26 +103,20 @@ class CourseListFragment : ViewModelMainFragment<CoursesViewModel>() {
                 }
             }))
 
-        registerObservers()
+        registerObserver()
     }
 
-    private fun registerObservers() {
-        if (filter == CourseListFilter.ALL) {
-            viewModel.courseList
-                .observe(this) {
-                    // as new course list is loaded into the database it is accessed via the non-async queries
-                    buildAndShowCourseList()
-                }
-        }
-        viewModel.enrolledCourses
+    private fun registerObserver() {
+        viewModel.courses
             .observe(this) {
-                buildAndShowCourseList()
+                // as new course list is loaded into the database it is accessed via the non-async query
+                courseList = viewModel.sectionedCourseList
+                showCourseList()
             }
     }
 
-    private fun unregisterObservers() {
-        viewModel.courseList.removeObservers(this)
-        viewModel.enrolledCourses.removeObservers(this)
+    private fun unregisterObserver() {
+        viewModel.courses.removeObservers(this)
     }
 
     override fun onStart() {
@@ -145,10 +135,8 @@ class CourseListFragment : ViewModelMainFragment<CoursesViewModel>() {
         EventBus.getDefault().unregister(this)
     }
 
-    private fun buildAndShowCourseList() {
-        if (filter == CourseListFilter.ALL) {
-            buildCourseListFilterAll()
-        } else {
+    private fun showCourseList() {
+        if (filter == CourseListFilter.MY) {
             if (!UserManager.isAuthorized) {
                 hideContent()
                 showLoginRequired()
@@ -157,15 +145,13 @@ class CourseListFragment : ViewModelMainFragment<CoursesViewModel>() {
                 hideContent()
                 showNoEnrollmentsMessage()
                 return
-            } else {
-                buildCourseListFilterMy()
             }
         }
-        showCourseList()
+        updateCourseList()
         showContent()
     }
 
-    private fun showCourseList() {
+    private fun updateCourseList() {
         courseListAdapter.update(courseList)
     }
 
@@ -178,85 +164,27 @@ class CourseListFragment : ViewModelMainFragment<CoursesViewModel>() {
             searchView.setIconifiedByDefault(false)
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    onSearch(query, filter === CourseListFilter.MY)
+                    onSearch(query)
                     return false
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
-                    onSearch(newText, filter === CourseListFilter.MY)
+                    onSearch(newText)
                     return false
                 }
             })
         }
     }
 
-    fun onSearch(query: String?, withEnrollment: Boolean) {
-        unregisterObservers()
-        var searchLiveDataObject: LiveData<List<Course>>? = null
+    fun onSearch(query: String?) {
+        unregisterObserver()
         if (query != null && query.isNotEmpty()) {
-            searchLiveDataObject = viewModel.searchCourses(query, withEnrollment)
-            searchLiveDataObject.observe(this) { results ->
-                searchLiveDataObject.removeObservers(this)
-                courseList.clear()
-                courseList.add(null, results)
-                showCourseList()
-            }
+            val results = viewModel.searchCourses(query)
+            courseList.clear()
+            courseList.add(null, results)
+            updateCourseList()
         } else {
-            searchLiveDataObject?.removeObservers(this)
-            registerObservers()
-        }
-    }
-
-    private fun buildCourseListFilterMy() {
-        courseList.clear()
-        var subList = viewModel.currentAndPastCoursesWithEnrollment
-        if (subList.isNotEmpty()) {
-            courseList.add(
-                App.getInstance().getString(R.string.header_my_current_courses),
-                subList
-            )
-        }
-        subList = viewModel.futureCoursesWithEnrollment
-        if (subList.isNotEmpty()) {
-            courseList.add(
-                App.getInstance().getString(R.string.header_my_future_courses),
-                subList
-            )
-        }
-    }
-
-    private fun buildCourseListFilterAll() {
-        courseList.clear()
-        var subList: List<Course>
-        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-            subList = viewModel.futureCourses
-            if (subList.isNotEmpty()) {
-                courseList.add(
-                    App.getInstance().getString(R.string.header_future_courses),
-                    subList
-                )
-            }
-            subList = viewModel.currentAndPastCourses
-            if (subList.isNotEmpty()) {
-                courseList.add(App.getInstance().getString(R.string.header_self_paced_courses),
-                    subList
-                )
-            }
-        } else {
-            subList = viewModel.currentAndFutureCourses
-            if (subList.isNotEmpty()) {
-                courseList.add(
-                    App.getInstance().getString(R.string.header_current_and_upcoming_courses),
-                    subList
-                )
-            }
-            subList = viewModel.pastCourses
-            if (subList.isNotEmpty()) {
-                courseList.add(
-                    App.getInstance().getString(R.string.header_self_paced_courses),
-                    subList
-                )
-            }
+            registerObserver()
         }
     }
 
@@ -275,7 +203,8 @@ class CourseListFragment : ViewModelMainFragment<CoursesViewModel>() {
         startActivity(intent)
     }
 
-    fun enroll(courseId: String) { //ToDo refactor out, has duplicate code in BaseCourseListPresenter used by Channels
+    // ToDo Mind that this has duplicate code in BaseCourseListPresenter used by Channels.
+    fun enroll(courseId: String) {
         showBlockingProgress()
         courseManager.createEnrollment(courseId, object : RequestJobCallback() {
             public override fun onSuccess() {
@@ -328,7 +257,5 @@ class CourseListFragment : ViewModelMainFragment<CoursesViewModel>() {
     fun onLogoutEvent(event: LogoutEvent) {
         onRefresh()
     }
-
-    // ToDo kann das raus?
 
 }

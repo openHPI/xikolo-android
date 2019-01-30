@@ -52,18 +52,18 @@ class CoursesDao(realm: Realm) : BaseDao(realm) {
             .findAllAsync()
             .asLiveData()
 
-    fun searchCourses(query: String, withEnrollment: Boolean): LiveData<List<Course>> {
+    fun searchCourses(query: String, withEnrollment: Boolean): List<Course> {
         var dbQuery = realm
             .where<Course>()
             .equalTo("external", false)
             .beginGroup()
-            .like("title", "*$query*", Case.INSENSITIVE)
-            .or()
-            .like("shortAbstract", "*$query*", Case.INSENSITIVE)
-            .or()
-            .like("description", "*$query*", Case.INSENSITIVE)
-            .or()
-            .like("teachers", "*$query*", Case.INSENSITIVE)
+                .like("title", "*$query*", Case.INSENSITIVE)
+                .or()
+                .like("shortAbstract", "*$query*", Case.INSENSITIVE)
+                .or()
+                .like("description", "*$query*", Case.INSENSITIVE)
+                .or()
+                .like("teachers", "*$query*", Case.INSENSITIVE)
             .endGroup()
 
         if (withEnrollment) {
@@ -72,20 +72,19 @@ class CoursesDao(realm: Realm) : BaseDao(realm) {
 
         return dbQuery
             .sort("startDate", Sort.DESCENDING)
-            .findAllAsync()
-            .asLiveData()
+            .findAll()
     }
 
     fun course(id: String): LiveData<Course> =
         realm
             .where<Course>()
             .beginGroup()
-            .equalTo("id", id)
-            .or()
-            .equalTo("slug", id)
+                .equalTo("id", id)
+                .or()
+                .equalTo("slug", id)
             .endGroup()
             .findFirstAsync()
-            .asLiveData() // ToDo can we do this?
+            .asLiveData()
 
     fun currentAndFutureCourses(): List<Course> =
         realm
@@ -111,12 +110,13 @@ class CoursesDao(realm: Realm) : BaseDao(realm) {
             .sort("startDate", Sort.DESCENDING)
             .findAll()
 
-    fun futureCourses(): List<Course> = realm
-        .where<Course>()
-        .equalTo("external", false)
-        .greaterThan("startDate", Date())
-        .sort("startDate", Sort.ASCENDING)
-        .findAll()
+    fun futureCourses(): List<Course> =
+        realm
+            .where<Course>()
+            .equalTo("external", false)
+            .greaterThan("startDate", Date())
+            .sort("startDate", Sort.ASCENDING)
+            .findAll()
 
     fun currentAndPastCoursesWithEnrollment(): List<Course> =
         realm

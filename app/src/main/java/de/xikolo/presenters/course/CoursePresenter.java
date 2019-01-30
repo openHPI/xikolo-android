@@ -14,7 +14,8 @@ import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.presenters.base.Presenter;
 import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;
-import de.xikolo.viewmodels.CoursesViewModel;
+import de.xikolo.viewmodels.CourseViewModel;
+import de.xikolo.viewmodels.base.NetworkCode;
 import io.realm.Realm;
 
 public class CoursePresenter extends Presenter<CourseView> {
@@ -114,15 +115,17 @@ public class CoursePresenter extends Presenter<CourseView> {
             getView().showProgressDialog();
         }
 
-        // ToDo this is a workaround for new ViewModel architecture because courseManager.requestCourse does not exist anymore
-        CoursesViewModel viewModel = new CoursesViewModel(identifier);
-        viewModel.getCourse().observe(lifecycleOwner, course -> {
-            if (course != null && course.isValid()) {
+        // ToDo Refactor this with architecture change. This is a workaround for new ViewModel architecture because CourseManager.requestCourse() does not exist anymore.
+        CourseViewModel viewModel = new CourseViewModel(identifier);
+        viewModel.getNetworkState().observe(lifecycleOwner, networkState -> {
+            if (networkState != null && networkState.getCode() == NetworkCode.SUCCESS) {
+                viewModel.getNetworkState().removeObservers(lifecycleOwner);
                 if (getView() != null) {
                     getView().hideProgressDialog();
                     initCourse(Course.find(identifier).id, tab);
                 }
-            } else {
+            } else if (networkState != null && networkState.getCode() != NetworkCode.STARTED) {
+                viewModel.getNetworkState().removeObservers(lifecycleOwner);
                 if (getView() != null) {
                     getView().hideProgressDialog();
                     getView().showErrorToast();
@@ -130,7 +133,7 @@ public class CoursePresenter extends Presenter<CourseView> {
                 }
             }
         });
-        viewModel.onRefresh();
+        viewModel.requestCourse(false);
     }
 
     public void enroll() {

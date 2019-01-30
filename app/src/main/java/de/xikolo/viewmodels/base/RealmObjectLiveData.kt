@@ -19,5 +19,3 @@ class RealmObjectLiveData<T : RealmObject>(private val realmObject: T) : LiveDat
 }
 
 fun <T : RealmObject> T.asLiveData() = RealmObjectLiveData(this)
-
-// ToDo is this allowed?

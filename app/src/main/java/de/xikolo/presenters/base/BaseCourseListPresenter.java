@@ -11,7 +11,7 @@ import io.realm.Realm;
 
 import static de.xikolo.network.jobs.base.RequestJobCallback.ErrorCode.NO_NETWORK;
 
-// ToDo has code duplications with CourseListFragment
+// ToDo Remove this with architecture change. This has code duplications with CourseListFragment.
 public abstract class BaseCourseListPresenter<V extends BaseCourseListView> extends LoadingStatePresenter<V> {
 
     protected Realm realm;
@@ -64,7 +64,7 @@ public abstract class BaseCourseListPresenter<V extends BaseCourseListView> exte
     }
 
     public void buildCourseList() {
-        // ToDo implemented in Channels
+        // ToDo Remove this with architecture change. This is being overridden in Channels.
     }
 
 }
