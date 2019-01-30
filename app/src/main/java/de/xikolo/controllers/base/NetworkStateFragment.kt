@@ -1,46 +1,30 @@
 package de.xikolo.controllers.base
 
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.*
 import de.xikolo.R
 import de.xikolo.controllers.helper.NetworkStateHelper
+import de.xikolo.utils.NetworkUtil
+import de.xikolo.utils.ToastUtil
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.base.NetworkCode
 import de.xikolo.viewmodels.base.observe
-import de.xikolo.utils.NetworkUtil
-import de.xikolo.utils.ToastUtil
 
-abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
+abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, ViewModelCreationInterface<T> {
 
     private lateinit var networkStateHelper: NetworkStateHelper
 
-    protected lateinit var viewModel: T
-
     abstract val layoutResource: Int
 
-    private fun initViewModel() {
-        val vm = createViewModel()
-        val factory = object : ViewModelProvider.NewInstanceFactory() {
-            override fun <S : ViewModel?> create(modelClass: Class<S>): S {
-                @Suppress("unchecked_cast")
-                return vm as S
-            }
-        }
-        viewModel = ViewModelProviders.of(this, factory).get(vm.javaClass)
-    }
+    override lateinit var viewModel: T
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
+        initViewModel(this)
     }
-
-    abstract fun createViewModel(): T
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // inflate generic network state view
