@@ -11,17 +11,15 @@ import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
-import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Announcement
 import de.xikolo.models.Course
 import de.xikolo.utils.MarkdownUtil
-import de.xikolo.viewmodels.AnnouncementListViewModel
-import de.xikolo.viewmodels.base.observe
+import de.xikolo.viewmodels.AnnouncementsViewModel
 import java.text.DateFormat
 import java.util.*
 
-class AnnouncementFragment : NetworkStateFragment<AnnouncementListViewModel>() {
+class AnnouncementFragment : NetworkStateFragment<AnnouncementsViewModel>() {
 
     companion object {
         val TAG: String = AnnouncementFragment::class.java.simpleName
@@ -44,8 +42,8 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementListViewModel>() {
 
     override val layoutResource = R.layout.content_announcement
 
-    override fun createViewModel(): AnnouncementListViewModel {
-        return AnnouncementListViewModel()
+    override fun createViewModel(): AnnouncementsViewModel {
+        return AnnouncementsViewModel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,13 +54,10 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementListViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.announcements
-            .observe(this) { _ ->
-                announcement = Announcement.get(announcementId)
-                announcement?.let {
-                    showAnnouncement(it)
-                }
-            }
+        announcement = Announcement.get(announcementId)
+        announcement?.let {
+            showAnnouncement(it)
+        }
     }
 
     private fun showAnnouncement(announcement: Announcement) {
