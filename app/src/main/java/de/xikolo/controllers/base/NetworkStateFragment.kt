@@ -4,9 +4,6 @@ package de.xikolo.controllers.base
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.StringRes
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.xikolo.R
 import de.xikolo.controllers.helper.NetworkStateHelper

@@ -1,10 +1,10 @@
 package de.xikolo.controllers.base
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import de.xikolo.viewmodels.base.BaseViewModel
 
 interface ViewModelCreationInterface<T : BaseViewModel> {
@@ -31,4 +31,5 @@ interface ViewModelCreationInterface<T : BaseViewModel> {
         val factory = createViewModelFactory(vm)
         viewModel = ViewModelProviders.of(fragmentActivity, factory).get(vm.javaClass)
     }
+
 }
