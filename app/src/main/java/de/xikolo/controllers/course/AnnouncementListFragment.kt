@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
+import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.main.AnnouncementListAdapter
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.viewmodels.AnnouncementsViewModel
+import de.xikolo.viewmodels.AnnouncementViewModel
 import de.xikolo.viewmodels.base.observe
 
-class AnnouncementListFragment : NetworkStateFragment<AnnouncementsViewModel>() {
+class AnnouncementListFragment : NetworkStateFragment<AnnouncementViewModel>() {
 
     companion object {
         val TAG: String = AnnouncementListFragment::class.java.simpleName
@@ -33,8 +34,8 @@ class AnnouncementListFragment : NetworkStateFragment<AnnouncementsViewModel>() 
 
     override val layoutResource = R.layout.content_news_list
 
-    override fun createViewModel(): AnnouncementsViewModel {
-        return AnnouncementsViewModel(courseId)
+    override fun createViewModel(): AnnouncementViewModel {
+        return AnnouncementViewModel(courseId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,12 +55,14 @@ class AnnouncementListFragment : NetworkStateFragment<AnnouncementsViewModel>() 
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = announcementListAdapter
 
-        viewModel.courseAnnouncements
-            .observe(this) { showAnnouncementList() }
+        viewModel.announcements
+            .observe(this) {
+                showAnnouncementList()
+            }
     }
 
     private fun showAnnouncementList() {
-        viewModel.courseAnnouncements.value?.let { announcements ->
+        viewModel.announcements.value?.let { announcements ->
             if (announcements.isEmpty()) {
                 showEmptyMessage(R.string.empty_message_course_announcements_title)
             } else {
