@@ -1,8 +1,7 @@
 package de.xikolo.controllers.helper;
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import de.xikolo.controllers.dialogs.MobileDownloadDialog;
 import de.xikolo.controllers.dialogs.ModuleDownloadDialog;
 import de.xikolo.controllers.dialogs.ModuleDownloadDialogAutoBundle;

@@ -2,11 +2,11 @@ package de.xikolo.controllers.base;
 
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import de.xikolo.presenters.base.Presenter;
 import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.presenters.base.PresenterLoader;
@@ -26,7 +26,7 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Loader<P> loader = getLoaderManager().getLoader(loaderId());
+        Loader<P> loader = LoaderManager.getInstance(this).getLoader(loaderId());
         if (loader == null) {
             initLoader();
         } else {
@@ -37,7 +37,7 @@ public abstract class BasePresenterFragment<P extends Presenter<V>, V extends Vi
 
     private void initLoader() {
         // LoaderCallbacks as an object, so no hint regarding loader will be leak to the subclasses.
-        getLoaderManager().initLoader(loaderId(), null, new LoaderManager.LoaderCallbacks<P>() {
+        LoaderManager.getInstance(this).initLoader(loaderId(), null, new LoaderManager.LoaderCallbacks<P>() {
             @NonNull
             @Override
             public final Loader<P> onCreateLoader(int id, Bundle args) {

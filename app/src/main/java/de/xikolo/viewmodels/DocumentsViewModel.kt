@@ -1,6 +1,6 @@
 package de.xikolo.viewmodels
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import de.xikolo.network.jobs.ListDocumentsWithLocalizationsForCourseJob
 import de.xikolo.models.Document
 import de.xikolo.models.DocumentLocalization

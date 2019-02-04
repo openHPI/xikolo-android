@@ -1,6 +1,6 @@
 package de.xikolo.models.dao
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import de.xikolo.models.Announcement
 import de.xikolo.models.dao.base.BaseDao
 import de.xikolo.viewmodels.base.asLiveData

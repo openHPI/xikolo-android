@@ -2,7 +2,7 @@ package de.xikolo.storages
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v7.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.utils.PlaybackSpeedUtil

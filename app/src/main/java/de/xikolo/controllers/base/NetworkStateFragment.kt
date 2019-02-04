@@ -1,13 +1,13 @@
 package de.xikolo.controllers.base
 
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.v4.widget.SwipeRefreshLayout
 import android.view.*
+import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.xikolo.R
 import de.xikolo.controllers.helper.NetworkStateHelper
 import de.xikolo.viewmodels.base.BaseViewModel

@@ -1,12 +1,12 @@
 package de.xikolo;
 
 import android.app.Application;
-import android.support.v7.preference.PreferenceManager;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 
 import com.evernote.android.job.JobManager;
 
+import androidx.preference.PreferenceManager;
 import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
 import de.xikolo.lanalytics.Lanalytics;

@@ -1,6 +1,6 @@
 package de.xikolo.viewmodels.base
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import de.xikolo.events.NetworkStateEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

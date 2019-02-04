@@ -1,11 +1,11 @@
 package de.xikolo.config;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-
 import com.bumptech.glide.annotation.GlideExtension;
 import com.bumptech.glide.annotation.GlideOption;
 import com.bumptech.glide.request.RequestOptions;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 
 @GlideExtension
 public class GlideApiExtension {

@@ -3,12 +3,12 @@ package de.xikolo.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.Log;
 
 import java.util.Hashtable;
 
+import androidx.appcompat.widget.AppCompatTextView;
 import de.xikolo.R;
 import de.xikolo.config.Config;
 

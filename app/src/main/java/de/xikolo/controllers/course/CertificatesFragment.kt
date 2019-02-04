@@ -1,13 +1,13 @@
 package de.xikolo.controllers.course
 
 import android.os.Bundle
-import android.support.v4.widget.NestedScrollView
-import android.support.v4.widget.TextViewCompat
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.widget.NestedScrollView
+import androidx.core.widget.TextViewCompat
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R

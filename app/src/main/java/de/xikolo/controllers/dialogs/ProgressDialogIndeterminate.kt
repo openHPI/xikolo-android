@@ -2,9 +2,9 @@ package de.xikolo.controllers.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.ProgressBar
+import androidx.appcompat.app.AlertDialog
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.base.BaseDialogFragment

@@ -9,7 +9,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import android.support.v4.app.ShareCompat
+import androidx.core.app.ShareCompat
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.models.Course

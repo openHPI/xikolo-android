@@ -1,9 +1,6 @@
 package de.xikolo.controllers.secondscreen;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +11,7 @@ import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.yatatsu.autobundle.AutoBundleField;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,6 +20,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.controllers.base.BaseFragment;

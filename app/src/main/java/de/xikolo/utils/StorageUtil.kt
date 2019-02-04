@@ -2,7 +2,7 @@ package de.xikolo.utils
 
 import android.content.Context
 import android.os.Environment
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import de.xikolo.R
 import de.xikolo.services.DownloadService
 import de.xikolo.storages.ApplicationPreferences

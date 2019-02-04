@@ -1,11 +1,10 @@
 package de.xikolo.models;
 
-import android.support.annotation.StringRes;
-
 import com.squareup.moshi.Json;
 
 import java.util.Date;
 
+import androidx.annotation.StringRes;
 import de.xikolo.R;
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.utils.DateUtil;
@@ -97,7 +96,8 @@ public class Item extends RealmObject {
     public static final String EXERCISE_TYPE_MAIN = "main";
     public static final String EXERCISE_TYPE_BONUS = "bonus";
 
-    public @StringRes int getIconRes() {
+    @StringRes
+    public int getIconRes() {
         int icon = R.string.icon_text;
 
         switch (contentType) {

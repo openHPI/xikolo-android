@@ -4,14 +4,14 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.StringRes
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.App

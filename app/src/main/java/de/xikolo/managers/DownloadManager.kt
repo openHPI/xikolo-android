@@ -2,8 +2,8 @@ package de.xikolo.managers
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import de.xikolo.App
 import de.xikolo.config.Config
 import de.xikolo.events.DownloadDeletedEvent

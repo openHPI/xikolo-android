@@ -1,14 +1,14 @@
 package de.xikolo.controllers.base;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 
 import com.yatatsu.autobundle.AutoBundle;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import de.xikolo.utils.TintUtil;
 

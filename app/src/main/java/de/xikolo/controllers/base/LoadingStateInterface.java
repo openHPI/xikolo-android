@@ -1,6 +1,6 @@
 package de.xikolo.controllers.base;
 
-import android.support.annotation.LayoutRes;
+import androidx.annotation.LayoutRes;
 
 public interface LoadingStateInterface {
 

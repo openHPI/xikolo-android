@@ -1,6 +1,6 @@
 package de.xikolo.presenters.main;
 
-import android.arch.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleOwner;
 
 import de.xikolo.presenters.base.PresenterFactory;
 

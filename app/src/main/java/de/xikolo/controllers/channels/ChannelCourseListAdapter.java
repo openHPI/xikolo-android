@@ -1,15 +1,15 @@
 package de.xikolo.controllers.channels;
 
 import android.content.Context;
-import android.support.annotation.ColorInt;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.App;
@@ -20,9 +20,9 @@ import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseCourseListAdapter;
 import de.xikolo.controllers.main.CourseListAdapter;
 import de.xikolo.models.Course;
-import de.xikolo.utils.SectionList;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.MarkdownUtil;
+import de.xikolo.utils.SectionList;
 
 public class ChannelCourseListAdapter extends BaseCourseListAdapter {
 
