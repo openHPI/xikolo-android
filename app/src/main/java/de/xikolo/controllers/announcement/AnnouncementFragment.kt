@@ -16,11 +16,11 @@ import de.xikolo.managers.UserManager
 import de.xikolo.models.Announcement
 import de.xikolo.models.Course
 import de.xikolo.utils.MarkdownUtil
-import de.xikolo.viewmodels.AnnouncementsViewModel
+import de.xikolo.viewmodels.AnnouncementListViewModel
 import java.text.DateFormat
 import java.util.*
 
-class AnnouncementFragment : NetworkStateFragment<AnnouncementsViewModel>() {
+class AnnouncementFragment : NetworkStateFragment<AnnouncementListViewModel>() {
 
     companion object {
         val TAG: String = AnnouncementFragment::class.java.simpleName
@@ -43,8 +43,8 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementsViewModel>() {
 
     override val layoutResource = R.layout.content_announcement
 
-    override fun createViewModel(): AnnouncementsViewModel {
-        return AnnouncementsViewModel()
+    override fun createViewModel(): AnnouncementListViewModel {
+        return AnnouncementListViewModel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +66,7 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementsViewModel>() {
             val course = Course.get(announcement.courseId)
             if (course.accessible && course.isEnrolled) {
                 courseButton.visibility = View.VISIBLE
-                courseButton.setOnClickListener { _ ->
+                courseButton.setOnClickListener {
                     val intent = CourseActivityAutoBundle.builder().courseId(announcement.courseId).build(activity!!)
                     startActivity(intent)
                 }

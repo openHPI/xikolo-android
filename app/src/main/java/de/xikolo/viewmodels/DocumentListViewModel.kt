@@ -1,13 +1,13 @@
 package de.xikolo.viewmodels
 
 import androidx.lifecycle.LiveData
-import de.xikolo.network.jobs.ListDocumentsWithLocalizationsForCourseJob
 import de.xikolo.models.Document
 import de.xikolo.models.DocumentLocalization
 import de.xikolo.models.dao.DocumentDao
+import de.xikolo.network.jobs.ListDocumentsWithLocalizationsForCourseJob
 import de.xikolo.viewmodels.base.BaseViewModel
 
-open class DocumentsViewModel(val courseId: String) : BaseViewModel() {
+open class DocumentListViewModel(val courseId: String) : BaseViewModel() {
 
     private val documentDao = DocumentDao(realm)
 

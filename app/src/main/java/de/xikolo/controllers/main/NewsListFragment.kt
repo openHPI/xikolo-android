@@ -14,13 +14,13 @@ import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.viewmodels.AnnouncementsViewModel
+import de.xikolo.viewmodels.AnnouncementListViewModel
 import de.xikolo.viewmodels.base.observe
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class NewsListFragment : ViewModelMainFragment<AnnouncementsViewModel>() {
+class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
 
     companion object {
         val TAG: String = NewsListFragment::class.java.simpleName
@@ -33,8 +33,8 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementsViewModel>() {
 
     override val layoutResource = R.layout.content_news_list
 
-    override fun createViewModel(): AnnouncementsViewModel {
-        return AnnouncementsViewModel()
+    override fun createViewModel(): AnnouncementListViewModel {
+        return AnnouncementListViewModel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,8 +59,10 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementsViewModel>() {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = announcementListAdapter
 
-        viewModel.globalAnnouncements
-            .observe(this) { showAnnouncementList() }
+        viewModel.announcements
+            .observe(this) {
+                showAnnouncementList()
+            }
     }
 
     override fun onStart() {
@@ -76,7 +78,7 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementsViewModel>() {
     }
 
     private fun showAnnouncementList() {
-        viewModel.globalAnnouncements.value?.let { announcements ->
+        viewModel.announcements.value?.let { announcements ->
             if (announcements.isEmpty()) {
                 showEmptyMessage(R.string.empty_message_global_announcements_title)
             } else {
