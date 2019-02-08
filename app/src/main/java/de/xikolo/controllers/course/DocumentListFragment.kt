@@ -9,10 +9,10 @@ import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
-import de.xikolo.viewmodels.DocumentViewModel
+import de.xikolo.viewmodels.DocumentListViewModel
 import de.xikolo.viewmodels.base.observe
 
-class DocumentListFragment : NetworkStateFragment<DocumentViewModel>() {
+class DocumentListFragment : NetworkStateFragment<DocumentListViewModel>() {
 
     @AutoBundleField
     lateinit var courseId: String
@@ -22,8 +22,8 @@ class DocumentListFragment : NetworkStateFragment<DocumentViewModel>() {
 
     private lateinit var documentListAdapter: DocumentListAdapter
 
-    override fun createViewModel(): DocumentViewModel {
-        return DocumentViewModel(courseId)
+    override fun createViewModel(): DocumentListViewModel {
+        return DocumentListViewModel(courseId)
     }
 
     override val layoutResource = R.layout.content_documents_list

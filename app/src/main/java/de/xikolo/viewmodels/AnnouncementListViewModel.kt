@@ -1,13 +1,13 @@
 package de.xikolo.viewmodels
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import de.xikolo.models.Announcement
 import de.xikolo.models.dao.AnnouncementsDao
 import de.xikolo.network.jobs.ListAnnouncementsJob
 import de.xikolo.network.jobs.UpdateAnnouncementVisitedJob
 import de.xikolo.viewmodels.base.BaseViewModel
 
-class AnnouncementViewModel(val courseId: String? = null) : BaseViewModel() {
+class AnnouncementListViewModel(val courseId: String? = null) : BaseViewModel() {
 
     private val announcementsDao = AnnouncementsDao(realm)
 

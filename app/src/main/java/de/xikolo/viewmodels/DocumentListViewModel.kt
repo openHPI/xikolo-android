@@ -7,7 +7,7 @@ import de.xikolo.models.dao.DocumentDao
 import de.xikolo.network.jobs.ListDocumentsWithLocalizationsForCourseJob
 import de.xikolo.viewmodels.base.BaseViewModel
 
-open class DocumentViewModel(val courseId: String) : BaseViewModel() {
+open class DocumentListViewModel(val courseId: String) : BaseViewModel() {
 
     private val documentDao = DocumentDao(realm)
 

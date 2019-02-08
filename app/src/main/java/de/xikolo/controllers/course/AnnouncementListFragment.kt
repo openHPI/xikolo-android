@@ -15,10 +15,10 @@ import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.main.AnnouncementListAdapter
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.viewmodels.AnnouncementViewModel
+import de.xikolo.viewmodels.AnnouncementListViewModel
 import de.xikolo.viewmodels.base.observe
 
-class AnnouncementListFragment : NetworkStateFragment<AnnouncementViewModel>() {
+class AnnouncementListFragment : NetworkStateFragment<AnnouncementListViewModel>() {
 
     companion object {
         val TAG: String = AnnouncementListFragment::class.java.simpleName
@@ -34,8 +34,8 @@ class AnnouncementListFragment : NetworkStateFragment<AnnouncementViewModel>() {
 
     override val layoutResource = R.layout.content_news_list
 
-    override fun createViewModel(): AnnouncementViewModel {
-        return AnnouncementViewModel(courseId)
+    override fun createViewModel(): AnnouncementListViewModel {
+        return AnnouncementListViewModel(courseId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

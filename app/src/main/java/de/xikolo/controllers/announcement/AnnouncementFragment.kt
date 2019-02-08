@@ -16,11 +16,11 @@ import de.xikolo.managers.UserManager
 import de.xikolo.models.Announcement
 import de.xikolo.models.Course
 import de.xikolo.utils.MarkdownUtil
-import de.xikolo.viewmodels.AnnouncementViewModel
+import de.xikolo.viewmodels.AnnouncementListViewModel
 import java.text.DateFormat
 import java.util.*
 
-class AnnouncementFragment : NetworkStateFragment<AnnouncementViewModel>() {
+class AnnouncementFragment : NetworkStateFragment<AnnouncementListViewModel>() {
 
     companion object {
         val TAG: String = AnnouncementFragment::class.java.simpleName
@@ -43,8 +43,8 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementViewModel>() {
 
     override val layoutResource = R.layout.content_announcement
 
-    override fun createViewModel(): AnnouncementViewModel {
-        return AnnouncementViewModel()
+    override fun createViewModel(): AnnouncementListViewModel {
+        return AnnouncementListViewModel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

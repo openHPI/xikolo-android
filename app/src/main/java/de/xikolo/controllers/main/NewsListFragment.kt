@@ -14,13 +14,13 @@ import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.viewmodels.AnnouncementViewModel
+import de.xikolo.viewmodels.AnnouncementListViewModel
 import de.xikolo.viewmodels.base.observe
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class NewsListFragment : ViewModelMainFragment<AnnouncementViewModel>() {
+class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
 
     companion object {
         val TAG: String = NewsListFragment::class.java.simpleName
@@ -33,8 +33,8 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementViewModel>() {
 
     override val layoutResource = R.layout.content_news_list
 
-    override fun createViewModel(): AnnouncementViewModel {
-        return AnnouncementViewModel()
+    override fun createViewModel(): AnnouncementListViewModel {
+        return AnnouncementListViewModel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
