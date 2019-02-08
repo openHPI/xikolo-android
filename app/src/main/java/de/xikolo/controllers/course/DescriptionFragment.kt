@@ -68,7 +68,7 @@ class DescriptionFragment : NetworkStateFragment<CourseViewModel>() {
         textLanguage.text = course.formattedLanguage
         MarkdownUtil.formatAndSet(course.description, textDescription)
 
-        if (course.teachers != null && "" != course.teachers) {
+        if (!course.teachers.isNullOrEmpty()) {
             textTeacher.text = course.teachers
         } else {
             textTeacher.visibility = View.GONE
