@@ -1,6 +1,6 @@
 package de.xikolo.viewmodels.base
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import io.realm.RealmChangeListener
 import io.realm.RealmObject
 

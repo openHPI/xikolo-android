@@ -1,6 +1,6 @@
 package de.xikolo.viewmodels
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import de.xikolo.models.Course
 import de.xikolo.models.dao.CoursesDao
 import de.xikolo.network.jobs.GetCourseJob

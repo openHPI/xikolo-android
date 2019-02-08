@@ -1,6 +1,6 @@
 package de.xikolo.viewmodels
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R

@@ -1,11 +1,11 @@
 package de.xikolo.presenters.course;
 
-import android.arch.lifecycle.LifecycleOwner;
 import android.net.Uri;
 
 import com.crashlytics.android.Crashlytics;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import de.xikolo.controllers.helper.CourseArea;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;

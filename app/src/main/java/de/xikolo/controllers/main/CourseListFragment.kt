@@ -1,11 +1,11 @@
 package de.xikolo.controllers.main
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.GridLayoutManager
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R

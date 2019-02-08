@@ -1,7 +1,6 @@
 package de.xikolo.presenters.course;
 
-import android.arch.lifecycle.LifecycleOwner;
-
+import androidx.lifecycle.LifecycleOwner;
 import de.xikolo.presenters.base.PresenterFactory;
 
 public class CoursePresenterFactory implements PresenterFactory<CoursePresenter> {
