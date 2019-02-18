@@ -2,16 +2,16 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.network.jobs.base.RequestJobCallback
-import de.xikolo.network.jobs.base.RequestJob
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
 import de.xikolo.models.Enrollment
-import de.xikolo.network.sync.Sync
 import de.xikolo.network.ApiService
+import de.xikolo.network.jobs.base.NetworkJob
+import de.xikolo.network.sync.Sync
+import de.xikolo.viewmodels.base.NetworkStateLiveData
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class GetCourseJob(private val courseId: String, callback: RequestJobCallback) : RequestJob(callback) {
+class GetCourseJob(private val courseId: String, networkState: NetworkStateLiveData, userRequest: Boolean) : NetworkJob(networkState, userRequest) {
 
     companion object {
         val TAG: String = GetCourseJob::class.java.simpleName
@@ -28,16 +28,16 @@ class GetCourseJob(private val courseId: String, callback: RequestJobCallback) :
             if (Config.DEBUG) Log.i(TAG, "Course received")
 
             Sync.Data.with(Course::class.java, response.body())
-                    .saveOnly()
-                    .run()
+                .saveOnly()
+                .run()
             Sync.Included.with(Enrollment::class.java, response.body())
-                    .addFilter("courseId", courseId)
-                    .run()
+                .addFilter("courseId", courseId)
+                .run()
 
-            callback?.success()
+            success()
         } else {
             if (Config.DEBUG) Log.e(TAG, "Error while fetching course")
-            callback?.error(RequestJobCallback.ErrorCode.ERROR)
+            error()
         }
     }
 

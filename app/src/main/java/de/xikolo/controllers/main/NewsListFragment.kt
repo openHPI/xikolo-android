@@ -3,7 +3,6 @@ package de.xikolo.controllers.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -98,17 +97,6 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
         if (activityCallback?.isDrawerOpen == false) {
             inflater?.inflate(R.menu.refresh, menu)
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val itemId = item?.itemId
-        when (itemId) {
-            R.id.action_refresh -> {
-                onRefresh()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     @Suppress("UNUSED_PARAMETER")

@@ -22,16 +22,11 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
         val TAG: String = CertificateListAdapter::class.java.simpleName
     }
 
-    private var courseList: MutableList<Course> = ArrayList()
+    private var courseList: List<Course> = ArrayList()
 
-    fun update(courseList: MutableList<Course>) {
+    fun update(courseList: List<Course>) {
         this.courseList = courseList
         notifyDataSetChanged()
-    }
-
-    fun clear() {
-        courseList.clear()
-        this.notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

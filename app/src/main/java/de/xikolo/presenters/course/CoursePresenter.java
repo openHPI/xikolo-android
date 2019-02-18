@@ -5,6 +5,7 @@ import android.net.Uri;
 import com.crashlytics.android.Crashlytics;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import de.xikolo.controllers.helper.CourseArea;
 import de.xikolo.managers.CourseManager;
 import de.xikolo.models.Course;
@@ -13,6 +14,8 @@ import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.presenters.base.Presenter;
 import de.xikolo.utils.DeepLinkingUtil;
 import de.xikolo.utils.LanalyticsUtil;
+import de.xikolo.viewmodels.CourseViewModel;
+import de.xikolo.viewmodels.base.NetworkCode;
 import io.realm.Realm;
 
 public class CoursePresenter extends Presenter<CourseView> {
@@ -29,9 +32,12 @@ public class CoursePresenter extends Presenter<CourseView> {
 
     private CourseArea lastTrackedCourseTab;
 
-    CoursePresenter() {
+    private LifecycleOwner lifecycleOwner;
+
+    CoursePresenter(LifecycleOwner lifecycleOwner) {
         this.courseManager = new CourseManager();
         this.realm = Realm.getDefaultInstance();
+        this.lifecycleOwner = lifecycleOwner;
     }
 
     @Override
@@ -108,17 +114,18 @@ public class CoursePresenter extends Presenter<CourseView> {
         if (getView() != null) {
             getView().showProgressDialog();
         }
-        courseManager.requestCourse(identifier, new RequestJobCallback() {
-            @Override
-            public void onSuccess() {
+
+        // ToDo Refactor this with architecture change. This is a workaround for new ViewModel architecture because CourseManager.requestCourse() does not exist anymore.
+        CourseViewModel viewModel = new CourseViewModel(identifier);
+        viewModel.getNetworkState().observe(lifecycleOwner, networkState -> {
+            if (networkState != null && networkState.getCode() == NetworkCode.SUCCESS) {
+                viewModel.getNetworkState().removeObservers(lifecycleOwner);
                 if (getView() != null) {
                     getView().hideProgressDialog();
                     initCourse(Course.find(identifier).id, tab);
                 }
-            }
-
-            @Override
-            public void onError(@NonNull ErrorCode code) {
+            } else if (networkState != null && networkState.getCode() != NetworkCode.STARTED) {
+                viewModel.getNetworkState().removeObservers(lifecycleOwner);
                 if (getView() != null) {
                     getView().hideProgressDialog();
                     getView().showErrorToast();
@@ -126,6 +133,7 @@ public class CoursePresenter extends Presenter<CourseView> {
                 }
             }
         });
+        viewModel.requestCourse(false);
     }
 
     public void enroll() {

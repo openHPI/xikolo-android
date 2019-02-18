@@ -77,20 +77,4 @@ class AnnouncementListFragment : NetworkStateFragment<AnnouncementListViewModel>
         startActivity(intent)
         LanalyticsUtil.trackVisitedAnnouncementDetail(announcementId)
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.refresh, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val itemId = item?.itemId
-        when (itemId) {
-            R.id.action_refresh -> {
-                onRefresh()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
 }
