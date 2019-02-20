@@ -63,19 +63,23 @@ public abstract class ApiService {
     // interceptor doing nothing
     private static Interceptor mockingInterceptor = chain -> chain.proceed(chain.request());
 
-    public static void enableMocking(Interceptor interceptor) {
+    public synchronized static void enableMocking(Interceptor interceptor) {
         mockingInterceptor = interceptor;
-        service = null;
+        invalidateInstance();
     }
 
-    public static void disableMocking() {
+    public synchronized static void disableMocking() {
         mockingInterceptor = chain -> chain.proceed(chain.request());
-        service = null;
+        invalidateInstance();
     }
 
     private static ApiServiceInterface service;
 
     private ApiService() {
+    }
+
+    private synchronized static void invalidateInstance() {
+        service = null;
     }
 
     public synchronized static ApiServiceInterface getInstance() {

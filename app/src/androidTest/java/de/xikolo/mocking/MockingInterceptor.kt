@@ -18,7 +18,7 @@ class MockingInterceptor(private val context: Context) : Interceptor {
                 .code(mockedResponse.statusCode)
                 .message(mockedResponse.responseString)
                 .request(chain.request())
-                .protocol(Protocol.HTTP_1_0)
+                .protocol(Protocol.HTTP_1_1)
                 .body(
                     ResponseBody.create(
                         MediaType.parse(mockedResponse.contentType),
@@ -28,7 +28,7 @@ class MockingInterceptor(private val context: Context) : Interceptor {
                 .addHeader("content-type", mockedResponse.contentType)
                 .build()
         } catch (e: Exception) {
-            // return a regular request
+            // make a regular request
             chain.proceed(chain.request())
         }
     }

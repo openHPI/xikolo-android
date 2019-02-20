@@ -9,7 +9,7 @@ import org.junit.Before
 open class BaseMockedTest {
 
     /**
-     * Adds the mocking interceptor to the ApiService singleton to satisfy API requests locally.
+     * Adds the mocking interceptor to the ApiService class statically to satisfy API requests locally.
      */
     @Before
     fun enableMocking() {
