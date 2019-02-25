@@ -13,14 +13,11 @@ class MockingData {
          * Returns null if request cannot be mocked and the {@link MockingInterceptor} should proceed without mocking.
          */
         fun getResponse(context: Context, request: Request, flavor: BuildFlavor): BaseMockedResponse? {
-            if (flavor != BuildFlavor.OPEN_SAP) {
-                return null
-            }
             return when (request.url().encodedPath()) {
-                MockedRequest.AUTHENTICATE.path -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/opensap/authenticate")
-                MockedRequest.COURSES.path      -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/opensap/courses")
-                MockedRequest.CHANNELS.path     -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/opensap/channels")
-                MockedRequest.USERS_ME.path     -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/opensap/users/me")
+                MockedRequest.AUTHENTICATE.path -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/authenticate")
+                MockedRequest.COURSES.path      -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/courses")
+                MockedRequest.CHANNELS.path     -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/channels")
+                MockedRequest.USERS_ME.path     -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/users/me")
                 else                            -> null
             }
         }

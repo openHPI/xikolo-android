@@ -10,6 +10,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import de.xikolo.R
 import de.xikolo.controllers.main.MainActivity
+import de.xikolo.mocking.base.BaseMockedTest
 import de.xikolo.ui.helper.AssertionHelper
 import de.xikolo.ui.helper.NavigationHelper
 import de.xikolo.ui.helper.NavigationHelper.Companion.WAIT_UI_INTERACTION
@@ -19,7 +20,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @LargeTest
-class NavigationTest {
+class NavigationTest : BaseMockedTest() {
 
     @Rule
     @JvmField

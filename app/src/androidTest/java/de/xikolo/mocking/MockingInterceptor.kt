@@ -14,18 +14,18 @@ class MockingInterceptor(private val context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         return try {
             val mockedResponse = MockingData.getResponse(context, chain.request(), BuildConfig.X_FLAVOR)!!
+            val responseBody = ResponseBody.create(
+                MediaType.parse(mockedResponse.contentType),
+                mockedResponse.responseString.toByteArray()
+            )
             Response.Builder()
                 .code(mockedResponse.statusCode)
                 .message(mockedResponse.responseString)
                 .request(chain.request())
                 .protocol(Protocol.HTTP_1_1)
-                .body(
-                    ResponseBody.create(
-                        MediaType.parse(mockedResponse.contentType),
-                        mockedResponse.responseString.toByteArray()
-                    )
-                )
+                .body(responseBody)
                 .addHeader("content-type", mockedResponse.contentType)
+                .addHeader("content-length", responseBody.contentLength().toString())
                 .build()
         } catch (e: Exception) {
             // make a regular request
