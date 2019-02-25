@@ -16,27 +16,14 @@ android:
     - tools # called twice to get the newest android sdk tools
     - build-tools-28.0.3
     - android-28
-    - android-23
     - extra-android-m2repository
     - extra-google-m2repository
-    - sys-img-armeabi-v7a-google_apis-23 # emulator
 
 env:
   - FLAVOR="openhpi"
   - FLAVOR="opensap"
   - FLAVOR="moochouse"
   - FLAVOR="openwho"
-
-before_script: # emulator management: creation and setup
-  - android list target # remove later
-  - android list device # remove later
-  - echo no | android create avd  --force --name xikolo --target android-23 --tag google_apis --abi armeabi-v7a --device "Nexus 6" # add/remove --tag google_apis when testing with/without them
-  - emulator -avd xikolo -no-window &
-  - android-wait-for-emulator
-  - adb shell settings put global window_animation_scale 0 &
-  - adb shell settings put global transition_animation_scale 0 &
-  - adb shell settings put global animator_duration_scale 0 &
-  - adb shell input keyevent 82 &
 
 script:
    - ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest connected${FLAVOR}DebugAndroidTest
