@@ -8,8 +8,6 @@ import de.xikolo.network.jobs.base.RequestJobCallback
 import io.realm.Realm
 import io.realm.RealmChangeListener
 import io.realm.RealmResults
-import io.realm.Sort
-import java.util.*
 
 class CourseManager {
 
@@ -50,38 +48,6 @@ class CourseManager {
         return coursePromise
     }
 
-    fun listCurrentAndFutureCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
-        .where(Course::class.java)
-        .equalTo("channelId", channelId)
-        .equalTo("external", false)
-        .greaterThanOrEqualTo("endDate", Date())
-        .sort("startDate", Sort.ASCENDING)
-        .findAll()
-
-    fun listCurrentAndPastCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
-        .where(Course::class.java)
-        .equalTo("channelId", channelId)
-        .equalTo("external", false)
-        .lessThanOrEqualTo("startDate", Date())
-        .sort("startDate", Sort.DESCENDING)
-        .findAll()
-
-    fun listPastCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
-        .where(Course::class.java)
-        .equalTo("channelId", channelId)
-        .equalTo("external", false)
-        .lessThan("endDate", Date())
-        .sort("startDate", Sort.DESCENDING)
-        .findAll()
-
-    fun listFutureCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
-        .where(Course::class.java)
-        .equalTo("channelId", channelId)
-        .equalTo("external", false)
-        .greaterThan("startDate", Date())
-        .sort("startDate", Sort.ASCENDING)
-        .findAll()
-
     fun listSectionProgressesForCourse(courseId: String, realm: Realm, listener: RealmChangeListener<RealmResults<SectionProgress>>?): RealmResults<*> {
         if (listener == null) {
             throw IllegalArgumentException("RealmChangeListener should not be null for async queries.")
@@ -96,23 +62,6 @@ class CourseManager {
         spListPromise.addChangeListener(listener)
 
         return spListPromise
-    }
-
-    fun listCoursesForChannel(channelId: String, realm: Realm, listener: RealmChangeListener<RealmResults<Course>>?): RealmResults<*> {
-        if (listener == null) {
-            throw IllegalArgumentException("RealmChangeListener should not be null for async queries.")
-        }
-
-        val courseListPromise = realm
-            .where(Course::class.java)
-            .equalTo("channelId", channelId)
-            .equalTo("external", false)
-            .sort("startDate", Sort.DESCENDING)
-            .findAllAsync()
-
-        courseListPromise.addChangeListener(listener)
-
-        return courseListPromise
     }
 
     fun requestCourseWithSections(courseId: String, callback: RequestJobCallback) {

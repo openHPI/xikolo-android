@@ -136,4 +136,49 @@ class CoursesDao(realm: Realm) : BaseDao(realm) {
             .sort("startDate", Sort.ASCENDING)
             .findAll()
 
+    fun coursesForChannel(channelId: String): LiveData<List<Course>> =
+        realm
+            .where(Course::class.java)
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .sort("startDate", Sort.DESCENDING)
+            .findAllAsync()
+            .asLiveData()
+
+    fun currentAndFutureCoursesForChannel(channelId: String): List<Course> =
+        realm
+            .where<Course>()
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .greaterThanOrEqualTo("endDate", Date())
+            .sort("startDate", Sort.ASCENDING)
+            .findAll()
+
+    fun currentAndPastCoursesForChannel(channelId: String): List<Course> =
+        realm
+            .where<Course>()
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .lessThanOrEqualTo("startDate", Date())
+            .sort("startDate", Sort.DESCENDING)
+            .findAll()
+
+    fun pastCoursesForChannel(channelId: String): List<Course> =
+        realm
+            .where<Course>()
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .lessThan("endDate", Date())
+            .sort("startDate", Sort.DESCENDING)
+            .findAll()
+
+    fun futureCoursesForChannel(channelId: String): List<Course> =
+        realm
+            .where<Course>()
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .greaterThan("startDate", Date())
+            .sort("startDate", Sort.ASCENDING)
+            .findAll()
+
 }

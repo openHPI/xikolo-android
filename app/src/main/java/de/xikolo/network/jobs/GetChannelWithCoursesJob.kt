@@ -2,15 +2,15 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.network.jobs.base.RequestJob
-import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
-import de.xikolo.network.sync.Sync
 import de.xikolo.network.ApiService
+import de.xikolo.network.jobs.base.NetworkJob
+import de.xikolo.network.sync.Sync
+import de.xikolo.viewmodels.base.NetworkStateLiveData
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class GetChannelWithCoursesJob(private val channelId: String, callback: RequestJobCallback) : RequestJob(callback) {
+class GetChannelWithCoursesJob(private val channelId: String, networkState: NetworkStateLiveData, userRequest: Boolean) : NetworkJob(networkState, userRequest) {
 
     companion object {
         val TAG: String = GetChannelWithCoursesJob::class.java.simpleName
@@ -29,10 +29,10 @@ class GetChannelWithCoursesJob(private val channelId: String, callback: RequestJ
                 .saveOnly()
                 .run()
 
-            callback?.success()
+            success()
         } else {
             if (Config.DEBUG) Log.e(TAG, "Error while fetching channel")
-            callback?.error(RequestJobCallback.ErrorCode.ERROR)
+            error()
         }
     }
 
