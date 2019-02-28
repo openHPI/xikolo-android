@@ -2,8 +2,10 @@ package de.xikolo.managers
 
 import de.xikolo.models.Course
 import de.xikolo.models.Enrollment
-import de.xikolo.models.SectionProgress
-import de.xikolo.network.jobs.*
+import de.xikolo.network.jobs.CreateEnrollmentJob
+import de.xikolo.network.jobs.DeleteEnrollmentJob
+import de.xikolo.network.jobs.GetCourseWithSectionsJob
+import de.xikolo.network.jobs.ListEnrollmentsJob
 import de.xikolo.network.jobs.base.RequestJobCallback
 import io.realm.Realm
 import io.realm.RealmChangeListener
@@ -82,22 +84,6 @@ class CourseManager {
         .sort("startDate", Sort.ASCENDING)
         .findAll()
 
-    fun listSectionProgressesForCourse(courseId: String, realm: Realm, listener: RealmChangeListener<RealmResults<SectionProgress>>?): RealmResults<*> {
-        if (listener == null) {
-            throw IllegalArgumentException("RealmChangeListener should not be null for async queries.")
-        }
-
-        val spListPromise = realm
-            .where(SectionProgress::class.java)
-            .equalTo("courseProgressId", courseId)
-            .sort("position")
-            .findAllAsync()
-
-        spListPromise.addChangeListener(listener)
-
-        return spListPromise
-    }
-
     fun listCoursesForChannel(channelId: String, realm: Realm, listener: RealmChangeListener<RealmResults<Course>>?): RealmResults<*> {
         if (listener == null) {
             throw IllegalArgumentException("RealmChangeListener should not be null for async queries.")
@@ -129,10 +115,6 @@ class CourseManager {
 
     fun deleteEnrollment(id: String, callback: RequestJobCallback) {
         DeleteEnrollmentJob(id, callback).run()
-    }
-
-    fun requestCourseProgressWithSections(courseId: String, callback: RequestJobCallback) {
-        GetCourseProgressWithSectionsJob(courseId, callback).run()
     }
 
 }
