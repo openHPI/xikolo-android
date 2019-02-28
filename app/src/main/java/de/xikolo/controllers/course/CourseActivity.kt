@@ -2,24 +2,25 @@ package de.xikolo.controllers.course
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.*
-import androidx.core.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewStub
 import android.widget.Button
+import androidx.core.app.NavUtils
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import butterknife.BindView
+import com.crashlytics.android.Crashlytics
 import com.google.android.material.tabs.TabLayout
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.controllers.base.BasePresenterActivity
+import de.xikolo.controllers.base.ViewModelActivity
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.controllers.dialogs.UnenrollDialog
@@ -28,17 +29,20 @@ import de.xikolo.controllers.helper.CourseArea
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
 import de.xikolo.events.NetworkStateEvent
+import de.xikolo.managers.CourseManager
 import de.xikolo.models.Course
-import de.xikolo.presenters.base.PresenterFactory
-import de.xikolo.presenters.course.CoursePresenter
-import de.xikolo.presenters.course.CoursePresenterFactory
-import de.xikolo.presenters.course.CourseView
+import de.xikolo.models.Enrollment
+import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.utils.DeepLinkingUtil
+import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.ShareUtil
 import de.xikolo.utils.ToastUtil
+import de.xikolo.viewmodels.CourseViewModel
+import de.xikolo.viewmodels.base.observe
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), CourseView, UnenrollDialog.Listener {
+class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.Listener {
 
     companion object {
         val TAG: String = CourseActivity::class.java.simpleName
@@ -56,6 +60,8 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
     @BindView(R.id.stub_bottom)
     lateinit var stubBottom: ViewStub
 
+    private val courseManager = CourseManager()
+
     private var progressDialog: ProgressDialogIndeterminate? = null
 
     private var adapter: CoursePagerAdapter? = null
@@ -64,83 +70,107 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
     private var enrollButton: Button? = null
 
     private var areaState: CourseArea.State = CourseArea.All
+    private var courseTab: CourseArea = CourseArea.LEARNINGS
+    private var lastTrackedCourseTab: CourseArea? = null
 
-    private var enrolled = false
+    private lateinit var course: Course
+
+    override fun createViewModel(): CourseViewModel {
+        if (intent.action === Intent.ACTION_VIEW) { // deep linking
+            courseId = DeepLinkingUtil.getCourseIdentifierFromResumeUri(intent.data)
+            setCourseTab(
+                DeepLinkingUtil.getTab(intent?.data?.path)
+            )
+        }
+        if (courseId == null) {
+            val cacheController = CacheHelper()
+            cacheController.readCachedExtras()
+            if (cacheController.course != null) {
+                courseId = cacheController.course.id
+            }
+        }
+        return if (courseId != null) {
+            CourseViewModel(courseId!!)
+        } else {
+            showErrorToast()
+            finishActivity()
+            CourseViewModel("")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blank_tabs)
         setupActionBar(false)
         enableOfflineModeToolbar(true)
+
+        setupView()
+
+        viewModel.course
+            .observe(this) {
+                course = it
+                setupCourse()
+            }
     }
 
-    override fun setupView(course: Course, courseTab: CourseArea) {
-        title = course.title
-
+    private fun setupView() {
         if (stubBottom.parent != null) {
             stubBottom.layoutResource = R.layout.content_enroll_button
             enrollBar = stubBottom.inflate()
             enrollButton = enrollBar?.findViewById(R.id.button_enroll)
-            enrollButton?.setOnClickListener { _ -> presenter.enroll() }
+            enrollButton?.setOnClickListener { enroll() }
         }
 
-        courseId = course.id
-
+        val previousCourseTab = courseTab
         adapter = CoursePagerAdapter(supportFragmentManager)
-        adapter?.let { a ->
-            viewPager.adapter = a
+        adapter?.let {
+            viewPager.adapter = it
 
             tabLayout.clearOnTabSelectedListeners()
-            tabLayout.addOnTabSelectedListener(a)
+            tabLayout.addOnTabSelectedListener(it)
             tabLayout.setupWithViewPager(viewPager)
         }
 
-        viewPager.currentItem = areaState.indexOf(courseTab)
+        setCourseTab(previousCourseTab)
+        updateViewPagerTab()
 
         hideEnrollBar()
     }
 
-    override fun onPresenterCreatedOrRestored(presenter: CoursePresenter) {
-        val action = intent.action
+    private fun updateViewPagerTab() {
+        viewPager.currentItem = areaState.indexOf(courseTab)
+    }
 
-        if (action != null && action == Intent.ACTION_VIEW) {
-            presenter.handleDeepLink(intent.data)
-        } else if (courseId == null) {
-            val cacheController = CacheHelper()
-            cacheController.readCachedExtras()
-            if (cacheController.course != null) {
-                courseId = cacheController.course.id
-            }
-            if (courseId != null) {
-                val restartIntent = CourseActivityAutoBundle.builder().courseId(courseId).build(this)
-                finish()
-                startActivity(restartIntent)
-            }
+    private fun setupCourse() {
+        Crashlytics.setString("course_id", course.id)
+
+        if (!course.isEnrolled) {
+            setAreaState(CourseArea.Locked)
+            showEnrollBar()
+        } else if (course.accessible) {
+            setAreaState(CourseArea.All)
+            hideEnrollBar()
         } else {
-            presenter.initCourse(courseId)
+            setAreaState(CourseArea.Locked)
+            showCourseUnavailableEnrollBar()
         }
+
+        title = course.title
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-
-        if (intent != null) {
-            val action = intent.action
-
-            if (action != null && action == Intent.ACTION_VIEW) {
-                presenter.handleDeepLink(intent.data)
-            }
-        }
+        updateViewPagerTab()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
 
-        if (enrolled) {
+        if (course.isEnrolled) {
             inflater.inflate(R.menu.unenroll, menu)
         }
-
         inflater.inflate(R.menu.share, menu)
+
         super.onCreateOptionsMenu(menu)
         return true
     }
@@ -153,7 +183,7 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
                 return true
             }
             R.id.action_share    -> {
-                ShareUtil.shareCourseLink(this, courseId!!)
+                ShareUtil.shareCourseLink(this, course.id)
                 return true
             }
             R.id.action_unenroll -> {
@@ -166,77 +196,129 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
         return super.onOptionsItemSelected(item)
     }
 
+    private fun setCourseTab(tab: CourseArea) {
+        courseTab = tab
+        courseId?.let {
+            if (lastTrackedCourseTab !== courseTab) {
+                when (tab) {
+                    CourseArea.DISCUSSIONS   -> LanalyticsUtil.trackVisitedPinboard(it)
+                    CourseArea.PROGRESS      -> LanalyticsUtil.trackVisitedProgress(it)
+                    CourseArea.ANNOUNCEMENTS -> LanalyticsUtil.trackVisitedAnnouncements(it)
+                    CourseArea.RECAP         -> LanalyticsUtil.trackVisitedRecap(it)
+                    else                     -> return
+                }
+            }
+        }
+        lastTrackedCourseTab = courseTab
+    }
+
     override fun onDialogPositiveClick(dialog: DialogFragment) {
-        presenter.unenroll()
+        unenroll()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         adapter?.getItem(viewPager.currentItem)?.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun setAreaState(state: CourseArea.State) {
+    private fun setAreaState(state: CourseArea.State) {
         areaState = state
         adapter?.notifyDataSetChanged()
     }
 
-    override fun hideEnrollBar() {
-        enrolled = true
+    private fun hideEnrollBar() {
         enrollBar?.visibility = View.GONE
     }
 
-    override fun showEnrollBar() {
-        enrolled = false
+    private fun showEnrollBar() {
         enrollBar?.visibility = View.VISIBLE
         enrollButton?.isEnabled = true
         enrollButton?.isClickable = true
         enrollButton?.setText(R.string.btn_enroll)
     }
 
-    override fun showCourseUnavailableEnrollBar() {
-        enrolled = true
+    private fun showCourseUnavailableEnrollBar() {
         enrollBar?.visibility = View.VISIBLE
         enrollButton?.isEnabled = false
         enrollButton?.isClickable = false
         enrollButton?.setText(R.string.btn_starts_soon)
     }
 
-    override fun finishActivity() {
+    private fun finishActivity() {
         finish()
     }
 
-    override fun restartActivity() {
+    private fun restartActivity() {
         finish()
         startActivity(intent)
     }
 
-    override fun showProgressDialog() {
+    private fun showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = ProgressDialogIndeterminateAutoBundle.builder().build()
         }
         progressDialog?.show(supportFragmentManager, ProgressDialogIndeterminate.TAG)
     }
 
-    override fun hideProgressDialog() {
+    private fun hideProgressDialog() {
         if (progressDialog?.dialog?.isShowing == true) {
             progressDialog?.dismiss()
         }
     }
 
-    override fun showErrorToast() {
+    private fun showErrorToast() {
         ToastUtil.show(R.string.error)
     }
 
-    override fun showNoNetworkToast() {
+    private fun showNoNetworkToast() {
         ToastUtil.show(R.string.toast_no_network)
     }
 
-    override fun showLoginRequiredMessage() {
+    private fun showLoginRequiredMessage() {
         ToastUtil.show(R.string.toast_please_log_in)
     }
 
-    override fun openLogin() {
+    private fun openLogin() {
         val intent = LoginActivityAutoBundle.builder().build(this)
         startActivity(intent)
+    }
+
+    private fun enroll() {
+        showProgressDialog()
+        courseManager.createEnrollment(course.id, object : RequestJobCallback() {
+            public override fun onSuccess() {
+                restartActivity()
+                hideProgressDialog()
+            }
+
+            public override fun onError(code: RequestJobCallback.ErrorCode) {
+                hideProgressDialog()
+                if (code === RequestJobCallback.ErrorCode.NO_NETWORK) {
+                    showNoNetworkToast()
+                } else if (code === RequestJobCallback.ErrorCode.NO_AUTH) {
+                    showLoginRequiredMessage()
+                    openLogin()
+                }
+            }
+        })
+    }
+
+    private fun unenroll() {
+        showProgressDialog()
+        courseManager.deleteEnrollment(Enrollment.getForCourse(course.id).id, object : RequestJobCallback() {
+            public override fun onSuccess() {
+                finishActivity()
+                hideProgressDialog()
+            }
+
+            public override fun onError(code: RequestJobCallback.ErrorCode) {
+                hideProgressDialog()
+                if (code === RequestJobCallback.ErrorCode.NO_NETWORK) {
+                    showNoNetworkToast()
+                } else {
+                    showErrorToast()
+                }
+            }
+        })
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -252,10 +334,6 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
             tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.offline_mode_toolbar))
             setColorScheme(R.color.offline_mode_toolbar, R.color.offline_mode_statusbar)
         }
-    }
-
-    override fun getPresenterFactory(): PresenterFactory<CoursePresenter> {
-        return CoursePresenterFactory(this)
     }
 
     inner class CoursePagerAdapter internal constructor(private val fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager), TabLayout.OnTabSelectedListener {
@@ -274,23 +352,21 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
             val name = makeFragmentName(R.id.viewpager, position)
             var fragment: Fragment? = fragmentManager.findFragmentByTag(name)
             if (fragment == null) {
-                courseId?.let { courseId ->
-                    when (areaState.get(position)) {
-                        CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(courseId).build()
-                        CourseArea.DISCUSSIONS    -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
-                            .inAppLinksEnabled(true)
-                            .externalLinksEnabled(false)
-                            .build()
-                        CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(courseId).build()
-                        CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(courseId).build()
-                        CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(courseId).build()
-                        CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(courseId).build()
-                        CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build()
-                        CourseArea.RECAP          -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
-                            .inAppLinksEnabled(true)
-                            .externalLinksEnabled(false)
-                            .build()
-                    }
+                when (areaState.get(position)) {
+                    CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(course.id).build()
+                    CourseArea.DISCUSSIONS    -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
+                        .inAppLinksEnabled(true)
+                        .externalLinksEnabled(false)
+                        .build()
+                    CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(course.id).build()
+                    CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(course.id).build()
+                    CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(course.id).build()
+                    CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(course.id).build()
+                    CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(course.id).build()
+                    CourseArea.RECAP          -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
+                        .inAppLinksEnabled(true)
+                        .externalLinksEnabled(false)
+                        .build()
                 }
             }
             return fragment
@@ -303,15 +379,11 @@ class CourseActivity : BasePresenterActivity<CoursePresenter, CourseView>(), Cou
         override fun onTabSelected(tab: TabLayout.Tab) {
             val tabPosition = tabLayout.selectedTabPosition
             viewPager.setCurrentItem(tabPosition, true)
-            presenter.setCourseTab(areaState.get(tabPosition))
+            setCourseTab(areaState.get(tabPosition))
         }
 
-        override fun onTabUnselected(tab: TabLayout.Tab) {
+        override fun onTabUnselected(tab: TabLayout.Tab) {}
 
-        }
-
-        override fun onTabReselected(tab: TabLayout.Tab) {
-
-        }
+        override fun onTabReselected(tab: TabLayout.Tab) {}
     }
 }
