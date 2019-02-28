@@ -2,12 +2,16 @@ package de.xikolo.managers
 
 import de.xikolo.models.Course
 import de.xikolo.models.Enrollment
-import de.xikolo.models.SectionProgress
-import de.xikolo.network.jobs.*
+import de.xikolo.network.jobs.CreateEnrollmentJob
+import de.xikolo.network.jobs.DeleteEnrollmentJob
+import de.xikolo.network.jobs.GetCourseWithSectionsJob
+import de.xikolo.network.jobs.ListEnrollmentsJob
 import de.xikolo.network.jobs.base.RequestJobCallback
 import io.realm.Realm
 import io.realm.RealmChangeListener
 import io.realm.RealmResults
+import io.realm.Sort
+import java.util.*
 
 class CourseManager {
 
@@ -48,20 +52,53 @@ class CourseManager {
         return coursePromise
     }
 
-    fun listSectionProgressesForCourse(courseId: String, realm: Realm, listener: RealmChangeListener<RealmResults<SectionProgress>>?): RealmResults<*> {
+    fun listCurrentAndFutureCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
+        .where(Course::class.java)
+        .equalTo("channelId", channelId)
+        .equalTo("external", false)
+        .greaterThanOrEqualTo("endDate", Date())
+        .sort("startDate", Sort.ASCENDING)
+        .findAll()
+
+    fun listCurrentAndPastCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
+        .where(Course::class.java)
+        .equalTo("channelId", channelId)
+        .equalTo("external", false)
+        .lessThanOrEqualTo("startDate", Date())
+        .sort("startDate", Sort.DESCENDING)
+        .findAll()
+
+    fun listPastCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
+        .where(Course::class.java)
+        .equalTo("channelId", channelId)
+        .equalTo("external", false)
+        .lessThan("endDate", Date())
+        .sort("startDate", Sort.DESCENDING)
+        .findAll()
+
+    fun listFutureCoursesForChannel(realm: Realm, channelId: String): List<Course> = realm
+        .where(Course::class.java)
+        .equalTo("channelId", channelId)
+        .equalTo("external", false)
+        .greaterThan("startDate", Date())
+        .sort("startDate", Sort.ASCENDING)
+        .findAll()
+
+    fun listCoursesForChannel(channelId: String, realm: Realm, listener: RealmChangeListener<RealmResults<Course>>?): RealmResults<*> {
         if (listener == null) {
             throw IllegalArgumentException("RealmChangeListener should not be null for async queries.")
         }
 
-        val spListPromise = realm
-            .where(SectionProgress::class.java)
-            .equalTo("courseProgressId", courseId)
-            .sort("position")
+        val courseListPromise = realm
+            .where(Course::class.java)
+            .equalTo("channelId", channelId)
+            .equalTo("external", false)
+            .sort("startDate", Sort.DESCENDING)
             .findAllAsync()
 
-        spListPromise.addChangeListener(listener)
+        courseListPromise.addChangeListener(listener)
 
-        return spListPromise
+        return courseListPromise
     }
 
     fun requestCourseWithSections(courseId: String, callback: RequestJobCallback) {
@@ -78,10 +115,6 @@ class CourseManager {
 
     fun deleteEnrollment(id: String, callback: RequestJobCallback) {
         DeleteEnrollmentJob(id, callback).run()
-    }
-
-    fun requestCourseProgressWithSections(courseId: String, callback: RequestJobCallback) {
-        GetCourseProgressWithSectionsJob(courseId, callback).run()
     }
 
 }
