@@ -4,10 +4,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import java.util.Date;
+
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
@@ -16,49 +22,98 @@ import de.xikolo.config.GlideApp;
 import de.xikolo.controllers.base.BaseCourseListAdapter;
 import de.xikolo.controllers.helper.CourseListFilter;
 import de.xikolo.models.Course;
+import de.xikolo.models.CourseDate;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.SectionList;
+import de.xikolo.utils.TimeUtil;
 
 public class CourseListAdapter extends BaseCourseListAdapter {
 
     public static final String TAG = CourseListAdapter.class.getSimpleName();
 
-    private static final int ITEM_VIEW_TYPE_HEADER = 0;
-    private static final int ITEM_VIEW_TYPE_ITEM = 1;
-
+    private OnCourseDatesClickListener onCourseDatesClickListener;
     private CourseListFilter courseFilter;
 
-    public CourseListAdapter(Fragment fragment, OnCourseButtonClickListener callback, CourseListFilter courseFilter) {
+    private CourseDate nextDate;
+    private Long todaysDateCount = 0L;
+    private Long nextSevenDaysDateCount = 0L;
+    private Long futureDateCount = 0L;
+
+    public CourseListAdapter(Fragment fragment, CourseListFilter courseFilter, OnCourseButtonClickListener onCourseButtonClickListener, OnCourseDatesClickListener onCourseDatesClickListener) {
         this.fragment = fragment;
         this.courseList = new SectionList<>();
-        this.callback = callback;
         this.courseFilter = courseFilter;
+        this.onCourseButtonClickListener = onCourseButtonClickListener;
+        this.onCourseDatesClickListener = onCourseDatesClickListener;
+    }
+
+    public void update(CourseDate nextDate, Long todaysDateCount, Long nextSevenDaysDateCount, Long futureDateCount) {
+        this.nextDate = nextDate;
+        this.todaysDateCount = todaysDateCount;
+        this.nextSevenDaysDateCount = nextSevenDaysDateCount;
+        this.futureDateCount = futureDateCount;
+        this.notifyDataSetChanged();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (courseList.isHeader(position)) {
-            return ITEM_VIEW_TYPE_HEADER;
+        if (courseFilter == CourseListFilter.MY) {
+            if (position == 1)
+                return ITEM_VIEW_TYPE_META;
+            else if (position == 0 || courseList.isHeader(position))
+                return ITEM_VIEW_TYPE_HEADER;
+            else
+                return ITEM_VIEW_TYPE_ITEM;
         } else {
-            return ITEM_VIEW_TYPE_ITEM;
+            if (courseList.isHeader(position))
+                return ITEM_VIEW_TYPE_HEADER;
+            else
+                return ITEM_VIEW_TYPE_ITEM;
         }
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == ITEM_VIEW_TYPE_HEADER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
-            return new HeaderViewHolder(view);
-        } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_list, parent, false);
-            return new CourseViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case ITEM_VIEW_TYPE_META:
+                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_dates, parent, false);
+                return new CourseDatesViewHolder(view1);
+            case ITEM_VIEW_TYPE_HEADER:
+                View view2 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
+                return new HeaderViewHolder(view2);
+            default:
+                View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_list, parent, false);
+                return new CourseViewHolder(view3);
         }
     }
 
     @SuppressWarnings("SetTextI18n")
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof HeaderViewHolder) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof CourseDatesViewHolder) {
+            CourseDatesViewHolder viewHolder = (CourseDatesViewHolder) holder;
+
+            viewHolder.container.setOnClickListener(v -> onCourseDatesClickListener.onCourseDatesClicked());
+
+            if (nextDate != null) {
+                viewHolder.textNextCourse.setText(
+                    String.format(
+                        App.getInstance().getString(R.string.course_date_next),
+                        TimeUtil.getTimeLeftString(nextDate.getDate().getTime() - new Date().getTime()),
+                        "Calliope mini erfolgreich in der Schule einsetzen"
+                    )
+                );
+                viewHolder.titleOfNextDate.setText(nextDate.getTitle());
+            } else {
+                viewHolder.titleOfNextDate.setVisibility(View.GONE);
+                viewHolder.textNextCourse.setVisibility(View.GONE);
+            }
+
+            viewHolder.numberOfDatesToday.setText(String.valueOf(todaysDateCount));
+            viewHolder.numberOfDatesWeek.setText(String.valueOf(nextSevenDaysDateCount));
+            viewHolder.numberOfAllDates.setText(String.valueOf(futureDateCount));
+        } else if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
 
             String header = (String) courseList.getItem(position);
@@ -121,30 +176,62 @@ public class CourseListAdapter extends BaseCourseListAdapter {
             viewHolder.buttonCourseAction.setEnabled(true);
 
             viewHolder.buttonCourseDetails.setVisibility(View.VISIBLE);
-            viewHolder.buttonCourseDetails.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+            viewHolder.buttonCourseDetails.setOnClickListener(v -> onCourseButtonClickListener.onDetailButtonClicked(course.id));
 
             if (course.isEnrolled() && course.accessible) {
-                viewHolder.layout.setOnClickListener(v -> callback.onContinueButtonClicked(course.id));
+                viewHolder.layout.setOnClickListener(v -> onCourseButtonClickListener.onContinueButtonClicked(course.id));
 
                 viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_continue_course));
-                viewHolder.buttonCourseAction.setOnClickListener(v -> callback.onContinueButtonClicked(course.id));
+                viewHolder.buttonCourseAction.setOnClickListener(v -> onCourseButtonClickListener.onContinueButtonClicked(course.id));
 
                 viewHolder.buttonCourseDetails.setVisibility(View.GONE);
 
             } else if (course.isEnrolled() && !course.accessible) {
-                viewHolder.layout.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+                viewHolder.layout.setOnClickListener(v -> onCourseButtonClickListener.onDetailButtonClicked(course.id));
 
                 viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_starts_soon));
                 viewHolder.buttonCourseAction.setEnabled(false);
                 viewHolder.buttonCourseAction.setClickable(false);
 
             } else {
-                viewHolder.layout.setOnClickListener(v -> callback.onDetailButtonClicked(course.id));
+                viewHolder.layout.setOnClickListener(v -> onCourseButtonClickListener.onDetailButtonClicked(course.id));
 
                 viewHolder.buttonCourseAction.setText(context.getString(R.string.btn_enroll));
-                viewHolder.buttonCourseAction.setOnClickListener(v -> callback.onEnrollButtonClicked(course.id));
+                viewHolder.buttonCourseAction.setOnClickListener(v -> onCourseButtonClickListener.onEnrollButtonClicked(course.id));
             }
         }
+    }
+
+    public interface OnCourseDatesClickListener {
+
+        void onCourseDatesClicked();
+    }
+
+    static class CourseDatesViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.container)
+        View container;
+
+        @BindView(R.id.textNextCourse)
+        TextView textNextCourse;
+
+        @BindView(R.id.textTitleOfNextDate)
+        TextView titleOfNextDate;
+
+        @BindView(R.id.textNumberOfDatesToday)
+        TextView numberOfDatesToday;
+
+        @BindView(R.id.textNumberOfDatesWeek)
+        TextView numberOfDatesWeek;
+
+        @BindView(R.id.textNumberOfAllDates)
+        TextView numberOfAllDates;
+
+        CourseDatesViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+
     }
 
 }

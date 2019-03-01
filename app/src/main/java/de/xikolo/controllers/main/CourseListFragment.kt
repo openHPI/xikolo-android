@@ -22,7 +22,9 @@ import de.xikolo.models.Course
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.utils.SectionList
+import de.xikolo.utils.ToastUtil
 import de.xikolo.viewmodels.main.CourseListViewModel
+import de.xikolo.viewmodels.base.observe
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
 import org.greenrobot.eventbus.EventBus
@@ -64,7 +66,7 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        courseListAdapter = CourseListAdapter(this, object : BaseCourseListAdapter.OnCourseButtonClickListener {
+        courseListAdapter = CourseListAdapter(this, filter, object : BaseCourseListAdapter.OnCourseButtonClickListener {
             override fun onEnrollButtonClicked(courseId: String) {
                 enroll(courseId)
             }
@@ -76,7 +78,7 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
             override fun onDetailButtonClicked(courseId: String) {
                 enterCourseDetails(courseId)
             }
-        }, filter)
+        }, CourseListAdapter.OnCourseDatesClickListener { ToastUtil.show("click") })
 
         recyclerView.adapter = courseListAdapter
 
@@ -103,20 +105,31 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
             }
         ))
 
-        registerObserver()
+        registerObservers()
     }
 
-    private fun registerObserver() {
+    private fun registerObservers() {
         viewModel.courses
             .observe(this) {
                 // as new course list is loaded into the database it is accessed via the non-async query
                 courseList = viewModel.sectionedCourseList
                 showCourseList()
             }
+
+        viewModel.dates
+            .observe(this) {
+                courseListAdapter.update(
+                    viewModel.nextDate,
+                    viewModel.todaysDateCount,
+                    viewModel.nextSevenDaysDateCount,
+                    viewModel.futureDateCount
+                )
+            }
     }
 
-    private fun unregisterObserver() {
+    private fun unregisterObservers() {
         viewModel.courses.removeObservers(this)
+        viewModel.dates.removeObservers(this)
     }
 
     override fun onStart() {
@@ -177,14 +190,14 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
     }
 
     fun onSearch(query: String?) {
-        unregisterObserver()
+        unregisterObservers()
         if (query != null && query.isNotEmpty()) {
             val results = viewModel.searchCourses(query)
             courseList.clear()
             courseList.add(null, results)
             updateCourseList()
         } else {
-            registerObserver()
+            registerObservers()
         }
     }
 

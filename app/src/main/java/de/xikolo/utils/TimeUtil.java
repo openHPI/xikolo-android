@@ -61,6 +61,22 @@ public class TimeUtil {
     }
 
     /**
+     * Formats milliseconds to human-readable time string.
+     * @param millis milliseconds
+     * @return String in format "2d 4h 12m"
+     */
+    public static String getTimeLeftString(long millis) {
+        long days = TimeUnit.MILLISECONDS.toDays(millis);
+        long hours = TimeUnit.MILLISECONDS.toHours(millis - TimeUnit.DAYS.toMillis(days));
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis - TimeUnit.DAYS.toMillis(days) - TimeUnit.HOURS.toMillis(hours));
+        return String.format(Locale.US, "%dd %dh %sm",
+            days,
+            hours,
+            minutes
+        );
+    }
+
+    /**
      * Formats minutes and seconds to human-readable time string.
      * @param minutes minutes
      * @param seconds seconds

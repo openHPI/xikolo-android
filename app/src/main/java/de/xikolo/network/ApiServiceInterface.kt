@@ -71,6 +71,11 @@ interface ApiServiceInterface {
     @GET("course-progresses/{id}?include=section-progresses")
     fun getCourseProgressWithSections(@Path("id") id: String): Call<CourseProgress.JsonModel>
 
+    // Dates
+
+    @GET("course-dates")
+    fun listDates(): Call<Array<CourseDate.JsonModel>>
+
     // Subtitle
 
     @GET("subtitle-tracks?include=cues")

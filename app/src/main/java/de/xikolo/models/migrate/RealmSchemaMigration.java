@@ -1,5 +1,7 @@
 package de.xikolo.models.migrate;
 
+import java.util.Date;
+
 import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
@@ -91,6 +93,16 @@ public class RealmSchemaMigration implements RealmMigration {
 
             schema.get("Video")
                 .addRealmListField("subtitles", schema.get("VideoSubtitles"));
+
+            oldVersion++;
+        }
+
+        if (oldVersion == 5) {
+            schema.create("CourseDate")
+                .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+                .addField("type", String.class)
+                .addField("title", String.class)
+                .addField("date", Date.class);
 
             oldVersion++;
         }

@@ -20,9 +20,13 @@ public abstract class BaseCourseListAdapter extends RecyclerView.Adapter<Recycle
 
     public static final String TAG = BaseCourseListAdapter.class.getSimpleName();
 
+    public static final int ITEM_VIEW_TYPE_META = 0;
+    public static final int ITEM_VIEW_TYPE_HEADER = 1;
+    public static final int ITEM_VIEW_TYPE_ITEM = 2;
+
     protected SectionList<String, List<Course>> courseList;
 
-    protected OnCourseButtonClickListener callback;
+    protected OnCourseButtonClickListener onCourseButtonClickListener;
 
     protected Fragment fragment;
 
@@ -30,6 +34,8 @@ public abstract class BaseCourseListAdapter extends RecyclerView.Adapter<Recycle
         this.courseList = courseList;
         this.notifyDataSetChanged();
     }
+
+    public abstract int getItemViewType(int position);
 
     public boolean isHeader(int position) {
         return courseList.isHeader(position);
@@ -52,7 +58,6 @@ public abstract class BaseCourseListAdapter extends RecyclerView.Adapter<Recycle
         void onContinueButtonClicked(String courseId);
 
         void onDetailButtonClicked(String courseId);
-
     }
 
     public static class CourseViewHolder extends RecyclerView.ViewHolder {

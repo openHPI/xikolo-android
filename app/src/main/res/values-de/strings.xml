@@ -169,6 +169,12 @@
     <string name="course_date_self_paced">Selbststudium</string>
     <string name="course_date_beginning">Ab %s</string>
 
+    <string name="course_dates_title">Terminübersicht</string>
+    <string name="course_date_next">Nächster Termin in %1$s: %2$s</string>
+    <string name="course_dates_today">Heute</string>
+    <string name="course_dates_week">Kommende 7 Tage</string>
+    <string name="course_dates_all">Alle</string>
+
     <string name="course_qualified_certificate">Qualifiziertes Zertifikat</string>
     <string name="course_record_of_achievement">Zeugnis</string>
     <string name="course_confirmation_of_participation">Teilnahmebestätigung</string>
