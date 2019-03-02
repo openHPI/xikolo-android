@@ -90,7 +90,7 @@ public class TimeUtil {
         long days = TimeUnit.MILLISECONDS.toDays(millis);
         long hours = TimeUnit.MILLISECONDS.toHours(millis - TimeUnit.DAYS.toMillis(days));
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis - TimeUnit.DAYS.toMillis(days) - TimeUnit.HOURS.toMillis(hours));
-        return String.format(Locale.getDefault(), context.getString(R.string.time_left),
+        return String.format(Locale.getDefault(), context.getString(R.string.time_left_format),
             days,
             hours,
             minutes

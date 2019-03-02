@@ -106,9 +106,12 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : R
             viewHolder.textDateTitle.text = courseDate.title
 
             courseDate.date?.time?.let {
-                viewHolder.textTimeLeft.text = TimeUtil.getTimeLeftString(
-                    it - Date().time,
-                    App.getInstance()
+                viewHolder.textTimeLeft.text = String.format(
+                    App.getInstance().getString(R.string.time_left),
+                    TimeUtil.getTimeLeftString(
+                        it - Date().time,
+                        App.getInstance()
+                    )
                 )
             }
         }

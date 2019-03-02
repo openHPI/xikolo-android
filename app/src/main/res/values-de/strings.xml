@@ -172,7 +172,7 @@
     <string name="course_date_beginning">Ab %s</string>
 
     <string name="course_dates_title">Terminübersicht</string>
-    <string name="course_date_next">Nächster Termin: %1$s</string>
+    <string name="course_date_next">Nächster Termin in %1$s</string>
     <string name="course_dates_today">Heute</string>
     <string name="course_dates_week">Kommende 7 Tage</string>
     <string name="course_dates_later">Später</string>
@@ -181,7 +181,8 @@
     <string name="course_date_type_section_start">Sektionsstart</string>
     <string name="course_date_type_submission_publishing">Aufgabe</string>
     <string name="course_date_type_submission_deadline">Abgabefrist</string> <!-- ToDo -->
-    <string name="time_left">%dt %dh %dm verbleiben</string>
+    <string name="time_left">%1$s verbleiben</string>
+    <string name="time_left_format">%dt %dh %dm</string>
 
     <string name="course_qualified_certificate">Qualifiziertes Zertifikat</string>
     <string name="course_record_of_achievement">Zeugnis</string>

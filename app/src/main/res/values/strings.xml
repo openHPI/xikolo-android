@@ -176,7 +176,7 @@
     <string name="course_date_beginning">Beginning %s</string>
 
     <string name="course_dates_title">Date overview</string>
-    <string name="course_date_next">Next date: %1$s</string>
+    <string name="course_date_next">Next date in %1$s</string>
     <string name="course_dates_today">Today</string>
     <string name="course_dates_week">Next 7 days</string>
     <string name="course_dates_later">Later</string>
@@ -185,7 +185,8 @@
     <string name="course_date_type_section_start">Section start</string>
     <string name="course_date_type_submission_publishing">Submission publishing</string>
     <string name="course_date_type_submission_deadline">Submission deadline</string>
-    <string name="time_left">%dd %dh %dm left</string>
+    <string name="time_left"> %1$s left</string>
+    <string name="time_left_format">%dd %dh %dm</string>
 
     <string name="course_qualified_certificate">Qualified Certificate</string>
     <string name="course_record_of_achievement">Record of Achievement</string>
