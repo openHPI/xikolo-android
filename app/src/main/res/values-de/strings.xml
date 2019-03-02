@@ -15,6 +15,8 @@
 
     <string name="title_section_channels">Channels</string>
 
+    <string name="title_section_dates">Terminübersicht</string>
+
     <string name="title_section_beta">Beta</string>
 
     <!-- -->
@@ -170,10 +172,16 @@
     <string name="course_date_beginning">Ab %s</string>
 
     <string name="course_dates_title">Terminübersicht</string>
-    <string name="course_date_next">Nächster Termin in %1$s: %2$s</string>
+    <string name="course_date_next">Nächster Termin: %1$s</string>
     <string name="course_dates_today">Heute</string>
     <string name="course_dates_week">Kommende 7 Tage</string>
+    <string name="course_dates_later">Später</string>
     <string name="course_dates_all">Alle</string>
+    <string name="course_date_type_course_start">Kursstart</string>
+    <string name="course_date_type_section_start">Sektionsstart</string>
+    <string name="course_date_type_submission_publishing">Aufgabe</string>
+    <string name="course_date_type_submission_deadline">Abgabefrist</string> <!-- ToDo -->
+    <string name="time_left">%dt %dh %dm übrig</string>
 
     <string name="course_qualified_certificate">Qualifiziertes Zertifikat</string>
     <string name="course_record_of_achievement">Zeugnis</string>

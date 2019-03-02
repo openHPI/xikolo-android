@@ -29,22 +29,54 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
     }
 
     val dates: LiveData<List<CourseDate>> by lazy {
-        datesDao.futureDates()
+        datesDao.dates()
     }
 
-    val todaysDateCount: Long
+    val sectionedDateList: SectionList<String, List<CourseDate>>
         get() {
-            return datesDao.dateCountToday()
+            val dateList = SectionList<String, List<CourseDate>>()
+            var subList: List<CourseDate> = datesDao.datesToday()
+            if (subList.isNotEmpty()) {
+                dateList.add(
+                    App.getInstance().getString(R.string.course_dates_today),
+                    subList
+                )
+            }
+            subList = datesDao.datesNextSevenDays().minus(datesDao.datesToday())
+            if (subList.isNotEmpty()) {
+                dateList.add(
+                    App.getInstance().getString(R.string.course_dates_week),
+                    subList
+                )
+            }
+            subList = datesDao.datesInFuture().minus(datesDao.datesNextSevenDays())
+            if (subList.isNotEmpty()) {
+                dateList.add(
+                    if (dateList.size() > 0) {
+                        App.getInstance().getString(R.string.course_dates_later)
+                    } else {
+                        App.getInstance().getString(R.string.course_dates_all)
+                    },
+                    subList
+                )
+            }
+
+            return dateList
         }
 
-    val nextSevenDaysDateCount: Long
+    val todaysDateCount: Int
         get() {
-            return datesDao.dateCountNextSevenDays()
+            return datesDao.datesToday().size
         }
 
-    val futureDateCount: Long
+    val nextSevenDaysDateCount: Int
         get() {
-            return datesDao.dateCountFuture()
+            return datesDao.datesNextSevenDays().size
+        }
+
+    val futureDateCount: Int
+        get() {
+            return datesDao.datesInFuture().size
         }
 
     val nextDate: CourseDate?
@@ -61,7 +93,7 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
             return if (filter == CourseListFilter.ALL) {
                 courseListFilterAll
             } else {
-                courseListFilterMyWithDates
+                courseListFilterMyWithDateOverview
             }
         }
 
@@ -102,7 +134,7 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
             return courseList
         }
 
-    private val courseListFilterMyWithDates: SectionList<String, List<Course>>
+    private val courseListFilterMyWithDateOverview: SectionList<String, List<Course>>
         get() {
             val courseList = SectionList<String, List<Course>>()
 
@@ -146,7 +178,7 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
         ListCoursesJob(networkState, userRequest).run()
     }
 
-    private fun requestDateList(userRequest: Boolean) {
+    fun requestDateList(userRequest: Boolean) {
         ListDatesJob(networkState, userRequest).run()
     }
 }

@@ -35,9 +35,9 @@ public class CourseListAdapter extends BaseCourseListAdapter {
     private CourseListFilter courseFilter;
 
     private CourseDate nextDate;
-    private Long todaysDateCount = 0L;
-    private Long nextSevenDaysDateCount = 0L;
-    private Long futureDateCount = 0L;
+    private int todaysDateCount = 0;
+    private int nextSevenDaysDateCount = 0;
+    private int futureDateCount = 0;
 
     public CourseListAdapter(Fragment fragment, CourseListFilter courseFilter, OnCourseButtonClickListener onCourseButtonClickListener, OnCourseDatesClickListener onCourseDatesClickListener) {
         this.fragment = fragment;
@@ -47,7 +47,7 @@ public class CourseListAdapter extends BaseCourseListAdapter {
         this.onCourseDatesClickListener = onCourseDatesClickListener;
     }
 
-    public void update(CourseDate nextDate, Long todaysDateCount, Long nextSevenDaysDateCount, Long futureDateCount) {
+    public void update(CourseDate nextDate, int todaysDateCount, int nextSevenDaysDateCount, int futureDateCount) {
         this.nextDate = nextDate;
         this.todaysDateCount = todaysDateCount;
         this.nextSevenDaysDateCount = nextSevenDaysDateCount;
@@ -58,9 +58,9 @@ public class CourseListAdapter extends BaseCourseListAdapter {
     @Override
     public int getItemViewType(int position) {
         if (courseFilter == CourseListFilter.MY) {
-            if (position == 1)
+            if (position == 1) // the course overview with a header at position 0
                 return ITEM_VIEW_TYPE_META;
-            else if (position == 0 || courseList.isHeader(position))
+            else if (courseList.isHeader(position))
                 return ITEM_VIEW_TYPE_HEADER;
             else
                 return ITEM_VIEW_TYPE_ITEM;
@@ -77,14 +77,17 @@ public class CourseListAdapter extends BaseCourseListAdapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_VIEW_TYPE_META:
-                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_dates, parent, false);
-                return new CourseDatesViewHolder(view1);
+                return new CourseDatesViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.content_date_overview, parent, false)
+                );
             case ITEM_VIEW_TYPE_HEADER:
-                View view2 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
-                return new HeaderViewHolder(view2);
+                return new HeaderViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false)
+                );
             default:
-                View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_list, parent, false);
-                return new CourseViewHolder(view3);
+                return new CourseViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_list, parent, false)
+                );
         }
     }
 
@@ -97,17 +100,24 @@ public class CourseListAdapter extends BaseCourseListAdapter {
             viewHolder.container.setOnClickListener(v -> onCourseDatesClickListener.onCourseDatesClicked());
 
             if (nextDate != null) {
-                viewHolder.textNextCourse.setText(
+                viewHolder.textNextDate.setText(
                     String.format(
                         App.getInstance().getString(R.string.course_date_next),
-                        TimeUtil.getTimeLeftString(nextDate.getDate().getTime() - new Date().getTime()),
-                        "Calliope mini erfolgreich in der Schule einsetzen"
+                        TimeUtil.getTimeLeftString(
+                            nextDate.getDate().getTime() - new Date().getTime(),
+                            App.getInstance()
+                        )
                     )
                 );
+                viewHolder.textNextCourse.setText(
+                    Course.get(nextDate.getCourseId()).title
+                );
+
                 viewHolder.titleOfNextDate.setText(nextDate.getTitle());
+
+                viewHolder.nextDateContainer.setVisibility(View.VISIBLE);
             } else {
-                viewHolder.titleOfNextDate.setVisibility(View.GONE);
-                viewHolder.textNextCourse.setVisibility(View.GONE);
+                viewHolder.nextDateContainer.setVisibility(View.GONE);
             }
 
             viewHolder.numberOfDatesToday.setText(String.valueOf(todaysDateCount));
@@ -211,6 +221,12 @@ public class CourseListAdapter extends BaseCourseListAdapter {
 
         @BindView(R.id.container)
         View container;
+
+        @BindView(R.id.nextDateContainer)
+        ViewGroup nextDateContainer;
+
+        @BindView(R.id.textNextDate)
+        TextView textNextDate;
 
         @BindView(R.id.textNextCourse)
         TextView textNextCourse;

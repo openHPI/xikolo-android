@@ -1,5 +1,6 @@
 package de.xikolo.controllers.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -11,6 +12,7 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.controllers.course.CourseActivityAutoBundle
+import de.xikolo.controllers.dates.DateListActivity
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.events.LoginEvent
@@ -22,6 +24,7 @@ import de.xikolo.models.Course
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.utils.SectionList
+import de.xikolo.viewmodels.main.CourseListViewModel
 import de.xikolo.utils.ToastUtil
 import de.xikolo.viewmodels.main.CourseListViewModel
 import de.xikolo.viewmodels.base.observe
@@ -66,19 +69,28 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        courseListAdapter = CourseListAdapter(this, filter, object : BaseCourseListAdapter.OnCourseButtonClickListener {
-            override fun onEnrollButtonClicked(courseId: String) {
-                enroll(courseId)
-            }
+        courseListAdapter = CourseListAdapter(
+            this,
+            filter,
+            object : BaseCourseListAdapter.OnCourseButtonClickListener {
+                override fun onEnrollButtonClicked(courseId: String) {
+                    enroll(courseId)
+                }
 
-            override fun onContinueButtonClicked(courseId: String) {
-                enterCourse(courseId)
-            }
+                override fun onContinueButtonClicked(courseId: String) {
+                    enterCourse(courseId)
+                }
 
-            override fun onDetailButtonClicked(courseId: String) {
-                enterCourseDetails(courseId)
+                override fun onDetailButtonClicked(courseId: String) {
+                    enterCourseDetails(courseId)
+                }
+            },
+            CourseListAdapter.OnCourseDatesClickListener {
+                startActivity(
+                    Intent(activity, DateListActivity::class.java)
+                )
             }
-        }, CourseListAdapter.OnCourseDatesClickListener { ToastUtil.show("click") })
+        )
 
         recyclerView.adapter = courseListAdapter
 
@@ -111,8 +123,8 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
     private fun registerObservers() {
         viewModel.courses
             .observe(this) {
-                // as new course list is loaded into the database it is accessed via the non-async query
                 courseList = viewModel.sectionedCourseList
+                viewModel.requestDateList(false) // request the date list here as it is not included with the courses and needs to be refreshed upon courses change
                 showCourseList()
             }
 
@@ -124,6 +136,7 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
                     viewModel.nextSevenDaysDateCount,
                     viewModel.futureDateCount
                 )
+                showContent()
             }
     }
 

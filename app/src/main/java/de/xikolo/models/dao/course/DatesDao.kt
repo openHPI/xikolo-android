@@ -12,7 +12,7 @@ import java.util.*
 
 class DatesDao(realm: Realm) : BaseDao(realm) {
 
-    fun futureDates(): LiveData<List<CourseDate>> =
+    fun dates(): LiveData<List<CourseDate>> =
         realm
             .where<CourseDate>()
             .greaterThanOrEqualTo("date", Date())
@@ -27,22 +27,22 @@ class DatesDao(realm: Realm) : BaseDao(realm) {
             .sort("date", Sort.ASCENDING)
             .findFirst()
 
-    fun dateCountToday(): Long =
+    fun datesToday(): List<CourseDate> =
         realm
             .where<CourseDate>()
             .between("date", Date(), DateUtil.todaysMidnight())
-            .count()
+            .findAll()
 
-    fun dateCountNextSevenDays(): Long =
+    fun datesNextSevenDays(): List<CourseDate> =
         realm
             .where<CourseDate>()
             .between("date", Date(), DateUtil.nextSevenDays())
-            .count()
+            .findAll()
 
-    fun dateCountFuture(): Long =
+    fun datesInFuture(): List<CourseDate> =
         realm
             .where<CourseDate>()
             .greaterThan("date", Date())
-            .count()
+            .findAll()
 
 }

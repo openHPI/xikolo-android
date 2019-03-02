@@ -102,7 +102,8 @@ public class RealmSchemaMigration implements RealmMigration {
                 .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
                 .addField("type", String.class)
                 .addField("title", String.class)
-                .addField("date", Date.class);
+                .addField("date", Date.class)
+                .addField("courseId", String.class);
 
             oldVersion++;
         }
