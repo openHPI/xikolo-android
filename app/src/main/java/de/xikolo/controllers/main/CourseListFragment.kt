@@ -85,7 +85,7 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
                     enterCourseDetails(courseId)
                 }
             },
-            CourseListAdapter.OnCourseDatesClickListener {
+            CourseListAdapter.OnDateOverviewClickListener {
                 startActivity(
                     Intent(activity, DateListActivity::class.java)
                 )

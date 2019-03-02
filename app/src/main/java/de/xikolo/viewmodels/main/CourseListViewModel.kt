@@ -140,7 +140,7 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
 
             courseList.add(
                 App.getInstance().getString(R.string.course_dates_title),
-                listOf(Course())
+                listOf(Course()) // this element is just a placeholder and replaced by the date overview
             )
 
             var subList = CourseDao.Unmanaged.allCurrentAndPastWithEnrollment()

@@ -25,7 +25,7 @@ class ListDatesJob(networkState: NetworkStateLiveData, userRequest: Boolean) : N
 
             success()
         } else {
-            if (Config.DEBUG) Log.e(TAG, "Error while fetching dates list")
+            if (Config.DEBUG) Log.e(TAG, "Error while fetching date list")
             error()
         }
     }

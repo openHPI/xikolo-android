@@ -25,7 +25,7 @@ open class CourseDate : RealmObject() {
 
     var courseId: String? = null
 
-    fun getDisplayTypeString(context: Context): String {
+    fun getTypeString(context: Context): String {
         return when (type) {
             "course_start"               -> context.getString(R.string.course_date_type_course_start)
             "section_start"              -> context.getString(R.string.course_date_type_section_start)

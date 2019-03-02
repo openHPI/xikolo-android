@@ -58,6 +58,7 @@ class DateListFragment : NetworkStateFragment<CourseListViewModel>() {
 
         viewModel.courses
             .observe(this) {
+                // request the date list here as it is not included with the courses and needs to be refreshed upon courses change
                 viewModel.requestDateList(false)
             }
 

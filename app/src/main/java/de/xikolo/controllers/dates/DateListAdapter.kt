@@ -90,7 +90,7 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : R
             val courseDate = dateList.getItem(actualPosition) as CourseDate
             val viewHolder: CourseDateViewHolder = holder as CourseDateViewHolder
 
-            viewHolder.textType.text = courseDate.getDisplayTypeString(App.getInstance())
+            viewHolder.textType.text = courseDate.getTypeString(App.getInstance())
 
             viewHolder.textCourse.text = Course.get(courseDate.courseId).title
             viewHolder.textCourse.setOnClickListener {

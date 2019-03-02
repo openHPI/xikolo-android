@@ -31,7 +31,7 @@ public class CourseListAdapter extends BaseCourseListAdapter {
 
     public static final String TAG = CourseListAdapter.class.getSimpleName();
 
-    private OnCourseDatesClickListener onCourseDatesClickListener;
+    private OnDateOverviewClickListener onDateOverviewClickListener;
     private CourseListFilter courseFilter;
 
     private CourseDate nextDate;
@@ -39,12 +39,12 @@ public class CourseListAdapter extends BaseCourseListAdapter {
     private int nextSevenDaysDateCount = 0;
     private int futureDateCount = 0;
 
-    public CourseListAdapter(Fragment fragment, CourseListFilter courseFilter, OnCourseButtonClickListener onCourseButtonClickListener, OnCourseDatesClickListener onCourseDatesClickListener) {
+    public CourseListAdapter(Fragment fragment, CourseListFilter courseFilter, OnCourseButtonClickListener onCourseButtonClickListener, OnDateOverviewClickListener onDateOverviewClickListener) {
         this.fragment = fragment;
         this.courseList = new SectionList<>();
         this.courseFilter = courseFilter;
         this.onCourseButtonClickListener = onCourseButtonClickListener;
-        this.onCourseDatesClickListener = onCourseDatesClickListener;
+        this.onDateOverviewClickListener = onDateOverviewClickListener;
     }
 
     public void update(CourseDate nextDate, int todaysDateCount, int nextSevenDaysDateCount, int futureDateCount) {
@@ -97,7 +97,7 @@ public class CourseListAdapter extends BaseCourseListAdapter {
         if (holder instanceof CourseDatesViewHolder) {
             CourseDatesViewHolder viewHolder = (CourseDatesViewHolder) holder;
 
-            viewHolder.container.setOnClickListener(v -> onCourseDatesClickListener.onCourseDatesClicked());
+            viewHolder.container.setOnClickListener(v -> onDateOverviewClickListener.onDateOverviewClicked());
 
             if (nextDate != null) {
                 viewHolder.textNextDate.setText(
@@ -212,9 +212,9 @@ public class CourseListAdapter extends BaseCourseListAdapter {
         }
     }
 
-    public interface OnCourseDatesClickListener {
+    public interface OnDateOverviewClickListener {
 
-        void onCourseDatesClicked();
+        void onDateOverviewClicked();
     }
 
     static class CourseDatesViewHolder extends RecyclerView.ViewHolder {
