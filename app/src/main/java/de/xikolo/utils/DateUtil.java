@@ -111,9 +111,8 @@ public class DateUtil {
     }
 
     public static Date nextSevenDays() {
-        Date now = new Date();
         Calendar c = Calendar.getInstance();
-        c.setTime(now);
+        c.setTime(todaysMidnight());
         c.add(Calendar.DAY_OF_YEAR, 7);
         return c.getTime();
     }
