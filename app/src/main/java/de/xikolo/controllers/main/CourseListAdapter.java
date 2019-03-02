@@ -58,7 +58,8 @@ public class CourseListAdapter extends BaseCourseListAdapter {
     @Override
     public int getItemViewType(int position) {
         if (courseFilter == CourseListFilter.MY) {
-            if (position == 1) // the course overview with a header at position 0
+            if (courseList.getItem(position) instanceof Course
+                && ((Course) courseList.getItem(position)).id == null) // the course overview (Course with null id) with a header at position 0
                 return ITEM_VIEW_TYPE_META;
             else if (courseList.isHeader(position))
                 return ITEM_VIEW_TYPE_HEADER;
