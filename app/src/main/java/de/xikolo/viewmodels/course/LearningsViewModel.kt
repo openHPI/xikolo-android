@@ -4,21 +4,21 @@ import androidx.lifecycle.LiveData
 import de.xikolo.models.Course
 import de.xikolo.models.Item
 import de.xikolo.models.dao.CoursesDao
-import de.xikolo.models.dao.course.LearningsDao
+import de.xikolo.models.dao.ItemsDao
 import de.xikolo.network.jobs.ListSectionsWithItemsJob
 import de.xikolo.viewmodels.base.BaseViewModel
 
 open class LearningsViewModel(val courseId: String) : BaseViewModel() {
 
     private val coursesDao = CoursesDao(realm)
-    private val learningsDao = LearningsDao(realm)
+    private val itemsDao = ItemsDao(realm)
 
     val course: LiveData<Course> by lazy {
         coursesDao.course(courseId)
     }
 
     val accessibleItems: LiveData<List<Item>> by lazy {
-        learningsDao.accessibleItemsForCourse(courseId)
+        itemsDao.accessibleItemsForCourse(courseId)
     }
 
     override fun onFirstCreate() {

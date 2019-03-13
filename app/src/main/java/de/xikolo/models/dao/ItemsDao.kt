@@ -1,4 +1,4 @@
-package de.xikolo.models.dao.course
+package de.xikolo.models.dao
 
 import androidx.lifecycle.LiveData
 import de.xikolo.models.Item
@@ -7,7 +7,7 @@ import de.xikolo.viewmodels.base.asLiveData
 import io.realm.Realm
 import io.realm.kotlin.where
 
-class LearningsDao(realm: Realm) : BaseDao(realm) {
+class ItemsDao(realm: Realm) : BaseDao(realm) {
 
     fun accessibleItemsForCourse(courseId: String): LiveData<List<Item>> =
         realm
