@@ -105,8 +105,13 @@ class CertificatesFragment : NetworkStateFragment<CourseViewModel>() {
                 }
                 container.addView(dvh.view)
             }
+
+            if (downloadViewHelpers.isEmpty()) {
+                showEmptyMessage(R.string.empty_message_course_certificates)
+            } else {
+                showContent()
+            }
         }
-        showContent()
     }
 
 }

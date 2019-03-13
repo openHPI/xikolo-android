@@ -322,5 +322,6 @@
     <string name="empty_message_documents_title">No documents available for this course</string>
     <string name="empty_message_global_announcements_title">No announcements available</string>
     <string name="empty_message_course_announcements_title">No announcements available for this course</string>
+    <string name="empty_message_course_certificates">No certificates available for this course</string>
 
 </resources>
