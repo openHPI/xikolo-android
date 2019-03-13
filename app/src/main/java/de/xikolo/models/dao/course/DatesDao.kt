@@ -31,18 +31,21 @@ class DatesDao(realm: Realm) : BaseDao(realm) {
         realm
             .where<CourseDate>()
             .between("date", Date(), DateUtil.todaysMidnight())
+            .sort("date", Sort.ASCENDING)
             .findAll()
 
     fun datesNextSevenDays(): List<CourseDate> =
         realm
             .where<CourseDate>()
             .between("date", Date(), DateUtil.nextSevenDays())
+            .sort("date", Sort.ASCENDING)
             .findAll()
 
     fun datesInFuture(): List<CourseDate> =
         realm
             .where<CourseDate>()
             .greaterThan("date", Date())
+            .sort("date", Sort.ASCENDING)
             .findAll()
 
 }
