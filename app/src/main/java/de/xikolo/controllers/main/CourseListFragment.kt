@@ -203,7 +203,6 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         startActivity(intent)
     }
 
-    // ToDo Mind that this has duplicate code in BaseCourseListPresenter used by Channels.
     fun enroll(courseId: String) {
         showBlockingProgress()
         courseManager.createEnrollment(courseId, object : RequestJobCallback() {
