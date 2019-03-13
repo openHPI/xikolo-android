@@ -1,6 +1,7 @@
 package de.xikolo.controllers.base
 
 
+import android.content.Intent
 import android.os.Bundle
 import de.xikolo.viewmodels.base.BaseViewModel
 
@@ -10,6 +11,17 @@ abstract class ViewModelActivity<T : BaseViewModel> : BaseActivity(), ViewModelC
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel(this)
+        initViewModel()
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        initViewModel()
+    }
+
+    private fun initViewModel(){
+        initViewModel(this)
+        viewModel.onCreate()
+    }
+
 }
