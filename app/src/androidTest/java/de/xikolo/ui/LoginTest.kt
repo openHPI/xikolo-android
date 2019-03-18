@@ -11,7 +11,7 @@ import de.xikolo.R
 import de.xikolo.controllers.login.LoginActivity
 import de.xikolo.managers.UserManager
 import de.xikolo.mocking.base.BaseMockedTest
-import de.xikolo.ui.helper.NavigationHelper.Companion.WAIT_LOADING_LONG
+import de.xikolo.ui.helper.NavigationHelper.Companion.WAIT_LOADING_SHORT
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
 import org.junit.After
@@ -24,7 +24,7 @@ class LoginTest : BaseMockedTest() {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(LoginActivity::class.java)
+    var activityTestRule = ActivityTestRule(LoginActivity::class.java)
 
     /**
      * Logs the user out.
@@ -76,7 +76,8 @@ class LoginTest : BaseMockedTest() {
         )
 
         loginButton.perform(click())
-        Thread.sleep(WAIT_LOADING_LONG)
+
+        Thread.sleep(WAIT_LOADING_SHORT) // necessary waiting
 
         assertTrue(UserManager.isAuthorized)
     }

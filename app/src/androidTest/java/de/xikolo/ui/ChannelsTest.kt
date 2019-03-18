@@ -15,8 +15,6 @@ import de.xikolo.config.FeatureToggle
 import de.xikolo.controllers.main.MainActivity
 import de.xikolo.mocking.base.BaseMockedTest
 import de.xikolo.ui.helper.NavigationHelper
-import de.xikolo.ui.helper.NavigationHelper.Companion.WAIT_LOADING_SHORT
-import de.xikolo.ui.helper.NavigationHelper.Companion.WAIT_UI_INTERACTION
 import de.xikolo.ui.helper.ViewHierarchyHelper.Companion.childAtPosition
 import org.hamcrest.Matchers.allOf
 import org.junit.Before
@@ -28,7 +26,7 @@ class ChannelsTest : BaseMockedTest() {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
+    var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
     /**
      * Navigates in the app to the channel list. (if applicable)
@@ -39,17 +37,13 @@ class ChannelsTest : BaseMockedTest() {
             return
         }
 
-        NavigationHelper.waitForAppStartup()
-
         NavigationHelper.openNavigation()
-        Thread.sleep(WAIT_UI_INTERACTION)
 
         val channelsButton = onView(
             withText(App.getInstance().getString(R.string.title_section_channels))
         )
 
         channelsButton.perform(click())
-        Thread.sleep(WAIT_LOADING_SHORT)
     }
 
     /**
@@ -72,7 +66,6 @@ class ChannelsTest : BaseMockedTest() {
         )
 
         refreshView.perform(click())
-        Thread.sleep(WAIT_LOADING_SHORT)
 
         val cardView = onView(
             allOf(
@@ -126,12 +119,10 @@ class ChannelsTest : BaseMockedTest() {
         )
 
         cardView.perform(click())
-        Thread.sleep(WAIT_UI_INTERACTION)
 
         onView(
             withId(R.id.contentLayout)
         ).perform(swipeUp())
-        Thread.sleep(WAIT_UI_INTERACTION)
 
         pressBack()
     }
