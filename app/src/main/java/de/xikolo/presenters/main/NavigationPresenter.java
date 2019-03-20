@@ -1,7 +1,6 @@
 package de.xikolo.presenters.main;
 
 import androidx.lifecycle.LifecycleOwner;
-
 import de.xikolo.models.dao.AnnouncementsDao;
 import de.xikolo.presenters.base.Presenter;
 import io.realm.Realm;
@@ -24,7 +23,7 @@ public class NavigationPresenter extends Presenter<NavigationView> {
     public void onViewAttached(NavigationView view) {
         super.onViewAttached(view);
 
-        announcementsDao.getGlobalAnnouncements().observe(lifecycleOwner, announcements -> {
+        announcementsDao.globalAnnouncements().observe(lifecycleOwner, announcements -> {
             if (isViewAttached()) {
                 getView().updateDrawer();
             }

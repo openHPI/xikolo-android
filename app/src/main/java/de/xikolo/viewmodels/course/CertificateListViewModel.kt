@@ -10,7 +10,6 @@ class CertificateListViewModel(courseId: String) : BaseViewModel() {
 
     val course: LiveData<Course> = courseViewModel.course
 
-
     override fun onFirstCreate() {
         courseViewModel.requestCourse(false)
     }

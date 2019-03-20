@@ -75,5 +75,7 @@ class MetaSectionList<H : Any, M : Any, S : List<Any>>(private var metaItem: M? 
         return false
     }
 
-    fun isSectionItem(position: Int) = !isMetaItem(position) && !isHeader(position)
+    fun isSectionItem(position: Int): Boolean {
+        return !isMetaItem(position) && !isHeader(position)
+    }
 }

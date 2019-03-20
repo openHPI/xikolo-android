@@ -12,9 +12,9 @@ class AnnouncementListViewModel(val courseId: String? = null) : BaseViewModel() 
 
     val announcements: LiveData<List<Announcement>> by lazy {
         if (courseId != null) {
-            announcementsDao.getAnnouncementsForCourse(courseId)
+            announcementsDao.announcementsForCourse(courseId)
         } else {
-            announcementsDao.getGlobalAnnouncements()
+            announcementsDao.globalAnnouncements()
         }
     }
 

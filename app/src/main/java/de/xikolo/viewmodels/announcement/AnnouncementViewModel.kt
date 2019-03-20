@@ -2,15 +2,19 @@ package de.xikolo.viewmodels.announcement
 
 import androidx.lifecycle.LiveData
 import de.xikolo.models.Announcement
+import de.xikolo.models.dao.AnnouncementsDao
 import de.xikolo.network.jobs.UpdateAnnouncementVisitedJob
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.main.AnnouncementListViewModel
 
-class AnnouncementViewModel(val courseId: String? = null) : BaseViewModel() {
+class AnnouncementViewModel(val announcementId: String) : BaseViewModel() {
 
+    private val announcementsDao = AnnouncementsDao(realm)
     private val announcementListViewModel = AnnouncementListViewModel()
 
-    val announcements: LiveData<List<Announcement>> = announcementListViewModel.announcements
+    val announcement: LiveData<Announcement> by lazy {
+        announcementsDao.announcement(announcementId)
+    }
 
     override fun onFirstCreate() {
         announcementListViewModel.requestAnnouncementList(false)
@@ -21,6 +25,7 @@ class AnnouncementViewModel(val courseId: String? = null) : BaseViewModel() {
     }
 
     fun updateAnnouncementVisited(announcementId: String) {
+        announcementsDao.markAnnouncementVisited(announcementId)
         UpdateAnnouncementVisitedJob.schedule(announcementId)
     }
 }
