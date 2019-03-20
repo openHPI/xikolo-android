@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -22,7 +24,7 @@ import de.xikolo.controllers.main.CourseListAdapter;
 import de.xikolo.models.Course;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.MarkdownUtil;
-import de.xikolo.utils.SectionList;
+import de.xikolo.utils.MetaSectionList;
 
 public class ChannelCourseListAdapter extends BaseCourseListAdapter {
 
@@ -34,15 +36,38 @@ public class ChannelCourseListAdapter extends BaseCourseListAdapter {
 
     private int channelColor = -1;
 
+    private MetaSectionList<String, String, List<Course>> courseList;
+
     ChannelCourseListAdapter(Fragment fragment, CourseListAdapter.OnCourseButtonClickListener callback) {
         this.fragment = fragment;
-        this.courseList = new SectionList<>();
+        this.courseList = new MetaSectionList<>();
         this.callback = callback;
     }
 
+    //// The supertype functions of these will be used once the BaseCourseListAdapter has transitioned to using MetaSectionList
+    public void update(MetaSectionList<String, String, List<Course>> courseList) {
+        this.courseList = courseList;
+        this.notifyDataSetChanged();
+    }
+
+    public boolean isHeader(int position) {
+        return courseList.isHeader(position);
+    }
+
+    public void clear() {
+        this.courseList.clear();
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemCount() {
+        return courseList.getSize();
+    }
+    ////
+
     @Override
     public int getItemViewType(int position) {
-        if (position == 0)
+        if (courseList.isMetaItem(position))
             return ITEM_VIEW_TYPE_META;
         else if (courseList.isHeader(position))
             return ITEM_VIEW_TYPE_HEADER;

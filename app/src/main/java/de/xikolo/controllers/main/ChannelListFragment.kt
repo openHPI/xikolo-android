@@ -13,8 +13,8 @@ import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
-import de.xikolo.viewmodels.ChannelListViewModel
 import de.xikolo.viewmodels.base.observe
+import de.xikolo.viewmodels.main.ChannelListViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
 import org.greenrobot.eventbus.EventBus

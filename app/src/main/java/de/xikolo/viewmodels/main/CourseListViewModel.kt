@@ -1,4 +1,4 @@
-package de.xikolo.viewmodels
+package de.xikolo.viewmodels.main
 
 import androidx.lifecycle.LiveData
 import de.xikolo.App
@@ -12,12 +12,9 @@ import de.xikolo.network.jobs.ListCoursesJob
 import de.xikolo.utils.SectionList
 import de.xikolo.viewmodels.base.BaseViewModel
 
-open class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel() {
+class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel() {
 
     private val coursesDao = CoursesDao(realm)
-
-    val coursesWithCertificates
-        get() = coursesDao.coursesWithCertificates()
 
     val enrollmentCount
         get() = coursesDao.enrollmentCount()
@@ -108,7 +105,7 @@ open class CourseListViewModel(private val filter: CourseListFilter) : BaseViewM
         requestCourseList(true)
     }
 
-    private fun requestCourseList(userRequest: Boolean) {
+    fun requestCourseList(userRequest: Boolean) {
         ListCoursesJob(networkState, userRequest).run()
     }
 }

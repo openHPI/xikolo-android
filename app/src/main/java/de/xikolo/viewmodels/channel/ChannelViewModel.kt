@@ -1,47 +1,46 @@
-package de.xikolo.viewmodels
+package de.xikolo.viewmodels.channel
 
 import androidx.lifecycle.LiveData
 import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.BuildFlavor
+import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
 import de.xikolo.models.dao.ChannelsDao
 import de.xikolo.models.dao.CoursesDao
 import de.xikolo.network.jobs.GetChannelWithCoursesJob
-import de.xikolo.utils.SectionList
+import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
-import java.util.*
+import de.xikolo.viewmodels.main.CourseListViewModel
 
 class ChannelViewModel(val channelId: String) : BaseViewModel() {
 
     private val channelsDao = ChannelsDao(realm)
     private val coursesDao = CoursesDao(realm)
+    private val courseListViewModel = CourseListViewModel(CourseListFilter.ALL)
 
     val channel: LiveData<Channel> by lazy {
         channelsDao.channel(channelId)
     }
 
-    val courses: LiveData<List<Course>> by lazy {
-        coursesDao.coursesForChannel(channelId)
-    }
+    val courses: LiveData<List<Course>> = courseListViewModel.courses
 
-    fun buildContentList(channel: Channel): SectionList<String, List<Course>> {
-        val courseList = SectionList<String, List<Course>>()
-        courseList.add(channel.description, ArrayList())
+    fun buildContentList(channel: Channel): MetaSectionList<String, String, List<Course>> {
+        val contentList = MetaSectionList<String, String, List<Course>>(channel.description)
         var subList: List<Course>
         if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
             subList = coursesDao.futureCoursesForChannel(channelId)
             if (subList.isNotEmpty()) {
-                courseList.add(
+                contentList.add(
                     App.getInstance().getString(R.string.header_future_courses),
                     subList
                 )
             }
             subList = coursesDao.currentAndPastCoursesForChannel(channelId)
             if (subList.isNotEmpty()) {
-                courseList.add(
+                contentList.add(
                     App.getInstance().getString(R.string.header_self_paced_courses),
                     subList
                 )
@@ -49,20 +48,20 @@ class ChannelViewModel(val channelId: String) : BaseViewModel() {
         } else {
             subList = coursesDao.currentAndFutureCoursesForChannel(channelId)
             if (subList.isNotEmpty()) {
-                courseList.add(
+                contentList.add(
                     App.getInstance().getString(R.string.header_current_and_upcoming_courses),
                     subList
                 )
             }
             subList = coursesDao.pastCoursesForChannel(channelId)
             if (subList.isNotEmpty()) {
-                courseList.add(
+                contentList.add(
                     App.getInstance().getString(R.string.header_self_paced_courses),
                     subList
                 )
             }
         }
-        return courseList
+        return contentList
     }
 
     override fun onFirstCreate() {
