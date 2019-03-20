@@ -20,7 +20,7 @@ import de.xikolo.managers.UserManager
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
 import de.xikolo.network.jobs.base.RequestJobCallback
-import de.xikolo.utils.MetaSectionList
+import de.xikolo.utils.SectionList
 import de.xikolo.viewmodels.base.observe
 import de.xikolo.viewmodels.channel.ChannelViewModel
 import de.xikolo.views.AutofitRecyclerView
@@ -135,7 +135,7 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
         contentListAdapter.setButtonColor(channel.colorOrDefault)
     }
 
-    private fun showContentList(contents: MetaSectionList<String, String, List<Course>>) {
+    private fun showContentList(contents: SectionList<String, List<Course>>) {
         contentListAdapter.update(contents)
 
         if (scrollToCoursePosition >= 0) {

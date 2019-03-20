@@ -24,7 +24,7 @@ import de.xikolo.controllers.main.CourseListAdapter;
 import de.xikolo.models.Course;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.MarkdownUtil;
-import de.xikolo.utils.MetaSectionList;
+import de.xikolo.utils.SectionList;
 
 public class ChannelCourseListAdapter extends BaseCourseListAdapter {
 
@@ -36,38 +36,18 @@ public class ChannelCourseListAdapter extends BaseCourseListAdapter {
 
     private int channelColor = -1;
 
-    private MetaSectionList<String, String, List<Course>> courseList;
+    private SectionList<String, List<Course>> courseList;
 
     ChannelCourseListAdapter(Fragment fragment, CourseListAdapter.OnCourseButtonClickListener callback) {
         this.fragment = fragment;
-        this.courseList = new MetaSectionList<>();
+        this.courseList = new SectionList<>();
         this.callback = callback;
     }
 
-    //// The supertype functions of these will be used once the BaseCourseListAdapter has transitioned to using MetaSectionList
-    public void update(MetaSectionList<String, String, List<Course>> courseList) {
-        this.courseList = courseList;
-        this.notifyDataSetChanged();
-    }
-
-    public boolean isHeader(int position) {
-        return courseList.isHeader(position);
-    }
-
-    public void clear() {
-        this.courseList.clear();
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public int getItemCount() {
-        return courseList.getSize();
-    }
-    ////
 
     @Override
     public int getItemViewType(int position) {
-        if (courseList.isMetaItem(position))
+        if (position == 0)
             return ITEM_VIEW_TYPE_META;
         else if (courseList.isHeader(position))
             return ITEM_VIEW_TYPE_HEADER;

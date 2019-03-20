@@ -11,7 +11,7 @@ import de.xikolo.models.Course
 import de.xikolo.models.dao.ChannelsDao
 import de.xikolo.models.dao.CoursesDao
 import de.xikolo.network.jobs.GetChannelWithCoursesJob
-import de.xikolo.utils.MetaSectionList
+import de.xikolo.utils.SectionList
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.main.CourseListViewModel
 
@@ -27,8 +27,9 @@ class ChannelViewModel(val channelId: String) : BaseViewModel() {
 
     val courses: LiveData<List<Course>> = courseListViewModel.courses
 
-    fun buildContentList(channel: Channel): MetaSectionList<String, String, List<Course>> {
-        val contentList = MetaSectionList<String, String, List<Course>>(channel.description)
+    fun buildContentList(channel: Channel): SectionList<String, List<Course>> {
+        val contentList = SectionList<String, List<Course>>()
+        contentList.add(channel.description, ArrayList())
         var subList: List<Course>
         if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
             subList = coursesDao.futureCoursesForChannel(channelId)
