@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
-
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -36,14 +34,11 @@ public class ChannelCourseListAdapter extends BaseCourseListAdapter {
 
     private int channelColor = -1;
 
-    private SectionList<String, List<Course>> courseList;
-
     ChannelCourseListAdapter(Fragment fragment, CourseListAdapter.OnCourseButtonClickListener callback) {
         this.fragment = fragment;
         this.courseList = new SectionList<>();
         this.callback = callback;
     }
-
 
     @Override
     public int getItemViewType(int position) {
