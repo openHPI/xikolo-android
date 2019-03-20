@@ -43,7 +43,7 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementViewModel>() {
     override val layoutResource = R.layout.content_announcement
 
     override fun createViewModel(): AnnouncementViewModel {
-        return AnnouncementViewModel()
+        return AnnouncementViewModel(announcementId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,11 +54,9 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.announcements
+        viewModel.announcement
             .observe(this) {
-                Announcement.get(announcementId)?.let {
-                    showAnnouncement(it)
-                }
+                showAnnouncement(it)
             }
     }
 
@@ -76,7 +74,6 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementViewModel>() {
 
         if (!announcement.visited && UserManager.isAuthorized) {
             viewModel.updateAnnouncementVisited(announcementId)
-            announcement.visited = true
         }
 
         val dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
