@@ -142,14 +142,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controllers.dates.DateListActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controllers.main.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.main.MainActivity" />
-        </activity>
-        <activity
             android:name=".controllers.announcement.AnnouncementActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppThemeTranslucentStatus" />
