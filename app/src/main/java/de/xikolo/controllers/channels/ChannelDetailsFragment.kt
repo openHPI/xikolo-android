@@ -134,7 +134,7 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
             textTitle.text = channel.title
         }
 
-        contentListAdapter.setButtonColor(channel.colorOrDefault)
+        contentListAdapter.setThemeColor(channel.colorOrDefault)
     }
 
     private fun showContentList(contents: MetaSectionList<String, String, List<Course>>) {
@@ -147,8 +147,8 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
 
                 var headerCount = 0
                 for (i in 0 until scrollToCoursePosition) {
-                    if (contentListAdapter.getItemViewType(i) == ChannelCourseListAdapter.ITEM_VIEW_TYPE_HEADER
-                        || contentListAdapter.getItemViewType(i) == ChannelCourseListAdapter.ITEM_VIEW_TYPE_META) {
+                    if (contentListAdapter.isHeader(i)
+                        || contentListAdapter.isMetaItem(i)) {
                         headerCount++
                     }
                 }

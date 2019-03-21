@@ -1,6 +1,5 @@
 package de.xikolo.controllers.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -12,7 +11,6 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.controllers.course.CourseActivityAutoBundle
-import de.xikolo.controllers.dates.DateListActivity
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.events.LoginEvent
@@ -22,10 +20,9 @@ import de.xikolo.managers.CourseManager
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
 import de.xikolo.models.dao.CourseDao
+import de.xikolo.models.DateOverview
 import de.xikolo.network.jobs.base.RequestJobCallback
-import de.xikolo.utils.SectionList
-import de.xikolo.viewmodels.main.CourseListViewModel
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.main.CourseListViewModel
 import de.xikolo.viewmodels.base.observe
 import de.xikolo.views.AutofitRecyclerView
@@ -44,13 +41,13 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
     lateinit var filter: CourseListFilter
 
     @BindView(R.id.content_view)
-    internal lateinit var recyclerView: AutofitRecyclerView
+    lateinit var recyclerView: AutofitRecyclerView
 
     private lateinit var courseListAdapter: CourseListAdapter
 
     private val courseManager = CourseManager()
 
-    private var courseList: SectionList<String, List<Course>> = SectionList()
+    private var courseList: MetaSectionList<String, DateOverview, List<Course>> = MetaSectionList()
 
     override val layoutResource = R.layout.content_course_list
 
@@ -85,10 +82,10 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
                     enterCourseDetails(courseId)
                 }
             },
-            CourseListAdapter.OnDateOverviewClickListener {
-                startActivity(
-                    Intent(activity, DateListActivity::class.java)
-                )
+            object : CourseListAdapter.OnDateOverviewClickListener {
+                override fun onDateOverviewClicked() {
+                    activityCallback?.selectDrawerSection(NavigationAdapter.NAV_DATES.position)
+                }
             }
         )
 
@@ -130,12 +127,6 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
 
         viewModel.dates
             .observe(this) {
-                courseListAdapter.update(
-                    viewModel.nextDate,
-                    viewModel.todaysDateCount,
-                    viewModel.nextSevenDaysDateCount,
-                    viewModel.futureDateCount
-                )
                 showContent()
             }
     }

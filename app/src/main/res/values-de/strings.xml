@@ -7,6 +7,7 @@
     <string name="title_section_logout">Abmelden</string>
     <string name="title_section_all_courses">Alle Kurse</string>
     <string name="title_section_news">Neuigkeiten</string>
+    <string name="title_section_dates">Termine</string>
     <string name="title_section_downloads">Downloads</string>
     <string name="title_section_settings">Einstellungen</string>
     <string name="title_section_my_courses">Meine Kurse</string>
@@ -14,8 +15,6 @@
     <string name="title_section_second_screen">Second Screen</string>
 
     <string name="title_section_channels">Channels</string>
-
-    <string name="title_section_dates">Terminübersicht</string>
 
     <string name="title_section_beta">Beta</string>
 
@@ -320,5 +319,6 @@
     <string name="empty_message_global_announcements_title">Keine Neuigkeiten vorhanden</string>
     <string name="empty_message_course_announcements_title">Für diesen Kurs gibt es keine Neuigkeiten</string>
     <string name="empty_message_course_certificates">Für diesen Kurs gibt es keine Zertifikate</string>
+    <string name="empty_message_dates">Aktuell keine zukünftigen Termine</string>
 
 </resources>

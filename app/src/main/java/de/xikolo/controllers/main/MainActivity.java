@@ -142,6 +142,10 @@ public class MainActivity extends BaseActivity
             newFragment = new CertificateListFragment();
             tag = "certificates";
         }
+        if (position == NavigationAdapter.NAV_DATES.getPosition()) {
+            newFragment = new DateListFragment();
+            tag = "dates";
+        }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {
             newFragment = new NewsListFragment();
             tag = "news";

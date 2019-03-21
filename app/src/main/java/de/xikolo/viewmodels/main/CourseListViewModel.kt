@@ -8,12 +8,13 @@ import de.xikolo.config.BuildFlavor
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.Course
 import de.xikolo.models.CourseDate
+import de.xikolo.models.DateOverview
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.models.dao.DatesDao
 import de.xikolo.models.dao.EnrollmentDao
 import de.xikolo.network.jobs.ListCoursesJob
 import de.xikolo.network.jobs.ListDatesJob
-import de.xikolo.utils.SectionList
+import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
 
 class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel() {
@@ -26,6 +27,10 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
 
     val enrolledCourses: LiveData<List<Course>> by lazy {
         coursesDao.allEnrolled()
+    }
+
+    val courses: LiveData<List<Course>> by lazy {
+        coursesDao.courses()
     }
 
     val dates: LiveData<List<CourseDate>> by lazy {
@@ -97,9 +102,9 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
             }
         }
 
-    private val courseListFilterAll: SectionList<String, List<Course>>
+    private val courseListFilterAll: MetaSectionList<String, DateOverview, List<Course>>
         get() {
-            val courseList = SectionList<String, List<Course>>()
+            val courseList = MetaSectionList<String, DateOverview, List<Course>>()
             var subList: List<Course>
             if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
                 subList = CourseDao.Unmanaged.allFuture()
@@ -134,15 +139,17 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
             return courseList
         }
 
-    private val courseListFilterMyWithDateOverview: SectionList<String, List<Course>>
+    private val courseListFilterMyWithDateOverview: MetaSectionList<String, DateOverview, List<Course>>
         get() {
-            val courseList = SectionList<String, List<Course>>()
-
-            courseList.add(
-                App.getInstance().getString(R.string.course_dates_title),
-                listOf(Course()) // this element is just a placeholder and replaced by the date overview it is identified by its null id
+            val courseList = MetaSectionList<String, DateOverview, List<Course>>(
+                DateOverview(
+                    datesDao.nextDate(),
+                    datesDao.datesToday().size,
+                    datesDao.datesNextSevenDays().size,
+                    datesDao.datesInFuture().size
+                ),
+                App.getInstance().getString(R.string.course_dates_title)
             )
-
             var subList = CourseDao.Unmanaged.allCurrentAndPastWithEnrollment()
             if (subList.isNotEmpty()) {
                 courseList.add(
@@ -162,7 +169,6 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
 
     fun searchCourses(query: String): List<Course> =
         CourseDao.Unmanaged.search(query, filter == CourseListFilter.MY)
-
 
     override fun onFirstCreate() {
         requestCourseList(false)

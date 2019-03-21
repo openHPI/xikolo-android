@@ -1,14 +1,15 @@
 package de.xikolo.utils
 
-class MetaSectionList<H : Any, M : Any, S : List<Any>>(private var metaItem: M? = null, private var metaHeader: H? = null) {
+class MetaSectionList<H, out M, S : List<*>>(private var metaItem: M? = null, private var metaHeader: H? = null) {
 
-    private val headers: MutableList<H> = mutableListOf()
+    private val headers: MutableList<H?> = mutableListOf()
     private val sections: MutableList<S> = mutableListOf()
 
     private val hasMetaItem = metaItem != null
     private val hasMetaHeader = metaHeader != null
 
-    private val metaOffset = if (hasMetaItem) 1 else 0 + if (hasMetaHeader) 1 else 0
+    private val metaOffset
+        get() = (if (hasMetaItem) 1 else 0) + if (hasMetaHeader) 1 else 0
 
     val size
         get() = metaOffset + headers.size + sections.sumBy { it.size }
@@ -20,12 +21,12 @@ class MetaSectionList<H : Any, M : Any, S : List<Any>>(private var metaItem: M? 
         sections.clear()
     }
 
-    fun add(header: H, section: S) {
+    fun add(header: H?, section: S) {
         headers.add(header)
         sections.add(section)
     }
 
-    fun getItem(position: Int): Any? {
+    fun get(position: Int): Any? {
         when {
             isMetaItem(position)   -> return metaItem
             isMetaHeader(position) -> return metaHeader
