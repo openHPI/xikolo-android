@@ -29,21 +29,11 @@ class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            ITEM_VIEW_TYPE_META   -> {
-                DescriptionViewHolder(
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_description, parent, false)
-                )
-            }
-            ITEM_VIEW_TYPE_HEADER -> {
-                HeaderViewHolder(
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_header, parent, false)
-                )
-            }
-            else                  -> {
-                BaseCourseListAdapter.CourseViewHolder(
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_course_list, parent, false)
-                )
-            }
+            ITEM_VIEW_TYPE_META   -> DescriptionViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_description, parent, false)
+            )
+            ITEM_VIEW_TYPE_HEADER -> createHeaderViewHolder(parent, viewType)
+            else                  -> createCourseViewHolder(parent, viewType)
         }
     }
 

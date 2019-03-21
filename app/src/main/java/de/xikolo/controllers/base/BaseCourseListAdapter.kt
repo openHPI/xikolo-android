@@ -1,5 +1,6 @@
 package de.xikolo.controllers.base
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -20,6 +21,12 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
 
     companion object {
         val TAG: String = BaseCourseListAdapter::class.java.simpleName
+    }
+
+    protected fun createCourseViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return CourseViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_course_list, parent, false)
+        )
     }
 
     protected fun bindCourseViewHolder(holder: CourseViewHolder, position: Int) {

@@ -1,5 +1,6 @@
 package de.xikolo.controllers.base
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -44,6 +45,12 @@ abstract class BaseMetaRecyclerViewAdapter<M, S> : RecyclerView.Adapter<Recycler
 
     override fun getItemCount(): Int {
         return contentList.size
+    }
+
+    protected fun createHeaderViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return HeaderViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_header, parent, false)
+        )
     }
 
     protected fun bindHeaderViewHolder(holder: HeaderViewHolder, position: Int) {
