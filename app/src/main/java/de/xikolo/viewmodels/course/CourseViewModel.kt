@@ -1,4 +1,4 @@
-package de.xikolo.viewmodels
+package de.xikolo.viewmodels.course
 
 import androidx.lifecycle.LiveData
 import de.xikolo.models.Course
@@ -6,7 +6,7 @@ import de.xikolo.models.dao.CoursesDao
 import de.xikolo.network.jobs.GetCourseJob
 import de.xikolo.viewmodels.base.BaseViewModel
 
-open class CourseViewModel(val courseId: String) : BaseViewModel() {
+class CourseViewModel(val courseId: String) : BaseViewModel() {
 
     private val coursesDao = CoursesDao(realm)
 
@@ -26,4 +26,3 @@ open class CourseViewModel(val courseId: String) : BaseViewModel() {
         GetCourseJob(courseId, networkState, userRequest).run()
     }
 }
-

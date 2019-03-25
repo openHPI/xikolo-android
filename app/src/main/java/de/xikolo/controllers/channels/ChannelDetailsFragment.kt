@@ -21,8 +21,8 @@ import de.xikolo.models.Channel
 import de.xikolo.models.Course
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.utils.SectionList
-import de.xikolo.viewmodels.ChannelViewModel
 import de.xikolo.viewmodels.base.observe
+import de.xikolo.viewmodels.channel.ChannelViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
 

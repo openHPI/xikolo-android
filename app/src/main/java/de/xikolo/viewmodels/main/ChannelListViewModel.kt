@@ -1,4 +1,4 @@
-package de.xikolo.viewmodels
+package de.xikolo.viewmodels.main
 
 import androidx.lifecycle.LiveData
 import de.xikolo.BuildConfig

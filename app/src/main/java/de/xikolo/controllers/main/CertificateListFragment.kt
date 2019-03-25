@@ -10,19 +10,18 @@ import butterknife.BindView
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.course.CourseActivityAutoBundle
-import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
-import de.xikolo.viewmodels.CourseListViewModel
 import de.xikolo.viewmodels.base.observe
+import de.xikolo.viewmodels.main.CertificateListViewModel
 import de.xikolo.views.SpaceItemDecoration
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class CertificateListFragment : ViewModelMainFragment<CourseListViewModel>() {
+class CertificateListFragment : ViewModelMainFragment<CertificateListViewModel>() {
 
     companion object {
         val TAG: String = CertificateListFragment::class.java.simpleName
@@ -35,8 +34,8 @@ class CertificateListFragment : ViewModelMainFragment<CourseListViewModel>() {
 
     override val layoutResource = R.layout.content_certificate_list
 
-    override fun createViewModel(): CourseListViewModel {
-        return CourseListViewModel(CourseListFilter.ALL)
+    override fun createViewModel(): CertificateListViewModel {
+        return CertificateListViewModel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

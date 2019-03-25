@@ -1,9 +1,6 @@
 package de.xikolo.controllers.course
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,8 +12,8 @@ import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.main.AnnouncementListAdapter
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.viewmodels.AnnouncementListViewModel
 import de.xikolo.viewmodels.base.observe
+import de.xikolo.viewmodels.main.AnnouncementListViewModel
 
 class AnnouncementListFragment : NetworkStateFragment<AnnouncementListViewModel>() {
 

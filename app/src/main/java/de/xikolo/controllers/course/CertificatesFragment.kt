@@ -13,10 +13,10 @@ import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.models.Course
 import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Enrollment
-import de.xikolo.viewmodels.CourseViewModel
 import de.xikolo.viewmodels.base.observe
+import de.xikolo.viewmodels.course.CertificateListViewModel
 
-class CertificatesFragment : NetworkStateFragment<CourseViewModel>() {
+class CertificatesFragment : NetworkStateFragment<CertificateListViewModel>() {
 
     companion object {
         val TAG: String = CertificatesFragment::class.java.simpleName
@@ -33,8 +33,8 @@ class CertificatesFragment : NetworkStateFragment<CourseViewModel>() {
 
     override val layoutResource = R.layout.content_certificates
 
-    override fun createViewModel(): CourseViewModel {
-        return CourseViewModel(courseId)
+    override fun createViewModel(): CertificateListViewModel {
+        return CertificateListViewModel(courseId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

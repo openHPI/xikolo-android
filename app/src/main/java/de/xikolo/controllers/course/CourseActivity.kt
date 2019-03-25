@@ -37,8 +37,8 @@ import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.ShareUtil
 import de.xikolo.utils.ToastUtil
-import de.xikolo.viewmodels.CourseViewModel
 import de.xikolo.viewmodels.base.observe
+import de.xikolo.viewmodels.course.CourseViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 

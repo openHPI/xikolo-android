@@ -1,10 +1,9 @@
-package de.xikolo.viewmodels
+package de.xikolo.viewmodels.main
 
 import androidx.lifecycle.LiveData
 import de.xikolo.models.Announcement
 import de.xikolo.models.dao.AnnouncementsDao
 import de.xikolo.network.jobs.ListAnnouncementsJob
-import de.xikolo.network.jobs.UpdateAnnouncementVisitedJob
 import de.xikolo.viewmodels.base.BaseViewModel
 
 class AnnouncementListViewModel(val courseId: String? = null) : BaseViewModel() {
@@ -13,9 +12,9 @@ class AnnouncementListViewModel(val courseId: String? = null) : BaseViewModel() 
 
     val announcements: LiveData<List<Announcement>> by lazy {
         if (courseId != null) {
-            announcementsDao.getAnnouncementsForCourse(courseId)
+            announcementsDao.announcementsForCourse(courseId)
         } else {
-            announcementsDao.getGlobalAnnouncements()
+            announcementsDao.globalAnnouncements()
         }
     }
 
@@ -27,12 +26,8 @@ class AnnouncementListViewModel(val courseId: String? = null) : BaseViewModel() 
         requestAnnouncementList(true)
     }
 
-    private fun requestAnnouncementList(userRequest: Boolean) {
+    fun requestAnnouncementList(userRequest: Boolean) {
         ListAnnouncementsJob(courseId, userRequest, networkState).run()
-    }
-
-    fun updateAnnouncementVisited(announcementId: String) {
-        UpdateAnnouncementVisitedJob.schedule(announcementId)
     }
 
 }

@@ -9,8 +9,8 @@ import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
-import de.xikolo.viewmodels.DocumentListViewModel
 import de.xikolo.viewmodels.base.observe
+import de.xikolo.viewmodels.course.DocumentListViewModel
 
 class DocumentListFragment : NetworkStateFragment<DocumentListViewModel>() {
 
