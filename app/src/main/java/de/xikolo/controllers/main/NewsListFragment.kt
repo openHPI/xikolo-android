@@ -13,7 +13,7 @@ import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.viewmodels.base.observe
+import de.xikolo.extensions.observe
 import de.xikolo.viewmodels.main.AnnouncementListViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

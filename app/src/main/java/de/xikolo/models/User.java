@@ -3,7 +3,7 @@ package de.xikolo.models;
 import com.squareup.moshi.Json;
 
 import de.xikolo.models.base.RealmAdapter;
-import io.realm.Realm;
+import de.xikolo.models.dao.ProfileDao;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -22,12 +22,8 @@ public class User extends RealmObject {
 
     public String profileId;
 
-    public static User get(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        User model = realm.where(User.class).equalTo("id", id).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
+    public Profile getProfile() {
+        return ProfileDao.Unmanaged.find(profileId);
     }
 
     @JsonApi(type = "users")

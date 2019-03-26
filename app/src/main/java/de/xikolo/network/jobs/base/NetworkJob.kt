@@ -2,8 +2,6 @@ package de.xikolo.network.jobs.base
 
 import de.xikolo.managers.UserManager
 import de.xikolo.utils.NetworkUtil
-import de.xikolo.viewmodels.base.NetworkCode
-import de.xikolo.viewmodels.base.NetworkStateLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

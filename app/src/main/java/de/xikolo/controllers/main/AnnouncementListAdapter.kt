@@ -10,7 +10,6 @@ import butterknife.ButterKnife
 import de.xikolo.R
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Announcement
-import de.xikolo.models.Course
 import java.text.DateFormat
 import java.util.*
 
@@ -52,7 +51,7 @@ class AnnouncementListAdapter(private val announcementClickListener: (String) ->
         val dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
         holder.date.text = dateFormat.format(announcement.publishedAt)
 
-        val course = Course.get(announcement.courseId)
+        val course = announcement.course
         if (course != null && global) {
             holder.course.text = course.title
             holder.course.visibility = View.VISIBLE

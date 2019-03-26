@@ -2,7 +2,7 @@ package de.xikolo.models;
 
 import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
-import io.realm.Realm;
+import de.xikolo.models.dao.CourseDao;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -24,20 +24,8 @@ public class Enrollment extends RealmObject implements JsonAdapter<Enrollment.Js
 
     public String courseId;
 
-    public static Enrollment get(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        Enrollment model = realm.where(Enrollment.class).equalTo("id", id).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
-    }
-
-    public static Enrollment getForCourse(String courseId) {
-        Realm realm = Realm.getDefaultInstance();
-        Enrollment model = realm.where(Enrollment.class).equalTo("courseId", courseId).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
+    public Course getCourse() {
+        return CourseDao.Unmanaged.find(courseId);
     }
 
     public boolean anyCertificateAchieved() {

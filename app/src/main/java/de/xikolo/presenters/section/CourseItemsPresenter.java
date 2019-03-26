@@ -8,6 +8,8 @@ import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
+import de.xikolo.models.dao.CourseDao;
+import de.xikolo.models.dao.SectionDao;
 import de.xikolo.presenters.base.Presenter;
 import de.xikolo.utils.LanalyticsUtil;
 import io.realm.Realm;
@@ -94,10 +96,10 @@ public class CourseItemsPresenter extends Presenter<CourseItemsView> {
 
     private void loadModels() {
         if (course == null) {
-            course = Course.get(courseId);
+            course = CourseDao.Unmanaged.find(courseId);
         }
         if (section == null) {
-            section = Section.get(sectionId);
+            section = SectionDao.Unmanaged.find(sectionId);
         }
     }
 

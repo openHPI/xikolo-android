@@ -5,18 +5,17 @@ import de.xikolo.BuildConfig
 import de.xikolo.config.BuildFlavor
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
-import de.xikolo.models.dao.ChannelsDao
-import de.xikolo.models.dao.CoursesDao
+import de.xikolo.models.dao.ChannelDao
+import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.ListChannelsWithCoursesJob
 import de.xikolo.viewmodels.base.BaseViewModel
 
 class ChannelListViewModel : BaseViewModel() {
 
-    private val channelsDao = ChannelsDao(realm)
-    private val coursesDao = CoursesDao(realm)
+    private val channelsDao = ChannelDao(realm)
 
     val channels: LiveData<List<Channel>> by lazy {
-        channelsDao.channels()
+        channelsDao.all()
     }
 
     fun buildCourseLists(channelList: List<Channel>): List<List<Course>> {
@@ -24,11 +23,11 @@ class ChannelListViewModel : BaseViewModel() {
         for (channel in channelList) {
             val courseList = mutableListOf<Course>()
             if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-                courseList.addAll(coursesDao.futureCoursesForChannel(channel.id))
-                courseList.addAll(coursesDao.currentAndPastCoursesForChannel(channel.id))
+                courseList.addAll(CourseDao.Unmanaged.allFutureForChannel(channel.id))
+                courseList.addAll(CourseDao.Unmanaged.allCurrentAndPastForChannel(channel.id))
             } else {
-                courseList.addAll(coursesDao.currentAndFutureCoursesForChannel(channel.id))
-                courseList.addAll(coursesDao.pastCoursesForChannel(channel.id))
+                courseList.addAll(CourseDao.Unmanaged.allCurrentAndFutureForChannel(channel.id))
+                courseList.addAll(CourseDao.Unmanaged.allPastForChannel(channel.id))
             }
             courseLists.add(courseList)
         }

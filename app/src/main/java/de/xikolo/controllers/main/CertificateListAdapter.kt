@@ -13,7 +13,7 @@ import de.xikolo.R
 import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.models.Course
 import de.xikolo.models.DownloadAsset
-import de.xikolo.models.Enrollment
+import de.xikolo.models.dao.EnrollmentDao
 import java.util.*
 
 class CertificateListAdapter(private val fragment: CertificateListFragment, private val callback: OnCertificateCardClickListener) : RecyclerView.Adapter<CertificateListAdapter.CertificateViewHolder>() {
@@ -48,7 +48,7 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
         holder.container.removeAllViews()
 
         fragment.activity?.let { activity ->
-            Enrollment.getForCourse(course.id)?.let { enrollment ->
+            EnrollmentDao.Unmanaged.findForCourse(course.id)?.let { enrollment ->
                 if (course.certificates.confirmationOfParticipation.available) {
                     val dvh = DownloadViewHelper(
                         activity,

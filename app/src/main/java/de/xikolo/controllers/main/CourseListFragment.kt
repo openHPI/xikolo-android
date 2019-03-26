@@ -15,12 +15,13 @@ import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
+import de.xikolo.extensions.observe
 import de.xikolo.managers.CourseManager
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
+import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.utils.SectionList
-import de.xikolo.viewmodels.base.observe
 import de.xikolo.viewmodels.main.CourseListViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
@@ -209,8 +210,8 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
             public override fun onSuccess() {
                 if (view != null) {
                     hideAnyProgress()
-                    val course = Course.get(courseId)
-                    if (course.accessible) {
+                    val course = CourseDao.Unmanaged.find(courseId)
+                    if (course?.accessible == true) {
                         enterCourse(courseId)
                     }
                 }
@@ -247,11 +248,13 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLoginEvent(event: LoginEvent) {
         onRefresh()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLogoutEvent(event: LogoutEvent) {
         onRefresh()

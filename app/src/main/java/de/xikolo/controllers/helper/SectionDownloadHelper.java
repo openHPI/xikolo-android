@@ -14,6 +14,7 @@ import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
+import de.xikolo.models.dao.VideoDao;
 import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.LanalyticsUtil;
@@ -81,13 +82,13 @@ public class SectionDownloadHelper {
                 for (Item item : section.getAccessibleItems()) {
                     if (item.contentType.equals(Item.TYPE_VIDEO)) {
                         if (sdVideo) {
-                            startDownload(new DownloadAsset.Course.Item.VideoSD(item, Video.getForContentId(item.contentId)));
+                            startDownload(new DownloadAsset.Course.Item.VideoSD(item, VideoDao.Unmanaged.find(item.contentId)));
                         }
                         if (hdVideo) {
-                            startDownload(new DownloadAsset.Course.Item.VideoHD(item, Video.getForContentId(item.contentId)));
+                            startDownload(new DownloadAsset.Course.Item.VideoHD(item, VideoDao.Unmanaged.find(item.contentId)));
                         }
                         if (slides) {
-                            startDownload(new DownloadAsset.Course.Item.Slides(item, Video.getForContentId(item.contentId)));
+                            startDownload(new DownloadAsset.Course.Item.Slides(item, VideoDao.Unmanaged.find(item.contentId)));
                         }
                     }
                 }

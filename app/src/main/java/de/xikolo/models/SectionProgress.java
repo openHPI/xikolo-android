@@ -3,7 +3,6 @@ package de.xikolo.models;
 import com.squareup.moshi.Json;
 
 import de.xikolo.models.base.RealmAdapter;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -30,14 +29,6 @@ public class SectionProgress extends RealmObject {
     public VisitStatistic visits;
 
     public String courseProgressId;
-
-    public static SectionProgress get(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        SectionProgress model = realm.where(SectionProgress.class).equalTo("id", id).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
-    }
 
     @JsonApi(type = "section-progresses")
     public static class JsonModel extends Resource implements RealmAdapter<SectionProgress> {

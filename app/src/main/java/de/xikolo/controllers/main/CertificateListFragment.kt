@@ -14,7 +14,7 @@ import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
-import de.xikolo.viewmodels.base.observe
+import de.xikolo.extensions.observe
 import de.xikolo.viewmodels.main.CertificateListViewModel
 import de.xikolo.views.SpaceItemDecoration
 import org.greenrobot.eventbus.EventBus

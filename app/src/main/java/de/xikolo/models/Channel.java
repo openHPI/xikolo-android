@@ -1,16 +1,15 @@
 package de.xikolo.models;
 
 import android.graphics.Color;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 
 import com.squareup.moshi.Json;
 
+import androidx.core.content.ContextCompat;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.models.base.RealmAdapter;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.JsonApi;
@@ -34,14 +33,6 @@ public class Channel extends RealmObject {
     public String description;
 
     public String imageUrl;
-
-    public static Channel get(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        Channel model = realm.where(Channel.class).equalTo("id", id).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
-    }
 
     public int getColorOrDefault() {
         if (color != null)

@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.base.BaseDialogFragment
-import de.xikolo.models.SubtitleTrack
+import de.xikolo.models.dao.SubtitleTrackDao
 import de.xikolo.utils.LanguageUtil
 
 class ChooseLanguageDialog : BaseDialogFragment() {
@@ -23,7 +23,7 @@ class ChooseLanguageDialog : BaseDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         var items: Array<CharSequence?>? = null
 
-        val subtitles = SubtitleTrack.listForVideoId(videoId)
+        val subtitles = SubtitleTrackDao.Unmanaged.allForVideo(videoId)
 
         if (subtitles.isNotEmpty()) {
             items = arrayOfNulls(subtitles.size)

@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import de.xikolo.R;
 import de.xikolo.controllers.base.BaseActivity;
 import de.xikolo.models.Item;
+import de.xikolo.models.dao.ItemDao;
 import de.xikolo.utils.LanalyticsUtil;
 
 public class SlideViewerActivity extends BaseActivity {
@@ -29,7 +30,7 @@ public class SlideViewerActivity extends BaseActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        Item item = Item.get(itemId);
+        Item item = ItemDao.Unmanaged.find(itemId);
         setTitle(item.title + " - " + getString(R.string.second_screen_slides));
 
         String tag = "content";

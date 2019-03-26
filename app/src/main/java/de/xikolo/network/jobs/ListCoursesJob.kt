@@ -8,7 +8,7 @@ import de.xikolo.models.Enrollment
 import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.NetworkJob
 import de.xikolo.network.sync.Sync
-import de.xikolo.viewmodels.base.NetworkStateLiveData
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import io.realm.kotlin.where
 import ru.gildor.coroutines.retrofit.awaitResponse
 

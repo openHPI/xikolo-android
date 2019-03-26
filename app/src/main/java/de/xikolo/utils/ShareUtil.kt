@@ -12,7 +12,7 @@ import android.os.Build
 import androidx.core.app.ShareCompat
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.models.Course
+import de.xikolo.models.dao.CourseDao
 
 object ShareUtil {
 
@@ -20,7 +20,7 @@ object ShareUtil {
     fun shareCourseLink(activity: Activity, courseId: String) {
         val intent = ShareCompat.IntentBuilder.from(activity)
             .setType("text/plain")
-            .setText("${Config.HOST_URL}courses/${Course.find(courseId)?.slug}")
+            .setText("${Config.HOST_URL}courses/${CourseDao.Unmanaged.find(courseId)?.slug}")
             .intent
 
         val chooserIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {

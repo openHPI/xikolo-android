@@ -19,9 +19,10 @@ import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
 import de.xikolo.config.GlideApp;
 import de.xikolo.managers.UserManager;
-import de.xikolo.models.Announcement;
 import de.xikolo.models.Profile;
 import de.xikolo.models.User;
+import de.xikolo.models.dao.AnnouncementDao;
+import de.xikolo.models.dao.UserDao;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.views.CustomFontTextView;
 
@@ -166,10 +167,10 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 profileViewHolder.viewLogin.setVisibility(View.GONE);
                 profileViewHolder.viewProfile.setVisibility(View.VISIBLE);
 
-                User user = User.get(UserManager.getUserId());
+                User user = UserDao.Unmanaged.find(UserManager.getUserId());
 
                 if (user != null) {
-                    Profile profile = Profile.get(user.profileId);
+                    Profile profile = user.getProfile();
                     profileViewHolder.textName.setText(String.format(context.getResources().getString(R.string.user_name),
                             profile.firstName, profile.lastName));
                     profileViewHolder.textEmail.setText(profile.email);
@@ -190,7 +191,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
 
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
 
-            long count = Announcement.countNotVisited();
+            long count = AnnouncementDao.Unmanaged.countNotVisited();
             if (count > 0) {
                 counterViewHolder.textCounter.setText(String.valueOf(count));
                 counterViewHolder.textCounter.setVisibility(View.VISIBLE);

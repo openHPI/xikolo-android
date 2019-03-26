@@ -4,6 +4,9 @@ import de.xikolo.managers.ItemManager;
 import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
+import de.xikolo.models.dao.CourseDao;
+import de.xikolo.models.dao.ItemDao;
+import de.xikolo.models.dao.SectionDao;
 import de.xikolo.presenters.base.LoadingStatePresenter;
 import de.xikolo.presenters.base.LoadingStateView;
 import io.realm.Realm;
@@ -44,13 +47,13 @@ public class ItemPresenter<V extends LoadingStateView> extends LoadingStatePrese
 
     protected void loadModels() {
         if (course == null) {
-            course = Course.get(courseId);
+            course = CourseDao.Unmanaged.find(courseId);
         }
         if (section == null) {
-            section = Section.get(sectionId);
+            section = SectionDao.Unmanaged.find(sectionId);
         }
         if (item == null) {
-            item = Item.get(itemId);
+            item = ItemDao.Unmanaged.find(itemId);
         }
     }
 

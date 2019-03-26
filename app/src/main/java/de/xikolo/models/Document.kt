@@ -1,7 +1,6 @@
 package de.xikolo.models
 
 import com.squareup.moshi.Json
-import com.vicpin.krealmextensions.query
 import de.xikolo.models.base.RealmAdapter
 import io.realm.RealmList
 import io.realm.RealmObject
@@ -24,9 +23,6 @@ open class Document : RealmObject() {
     var isPublic: Boolean = false
 
     var courseIds: RealmList<String> = RealmList()
-
-    val localizations: List<DocumentLocalization>
-        get() = DocumentLocalization().query { equalTo("documentId", id) }
 
     @JsonApi(type = "documents")
     class JsonModel : Resource(), RealmAdapter<Document> {

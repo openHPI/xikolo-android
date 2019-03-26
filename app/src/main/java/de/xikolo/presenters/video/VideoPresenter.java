@@ -5,6 +5,10 @@ import de.xikolo.models.Course;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
 import de.xikolo.models.Video;
+import de.xikolo.models.dao.CourseDao;
+import de.xikolo.models.dao.ItemDao;
+import de.xikolo.models.dao.SectionDao;
+import de.xikolo.models.dao.VideoDao;
 import de.xikolo.presenters.base.Presenter;
 import io.realm.Realm;
 
@@ -51,16 +55,16 @@ public class VideoPresenter extends Presenter<VideoView> {
 
     private void loadModels() {
         if (course == null) {
-            course = Course.get(courseId);
+            course = CourseDao.Unmanaged.find(courseId);
         }
         if (section == null) {
-            section = Section.get(sectionId);
+            section = SectionDao.Unmanaged.find(sectionId);
         }
         if (item == null) {
-            item = Item.get(itemId);
+            item = ItemDao.Unmanaged.find(itemId);
         }
         if (video == null) {
-            video = Video.get(videoId);
+            video = VideoDao.Unmanaged.find(videoId);
         }
     }
 

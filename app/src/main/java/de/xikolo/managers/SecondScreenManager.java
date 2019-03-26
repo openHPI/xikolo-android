@@ -8,6 +8,7 @@ import de.xikolo.App;
 import de.xikolo.events.base.Event;
 import de.xikolo.models.Item;
 import de.xikolo.models.WebSocketMessage;
+import de.xikolo.models.dao.ItemDao;
 import de.xikolo.network.jobs.base.RequestJobCallback;
 import de.xikolo.utils.NotificationUtil;
 
@@ -99,7 +100,7 @@ public class SecondScreenManager {
         return new RequestJobCallback() {
             @Override
             public void onSuccess() {
-                Item item = Item.get(itemId);
+                Item item = ItemDao.Unmanaged.find(itemId);
                 itemManager.requestSubtitlesWithCuesForVideo(item.contentId, subtitleCallback(message));
             }
 
@@ -114,7 +115,7 @@ public class SecondScreenManager {
         return new RequestJobCallback() {
             @Override
             protected void onSuccess() {
-                Item item = Item.get(itemId);
+                Item item = ItemDao.Unmanaged.find(itemId);
 
                 // show notification
                 notificationUtil.showSecondScreenNotification(item.title);

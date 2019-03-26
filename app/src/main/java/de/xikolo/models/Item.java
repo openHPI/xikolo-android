@@ -7,8 +7,10 @@ import java.util.Date;
 import androidx.annotation.StringRes;
 import de.xikolo.R;
 import de.xikolo.models.base.RealmAdapter;
+import de.xikolo.models.dao.CourseDao;
+import de.xikolo.models.dao.ItemDao;
+import de.xikolo.models.dao.SectionDao;
 import de.xikolo.utils.DateUtil;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -42,47 +44,16 @@ public class Item extends RealmObject {
 
     public String courseId;
 
-    public static Item get(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        Item model = realm.where(Item.class).equalTo("id", id).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
+    public Section getSection() {
+        return SectionDao.Unmanaged.find(sectionId);
     }
 
-    public Section getSection() {
-        Realm realm = Realm.getDefaultInstance();
-        Section model = realm.where(Section.class).equalTo("id", sectionId).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
+    public Course getCourse() {
+        return CourseDao.Unmanaged.find(courseId);
     }
 
     public RealmObject getContent() {
-        Realm realm = Realm.getDefaultInstance();
-
-        RealmObject model = null;
-        switch (contentType) {
-            case TYPE_TEXT:
-                model = realm.where(RichText.class).equalTo("id", contentId).findFirst();
-                break;
-            case TYPE_VIDEO:
-                model = realm.where(Video.class).equalTo("id", contentId).findFirst();
-                break;
-            case TYPE_QUIZ:
-                model = realm.where(Quiz.class).equalTo("id", contentId).findFirst();
-                break;
-            case TYPE_LTI:
-                model = realm.where(LtiExercise.class).equalTo("id", contentId).findFirst();
-                break;
-            case TYPE_PEER:
-                model = realm.where(PeerAssessment.class).equalTo("id", contentId).findFirst();
-                break;
-        }
-
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
+        return ItemDao.Unmanaged.findContent(contentId);
     }
 
     public static final String TYPE_TEXT = "rich_text";

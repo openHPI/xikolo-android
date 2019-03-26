@@ -1,6 +1,7 @@
 package de.xikolo.viewmodels.base
 
 import androidx.lifecycle.ViewModel
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import io.realm.Realm
 
 abstract class BaseViewModel : ViewModel() {

@@ -12,7 +12,7 @@ import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.main.AnnouncementListAdapter
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.viewmodels.base.observe
+import de.xikolo.extensions.observe
 import de.xikolo.viewmodels.main.AnnouncementListViewModel
 
 class AnnouncementListFragment : NetworkStateFragment<AnnouncementListViewModel>() {

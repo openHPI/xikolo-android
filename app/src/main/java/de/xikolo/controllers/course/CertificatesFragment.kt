@@ -10,10 +10,11 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
+import de.xikolo.extensions.observe
 import de.xikolo.models.Course
 import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Enrollment
-import de.xikolo.viewmodels.base.observe
+import de.xikolo.models.dao.EnrollmentDao
 import de.xikolo.viewmodels.course.CertificateListViewModel
 
 class CertificatesFragment : NetworkStateFragment<CertificateListViewModel>() {
@@ -48,7 +49,7 @@ class CertificatesFragment : NetworkStateFragment<CertificateListViewModel>() {
             .observe(this) {
                 showCertificates(
                     it,
-                    Enrollment.getForCourse(it.id)
+                    EnrollmentDao.Unmanaged.findForCourse(it.id)
                 )
             }
     }

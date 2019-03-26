@@ -11,9 +11,9 @@ import de.xikolo.controllers.channels.ChannelDetailsActivityAutoBundle
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
+import de.xikolo.extensions.observe
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
-import de.xikolo.viewmodels.base.observe
 import de.xikolo.viewmodels.main.ChannelListViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
@@ -125,11 +125,13 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLoginEvent(event: LoginEvent) {
         onRefresh()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLogoutEvent(event: LogoutEvent) {
         onRefresh()

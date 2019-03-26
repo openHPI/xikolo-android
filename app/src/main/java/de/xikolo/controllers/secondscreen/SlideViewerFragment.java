@@ -34,6 +34,8 @@ import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.models.DownloadAsset;
 import de.xikolo.models.Item;
 import de.xikolo.models.Video;
+import de.xikolo.models.dao.ItemDao;
+import de.xikolo.models.dao.VideoDao;
 
 public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteListener, OnPageChangeListener {
 
@@ -69,8 +71,8 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Item item = Item.get(itemId);
-        Video video = Video.getForContentId(item.contentId);
+        Item item = ItemDao.Unmanaged.find(itemId);
+        Video video = VideoDao.Unmanaged.find(item.contentId);
         slides = new DownloadAsset.Course.Item.Slides(item, video);
 
         fab.setOnClickListener(v -> {

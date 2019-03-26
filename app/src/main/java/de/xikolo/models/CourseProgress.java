@@ -3,7 +3,6 @@ package de.xikolo.models;
 import com.squareup.moshi.Json;
 
 import de.xikolo.models.base.RealmAdapter;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
@@ -22,14 +21,6 @@ public class CourseProgress extends RealmObject {
     public ExerciseStatistic bonusExercises;
 
     public VisitStatistic visits;
-
-    public static CourseProgress get(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        CourseProgress model = realm.where(CourseProgress.class).equalTo("id", id).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
-    }
 
     @JsonApi(type = "course-progresses")
     public static class JsonModel extends Resource implements RealmAdapter<CourseProgress> {

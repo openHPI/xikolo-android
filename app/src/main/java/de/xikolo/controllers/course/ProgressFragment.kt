@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
-import de.xikolo.models.CourseProgress
-import de.xikolo.viewmodels.base.observe
+import de.xikolo.extensions.observe
+import de.xikolo.models.dao.CourseProgressDao
 import de.xikolo.viewmodels.course.ProgressViewModel
 import de.xikolo.views.SpaceItemDecoration
 
@@ -65,12 +65,10 @@ class ProgressFragment : NetworkStateFragment<ProgressViewModel>() {
         ))
 
         viewModel.sectionProgresses
-            .observe(this) {
-                if (it.isNotEmpty()) {
-                    adapter.update(
-                        CourseProgress.get(courseId),
-                        it
-                    )
+            .observe(this) { sp ->
+                val cp = CourseProgressDao.Unmanaged.find(courseId)
+                if (sp.isNotEmpty() && cp != null) {
+                    adapter.update(cp, sp)
                     showContent()
                 }
             }

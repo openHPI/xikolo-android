@@ -12,12 +12,11 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.course.CourseActivityAutoBundle
+import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Announcement
-import de.xikolo.models.Course
 import de.xikolo.utils.MarkdownUtil
 import de.xikolo.viewmodels.announcement.AnnouncementViewModel
-import de.xikolo.viewmodels.base.observe
 import java.text.DateFormat
 import java.util.*
 
@@ -61,9 +60,9 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementViewModel>() {
     }
 
     private fun showAnnouncement(announcement: Announcement) {
-        if (global && announcement.courseId != null) {
-            val course = Course.get(announcement.courseId)
-            if (course.accessible && course.isEnrolled) {
+        if (global) {
+            val course = announcement.course
+            if (course?.accessible == true && course.isEnrolled) {
                 courseButton.visibility = View.VISIBLE
                 courseButton.setOnClickListener {
                     val intent = CourseActivityAutoBundle.builder().courseId(announcement.courseId).build(activity!!)
