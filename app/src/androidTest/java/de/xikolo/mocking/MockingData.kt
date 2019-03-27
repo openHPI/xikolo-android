@@ -14,10 +14,10 @@ class MockingData {
          */
         fun getResponse(context: Context, request: Request, flavor: BuildFlavor): BaseMockedResponse? {
             return when (request.url().encodedPath()) {
-                MockedRequest.AUTHENTICATE.path -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/authenticate")
-                MockedRequest.COURSES.path      -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/courses")
-                MockedRequest.CHANNELS.path     -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/channels")
-                MockedRequest.USERS_ME.path     -> MockedResponseFromJsonAsset(context, "mockedJsonApiResponses/users/me")
+                MockedRequest.AUTHENTICATE.path -> MockedResponseFromJsonAsset(context, "mockdata/authenticate")
+                MockedRequest.COURSES.path      -> MockedResponseFromJsonAsset(context, "mockdata/courses")
+                MockedRequest.CHANNELS.path     -> MockedResponseFromJsonAsset(context, "mockdata/channels")
+                MockedRequest.USERS_ME.path     -> MockedResponseFromJsonAsset(context, "mockdata/users/me")
                 else                            -> null
             }
         }

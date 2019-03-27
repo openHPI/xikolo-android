@@ -60,103 +60,103 @@ public abstract class ApiService {
         return chain.proceed(builder.build());
     };
 
-    // interceptor doing nothing
-    private static Interceptor mockingInterceptor = chain -> chain.proceed(chain.request());
-
-    public synchronized static void enableMocking(Interceptor interceptor) {
-        mockingInterceptor = interceptor;
-        invalidateInstance();
-    }
-
-    public synchronized static void disableMocking() {
-        mockingInterceptor = chain -> chain.proceed(chain.request());
-        invalidateInstance();
-    }
-
     private static ApiServiceInterface service;
 
     private ApiService() {
     }
 
-    private synchronized static void invalidateInstance() {
+    public synchronized static void invalidateInstance() {
         service = null;
+    }
+
+    public synchronized static void setupInstance() {
+        setupInstance(buildHttpClient());
+    }
+
+    public synchronized static void setupInstance(OkHttpClient client) {
+        service = buildInstance(client);
     }
 
     public synchronized static ApiServiceInterface getInstance() {
         if (service == null) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            if (Config.DEBUG) {
-                logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-            } else {
-                logging.setLevel(HttpLoggingInterceptor.Level.NONE);
-            }
-
-            OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(chain -> {
-                    Request original = chain.request();
-
-                    String mediaType = Config.MEDIA_TYPE_JSON_API;
-                    String xikoloVersionExtension = "; xikolo-version=" + Config.XIKOLO_API_VERSION;
-                    String appLanguage = Locale.getDefault().getLanguage();
-
-                    // plain json calls
-                    List plainJson = Arrays.asList(
-                        "/api/v2/authenticate"
-                    );
-                    if (plainJson.contains(original.url().encodedPath())) {
-                        mediaType = Config.MEDIA_TYPE_JSON;
-                        xikoloVersionExtension = "";
-                    }
-
-                    Request.Builder builder = original.newBuilder()
-                        .header(Config.HEADER_ACCEPT, mediaType + xikoloVersionExtension)
-                        .header(Config.HEADER_CONTENT_TYPE, mediaType)
-                        .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE)
-                        .header(Config.HEADER_ACCEPT_LANGUAGE, appLanguage);
-
-                    return chain.proceed(builder.build());
-                })
-                .addInterceptor(authenticationInterceptor)
-                .addInterceptor(userAgentInterceptor)
-                .addInterceptor(mockingInterceptor)
-                .addInterceptor(logging)
-                .build();
-
-            JsonAdapter.Factory jsonApiAdapterFactory = ResourceAdapterFactory.builder()
-                .add(Course.JsonModel.class)
-                .add(Channel.JsonModel.class)
-                .add(Section.JsonModel.class)
-                .add(Item.JsonModel.class)
-                .add(Enrollment.JsonModel.class)
-                .add(CourseProgress.JsonModel.class)
-                .add(SectionProgress.JsonModel.class)
-                .add(Profile.JsonModel.class)
-                .add(RichText.JsonModel.class)
-                .add(Quiz.JsonModel.class)
-                .add(Video.JsonModel.class)
-                .add(LtiExercise.JsonModel.class)
-                .add(PeerAssessment.JsonModel.class)
-                .add(SubtitleTrack.JsonModel.class)
-                .add(SubtitleCue.JsonModel.class)
-                .add(Announcement.JsonModel.class)
-                .add(Document.JsonModel.class)
-                .add(DocumentLocalization.JsonModel.class)
-                .build();
-
-            Moshi moshi = new Moshi.Builder()
-                .add(jsonApiAdapterFactory)
-                .build();
-
-            Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Config.API_URL)
-                .client(client)
-                .addConverterFactory(JsonApiConverterFactory.create(moshi))
-                .addConverterFactory(MoshiConverterFactory.create())
-                .build();
-
-            service = retrofit.create(ApiServiceInterface.class);
+            setupInstance();
         }
         return service;
+    }
+
+    public synchronized static ApiServiceInterface buildInstance(OkHttpClient client) {
+        JsonAdapter.Factory jsonApiAdapterFactory = ResourceAdapterFactory.builder()
+            .add(Course.JsonModel.class)
+            .add(Channel.JsonModel.class)
+            .add(Section.JsonModel.class)
+            .add(Item.JsonModel.class)
+            .add(Enrollment.JsonModel.class)
+            .add(CourseProgress.JsonModel.class)
+            .add(SectionProgress.JsonModel.class)
+            .add(Profile.JsonModel.class)
+            .add(RichText.JsonModel.class)
+            .add(Quiz.JsonModel.class)
+            .add(Video.JsonModel.class)
+            .add(LtiExercise.JsonModel.class)
+            .add(PeerAssessment.JsonModel.class)
+            .add(SubtitleTrack.JsonModel.class)
+            .add(SubtitleCue.JsonModel.class)
+            .add(Announcement.JsonModel.class)
+            .add(Document.JsonModel.class)
+            .add(DocumentLocalization.JsonModel.class)
+            .build();
+
+        Moshi moshi = new Moshi.Builder()
+            .add(jsonApiAdapterFactory)
+            .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(Config.API_URL)
+            .client(client)
+            .addConverterFactory(JsonApiConverterFactory.create(moshi))
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build();
+
+        return retrofit.create(ApiServiceInterface.class);
+    }
+
+    public synchronized static OkHttpClient buildHttpClient() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        if (Config.DEBUG) {
+            logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        } else {
+            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+
+        return new OkHttpClient.Builder()
+            .addInterceptor(chain -> {
+                Request original = chain.request();
+
+                String mediaType = Config.MEDIA_TYPE_JSON_API;
+                String xikoloVersionExtension = "; xikolo-version=" + Config.XIKOLO_API_VERSION;
+                String appLanguage = Locale.getDefault().getLanguage();
+
+                // plain json calls
+                List plainJson = Arrays.asList(
+                    "/api/v2/authenticate"
+                );
+                if (plainJson.contains(original.url().encodedPath())) {
+                    mediaType = Config.MEDIA_TYPE_JSON;
+                    xikoloVersionExtension = "";
+                }
+
+                Request.Builder builder = original.newBuilder()
+                    .header(Config.HEADER_ACCEPT, mediaType + xikoloVersionExtension)
+                    .header(Config.HEADER_CONTENT_TYPE, mediaType)
+                    .header(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE)
+                    .header(Config.HEADER_ACCEPT_LANGUAGE, appLanguage);
+
+                return chain.proceed(builder.build());
+            })
+            .addInterceptor(authenticationInterceptor)
+            .addInterceptor(userAgentInterceptor)
+            .addInterceptor(logging)
+            .build();
     }
 
 }

@@ -13,10 +13,13 @@ open class BaseMockedTest {
      */
     @Before
     fun enableMocking() {
-        ApiService.enableMocking(
-            MockingInterceptor(
-                InstrumentationRegistry.getInstrumentation().context
-            )
+        val mockingInterceptor = MockingInterceptor(InstrumentationRegistry.getInstrumentation().context)
+
+        ApiService.setupInstance(
+            ApiService.buildHttpClient()
+                .newBuilder()
+                .addInterceptor(mockingInterceptor)
+                .build()
         )
     }
 
@@ -25,7 +28,7 @@ open class BaseMockedTest {
      */
     @After
     fun disableMocking() {
-        ApiService.disableMocking()
+        ApiService.invalidateInstance()
     }
 
 }
