@@ -1,25 +1,35 @@
 package de.xikolo.network.jobs.base
 
-import com.evernote.android.job.Job
+import android.content.Context
+import androidx.work.CoroutineWorker
+import androidx.work.Data
+import androidx.work.WorkerParameters
 import de.xikolo.managers.UserManager
+import kotlinx.coroutines.Dispatchers
 import java.io.IOException
 
-abstract class ScheduledJob(private vararg val preconditions: Precondition) : Job() {
+abstract class ScheduledJob(
+    context: Context,
+    params: WorkerParameters,
+    private vararg val preconditions: Precondition
+) : CoroutineWorker(context, params) {
 
-    @Throws(IOException::class)
-    protected abstract fun onRun(params: Params): Result
+    override val coroutineContext = Dispatchers.IO
 
-    override fun onRunJob(params: Params): Result {
+    override suspend fun doWork(): Result {
         if (preconditions.contains(Precondition.AUTH) && !UserManager.isAuthorized) {
-            return Result.FAILURE
+            return Result.failure()
         }
 
         return try {
-            onRun(params)
+            onRun(inputData)
         } catch (e: IOException) {
-            Result.FAILURE
+            Result.failure()
         }
     }
+
+    @Throws(IOException::class)
+    protected abstract suspend fun onRun(data: Data): Result
 
     enum class Precondition {
         AUTH
