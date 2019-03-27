@@ -5,9 +5,9 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
+import org.java_websocket.enums.ReadyState;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -85,7 +85,7 @@ public class WebSocketManager {
                 SSLContext sc = SSLContext.getInstance("TLS");
                 sc.init(null, null, null);
                 SSLSocketFactory factory = sc.getSocketFactory();
-                webSocketClient.setSocket(factory.createSocket());
+                webSocketClient.setSocketFactory(factory);
                 webSocketClient.connect();
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -114,7 +114,7 @@ public class WebSocketManager {
     }
 
     public boolean isConnected() {
-        return webSocketClient != null && webSocketClient.getReadyState() == WebSocket.READYSTATE.OPEN;
+        return webSocketClient != null && webSocketClient.getReadyState() == ReadyState.OPEN;
     }
 
     @SuppressWarnings("unused")
