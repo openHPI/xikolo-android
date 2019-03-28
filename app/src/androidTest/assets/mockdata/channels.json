@@ -1,0 +1,50 @@
+{
+  "data": [
+    {
+      "type": "channels",
+      "id": "enterprise",
+      "links": {
+        "self": "/api/v2/channels/ea0de67d-ce69-4e4d-993a-8638d264d2f6"
+      },
+      "attributes": {
+        "name": "Enterprise MOOCs",
+        "title": "Enterprise MOOCs",
+        "slug": "enterprise",
+        "color": "#fbab00",
+        "position": 0,
+        "description": "How can you balance your busy work schedule, while learning how SAP innovations could potentially transform your business? With openSAP, of course! Whether you’re an SAP professional, developer, consultant, entrepreneur, professor or student you can keep up to date with the latest innovations from SAP\r\n\r\nopenSAP is SAP’s innovative learning platform and a thought leader for Enterprise MOOCs (Massive Open Online Courses).\r\n\r\nopenSAP gives you maximum flexibility to learn at your convenience. Compared to traditional e-learning, it provides you with an engaging and effective learning experience through gamification and by connecting you with other learners and SAP experts.\r\n\r\nopenSAP courses are free of charge (except for optional system access) and are offered in English. See our [openSAP course listings][1] for more information.\r\n\r\nVisit [SAP Education][2] to find out about further training related to your openSAP course. You can also find a complete overview of SAP Education´s training offerings under [SAP Training and Certification Shop][3].\r\n\r\n  [1]: https://open.sap.com/courses\r\n  [2]: https://training.sap.com/shop/content/opensap\r\n  [3]: https://training.sap.com/",
+        "mobile_image_url": "https://s3.xopic.de/opensap-public/channels/77Eyx5HT7Q3TRTrIGlGxOm/mobile_v1.jpg"
+      },
+      "relationships": {
+        "courses": {
+          "links": {
+            "related": "/api/v2/courses?filter%5Bchannel%5D=ea0de67d-ce69-4e4d-993a-8638d264d2f6"
+          }
+        }
+      }
+    },
+    {
+      "type": "channels",
+      "id": "thought-leaders",
+      "links": {
+        "self": "/api/v2/channels/0c035719-651b-444c-b4d5-d6d3fa1da89f"
+      },
+      "attributes": {
+        "name": "Thought Leaders",
+        "title": "Thought Leaders",
+        "slug": "thought-leaders",
+        "color": "#008fd3",
+        "position": 0,
+        "description": "The openSAP team has introduced a new series called openSAP thought leaders. Businesses are entering a new era of unprecedented change. The drivers of these changes are diverse and continue to evolve. Businesses need to adapt to these changes to meet their customers’ needs. To accelerate change and simplification, businesses need thought leadership. openSAP is offering its platform to thought leaders from both business and academic communities to share their insights on the drivers of change, how to manage the change, and how to master complexity. By sharing their stories of successful digital innovation and transformation, we hope to empower learners to open their minds to the latest and greatest ideas.",
+        "mobile_image_url": "https://s3.xopic.de/opensap-public/channels/mFqVSY40Ezvrg4yfoaONF/mobile_v1.jpg"
+      },
+      "relationships": {
+        "courses": {
+          "links": {
+            "related": "/api/v2/courses?filter%5Bchannel%5D=0c035719-651b-444c-b4d5-d6d3fa1da89f"
+          }
+        }
+      }
+    }
+  ]
+}

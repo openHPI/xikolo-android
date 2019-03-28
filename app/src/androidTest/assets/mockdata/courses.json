@@ -1,0 +1,1345 @@
+{
+  "data": [
+    {
+      "type": "courses",
+      "id": "32004492-10d1-4e77-aaf1-a7c774d5c932",
+      "links": {
+        "self": "/api/v2/courses/32004492-10d1-4e77-aaf1-a7c774d5c932"
+      },
+      "attributes": {
+        "title": "Upgrade2Success – Making SAP ERP HCM Migration Easier",
+        "slug": "sf6",
+        "start_at": "2019-02-12T09:00:00.000+00:00",
+        "end_at": "2019-03-13T09:00:00.000+00:00",
+        "abstract": "Join this free online course to learn what you need to move from your on-premise SAP ERP HCM solution to the cloud. The course is ideal for HR and IT professionals.",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F1wlJNMV4BzOJgTo9EHigPU%2Fvisual_v1.jpg",
+        "language": "en",
+        "status": "announced",
+        "classifiers": {
+          "reporting": [
+            "dim_hcm",
+            "dim_cp"
+          ],
+          "category": [
+            "Administrator",
+            "Technology Consultant",
+            "Application Consultant"
+          ],
+          "topic": [
+            "SAP Cloud Platform",
+            "Human Resources",
+            "Enterprise Management"
+          ],
+          "keywords": [
+            "SAP SuccessFactors",
+            "HR",
+            "Human Resources",
+            "Human Capital Management",
+            "SAP SuccessFactors Human Capital Management",
+            "HCM",
+            "SAP ERP HCM Migration",
+            "Upgrade2Success",
+            "Migration Services Approach",
+            "Data Protection",
+            "SAP Cloud Platform"
+          ]
+        },
+        "teachers": "Wim Valstar",
+        "accessible": false,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": true,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": true,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": false
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "enterprise"
+          },
+          "links": {
+            "related": "/api/v2/channels/enterprise"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "32004492-10d1-4e77-aaf1-a7c774d5c932"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/32004492-10d1-4e77-aaf1-a7c774d5c932"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+          }
+        }
+      }
+    },
+    {
+      "type": "courses",
+      "id": "dcc24b6e-8e29-46b2-9728-b08e8712d0b6",
+      "links": {
+        "self": "/api/v2/courses/dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+      },
+      "attributes": {
+        "title": "System Conversion to SAP S/4HANA (Repeat)",
+        "slug": "s4h11-1",
+        "start_at": "2019-02-06T09:00:00.000+00:00",
+        "end_at": "2019-03-14T09:00:00.000+00:00",
+        "abstract": "Join this this free open online course to learn how to convert an SAP ERP system into an SAP S/4HANA system. After completing this course, you’ll have a good understanding about the benefits of a system conversion compared to a new implementation, which tools support a system conversion, and what essential changes are required in the Finance and Logistics areas.   ",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F2b3k2O684O4dBW6NtGTOiz%2Fvisual_v1.jpg",
+        "language": "en",
+        "status": "announced",
+        "classifiers": {
+          "category": [
+            "Application Consultant",
+            "Technology Consultant",
+            "Administrator"
+          ],
+          "topic": [
+            "Enterprise Management",
+            "SAP S/4HANA",
+            "User Experience"
+          ],
+          "keywords": [
+            "sap s4hana",
+            "ERP",
+            "Enterprise Management",
+            "SAP S/4HANA UX",
+            "SAP S/4HANA",
+            "User Experience",
+            "UX",
+            "System Conversion",
+            "System Implementation",
+            "Finance",
+            "Logistics",
+            "SAP Fiori"
+          ],
+          "reporting": [
+            "dim_s4",
+            "dim_s4p",
+            "dim_ux"
+          ]
+        },
+        "teachers": "Featuring experts from the SAP S/4HANA Regional Implementation Group",
+        "accessible": false,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": true,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": true,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": false
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "enterprise"
+          },
+          "links": {
+            "related": "/api/v2/channels/enterprise"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+          }
+        }
+      }
+    },
+    {
+      "type": "courses",
+      "id": "17a1842f-9c2f-4de4-b98c-bdda432d107f",
+      "links": {
+        "self": "/api/v2/courses/17a1842f-9c2f-4de4-b98c-bdda432d107f"
+      },
+      "attributes": {
+        "title": "SAP Sales Cloud – An Overview ",
+        "slug": "c4h4",
+        "start_at": "2019-02-05T09:00:00.000+00:00",
+        "end_at": "2019-03-13T09:00:00.000+00:00",
+        "abstract": "Join this free online course to get an insight into SAP Sales Cloud solutions. Learn how to empower your salespeople to personalize buyer engagement, close deals faster, and align their behavior to your business goals. ",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2FIADttlvPfYEtOOdQQfOpx%2Fvisual_v1.jpg",
+        "language": "en",
+        "status": "announced",
+        "classifiers": {
+          "category": [
+            "Business Decision Maker",
+            "Salespeople"
+          ],
+          "topic": [
+            "Cloud Solutions"
+          ],
+          "keywords": [
+            "SAP Cloud for Customer",
+            "Customer Engagement and Commerce",
+            "CRM",
+            "SAP Customer Experience",
+            "SAP Marketing Cloud",
+            "SAP Commerce Cloud",
+            "SAP Sales Cloud",
+            "Buyer Engagement",
+            "Deal",
+            "Sales Automation",
+            "Sales Execution",
+            "Commissions",
+            "Subscription Billing"
+          ],
+          "reporting": [
+            "dim_cec",
+            "dim_intelli"
+          ]
+        },
+        "teachers": "Marco Flores , Simon Dechent , Nikhil Betigeri, Akash Winny, Ruchi Verma",
+        "accessible": false,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": true,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": true,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": false
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "enterprise"
+          },
+          "links": {
+            "related": "/api/v2/channels/enterprise"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=17a1842f-9c2f-4de4-b98c-bdda432d107f"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=17a1842f-9c2f-4de4-b98c-bdda432d107f"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=17a1842f-9c2f-4de4-b98c-bdda432d107f"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=17a1842f-9c2f-4de4-b98c-bdda432d107f"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "17a1842f-9c2f-4de4-b98c-bdda432d107f"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/17a1842f-9c2f-4de4-b98c-bdda432d107f"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=17a1842f-9c2f-4de4-b98c-bdda432d107f"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=17a1842f-9c2f-4de4-b98c-bdda432d107f"
+          }
+        }
+      }
+    },
+    {
+      "type": "courses",
+      "id": "ace4bcf6-5b03-4724-93cf-1a586a1c455f",
+      "links": {
+        "self": "/api/v2/courses/ace4bcf6-5b03-4724-93cf-1a586a1c455f"
+      },
+      "attributes": {
+        "title": "Software Development on SAP HANA (Update Q1/2019) ",
+        "slug": "hana7",
+        "start_at": "2019-01-23T09:00:00.000+00:00",
+        "end_at": "2019-02-21T09:01:00.000+00:00",
+        "abstract": "This free online course focuses on SAP HANA 2.0 and is aimed at software developers already familiar with SAP HANA. With this course, you’ll take a deeper dive on key topics from real world applications and learn about new functionality added in SAP HANA 2.0 SPS 03.  ",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F5gfdg56didOQhzZBUh1DJl%2Fvisual_v1.jpg",
+        "language": "en",
+        "status": "active",
+        "classifiers": {
+          "category": [
+            "Application Consultant",
+            "Developer"
+          ],
+          "topic": [
+            "SAP HANA"
+          ],
+          "keywords": [
+            "SAP Web IDE",
+            "HDI",
+            "XSA",
+            "Core Programming Model",
+            "SAP HANA",
+            "SAP HANA 2.0",
+            "SPS 03",
+            "SAP HANA Native Development",
+            "SAP HANA Native Apps",
+            "Cross-container",
+            "Security",
+            "SQL DDL",
+            "CDS",
+            "UI annotations",
+            "Open Source",
+            "Hands-on Programming Exercises",
+            "Coding"
+          ],
+          "reporting": [
+            "dim_hana",
+            "dim_cp"
+          ]
+        },
+        "teachers": "Thomas Jung , Rich Heilman ",
+        "accessible": true,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": true,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": true,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": false
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "enterprise"
+          },
+          "links": {
+            "related": "/api/v2/channels/enterprise"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=ace4bcf6-5b03-4724-93cf-1a586a1c455f"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=ace4bcf6-5b03-4724-93cf-1a586a1c455f"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=ace4bcf6-5b03-4724-93cf-1a586a1c455f"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=ace4bcf6-5b03-4724-93cf-1a586a1c455f"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "ace4bcf6-5b03-4724-93cf-1a586a1c455f"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/ace4bcf6-5b03-4724-93cf-1a586a1c455f"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=ace4bcf6-5b03-4724-93cf-1a586a1c455f"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=ace4bcf6-5b03-4724-93cf-1a586a1c455f"
+          }
+        }
+      }
+    },
+    {
+      "type": "courses",
+      "id": "6668ba5b-3e1b-4860-b71e-e76c0861e7f0",
+      "links": {
+        "self": "/api/v2/courses/6668ba5b-3e1b-4860-b71e-e76c0861e7f0"
+      },
+      "attributes": {
+        "title": "Reimagine Customer Experience with SAP C/4HANA",
+        "slug": "c4h1",
+        "start_at": "2019-01-22T09:00:00.000+00:00",
+        "end_at": "2019-03-06T09:00:00.000+00:00",
+        "abstract": "Join this course to learn how you can reimagine the customer experience with SAP C/4HANA. Learn about solutions that help brands build long-term competitive differentiation and brand loyalty through customer experiences that are trusted, simple, personal, helpful, and connected.",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F37f4Qs7Z4zTu8YNtBIVv1u%2Fvisual_v1.jpg",
+        "language": "en",
+        "status": "active",
+        "classifiers": {
+          "reporting": [
+            "cmp182_sapphire",
+            "dim_cec",
+            "dim_intelli"
+          ],
+          "category": [
+            "Business Decision Maker",
+            "Application Consultant",
+            "Technology Consultant",
+            "Salespeople"
+          ],
+          "topic": [
+            "Cloud Solutions"
+          ],
+          "keywords": [
+            "SAP Cloud for Customer",
+            "Customer Engagement and Commerce",
+            "CRM",
+            "SAP Customer Experience",
+            "SAP Marketing Cloud",
+            "SAP Commerce Cloud",
+            "SAP Sales Cloud",
+            "SAP Service Cloud",
+            "SAP Customer Data Cloud",
+            "SAP C/4HANA",
+            "Intelligent Enterprise"
+          ]
+        },
+        "teachers": "Featuring SAP Customer Experience Experts for SAP C/4HANA",
+        "accessible": true,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": true,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": true,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": false
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "enterprise"
+          },
+          "links": {
+            "related": "/api/v2/channels/enterprise"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=6668ba5b-3e1b-4860-b71e-e76c0861e7f0"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=6668ba5b-3e1b-4860-b71e-e76c0861e7f0"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=6668ba5b-3e1b-4860-b71e-e76c0861e7f0"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=6668ba5b-3e1b-4860-b71e-e76c0861e7f0"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "6668ba5b-3e1b-4860-b71e-e76c0861e7f0"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/6668ba5b-3e1b-4860-b71e-e76c0861e7f0"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=6668ba5b-3e1b-4860-b71e-e76c0861e7f0"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=6668ba5b-3e1b-4860-b71e-e76c0861e7f0"
+          }
+        }
+      }
+    },
+    {
+      "type": "courses",
+      "id": "c6d42b85-42cf-433a-b46f-37f478dbbf5d",
+      "links": {
+        "self": "/api/v2/courses/c6d42b85-42cf-433a-b46f-37f478dbbf5d"
+      },
+      "attributes": {
+        "title": "How Social Enterprises Enhance Corporate Supply Chains",
+        "slug": "sewf1-tl",
+        "start_at": "2019-01-22T09:00:00.000+00:00",
+        "end_at": "2019-02-20T09:01:00.000+00:00",
+        "abstract": "Join this free online course to get inspired and learn how social enterprises enhance corporate supply chains while contributing to a positive environmental and social impact. You’ll hear from representatives of both social enterprises and companies who are involved in corporate social partnerships and learn about the benefits for everyone involved. ",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F63brrL4X3ORtMkwk0dlikl%2Fvisual_v1.jpg",
+        "language": "en",
+        "status": "active",
+        "classifiers": {
+          "category": [
+            "Business Decision Maker"
+          ],
+          "topic": [
+            "Social Responsibility"
+          ],
+          "keywords": [
+            "Thought Leaders",
+            "Sustainability",
+            "Organizational Sustainability",
+            "Social Impact",
+            "Social Enterprises",
+            "Corporate Supply Chains",
+            "Social Procurement",
+            "Social Partnerships",
+            "Social Entrepreneurs",
+            "Social Enterprise World Forum",
+            "Buy Social Corporate Challenge campaign",
+            "Social Enterprise UK",
+            "From Babies with Love"
+          ],
+          "reporting": [
+            "ch_tl",
+            "dim_scm",
+            "dim_iot_scm",
+            "dim_social",
+            "dim_bn"
+          ]
+        },
+        "teachers": "Brought to you by Social Enterprise World Forum and Social Enterprise UK",
+        "accessible": true,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": true,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": true,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": false
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "thought-leaders"
+          },
+          "links": {
+            "related": "/api/v2/channels/thought-leaders"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=c6d42b85-42cf-433a-b46f-37f478dbbf5d"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=c6d42b85-42cf-433a-b46f-37f478dbbf5d"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=c6d42b85-42cf-433a-b46f-37f478dbbf5d"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=c6d42b85-42cf-433a-b46f-37f478dbbf5d"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "c6d42b85-42cf-433a-b46f-37f478dbbf5d"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/c6d42b85-42cf-433a-b46f-37f478dbbf5d"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=c6d42b85-42cf-433a-b46f-37f478dbbf5d"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=c6d42b85-42cf-433a-b46f-37f478dbbf5d"
+          }
+        }
+      }
+    },
+    {
+      "type": "courses",
+      "id": "b0364dd9-8437-49d6-94c5-82993722dcf9",
+      "links": {
+        "self": "/api/v2/courses/b0364dd9-8437-49d6-94c5-82993722dcf9"
+      },
+      "attributes": {
+        "title": "Freedom of Data with SAP Data Hub",
+        "slug": "hub1",
+        "start_at": "2019-01-15T09:00:00.000+00:00",
+        "end_at": "2019-03-06T09:00:00.000+00:00",
+        "abstract": "Join this free open online course to learn about SAP Data Hub. The course will provide you with an overview of the architecture as well as the installation/deployment options, and is aimed at application developers, data warehouse modelers, data engineers, data scientists, and technical business analysts. ",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F5mvsVA8GYpSOgjmeO0qMEp%2Fvisual_v1.jpg",
+        "language": "en",
+        "status": "active",
+        "classifiers": {
+          "category": [
+            "Developer",
+            "Application Consultant",
+            "Data Scientist"
+          ],
+          "topic": [
+            "Analytics"
+          ],
+          "keywords": [
+            "SAP Data Hub",
+            "Data Landscapes",
+            "Data Flows",
+            "Data Discovery",
+            "Data-Driven Data Pipelines",
+            "Data Warehouse Modelers",
+            "Data Engineers",
+            "Big Data",
+            "IOT",
+            "Intelligent Enterprise",
+            "SAP HANA Data Management Suite"
+          ],
+          "reporting": [
+            "dim_analytics",
+            "dim_ds",
+            "dim_intelli",
+            "dim_hana",
+            "dim_iot",
+            "dim_iot_scm",
+            "dim_ana_iot"
+          ]
+        },
+        "teachers": "Tobias Koebler, Christian Sengstock, Ulrich Christ",
+        "accessible": true,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": true,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": true,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": false
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "enterprise"
+          },
+          "links": {
+            "related": "/api/v2/channels/enterprise"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=b0364dd9-8437-49d6-94c5-82993722dcf9"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=b0364dd9-8437-49d6-94c5-82993722dcf9"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=b0364dd9-8437-49d6-94c5-82993722dcf9"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=b0364dd9-8437-49d6-94c5-82993722dcf9"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "b0364dd9-8437-49d6-94c5-82993722dcf9"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/b0364dd9-8437-49d6-94c5-82993722dcf9"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=b0364dd9-8437-49d6-94c5-82993722dcf9"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=b0364dd9-8437-49d6-94c5-82993722dcf9"
+          }
+        }
+      }
+    },
+    {
+      "type": "courses",
+      "id": "6f699cd6-937a-4d92-a84d-4e89a408867c",
+      "links": {
+        "self": "/api/v2/courses/6f699cd6-937a-4d92-a84d-4e89a408867c"
+      },
+      "attributes": {
+        "title": "SAP TechEd 2018 Recap",
+        "slug": "teched18",
+        "start_at": "2018-12-04T09:00:00.000+00:00",
+        "end_at": null,
+        "abstract": "Take a look back at SAP TechEd 2018 and catch up on topics such as Integration Out-of-the-Box, Next-Gen Data Management, Application Landscapes and Cloud-Native Architectures, Consumer-Grade Experience, Applied Intelligence, Security by Default, and \tOpen Platform. \r\n",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F3oepD9rau3mUkpZ0noQCi8%2Fvisual_v1.jpg",
+        "language": "en",
+        "status": "self-paced",
+        "classifiers": {
+          "reporting": [
+            "dim_iot",
+            "dim_iot_scm",
+            "dim_dtrafo",
+            "dim_analytics",
+            "dim_cp",
+            "dim_intelli",
+            "dim_leo",
+            "dim_s4",
+            "dim_s4c",
+            "dim_s4p",
+            "dim_sec",
+            "dim_ux",
+            "dim_ds",
+            "dim_hana",
+            "dim_ana_iot"
+          ],
+          "category": [
+            "Developer",
+            "Application Consultant",
+            "Technology Consultant",
+            "Administrator"
+          ],
+          "topic": [
+            "Analytics",
+            "SAP S/4HANA",
+            "User Experience",
+            "SAP Cloud Platform"
+          ],
+          "keywords": [
+            "SAP TechEd 2018",
+            "Recap",
+            "Analytics",
+            "Security",
+            "sap s4hana",
+            "UX",
+            "User Experience",
+            "SAP Cloud Platform"
+          ]
+        },
+        "teachers": "Featuring product and topic experts from SAP",
+        "accessible": true,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": false,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": false,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": false
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "enterprise"
+          },
+          "links": {
+            "related": "/api/v2/channels/enterprise"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=6f699cd6-937a-4d92-a84d-4e89a408867c"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=6f699cd6-937a-4d92-a84d-4e89a408867c"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=6f699cd6-937a-4d92-a84d-4e89a408867c"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=6f699cd6-937a-4d92-a84d-4e89a408867c"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "6f699cd6-937a-4d92-a84d-4e89a408867c"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/6f699cd6-937a-4d92-a84d-4e89a408867c"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=6f699cd6-937a-4d92-a84d-4e89a408867c"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=6f699cd6-937a-4d92-a84d-4e89a408867c"
+          }
+        }
+      }
+    },
+    {
+      "type": "courses",
+      "id": "7962929a-d4e1-4f3a-8222-c6f16ad9f8a8",
+      "links": {
+        "self": "/api/v2/courses/7962929a-d4e1-4f3a-8222-c6f16ad9f8a8"
+      },
+      "attributes": {
+        "title": "Integration – The Key to the Intelligent Enterprise",
+        "slug": "int1",
+        "start_at": "2018-11-19T09:00:00.000+00:00",
+        "end_at": "2018-12-18T09:00:00.000+00:00",
+        "abstract": "Join this free online course to learn how your business can become an Intelligent Enterprise by connecting your data, and get an overview of the integration options provided by SAP. ",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F3H37oZgtVBmk4zIaFag7Bm%2Fvisual_v2.jpg",
+        "language": "en",
+        "status": "self-paced",
+        "classifiers": {
+          "category": [
+            "Developer",
+            "Business Decision Maker",
+            "Application Consultant",
+            "Technology Consultant",
+            "Data Scientist"
+          ],
+          "topic": [
+            "Digital Transformation",
+            "SAP Cloud Platform"
+          ],
+          "keywords": [
+            "sap leonardo",
+            "Digital Transformation",
+            "Digital Innovation Path",
+            "Digital Transformation Journey",
+            "SAP Cloud Platform",
+            "Intelligent Enterprise",
+            "Intelligent Enterprise Applications",
+            "SAP Integration Strategy",
+            "Automate Data Wrangling",
+            "Connectivity",
+            "Connected Data",
+            "Cross-Technologies",
+            "Automated Data Wrangling",
+            "Out-of-the-box Integration",
+            "Holistic Integration",
+            "Open Integration",
+            "AI Supported Integration"
+          ],
+          "reporting": [
+            "dim_intelli",
+            "dim_leo",
+            "dim_dtrafo",
+            "dim_cp",
+            "dim_ds",
+            "dim_analytics",
+            "dim_iot",
+            "dim_iot_scm",
+            "dim_sec",
+            "dim_ux",
+            "dim_ana_iot"
+          ]
+        },
+        "teachers": "Katrin von Ahsen ",
+        "accessible": true,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": true,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": true,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": false
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "enterprise"
+          },
+          "links": {
+            "related": "/api/v2/channels/enterprise"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=7962929a-d4e1-4f3a-8222-c6f16ad9f8a8"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=7962929a-d4e1-4f3a-8222-c6f16ad9f8a8"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=7962929a-d4e1-4f3a-8222-c6f16ad9f8a8"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=7962929a-d4e1-4f3a-8222-c6f16ad9f8a8"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "7962929a-d4e1-4f3a-8222-c6f16ad9f8a8"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/7962929a-d4e1-4f3a-8222-c6f16ad9f8a8"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=7962929a-d4e1-4f3a-8222-c6f16ad9f8a8"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=7962929a-d4e1-4f3a-8222-c6f16ad9f8a8"
+          }
+        }
+      }
+    },
+    {
+      "type": "courses",
+      "id": "e3a4700f-5286-4b9b-9228-3feaf1db5807",
+      "links": {
+        "self": "/api/v2/courses/e3a4700f-5286-4b9b-9228-3feaf1db5807"
+      },
+      "attributes": {
+        "title": "Create and Deliver Cloud-Native SAP S/4HANA Extensions",
+        "slug": "s4h13",
+        "start_at": "2018-11-14T09:00:00.000+00:00",
+        "end_at": "2018-12-20T09:00:00.000+00:00",
+        "abstract": "Join this free open online course to learn how to build, test, and deliver high-quality, cloud-native, SAP S/4HANA extensions using the SAP S/4HANA Cloud SDK.",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F6VypcvEjI3zasyrsgvJOxV%2Fvisual_v1.jpg",
+        "language": "en",
+        "status": "self-paced",
+        "classifiers": {
+          "category": [
+            "Developer",
+            "Application Consultant",
+            "Technology Consultant"
+          ],
+          "topic": [
+            "Enterprise Management",
+            "SAP S/4HANA"
+          ],
+          "keywords": [
+            "sap s4hana",
+            "ERP",
+            "Enterprise Management",
+            "SAP S/4HANA",
+            "SAP S/4HANA Cloud SDK",
+            "SAP S/4HANA Extensions",
+            "SAP S/4HANA Cloud",
+            "SAP Cloud Platform",
+            "SAP Leonardo Machine Learning",
+            "Cloud-Native",
+            "Intelligent ERP",
+            "Intelligent Enterprise",
+            "Side-by-Side Extensions",
+            "Extensibility",
+            "Java"
+          ],
+          "reporting": [
+            "dim_s4",
+            "dim_s4c",
+            "dim_s4p",
+            "dim_cp",
+            "dim_intelli"
+          ]
+        },
+        "teachers": "Benjamin Heilbrunn, Dr. Henning Heitkötter, Ekaterina Kruse, Florian Wilhelm, Daniel Kurzynski ",
+        "accessible": true,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": true,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": true,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": true
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "enterprise"
+          },
+          "links": {
+            "related": "/api/v2/channels/enterprise"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=e3a4700f-5286-4b9b-9228-3feaf1db5807"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=e3a4700f-5286-4b9b-9228-3feaf1db5807"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=e3a4700f-5286-4b9b-9228-3feaf1db5807"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=e3a4700f-5286-4b9b-9228-3feaf1db5807"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "e3a4700f-5286-4b9b-9228-3feaf1db5807"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/e3a4700f-5286-4b9b-9228-3feaf1db5807"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=e3a4700f-5286-4b9b-9228-3feaf1db5807"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=e3a4700f-5286-4b9b-9228-3feaf1db5807"
+          }
+        }
+      }
+    },
+    {
+      "type": "courses",
+      "id": "e72c7ead-cb83-4ebf-8550-e7b93f0b7943",
+      "links": {
+        "self": "/api/v2/courses/e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+      },
+      "attributes": {
+        "title": "Enterprise Machine Learning in a Nutshell (Repeat)",
+        "slug": "ml1-1",
+        "start_at": "2017-11-21T09:00:00.000+00:00",
+        "end_at": "2017-12-20T09:01:00.000+00:00",
+        "abstract": "Join this free online course to learn about how machine learning can be applied to solve business problems. After taking this course, participants should be aware of recent advances in machine learning, understand the basic concepts involved and how business problems can be solved with machine learning. The course gives guidelines on how to formulate a business problem as a machine learning problem.\r\n\r\nVideo subtitles for this course are available in Spanish, Portuguese, German, French, and English.\r\n\r\n",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F72dyPiy5HvuMsRt3VQuN4n%2Fvisual_v1.jpg",
+        "language": "en",
+        "status": "self-paced",
+        "classifiers": {
+          "category": [
+            "Business Decision Maker",
+            "Data Scientist"
+          ],
+          "topic": [
+            "Analytics",
+            "Digital Transformation"
+          ],
+          "reporting": [
+            "dim_analytics",
+            "dim_ds",
+            "dim_dtrafo",
+            "dim_leo",
+            "cmp173_leo",
+            "dim_intelli",
+            "dim_ana_iot"
+          ],
+          "keywords": [
+            "Machine Learning",
+            "Artificial Intelligence",
+            "Natural Language Processing",
+            "sap leonardo",
+            "Intelligent Applications",
+            "Computer Vision"
+          ]
+        },
+        "teachers": "Daniel Dahlmeier and Markus Noga",
+        "accessible": true,
+        "enrollable": true,
+        "hidden": false,
+        "external": false,
+        "external_url": null,
+        "policy_url": null,
+        "certificates": {
+          "confirmation_of_participation": {
+            "available": true,
+            "threshold": 50
+          },
+          "record_of_achievement": {
+            "available": true,
+            "threshold": 50
+          },
+          "qualified_certificate": {
+            "available": false
+          }
+        },
+        "on_demand": true
+      },
+      "relationships": {
+        "channel": {
+          "data": {
+            "type": "channels",
+            "id": "enterprise"
+          },
+          "links": {
+            "related": "/api/v2/channels/enterprise"
+          }
+        },
+        "user_enrollment": {
+          "data": {
+            "type": "enrollments",
+            "id": "2eaefc0f-9a42-4e67-bcb9-aacc61777fe6"
+          }
+        },
+        "sections": {
+          "links": {
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          }
+        },
+        "objectives": {
+          "links": {
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          }
+        },
+        "documents": {
+          "links": {
+            "related": "/api/v2/documents?filter%5Bcourse%5D=e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          }
+        },
+        "objectives_user_statuses": {
+          "links": {
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          }
+        },
+        "dates": {
+          "links": {
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          }
+        },
+        "repetition_suggestions": {
+          "links": {
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "total_pages": 1
+  },
+  "links": {
+    "first": "https://open.sap.com/api/v2/courses?page%5Bnumber%5D=1",
+    "last": "https://open.sap.com/api/v2/courses?page%5Bnumber%5D=1"
+  }
+}
