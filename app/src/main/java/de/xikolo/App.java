@@ -4,8 +4,6 @@ import android.app.Application;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 
-import com.evernote.android.job.JobManager;
-
 import androidx.preference.PreferenceManager;
 import de.xikolo.config.Config;
 import de.xikolo.config.FeatureToggle;
@@ -13,7 +11,6 @@ import de.xikolo.lanalytics.Lanalytics;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.managers.WebSocketManager;
 import de.xikolo.models.migrate.RealmSchemaMigration;
-import de.xikolo.network.jobs.base.ScheduledJobFactory;
 import de.xikolo.utils.ClientUtil;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -64,15 +61,10 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        configureJobManager();
         configureRealm();
         configureDefaultSettings();
         configureWebView();
         configureSecondScreenManager();
-    }
-
-    private void configureJobManager() {
-        JobManager.create(this).addJobCreator(new ScheduledJobFactory());
     }
 
     private void configureRealm() {

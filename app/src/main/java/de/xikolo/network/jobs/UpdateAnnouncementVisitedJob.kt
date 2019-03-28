@@ -1,47 +1,53 @@
 package de.xikolo.network.jobs
 
+import android.content.Context
 import android.util.Log
-import com.evernote.android.job.JobRequest
-import com.evernote.android.job.util.support.PersistableBundleCompat
+import androidx.work.*
 import de.xikolo.config.Config
-import de.xikolo.network.jobs.base.ScheduledJob
 import de.xikolo.models.Announcement
+import de.xikolo.network.ApiService
+import de.xikolo.network.jobs.base.ScheduledJob
 import de.xikolo.network.sync.Local
 import de.xikolo.network.sync.Sync
-import de.xikolo.network.ApiService
+import ru.gildor.coroutines.retrofit.awaitResponse
 
-class UpdateAnnouncementVisitedJob : ScheduledJob(Precondition.AUTH) {
+class UpdateAnnouncementVisitedJob(
+    context: Context,
+    params: WorkerParameters
+) : ScheduledJob(context, params, Precondition.AUTH) {
 
     companion object {
         val TAG: String = UpdateAnnouncementVisitedJob::class.java.simpleName
 
         @JvmStatic
-        fun schedule(announcementId: String): Int {
+        fun schedule(announcementId: String) {
             if (Config.DEBUG) Log.i(TAG, "$TAG scheduled | announcement.id $announcementId")
 
             Local.Update.with(Announcement::class.java, announcementId)
                     .setBeforeCommitCallback { _, model -> model.visited = true }
                     .run()
 
-            val extras = PersistableBundleCompat()
-            extras.putString("ann_id", announcementId)
+            val data = workDataOf("ann_id" to announcementId)
 
-            return JobRequest.Builder(UpdateAnnouncementVisitedJob.TAG)
-                    .setExecutionWindow(1, 30_000)
-                    .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
-                    .setRequirementsEnforced(true)
-                    .setExtras(extras)
-                    .build()
-                    .schedule()
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val workRequest = OneTimeWorkRequestBuilder<UpdateAnnouncementVisitedJob>()
+                .setInputData(data)
+                .setConstraints(constraints)
+                .build()
+
+            WorkManager.getInstance().enqueue(workRequest)
         }
     }
 
-    override fun onRun(params: Params): Result {
+    override suspend fun onRun(data: Data): Result {
         val model = Announcement.JsonModel()
-        model.id = params.extras.getString("ann_id", null)
+        model.id = data.getString("ann_id")
         model.visited = true
 
-        val response = ApiService.getInstance().updateAnnouncement(model.id, model).execute()
+        val response = ApiService.getInstance().updateAnnouncement(model.id, model).awaitResponse()
 
         return if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Announcement visit successfully updated")
@@ -50,10 +56,10 @@ class UpdateAnnouncementVisitedJob : ScheduledJob(Precondition.AUTH) {
                     .saveOnly()
                     .run()
 
-            Result.SUCCESS
+            Result.success()
         } else {
             if (Config.DEBUG) Log.e(TAG, "Error while updating announcement visit")
-            Result.FAILURE
+            Result.failure()
         }
     }
 
