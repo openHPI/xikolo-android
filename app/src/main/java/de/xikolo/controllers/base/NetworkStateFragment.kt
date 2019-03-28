@@ -10,8 +10,8 @@ import de.xikolo.controllers.helper.NetworkStateHelper
 import de.xikolo.utils.NetworkUtil
 import de.xikolo.utils.ToastUtil
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.base.NetworkCode
-import de.xikolo.viewmodels.base.observe
+import de.xikolo.network.jobs.base.NetworkCode
+import de.xikolo.extensions.observe
 
 abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, ViewModelCreationInterface<T> {
 

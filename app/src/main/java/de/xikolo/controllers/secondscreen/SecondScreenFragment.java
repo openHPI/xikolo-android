@@ -26,8 +26,11 @@ import de.xikolo.controllers.base.BaseFragment;
 import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.models.Item;
 import de.xikolo.models.Section;
-import de.xikolo.models.SubtitleTrack;
 import de.xikolo.models.Video;
+import de.xikolo.models.dao.ItemDao;
+import de.xikolo.models.dao.SectionDao;
+import de.xikolo.models.dao.SubtitleTrackDao;
+import de.xikolo.models.dao.VideoDao;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NotificationUtil;
@@ -68,8 +71,8 @@ public class SecondScreenFragment extends BaseFragment {
     @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onSecondScreenNewVideoEvent(SecondScreenManager.SecondScreenNewVideoEvent event) {
-        Item item = Item.get(event.itemId);
-        Video video = Video.getForContentId(item.contentId);
+        Item item = ItemDao.Unmanaged.find(event.itemId);
+        Video video = VideoDao.Unmanaged.find(item.contentId);
 
         if (item != null && cardVideo != null) {
             if (cardVideo.getVisibility() == View.VISIBLE) {
@@ -123,7 +126,7 @@ public class SecondScreenFragment extends BaseFragment {
             }
 
             // transcript
-            if (SubtitleTrack.listForVideoId(video.id).size() > 0) {
+            if (SubtitleTrackDao.Unmanaged.allForVideo(video.id).size() > 0) {
                 viewTranscript.setOnClickListener((v) -> {
                     Intent intent = TranscriptViewerActivityAutoBundle.builder(
                             event.courseId,
@@ -138,7 +141,7 @@ public class SecondScreenFragment extends BaseFragment {
             }
 
             // quiz
-            Section section = Section.get(event.sectionId);
+            Section section = SectionDao.Unmanaged.find(event.sectionId);
             List<Item> sectionItems = section.getAccessibleItems();
             if (sectionItems.size() > 0) {
                 final int itemIndex = sectionItems.indexOf(item);
@@ -251,8 +254,8 @@ public class SecondScreenFragment extends BaseFragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecondScreenUpdateVideoEvent(SecondScreenManager.SecondScreenUpdateVideoEvent event) {
-        Item item = Item.get(event.itemId);
-        Video video = Video.getForContentId(item.contentId);
+        Item item = ItemDao.Unmanaged.find(event.itemId);
+        Video video = VideoDao.Unmanaged.find(item.contentId);
 
         if (event.webSocketMessage.payload.containsKey("current_time")) {
             long minutes = TimeUnit.SECONDS.toMinutes(video.duration);

@@ -10,9 +10,10 @@ import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.helper.SectionDownloadHelper
 import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
-import de.xikolo.models.Course
+import de.xikolo.extensions.observe
 import de.xikolo.models.Section
-import de.xikolo.viewmodels.base.observe
+import de.xikolo.models.dao.CourseDao
+import de.xikolo.models.dao.SectionDao
 import de.xikolo.viewmodels.course.LearningsViewModel
 import de.xikolo.views.SpaceItemDecoration
 
@@ -76,7 +77,7 @@ class LearningsFragment : NetworkStateFragment<LearningsViewModel>(), SectionLis
 
         viewModel.accessibleItems
             .observe(this) {
-                setupSections(Section.listForCourse(courseId))
+                setupSections(SectionDao.Unmanaged.allForCourse(courseId))
                 showContent()
             }
     }
@@ -87,7 +88,7 @@ class LearningsFragment : NetworkStateFragment<LearningsViewModel>(), SectionLis
 
     override fun onSectionDownloadClicked(sectionId: String) {
         val sectionDownloadHelper = SectionDownloadHelper(activity)
-        sectionDownloadHelper.initSectionDownloads(Course.get(courseId), Section.get(sectionId))
+        sectionDownloadHelper.initSectionDownloads(CourseDao.Unmanaged.find(courseId), SectionDao.Unmanaged.find(sectionId))
     }
 
     override fun onItemClicked(sectionId: String, position: Int) {

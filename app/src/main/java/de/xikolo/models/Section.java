@@ -6,8 +6,9 @@ import java.util.Date;
 import java.util.List;
 
 import de.xikolo.models.base.RealmAdapter;
+import de.xikolo.models.dao.CourseDao;
+import de.xikolo.models.dao.ItemDao;
 import de.xikolo.utils.DateUtil;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
@@ -34,32 +35,8 @@ public class Section extends RealmObject {
 
     public boolean accessible;
 
-    public static Section get(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        Section model = realm.where(Section.class).equalTo("id", id).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
-    }
-
-    public static List<Section> listForCourse(String courseId) {
-        Realm realm = Realm.getDefaultInstance();
-        List<Section> sectionList = realm
-                .where(Section.class)
-                .equalTo("courseId", courseId)
-                .sort("position")
-                .findAll();
-        if (sectionList != null) sectionList = realm.copyFromRealm(sectionList);
-        realm.close();
-        return sectionList;
-    }
-
     public Course getCourse() {
-        Realm realm = Realm.getDefaultInstance();
-        Course model = realm.where(Course.class).equalTo("id", courseId).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
+        return CourseDao.Unmanaged.find(courseId);
     }
 
     public boolean hasAccessibleItems() {
@@ -67,27 +44,11 @@ public class Section extends RealmObject {
     }
 
     public List<Item> getAccessibleItems() {
-        Realm realm = Realm.getDefaultInstance();
-        List<Item> items = realm.where(Item.class)
-                .equalTo("sectionId", id)
-                .equalTo("accessible", true)
-                .sort("position")
-                .findAll();
-        if (items != null) items = realm.copyFromRealm(items);
-        realm.close();
-        return items;
+        return ItemDao.Unmanaged.allAccessibleForSection(id);
     }
 
     public boolean hasDownloadableContent() {
-        Realm realm = Realm.getDefaultInstance();
-        int size = realm.where(Item.class)
-                .equalTo("sectionId", id)
-                .equalTo("accessible", true)
-                .equalTo("contentType", Item.TYPE_VIDEO)
-                .findAll()
-                .size();
-        realm.close();
-        return size > 0;
+        return ItemDao.Unmanaged.allAccessibleVideosForSection(id).size() > 0;
     }
 
     @JsonApi(type = "course-sections")

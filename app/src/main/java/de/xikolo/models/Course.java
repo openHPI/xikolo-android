@@ -14,10 +14,11 @@ import de.xikolo.R;
 import de.xikolo.config.BuildFlavor;
 import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
+import de.xikolo.models.dao.ChannelDao;
+import de.xikolo.models.dao.EnrollmentDao;
 import de.xikolo.utils.DateUtil;
 import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.LanguageUtil;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
@@ -72,30 +73,16 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
     public String channelId;
 
+    public Enrollment getEnrollment() {
+        return EnrollmentDao.Unmanaged.find(enrollmentId);
+    }
+
+    public Channel getChannel() {
+        return ChannelDao.Unmanaged.find(channelId);
+    }
+
     public boolean isEnrolled() {
         return enrollmentId != null;
-    }
-
-    public static Course get(String id) {
-        Realm realm = Realm.getDefaultInstance();
-        Course model = realm.where(Course.class).equalTo("id", id).findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
-    }
-
-    public static Course find(String identifier) {
-        Realm realm = Realm.getDefaultInstance();
-        Course model = realm.where(Course.class)
-            .beginGroup()
-                .equalTo("id", identifier)
-                .or()
-                .equalTo("slug", identifier)
-            .endGroup()
-            .findFirst();
-        if (model != null) model = realm.copyFromRealm(model);
-        realm.close();
-        return model;
     }
 
     @Override

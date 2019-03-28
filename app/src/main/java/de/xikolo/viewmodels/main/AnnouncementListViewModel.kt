@@ -2,19 +2,19 @@ package de.xikolo.viewmodels.main
 
 import androidx.lifecycle.LiveData
 import de.xikolo.models.Announcement
-import de.xikolo.models.dao.AnnouncementsDao
+import de.xikolo.models.dao.AnnouncementDao
 import de.xikolo.network.jobs.ListAnnouncementsJob
 import de.xikolo.viewmodels.base.BaseViewModel
 
 class AnnouncementListViewModel(val courseId: String? = null) : BaseViewModel() {
 
-    private val announcementsDao = AnnouncementsDao(realm)
+    private val announcementsDao = AnnouncementDao(realm)
 
     val announcements: LiveData<List<Announcement>> by lazy {
         if (courseId != null) {
-            announcementsDao.announcementsForCourse(courseId)
+            announcementsDao.allForCourse(courseId)
         } else {
-            announcementsDao.globalAnnouncements()
+            announcementsDao.all()
         }
     }
 

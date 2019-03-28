@@ -31,6 +31,10 @@ import de.xikolo.managers.SecondScreenManager;
 import de.xikolo.models.Item;
 import de.xikolo.models.SubtitleTrack;
 import de.xikolo.models.Video;
+import de.xikolo.models.dao.ItemDao;
+import de.xikolo.models.dao.SubtitleCueDao;
+import de.xikolo.models.dao.SubtitleTrackDao;
+import de.xikolo.models.dao.VideoDao;
 import de.xikolo.utils.AndroidDimenUtil;
 import de.xikolo.utils.TimeUtil;
 
@@ -60,9 +64,9 @@ public class TranscriptViewerFragment extends BaseFragment implements ChooseLang
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        Item item = Item.get(itemId);
-        video = Video.getForContentId(item.contentId);
-        subtitles = SubtitleTrack.listForVideoId(video.id);
+        Item item = ItemDao.Unmanaged.find(itemId);
+        video = VideoDao.Unmanaged.find(item.contentId);
+        subtitles = SubtitleTrackDao.Unmanaged.allForVideo(video.id);
     }
 
     @Override
@@ -77,7 +81,7 @@ public class TranscriptViewerFragment extends BaseFragment implements ChooseLang
         ButterKnife.bind(getActivity(), view);
 
         adapter = new TranscriptViewerAdapter();
-        adapter.updateSubtitles(subtitles.get(0).listCues());
+        adapter.updateSubtitles(SubtitleCueDao.Unmanaged.allForTrack(subtitles.get(0).id));
 
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -180,7 +184,7 @@ public class TranscriptViewerFragment extends BaseFragment implements ChooseLang
     @Override
     public void onItemClick(int position) {
         if (adapter != null) {
-            adapter.updateSubtitles(subtitles.get(position).listCues());
+            adapter.updateSubtitles(SubtitleCueDao.Unmanaged.allForTrack(subtitles.get(position).id));
             performScroll();
         }
     }

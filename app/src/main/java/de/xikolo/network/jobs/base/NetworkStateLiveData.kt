@@ -1,4 +1,4 @@
-package de.xikolo.viewmodels.base
+package de.xikolo.network.jobs.base
 
 import androidx.lifecycle.LiveData
 import de.xikolo.events.NetworkStateEvent

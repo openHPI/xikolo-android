@@ -6,8 +6,8 @@ import de.xikolo.models.Channel
 import de.xikolo.models.Course
 import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.NetworkJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.network.sync.Sync
-import de.xikolo.viewmodels.base.NetworkStateLiveData
 import ru.gildor.coroutines.retrofit.awaitResponse
 
 class GetChannelWithCoursesJob(private val channelId: String, networkState: NetworkStateLiveData, userRequest: Boolean) : NetworkJob(networkState, userRequest) {

@@ -29,15 +29,15 @@ import de.xikolo.controllers.helper.CourseArea
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
 import de.xikolo.events.NetworkStateEvent
+import de.xikolo.extensions.observe
 import de.xikolo.managers.CourseManager
 import de.xikolo.models.Course
-import de.xikolo.models.Enrollment
+import de.xikolo.models.dao.EnrollmentDao
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.ShareUtil
 import de.xikolo.utils.ToastUtil
-import de.xikolo.viewmodels.base.observe
 import de.xikolo.viewmodels.course.CourseViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -303,22 +303,24 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     private fun unenroll() {
-        showProgressDialog()
-        courseManager.deleteEnrollment(Enrollment.getForCourse(course.id).id, object : RequestJobCallback() {
-            public override fun onSuccess() {
-                finishActivity()
-                hideProgressDialog()
-            }
-
-            public override fun onError(code: RequestJobCallback.ErrorCode) {
-                hideProgressDialog()
-                if (code === RequestJobCallback.ErrorCode.NO_NETWORK) {
-                    showNoNetworkToast()
-                } else {
-                    showErrorToast()
+        EnrollmentDao.Unmanaged.findForCourse(course.id)?.id?.let { enrollmentId ->
+            showProgressDialog()
+            courseManager.deleteEnrollment(enrollmentId, object : RequestJobCallback() {
+                public override fun onSuccess() {
+                    finishActivity()
+                    hideProgressDialog()
                 }
-            }
-        })
+
+                public override fun onError(code: RequestJobCallback.ErrorCode) {
+                    hideProgressDialog()
+                    if (code === RequestJobCallback.ErrorCode.NO_NETWORK) {
+                        showNoNetworkToast()
+                    } else {
+                        showErrorToast()
+                    }
+                }
+            })
+        }
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)

@@ -41,7 +41,7 @@ public class ProfilePresenter extends LoadingStatePresenter<ProfileView> {
 
         userPromise = userManager.getUser(realm, (u) -> {
             user = u;
-            profile = Profile.get(user.profileId);
+            profile = user.getProfile();
 
             if (isViewAttached()) {
                 getView().showContent();

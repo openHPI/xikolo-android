@@ -14,6 +14,7 @@ import de.xikolo.R
 import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.models.Document
 import de.xikolo.models.DownloadAsset
+import de.xikolo.models.dao.DocumentLocalizationDao
 import java.util.*
 
 class DocumentListAdapter(val activity: FragmentActivity) : RecyclerView.Adapter<DocumentListAdapter.DocumentViewHolder>() {
@@ -45,14 +46,17 @@ class DocumentListAdapter(val activity: FragmentActivity) : RecyclerView.Adapter
         holder.description.text = document.description
 
         holder.downloadsLayout.removeAllViews()
-        document.localizations.forEach { l ->
-            val downloadViewHelper = DownloadViewHelper(
-                activity,
-                DownloadAsset.Document(document, l),
-                String.format(activity.getString(R.string.document_lang), l.language)
-            )
-            downloadViewHelper.textFileName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F)
-            holder.downloadsLayout.addView(downloadViewHelper.view)
+
+        document.id?.let { documentId ->
+            DocumentLocalizationDao.Unmanaged.allForDocument(documentId).forEach { l ->
+                val downloadViewHelper = DownloadViewHelper(
+                    activity,
+                    DownloadAsset.Document(document, l),
+                    String.format(activity.getString(R.string.document_lang), l.language)
+                )
+                downloadViewHelper.textFileName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F)
+                holder.downloadsLayout.addView(downloadViewHelper.view)
+            }
         }
     }
 

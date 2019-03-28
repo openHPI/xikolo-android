@@ -15,13 +15,14 @@ import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
+import de.xikolo.extensions.observe
 import de.xikolo.managers.CourseManager
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
+import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.utils.SectionList
-import de.xikolo.viewmodels.base.observe
 import de.xikolo.viewmodels.channel.ChannelViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
@@ -168,8 +169,8 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
             public override fun onSuccess() {
                 if (view != null) {
                     hideAnyProgress()
-                    val course = Course.get(courseId)
-                    if (course.accessible) {
+                    val course = CourseDao.Unmanaged.find(courseId)
+                    if (course?.accessible == true) {
                         enterCourse(courseId)
                     }
                 }

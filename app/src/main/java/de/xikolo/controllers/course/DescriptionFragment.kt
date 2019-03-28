@@ -11,7 +11,7 @@ import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.models.Course
 import de.xikolo.utils.MarkdownUtil
-import de.xikolo.viewmodels.base.observe
+import de.xikolo.extensions.observe
 import de.xikolo.viewmodels.course.DescriptionViewModel
 
 class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {

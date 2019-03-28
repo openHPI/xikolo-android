@@ -6,7 +6,7 @@ import de.xikolo.models.Announcement
 import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.NetworkJob
 import de.xikolo.network.sync.Sync
-import de.xikolo.viewmodels.base.NetworkStateLiveData
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import ru.gildor.coroutines.retrofit.awaitResponse
 
 class ListAnnouncementsJob(private val courseId: String?, userRequest: Boolean, networkState: NetworkStateLiveData) : NetworkJob(networkState, userRequest, Precondition.AUTH) {

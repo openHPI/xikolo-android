@@ -5,7 +5,7 @@ import com.squareup.moshi.Json;
 import java.util.List;
 
 import de.xikolo.models.base.RealmAdapter;
-import io.realm.Realm;
+import de.xikolo.models.dao.SubtitleCueDao;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -26,7 +26,7 @@ public class SubtitleTrack extends RealmObject {
     public String videoId;
 
     public int getTextPosition(long millis) {
-        List<SubtitleCue> cueList = listCues();
+        List<SubtitleCue> cueList = SubtitleCueDao.Unmanaged.allForTrack(id);
 
         for (int i = 0; i < cueList.size(); i++) {
             SubtitleCue cue = cueList.get(i);
@@ -35,27 +35,6 @@ public class SubtitleTrack extends RealmObject {
             }
         }
         return -1;
-    }
-
-    public List<SubtitleCue> listCues() {
-        Realm realm = Realm.getDefaultInstance();
-        List<SubtitleCue> list = realm.where(SubtitleCue.class)
-                .equalTo("subtitleId", id)
-                .sort("identifier")
-                .findAll();
-        if (list != null) list = realm.copyFromRealm(list);
-        realm.close();
-        return list;
-    }
-
-    public static List<SubtitleTrack> listForVideoId(String videoId) {
-        Realm realm = Realm.getDefaultInstance();
-        List<SubtitleTrack> list = realm.where(SubtitleTrack.class)
-                .equalTo("videoId", videoId)
-                .findAll();
-        if (list != null) list = realm.copyFromRealm(list);
-        realm.close();
-        return list;
     }
 
     @JsonApi(type = "subtitle-tracks")
