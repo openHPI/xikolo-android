@@ -24,7 +24,6 @@ import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.channel.ChannelViewModel
-import de.xikolo.extensions.observe
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
 

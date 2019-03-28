@@ -53,16 +53,16 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
                             )
                         )
                     }
-                    holder.textNextCourse.text = Course.get(nextDate.courseId).title
+                    holder.textNextCourse.text = nextDate.getCourse()?.title
                     holder.titleOfNextDate.text = nextDate.title
                     holder.nextDateContainer.visibility = View.VISIBLE
                 } ?: run {
                     holder.nextDateContainer.visibility = View.GONE
                 }
 
-                holder.numberOfDatesToday.text = dateOverview.todaysDateCount.toString()
-                holder.numberOfDatesWeek.text = dateOverview.nextSevenDaysDateCount.toString()
-                holder.numberOfAllDates.text = dateOverview.futureDateCount.toString()
+                holder.numberOfDatesToday.text = dateOverview.countToday.toString()
+                holder.numberOfDatesWeek.text = dateOverview.countNextSevenDays.toString()
+                holder.numberOfAllDates.text = dateOverview.countFuture.toString()
             }
             is CourseViewHolder       -> {
                 val course = super.contentList.get(position) as Course

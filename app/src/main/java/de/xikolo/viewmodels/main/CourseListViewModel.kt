@@ -10,7 +10,7 @@ import de.xikolo.models.Course
 import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
 import de.xikolo.models.dao.CourseDao
-import de.xikolo.models.dao.DatesDao
+import de.xikolo.models.dao.DateDao
 import de.xikolo.models.dao.EnrollmentDao
 import de.xikolo.network.jobs.ListCoursesJob
 import de.xikolo.network.jobs.ListDatesJob
@@ -20,80 +20,20 @@ import de.xikolo.viewmodels.base.BaseViewModel
 class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel() {
 
     private val coursesDao = CourseDao(realm)
-    private val datesDao = DatesDao(realm)
+    private val dateDao = DateDao(realm)
 
     val enrollmentCount
         get() = EnrollmentDao.Unmanaged.count()
-
-    val enrolledCourses: LiveData<List<Course>> by lazy {
-        coursesDao.allEnrolled()
-    }
-
-    val courses: LiveData<List<Course>> by lazy {
-        coursesDao.courses()
-    }
-
-    val dates: LiveData<List<CourseDate>> by lazy {
-        datesDao.dates()
-    }
-
-    val sectionedDateList: SectionList<String, List<CourseDate>>
-        get() {
-            val dateList = SectionList<String, List<CourseDate>>()
-            var subList: List<CourseDate> = datesDao.datesToday()
-            if (subList.isNotEmpty()) {
-                dateList.add(
-                    App.getInstance().getString(R.string.course_dates_today),
-                    subList
-                )
-            }
-            subList = datesDao.datesNextSevenDays().minus(datesDao.datesToday())
-            if (subList.isNotEmpty()) {
-                dateList.add(
-                    App.getInstance().getString(R.string.course_dates_week),
-                    subList
-                )
-            }
-            subList = datesDao.datesInFuture().minus(datesDao.datesNextSevenDays())
-            if (subList.isNotEmpty()) {
-                dateList.add(
-                    if (dateList.size() > 0) {
-                        App.getInstance().getString(R.string.course_dates_later)
-                    } else {
-                        App.getInstance().getString(R.string.course_dates_all)
-                    },
-                    subList
-                )
-            }
-
-            return dateList
-        }
-
-    val todaysDateCount: Int
-        get() {
-            return datesDao.datesToday().size
-        }
-
-    val nextSevenDaysDateCount: Int
-        get() {
-            return datesDao.datesNextSevenDays().size
-        }
-
-    val futureDateCount: Int
-        get() {
-            return datesDao.datesInFuture().size
-        }
-
-    val nextDate: CourseDate?
-        get() {
-            return datesDao.nextDate()
-        }
 
     val courses: LiveData<List<Course>> by lazy {
         coursesDao.all()
     }
 
-    val sectionedCourseList: SectionList<String, List<Course>>
+    val dates: LiveData<List<CourseDate>> by lazy {
+        dateDao.all()
+    }
+
+    val sectionedCourseList: MetaSectionList<String, DateOverview, List<Course>>
         get() {
             return if (filter == CourseListFilter.ALL) {
                 courseListFilterAll
@@ -143,10 +83,10 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
         get() {
             val courseList = MetaSectionList<String, DateOverview, List<Course>>(
                 DateOverview(
-                    datesDao.nextDate(),
-                    datesDao.datesToday().size,
-                    datesDao.datesNextSevenDays().size,
-                    datesDao.datesInFuture().size
+                    DateDao.Unmanaged.findNext(),
+                    DateDao.Unmanaged.countToday(),
+                    DateDao.Unmanaged.countNextSevenDays(),
+                    DateDao.Unmanaged.countFuture()
                 ),
                 App.getInstance().getString(R.string.course_dates_title)
             )

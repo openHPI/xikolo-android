@@ -10,7 +10,6 @@ import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.base.BaseMetaRecyclerViewAdapter
-import de.xikolo.models.Course
 import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
 import de.xikolo.utils.TimeUtil
@@ -45,16 +44,16 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
             is HeaderViewHolder     -> bindHeaderViewHolder(holder, position)
             is OverviewViewHolder   -> {
                 val dateOverview = super.contentList.get(position) as DateOverview
-                holder.numberOfDatesToday.text = dateOverview.todaysDateCount.toString()
-                holder.numberOfDatesWeek.text = dateOverview.nextSevenDaysDateCount.toString()
-                holder.numberOfAllDates.text = dateOverview.futureDateCount.toString()
+                holder.numberOfDatesToday.text = dateOverview.countToday.toString()
+                holder.numberOfDatesWeek.text = dateOverview.countNextSevenDays.toString()
+                holder.numberOfAllDates.text = dateOverview.countFuture.toString()
             }
             is CourseDateViewHolder -> {
                 val courseDate = super.contentList.get(position) as CourseDate
 
                 holder.textType.text = courseDate.getTypeString(App.getInstance())
 
-                holder.textCourse.text = Course.get(courseDate.courseId).title
+                holder.textCourse.text = courseDate.getCourse()?.title
                 holder.container.setOnClickListener {
                     onDateClickListener?.onCourseClicked(courseDate.courseId)
                 }

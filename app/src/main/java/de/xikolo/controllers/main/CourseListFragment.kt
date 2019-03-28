@@ -19,12 +19,11 @@ import de.xikolo.extensions.observe
 import de.xikolo.managers.CourseManager
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
-import de.xikolo.models.dao.CourseDao
 import de.xikolo.models.DateOverview
+import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.main.CourseListViewModel
-import de.xikolo.viewmodels.base.observe
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
 import org.greenrobot.eventbus.EventBus
@@ -264,13 +263,13 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLoginEvent(event: LoginEvent) {
         onRefresh()
     }
 
-    @Suppress("UNUSED_PARAMETER")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLogoutEvent(event: LogoutEvent) {
         onRefresh()

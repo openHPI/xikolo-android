@@ -4,6 +4,7 @@ import android.content.Context
 import com.squareup.moshi.Json
 import de.xikolo.R
 import de.xikolo.models.base.RealmAdapter
+import de.xikolo.models.dao.CourseDao
 import de.xikolo.utils.DateUtil
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -24,6 +25,10 @@ open class CourseDate : RealmObject() {
     var date: Date? = null
 
     var courseId: String? = null
+
+    fun getCourse(): Course? {
+        return CourseDao.Unmanaged.find(courseId)
+    }
 
     fun getTypeString(context: Context): String {
         return when (type) {

@@ -1,4 +1,4 @@
-package de.xikolo.viewmodels
+package de.xikolo.viewmodels.main
 
 import androidx.lifecycle.LiveData
 import de.xikolo.App
@@ -7,7 +7,7 @@ import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.Course
 import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
-import de.xikolo.models.dao.course.DatesDao
+import de.xikolo.models.dao.DateDao
 import de.xikolo.network.jobs.ListDatesJob
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
@@ -15,10 +15,10 @@ import de.xikolo.viewmodels.base.BaseViewModel
 open class DateListViewModel : BaseViewModel() {
 
     private val courseListViewModel = CourseListViewModel(CourseListFilter.MY)
-    private val datesDao = DatesDao(realm)
+    private val dateDao = DateDao(realm)
 
     val dates: LiveData<List<CourseDate>> by lazy {
-        datesDao.dates()
+        dateDao.all()
     }
 
     val courses: LiveData<List<Course>> = courseListViewModel.courses
@@ -28,26 +28,26 @@ open class DateListViewModel : BaseViewModel() {
             val dateList = MetaSectionList<String, DateOverview, List<CourseDate>>(
                 DateOverview(
                     null,
-                    datesDao.datesToday().size,
-                    datesDao.datesNextSevenDays().size,
-                    datesDao.datesInFuture().size
+                    DateDao.Unmanaged.countToday(),
+                    DateDao.Unmanaged.countNextSevenDays(),
+                    DateDao.Unmanaged.countFuture()
                 )
             )
-            var subList: List<CourseDate> = datesDao.datesToday()
+            var subList: List<CourseDate> = DateDao.Unmanaged.allToday()
             if (subList.isNotEmpty()) {
                 dateList.add(
                     App.getInstance().getString(R.string.course_dates_today),
                     subList
                 )
             }
-            subList = datesDao.datesNextSevenDays().minus(datesDao.datesToday())
+            subList = DateDao.Unmanaged.allNextSevenDaysWithoutToday()
             if (subList.isNotEmpty()) {
                 dateList.add(
                     App.getInstance().getString(R.string.course_dates_week),
                     subList
                 )
             }
-            subList = datesDao.datesInFuture().minus(datesDao.datesNextSevenDays())
+            subList = DateDao.Unmanaged.allFutureWithoutNextSevenDays()
             if (subList.isNotEmpty()) {
                 dateList.add(
                     if (dateList.size > 0) {

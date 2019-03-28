@@ -5,8 +5,8 @@ import de.xikolo.config.Config
 import de.xikolo.models.CourseDate
 import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.NetworkJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.network.sync.Sync
-import de.xikolo.viewmodels.base.NetworkStateLiveData
 import ru.gildor.coroutines.retrofit.awaitResponse
 
 class ListDatesJob(networkState: NetworkStateLiveData, userRequest: Boolean) : NetworkJob(networkState, userRequest, Precondition.AUTH) {
