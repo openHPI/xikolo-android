@@ -16,7 +16,7 @@ class GetItemWithContentJob(callback: RequestJobCallback, private val itemId: St
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().getItemWithContent(itemId).awaitResponse()
+        val response = ApiService.instance.getItemWithContent(itemId).awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Item received")

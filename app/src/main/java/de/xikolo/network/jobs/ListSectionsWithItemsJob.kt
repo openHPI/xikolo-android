@@ -17,7 +17,7 @@ class ListSectionsWithItemsJob(private val courseId: String, networkState: Netwo
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().listSectionsWithItemsForCourse(courseId).awaitResponse()
+        val response = ApiService.instance.listSectionsWithItemsForCourse(courseId).awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Sections received")

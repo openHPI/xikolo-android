@@ -18,7 +18,7 @@ class GetUserWithProfileJob(callback: RequestJobCallback) : RequestJob(callback,
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().getUserWithProfile().awaitResponse()
+        val response = ApiService.instance.getUserWithProfile().awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "User received")

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import de.xikolo.App
+import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.events.DownloadDeletedEvent
 import de.xikolo.events.DownloadStartedEvent
@@ -130,16 +131,18 @@ class DownloadManager(activity: FragmentActivity) {
     fun cancelAssetDownload(downloadAsset: DownloadAsset) {
         if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-                if (Config.DEBUG) Log.d(TAG, "Cancel download " + downloadAsset.url!!)
+                if (Config.DEBUG) Log.d(TAG, "Cancel download " + downloadAsset.url)
+                    if (downloadAsset.url != null) {
+                        DownloadService.instance?.cancelDownload(downloadAsset.url)
 
-                val downloadService = DownloadService.getInstance()
-                downloadService?.cancelDownload(downloadAsset.url)
+                        deleteAssetDownload(downloadAsset, false)
 
-                deleteAssetDownload(downloadAsset, false)
-
-                downloadAsset.secondaryAssets.forEach {
-                    cancelAssetDownload(it)
-                }
+                        downloadAsset.secondaryAssets.forEach {
+                            cancelAssetDownload(it)
+                        }
+                    } else {
+                        ToastUtil.show(R.string.error_plain)
+                    }
             } else {
                 pendingAction = PendingAction(ActionType.CANCEL, downloadAsset)
             }
@@ -190,7 +193,7 @@ class DownloadManager(activity: FragmentActivity) {
 
     fun getDownloadTotalBytes(downloadAsset: DownloadAsset): Long {
         var totalBytes = 0L
-        val mainDownload = DownloadService.getInstance()?.getDownload(downloadAsset.url)
+        val mainDownload = DownloadService.instance?.getDownload(downloadAsset.url)
         totalBytes +=
             if (mainDownload != null && mainDownload.totalBytes > 0L) {
                 mainDownload.totalBytes
@@ -199,7 +202,7 @@ class DownloadManager(activity: FragmentActivity) {
             }
 
         downloadAsset.secondaryAssets.forEach {
-            val secondaryDownload = DownloadService.getInstance()?.getDownload(it.url)
+            val secondaryDownload = DownloadService.instance?.getDownload(it.url)
             totalBytes +=
                 if (secondaryDownload != null && secondaryDownload.totalBytes > 0L) {
                     secondaryDownload.totalBytes
@@ -213,10 +216,10 @@ class DownloadManager(activity: FragmentActivity) {
 
     fun getDownloadWrittenBytes(downloadAsset: DownloadAsset): Long {
         var writtenBytes = 0L
-        writtenBytes += DownloadService.getInstance()?.getDownload(downloadAsset.url)?.bytesWritten ?: 0L
+        writtenBytes += DownloadService.instance?.getDownload(downloadAsset.url)?.bytesWritten ?: 0L
 
         downloadAsset.secondaryAssets.forEach {
-            writtenBytes += DownloadService.getInstance()?.getDownload(it.url)?.bytesWritten ?: 0L
+            writtenBytes += DownloadService.instance?.getDownload(it.url)?.bytesWritten ?: 0L
         }
 
         return writtenBytes
@@ -231,7 +234,8 @@ class DownloadManager(activity: FragmentActivity) {
     }
 
     fun downloadRunning(downloadAsset: DownloadAsset): Boolean {
-        return DownloadService.getInstance()?.isDownloading(downloadAsset.url) == true
+        return downloadAsset.url != null
+                && DownloadService.instance?.isDownloading(downloadAsset.url) == true
     }
 
     fun downloadExists(downloadAsset: DownloadAsset): Boolean {

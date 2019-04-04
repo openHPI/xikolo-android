@@ -17,9 +17,9 @@ class ListAnnouncementsJob(private val courseId: String?, userRequest: Boolean, 
 
     override suspend fun onRun() {
         val response = if (courseId != null) {
-            ApiService.getInstance().listCourseAnnouncements(courseId).awaitResponse()
+            ApiService.instance.listCourseAnnouncements(courseId).awaitResponse()
         } else {
-            ApiService.getInstance().listGlobalAnnouncements().awaitResponse()
+            ApiService.instance.listGlobalAnnouncements().awaitResponse()
         }
 
         if (response.isSuccessful) {

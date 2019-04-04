@@ -18,7 +18,7 @@ class ListSubtitlesWithCuesJob(callback: RequestJobCallback, private val videoId
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().listSubtitlesWithCuesForVideo(videoId).awaitResponse()
+        val response = ApiService.instance.listSubtitlesWithCuesForVideo(videoId).awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Subtitles received")

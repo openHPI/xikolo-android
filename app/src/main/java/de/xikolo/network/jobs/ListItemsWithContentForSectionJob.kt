@@ -16,7 +16,7 @@ class ListItemsWithContentForSectionJob(callback: RequestJobCallback, private va
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().listItemsWithContentForSection(sectionId).awaitResponse()
+        val response = ApiService.instance.listItemsWithContentForSection(sectionId).awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Items received")

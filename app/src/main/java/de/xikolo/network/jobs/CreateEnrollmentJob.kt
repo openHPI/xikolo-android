@@ -22,7 +22,7 @@ class CreateEnrollmentJob(private val courseId: String, callback: RequestJobCall
         val enrollment = Enrollment.JsonModel()
         enrollment.course = HasOne<Course.JsonModel>(Course.JsonModel().type, courseId)
 
-        val response = ApiService.getInstance().createEnrollment(enrollment).awaitResponse()
+        val response = ApiService.instance.createEnrollment(enrollment).awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Enrollment created")

@@ -17,7 +17,7 @@ class GetChannelWithCoursesJob(private val channelId: String, networkState: Netw
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().getChannelWithCourses(channelId).awaitResponse()
+        val response = ApiService.instance.getChannelWithCourses(channelId).awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Channel received")

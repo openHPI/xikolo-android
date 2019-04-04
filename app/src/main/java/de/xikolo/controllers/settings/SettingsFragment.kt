@@ -135,7 +135,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         findPreference(getString(R.string.preference_storage)).summary = prefs.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
         findPreference(getString(R.string.preference_storage)).onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _, _ ->
-                if (DownloadService.getInstance() != null && DownloadService.getInstance().isDownloading) {
+                if (DownloadService.instance?.isDownloading == true) {
                     ToastUtil.show(R.string.notification_storage_locked)
                     return@OnPreferenceChangeListener false
                 }

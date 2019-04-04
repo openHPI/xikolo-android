@@ -17,7 +17,7 @@ class GetCourseWithSectionsJob(private val courseId: String, callback: RequestJo
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().getCourseWithSections(courseId).awaitResponse()
+        val response = ApiService.instance.getCourseWithSections(courseId).awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Course received")

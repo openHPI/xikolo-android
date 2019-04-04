@@ -19,9 +19,9 @@ class GetCourseJob(private val courseId: String, networkState: NetworkStateLiveD
 
     override suspend fun onRun() {
         val response = if (UserManager.isAuthorized) {
-            ApiService.getInstance().getCourseWithEnrollment(courseId).awaitResponse()
+            ApiService.instance.getCourseWithEnrollment(courseId).awaitResponse()
         } else {
-            ApiService.getInstance().getCourse(courseId).awaitResponse()
+            ApiService.instance.getCourse(courseId).awaitResponse()
         }
 
         if (response.isSuccessful) {

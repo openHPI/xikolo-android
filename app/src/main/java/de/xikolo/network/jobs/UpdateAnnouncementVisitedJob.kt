@@ -47,7 +47,7 @@ class UpdateAnnouncementVisitedJob(
         model.id = data.getString("ann_id")
         model.visited = true
 
-        val response = ApiService.getInstance().updateAnnouncement(model.id, model).awaitResponse()
+        val response = ApiService.instance.updateAnnouncement(model.id, model).awaitResponse()
 
         return if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Announcement visit successfully updated")

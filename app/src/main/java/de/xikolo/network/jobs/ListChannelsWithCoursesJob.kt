@@ -17,7 +17,7 @@ class ListChannelsWithCoursesJob(networkState: NetworkStateLiveData, userRequest
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().listChannelsWithCourses().awaitResponse()
+        val response = ApiService.instance.listChannelsWithCourses().awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Channels received")

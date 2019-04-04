@@ -17,7 +17,7 @@ class ListDocumentsWithLocalizationsForCourseJob(private val courseId: String, u
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().listDocumentsWithLocalizationsForCourse(courseId).awaitResponse()
+        val response = ApiService.instance.listDocumentsWithLocalizationsForCourse(courseId).awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Documents received")

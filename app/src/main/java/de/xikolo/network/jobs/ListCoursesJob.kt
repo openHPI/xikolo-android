@@ -20,9 +20,9 @@ class ListCoursesJob(networkState: NetworkStateLiveData, userRequest: Boolean) :
 
     override suspend fun onRun() {
         val response = if (UserManager.isAuthorized) {
-            ApiService.getInstance().listCoursesWithEnrollments().awaitResponse()
+            ApiService.instance.listCoursesWithEnrollments().awaitResponse()
         } else {
-            ApiService.getInstance().listCourses().awaitResponse()
+            ApiService.instance.listCourses().awaitResponse()
         }
 
         if (response.isSuccessful) {

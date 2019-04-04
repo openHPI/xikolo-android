@@ -47,7 +47,7 @@ class UpdateItemVisitedJob(
         model.id = data.getString("item_id")
         model.visited = true
 
-        val response = ApiService.getInstance().updateItem(model.id, model).awaitResponse()
+        val response = ApiService.instance.updateItem(model.id, model).awaitResponse()
 
         return if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Item visit successfully updated")

@@ -16,7 +16,7 @@ class ListEnrollmentsJob(callback: RequestJobCallback) : RequestJob(callback, Pr
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().listEnrollments().awaitResponse()
+        val response = ApiService.instance.listEnrollments().awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Enrollments received")
