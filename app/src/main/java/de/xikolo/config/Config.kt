@@ -56,12 +56,12 @@ object Config {
             }
         }
 
-        HOST = App.getInstance().getString(de.xikolo.R.string.app_host)
+        HOST = App.instance.getString(de.xikolo.R.string.app_host)
         HOST_URL = "https://$HOST/"
         API_URL = HOST_URL + "api/v2/"
 
-        XIKOLO_API_VERSION = App.getInstance().resources.getInteger(de.xikolo.R.integer.xikolo_api_version)
-        REALM_SCHEMA_VERSION = App.getInstance().resources.getInteger(de.xikolo.R.integer.realm_schema_version)
+        XIKOLO_API_VERSION = App.instance.resources.getInteger(de.xikolo.R.integer.xikolo_api_version)
+        REALM_SCHEMA_VERSION = App.instance.resources.getInteger(de.xikolo.R.integer.realm_schema_version)
     }
 
     @JvmField val DEBUG = BuildConfig.X_TYPE === BuildType.DEBUG
@@ -81,7 +81,7 @@ object Config {
     @JvmField val HEADER_USER_PLATFORM = "X-User-Platform"
     @JvmField val HEADER_USER_PLATFORM_VALUE = "Android"
     @JvmField val HEADER_USER_AGENT_VALUE =
-        "${App.getInstance().resources.getString(de.xikolo.R.string.app_name)}/${BuildConfig.VERSION_NAME} Android/${Build.VERSION.RELEASE} (${DeviceUtil.deviceName})"
+        "${App.instance.resources.getString(de.xikolo.R.string.app_name)}/${BuildConfig.VERSION_NAME} Android/${Build.VERSION.RELEASE} (${DeviceUtil.deviceName})"
 
     @JvmField val HEADER_API_VERSION_EXPIRATION_DATE = "X-Api-Version-Expiration-Date"
 

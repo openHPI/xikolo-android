@@ -70,7 +70,7 @@ class DownloadsAdapter(private val callback: OnDeleteButtonClickedListener) : Re
 
             val folderItem = sectionList.getItem(position) as FolderItem
 
-            val context = App.getInstance()
+            val context = App.instance
 
             val dir = File(folderItem.path)
             viewHolder.textTitle.text = folderItem.title.replace("_".toRegex(), " ")

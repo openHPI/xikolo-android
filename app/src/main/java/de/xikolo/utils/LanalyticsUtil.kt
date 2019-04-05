@@ -42,7 +42,7 @@ object LanalyticsUtil {
     @JvmStatic
     val contextDataJson: String
         get() {
-            val application = App.getInstance()
+            val application = App.instance
 
             val contextData = application.lanalytics.defaultContextData
             contextData[CONTEXT_CLIENT_ID] = application.clientId
@@ -334,7 +334,7 @@ object LanalyticsUtil {
     // Misc
 
     fun Lanalytics.Event.track() {
-        val application = App.getInstance()
+        val application = App.instance
         if (UserManager.isAuthorized && FeatureToggle.tracking()) {
             val tracker = application.lanalytics.defaultTracker
             tracker.send(this, UserManager.token)
@@ -344,7 +344,7 @@ object LanalyticsUtil {
     }
 
     private fun createEventBuilder(): Lanalytics.Event.Builder {
-        val application = App.getInstance()
+        val application = App.instance
         val builder = Lanalytics.Event.Builder(application)
 
         if (UserManager.isAuthorized) {

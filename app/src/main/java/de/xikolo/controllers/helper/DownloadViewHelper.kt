@@ -91,7 +91,7 @@ class DownloadViewHelper(
     private var progressBarUpdaterRunning = false
 
     init {
-        val inflater = LayoutInflater.from(App.getInstance())
+        val inflater = LayoutInflater.from(App.instance)
         view = inflater.inflate(R.layout.container_download, null)
 
         ButterKnife.bind(this, view)
@@ -175,7 +175,7 @@ class DownloadViewHelper(
             val intent = Intent.createChooser(target, null)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
-                App.getInstance().startActivity(intent)
+                App.instance.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
                 ToastUtil.show(R.string.toast_no_file_viewer_found)
             }

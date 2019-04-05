@@ -29,7 +29,7 @@ class NavigationHelper {
         fun openNavigation() {
             val navButton = onView(
                 allOf(
-                    withContentDescription(App.getInstance().getString(R.string.navigation_drawer_open)),
+                    withContentDescription(App.instance.getString(R.string.navigation_drawer_open)),
                     isDisplayed()
                 )
             )
@@ -41,7 +41,7 @@ class NavigationHelper {
          * Opens the overflow menu.
          */
         fun openOverflowMenu() {
-            openActionBarOverflowOrOptionsMenu(App.getInstance())
+            openActionBarOverflowOrOptionsMenu(App.instance)
         }
     }
 

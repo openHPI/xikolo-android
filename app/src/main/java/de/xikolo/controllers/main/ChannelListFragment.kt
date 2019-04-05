@@ -53,7 +53,7 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
             override fun onChannelClicked(channelId: String) {
                 val intent = ChannelDetailsActivityAutoBundle
                     .builder(channelId)
-                    .build(App.getInstance())
+                    .build(App.instance)
                 startActivity(intent)
             }
 
@@ -61,7 +61,7 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
                 val intent = CourseActivityAutoBundle
                     .builder()
                     .courseId(course.id)
-                    .build(App.getInstance())
+                    .build(App.instance)
                 startActivity(intent)
             }
 
@@ -69,7 +69,7 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
                 val intent = ChannelDetailsActivityAutoBundle
                     .builder(channelId)
                     .scrollToCoursePosition(scrollPosition)
-                    .build(App.getInstance())
+                    .build(App.instance)
                 startActivity(intent)
             }
         })

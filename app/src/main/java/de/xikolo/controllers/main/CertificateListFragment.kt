@@ -51,13 +51,13 @@ class CertificateListFragment : ViewModelMainFragment<CertificateListViewModel>(
 
         certificateListAdapter = CertificateListAdapter(this, object : CertificateListAdapter.OnCertificateCardClickListener {
             override fun onCourseClicked(courseId: String) {
-                val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.getInstance())
+                val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.instance)
                 startActivity(intent)
             }
         })
 
         activity?.let { activity ->
-            recyclerView.layoutManager = LinearLayoutManager(App.getInstance())
+            recyclerView.layoutManager = LinearLayoutManager(App.instance)
             recyclerView.addItemDecoration(SpaceItemDecoration(
                 activity.resources.getDimensionPixelSize(R.dimen.card_horizontal_margin),
                 activity.resources.getDimensionPixelSize(R.dimen.card_vertical_margin),

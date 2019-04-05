@@ -40,7 +40,7 @@ class ChannelsTest : BaseMockedTest() {
         NavigationHelper.openNavigation()
 
         val channelsButton = onView(
-            withText(App.getInstance().getString(R.string.title_section_channels))
+            withText(App.instance.getString(R.string.title_section_channels))
         )
 
         channelsButton.perform(click())
@@ -60,7 +60,7 @@ class ChannelsTest : BaseMockedTest() {
 
         val refreshView = onView(
             allOf(
-                withText(App.getInstance().getString(R.string.action_refresh)),
+                withText(App.instance.getString(R.string.action_refresh)),
                 isDisplayed()
             )
         )

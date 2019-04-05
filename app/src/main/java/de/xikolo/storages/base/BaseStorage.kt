@@ -6,7 +6,7 @@ import de.xikolo.App
 
 abstract class BaseStorage(name: String, mode: Int) {
 
-    private val preferences: SharedPreferences = App.getInstance().getSharedPreferences(name, mode)
+    private val preferences: SharedPreferences = App.instance.getSharedPreferences(name, mode)
 
     fun getString(key: String, defValue: String? = null) : String? = preferences.getString(key, defValue)
 

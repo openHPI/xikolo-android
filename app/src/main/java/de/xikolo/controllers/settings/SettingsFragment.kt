@@ -65,12 +65,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             val newStoragePreference = sharedPreferences?.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
             findPreference(getString(R.string.preference_storage)).summary = newStoragePreference
 
-            val newStorageType = StorageUtil.toStorageType(App.getInstance(), newStoragePreference)
+            val newStorageType = StorageUtil.toStorageType(App.instance, newStoragePreference)
             var oldStorageType = StorageUtil.StorageType.INTERNAL
-            var oldStorage = StorageUtil.getInternalStorage(App.getInstance())
+            var oldStorage = StorageUtil.getInternalStorage(App.instance)
             if (newStorageType == StorageUtil.StorageType.INTERNAL) {
                 oldStorageType = StorageUtil.StorageType.SDCARD
-                oldStorage = StorageUtil.getSdcardStorage(App.getInstance())!!
+                oldStorage = StorageUtil.getSdcardStorage(App.instance)!!
             }
 
             // clean up before
@@ -107,14 +107,14 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
                         if (newStorageType == StorageUtil.StorageType.INTERNAL) {
                             StorageUtil.migrateAsync(
-                                StorageUtil.getSdcardStorage(App.getInstance())!!,
-                                StorageUtil.getInternalStorage(App.getInstance()),
+                                StorageUtil.getSdcardStorage(App.instance)!!,
+                                StorageUtil.getInternalStorage(App.instance),
                                 migrationCallback
                             )
                         } else {
                             StorageUtil.migrateAsync(
-                                StorageUtil.getInternalStorage(App.getInstance()),
-                                StorageUtil.getSdcardStorage(App.getInstance())!!,
+                                StorageUtil.getInternalStorage(App.instance),
+                                StorageUtil.getSdcardStorage(App.instance)!!,
                                 migrationCallback
                             )
                         }
@@ -142,14 +142,14 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 true
             }
 
-        if (StorageUtil.getStorages(App.getInstance()).size < 2) {
+        if (StorageUtil.getStorages(App.instance).size < 2) {
             val general = findPreference(getString(R.string.preference_category_general)) as PreferenceCategory
             val storagePref = findPreference(getString(R.string.preference_storage))
             general.removePreference(storagePref)
         }
 
         val pipSettings = findPreference(getString(R.string.preference_video_pip))
-        if (!FeatureToggle.pictureInPicture(App.getInstance())) {
+        if (!FeatureToggle.pictureInPicture(App.instance)) {
             val video = findPreference(getString(R.string.preference_category_video_playback_speed)) as PreferenceCategory
             video.removePreference(pipSettings)
         } else {
@@ -283,7 +283,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private fun openUrl(url: String) {
         val customTabsIntent = CustomTabsIntent.Builder()
-            .setToolbarColor(ContextCompat.getColor(App.getInstance(), R.color.apptheme_main))
+            .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_main))
             .build()
         customTabsIntent.launchUrl(activity, Uri.parse(url))
     }

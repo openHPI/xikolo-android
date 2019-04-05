@@ -134,7 +134,7 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
     }
 
     fun setMessageSymbol(title: Int) {
-        textIcon.text = App.getInstance().resources.getString(title)
+        textIcon.text = App.instance.resources.getString(title)
     }
 
     fun setMessageTitle(title: String) {
@@ -142,7 +142,7 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
     }
 
     fun setMessageTitle(title: Int) {
-        textHeader.text = App.getInstance().resources.getString(title)
+        textHeader.text = App.instance.resources.getString(title)
     }
 
     fun setMessageSummary(summary: String?) {
@@ -159,7 +159,7 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
             textSummary.text = null
             textSummary.visibility = View.GONE
         } else {
-            textSummary.text = App.getInstance().resources.getString(summary)
+            textSummary.text = App.instance.resources.getString(summary)
             textSummary.visibility = View.VISIBLE
         }
     }

@@ -24,7 +24,7 @@ object ApiService {
         val original = chain.request()
 
         val builder = original.newBuilder()
-        if (original.url().host() == App.getInstance().getString(R.string.app_host) && UserManager.isAuthorized) {
+        if (original.url().host() == App.instance.getString(R.string.app_host) && UserManager.isAuthorized) {
             builder.header(
                 Config.HEADER_AUTH,
                 Config.HEADER_AUTH_VALUE_PREFIX_JSON_API + UserManager.token!!
@@ -143,7 +143,7 @@ object ApiService {
             .addInterceptor(authenticationInterceptor)
             .addInterceptor(userAgentInterceptor)
             .addInterceptor(logging)
-            .cache(Cache(App.getInstance().cacheDir, HTTP_CACHE_SIZE_BYTES))
+            .cache(Cache(App.instance.cacheDir, HTTP_CACHE_SIZE_BYTES))
             .build()
     }
 
