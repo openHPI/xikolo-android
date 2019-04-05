@@ -2,11 +2,10 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.network.jobs.base.RequestJobCallback
-import de.xikolo.network.jobs.base.RequestJob
-import de.xikolo.models.Item
-import de.xikolo.network.sync.Sync
 import de.xikolo.network.ApiService
+import de.xikolo.network.jobs.base.RequestJob
+import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.sync.Sync
 import ru.gildor.coroutines.retrofit.awaitResponse
 
 class GetItemWithContentJob(callback: RequestJobCallback, private val itemId: String) : RequestJob(callback, Precondition.AUTH) {
@@ -18,10 +17,10 @@ class GetItemWithContentJob(callback: RequestJobCallback, private val itemId: St
     override suspend fun onRun() {
         val response = ApiService.instance.getItemWithContent(itemId).awaitResponse()
 
-        if (response.isSuccessful) {
+        if (response.isSuccessful && response.body() != null) {
             if (Config.DEBUG) Log.i(TAG, "Item received")
 
-            Sync.Data.with(Item::class.java, response.body())
+            Sync.Data.with(response.body()!!)
                     .saveOnly()
                     .run()
             syncItemContent(response.body()!!)

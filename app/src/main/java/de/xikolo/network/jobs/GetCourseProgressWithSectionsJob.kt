@@ -2,12 +2,11 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.models.CourseProgress
 import de.xikolo.models.SectionProgress
 import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.NetworkJob
-import de.xikolo.network.sync.Sync
 import de.xikolo.network.jobs.base.NetworkStateLiveData
+import de.xikolo.network.sync.Sync
 import ru.gildor.coroutines.retrofit.awaitResponse
 
 class GetCourseProgressWithSectionsJob(private val courseId: String, networkState: NetworkStateLiveData, userRequest: Boolean) : NetworkJob(networkState, userRequest, Precondition.AUTH) {
@@ -19,13 +18,13 @@ class GetCourseProgressWithSectionsJob(private val courseId: String, networkStat
     override suspend fun onRun() {
         val response = ApiService.instance.getCourseProgressWithSections(courseId).awaitResponse()
 
-        if (response.isSuccessful) {
+        if (response.isSuccessful && response.body() != null) {
             if (Config.DEBUG) Log.i(TAG, "Course progress received")
 
-            Sync.Data.with(CourseProgress::class.java, response.body())
+            Sync.Data.with(response.body()!!)
                 .saveOnly()
                 .run()
-            Sync.Included.with(SectionProgress::class.java, response.body())
+            Sync.Included.with<SectionProgress>(response.body()!!)
                 .addFilter("courseProgressId", courseId)
                 .run()
 

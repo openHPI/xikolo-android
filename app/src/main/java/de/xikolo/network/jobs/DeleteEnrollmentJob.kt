@@ -8,6 +8,7 @@ import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.RequestJob
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.network.sync.Local
+import io.realm.kotlin.where
 import ru.gildor.coroutines.retrofit.awaitResponse
 
 class DeleteEnrollmentJob(private val id: String, callback: RequestJobCallback) : RequestJob(callback, Precondition.AUTH) {
@@ -22,10 +23,12 @@ class DeleteEnrollmentJob(private val id: String, callback: RequestJobCallback) 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Enrollment deleted")
 
-            Local.Delete.with(Enrollment::class.java, id)
+            Local.Delete.with<Enrollment>(id)
                     .setBeforeCommitCallback { realm, model ->
-                        val course = realm.where(Course::class.java).equalTo("enrollmentId", model.id).findFirst()
-                        if (course != null) course.enrollmentId = null
+                        realm.where<Course>()
+                            .equalTo("enrollmentId", model.id)
+                            .findFirst()
+                            ?.enrollmentId = null
                     }
                     .run()
 

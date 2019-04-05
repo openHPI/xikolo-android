@@ -7,8 +7,8 @@ import de.xikolo.models.Course
 import de.xikolo.models.Enrollment
 import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.NetworkJob
-import de.xikolo.network.sync.Sync
 import de.xikolo.network.jobs.base.NetworkStateLiveData
+import de.xikolo.network.sync.Sync
 import io.realm.kotlin.where
 import ru.gildor.coroutines.retrofit.awaitResponse
 
@@ -25,16 +25,17 @@ class ListCoursesJob(networkState: NetworkStateLiveData, userRequest: Boolean) :
             ApiService.instance.listCourses().awaitResponse()
         }
 
-        if (response.isSuccessful) {
+        if (response.isSuccessful && response.body() != null) {
             if (Config.DEBUG) Log.i(TAG, "Courses received")
 
-            Sync.Data.with(Course::class.java, *response.body()!!)
+            Sync.Data.with(response.body()!!)
                 .setBeforeCommitCallback { realm, model ->
                     val course = realm.where<Course>().equalTo("id", model.id).findFirst()
                     if (course != null) model.description = course.description
                 }
                 .run()
-            Sync.Included.with(Enrollment::class.java, *response.body()!!).run()
+            Sync.Included.with<Enrollment>(response.body()!!)
+                .run()
 
             success()
         } else {

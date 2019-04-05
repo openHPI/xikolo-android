@@ -2,11 +2,10 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.models.Announcement
 import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.NetworkJob
-import de.xikolo.network.sync.Sync
 import de.xikolo.network.jobs.base.NetworkStateLiveData
+import de.xikolo.network.sync.Sync
 import ru.gildor.coroutines.retrofit.awaitResponse
 
 class ListAnnouncementsJob(private val courseId: String?, userRequest: Boolean, networkState: NetworkStateLiveData) : NetworkJob(networkState, userRequest, Precondition.AUTH) {
@@ -22,10 +21,10 @@ class ListAnnouncementsJob(private val courseId: String?, userRequest: Boolean, 
             ApiService.instance.listGlobalAnnouncements().awaitResponse()
         }
 
-        if (response.isSuccessful) {
+        if (response.isSuccessful && response.body() != null) {
             if (Config.DEBUG) Log.i(TAG, "Announcements received")
 
-            val sync = Sync.Data.with(Announcement::class.java, *response.body()!!)
+            val sync = Sync.Data.with(response.body()!!)
             if (courseId != null) {
                 sync.addFilter("courseId", courseId)
             }

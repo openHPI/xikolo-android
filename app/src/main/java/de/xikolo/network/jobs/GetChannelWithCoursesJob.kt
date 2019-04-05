@@ -2,7 +2,6 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.models.Channel
 import de.xikolo.models.Course
 import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.NetworkJob
@@ -19,13 +18,13 @@ class GetChannelWithCoursesJob(private val channelId: String, networkState: Netw
     override suspend fun onRun() {
         val response = ApiService.instance.getChannelWithCourses(channelId).awaitResponse()
 
-        if (response.isSuccessful) {
+        if (response.isSuccessful && response.body() != null) {
             if (Config.DEBUG) Log.i(TAG, "Channel received")
 
-            Sync.Data.with(Channel::class.java, response.body())
+            Sync.Data.with(response.body()!!)
                 .saveOnly()
                 .run()
-            Sync.Included.with(Course::class.java, response.body())
+            Sync.Included.with<Course>(response.body()!!)
                 .saveOnly()
                 .run()
 

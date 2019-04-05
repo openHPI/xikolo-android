@@ -3,12 +3,13 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.network.jobs.base.RequestJobCallback
-import de.xikolo.network.jobs.base.RequestJob
 import de.xikolo.models.Course
 import de.xikolo.models.Enrollment
-import de.xikolo.network.sync.Sync
 import de.xikolo.network.ApiService
+import de.xikolo.network.jobs.base.RequestJob
+import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.sync.Sync
+import io.realm.kotlin.where
 import moe.banana.jsonapi2.HasOne
 import ru.gildor.coroutines.retrofit.awaitResponse
 
@@ -24,14 +25,16 @@ class CreateEnrollmentJob(private val courseId: String, callback: RequestJobCall
 
         val response = ApiService.instance.createEnrollment(enrollment).awaitResponse()
 
-        if (response.isSuccessful) {
+        if (response.isSuccessful && response.body() != null) {
             if (Config.DEBUG) Log.i(TAG, "Enrollment created")
 
-            Sync.Data.with(Enrollment::class.java, response.body())
+            Sync.Data.with(response.body()!!)
                     .saveOnly()
                     .setBeforeCommitCallback { realm, model ->
-                        val course = realm.where(Course::class.java).equalTo("id", courseId).findFirst()
-                        if (course != null) course.enrollmentId = model.id
+                        realm.where<Course>()
+                            .equalTo("id", courseId)
+                            .findFirst()
+                            ?.enrollmentId = model.id
                     }
                     .run()
 
