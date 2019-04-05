@@ -26,7 +26,7 @@ class AnnouncementListViewModel(val courseId: String? = null) : BaseViewModel() 
         requestAnnouncementList(true)
     }
 
-    private fun requestAnnouncementList(userRequest: Boolean) {
+    fun requestAnnouncementList(userRequest: Boolean) {
         ListAnnouncementsJob(courseId, userRequest, networkState).run()
     }
 
