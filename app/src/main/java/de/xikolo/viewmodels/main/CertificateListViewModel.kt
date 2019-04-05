@@ -16,10 +16,10 @@ class CertificateListViewModel : BaseViewModel() {
         get() = CourseDao.Unmanaged.allWithCertificates()
 
     override fun onFirstCreate() {
-        courseListViewModel.requestCourseList(false)
+        courseListViewModel.requestCourseList(false, networkState)
     }
 
     override fun onRefresh() {
-        courseListViewModel.requestCourseList(true)
+        courseListViewModel.requestCourseList(true, networkState)
     }
 }

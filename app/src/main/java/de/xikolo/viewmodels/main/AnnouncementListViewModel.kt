@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import de.xikolo.models.Announcement
 import de.xikolo.models.dao.AnnouncementDao
 import de.xikolo.network.jobs.ListAnnouncementsJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.viewmodels.base.BaseViewModel
 
 class AnnouncementListViewModel(val courseId: String? = null) : BaseViewModel() {
@@ -26,7 +27,11 @@ class AnnouncementListViewModel(val courseId: String? = null) : BaseViewModel() 
         requestAnnouncementList(true)
     }
 
-    fun requestAnnouncementList(userRequest: Boolean) {
+    private fun requestAnnouncementList(userRequest: Boolean) {
+        ListAnnouncementsJob(courseId, userRequest, networkState).run()
+    }
+
+    fun requestAnnouncementList(userRequest: Boolean, networkState: NetworkStateLiveData) {
         ListAnnouncementsJob(courseId, userRequest, networkState).run()
     }
 

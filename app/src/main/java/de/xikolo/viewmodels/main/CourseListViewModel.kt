@@ -10,6 +10,7 @@ import de.xikolo.models.Course
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.models.dao.EnrollmentDao
 import de.xikolo.network.jobs.ListCoursesJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.SectionList
 import de.xikolo.viewmodels.base.BaseViewModel
 
@@ -106,7 +107,11 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
         requestCourseList(true)
     }
 
-    fun requestCourseList(userRequest: Boolean) {
+    private fun requestCourseList(userRequest: Boolean) {
+        ListCoursesJob(networkState, userRequest).run()
+    }
+
+    fun requestCourseList(userRequest: Boolean, networkState: NetworkStateLiveData) {
         ListCoursesJob(networkState, userRequest).run()
     }
 }
