@@ -71,13 +71,11 @@ class SectionListAdapter(private val activity: FragmentActivity,
                     return false
                 }
 
-                override fun getSpanCount(): Int {
-                    return holder.recyclerView.spanCount
-                }
+                override val spanCount: Int
+                    get() = holder.recyclerView.spanCount
 
-                override fun getItemCount(): Int {
-                    return itemAdapter.itemCount
-                }
+                override val itemCount: Int
+                    get() = itemAdapter.itemCount
             }
         ))
         ViewCompat.setNestedScrollingEnabled(holder.recyclerView, false)

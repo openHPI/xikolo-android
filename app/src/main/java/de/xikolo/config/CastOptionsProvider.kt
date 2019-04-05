@@ -10,6 +10,7 @@ import com.google.android.gms.cast.framework.media.NotificationOptions
 
 import de.xikolo.controllers.cast.CastActivity
 
+@Suppress("UNUSED")
 class CastOptionsProvider : OptionsProvider {
 
     override fun getCastOptions(appContext: Context): CastOptions {

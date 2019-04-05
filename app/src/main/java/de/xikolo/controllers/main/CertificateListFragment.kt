@@ -12,9 +12,9 @@ import de.xikolo.R
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
+import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
-import de.xikolo.extensions.observe
 import de.xikolo.viewmodels.main.CertificateListViewModel
 import de.xikolo.views.SpaceItemDecoration
 import org.greenrobot.eventbus.EventBus
@@ -67,14 +67,13 @@ class CertificateListFragment : ViewModelMainFragment<CertificateListViewModel>(
                         return false
                     }
 
-                    override fun getSpanCount(): Int {
-                        return 1
-                    }
+                    override val spanCount: Int
+                        get() = 1
 
-                    override fun getItemCount(): Int {
-                        return certificateListAdapter.itemCount
-                    }
-                }))
+                    override val itemCount: Int
+                        get() = certificateListAdapter.itemCount
+                }
+            ))
         }
         recyclerView.adapter = certificateListAdapter
 

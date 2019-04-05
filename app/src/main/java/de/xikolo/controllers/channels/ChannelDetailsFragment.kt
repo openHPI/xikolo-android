@@ -101,14 +101,14 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
                     return contentListAdapter.isHeader(position)
                 }
 
-                override fun getSpanCount(): Int {
-                    return recyclerView.spanCount
-                }
+                override val spanCount: Int
+                    get() = recyclerView.spanCount
 
-                override fun getItemCount(): Int {
-                    return contentListAdapter.itemCount
-                }
-            }))
+                override val itemCount: Int
+                    get() = contentListAdapter.itemCount
+
+            }
+        ))
 
         viewModel.channel
             .observe(this) {

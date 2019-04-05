@@ -85,14 +85,13 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
                     return false
                 }
 
-                override fun getSpanCount(): Int {
-                    return recyclerView.spanCount
-                }
+                override val spanCount: Int
+                    get() = recyclerView.spanCount
 
-                override fun getItemCount(): Int {
-                    return channelListAdapter.itemCount
-                }
-            }))
+                override val itemCount: Int
+                    get() = channelListAdapter.itemCount
+            }
+        ))
 
         viewModel.channels
             .observe(this) {
