@@ -66,43 +66,43 @@ object Config {
 
     @JvmField val DEBUG = BuildConfig.X_TYPE === BuildType.DEBUG
 
-    @JvmField val HEADER_ACCEPT = "Accept"
-    @JvmField val HEADER_CONTENT_TYPE = "Content-Type"
-    @JvmField val HEADER_ACCEPT_LANGUAGE = "Accept-Language"
-    @JvmField val HEADER_USER_AGENT = "User-Agent"
+    const val HEADER_ACCEPT = "Accept"
+    const val HEADER_CONTENT_TYPE = "Content-Type"
+    const val HEADER_ACCEPT_LANGUAGE = "Accept-Language"
+    const val HEADER_USER_AGENT = "User-Agent"
 
-    @JvmField val MEDIA_TYPE_JSON = "application/json"
-    @JvmField val MEDIA_TYPE_JSON_API = "application/vnd.api+json"
+    const val MEDIA_TYPE_JSON = "application/json"
+    const val MEDIA_TYPE_JSON_API = "application/vnd.api+json"
 
-    @JvmField val HEADER_AUTH = "Authorization"
-    @JvmField val HEADER_AUTH_VALUE_PREFIX = "Token token="
-    @JvmField val HEADER_AUTH_VALUE_PREFIX_JSON_API = "Legacy-Token token="
+    const val HEADER_AUTH = "Authorization"
+    const val HEADER_AUTH_VALUE_PREFIX = "Token token="
+    const val HEADER_AUTH_VALUE_PREFIX_JSON_API = "Legacy-Token token="
 
-    @JvmField val HEADER_USER_PLATFORM = "X-User-Platform"
-    @JvmField val HEADER_USER_PLATFORM_VALUE = "Android"
+    const val HEADER_USER_PLATFORM = "X-User-Platform"
+    const val HEADER_USER_PLATFORM_VALUE = "Android"
     @JvmField val HEADER_USER_AGENT_VALUE =
         "${App.instance.resources.getString(de.xikolo.R.string.app_name)}/${BuildConfig.VERSION_NAME} Android/${Build.VERSION.RELEASE} (${DeviceUtil.deviceName})"
 
-    @JvmField val HEADER_API_VERSION_EXPIRATION_DATE = "X-Api-Version-Expiration-Date"
+    const val HEADER_API_VERSION_EXPIRATION_DATE = "X-Api-Version-Expiration-Date"
 
-    @JvmField val FONT_DIR = "fonts/"
-    @JvmField val FONT_XIKOLO = "xikolo.ttf"
-    @JvmField val FONT_MATERIAL = "materialdesign.ttf"
+    const val FONT_DIR = "fonts/"
+    const val FONT_XIKOLO = "xikolo.ttf"
+    const val FONT_MATERIAL = "materialdesign.ttf"
 
-    @JvmField val LANALYTICS_CONTEXT_COOKIE = "lanalytics-context"
-    @JvmField val LANALYTICS_PATH = "tracking-events/"
+    const val LANALYTICS_CONTEXT_COOKIE = "lanalytics-context"
+    const val LANALYTICS_PATH = "tracking-events/"
 
-    @JvmField val ACCOUNT = "account/"
-    @JvmField val NEW = "new/"
-    @JvmField val RESET = "reset/$NEW"
-    @JvmField val COURSES = "courses/"
-    @JvmField val DISCUSSIONS = "pinboard/"
-    @JvmField val ITEMS = "items/"
-    @JvmField val RECAP = "learn?course_id="
+    const val ACCOUNT = "account/"
+    const val NEW = "new/"
+    const val RESET = "reset/$NEW"
+    const val COURSES = "courses/"
+    const val DISCUSSIONS = "pinboard/"
+    const val ITEMS = "items/"
+    const val RECAP = "learn?course_id="
 
     @JvmField val WEBSOCKET_URL = "wss://$HOST/ws"
 
-    @JvmField var PRESENTER_LIFECYCLE_LOGGING = false
-    @JvmField var WEBVIEW_LOGGING = false
+    const val PRESENTER_LIFECYCLE_LOGGING = false
+    const val WEBVIEW_LOGGING = false
 
 }

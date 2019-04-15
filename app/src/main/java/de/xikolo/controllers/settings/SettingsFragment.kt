@@ -16,7 +16,7 @@ import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.config.FeatureToggle
+import de.xikolo.config.FeatureConfig
 import de.xikolo.controllers.dialogs.ProgressDialogHorizontal
 import de.xikolo.controllers.dialogs.ProgressDialogHorizontalAutoBundle
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
@@ -149,7 +149,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
 
         val pipSettings = findPreference(getString(R.string.preference_video_pip))
-        if (!FeatureToggle.pictureInPicture(App.instance)) {
+        if (!FeatureConfig.PIP) {
             val video = findPreference(getString(R.string.preference_category_video_playback_speed)) as PreferenceCategory
             video.removePreference(pipSettings)
         } else {

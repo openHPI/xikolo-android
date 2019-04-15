@@ -147,7 +147,7 @@ class DownloadService : Service() {
     }
 
     @Synchronized
-    fun isDownloading(url: String): Boolean {
+    fun isDownloading(url: String?): Boolean {
         val download = getDownload(url)
         return download?.state == Download.State.PENDING || download?.state == Download.State.RUNNING
     }

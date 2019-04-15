@@ -11,7 +11,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.config.FeatureToggle
+import de.xikolo.config.FeatureConfig
 import de.xikolo.controllers.main.MainActivity
 import de.xikolo.mocking.base.BaseMockedTest
 import de.xikolo.ui.helper.NavigationHelper
@@ -33,7 +33,7 @@ class ChannelsTest : BaseMockedTest() {
      */
     @Before
     fun navigateToChannelList() {
-        if (!FeatureToggle.channels()) {
+        if (!FeatureConfig.CHANNELS) {
             return
         }
 
@@ -52,7 +52,7 @@ class ChannelsTest : BaseMockedTest() {
      */
     @Test
     fun channelLoading() {
-        if (!FeatureToggle.channels()) {
+        if (!FeatureConfig.CHANNELS) {
             return
         }
 
@@ -94,7 +94,7 @@ class ChannelsTest : BaseMockedTest() {
      */
     @Test
     fun channelDetails() {
-        if (!FeatureToggle.channels()) {
+        if (!FeatureConfig.CHANNELS) {
             return
         }
 

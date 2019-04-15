@@ -132,17 +132,18 @@ class DownloadManager(activity: FragmentActivity) {
         if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 if (Config.DEBUG) Log.d(TAG, "Cancel download " + downloadAsset.url)
-                    if (downloadAsset.url != null) {
-                        DownloadService.instance?.cancelDownload(downloadAsset.url)
 
-                        deleteAssetDownload(downloadAsset, false)
+                if (downloadAsset.url != null) {
+                    DownloadService.instance?.cancelDownload(downloadAsset.url)
 
-                        downloadAsset.secondaryAssets.forEach {
-                            cancelAssetDownload(it)
-                        }
-                    } else {
-                        ToastUtil.show(R.string.error_plain)
+                    deleteAssetDownload(downloadAsset, false)
+
+                    downloadAsset.secondaryAssets.forEach {
+                        cancelAssetDownload(it)
                     }
+                } else {
+                    ToastUtil.show(R.string.error_plain)
+                }
             } else {
                 pendingAction = PendingAction(ActionType.CANCEL, downloadAsset)
             }
@@ -234,8 +235,7 @@ class DownloadManager(activity: FragmentActivity) {
     }
 
     fun downloadRunning(downloadAsset: DownloadAsset): Boolean {
-        return downloadAsset.url != null
-                && DownloadService.instance?.isDownloading(downloadAsset.url) == true
+        return DownloadService.instance?.isDownloading(downloadAsset.url) == true
     }
 
     fun downloadExists(downloadAsset: DownloadAsset): Boolean {

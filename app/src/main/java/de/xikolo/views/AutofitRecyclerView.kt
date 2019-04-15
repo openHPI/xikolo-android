@@ -10,7 +10,7 @@ class AutofitRecyclerView : RecyclerView {
 
     private var manager: GridLayoutManager = GridLayoutManager(context, 1)
 
-    private val mItemDecorations = ArrayList<RecyclerView.ItemDecoration>()
+    private val itemDecorations = ArrayList<ItemDecoration>()
 
     private var columnWidth = -1
 
@@ -54,25 +54,25 @@ class AutofitRecyclerView : RecyclerView {
         }
     }
 
-    override fun addItemDecoration(decor: RecyclerView.ItemDecoration) {
+    override fun addItemDecoration(decor: ItemDecoration) {
         super.addItemDecoration(decor)
         addItemDecoration(decor, -1)
     }
 
-    override fun addItemDecoration(decor: RecyclerView.ItemDecoration, index: Int) {
+    override fun addItemDecoration(decor: ItemDecoration, index: Int) {
         super.addItemDecoration(decor, index)
         if (index < 0) {
-            mItemDecorations.add(decor)
+            itemDecorations.add(decor)
         } else {
-            mItemDecorations.add(index, decor)
+            itemDecorations.add(index, decor)
         }
     }
 
     fun clearItemDecorations() {
-        for (decor in mItemDecorations) {
+        for (decor in itemDecorations) {
             super.removeItemDecoration(decor)
         }
-        mItemDecorations.clear()
+        itemDecorations.clear()
     }
 
 }

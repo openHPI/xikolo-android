@@ -1,7 +1,6 @@
 package de.xikolo.network.sync
 
 import android.util.Log
-import android.util.Pair
 import de.xikolo.config.Config
 import de.xikolo.models.base.RealmAdapter
 import io.realm.Realm

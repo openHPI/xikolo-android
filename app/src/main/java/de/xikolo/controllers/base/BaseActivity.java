@@ -37,7 +37,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.config.FeatureToggle;
+import de.xikolo.config.FeatureConfig;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
@@ -154,7 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
             setupCastMiniController();
         }
 
-        if (UserManager.isAuthorized() && FeatureToggle.secondScreen()) {
+        if (UserManager.isAuthorized() && FeatureConfig.SECOND_SCREEN) {
             app.getWebSocketManager().initConnection(UserManager.getToken());
         }
     }

@@ -2,7 +2,7 @@ package de.xikolo.controllers.helper
 
 import androidx.annotation.StringRes
 import de.xikolo.R
-import de.xikolo.config.FeatureToggle
+import de.xikolo.config.FeatureConfig
 
 enum class CourseListFilter {
     ALL, MY
@@ -34,21 +34,21 @@ enum class CourseArea(@StringRes val titleRes: Int) {
 
     object All : State() {
         init {
-            areas.add(CourseArea.LEARNINGS)
-            areas.add(CourseArea.DISCUSSIONS)
-            areas.add(CourseArea.PROGRESS)
-            areas.add(CourseArea.COURSE_DETAILS)
-            areas.add(CourseArea.CERTIFICATES)
-            if (FeatureToggle.documents()) areas.add(CourseArea.DOCUMENTS)
-            areas.add(CourseArea.ANNOUNCEMENTS)
-            if (FeatureToggle.recapMode()) areas.add(CourseArea.RECAP)
+            areas.add(LEARNINGS)
+            areas.add(DISCUSSIONS)
+            areas.add(PROGRESS)
+            areas.add(COURSE_DETAILS)
+            areas.add(CERTIFICATES)
+            if (FeatureConfig.DOCUMENTS) areas.add(DOCUMENTS)
+            areas.add(ANNOUNCEMENTS)
+            if (FeatureConfig.RECAP_MODE) areas.add(RECAP)
         }
     }
 
     object Locked : State() {
         init {
-            areas.add(CourseArea.COURSE_DETAILS)
-            areas.add(CourseArea.CERTIFICATES)
+            areas.add(COURSE_DETAILS)
+            areas.add(CERTIFICATES)
         }
     }
 

@@ -5,7 +5,7 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import androidx.preference.PreferenceManager
 import de.xikolo.config.Config
-import de.xikolo.config.FeatureToggle
+import de.xikolo.config.FeatureConfig
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.managers.SecondScreenManager
 import de.xikolo.managers.WebSocketManager
@@ -84,7 +84,7 @@ class App : Application() {
 
     @Synchronized
     fun configureSecondScreenManager() {
-        if (FeatureToggle.secondScreen()) {
+        if (FeatureConfig.SECOND_SCREEN) {
             if (secondScreenManager == null) {
                 secondScreenManager = SecondScreenManager()
             }

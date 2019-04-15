@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
-import de.xikolo.config.FeatureToggle;
+import de.xikolo.config.FeatureConfig;
 import de.xikolo.config.GlideApp;
 import de.xikolo.managers.UserManager;
 import de.xikolo.models.Profile;
@@ -52,7 +52,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 NavigationItem.ViewType.PROFILE,
                 NAV_ITEMS.size()));
 
-        if (FeatureToggle.channels()) {
+        if (FeatureConfig.CHANNELS) {
             NAV_ITEMS.add(NAV_CHANNELS = new NavigationItem(
                     R.string.icon_channels,
                     R.string.title_section_channels,
@@ -90,7 +90,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             NavigationItem.ViewType.MAIN,
             NAV_ITEMS.size()));
 
-        if (FeatureToggle.secondScreen()) {
+        if (FeatureConfig.SECOND_SCREEN) {
             NAV_ITEMS.add(NAV_SECOND_SCREEN = new NavigationItem(
                 R.string.icon_second_screen,
                 R.string.title_section_second_screen,
