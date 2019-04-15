@@ -2,10 +2,10 @@ package de.xikolo.managers
 
 import de.xikolo.App
 import de.xikolo.events.LogoutEvent
+import de.xikolo.models.User
 import de.xikolo.network.jobs.CreateAccessTokenJob
 import de.xikolo.network.jobs.GetUserWithProfileJob
 import de.xikolo.network.jobs.base.RequestJobCallback
-import de.xikolo.models.User
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.storages.UserStorage
 import io.realm.Realm
@@ -66,7 +66,7 @@ class UserManager {
 
         @JvmStatic
         fun logout() {
-            val application = App.getInstance()
+            val application = App.instance
             application.clearCookieSyncManager()
 
             val userStorage = UserStorage()

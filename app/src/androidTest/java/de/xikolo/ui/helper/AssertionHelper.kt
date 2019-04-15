@@ -22,7 +22,7 @@ class AssertionHelper {
         fun assertMainShown() {
             val toolbarTitle = onView(
                 allOf(
-                    withText(App.getInstance().getString(R.string.title_section_all_courses)),
+                    withText(App.instance.getString(R.string.title_section_all_courses)),
                     isDescendantOfA(instanceOf(Toolbar::class.java)),
                     isDisplayed()
                 )

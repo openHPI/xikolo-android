@@ -4,7 +4,7 @@ import android.content.res.Configuration
 import android.util.Log
 import com.google.gson.Gson
 import de.xikolo.App
-import de.xikolo.config.FeatureToggle
+import de.xikolo.config.FeatureConfig
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.managers.UserManager
 import de.xikolo.models.DownloadAsset
@@ -42,7 +42,7 @@ object LanalyticsUtil {
     @JvmStatic
     val contextDataJson: String
         get() {
-            val application = App.getInstance()
+            val application = App.instance
 
             val contextData = application.lanalytics.defaultContextData
             contextData[CONTEXT_CLIENT_ID] = application.clientId
@@ -334,17 +334,17 @@ object LanalyticsUtil {
     // Misc
 
     fun Lanalytics.Event.track() {
-        val application = App.getInstance()
-        if (UserManager.isAuthorized && FeatureToggle.tracking()) {
+        val application = App.instance
+        if (UserManager.isAuthorized && FeatureConfig.TRACKING) {
             val tracker = application.lanalytics.defaultTracker
             tracker.send(this, UserManager.token)
             Log.i("Lanalytics", "Created tracking event " + this.verb)
         }
-        if (UserManager.isAuthorized && !FeatureToggle.tracking()) Log.d("Lanalytics", "Would have created tracking event " + this.verb)
+        if (UserManager.isAuthorized && !FeatureConfig.TRACKING) Log.d("Lanalytics", "Would have created tracking event " + this.verb)
     }
 
     private fun createEventBuilder(): Lanalytics.Event.Builder {
-        val application = App.getInstance()
+        val application = App.instance
         val builder = Lanalytics.Event.Builder(application)
 
         if (UserManager.isAuthorized) {

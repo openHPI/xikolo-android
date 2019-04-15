@@ -95,14 +95,13 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
                     return courseListAdapter.isHeader(position)
                 }
 
-                override fun getSpanCount(): Int {
-                    return recyclerView.spanCount
-                }
+                override val spanCount: Int
+                    get() = recyclerView.spanCount
 
-                override fun getItemCount(): Int {
-                    return courseListAdapter.itemCount
-                }
-            }))
+                override val itemCount: Int
+                    get() = courseListAdapter.itemCount
+            }
+        ))
 
         registerObserver()
     }

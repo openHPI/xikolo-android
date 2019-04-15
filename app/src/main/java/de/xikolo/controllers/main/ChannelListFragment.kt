@@ -53,7 +53,7 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
             override fun onChannelClicked(channelId: String) {
                 val intent = ChannelDetailsActivityAutoBundle
                     .builder(channelId)
-                    .build(App.getInstance())
+                    .build(App.instance)
                 startActivity(intent)
             }
 
@@ -61,7 +61,7 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
                 val intent = CourseActivityAutoBundle
                     .builder()
                     .courseId(course.id)
-                    .build(App.getInstance())
+                    .build(App.instance)
                 startActivity(intent)
             }
 
@@ -69,7 +69,7 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
                 val intent = ChannelDetailsActivityAutoBundle
                     .builder(channelId)
                     .scrollToCoursePosition(scrollPosition)
-                    .build(App.getInstance())
+                    .build(App.instance)
                 startActivity(intent)
             }
         })
@@ -85,14 +85,13 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
                     return false
                 }
 
-                override fun getSpanCount(): Int {
-                    return recyclerView.spanCount
-                }
+                override val spanCount: Int
+                    get() = recyclerView.spanCount
 
-                override fun getItemCount(): Int {
-                    return channelListAdapter.itemCount
-                }
-            }))
+                override val itemCount: Int
+                    get() = channelListAdapter.itemCount
+            }
+        ))
 
         viewModel.channels
             .observe(this) {

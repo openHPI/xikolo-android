@@ -41,7 +41,7 @@ import androidx.mediarouter.app.MediaRouteButton;
 import butterknife.BindView;
 import de.xikolo.R;
 import de.xikolo.config.Config;
-import de.xikolo.config.FeatureToggle;
+import de.xikolo.config.FeatureConfig;
 import de.xikolo.controllers.base.BasePresenterActivity;
 import de.xikolo.controllers.helper.VideoHelper;
 import de.xikolo.models.Course;
@@ -385,7 +385,7 @@ public class VideoActivity extends BasePresenterActivity<VideoPresenter, VideoVi
 
     @Override
     public void onUserLeaveHint() {
-        if (FeatureToggle.pictureInPicture(this) && videoHelper.getCurrentPosition() < videoHelper.getDuration() - 5000) {
+        if (FeatureConfig.PIP && videoHelper.getCurrentPosition() < videoHelper.getDuration() - 5000) {
             super.onUserLeaveHint();
             enterPip(false);
         }

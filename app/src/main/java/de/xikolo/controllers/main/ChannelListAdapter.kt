@@ -70,7 +70,7 @@ class ChannelListAdapter(private val callback: OnChannelCardClickListener) : Rec
         holder.layout.setOnClickListener { callback.onChannelClicked(channel.id) }
 
         if (channel.imageUrl != null) {
-            GlideApp.with(App.getInstance()).load(channel.imageUrl).into(holder.imageView)
+            GlideApp.with(App.instance).load(channel.imageUrl).into(holder.imageView)
         } else {
             holder.imageView.visibility = View.GONE
         }
@@ -83,7 +83,7 @@ class ChannelListAdapter(private val callback: OnChannelCardClickListener) : Rec
             val course = courseList[i]
 
             val listItem = LayoutInflater
-                .from(App.getInstance())
+                .from(App.instance)
                 .inflate(
                     R.layout.item_channel_list_scroll,
                     holder.scrollContainer,
@@ -95,7 +95,7 @@ class ChannelListAdapter(private val callback: OnChannelCardClickListener) : Rec
 
             val imageView = listItem.findViewById<ImageView>(R.id.imageView)
             GlideApp
-                .with(App.getInstance())
+                .with(App.instance)
                 .load(course.imageUrl)
                 .into(imageView)
 
@@ -106,7 +106,7 @@ class ChannelListAdapter(private val callback: OnChannelCardClickListener) : Rec
 
         if (courseList.size > PREVIEW_COURSES_COUNT) {
             val showMoreCard = LayoutInflater
-                .from(App.getInstance())
+                .from(App.instance)
                 .inflate(
                     R.layout.item_channel_list_scroll_more,
                     holder.scrollContainer,
@@ -115,7 +115,7 @@ class ChannelListAdapter(private val callback: OnChannelCardClickListener) : Rec
 
             val imageView = showMoreCard.findViewById<ImageView>(R.id.imageView)
             GlideApp
-                .with(App.getInstance())
+                .with(App.instance)
                 .load(channel.imageUrl)
                 .into(imageView)
 
@@ -123,7 +123,7 @@ class ChannelListAdapter(private val callback: OnChannelCardClickListener) : Rec
 
             val card = showMoreCard.findViewById<View>(R.id.card_view)
             val params = card.layoutParams
-            params.width += App.getInstance().resources.getDimension(R.dimen.corner_radius).toInt()
+            params.width += App.instance.resources.getDimension(R.dimen.corner_radius).toInt()
             card.layoutParams = params
 
             holder.scrollContainer.addView(showMoreCard)

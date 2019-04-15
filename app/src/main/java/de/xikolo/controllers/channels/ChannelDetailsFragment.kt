@@ -93,22 +93,22 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
         recyclerView.adapter = contentListAdapter
 
         recyclerView.addItemDecoration(SpaceItemDecoration(
-            App.getInstance().resources.getDimensionPixelSize(R.dimen.card_horizontal_margin),
-            App.getInstance().resources.getDimensionPixelSize(R.dimen.card_vertical_margin),
+            App.instance.resources.getDimensionPixelSize(R.dimen.card_horizontal_margin),
+            App.instance.resources.getDimensionPixelSize(R.dimen.card_vertical_margin),
             false,
             object : SpaceItemDecoration.RecyclerViewInfo {
                 override fun isHeader(position: Int): Boolean {
                     return contentListAdapter.isHeader(position)
                 }
 
-                override fun getSpanCount(): Int {
-                    return recyclerView.spanCount
-                }
+                override val spanCount: Int
+                    get() = recyclerView.spanCount
 
-                override fun getItemCount(): Int {
-                    return contentListAdapter.itemCount
-                }
-            }))
+                override val itemCount: Int
+                    get() = contentListAdapter.itemCount
+
+            }
+        ))
 
         viewModel.channel
             .observe(this) {
@@ -195,18 +195,18 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
             showLoginRequired()
             openLogin()
         } else {
-            val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.getInstance())
+            val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.instance)
             startActivity(intent)
         }
     }
 
     private fun enterCourseDetails(courseId: String) {
-        val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.getInstance())
+        val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.instance)
         startActivity(intent)
     }
 
     private fun openLogin() {
-        val intent = LoginActivityAutoBundle.builder().build(App.getInstance())
+        val intent = LoginActivityAutoBundle.builder().build(App.instance)
         startActivity(intent)
     }
 

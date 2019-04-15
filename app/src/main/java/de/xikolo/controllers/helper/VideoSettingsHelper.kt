@@ -4,15 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
-import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import de.xikolo.R
-import de.xikolo.config.FeatureToggle
+import de.xikolo.config.FeatureConfig
 import de.xikolo.managers.PermissionManager
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.utils.PlaybackSpeedUtil
@@ -63,7 +63,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 )
             )
         }
-        if(FeatureToggle.pictureInPicture(context) && PermissionManager.hasPipPermission(context)) {
+        if(FeatureConfig.PIP && PermissionManager.hasPipPermission(context)) {
             list.addView(
                 buildSettingsItem(
                     R.string.icon_pip,
@@ -80,7 +80,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     fun buildQualityView(): ViewGroup {
         val list = buildSettingsPanel(context.getString(R.string.video_settings_quality))
 
-        if(FeatureToggle.hlsVideo()) {
+        if(FeatureConfig.HLS_VIDEO) {
             list.addView(
                 buildSettingsItem(
                     null,

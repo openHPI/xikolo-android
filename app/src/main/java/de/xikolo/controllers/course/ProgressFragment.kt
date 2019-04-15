@@ -54,13 +54,11 @@ class ProgressFragment : NetworkStateFragment<ProgressViewModel>() {
                     return false
                 }
 
-                override fun getSpanCount(): Int {
-                    return 1
-                }
+                override val spanCount: Int
+                    get() = 1
 
-                override fun getItemCount(): Int {
-                    return adapter.itemCount
-                }
+                override val itemCount: Int
+                    get() = adapter.itemCount
             }
         ))
 

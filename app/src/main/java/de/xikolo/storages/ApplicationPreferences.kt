@@ -10,9 +10,9 @@ import de.xikolo.utils.PlaybackSpeedUtil
 class ApplicationPreferences {
 
     private val preferences: SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(App.getInstance())
+        PreferenceManager.getDefaultSharedPreferences(App.instance)
 
-    private val context: Context = App.getInstance()
+    private val context: Context = App.instance
 
     var storage: String?
         get() = getString(context.getString(R.string.preference_storage), context.getString(R.string.settings_default_value_storage))

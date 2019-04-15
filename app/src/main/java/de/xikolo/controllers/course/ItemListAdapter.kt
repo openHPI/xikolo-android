@@ -38,7 +38,7 @@ class ItemListAdapter(private val section: Section, private val listener: OnItem
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val context = App.getInstance()
+        val context = App.instance
 
         val item = items[position]
 

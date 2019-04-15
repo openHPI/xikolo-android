@@ -34,14 +34,14 @@ class ChannelViewModel(val channelId: String) : BaseViewModel() {
             subList = CourseDao.Unmanaged.allFutureForChannel(channelId)
             if (subList.isNotEmpty()) {
                 contentList.add(
-                    App.getInstance().getString(R.string.header_future_courses),
+                    App.instance.getString(R.string.header_future_courses),
                     subList
                 )
             }
             subList = CourseDao.Unmanaged.allCurrentAndPastForChannel(channelId)
             if (subList.isNotEmpty()) {
                 contentList.add(
-                    App.getInstance().getString(R.string.header_self_paced_courses),
+                    App.instance.getString(R.string.header_self_paced_courses),
                     subList
                 )
             }
@@ -49,14 +49,14 @@ class ChannelViewModel(val channelId: String) : BaseViewModel() {
             subList = CourseDao.Unmanaged.allCurrentAndFutureForChannel(channelId)
             if (subList.isNotEmpty()) {
                 contentList.add(
-                    App.getInstance().getString(R.string.header_current_and_upcoming_courses),
+                    App.instance.getString(R.string.header_current_and_upcoming_courses),
                     subList
                 )
             }
             subList = CourseDao.Unmanaged.allPastForChannel(channelId)
             if (subList.isNotEmpty()) {
                 contentList.add(
-                    App.getInstance().getString(R.string.header_self_paced_courses),
+                    App.instance.getString(R.string.header_self_paced_courses),
                     subList
                 )
             }

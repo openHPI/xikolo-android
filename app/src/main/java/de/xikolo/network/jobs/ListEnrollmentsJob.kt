@@ -2,11 +2,10 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.network.jobs.base.RequestJobCallback
-import de.xikolo.network.jobs.base.RequestJob
-import de.xikolo.models.Enrollment
-import de.xikolo.network.sync.Sync
 import de.xikolo.network.ApiService
+import de.xikolo.network.jobs.base.RequestJob
+import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.sync.Sync
 import ru.gildor.coroutines.retrofit.awaitResponse
 
 class ListEnrollmentsJob(callback: RequestJobCallback) : RequestJob(callback, Precondition.AUTH) {
@@ -16,12 +15,12 @@ class ListEnrollmentsJob(callback: RequestJobCallback) : RequestJob(callback, Pr
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().listEnrollments().awaitResponse()
+        val response = ApiService.instance.listEnrollments().awaitResponse()
 
-        if (response.isSuccessful) {
+        if (response.isSuccessful && response.body() != null) {
             if (Config.DEBUG) Log.i(TAG, "Enrollments received")
 
-            Sync.Data.with(Enrollment::class.java, *response.body()!!)
+            Sync.Data.with(response.body()!!)
 
             callback?.success()
         } else {

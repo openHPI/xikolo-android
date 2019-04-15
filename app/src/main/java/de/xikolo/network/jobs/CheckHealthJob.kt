@@ -15,7 +15,7 @@ class CheckHealthJob(callback: RequestJobCallback) : RequestJob(callback) {
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().base().awaitResponse()
+        val response = ApiService.instance.base().awaitResponse()
 
         when (response.code()) {
             in 200..299 -> {

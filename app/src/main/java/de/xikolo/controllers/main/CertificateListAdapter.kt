@@ -56,9 +56,9 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                             enrollment.certificates.confirmationOfParticipationUrl,
                             course
                         ),
-                        App.getInstance().getString(R.string.course_confirmation_of_participation),
+                        App.instance.getString(R.string.course_confirmation_of_participation),
                         null,
-                        App.getInstance().getString(R.string.course_certificate_not_achieved)
+                        App.instance.getString(R.string.course_certificate_not_achieved)
                     )
 
                     holder.container.addView(dvh.view)
@@ -71,9 +71,9 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                             enrollment.certificates.recordOfAchievementUrl,
                             course
                         ),
-                        App.getInstance().getString(R.string.course_record_of_achievement),
+                        App.instance.getString(R.string.course_record_of_achievement),
                         null,
-                        App.getInstance().getString(R.string.course_certificate_not_achieved)
+                        App.instance.getString(R.string.course_certificate_not_achieved)
                     )
 
                     holder.container.addView(dvh.view)
@@ -86,9 +86,9 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
                             enrollment.certificates.qualifiedCertificateUrl,
                             course
                         ),
-                        App.getInstance().getString(R.string.course_qualified_certificate),
+                        App.instance.getString(R.string.course_qualified_certificate),
                         null,
-                        App.getInstance().getString(R.string.course_certificate_not_achieved)
+                        App.instance.getString(R.string.course_certificate_not_achieved)
                     )
 
                     holder.container.addView(dvh.view)

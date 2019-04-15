@@ -45,13 +45,13 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
                 subList = CourseDao.Unmanaged.allFuture()
                 if (subList.isNotEmpty()) {
                     courseList.add(
-                        App.getInstance().getString(R.string.header_future_courses),
+                        App.instance.getString(R.string.header_future_courses),
                         subList
                     )
                 }
                 subList = CourseDao.Unmanaged.allCurrentAndPast()
                 if (subList.isNotEmpty()) {
-                    courseList.add(App.getInstance().getString(R.string.header_self_paced_courses),
+                    courseList.add(App.instance.getString(R.string.header_self_paced_courses),
                         subList
                     )
                 }
@@ -59,14 +59,14 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
                 subList = CourseDao.Unmanaged.allCurrentAndFuture()
                 if (subList.isNotEmpty()) {
                     courseList.add(
-                        App.getInstance().getString(R.string.header_current_and_upcoming_courses),
+                        App.instance.getString(R.string.header_current_and_upcoming_courses),
                         subList
                     )
                 }
                 subList = CourseDao.Unmanaged.allPast()
                 if (subList.isNotEmpty()) {
                     courseList.add(
-                        App.getInstance().getString(R.string.header_self_paced_courses),
+                        App.instance.getString(R.string.header_self_paced_courses),
                         subList
                     )
                 }
@@ -80,14 +80,14 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
             var subList = CourseDao.Unmanaged.allCurrentAndPastWithEnrollment()
             if (subList.isNotEmpty()) {
                 courseList.add(
-                    App.getInstance().getString(R.string.header_my_current_courses),
+                    App.instance.getString(R.string.header_my_current_courses),
                     subList
                 )
             }
             subList = CourseDao.Unmanaged.allFutureWithEnrollment()
             if (subList.isNotEmpty()) {
                 courseList.add(
-                    App.getInstance().getString(R.string.header_my_future_courses),
+                    App.instance.getString(R.string.header_my_future_courses),
                     subList
                 )
             }

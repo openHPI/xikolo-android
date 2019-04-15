@@ -173,7 +173,7 @@ public class SlideViewerFragment extends BaseFragment implements OnLoadCompleteL
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDownloadCompletedEvent(DownloadCompletedEvent event) {
-        if (event.url.equals(slides.getUrl())) {
+        if (event.getUrl().equals(slides.getUrl())) {
             if (progressDialog != null && progressDialog.getDialog().isShowing()) {
                 progressDialog.getDialog().cancel();
             }

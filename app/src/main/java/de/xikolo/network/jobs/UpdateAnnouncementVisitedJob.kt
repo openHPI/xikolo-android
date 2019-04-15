@@ -23,7 +23,7 @@ class UpdateAnnouncementVisitedJob(
         fun schedule(announcementId: String) {
             if (Config.DEBUG) Log.i(TAG, "$TAG scheduled | announcement.id $announcementId")
 
-            Local.Update.with(Announcement::class.java, announcementId)
+            Local.Update.with<Announcement>(announcementId)
                     .setBeforeCommitCallback { _, model -> model.visited = true }
                     .run()
 
@@ -47,12 +47,12 @@ class UpdateAnnouncementVisitedJob(
         model.id = data.getString("ann_id")
         model.visited = true
 
-        val response = ApiService.getInstance().updateAnnouncement(model.id, model).awaitResponse()
+        val response = ApiService.instance.updateAnnouncement(model.id, model).awaitResponse()
 
-        return if (response.isSuccessful) {
+        return if (response.isSuccessful && response.body() != null) {
             if (Config.DEBUG) Log.i(TAG, "Announcement visit successfully updated")
 
-            Sync.Data.with(Announcement::class.java, response.body())
+            Sync.Data.with(response.body()!!)
                     .saveOnly()
                     .run()
 
