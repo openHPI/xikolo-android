@@ -2,14 +2,14 @@ dependencies {
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
     implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0"
 
     // kotlin extensions
     implementation "ru.gildor.coroutines:kotlin-coroutines-retrofit:1.1.0"
 
     // networking
-    def okhttpVersion = "3.14.0"
+    def okhttpVersion = "3.14.1"
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     implementation "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
 
@@ -77,7 +77,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'androidx.work:work-runtime-ktx:2.0.0'
+    implementation 'androidx.work:work-runtime-ktx:2.0.1'
 
     // local libraries
     implementation project(path: ":lanalytics", configuration: "default")

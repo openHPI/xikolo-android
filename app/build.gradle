@@ -142,6 +142,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    // workaround, can eventually be removed with a future version of android studio / kotlin
+    packagingOptions {
+        pickFirst("META-INF/atomicfu.kotlin_module")
+    }
 }
 
 apply from: 'dependencies.gradle'
