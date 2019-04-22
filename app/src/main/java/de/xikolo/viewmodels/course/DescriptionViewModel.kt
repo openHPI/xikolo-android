@@ -12,11 +12,11 @@ class DescriptionViewModel(val courseId: String) : BaseViewModel() {
     val course: LiveData<Course> = courseViewModel.course
 
     override fun onFirstCreate() {
-        courseViewModel.requestCourse(false)
+        courseViewModel.onFirstCreate()
     }
 
     override fun onRefresh() {
-        courseViewModel.requestCourse(true)
+        courseViewModel.onRefresh()
     }
 
     override val networkState: NetworkStateLiveData
