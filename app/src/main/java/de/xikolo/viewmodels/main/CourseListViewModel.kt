@@ -124,11 +124,7 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
         }
     }
 
-    private fun requestCourseList(userRequest: Boolean) {
+    fun requestCourseList(userRequest: Boolean) {
         ListCoursesJob(networkState, userRequest).run()
-    }
-
-    private fun requestDateList(userRequest: Boolean) {
-        ListDatesJob(networkState, userRequest).run()
     }
 }

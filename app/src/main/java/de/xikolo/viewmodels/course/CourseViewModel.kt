@@ -22,7 +22,8 @@ class CourseViewModel(val courseId: String) : BaseViewModel() {
         requestCourse(true)
     }
 
-    private fun requestCourse(userRequest: Boolean) {
+    fun requestCourse(userRequest: Boolean) {
         GetCourseJob(courseId, networkState, userRequest).run()
     }
+
 }
