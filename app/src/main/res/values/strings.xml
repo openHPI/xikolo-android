@@ -7,7 +7,7 @@
     <string name="title_section_logout">Logout</string>
     <string name="title_section_all_courses">All Courses</string>
     <string name="title_section_news">News</string>
-    <string name="title_section_dates">Dates</string>
+    <string name="title_section_dates">My Course Dates</string>
     <string name="title_section_downloads">Downloads</string>
     <string name="title_section_settings">Settings</string>
     <string name="title_section_my_courses">My Courses</string>
@@ -38,6 +38,7 @@
     <string name="action_language">Change language</string>
     <string name="action_search">Search</string>
     <string name="action_share">Share course</string>
+    <string name="action_course_dates">Course dates</string>
 
     <!-- -->
     <string name="tab_learnings">Learnings</string>
@@ -120,6 +121,9 @@
     <string name="dialog_server_error_message">There was an issue while contacting the server. Please try again later.</string>
     <string name="dialog_server_error_no">Close</string>
 
+    <string name="dialog_course_dates_title">Course dates</string>
+    <string name="dialog_course_dates_no">Close</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -174,8 +178,9 @@
     <string name="course_date_self_paced">Self-paced</string>
     <string name="course_date_beginning">Beginning %s</string>
 
-    <string name="course_dates_title">Date overview</string>
-    <string name="course_date_next">Next date in %1$s</string>
+    <string name="course_list_my_dates_title">My course dates</string>
+    <string name="course_date_list_title">Course date overview</string>
+    <string name="course_date_next">Next up: %1$s</string>
     <string name="course_dates_today">Today</string>
     <string name="course_dates_week">Next 7 days</string>
     <string name="course_dates_later">Later</string>

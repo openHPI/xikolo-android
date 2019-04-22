@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:textSize="32sp" />
+                android:textSize="36sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:textSize="32sp" />
+                android:textSize="36sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:textSize="32sp" />
+                android:textSize="36sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -85,54 +85,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingTop="20dp"
         android:visibility="gone">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="16dp">
-
-            <TextView
-                android:id="@+id/textNextDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="@string/course_date_next"
-                android:textColor="@color/text_second"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="•"
-                android:textColor="@color/text_second"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/textNextCourse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textColor="@color/apptheme_main"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/textTitleOfNextDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:paddingTop="2dp"
-            android:singleLine="true"
-            android:textSize="20sp" />
+        <include layout="@layout/container_date_item" />
 
     </LinearLayout>
 

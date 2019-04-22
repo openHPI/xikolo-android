@@ -56,8 +56,8 @@ class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: 
 
                 if (DateUtil.nowIsBetween(course.startDate, course.endDate)) {
                     holder.textBanner.visibility = View.VISIBLE
-                    holder.textBanner.text = App.getInstance().getText(R.string.banner_running)
-                    holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.getInstance(), R.color.banner_green))
+                    holder.textBanner.text = App.instance.getText(R.string.banner_running)
+                    holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_green))
                 } else {
                     holder.textBanner.visibility = View.GONE
                 }

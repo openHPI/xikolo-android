@@ -2,7 +2,6 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
-import de.xikolo.models.CourseDate
 import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.NetworkJob
 import de.xikolo.network.jobs.base.NetworkStateLiveData
@@ -16,12 +15,12 @@ class ListDatesJob(networkState: NetworkStateLiveData, userRequest: Boolean) : N
     }
 
     override suspend fun onRun() {
-        val response = ApiService.getInstance().listDates().awaitResponse()
+        val response = ApiService.instance.listDates().awaitResponse()
 
         if (response.isSuccessful) {
             if (Config.DEBUG) Log.i(TAG, "Dates received")
 
-            Sync.Data.with(CourseDate::class.java, *response.body()!!).run()
+            Sync.Data.with(response.body()!!).run()
 
             success()
         } else {

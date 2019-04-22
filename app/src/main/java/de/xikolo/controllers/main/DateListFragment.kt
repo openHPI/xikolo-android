@@ -45,7 +45,7 @@ class DateListFragment : ViewModelMainFragment<DateListViewModel>() {
 
     override fun onStart() {
         super.onStart()
-        activityCallback?.onFragmentAttached(NavigationAdapter.NAV_DATES.position, getString(R.string.title_section_dates))
+        activityCallback?.onFragmentAttached(NavigationAdapter.NAV_DATES.position, getString(R.string.course_date_list_title))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,12 +62,6 @@ class DateListFragment : ViewModelMainFragment<DateListViewModel>() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
-
-        viewModel.courses
-            .observe(this) {
-                // request the date list here as it is not included with the courses and needs to be refreshed upon courses change
-                viewModel.requestDateList(false)
-            }
 
         viewModel.dates
             .observe(this) {

@@ -120,13 +120,13 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         viewModel.courses
             .observe(this) {
                 courseList = viewModel.sectionedCourseList
-                viewModel.requestDateList(false) // request the date list here as it is not included with the courses and needs to be refreshed upon courses change
                 showCourseList()
             }
 
         viewModel.dates
             .observe(this) {
-                showContent()
+                courseList = viewModel.sectionedCourseList
+                showCourseList()
             }
     }
 
@@ -232,12 +232,12 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
                 }
             }
 
-            public override fun onError(code: RequestJobCallback.ErrorCode) {
+            public override fun onError(code: ErrorCode) {
                 if (view != null) {
                     hideAnyProgress()
                     if (code === ErrorCode.NO_NETWORK) {
                         showNetworkRequired()
-                    } else if (code === RequestJobCallback.ErrorCode.NO_AUTH) {
+                    } else if (code === ErrorCode.NO_AUTH) {
                         showLoginRequired()
                         openLogin()
                     }

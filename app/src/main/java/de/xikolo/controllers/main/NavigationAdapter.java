@@ -33,10 +33,10 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
     public static final NavigationItem NAV_PROFILE;
     public static final NavigationItem NAV_ALL_COURSES;
     public static final NavigationItem NAV_MY_COURSES;
+    public static final NavigationItem NAV_DATES;
     public static final NavigationItem NAV_CERTIFICATES;
     public static final NavigationItem NAV_CHANNELS;
     public static final NavigationItem NAV_NEWS;
-    public static final NavigationItem NAV_DATES;
     public static final NavigationItem NAV_DOWNLOADS;
     public static final NavigationItem NAV_SETTINGS;
 
@@ -79,15 +79,15 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
                 NavigationItem.ViewType.MAIN,
                 NAV_ITEMS.size()));
 
-        NAV_ITEMS.add(NAV_NEWS = new NavigationItem(
-                R.string.icon_news,
-                R.string.title_section_news,
-                NavigationItem.ViewType.MAIN,
-                NAV_ITEMS.size()));
-
         NAV_ITEMS.add(NAV_DATES = new NavigationItem(
                 R.string.icon_dates,
                 R.string.title_section_dates,
+                NavigationItem.ViewType.MAIN,
+                NAV_ITEMS.size()));
+
+        NAV_ITEMS.add(NAV_NEWS = new NavigationItem(
+                R.string.icon_news,
+                R.string.title_section_news,
                 NavigationItem.ViewType.MAIN,
                 NAV_ITEMS.size()));
 

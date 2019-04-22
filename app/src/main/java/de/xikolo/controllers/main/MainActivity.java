@@ -138,13 +138,13 @@ public class MainActivity extends BaseActivity
             newFragment = CourseListFragmentAutoBundle.builder(CourseListFilter.MY).build();
             tag = "my_courses";
         }
-        if (position == NavigationAdapter.NAV_CERTIFICATES.getPosition()) {
-            newFragment = new CertificateListFragment();
-            tag = "certificates";
-        }
         if (position == NavigationAdapter.NAV_DATES.getPosition()) {
             newFragment = new DateListFragment();
             tag = "dates";
+        }
+        if (position == NavigationAdapter.NAV_CERTIFICATES.getPosition()) {
+            newFragment = new CertificateListFragment();
+            tag = "certificates";
         }
         if (position == NavigationAdapter.NAV_NEWS.getPosition()) {
             newFragment = new NewsListFragment();

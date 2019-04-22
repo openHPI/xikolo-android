@@ -88,7 +88,7 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
                     DateDao.Unmanaged.countNextSevenDays(),
                     DateDao.Unmanaged.countFuture()
                 ),
-                App.getInstance().getString(R.string.course_dates_title)
+                App.instance.getString(R.string.course_list_my_dates_title)
             )
             var subList = CourseDao.Unmanaged.allCurrentAndPastWithEnrollment()
             if (subList.isNotEmpty()) {
@@ -124,7 +124,7 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
         ListCoursesJob(networkState, userRequest).run()
     }
 
-    fun requestDateList(userRequest: Boolean) {
+    private fun requestDateList(userRequest: Boolean) {
         ListDatesJob(networkState, userRequest).run()
     }
 }

@@ -52,7 +52,7 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
         if (course.isEnrolled && course.accessible) {
             holder.layout.setOnClickListener { onCourseButtonClickListener?.onContinueButtonClicked(course.id) }
 
-            holder.buttonCourseAction.text = App.getInstance().getString(R.string.btn_continue_course)
+            holder.buttonCourseAction.text = App.instance.getString(R.string.btn_continue_course)
             holder.buttonCourseAction.setOnClickListener { onCourseButtonClickListener?.onContinueButtonClicked(course.id) }
 
             holder.buttonCourseDetails.visibility = View.GONE
@@ -60,14 +60,14 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
         } else if (course.isEnrolled && !course.accessible) {
             holder.layout.setOnClickListener { onCourseButtonClickListener?.onDetailButtonClicked(course.id) }
 
-            holder.buttonCourseAction.text = App.getInstance().getString(R.string.btn_starts_soon)
+            holder.buttonCourseAction.text = App.instance.getString(R.string.btn_starts_soon)
             holder.buttonCourseAction.isEnabled = false
             holder.buttonCourseAction.isClickable = false
 
         } else {
             holder.layout.setOnClickListener { onCourseButtonClickListener?.onDetailButtonClicked(course.id) }
 
-            holder.buttonCourseAction.text = App.getInstance().getString(R.string.btn_enroll)
+            holder.buttonCourseAction.text = App.instance.getString(R.string.btn_enroll)
             holder.buttonCourseAction.setOnClickListener { onCourseButtonClickListener?.onEnrollButtonClicked(course.id) }
         }
     }

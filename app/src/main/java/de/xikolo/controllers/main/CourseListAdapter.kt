@@ -17,9 +17,10 @@ import de.xikolo.models.Course
 import de.xikolo.models.DateOverview
 import de.xikolo.utils.DateUtil
 import de.xikolo.utils.TimeUtil
+import java.text.DateFormat
 import java.util.*
 
-class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseListFilter, onCourseButtonClickListener: BaseCourseListAdapter.OnCourseButtonClickListener, private val onDateOverviewClickListener: OnDateOverviewClickListener) : BaseCourseListAdapter<DateOverview>(fragment, onCourseButtonClickListener) {
+class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseListFilter, onCourseButtonClickListener: OnCourseButtonClickListener, private val onDateOverviewClickListener: OnDateOverviewClickListener) : BaseCourseListAdapter<DateOverview>(fragment, onCourseButtonClickListener) {
 
     companion object {
         val TAG: String = CourseListAdapter::class.java.simpleName
@@ -45,16 +46,27 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
 
                 dateOverview.nextDate?.let { nextDate ->
                     nextDate.date?.let {
-                        holder.textNextDate.text = String.format(
-                            App.getInstance().getString(R.string.course_date_next),
-                            TimeUtil.getTimeLeftString(
-                                it.time - Date().time,
-                                App.getInstance()
-                            )
+                        holder.textTimeLeft.text = TimeUtil.getTimeLeftString(
+                            it.time - Date().time,
+                            App.instance
                         )
                     }
-                    holder.textNextCourse.text = nextDate.getCourse()?.title
-                    holder.titleOfNextDate.text = nextDate.title
+
+                    holder.textDate.text = DateFormat.getDateTimeInstance(
+                        DateFormat.YEAR_FIELD or DateFormat.MONTH_FIELD or DateFormat.DATE_FIELD,
+                        DateFormat.SHORT,
+                        Locale.getDefault()
+                    ).format(nextDate.date)
+
+                    holder.textCourse.text = nextDate.getCourse()?.title
+
+                    holder.textTitle.text = nextDate.title
+
+                    holder.textType.text = String.format(
+                        App.instance.getString(R.string.course_date_next),
+                        nextDate.getTypeString(App.instance)
+                    )
+
                     holder.nextDateContainer.visibility = View.VISIBLE
                 } ?: run {
                     holder.nextDateContainer.visibility = View.GONE
@@ -73,8 +85,8 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
 
                     if (DateUtil.nowIsBetween(course.startDate, course.endDate)) {
                         holder.textBanner.visibility = View.VISIBLE
-                        holder.textBanner.text = App.getInstance().getText(R.string.banner_running)
-                        holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.getInstance(), R.color.banner_green))
+                        holder.textBanner.text = App.instance.getText(R.string.banner_running)
+                        holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_green))
                     } else {
                         holder.textBanner.visibility = View.GONE
                     }
@@ -83,13 +95,13 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
                     when {
                         DateUtil.nowIsBetween(course.startDate, course.endDate) -> {
                             holder.textBanner.visibility = View.VISIBLE
-                            holder.textBanner.text = App.getInstance().getText(R.string.banner_running)
-                            holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.getInstance(), R.color.banner_green))
+                            holder.textBanner.text = App.instance.getText(R.string.banner_running)
+                            holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_green))
                         }
                         DateUtil.isPast(course.endDate)                         -> {
                             holder.textBanner.visibility = View.VISIBLE
-                            holder.textBanner.text = App.getInstance().getText(R.string.banner_self_paced)
-                            holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.getInstance(), R.color.banner_yellow))
+                            holder.textBanner.text = App.instance.getText(R.string.banner_self_paced)
+                            holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_yellow))
                         }
                         else                                                    -> holder.textBanner.visibility = View.GONE
                     }
@@ -110,18 +122,6 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
         @BindView(R.id.container)
         lateinit var container: View
 
-        @BindView(R.id.nextDateContainer)
-        lateinit var nextDateContainer: ViewGroup
-
-        @BindView(R.id.textNextDate)
-        lateinit var textNextDate: TextView
-
-        @BindView(R.id.textNextCourse)
-        lateinit var textNextCourse: TextView
-
-        @BindView(R.id.textTitleOfNextDate)
-        lateinit var titleOfNextDate: TextView
-
         @BindView(R.id.textNumberOfDatesToday)
         lateinit var numberOfDatesToday: TextView
 
@@ -130,6 +130,24 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
 
         @BindView(R.id.textNumberOfAllDates)
         lateinit var numberOfAllDates: TextView
+
+        @BindView(R.id.nextDateContainer)
+        lateinit var nextDateContainer: ViewGroup
+
+        @BindView(R.id.textDateDate)
+        lateinit var textDate: TextView
+
+        @BindView(R.id.textDateType)
+        lateinit var textType: TextView
+
+        @BindView(R.id.textDateTitle)
+        lateinit var textTitle: TextView
+
+        @BindView(R.id.textDateTimeLeft)
+        lateinit var textTimeLeft: TextView
+
+        @BindView(R.id.textDateCourse)
+        lateinit var textCourse: TextView
 
         init {
             ButterKnife.bind(this, view)

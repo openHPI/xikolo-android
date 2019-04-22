@@ -22,6 +22,8 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
         val TAG: String = DateListAdapter::class.java.simpleName
     }
 
+    var showCourse = true
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_VIEW_TYPE_META   ->
@@ -41,7 +43,15 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HeaderViewHolder     -> bindHeaderViewHolder(holder, position)
+            is HeaderViewHolder     -> {
+                bindHeaderViewHolder(holder, position)
+                holder.header.setPadding(
+                    App.instance.resources.getDimensionPixelSize(R.dimen.content_horizontal_margin),
+                    holder.header.paddingTop,
+                    App.instance.resources.getDimensionPixelSize(R.dimen.content_horizontal_margin),
+                    holder.header.paddingBottom
+                )
+            }
             is OverviewViewHolder   -> {
                 val dateOverview = super.contentList.get(position) as DateOverview
                 holder.numberOfDatesToday.text = dateOverview.countToday.toString()
@@ -51,11 +61,16 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
             is CourseDateViewHolder -> {
                 val courseDate = super.contentList.get(position) as CourseDate
 
-                holder.textType.text = courseDate.getTypeString(App.getInstance())
+                holder.textType.text = courseDate.getTypeString(App.instance)
 
                 holder.textCourse.text = courseDate.getCourse()?.title
                 holder.container.setOnClickListener {
                     onDateClickListener?.onCourseClicked(courseDate.courseId)
+                }
+
+                if (!showCourse) {
+                    holder.textCourse.visibility = View.GONE
+                    holder.textBullet.visibility = View.GONE
                 }
 
                 holder.textDate.text = DateFormat.getDateTimeInstance(
@@ -68,10 +83,10 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
 
                 courseDate.date?.time?.let {
                     holder.textTimeLeft.text = String.format(
-                        App.getInstance().getString(R.string.time_left),
+                        App.instance.getString(R.string.time_left),
                         TimeUtil.getTimeLeftString(
                             it - Date().time,
-                            App.getInstance()
+                            App.instance
                         )
                     )
                 }
@@ -105,19 +120,22 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
         @BindView(R.id.container)
         lateinit var container: View
 
-        @BindView(R.id.textDate)
+        @BindView(R.id.textDateDate)
         lateinit var textDate: TextView
 
-        @BindView(R.id.textType)
+        @BindView(R.id.textDateType)
         lateinit var textType: TextView
+
+        @BindView(R.id.textDateBullet)
+        lateinit var textBullet: TextView
 
         @BindView(R.id.textDateTitle)
         lateinit var textDateTitle: TextView
 
-        @BindView(R.id.textTimeLeft)
+        @BindView(R.id.textDateTimeLeft)
         lateinit var textTimeLeft: TextView
 
-        @BindView(R.id.textCourse)
+        @BindView(R.id.textDateCourse)
         lateinit var textCourse: TextView
 
         init {

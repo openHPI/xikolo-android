@@ -3,6 +3,7 @@ package de.xikolo.network.jobs
 import android.util.Log
 import de.xikolo.config.Config
 import de.xikolo.models.Course
+import de.xikolo.models.CourseDate
 import de.xikolo.models.Enrollment
 import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.RequestJob
@@ -29,6 +30,11 @@ class DeleteEnrollmentJob(private val id: String, callback: RequestJobCallback) 
                             .equalTo("enrollmentId", model.id)
                             .findFirst()
                             ?.enrollmentId = null
+
+                        realm.where<CourseDate>()
+                            .equalTo("courseId", model.courseId)
+                            .findAll()
+                            ?.deleteAllFromRealm()
                     }
                     .run()
 
