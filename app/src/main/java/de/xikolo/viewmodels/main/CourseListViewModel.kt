@@ -110,4 +110,3 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
         ListCoursesJob(networkState, userRequest).run()
     }
 }
-
