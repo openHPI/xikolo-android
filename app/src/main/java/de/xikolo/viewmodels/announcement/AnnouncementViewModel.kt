@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import de.xikolo.models.Announcement
 import de.xikolo.models.dao.AnnouncementDao
 import de.xikolo.network.jobs.UpdateAnnouncementVisitedJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.main.AnnouncementListViewModel
 
@@ -17,14 +18,18 @@ class AnnouncementViewModel(val announcementId: String) : BaseViewModel() {
     }
 
     override fun onFirstCreate() {
-        announcementListViewModel.requestAnnouncementList(false, networkState)
+        announcementListViewModel.requestAnnouncementList(false)
     }
 
     override fun onRefresh() {
-        announcementListViewModel.requestAnnouncementList(true, networkState)
+        announcementListViewModel.requestAnnouncementList(true)
     }
 
     fun updateAnnouncementVisited(announcementId: String) {
         UpdateAnnouncementVisitedJob.schedule(announcementId)
     }
+
+    override val networkState: NetworkStateLiveData
+        get() = announcementListViewModel.networkState
+
 }

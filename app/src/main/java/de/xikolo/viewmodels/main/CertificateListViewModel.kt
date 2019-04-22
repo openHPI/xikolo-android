@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.Course
 import de.xikolo.models.dao.CourseDao
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.viewmodels.base.BaseViewModel
 
 class CertificateListViewModel : BaseViewModel() {
@@ -16,10 +17,14 @@ class CertificateListViewModel : BaseViewModel() {
         get() = CourseDao.Unmanaged.allWithCertificates()
 
     override fun onFirstCreate() {
-        courseListViewModel.requestCourseList(false, networkState)
+        courseListViewModel.requestCourseList(false)
     }
 
     override fun onRefresh() {
-        courseListViewModel.requestCourseList(true, networkState)
+        courseListViewModel.requestCourseList(true)
     }
+
+    override val networkState: NetworkStateLiveData
+        get() = courseListViewModel.networkState
+
 }
