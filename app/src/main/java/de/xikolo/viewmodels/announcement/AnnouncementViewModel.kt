@@ -18,11 +18,11 @@ class AnnouncementViewModel(val announcementId: String) : BaseViewModel() {
     }
 
     override fun onFirstCreate() {
-        announcementListViewModel.requestAnnouncementList(false)
+        announcementListViewModel.onFirstCreate()
     }
 
     override fun onRefresh() {
-        announcementListViewModel.requestAnnouncementList(true)
+        announcementListViewModel.onRefresh()
     }
 
     fun updateAnnouncementVisited(announcementId: String) {
