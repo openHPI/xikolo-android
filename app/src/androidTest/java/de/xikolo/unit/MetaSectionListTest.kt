@@ -89,6 +89,6 @@ class MetaSectionListTest {
 
         list.add(null, listOf("item"))
 
-        assertTrue(list.size == 4)
+        assertTrue(list.size == 3)
     }
 }
