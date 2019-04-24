@@ -2,6 +2,7 @@ package de.xikolo.viewmodels.main
 
 import androidx.lifecycle.LiveData
 import de.xikolo.App
+import de.xikolo.R
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
@@ -52,7 +53,7 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
                 }
             if (subList.isNotEmpty()) {
                 dateList.add(
-                    App.instance.getString(de.xikolo.R.string.course_dates_today),
+                    App.instance.getString(R.string.course_dates_today),
                     subList
                 )
             }
@@ -65,7 +66,7 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
                 }
             if (subList.isNotEmpty()) {
                 dateList.add(
-                    App.instance.getString(de.xikolo.R.string.course_dates_week),
+                    App.instance.getString(R.string.course_dates_week),
                     subList
                 )
             }
@@ -79,9 +80,9 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
             if (subList.isNotEmpty()) {
                 dateList.add(
                     if (dateList.size > 0) {
-                        App.instance.getString(de.xikolo.R.string.course_dates_later)
+                        App.instance.getString(R.string.course_dates_later)
                     } else {
-                        App.instance.getString(de.xikolo.R.string.course_dates_all)
+                        App.instance.getString(R.string.course_dates_all)
                     },
                     subList
                 )
