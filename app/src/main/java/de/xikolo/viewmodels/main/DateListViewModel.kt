@@ -42,7 +42,7 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
 
             val dateList = MetaSectionList<String, DateOverview, List<CourseDate>>(dateOverview)
 
-            var subList: List<CourseDate> =
+            var subList =
                 if (courseId != null) {
                     DateDao.Unmanaged.allTodayForCourse(courseId)
                 } else {
@@ -68,11 +68,12 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
                 )
             }
 
-            subList = if (courseId != null) {
-                DateDao.Unmanaged.allFutureWithoutNextSevenDaysForCourse(courseId)
-            } else {
-                DateDao.Unmanaged.allFutureWithoutNextSevenDays()
-            }
+            subList =
+                if (courseId != null) {
+                    DateDao.Unmanaged.allFutureWithoutNextSevenDaysForCourse(courseId)
+                } else {
+                    DateDao.Unmanaged.allFutureWithoutNextSevenDays()
+                }
             if (subList.isNotEmpty()) {
                 dateList.add(
                     if (dateList.size > 0) {
