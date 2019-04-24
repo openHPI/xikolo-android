@@ -1,11 +1,13 @@
 package de.xikolo.ui.helper
 
+import android.content.Context
+import androidx.annotation.IntegerRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import de.xikolo.App
 import de.xikolo.R
 import org.hamcrest.Matchers.allOf
 
@@ -26,10 +28,10 @@ class NavigationHelper {
         /**
          * Opens the navigation drawer via the hamburger menu.
          */
-        fun openNavigation() {
+        fun openNavigation(context: Context) {
             val navButton = onView(
                 allOf(
-                    withContentDescription(App.instance.getString(R.string.navigation_drawer_open)),
+                    withContentDescription(context.getString(R.string.navigation_drawer_open)),
                     isDisplayed()
                 )
             )
@@ -38,10 +40,39 @@ class NavigationHelper {
         }
 
         /**
+         * Opens the navigation and selects the navigation item based on its text.
+         */
+        fun selectNavigationItem(context: Context, @IntegerRes withText: Int) {
+            openNavigation(context)
+
+            val channelsButton = onView(
+                ViewMatchers.withText(context.getString(withText))
+            )
+
+            channelsButton.perform(ViewActions.click())
+        }
+
+        /**
          * Opens the overflow menu.
          */
-        fun openOverflowMenu() {
-            openActionBarOverflowOrOptionsMenu(App.instance)
+        fun openOverflowMenu(context: Context) {
+            openActionBarOverflowOrOptionsMenu(context)
+        }
+
+        /**
+         * Clicks the refresh menu item in the overflow menu.
+         */
+        fun refreshThroughOverflow(context: Context) {
+            openOverflowMenu(context)
+
+            val refreshView = onView(
+                allOf(
+                    ViewMatchers.withText(context.getString(R.string.action_refresh)),
+                    isDisplayed()
+                )
+            )
+
+            refreshView.perform(ViewActions.click())
         }
     }
 

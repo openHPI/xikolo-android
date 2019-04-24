@@ -6,12 +6,9 @@ import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.BuildFlavor
 import de.xikolo.controllers.helper.CourseListFilter
-import de.xikolo.models.Course
 import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
-import de.xikolo.models.dao.CourseDao
 import de.xikolo.models.dao.DateDao
-import de.xikolo.models.dao.EnrollmentDao
 import de.xikolo.network.jobs.ListCoursesJob
 import de.xikolo.network.jobs.ListDatesJob
 import de.xikolo.utils.MetaSectionList
@@ -112,12 +109,18 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
 
     override fun onFirstCreate() {
         requestCourseList(false)
-        requestDateList(false)
+
+        if (filter == CourseListFilter.MY) {
+            requestDateList(false)
+        }
     }
 
     override fun onRefresh() {
         requestCourseList(true)
-        requestDateList(true)
+
+        if (filter == CourseListFilter.MY) {
+            requestDateList(true)
+        }
     }
 
     private fun requestCourseList(userRequest: Boolean) {

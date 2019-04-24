@@ -24,7 +24,7 @@ class AppStartupTest : BaseMockedTest() {
     fun appStartupTest() {
         Thread.sleep(NavigationHelper.WAIT_LOADING_LONG) // necessary waiting
 
-        AssertionHelper.assertMainShown()
+        AssertionHelper.assertMainShown(context)
     }
 
 }

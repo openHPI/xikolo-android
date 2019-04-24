@@ -30,11 +30,11 @@ class NavigationTest : BaseMockedTest() {
      */
     @Test
     fun navigationTest() {
-        NavigationHelper.openNavigation()
+        NavigationHelper.openNavigation(context)
 
         pressBack()
 
-        NavigationHelper.openNavigation()
+        NavigationHelper.openNavigation(context)
 
         val drawerLayout = onView(
             allOf(
@@ -45,7 +45,7 @@ class NavigationTest : BaseMockedTest() {
 
         drawerLayout.perform(swipeLeft())
 
-        AssertionHelper.assertMainShown()
+        AssertionHelper.assertMainShown(context)
     }
 
 }

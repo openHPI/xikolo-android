@@ -5,7 +5,6 @@ import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
 import de.xikolo.models.dao.DateDao
-import de.xikolo.network.jobs.ListDatesJob
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
 
@@ -89,16 +88,13 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
         }
 
     override fun onFirstCreate() {
+        // includes requesting of date list
         courseListViewModel.onFirstCreate()
-        requestDateList(false)
     }
 
     override fun onRefresh() {
+        // includes requesting of date list
         courseListViewModel.onRefresh()
-        requestDateList(true)
     }
 
-    private fun requestDateList(userRequest: Boolean) {
-        ListDatesJob(networkState, userRequest).run()
-    }
 }

@@ -6,10 +6,10 @@ import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.config.FeatureConfig
 import de.xikolo.controllers.main.MainActivity
@@ -37,13 +37,7 @@ class ChannelsTest : BaseMockedTest() {
             return
         }
 
-        NavigationHelper.openNavigation()
-
-        val channelsButton = onView(
-            withText(App.instance.getString(R.string.title_section_channels))
-        )
-
-        channelsButton.perform(click())
+        NavigationHelper.selectNavigationItem(context, R.string.title_section_channels)
     }
 
     /**
@@ -56,16 +50,7 @@ class ChannelsTest : BaseMockedTest() {
             return
         }
 
-        NavigationHelper.openOverflowMenu()
-
-        val refreshView = onView(
-            allOf(
-                withText(App.instance.getString(R.string.action_refresh)),
-                isDisplayed()
-            )
-        )
-
-        refreshView.perform(click())
+        NavigationHelper.refreshThroughOverflow(context)
 
         val cardView = onView(
             allOf(

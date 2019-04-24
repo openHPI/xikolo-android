@@ -1,16 +1,13 @@
-package de.xikolo.unit
-
 import de.xikolo.utils.MetaSectionList
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import junit.framework.TestCase
 import org.junit.Test
 
-class MetaSectionListTest {
+class MetaSectionListTest : TestCase() {
 
     private lateinit var list: MetaSectionList<String, String, List<String>>
 
     @Test
-    fun simpleListTest() {
+    fun testSimpleList() {
         list = MetaSectionList()
 
         list.add("header", listOf("item1", "item2", "item3"))
@@ -35,7 +32,7 @@ class MetaSectionListTest {
     }
 
     @Test
-    fun metaListTest() {
+    fun testMetaList() {
         list = MetaSectionList("meta item")
 
         assertTrue(list.size == 1)
@@ -64,7 +61,7 @@ class MetaSectionListTest {
     }
 
     @Test
-    fun metaHeaderListTest() {
+    fun testMetaHeaderList() {
         list = MetaSectionList("meta item", "meta header")
 
         assertTrue(list.size == 2)
