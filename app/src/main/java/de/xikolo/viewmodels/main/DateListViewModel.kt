@@ -1,10 +1,12 @@
 package de.xikolo.viewmodels.main
 
 import androidx.lifecycle.LiveData
+import de.xikolo.App
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
 import de.xikolo.models.dao.DateDao
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
 
@@ -50,7 +52,7 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
                 }
             if (subList.isNotEmpty()) {
                 dateList.add(
-                    de.xikolo.App.instance.getString(de.xikolo.R.string.course_dates_today),
+                    App.instance.getString(de.xikolo.R.string.course_dates_today),
                     subList
                 )
             }
@@ -63,7 +65,7 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
                 }
             if (subList.isNotEmpty()) {
                 dateList.add(
-                    de.xikolo.App.instance.getString(de.xikolo.R.string.course_dates_week),
+                    App.instance.getString(de.xikolo.R.string.course_dates_week),
                     subList
                 )
             }
@@ -77,9 +79,9 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
             if (subList.isNotEmpty()) {
                 dateList.add(
                     if (dateList.size > 0) {
-                        de.xikolo.App.instance.getString(de.xikolo.R.string.course_dates_later)
+                        App.instance.getString(de.xikolo.R.string.course_dates_later)
                     } else {
-                        de.xikolo.App.instance.getString(de.xikolo.R.string.course_dates_all)
+                        App.instance.getString(de.xikolo.R.string.course_dates_all)
                     },
                     subList
                 )
@@ -97,5 +99,8 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
         // includes requesting of date list
         courseListViewModel.onRefresh()
     }
+
+    override val networkState: NetworkStateLiveData
+        get() = courseListViewModel.networkState
 
 }
