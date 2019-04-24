@@ -1,3 +1,5 @@
+package de.xikolo.testing.unit
+
 import de.xikolo.utils.MetaSectionList
 import junit.framework.TestCase
 import org.junit.Test
