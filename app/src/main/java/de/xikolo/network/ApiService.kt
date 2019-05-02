@@ -90,6 +90,7 @@ object ApiService {
             .add(Announcement.JsonModel::class.java)
             .add(Document.JsonModel::class.java)
             .add(DocumentLocalization.JsonModel::class.java)
+            .add(CourseDate.JsonModel::class.java)
             .build()
 
         val moshi = Moshi.Builder()

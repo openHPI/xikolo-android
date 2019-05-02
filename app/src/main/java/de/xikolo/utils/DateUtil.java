@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -97,6 +98,23 @@ public class DateUtil {
         } else {
             return 0;
         }
+    }
+
+    public static Date todaysMidnight() {
+        Date now = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(now);
+        c.set(Calendar.HOUR_OF_DAY, 24);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        return c.getTime();
+    }
+
+    public static Date nextSevenDays() {
+        Calendar c = Calendar.getInstance();
+        c.setTime(todaysMidnight());
+        c.add(Calendar.DAY_OF_YEAR, 7);
+        return c.getTime();
     }
 
 }

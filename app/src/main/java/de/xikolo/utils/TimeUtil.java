@@ -1,7 +1,11 @@
 package de.xikolo.utils;
 
+import android.content.Context;
+
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import de.xikolo.R;
 
 public class TimeUtil {
 
@@ -75,6 +79,22 @@ public class TimeUtil {
         } catch (Exception e) {
             return "--:--";
         }
+    }
+
+    /**
+     * Formats milliseconds to human-readable time string.
+     * @param millis milliseconds
+     * @return String in format "2d 4h 12m left"
+     */
+    public static String getTimeLeftString(long millis, Context context) {
+        long days = TimeUnit.MILLISECONDS.toDays(millis);
+        long hours = TimeUnit.MILLISECONDS.toHours(millis - TimeUnit.DAYS.toMillis(days));
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis - TimeUnit.DAYS.toMillis(days) - TimeUnit.HOURS.toMillis(hours));
+        return String.format(Locale.getDefault(), context.getString(R.string.time_left_format),
+            days,
+            hours,
+            minutes
+        );
     }
 
 }

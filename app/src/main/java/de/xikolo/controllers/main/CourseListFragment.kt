@@ -19,9 +19,10 @@ import de.xikolo.extensions.observe
 import de.xikolo.managers.CourseManager
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
+import de.xikolo.models.DateOverview
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.RequestJobCallback
-import de.xikolo.utils.SectionList
+import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.main.CourseListViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
@@ -39,13 +40,13 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
     lateinit var filter: CourseListFilter
 
     @BindView(R.id.content_view)
-    internal lateinit var recyclerView: AutofitRecyclerView
+    lateinit var recyclerView: AutofitRecyclerView
 
     private lateinit var courseListAdapter: CourseListAdapter
 
     private val courseManager = CourseManager()
 
-    private var courseList: SectionList<String, List<Course>> = SectionList()
+    private var courseList: MetaSectionList<String, DateOverview, List<Course>> = MetaSectionList()
 
     override val layoutResource = R.layout.content_course_list
 
@@ -64,19 +65,28 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        courseListAdapter = CourseListAdapter(this, object : BaseCourseListAdapter.OnCourseButtonClickListener {
-            override fun onEnrollButtonClicked(courseId: String) {
-                enroll(courseId)
-            }
+        courseListAdapter = CourseListAdapter(
+            this,
+            filter,
+            object : BaseCourseListAdapter.OnCourseButtonClickListener {
+                override fun onEnrollButtonClicked(courseId: String) {
+                    enroll(courseId)
+                }
 
-            override fun onContinueButtonClicked(courseId: String) {
-                enterCourse(courseId)
-            }
+                override fun onContinueButtonClicked(courseId: String) {
+                    enterCourse(courseId)
+                }
 
-            override fun onDetailButtonClicked(courseId: String) {
-                enterCourseDetails(courseId)
+                override fun onDetailButtonClicked(courseId: String) {
+                    enterCourseDetails(courseId)
+                }
+            },
+            object : CourseListAdapter.OnDateOverviewClickListener {
+                override fun onDateOverviewClicked() {
+                    activityCallback?.selectDrawerSection(NavigationAdapter.NAV_DATES.position)
+                }
             }
-        }, filter)
+        )
 
         recyclerView.adapter = courseListAdapter
 
@@ -103,20 +113,26 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
             }
         ))
 
-        registerObserver()
+        registerObservers()
     }
 
-    private fun registerObserver() {
+    private fun registerObservers() {
         viewModel.courses
             .observe(this) {
-                // as new course list is loaded into the database it is accessed via the non-async query
+                courseList = viewModel.sectionedCourseList
+                showCourseList()
+            }
+
+        viewModel.dates
+            .observe(this) {
                 courseList = viewModel.sectionedCourseList
                 showCourseList()
             }
     }
 
-    private fun unregisterObserver() {
+    private fun unregisterObservers() {
         viewModel.courses.removeObservers(this)
+        viewModel.dates.removeObservers(this)
     }
 
     override fun onStart() {
@@ -177,14 +193,14 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
     }
 
     fun onSearch(query: String?) {
-        unregisterObserver()
+        unregisterObservers()
         if (query != null && query.isNotEmpty()) {
             val results = viewModel.searchCourses(query)
             courseList.clear()
             courseList.add(null, results)
             updateCourseList()
         } else {
-            registerObserver()
+            registerObservers()
         }
     }
 
@@ -216,12 +232,12 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
                 }
             }
 
-            public override fun onError(code: RequestJobCallback.ErrorCode) {
+            public override fun onError(code: ErrorCode) {
                 if (view != null) {
                     hideAnyProgress()
                     if (code === ErrorCode.NO_NETWORK) {
                         showNetworkRequired()
-                    } else if (code === RequestJobCallback.ErrorCode.NO_AUTH) {
+                    } else if (code === ErrorCode.NO_AUTH) {
                         showLoginRequired()
                         openLogin()
                     }
@@ -247,13 +263,13 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLoginEvent(event: LoginEvent) {
         onRefresh()
     }
 
-    @Suppress("UNUSED_PARAMETER")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLogoutEvent(event: LogoutEvent) {
         onRefresh()

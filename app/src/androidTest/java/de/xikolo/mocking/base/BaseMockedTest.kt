@@ -1,19 +1,18 @@
 package de.xikolo.mocking.base
 
-import androidx.test.platform.app.InstrumentationRegistry
 import de.xikolo.mocking.MockingInterceptor
 import de.xikolo.network.ApiService
 import org.junit.After
 import org.junit.Before
 
-open class BaseMockedTest {
+open class BaseMockedTest : BaseTest() {
 
     /**
      * Adds the mocking interceptor to the ApiService class statically to satisfy API requests locally.
      */
     @Before
     fun enableMocking() {
-        val mockingInterceptor = MockingInterceptor(InstrumentationRegistry.getInstrumentation().context)
+        val mockingInterceptor = MockingInterceptor(testContext)
 
         ApiService.setupInstance(
             ApiService.buildHttpClient()

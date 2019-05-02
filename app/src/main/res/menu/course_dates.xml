@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/course_dates"
+        android:icon="@drawable/ic_dates"
+        android:orderInCategory="90"
+        android:title="@string/action_course_dates"
+        app:showAsAction="ifRoom" />
+
+</menu>

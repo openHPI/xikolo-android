@@ -7,6 +7,7 @@
     <string name="title_section_logout">Abmelden</string>
     <string name="title_section_all_courses">Alle Kurse</string>
     <string name="title_section_news">Neuigkeiten</string>
+    <string name="title_section_dates">Meine Termine</string>
     <string name="title_section_downloads">Downloads</string>
     <string name="title_section_settings">Einstellungen</string>
     <string name="title_section_my_courses">Meine Kurse</string>
@@ -37,6 +38,7 @@
     <string name="action_language">Sprache ändern</string>
     <string name="action_search">Suche</string>
     <string name="action_share">Kurs teilen</string>
+    <string name="action_course_dates">Termine</string>
 
     <!-- -->
     <string name="tab_learnings">Lernmaterial</string>
@@ -117,6 +119,9 @@
     <string name="dialog_server_error_message">Beim Kontaktieren des Servers ist ein Problem aufgetreten. Bitte versuche es später noch einmal.</string>
     <string name="dialog_server_error_no">Schließen</string>
 
+    <string name="dialog_course_dates_title">Terminübersicht</string>
+    <string name="dialog_course_dates_no">Schließen</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -168,6 +173,20 @@
     <string name="course_date_since">Seit %s</string>
     <string name="course_date_self_paced">Selbststudium</string>
     <string name="course_date_beginning">Ab %s</string>
+
+    <string name="course_list_my_dates_title">Terminübersicht</string>
+    <string name="course_date_list_title">Terminübersicht</string>
+    <string name="course_date_next">Nächster Termin: %1$s</string>
+    <string name="course_dates_today">Heute</string>
+    <string name="course_dates_week">Kommende 7 Tage</string>
+    <string name="course_dates_later">Später</string>
+    <string name="course_dates_all">Alle</string>
+    <string name="course_date_type_course_start">Kursstart</string>
+    <string name="course_date_type_section_start">Sektionsstart</string>
+    <string name="course_date_type_submission_publishing">Aufgabe</string>
+    <string name="course_date_type_submission_deadline">Abgabefrist</string> <!-- ToDo -->
+    <string name="time_left">%1$s verbleiben</string>
+    <string name="time_left_format">%dt %dh %dm</string>
 
     <string name="course_qualified_certificate">Qualifiziertes Zertifikat</string>
     <string name="course_record_of_achievement">Zeugnis</string>
@@ -305,5 +324,6 @@
     <string name="empty_message_global_announcements_title">Keine Neuigkeiten vorhanden</string>
     <string name="empty_message_course_announcements_title">Für diesen Kurs gibt es keine Neuigkeiten</string>
     <string name="empty_message_course_certificates">Für diesen Kurs gibt es keine Zertifikate</string>
+    <string name="empty_message_dates">Aktuell keine zukünftigen Termine</string>
 
 </resources>

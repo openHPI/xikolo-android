@@ -18,6 +18,7 @@ class MockingData {
                 MockedRequest.COURSES.path      -> MockedResponseFromJsonAsset(context, "mockdata/courses")
                 MockedRequest.CHANNELS.path     -> MockedResponseFromJsonAsset(context, "mockdata/channels")
                 MockedRequest.USERS_ME.path     -> MockedResponseFromJsonAsset(context, "mockdata/users/me")
+                MockedRequest.COURSE_DATES.path -> MockedResponseFromJsonAsset(context, "mockdata/course-dates")
                 else                            -> null
             }
         }

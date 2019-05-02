@@ -1,0 +1,188 @@
+{
+  "data": [
+    {
+      "type": "course-dates",
+      "id": "b4eccd8a4ba8eec42b6bea561ba3100b",
+      "links": {
+        "html": "/courses/dafie1/items/5ym4zIVzp6i3tMxc0Gun9R"
+      },
+      "attributes": {
+        "type": "item_submission_deadline",
+        "title": "Week 2: Unit 2: Assignment",
+        "date": "2019-04-24T09:00:00.000+00:00"
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
+          },
+          "links": {
+            "related": "/api/v2/courses/0cf86d4c-4644-4251-8360-f459aede4152"
+          }
+        }
+      }
+    },
+    {
+      "type": "course-dates",
+      "id": "227bfcd98ff70b965e46c9f91504cf66",
+      "links": {
+        "html": "/courses/dafie1/items/797xcltw3ekaMFbSxbVahc"
+      },
+      "attributes": {
+        "type": "item_submission_deadline",
+        "title": "Week 2: Unit 3: Assignment",
+        "date": "2019-04-24T09:00:00.000+00:00"
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
+          },
+          "links": {
+            "related": "/api/v2/courses/0cf86d4c-4644-4251-8360-f459aede4152"
+          }
+        }
+      }
+    },
+    {
+      "type": "course-dates",
+      "id": "3845c474bbb73c36c1057c6871c4a9af",
+      "links": {
+        "html": "/courses/dafie1/sections/7vRzZfm4gpxWHm6UNpbtj0"
+      },
+      "attributes": {
+        "type": "section_start",
+        "title": "Week 4",
+        "date": "2019-04-30T09:00:00.000+00:00"
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
+          },
+          "links": {
+            "related": "/api/v2/courses/0cf86d4c-4644-4251-8360-f459aede4152"
+          }
+        }
+      }
+    },
+    {
+      "type": "course-dates",
+      "id": "eaf025545f34c31d2c7c00d113309dea",
+      "links": {
+        "html": "/courses/dafie1/items/24bqmPMw0PUEQRWW2yEwKC"
+      },
+      "attributes": {
+        "type": "item_submission_deadline",
+        "title": "Week 3: Unit 1: Assignment",
+        "date": "2019-05-01T09:00:00.000+00:00"
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
+          },
+          "links": {
+            "related": "/api/v2/courses/0cf86d4c-4644-4251-8360-f459aede4152"
+          }
+        }
+      }
+    },
+    {
+      "type": "course-dates",
+      "id": "4da16fb9a9246e8a2f8b5cca606d74f0",
+      "links": {
+        "html": "/courses/dafie1/items/7db3TW5x4MiIjIMurqiKQj"
+      },
+      "attributes": {
+        "type": "item_submission_deadline",
+        "title": "Week 3: Unit 2: Assignment",
+        "date": "2019-05-01T09:00:00.000+00:00"
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
+          },
+          "links": {
+            "related": "/api/v2/courses/0cf86d4c-4644-4251-8360-f459aede4152"
+          }
+        }
+      }
+    },
+    {
+      "type": "course-dates",
+      "id": "6a17511ef05918eddc386d5b9bd5981b",
+      "links": {
+        "html": "/courses/dafie1/items/27dxxJrzxFgimwOc1HoN3a"
+      },
+      "attributes": {
+        "type": "item_submission_deadline",
+        "title": "Research Challenge: Research Challenge",
+        "date": "2019-05-01T09:00:00.000+00:00"
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
+          },
+          "links": {
+            "related": "/api/v2/courses/0cf86d4c-4644-4251-8360-f459aede4152"
+          }
+        }
+      }
+    },
+    {
+      "type": "course-dates",
+      "id": "06784133dd485687de71d055522e5051",
+      "links": {
+        "html": "/courses/dafie1/sections/71P6XlHVTuNvcicPie7LPe"
+      },
+      "attributes": {
+        "type": "section_start",
+        "title": "Week 5",
+        "date": "2019-05-07T09:00:00.000+00:00"
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
+          },
+          "links": {
+            "related": "/api/v2/courses/0cf86d4c-4644-4251-8360-f459aede4152"
+          }
+        }
+      }
+    },
+    {
+      "type": "course-dates",
+      "id": "562f51217f3c742d65df11c50e8b12e2",
+      "links": {
+        "html": "/courses/dafie1/sections/7ydPmNDTFgUnJaLQvLVNqw"
+      },
+      "attributes": {
+        "type": "section_start",
+        "title": "I Like, I Wish",
+        "date": "2019-05-07T09:00:00.000+00:00"
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
+          },
+          "links": {
+            "related": "/api/v2/courses/0cf86d4c-4644-4251-8360-f459aede4152"
+          }
+        }
+      }
+    }
+  ]
+}

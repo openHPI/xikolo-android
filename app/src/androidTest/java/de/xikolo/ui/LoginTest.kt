@@ -11,6 +11,7 @@ import de.xikolo.R
 import de.xikolo.controllers.login.LoginActivity
 import de.xikolo.managers.UserManager
 import de.xikolo.mocking.base.BaseMockedTest
+import de.xikolo.ui.helper.AuthorizationHelper
 import de.xikolo.ui.helper.NavigationHelper.Companion.WAIT_LOADING_SHORT
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
@@ -53,7 +54,7 @@ class LoginTest : BaseMockedTest() {
 
         emailView.perform(
             clearText(),
-            typeText("credentials@beingmocked.com")
+            typeText(AuthorizationHelper.EMAIL)
         )
 
         val passwordView = onView(
@@ -65,13 +66,13 @@ class LoginTest : BaseMockedTest() {
 
         passwordView.perform(
             clearText(),
-            typeText("12345678")
+            typeText(AuthorizationHelper.PASSWORD),
+            closeSoftKeyboard()
         )
 
         val loginButton = onView(
             allOf(
-                withId(R.id.btnLogin),
-                isDisplayed()
+                withId(R.id.btnLogin)
             )
         )
 

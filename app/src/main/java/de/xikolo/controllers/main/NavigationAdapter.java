@@ -33,6 +33,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
     public static final NavigationItem NAV_PROFILE;
     public static final NavigationItem NAV_ALL_COURSES;
     public static final NavigationItem NAV_MY_COURSES;
+    public static final NavigationItem NAV_DATES;
     public static final NavigationItem NAV_CERTIFICATES;
     public static final NavigationItem NAV_CHANNELS;
     public static final NavigationItem NAV_NEWS;
@@ -75,6 +76,12 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
         NAV_ITEMS.add(NAV_MY_COURSES = new NavigationItem(
                 R.string.icon_course,
                 R.string.title_section_my_courses,
+                NavigationItem.ViewType.MAIN,
+                NAV_ITEMS.size()));
+
+        NAV_ITEMS.add(NAV_DATES = new NavigationItem(
+                R.string.icon_dates,
+                R.string.title_section_dates,
                 NavigationItem.ViewType.MAIN,
                 NAV_ITEMS.size()));
 
@@ -200,6 +207,11 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Ba
             }
         } else {
             viewHolder.textTitle.setText(navigationItem.getTitle(context));
+
+            // this is necessary because the RecyclerView is recycling items where there might still be a counter on it
+            if (viewHolder instanceof CounterNavigationViewHolder) {
+                ((CounterNavigationViewHolder) viewHolder).textCounter.setVisibility(View.GONE);
+            }
         }
 
         if (position == NAV_SECOND_SCREEN.getPosition() || position == NAV_CHANNELS.getPosition()) {

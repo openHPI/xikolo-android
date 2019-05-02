@@ -2,50 +2,51 @@
   "data": [
     {
       "type": "courses",
-      "id": "32004492-10d1-4e77-aaf1-a7c774d5c932",
+      "id": "0cf86d4c-4644-4251-8360-f459aede4152",
       "links": {
-        "self": "/api/v2/courses/32004492-10d1-4e77-aaf1-a7c774d5c932"
+        "self": "/api/v2/courses/0cf86d4c-4644-4251-8360-f459aede4152"
       },
       "attributes": {
-        "title": "Upgrade2Success – Making SAP ERP HCM Migration Easier",
-        "slug": "sf6",
-        "start_at": "2019-02-12T09:00:00.000+00:00",
-        "end_at": "2019-03-13T09:00:00.000+00:00",
-        "abstract": "Join this free online course to learn what you need to move from your on-premise SAP ERP HCM solution to the cloud. The course is ideal for HR and IT professionals.",
-        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F1wlJNMV4BzOJgTo9EHigPU%2Fvisual_v1.jpg",
+        "title": "Design-Led Approach for the Intelligent Enterprise",
+        "slug": "dafie1",
+        "start_at": "2019-04-09T09:00:00.000+00:00",
+        "end_at": "2019-05-15T09:00:00.000+00:00",
+        "abstract": "This free online course aims to explain how to apply a design-led approach for the Intelligent Enterprise, to provide the best user experience and successfully create well-designed software applications. ",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2FotreSC60jut2QFfx22q78%2Fvisual_v1.png",
         "language": "en",
-        "status": "announced",
+        "status": "active",
         "classifiers": {
-          "reporting": [
-            "dim_hcm",
-            "dim_cp"
-          ],
           "category": [
-            "Administrator",
-            "Technology Consultant",
-            "Application Consultant"
+            "Developer"
           ],
           "topic": [
-            "SAP Cloud Platform",
-            "Human Resources",
-            "Enterprise Management"
+            "User Experience"
           ],
           "keywords": [
-            "SAP SuccessFactors",
-            "HR",
-            "Human Resources",
-            "Human Capital Management",
-            "SAP SuccessFactors Human Capital Management",
-            "HCM",
-            "SAP ERP HCM Migration",
-            "Upgrade2Success",
-            "Migration Services Approach",
-            "Data Protection",
-            "SAP Cloud Platform"
+            "Design-led Development Process",
+            "Intelligent Enterprise",
+            "Design Research",
+            "Software Design",
+            "User Research",
+            "UI",
+            "UX",
+            "Delightful Experiences",
+            " Interaction Patterns",
+            "Application Development",
+            "Empathy",
+            "Hands-on Exercises",
+            "Single Peer Assessment",
+            "Research Challenge"
+          ],
+          "reporting": [
+            "dim_intelli",
+            "dim_ux",
+            "dim_leo",
+            "dim_dtrafo"
           ]
         },
-        "teachers": "Wim Valstar",
-        "accessible": false,
+        "teachers": "Deepa Iyer, Julian Vanderhost, Sylvie Charpentier, Dan Watters",
+        "accessible": true,
         "enrollable": true,
         "hidden": false,
         "external": false,
@@ -76,95 +77,108 @@
             "related": "/api/v2/channels/enterprise"
           }
         },
+        "user_enrollment": {
+          "data": {
+            "type": "enrollments",
+            "id": "da29cda2-fde7-4a3c-a793-063bb1df9130"
+          }
+        },
         "sections": {
           "links": {
-            "related": "/api/v2/course-sections?filter%5Bcourse%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=0cf86d4c-4644-4251-8360-f459aede4152"
           }
         },
         "objectives": {
           "links": {
-            "related": "/api/v2/objectives?filter%5Bcontext%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=0cf86d4c-4644-4251-8360-f459aede4152"
           }
         },
         "documents": {
           "links": {
-            "related": "/api/v2/documents?filter%5Bcourse%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+            "related": "/api/v2/documents?filter%5Bcourse%5D=0cf86d4c-4644-4251-8360-f459aede4152"
           }
         },
         "objectives_user_statuses": {
           "links": {
-            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=0cf86d4c-4644-4251-8360-f459aede4152"
           }
         },
         "progress": {
           "data": {
             "type": "course-progresses",
-            "id": "32004492-10d1-4e77-aaf1-a7c774d5c932"
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
           },
           "links": {
-            "related": "/api/v2/course-progresses/32004492-10d1-4e77-aaf1-a7c774d5c932"
+            "related": "/api/v2/course-progresses/0cf86d4c-4644-4251-8360-f459aede4152"
           }
         },
         "dates": {
           "links": {
-            "related": "/api/v2/course-dates?filter%5Bcourse%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=0cf86d4c-4644-4251-8360-f459aede4152"
           }
         },
         "repetition_suggestions": {
           "links": {
-            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=32004492-10d1-4e77-aaf1-a7c774d5c932"
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=0cf86d4c-4644-4251-8360-f459aede4152"
           }
         }
       }
     },
     {
       "type": "courses",
-      "id": "dcc24b6e-8e29-46b2-9728-b08e8712d0b6",
+      "id": "dd177e27-5584-47d6-a20f-bb3422d1369b",
       "links": {
-        "self": "/api/v2/courses/dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+        "self": "/api/v2/courses/dd177e27-5584-47d6-a20f-bb3422d1369b"
       },
       "attributes": {
-        "title": "System Conversion to SAP S/4HANA (Repeat)",
-        "slug": "s4h11-1",
-        "start_at": "2019-02-06T09:00:00.000+00:00",
-        "end_at": "2019-03-14T09:00:00.000+00:00",
-        "abstract": "Join this this free open online course to learn how to convert an SAP ERP system into an SAP S/4HANA system. After completing this course, you’ll have a good understanding about the benefits of a system conversion compared to a new implementation, which tools support a system conversion, and what essential changes are required in the Finance and Logistics areas.   ",
-        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F2b3k2O684O4dBW6NtGTOiz%2Fvisual_v1.jpg",
+        "title": "Digital Transformation Track",
+        "slug": "dtc1-tr",
+        "start_at": "2019-04-02T06:00:00.000+00:00",
+        "end_at": "2019-09-30T09:00:00.000+00:00",
+        "abstract": "Earn a Digital Transformation certificate by joining this free online curriculum.  \n\nTo help you focus on the digital transformation and gain the skills you need to succeed, we've put together this Digital Transformation track.  \nYou will learn about leadership in Digital Transformation, Internet of Things, Intelligent Enterprise, Blockchain, Machine Learning, and Information Security Management.  \n  \n**This track is not compatible with the mobile apps**. To view this track on a mobile device, we recommend that you log-in with a browser.   \n\n",
+        "image_url": "https://pichasso.xopic.de/image?file=https%3A%2F%2Fs3.xopic.de%2Fopensap-public%2Fcourses%2F6Jc2vFOA2eD2IENhU6tS2f%2Fvisual_v3.jpg",
         "language": "en",
-        "status": "announced",
+        "status": "active",
         "classifiers": {
+          "reporting": [
+            "dim_dtrafo",
+            "dim_analytics",
+            "dim_ana_iot",
+            "dim_cp",
+            "dim_ds",
+            "dim_hana",
+            "dim_intelli",
+            "dim_iot",
+            "dim_iot_scm",
+            "dim_leo",
+            "dim_sec"
+          ],
           "category": [
-            "Application Consultant",
-            "Technology Consultant",
-            "Administrator"
+            "Business Decision Maker"
           ],
           "topic": [
-            "Enterprise Management",
-            "SAP S/4HANA",
-            "User Experience"
+            "User Experience",
+            "Continuous Innovation",
+            "Digital Transformation"
           ],
           "keywords": [
-            "sap s4hana",
-            "ERP",
-            "Enterprise Management",
-            "SAP S/4HANA UX",
-            "SAP S/4HANA",
-            "User Experience",
-            "UX",
-            "System Conversion",
-            "System Implementation",
-            "Finance",
-            "Logistics",
-            "SAP Fiori"
-          ],
-          "reporting": [
-            "dim_s4",
-            "dim_s4p",
-            "dim_ux"
+            "Digital Transformation Track",
+            "Curriculum",
+            "Learning Path",
+            "Digital Innovation Path",
+            "Digital Transformation Journey",
+            "Digitization",
+            "Leadership in Digital Transformation",
+            "Internet of Things",
+            "IoT",
+            "Intelligent Enterprise",
+            "Blockchain",
+            "Machine Learning",
+            "Information Security Management"
           ]
         },
-        "teachers": "Featuring experts from the SAP S/4HANA Regional Implementation Group",
-        "accessible": false,
+        "teachers": "Mark Raben",
+        "accessible": true,
         "enrollable": true,
         "hidden": false,
         "external": false,
@@ -172,7 +186,7 @@
         "policy_url": null,
         "certificates": {
           "confirmation_of_participation": {
-            "available": true,
+            "available": false,
             "threshold": 50
           },
           "record_of_achievement": {
@@ -195,43 +209,49 @@
             "related": "/api/v2/channels/enterprise"
           }
         },
+        "user_enrollment": {
+          "data": {
+            "type": "enrollments",
+            "id": "15295758-f5e0-47d4-b39a-198e4302c2f8"
+          }
+        },
         "sections": {
           "links": {
-            "related": "/api/v2/course-sections?filter%5Bcourse%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+            "related": "/api/v2/course-sections?filter%5Bcourse%5D=dd177e27-5584-47d6-a20f-bb3422d1369b"
           }
         },
         "objectives": {
           "links": {
-            "related": "/api/v2/objectives?filter%5Bcontext%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+            "related": "/api/v2/objectives?filter%5Bcontext%5D=dd177e27-5584-47d6-a20f-bb3422d1369b"
           }
         },
         "documents": {
           "links": {
-            "related": "/api/v2/documents?filter%5Bcourse%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+            "related": "/api/v2/documents?filter%5Bcourse%5D=dd177e27-5584-47d6-a20f-bb3422d1369b"
           }
         },
         "objectives_user_statuses": {
           "links": {
-            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+            "related": "/api/v2/objectives-user-statuses?filter%5Bcontext%5D=dd177e27-5584-47d6-a20f-bb3422d1369b"
           }
         },
         "progress": {
           "data": {
             "type": "course-progresses",
-            "id": "dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+            "id": "dd177e27-5584-47d6-a20f-bb3422d1369b"
           },
           "links": {
-            "related": "/api/v2/course-progresses/dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+            "related": "/api/v2/course-progresses/dd177e27-5584-47d6-a20f-bb3422d1369b"
           }
         },
         "dates": {
           "links": {
-            "related": "/api/v2/course-dates?filter%5Bcourse%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+            "related": "/api/v2/course-dates?filter%5Bcourse%5D=dd177e27-5584-47d6-a20f-bb3422d1369b"
           }
         },
         "repetition_suggestions": {
           "links": {
-            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=dcc24b6e-8e29-46b2-9728-b08e8712d0b6"
+            "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=dd177e27-5584-47d6-a20f-bb3422d1369b"
           }
         }
       }
@@ -1329,6 +1349,122 @@
         "repetition_suggestions": {
           "links": {
             "related": "/api/v2/repetition-suggestions?filter%5Bcourse%5D=e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "type": "enrollments",
+      "id": "da29cda2-fde7-4a3c-a793-063bb1df9130",
+      "links": {
+        "self": "/api/v2/enrollments/da29cda2-fde7-4a3c-a793-063bb1df9130"
+      },
+      "attributes": {
+        "certificates": {
+          "confirmation_of_participation": null,
+          "record_of_achievement": null,
+          "qualified_certificate": null
+        },
+        "completed": false,
+        "reactivated": false,
+        "proctored": false,
+        "created_at": null
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
+          },
+          "links": {
+            "related": "/api/v2/courses/0cf86d4c-4644-4251-8360-f459aede4152"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "0cf86d4c-4644-4251-8360-f459aede4152"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/0cf86d4c-4644-4251-8360-f459aede4152"
+          }
+        }
+      }
+    },
+    {
+      "type": "enrollments",
+      "id": "15295758-f5e0-47d4-b39a-198e4302c2f8",
+      "links": {
+        "self": "/api/v2/enrollments/15295758-f5e0-47d4-b39a-198e4302c2f8"
+      },
+      "attributes": {
+        "certificates": {
+          "confirmation_of_participation": null,
+          "record_of_achievement": null,
+          "qualified_certificate": null
+        },
+        "completed": false,
+        "reactivated": false,
+        "proctored": false,
+        "created_at": null
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "dd177e27-5584-47d6-a20f-bb3422d1369b"
+          },
+          "links": {
+            "related": "/api/v2/courses/dd177e27-5584-47d6-a20f-bb3422d1369b"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "dd177e27-5584-47d6-a20f-bb3422d1369b"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/dd177e27-5584-47d6-a20f-bb3422d1369b"
+          }
+        }
+      }
+    },
+    {
+      "type": "enrollments",
+      "id": "2eaefc0f-9a42-4e67-bcb9-aacc61777fe6",
+      "links": {
+        "self": "/api/v2/enrollments/2eaefc0f-9a42-4e67-bcb9-aacc61777fe6"
+      },
+      "attributes": {
+        "certificates": {
+          "confirmation_of_participation": "https://open.sap.com/certificate/render?course_id=e72c7ead-cb83-4ebf-8550-e7b93f0b7943&type=ConfirmationOfParticipation",
+          "record_of_achievement": null,
+          "qualified_certificate": null
+        },
+        "completed": true,
+        "reactivated": false,
+        "proctored": false,
+        "created_at": null
+      },
+      "relationships": {
+        "course": {
+          "data": {
+            "type": "courses",
+            "id": "e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          },
+          "links": {
+            "related": "/api/v2/courses/e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          }
+        },
+        "progress": {
+          "data": {
+            "type": "course-progresses",
+            "id": "e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
+          },
+          "links": {
+            "related": "/api/v2/course-progresses/e72c7ead-cb83-4ebf-8550-e7b93f0b7943"
           }
         }
       }

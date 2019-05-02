@@ -8,6 +8,7 @@
     <string name="icon_lang" translatable="false"></string>
     <string name="icon_courses" translatable="false"></string>
     <string name="icon_news" translatable="false"></string>
+    <string name="icon_dates" translatable="false"></string>
     <string name="icon_certificates" translatable="false"></string>
     <string name="icon_downloads" translatable="false"></string>
     <string name="icon_settings" translatable="false"></string>

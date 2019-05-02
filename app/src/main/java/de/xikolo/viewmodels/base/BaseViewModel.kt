@@ -12,7 +12,7 @@ abstract class BaseViewModel : ViewModel() {
         Realm.getDefaultInstance()
     }
 
-    val networkState: NetworkStateLiveData by lazy {
+    open val networkState: NetworkStateLiveData by lazy {
         NetworkStateLiveData()
     }
 

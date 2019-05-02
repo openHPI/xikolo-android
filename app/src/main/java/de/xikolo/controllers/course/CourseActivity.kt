@@ -21,6 +21,7 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.controllers.base.ViewModelActivity
+import de.xikolo.controllers.dialogs.CourseDateListDialogAutoBundle
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.controllers.dialogs.UnenrollDialog
@@ -167,6 +168,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         val inflater = menuInflater
 
         if (course.isEnrolled) {
+            inflater.inflate(R.menu.course_dates, menu)
             inflater.inflate(R.menu.unenroll, menu)
         }
         inflater.inflate(R.menu.share, menu)
@@ -176,8 +178,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val itemId = item.itemId
-        when (itemId) {
+        when (item.itemId) {
             android.R.id.home    -> {
                 NavUtils.navigateUpFromSameTask(this)
                 return true
@@ -189,6 +190,11 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             R.id.action_unenroll -> {
                 val dialog = UnenrollDialog()
                 dialog.listener = this
+                dialog.show(supportFragmentManager, UnenrollDialog.TAG)
+                return true
+            }
+            R.id.course_dates    -> {
+                val dialog = CourseDateListDialogAutoBundle.builder(course.id).build()
                 dialog.show(supportFragmentManager, UnenrollDialog.TAG)
                 return true
             }
@@ -311,9 +317,9 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                     hideProgressDialog()
                 }
 
-                public override fun onError(code: RequestJobCallback.ErrorCode) {
+                public override fun onError(code: ErrorCode) {
                     hideProgressDialog()
-                    if (code === RequestJobCallback.ErrorCode.NO_NETWORK) {
+                    if (code === ErrorCode.NO_NETWORK) {
                         showNoNetworkToast()
                     } else {
                         showErrorToast()

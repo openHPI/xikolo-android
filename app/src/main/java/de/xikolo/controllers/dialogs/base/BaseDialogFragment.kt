@@ -24,7 +24,6 @@ abstract class BaseDialogFragment : DialogFragment() {
         ButterKnife.bind(this, view)
     }
 
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         AutoBundle.pack(this, outState)

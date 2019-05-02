@@ -8,5 +8,6 @@ enum class MockedRequest(val path: String) {
     AUTHENTICATE("/api/v2/authenticate"),
     COURSES("/api/v2/courses"),
     CHANNELS("/api/v2/channels"),
-    USERS_ME("/api/v2/users/me")
+    USERS_ME("/api/v2/users/me"),
+    COURSE_DATES("/api/v2/course-dates")
 }
