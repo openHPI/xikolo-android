@@ -8,12 +8,14 @@ import de.xikolo.config.BuildFlavor
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.Course
 import de.xikolo.models.CourseDate
+import de.xikolo.models.DateOverview
 import de.xikolo.models.dao.CourseDao
+import de.xikolo.models.dao.DateDao
 import de.xikolo.models.dao.EnrollmentDao
 import de.xikolo.network.jobs.ListCoursesJob
-import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.network.jobs.ListDatesJob
 import de.xikolo.utils.MetaSectionList
+import de.xikolo.viewmodels.base.BaseViewModel
 
 class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel() {
 
@@ -126,5 +128,9 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
 
     private fun requestCourseList(userRequest: Boolean) {
         ListCoursesJob(networkState, userRequest).run()
+    }
+
+    private fun requestDateList(userRequest: Boolean) {
+        ListDatesJob(networkState, userRequest).run()
     }
 }
