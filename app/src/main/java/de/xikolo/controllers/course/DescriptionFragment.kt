@@ -1,7 +1,9 @@
 package de.xikolo.controllers.course
 
+import android.graphics.Point
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.BindView
@@ -9,10 +11,13 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.NetworkStateFragment
-import de.xikolo.models.Course
-import de.xikolo.utils.MarkdownUtil
+import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.extensions.observe
+import de.xikolo.models.Course
+import de.xikolo.utils.DisplayUtil
+import de.xikolo.utils.MarkdownUtil
 import de.xikolo.viewmodels.course.DescriptionViewModel
+import de.xikolo.views.CustomSizeImageView
 
 class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
 
@@ -23,8 +28,20 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
     @AutoBundleField
     lateinit var courseId: String
 
-    @BindView(R.id.layout_header)
-    internal lateinit var imageView: ImageView
+    @BindView(R.id.videoPreview)
+    internal lateinit var videoPreview: ViewGroup
+
+    @BindView(R.id.videoThumbnail)
+    lateinit var imageVideoThumbnail: CustomSizeImageView
+
+    @BindView(R.id.durationText)
+    lateinit var textDuration: TextView
+
+    @BindView(R.id.playButton)
+    lateinit var viewPlay: View
+
+    @BindView(R.id.courseImage)
+    internal lateinit var courseImage: ImageView
 
     @BindView(R.id.text_teacher)
     internal lateinit var textTeacher: TextView
@@ -51,6 +68,14 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        textDuration.visibility = View.GONE
+
+        activity?.let {
+            val thumbnailSize: Point = DisplayUtil.getVideoThumbnailSize(it)
+            imageVideoThumbnail.setDimensions(thumbnailSize.x, thumbnailSize.y)
+        }
+
         viewModel.course
             .observe(this) {
                 showDescription(it)
@@ -58,10 +83,37 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
     }
 
     private fun showDescription(course: Course) {
-        if (course.imageUrl != null) {
-            GlideApp.with(this).load(course.imageUrl).into(imageView)
-        } else {
-            imageView.visibility = View.GONE
+        when {
+            course.teaserStream != null -> {
+                courseImage.visibility = View.GONE
+                videoPreview.visibility = View.VISIBLE
+
+                GlideApp.with(this)
+                    .load(course.teaserStream.thumbnailUrl)
+                    .override(imageVideoThumbnail.forcedWidth, imageVideoThumbnail.forcedHeight)
+                    .into(imageVideoThumbnail)
+
+                viewPlay.setOnClickListener {
+                    activity?.let {
+                        startActivity(
+                            VideoStreamPlayerActivityAutoBundle.builder(course.teaserStream)
+                                .parentIntent(it.intent)
+                                .overrideActualParent(true)
+                                .build(it)
+                        )
+                    }
+                }
+            }
+            course.imageUrl != null     -> {
+                videoPreview.visibility = View.GONE
+                courseImage.visibility = View.VISIBLE
+
+                GlideApp.with(this).load(course.imageUrl).into(courseImage)
+            }
+            else                        -> {
+                courseImage.visibility = View.GONE
+                videoPreview.visibility = View.GONE
+            }
         }
 
         textDate.text = course.formattedDate

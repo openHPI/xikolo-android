@@ -171,7 +171,20 @@
                 android:value=".controllers.course.CourseActivity" />
         </activity>
         <activity
-            android:name=".controllers.video.VideoActivity"
+            android:name=".controllers.video.VideoStreamPlayerActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:parentActivityName=".controllers.main.MainActivity"
+            android:theme="@style/AppThemeDarkStatusBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.main.MainActivity" />
+        </activity>
+        <activity
+            android:name=".controllers.video.VideoItemPlayerActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"

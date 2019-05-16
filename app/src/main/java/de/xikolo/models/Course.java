@@ -67,6 +67,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
     public CourseCertificates certificates;
 
+    public VideoStream teaserStream;
+
     public boolean onDemand;
 
     public String enrollmentId;
@@ -107,6 +109,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         model.externalUrl = externalUrl;
         model.policyUrl = policyUrl;
         model.onDemand = onDemand;
+        model.certificates = certificates;
+        model.teaserStream = teaserStream;
 
         if (enrollmentId != null) {
             model.enrollment = new HasOne<>(new Enrollment.JsonModel().getType(), enrollmentId);
@@ -205,6 +209,9 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
         public CourseCertificates certificates;
 
+        @Json(name = "teaser_stream")
+        public VideoStream teaserStream;
+
         @Json(name = "on_demand")
         public boolean onDemand;
 
@@ -239,6 +246,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.externalUrl = externalUrl;
             course.policyUrl = policyUrl;
             course.certificates = certificates;
+            course.teaserStream = teaserStream;
             course.onDemand = onDemand;
 
             if (enrollment != null) {

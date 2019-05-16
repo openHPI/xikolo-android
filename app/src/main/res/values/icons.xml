@@ -35,7 +35,9 @@
     <string name="icon_bonus" translatable="false">&#xe671;</string>
     <string name="icon_survey" translatable="false">&#xe678;</string>
     <string name="icon_pinboard" translatable="false">&#xe604;</string>
-    <string name="icon_pip" translatable="false">&#xe659;</string>
+    <string name="icon_pip" translatable="false">&#xe618;</string>
+    <string name="icon_show_immersive" translatable="false">&#xe658;</string>
+    <string name="icon_show_fitting" translatable="false">&#xe659;</string>
 
     <!-- materialdesign.ttf from https://materialdesignicons.com/ -->
     <string name="icon_step_forward" translatable="false">&#xf467;</string>

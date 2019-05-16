@@ -12,13 +12,14 @@ import de.xikolo.R
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.LoadingStatePresenterFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
-import de.xikolo.controllers.video.VideoActivityAutoBundle
+import de.xikolo.controllers.video.VideoItemPlayerActivityAutoBundle
 import de.xikolo.models.*
 import de.xikolo.presenters.base.PresenterFactory
 import de.xikolo.presenters.section.VideoPreviewPresenter
 import de.xikolo.presenters.section.VideoPreviewPresenterFactory
 import de.xikolo.presenters.section.VideoPreviewView
 import de.xikolo.utils.CastUtil
+import de.xikolo.utils.DisplayUtil
 import de.xikolo.views.CustomSizeImageView
 import java.util.concurrent.TimeUnit
 
@@ -28,7 +29,7 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
         val TAG: String = VideoPreviewFragment::class.java.simpleName
     }
 
-    @AutoBundleField()
+    @AutoBundleField
     lateinit var courseId: String
 
     @AutoBundleField
@@ -74,23 +75,15 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
 
         this.viewContainer.visibility = View.GONE
 
-        if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            val display = activity!!.windowManager.defaultDisplay
-            val size = Point()
-            display.getSize(size)
-            imageVideoThumbnail.setDimensions(size.x, size.x / 16 * 9)
-        } else {
-            val display = activity!!.windowManager.defaultDisplay
-            val size = Point()
-            display.getSize(size)
-            imageVideoThumbnail.setDimensions(
-                (size.x * 0.6).toInt(),
-                (size.x * 0.6 / 16 * 9).toInt()
-            )
+        activity?.let {
+            val thumbnailSize: Point = DisplayUtil.getVideoThumbnailSize(it)
+            imageVideoThumbnail.setDimensions(thumbnailSize.x, thumbnailSize.y)
 
-            val paramsMeta = videoMetadata.layoutParams
-            paramsMeta.width = (size.x * 0.6).toInt()
-            videoMetadata.layoutParams = paramsMeta
+            if (it.resources?.configuration?.orientation != Configuration.ORIENTATION_PORTRAIT) {
+                val paramsMeta = videoMetadata.layoutParams
+                paramsMeta.width = thumbnailSize.x
+                videoMetadata.layoutParams = paramsMeta
+            }
         }
     }
 
@@ -156,12 +149,15 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
         val seconds = video.duration - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(video.duration.toLong()))
         textDuration.text = getString(R.string.duration, minutes, seconds)
 
-        viewPlay.setOnClickListener { _ -> presenter.onPlayClicked() }
+        viewPlay.setOnClickListener { presenter.onPlayClicked() }
     }
 
     override fun startVideo(video: Video) {
         activity?.let {
-            val intent = VideoActivityAutoBundle.builder(courseId, sectionId, itemId, video.id).parentIntent(it.intent).build(it)
+            val intent = VideoItemPlayerActivityAutoBundle
+                .builder(courseId, sectionId, itemId, video.id)
+                .parentIntent(it.intent)
+                .build(it)
             startActivity(intent)
         }
     }
@@ -175,8 +171,7 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val itemId = item!!.itemId
-        when (itemId) {
+        when (item?.itemId) {
             R.id.action_refresh -> {
                 presenter.onRefresh()
                 return true
