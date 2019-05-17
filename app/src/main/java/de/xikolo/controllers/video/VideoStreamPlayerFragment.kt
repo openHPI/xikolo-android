@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.*
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -157,15 +158,30 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.view?.setOnTouchListener { v, _ ->
+        val gestureDetector = ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            override fun onScaleEnd(detector: ScaleGestureDetector?) {
+                detector?.let {
+                    val immersive = it.scaleFactor > 1
+                    videoSettingsHelper.isImmersiveModeEnabled = immersive
+                    changeImmersiveMode(videoSettingsHelper.isImmersiveModeEnabled, immersive, true)
+                }
+            }
+        })
+
+        this.view?.setOnTouchListener { _, event ->
+            if (!settingsOpen && controllerInterface?.isImmersiveModeAvailable() == true) {
+                gestureDetector.onTouchEvent(event)
+            }
+            false
+        }
+
+        this.view?.setOnClickListener {
             if (settingsOpen) {
                 hideSettings()
             }
             if (playerView.visibility == View.VISIBLE) {
                 showControls()
             }
-            v.performClick()
-            false
         }
 
         setupView()
