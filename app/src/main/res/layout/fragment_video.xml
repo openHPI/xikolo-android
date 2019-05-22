@@ -58,7 +58,7 @@
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:paddingLeft="16dp"
-                android:paddingTop="4dp"
+                android:paddingTop="8dp"
                 android:paddingRight="16dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark"
                 android:visibility="gone" />

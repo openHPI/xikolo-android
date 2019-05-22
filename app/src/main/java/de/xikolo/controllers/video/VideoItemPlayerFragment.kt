@@ -57,7 +57,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
     fun updateCastButton() {
         if (view != null) {
             mediaRouteButton.visibility =
-                if (CastUtil.isAvailable() && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (CastUtil.isAvailable()) {
                     View.VISIBLE
                 } else {
                     View.GONE

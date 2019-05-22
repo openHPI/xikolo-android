@@ -79,9 +79,7 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
     override fun onCastStateChanged(newState: Int) {
         super.onCastStateChanged(newState)
 
-        if (newState != CastState.NO_DEVICES_AVAILABLE) {
-            (playerFragment as VideoItemPlayerFragment).updateCastButton()
-        }
+        (playerFragment as VideoItemPlayerFragment).updateCastButton()
 
         if (newState == CastState.CONNECTED) {
             LanalyticsUtil.trackVideoPlay(itemId,
@@ -93,7 +91,6 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
                 "cast"
             )
 
-            playerFragment.pause(false)
             VideoDao.Unmanaged.find(videoId)?.let {
                 CastUtil.loadMedia(this, it, true)
             }
@@ -104,8 +101,6 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
 
     override fun updateVideoView(orientation: Int) {
         super.updateVideoView(orientation)
-
-        (playerFragment as VideoItemPlayerFragment).updateCastButton()
 
         val playerLayoutParams = playerFragmentContainer.layoutParams as RelativeLayout.LayoutParams
         if (isInLandscape(orientation)) {
