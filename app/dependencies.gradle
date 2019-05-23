@@ -2,14 +2,14 @@ dependencies {
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
     implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
 
     // kotlin extensions
     implementation "ru.gildor.coroutines:kotlin-coroutines-retrofit:1.1.0"
 
     // networking
-    def okhttpVersion = "3.14.1"
+    def okhttpVersion = "3.14.2"
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     implementation "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
 
@@ -56,15 +56,15 @@ dependencies {
     kapt           "com.github.yatatsu:autobundle-processor:${autobundleVersion}"
 
     // video
-    implementation "com.google.android.exoplayer:exoplayer:2.9.6"
+    implementation "com.google.android.exoplayer:exoplayer:2.10.1"
 
     // play services
-    implementation "com.google.android.gms:play-services-cast-framework:16.1.2"
+    implementation "com.google.android.gms:play-services-cast-framework:16.2.0"
     implementation "com.google.android.gms:play-services-gcm:16.1.0"
 
     // firebase
-    implementation "com.google.firebase:firebase-core:16.0.8"
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.9"
+    implementation "com.google.firebase:firebase-core:16.0.9"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.10.0"
 
     // material design
     implementation 'com.google.android.material:material:1.0.0'
