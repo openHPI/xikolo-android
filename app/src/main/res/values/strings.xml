@@ -258,7 +258,6 @@
     <string name="video_settings_show_immersive">Fill screen</string>
     <string name="video_settings_show_fitting">Fit screen</string>
     <string name="video_settings_separator" translatable="false">&#xb7;</string>
-    <string name="video_description_unavailable">There is no description available for this video.</string>
     <string name="video_pip_action_play" translatable="false">Play</string>
     <string name="video_pip_action_pause" translatable="false">Pause</string>
 

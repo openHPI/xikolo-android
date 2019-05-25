@@ -138,7 +138,6 @@ open class ExoPlayerVideoView : PlayerView {
         exoplayer.addVideoListener(
             object : VideoListener {
                 override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
-                    super.onVideoSizeChanged(width, height, unappliedRotationDegrees, pixelWidthHeightRatio)
                     aspectRatio = (width * pixelWidthHeightRatio) / height
                 }
             }
