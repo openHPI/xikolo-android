@@ -11,13 +11,13 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.NetworkStateFragment
-import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.models.Course
 import de.xikolo.utils.DisplayUtil
 import de.xikolo.utils.MarkdownUtil
 import de.xikolo.viewmodels.course.DescriptionViewModel
 import de.xikolo.views.CustomSizeImageView
+import de.xikolo.views.DateTextView
 
 class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
 
@@ -47,7 +47,7 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
     internal lateinit var textTeacher: TextView
 
     @BindView(R.id.text_date)
-    internal lateinit var textDate: TextView
+    internal lateinit var textDate: DateTextView
 
     @BindView(R.id.text_language)
     internal lateinit var textLanguage: TextView
@@ -115,12 +115,14 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
                 .load(course.teaserStream.thumbnailUrl)
                 .override(imageVideoThumbnail.forcedWidth, imageVideoThumbnail.forcedHeight)
                 .into(imageVideoThumbnail)
-            course.imageUrl != null                  -> GlideApp.with(this)
+            course.imageUrl != null                                                 -> GlideApp.with(this)
                 .load(course.imageUrl)
                 .into(courseImage)
         }
 
         textDate.text = course.formattedDate
+        textDate.setDateSpan(course.startDate, course.endDate)
+
         textLanguage.text = course.formattedLanguage
         MarkdownUtil.formatAndSet(course.description, textDescription)
 

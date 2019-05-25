@@ -64,9 +64,15 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
                 holder.textType.text = courseDate.getTypeString(App.instance)
 
                 holder.textCourse.text = courseDate.getCourse()?.title
-                holder.container.setOnClickListener {
-                    onDateClickListener?.onCourseClicked(courseDate.courseId)
+
+                if (onDateClickListener != null) {
+                    holder.container.setOnClickListener {
+                        onDateClickListener.onCourseClicked(courseDate.courseId)
+                    }
+                } else {
+                    holder.container.isClickable = false
                 }
+
 
                 if (!showCourse) {
                     holder.textCourse.visibility = View.GONE
