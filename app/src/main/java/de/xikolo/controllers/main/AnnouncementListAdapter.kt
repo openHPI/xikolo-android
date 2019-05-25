@@ -19,23 +19,23 @@ class AnnouncementListAdapter(private val announcementClickListener: (String) ->
         val TAG: String = AnnouncementListAdapter::class.java.simpleName
     }
 
-    var announcementList: MutableList<Announcement> = ArrayList()
-        set(value) {
-            field.clear()
-            field.addAll(value)
-            notifyDataSetChanged()
-        }
+    private var announcementList: List<Announcement> = listOf()
+
+    fun update(announcementList: List<Announcement>) {
+        this.announcementList = announcementList
+        notifyDataSetChanged()
+    }
 
     override fun getItemCount(): Int {
         return announcementList.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnnouncementListAdapter.AnnouncementViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnnouncementViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_news_list, parent, false)
         return AnnouncementViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: AnnouncementListAdapter.AnnouncementViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AnnouncementViewHolder, position: Int) {
         val announcement = announcementList[position]
 
         holder.title.text = announcement.title
