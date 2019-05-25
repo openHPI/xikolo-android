@@ -179,7 +179,7 @@
     <string name="course_date_beginning">Beginning %s</string>
 
     <string name="course_list_my_dates_title">My course dates</string>
-    <string name="course_date_list_title">Course date overview</string>
+    <string name="course_date_list_title">Course Date Overview</string>
     <string name="course_date_next">Next up: %1$s</string>
     <string name="course_dates_today">Today</string>
     <string name="course_dates_week">Next 7 days</string>
