@@ -79,8 +79,6 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
     override fun onCastStateChanged(newState: Int) {
         super.onCastStateChanged(newState)
 
-        (playerFragment as VideoItemPlayerFragment).updateCastButton()
-
         if (newState == CastState.CONNECTED) {
             LanalyticsUtil.trackVideoPlay(itemId,
                 courseId, sectionId,

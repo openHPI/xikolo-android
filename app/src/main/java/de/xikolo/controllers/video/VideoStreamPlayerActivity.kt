@@ -1,6 +1,7 @@
 package de.xikolo.controllers.video
 
 import android.content.Intent
+import android.view.Menu
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.video.base.BaseVideoPlayerActivity
@@ -25,5 +26,11 @@ class VideoStreamPlayerActivity : BaseVideoPlayerActivity(), VideoStreamPlayerFr
 
     override fun createPlayerFragment(): VideoStreamPlayerFragment {
         return VideoStreamPlayerFragment(videoStream)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val returnValue = super.onCreateOptionsMenu(menu)
+        enableCastMediaRouterButton(false) // disable cast button because casting is only supported for video items
+        return returnValue
     }
 }

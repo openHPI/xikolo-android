@@ -2,11 +2,6 @@ package de.xikolo.controllers.video
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.View
-import androidx.mediarouter.app.MediaRouteButton
-import butterknife.BindView
-import com.google.android.gms.cast.framework.CastButtonFactory
-import de.xikolo.R
 import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.managers.DownloadManager
 import de.xikolo.models.DownloadAsset
@@ -15,9 +10,7 @@ import de.xikolo.models.Video
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.models.dao.ItemDao
 import de.xikolo.models.dao.VideoDao
-import de.xikolo.utils.CastUtil
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.utils.PlayServicesUtil
 import de.xikolo.utils.PlaybackSpeedUtil
 
 class VideoItemPlayerFragment(private var courseId: String, private var sectionId: String, private var itemId: String, videoId: String, autoPlay: Boolean? = true) : VideoStreamPlayerFragment(VideoDao.Unmanaged.find(videoId)!!.singleStream, autoPlay) {
@@ -25,9 +18,6 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
     companion object {
         val TAG: String = VideoItemPlayerFragment::class.java.simpleName
     }
-
-    @BindView(R.id.video_media_route_button)
-    lateinit var mediaRouteButton: MediaRouteButton
 
     private var video: Video = VideoDao.Unmanaged.find(videoId)!!
     private var item: Item = ItemDao.Unmanaged.find(itemId)!!
@@ -40,29 +30,6 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         downloadManager = DownloadManager(activity!!)
         super.onActivityCreated(savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        activity?.let {
-            if (PlayServicesUtil.checkPlayServices(it)) {
-                CastButtonFactory.setUpMediaRouteButton(it, mediaRouteButton)
-            }
-
-            updateCastButton()
-        }
-    }
-
-    fun updateCastButton() {
-        if (view != null) {
-            mediaRouteButton.visibility =
-                if (CastUtil.isAvailable()) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-        }
     }
 
     override fun play(fromUser: Boolean) {
