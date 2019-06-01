@@ -6,7 +6,6 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.util.AttributeSet
 import androidx.annotation.IntRange
-
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.*
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -41,8 +40,9 @@ open class ExoPlayerVideoView : PlayerView {
     var onErrorListener: OnErrorListener? = null
 
     private var isPreparing = false
-
     private var isBuffering = false
+
+    private var previewPrepareThread = Thread()
 
     var aspectRatio: Float = 16.0f / 9.0f
 
@@ -73,7 +73,7 @@ open class ExoPlayerVideoView : PlayerView {
     private fun setup(context: Context) {
         playerContext = context
 
-        bandwidthMeter = DefaultBandwidthMeter()
+        bandwidthMeter = DefaultBandwidthMeter.Builder(context).build()
         dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
 
         exoplayer = ExoPlayerFactory.newSimpleInstance(
@@ -91,6 +91,8 @@ open class ExoPlayerVideoView : PlayerView {
 
                 override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                     if (playbackState == Player.STATE_READY && isPreparing) {
+                        previewPrepareThread.join()
+
                         onPreparedListener?.onPrepared()
                         isPreparing = false
                     }
@@ -143,10 +145,7 @@ open class ExoPlayerVideoView : PlayerView {
             }
         )
 
-
         player = exoplayer
-
-        this.useController = false
     }
 
     fun start() {
@@ -175,49 +174,48 @@ open class ExoPlayerVideoView : PlayerView {
             if (isHls) {
                 HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
             } else {
-                ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+                ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
             }
         mergedMediaSource = videoMediaSource
-
-        prepare()
     }
 
     fun setPreviewUri(uri: Uri) {
-        mediaMetadataRetriever = MediaMetadataRetriever()
-        previewAvailable =
-            try {
-                mediaMetadataRetriever?.setDataSource(playerContext, uri)
-                true
-            } catch (e1: Exception) {
+        previewPrepareThread = Thread {
+            mediaMetadataRetriever = MediaMetadataRetriever()
+            previewAvailable =
                 try {
-                    mediaMetadataRetriever?.setDataSource(uri.toString())
+                    mediaMetadataRetriever?.setDataSource(playerContext, uri)
                     true
-                } catch (e2: Exception) {
+                } catch (e1: Exception) {
                     try {
                         mediaMetadataRetriever?.setDataSource(uri.toString(), HashMap<String, String>())
                         true
-                    } catch (e3: Exception) {
-                        false
+                    } catch (e2: Exception) {
+                        try {
+                            mediaMetadataRetriever?.setDataSource(uri.toString())
+                            true
+                        } catch (e3: Exception) {
+                            false
+                        }
                     }
                 }
-            }
+        }
+        previewPrepareThread.start()
     }
 
     fun showSubtitles(uri: String, language: String) {
         val subtitleMediaSource = SingleSampleMediaSource.Factory(dataSourceFactory)
             .createMediaSource(
                 Uri.parse(uri),
-                Format.createTextSampleFormat(null, MimeTypes.TEXT_VTT, C.SELECTION_FLAG_FORCED, language),
+                Format.createTextSampleFormat(null, MimeTypes.TEXT_VTT, C.SELECTION_FLAG_DEFAULT, language),
                 C.TIME_UNSET
             )
 
         mergedMediaSource = MergingMediaSource(videoMediaSource, subtitleMediaSource)
-        prepare()
     }
 
     fun removeSubtitles() {
         mergedMediaSource = videoMediaSource
-        prepare()
     }
 
     fun getFrameAt(position: Long): Bitmap? {
@@ -237,12 +235,13 @@ open class ExoPlayerVideoView : PlayerView {
         exoplayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
     }
 
-    private fun prepare() {
+    fun prepare() {
         isPreparing = true
         exoplayer.prepare(mergedMediaSource)
     }
 
     fun release() {
+        player.stop()
         player.release()
     }
 

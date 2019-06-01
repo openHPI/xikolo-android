@@ -1,9 +1,11 @@
 package de.xikolo.controllers.video
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.managers.DownloadManager
+import de.xikolo.managers.ItemManager
 import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Item
 import de.xikolo.models.Video
@@ -12,11 +14,14 @@ import de.xikolo.models.dao.ItemDao
 import de.xikolo.models.dao.VideoDao
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.PlaybackSpeedUtil
+import io.realm.Realm
 
 class VideoItemPlayerFragment(private var courseId: String, private var sectionId: String, private var itemId: String, videoId: String, autoPlay: Boolean? = true) : VideoStreamPlayerFragment(VideoDao.Unmanaged.find(videoId)!!.singleStream, autoPlay) {
 
     companion object {
         val TAG: String = VideoItemPlayerFragment::class.java.simpleName
+
+        private const val VIDEO_POSITION_REWIND_TIME = 10000
     }
 
     private var video: Video = VideoDao.Unmanaged.find(videoId)!!
@@ -27,9 +32,14 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
 
     private lateinit var downloadManager: DownloadManager
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
         downloadManager = DownloadManager(activity!!)
-        super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initialVideoPosition = Math.max(video.progress - VIDEO_POSITION_REWIND_TIME, 0)
     }
 
     override fun play(fromUser: Boolean) {
@@ -106,7 +116,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
 
     override fun saveCurrentPosition() {
         super.saveCurrentPosition()
-        video.progress = currentPosition
+        ItemManager().updateVideoProgress(video, currentPosition, Realm.getDefaultInstance())
     }
 
     override fun getSubtitleList(): List<VideoSubtitles>? {

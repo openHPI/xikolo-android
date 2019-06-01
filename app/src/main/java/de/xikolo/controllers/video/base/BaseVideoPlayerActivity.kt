@@ -100,8 +100,8 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
                 actionBar.hide()
             }
         } else {
-            showSystemBars()
             disableImmersiveMode()
+            showSystemBars()
             actionBar.show()
         }
     }
@@ -345,7 +345,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
     }
 
     public override fun onUserLeaveHint() {
-        if (FeatureConfig.PIP && playerFragment.currentPosition < playerFragment.duration - 5000) {
+        if (FeatureConfig.PIP && !playerFragment.hasAlmostEnded) {
             super.onUserLeaveHint()
             enterPip(false)
         }

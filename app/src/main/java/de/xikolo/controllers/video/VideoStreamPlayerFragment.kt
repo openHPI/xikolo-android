@@ -40,6 +40,9 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
         private val SEEKBAR_PREVIEW_HANDLER_TAG = "$TAG/seekBarPreview"
         private const val SEEKBAR_PREVIEW_INTERVAL = 100
+        private const val SEEKBAR_PREVIEW_POSITION_DIFFERENCE = 5000
+
+        private const val SEEKBAR_UPDATER_INTERVAL = 100L
 
         private const val VIDEO_STEPPING_DURATION = 10000
     }
@@ -108,10 +111,13 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
     private val seekBarPreviewThread: HandlerThread
     private val seekBarPreviewHandler: Handler
 
+    protected var initialVideoPosition: Int = 0
+    private var initialPlaybackState: Boolean = autoPlay ?: true
+    private var isInitialPreparing = true
+
     private lateinit var controlsVisibilityHandler: ControlsVisibilityHandler
 
     private var isOfflineVideo = false
-    private var lastProgress = 0
 
     private val applicationPreferences = ApplicationPreferences()
 
@@ -123,6 +129,12 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
     val duration: Int
         get() = playerView.duration.toInt()
+
+    private val hasEnded: Boolean
+        get() = currentPosition >= duration
+
+    val hasAlmostEnded: Boolean
+        get() = currentPosition >= duration - 10000
 
     val isPlaying: Boolean
         get() = playerView.isPlaying()
@@ -184,40 +196,27 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
             }
         }
 
-        setupView()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setupVideo()
-    }
-
-    private fun setupView() {
-        playerView.keepScreenOn = true
-
         playerView.onPreparedListener = object : ExoPlayerVideoView.OnPreparedListener {
             override fun onPrepared() {
                 hideProgress()
+
                 playerView.visibility = View.VISIBLE
                 warningContainer.visibility = View.GONE
                 seekBar.max = duration
-                showControls()
+
+                seekTo(initialVideoPosition, false)
 
                 totalTimeText.text = getTimeString(duration)
-                playbackTimeText.text = getTimeString(0)
+                playbackTimeText.text = getTimeString(currentPosition)
 
                 stepForwardButton.visibility = View.VISIBLE
                 stepBackwardButton.visibility = View.VISIBLE
 
-                seekTo(lastProgress, false)
+                seekBar.isPreviewEnabled = playerView.previewAvailable
 
-                playerView.setPlaybackSpeed(currentPlaybackSpeed.speed)
-
-                if (autoPlay == true) {
+                if (initialPlaybackState) {
                     play(false)
                 }
-
-                Thread(seekBarUpdater).start()
             }
         }
 
@@ -256,17 +255,18 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
         seekBarUpdater = object : Runnable {
             override fun run() {
-                seekBarUpdaterIsRunning = true
                 activity?.runOnUiThread {
-                    if (!userIsSeeking) {
+                    seekBarUpdaterIsRunning = true
+
+                    if (!userIsSeeking && isPlaying) {
                         seekBar.progress = currentPosition
                         playbackTimeText.text = getTimeString(currentPosition)
                     }
 
-                    if (currentPosition < duration) {
-                        seekBarPreviewHandler.postDelayed(
-                            this,
-                            SEEKBAR_PREVIEW_INTERVAL.toLong()
+                    if (!hasEnded && isPlaying) {
+                        Handler().postDelayed(
+                            Thread(this),
+                            SEEKBAR_UPDATER_INTERVAL
                         )
                     } else {
                         seekBarUpdaterIsRunning = false
@@ -277,10 +277,10 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
         playButton.setOnClickListener {
             showControls()
-            if (playerView.isPlaying()) {
+            if (isPlaying) {
                 pause(true)
             } else {
-                if (currentPosition >= duration) {
+                if (hasEnded) {
                     // 'replay' button was pressed
                     stepForwardButton.visibility = View.VISIBLE
                     stepBackwardButton.visibility = View.VISIBLE
@@ -307,14 +307,11 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
         seekBar.attachPreviewFrameLayout(seekBarPreviewLayout)
         seekBar.setPreviewLoader(object : com.github.rubensousa.previewseekbar.PreviewLoader {
-            private val PREVIEW_INTERVAL = 100
-            private val PREVIEW_POSITION_DIFFERENCE = 5000
-
             private var lastPreview: Long = 0
             private var lastPosition: Long = -1
 
             override fun loadPreview(currentPosition: Long, max: Long) {
-                if (System.currentTimeMillis() - lastPreview > PREVIEW_INTERVAL && (lastPosition < 0 || Math.abs(currentPosition - lastPosition) > PREVIEW_POSITION_DIFFERENCE)) {
+                if (System.currentTimeMillis() - lastPreview > SEEKBAR_PREVIEW_INTERVAL && (lastPosition < 0 || Math.abs(currentPosition - lastPosition) > SEEKBAR_PREVIEW_POSITION_DIFFERENCE)) {
                     seekBarPreviewHandler.removeCallbacksAndMessages(null)
                     seekBarPreviewHandler.postAtFrontOfQueue {
                         val frame = playerView.getFrameAt(currentPosition)
@@ -347,7 +344,10 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         })
 
         retryButton.setOnClickListener {
+            showProgress()
             updateVideo()
+            seekTo(0, true)
+            prepare()
         }
 
         controllerInterface?.onCreateSettings()?.let {
@@ -372,6 +372,14 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
                 controllerInterface?.onSettingsSliding(slideOffset)
             }
         })
+
+        showProgress()
+        setupVideo()
+        updateVideo()
+        if(autoPlay == true) {
+            playerView.start()
+        }
+        prepare()
     }
 
     private fun setupVideo() {
@@ -438,13 +446,6 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         videoSettingsHelper.currentQuality = getVideoMode()
 
         controllerInterface?.onImmersiveModeChanged(videoSettingsHelper.isImmersiveModeEnabled)
-
-        updateVideo()
-    }
-
-    private fun reloadVideo() {
-        saveCurrentPosition()
-        updateVideo()
     }
 
     protected open fun getSubtitleList(): List<VideoSubtitles>? {
@@ -513,11 +514,15 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
     }
 
     protected open fun changeSubtitles(oldSubtitles: VideoSubtitles?, newSubtitles: VideoSubtitles?, fromUser: Boolean) {
+        showProgress()
         updateSubtitles()
+        prepare()
     }
 
     protected open fun changeQuality(oldVideoMode: VideoSettingsHelper.VideoMode, newVideoMode: VideoSettingsHelper.VideoMode, fromUser: Boolean) {
-        reloadVideo()
+        showProgress()
+        updateVideo()
+        prepare()
     }
 
     protected open fun changePlaybackSpeed(oldSpeed: PlaybackSpeedUtil, newSpeed: PlaybackSpeedUtil, fromUser: Boolean) {
@@ -528,27 +533,29 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         controllerInterface?.onImmersiveModeChanged(newMode)
     }
 
-    open fun play(fromUser: Boolean) {
-        playButton.text = getString(R.string.icon_pause)
-        playerView.start()
+    private fun startSeekBarUpdater() {
         if (!seekBarUpdaterIsRunning) {
             Thread(seekBarUpdater).start()
         }
     }
 
+    open fun play(fromUser: Boolean) {
+        playButton.text = getString(R.string.icon_pause)
+        startSeekBarUpdater()
+        playerView.start()
+    }
+
     open fun pause(fromUser: Boolean) {
         playButton.text = getString(R.string.icon_play)
-        playerView.pause()
         saveCurrentPosition()
+        playerView.pause()
     }
 
     protected open fun seekTo(progress: Int, fromUser: Boolean) {
         playerView.seekTo(progress.toLong())
         playbackTimeText.text = getTimeString(progress)
         seekBar.progress = progress
-        if (!seekBarUpdaterIsRunning) {
-            Thread(seekBarUpdater).start()
-        }
+        startSeekBarUpdater()
     }
 
     private fun stepForward() {
@@ -639,10 +646,8 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
     }
 
     override fun onDestroy() {
-        pause(false)
         playerView.release()
         seekBarPreviewThread.quit()
-
         super.onDestroy()
     }
 
@@ -659,25 +664,20 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
     }
 
     private fun updateSubtitles() {
-        showProgress()
         val currentSubtitles = videoSettingsHelper.currentVideoSubtitles
         if (currentSubtitles != null) {
             playerView.showSubtitles(getSubtitleUri(currentSubtitles), getSubtitleLanguage(currentSubtitles))
         } else {
             playerView.removeSubtitles()
         }
-        hideProgress()
     }
 
     private fun updateVideo() {
-        showProgress()
         warningContainer.visibility = View.GONE
 
         if (setVideoUri(videoSettingsHelper.currentQuality)) {
             updateSubtitles()
             updatePlaybackSpeed()
-
-            showProgress()
             if (isOfflineVideo) {
                 playerView.uri?.let {
                     playerView.setPreviewUri(it)
@@ -689,7 +689,6 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
                     playerView.setPreviewUri(Uri.parse(videoStream.hdUrl))
                 }
             }
-            seekBar.isPreviewEnabled = playerView.previewAvailable
         }
     }
 
@@ -714,9 +713,17 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         isOfflineVideo = false
     }
 
-    protected open fun saveCurrentPosition() {
-        lastProgress = currentPosition
+    private fun prepare() {
+        initialPlaybackState = isPlaying
+        if(!isInitialPreparing) {
+            initialVideoPosition = currentPosition
+        }
+        playerView.pause()
+        playerView.prepare()
+        isInitialPreparing = false
     }
+
+    protected open fun saveCurrentPosition() {}
 
     private fun getTimeString(millis: Int): String {
         return String.format(Locale.US, "%02d:%02d",

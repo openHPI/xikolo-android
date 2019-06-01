@@ -10,7 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone" />
+        android:keepScreenOn="true"
+        android:visibility="gone"
+        app:shutter_background_color="@color/transparent"
+        app:keep_content_on_player_reset="true"
+        app:use_controller="false" />
 
     <RelativeLayout
         android:id="@+id/shadowContainer"
