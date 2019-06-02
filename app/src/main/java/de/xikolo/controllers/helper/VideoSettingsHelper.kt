@@ -12,11 +12,13 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import de.xikolo.R
+import de.xikolo.config.Config
 import de.xikolo.config.FeatureConfig
 import de.xikolo.managers.PermissionManager
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.PlaybackSpeedUtil
+import de.xikolo.views.CustomFontTextView
 import java.util.*
 
 class VideoSettingsHelper(private val context: Context, private val subtitles: List<VideoSubtitles>?, private val changeListener: OnSettingsChangeListener, private val clickListener: OnSettingsClickListener, private val videoInfoCallback: VideoInfoCallback) {
@@ -92,7 +94,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                     R.string.icon_pip,
                     context.getString(R.string.video_settings_pip),
                     View.OnClickListener { clickListener.onPipClick() },
-                    false
+                    false,
+                    Config.FONT_MATERIAL
                 )
             )
         }
@@ -237,13 +240,14 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     }
 
     @SuppressLint("InflateParams")
-    private fun buildSettingsItem(@StringRes icon: Int?, title: String, clickListener: View.OnClickListener, active: Boolean): ViewGroup {
+    private fun buildSettingsItem(@StringRes icon: Int?, title: String, clickListener: View.OnClickListener, active: Boolean, font: String = Config.FONT_XIKOLO): ViewGroup {
         val item = inflater.inflate(R.layout.item_settings, null) as LinearLayout
 
-        val iconView = item.findViewById(R.id.item_settings_icon) as TextView
+        val iconView = item.findViewById(R.id.item_settings_icon) as CustomFontTextView
         val titleView = item.findViewById(R.id.item_settings_title) as TextView
 
         if (icon != null) {
+            iconView.setCustomFont(context, font)
             iconView.setText(icon)
         } else {
             iconView.setText(R.string.icon_settings)
