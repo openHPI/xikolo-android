@@ -64,6 +64,15 @@ public class VideoStream extends RealmObject implements Parcelable {
         }
     };
 
+    public VideoStream(String hdUrl, String sdUrl, String hlsUrl, int hdSize, int sdSize, String thumbnailUrl) {
+        this.hdUrl = hdUrl;
+        this.sdUrl = sdUrl;
+        this.hlsUrl = hlsUrl;
+        this.hdSize = hdSize;
+        this.sdSize = sdSize;
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
     @SuppressWarnings("unused")
     public VideoStream() {
     }

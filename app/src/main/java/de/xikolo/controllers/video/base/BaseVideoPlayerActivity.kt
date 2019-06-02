@@ -54,7 +54,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
     private var hasDisplayCutout = false
     private var isInImmersiveMode = false
 
-    protected lateinit var playerFragment: VideoStreamPlayerFragment
+    lateinit var playerFragment: VideoStreamPlayerFragment
 
     open val layoutResource = R.layout.activity_video
 
