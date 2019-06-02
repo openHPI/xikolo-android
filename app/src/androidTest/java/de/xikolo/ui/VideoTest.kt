@@ -1,15 +1,16 @@
 package de.xikolo.ui
 
 
+import android.content.pm.ActivityInfo
 import android.view.View
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.swipeRight
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import de.xikolo.R
+import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.controllers.video.VideoStreamPlayerActivity
 import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.controllers.video.VideoStreamPlayerFragment
@@ -49,17 +50,16 @@ class VideoTest : BaseMockedTest() {
         }
     }
 
-    @Test
-    fun testInitialProgress() {
-        val progressView = onView(
-            allOf(
-                withId(R.id.progressBar)
-            )
-        )
+    private fun waitForProgress() {
+        while (fragment.progressBar.visibility == View.VISIBLE) {
+            Thread.sleep(1000)
+        }
+    }
 
-        progressView.check(
-            matches(isDisplayed())
-        )
+    private fun showControls() {
+        activity.runOnUiThread {
+            fragment.showControls()
+        }
     }
 
     @Test
@@ -85,36 +85,35 @@ class VideoTest : BaseMockedTest() {
         controls.check(
             matches(isDisplayed())
         )
-
-        Thread.sleep(3000)
-
-        controls.check(
-            matches(not(isDisplayed()))
-        )
     }
 
-    // crazy, why isn't this working?
-    /*@Test
+    @Test
     fun testControlsEffect() {
         waitForVideo()
 
         activity.runOnUiThread {
             fragment.showControls()
+            assertTrue(fragment.isShowingControls)
         }
-        assertTrue(fragment.isShowingControls)
-
-/*        activity.runOnUiThread {
-            fragment.showControls(500)
-            Thread.sleep(1000)
-            assertFalse(fragment.isShowingControls)
-        }
-
 
         activity.runOnUiThread {
             fragment.hideControls()
             assertFalse(fragment.isShowingControls)
-        }*/
-    }*/
+        }
+    }
+
+    @Test
+    fun testInitialProgress() {
+        val progressView = onView(
+            allOf(
+                withId(R.id.progressBar)
+            )
+        )
+
+        progressView.check(
+            matches(isDisplayed())
+        )
+    }
 
     @Test
     fun testProgress() {
@@ -146,11 +145,9 @@ class VideoTest : BaseMockedTest() {
     @Test
     fun testPlayAndPauseUI() {
         waitForVideo()
+        showControls()
 
         fragment.pause(false)
-        activity.runOnUiThread {
-            fragment.showControls()
-        }
 
         val playButton = onView(
             allOf(
@@ -162,7 +159,9 @@ class VideoTest : BaseMockedTest() {
             click()
         )
         playButton.check(
-            matches(withText(R.string.icon_pause))
+            matches(
+                withText(R.string.icon_pause)
+            )
         )
 
         playButton.perform(
@@ -185,12 +184,45 @@ class VideoTest : BaseMockedTest() {
     }
 
     @Test
-    fun testSeeking() {
+    fun testReplayButton() {
         waitForVideo()
 
-        activity.runOnUiThread {
-            fragment.showControls()
-        }
+        fragment.playerView.seekTo(fragment.playerView.duration - 100)
+        waitForProgress()
+        Thread.sleep(1000)
+
+        val playButton = onView(
+            allOf(
+                withId(R.id.playButton)
+            )
+        )
+
+        playButton.check(
+            matches(
+                withText(R.string.icon_reload)
+            )
+        )
+
+        val prePosition = fragment.currentPosition
+        playButton.perform(
+            click()
+        )
+        waitForVideo()
+        val postPosition = fragment.currentPosition
+
+        assertTrue(postPosition < prePosition)
+
+        playButton.check(
+            matches(
+                withText(R.string.icon_pause)
+            )
+        )
+    }
+
+    @Test
+    fun testSeeking() {
+        waitForVideo()
+        showControls()
 
         val seekBar = onView(
             allOf(
@@ -222,10 +254,7 @@ class VideoTest : BaseMockedTest() {
     @Test
     fun testStepping() {
         waitForVideo()
-
-        activity.runOnUiThread {
-            fragment.showControls()
-        }
+        showControls()
 
         val stepForward = onView(
             allOf(
@@ -252,6 +281,108 @@ class VideoTest : BaseMockedTest() {
         )
         val postPositionBackward = fragment.currentPosition
         assertTrue(prePositionBackward > postPositionBackward)
+    }
+
+    @Test
+    fun testRotation() {
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+        waitForVideo()
+
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    @Test
+    fun testSettingsButton() {
+        waitForVideo()
+        showControls()
+
+        val settingsButton = onView(
+            allOf(
+                withId(R.id.settingsButton)
+            )
+        )
+
+        settingsButton.perform(
+            click()
+        )
+
+        val settingsContainer = onView(
+            allOf(
+                withId(R.id.settingsContainer),
+                isDisplayed()
+            )
+        )
+
+        settingsContainer.check(
+            matches(
+                not(hasChildCount(0))
+            )
+        )
+
+        settingsContainer.perform(
+            swipeDown()
+        )
+    }
+
+    @Test
+    fun testBackBehavior() {
+        waitForVideo()
+        showControls()
+
+        val settingsButton = onView(
+            allOf(
+                withId(R.id.settingsButton)
+            )
+        )
+
+        settingsButton.perform(
+            click()
+        )
+
+        assertFalse(fragment.handleBackPress())
+
+        assertTrue(fragment.handleBackPress())
+    }
+
+    @Test
+    fun testQualityChange() {
+        waitForVideo()
+        showControls()
+
+        val settingsButton = onView(
+            allOf(
+                withId(R.id.settingsButton)
+            )
+        )
+
+        settingsButton.perform(
+            click()
+        )
+
+        val qualitySetting = onView(
+            allOf(
+                withText(R.string.video_settings_quality)
+            )
+        )
+
+        qualitySetting.perform(
+            click()
+        )
+
+        val sdSetting = onView(
+            allOf(
+                withText(VideoSettingsHelper.VideoMode.SD.title)
+            )
+        )
+
+        sdSetting.perform(
+            click()
+        )
+
+        waitForVideo()
+
+        assertTrue(fragment.isPlaying)
     }
 
 }
