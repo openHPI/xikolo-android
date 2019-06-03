@@ -10,7 +10,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import de.xikolo.R
-import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.controllers.video.VideoStreamPlayerActivity
 import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.controllers.video.VideoStreamPlayerFragment
@@ -189,7 +188,7 @@ class VideoTest : BaseMockedTest() {
 
         fragment.playerView.seekTo(fragment.playerView.duration - 100)
         waitForProgress()
-        Thread.sleep(1000)
+        Thread.sleep(3000) // wait for player to finish
 
         val playButton = onView(
             allOf(
@@ -207,7 +206,7 @@ class VideoTest : BaseMockedTest() {
         playButton.perform(
             click()
         )
-        waitForVideo()
+        waitForProgress()
         val postPosition = fragment.currentPosition
 
         assertTrue(postPosition < prePosition)
@@ -245,7 +244,7 @@ class VideoTest : BaseMockedTest() {
         fragment.play(false)
 
         val prePosition = fragment.seekBar.progress
-        Thread.sleep(2000)
+        Thread.sleep(2000) // let video run a bit
         val postPosition = fragment.seekBar.progress
 
         assertTrue(postPosition > prePosition)
@@ -340,49 +339,15 @@ class VideoTest : BaseMockedTest() {
             click()
         )
 
-        assertFalse(fragment.handleBackPress())
+        Thread.sleep(1000) // wait for panel to open
 
-        assertTrue(fragment.handleBackPress())
-    }
+        val firstBackPress = fragment.handleBackPress()
+        assertFalse(firstBackPress)
 
-    @Test
-    fun testQualityChange() {
-        waitForVideo()
-        showControls()
+        Thread.sleep(1000) // wait for panel to close
 
-        val settingsButton = onView(
-            allOf(
-                withId(R.id.settingsButton)
-            )
-        )
-
-        settingsButton.perform(
-            click()
-        )
-
-        val qualitySetting = onView(
-            allOf(
-                withText(R.string.video_settings_quality)
-            )
-        )
-
-        qualitySetting.perform(
-            click()
-        )
-
-        val sdSetting = onView(
-            allOf(
-                withText(VideoSettingsHelper.VideoMode.SD.title)
-            )
-        )
-
-        sdSetting.perform(
-            click()
-        )
-
-        waitForVideo()
-
-        assertTrue(fragment.isPlaying)
+        val secondBackPress = fragment.handleBackPress()
+        assertTrue(secondBackPress)
     }
 
 }

@@ -84,14 +84,10 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
 
     private fun showDescription(course: Course) {
         when {
-            course.teaserStream != null -> {
+            course.teaserStream != null
+                && (course.teaserStream.hdUrl != null || course.teaserStream.sdUrl != null) -> {
                 courseImage.visibility = View.GONE
                 videoPreview.visibility = View.VISIBLE
-
-                GlideApp.with(this)
-                    .load(course.teaserStream.thumbnailUrl)
-                    .override(imageVideoThumbnail.forcedWidth, imageVideoThumbnail.forcedHeight)
-                    .into(imageVideoThumbnail)
 
                 viewPlay.setOnClickListener {
                     activity?.let {
@@ -104,16 +100,24 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
                     }
                 }
             }
-            course.imageUrl != null     -> {
+            course.imageUrl != null                                                         -> {
                 videoPreview.visibility = View.GONE
                 courseImage.visibility = View.VISIBLE
-
-                GlideApp.with(this).load(course.imageUrl).into(courseImage)
             }
-            else                        -> {
+            else                                                                            -> {
                 courseImage.visibility = View.GONE
                 videoPreview.visibility = View.GONE
             }
+        }
+
+        when {
+            course.teaserStream.thumbnailUrl != null -> GlideApp.with(this)
+                .load(course.teaserStream.thumbnailUrl)
+                .override(imageVideoThumbnail.forcedWidth, imageVideoThumbnail.forcedHeight)
+                .into(imageVideoThumbnail)
+            course.imageUrl != null                  -> GlideApp.with(this)
+                .load(course.imageUrl)
+                .into(courseImage)
         }
 
         textDate.text = course.formattedDate

@@ -347,6 +347,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
             showProgress()
             updateVideo()
             seekTo(0, true)
+            playerView.start()
             prepare()
         }
 
