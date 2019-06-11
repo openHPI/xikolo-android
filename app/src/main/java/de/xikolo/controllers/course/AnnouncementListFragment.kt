@@ -11,8 +11,9 @@ import de.xikolo.R
 import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.main.AnnouncementListAdapter
-import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.extensions.observe
+import de.xikolo.models.Announcement
+import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.viewmodels.main.AnnouncementListViewModel
 
 class AnnouncementListFragment : NetworkStateFragment<AnnouncementListViewModel>() {
@@ -54,18 +55,16 @@ class AnnouncementListFragment : NetworkStateFragment<AnnouncementListViewModel>
 
         viewModel.announcements
             .observe(this) {
-                showAnnouncementList()
+                showAnnouncementList(it)
             }
     }
 
-    private fun showAnnouncementList() {
-        viewModel.announcements.value?.let { announcements ->
-            if (announcements.isEmpty()) {
-                showEmptyMessage(R.string.empty_message_course_announcements_title)
-            } else {
-                showContent()
-                announcementListAdapter.announcementList = announcements.toMutableList()
-            }
+    private fun showAnnouncementList(announcements: List<Announcement>) {
+        if (announcements.isEmpty()) {
+            showEmptyMessage(R.string.empty_message_course_announcements_title)
+        } else {
+            showContent()
+            announcementListAdapter.update(announcements)
         }
     }
 

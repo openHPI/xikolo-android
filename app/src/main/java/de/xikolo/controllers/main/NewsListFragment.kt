@@ -12,8 +12,9 @@ import de.xikolo.R
 import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
-import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.extensions.observe
+import de.xikolo.models.Announcement
+import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.viewmodels.main.AnnouncementListViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -60,7 +61,7 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
 
         viewModel.announcements
             .observe(this) {
-                showAnnouncementList()
+                showAnnouncementList(it)
             }
     }
 
@@ -76,14 +77,12 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
         EventBus.getDefault().unregister(this)
     }
 
-    private fun showAnnouncementList() {
-        viewModel.announcements.value?.let { announcements ->
-            if (announcements.isEmpty()) {
-                showEmptyMessage(R.string.empty_message_global_announcements_title)
-            } else {
-                showContent()
-                announcementListAdapter.announcementList = announcements.toMutableList()
-            }
+    private fun showAnnouncementList(announcements: List<Announcement>) {
+        if (announcements.isEmpty()) {
+            showEmptyMessage(R.string.empty_message_global_announcements_title)
+        } else {
+            showContent()
+            announcementListAdapter.update(announcements)
         }
     }
 

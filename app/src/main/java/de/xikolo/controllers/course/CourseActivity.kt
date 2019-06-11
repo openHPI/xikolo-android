@@ -112,6 +112,11 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                 course = it
                 setupCourse()
             }
+
+        viewModel.dates
+            .observe(this) {
+                invalidateOptionsMenu()
+            }
     }
 
     private fun setupView() {
@@ -168,7 +173,9 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         val inflater = menuInflater
 
         if (course.isEnrolled) {
-            inflater.inflate(R.menu.course_dates, menu)
+            if (viewModel.dateCount > 0) {
+                inflater.inflate(R.menu.course_dates, menu)
+            }
             inflater.inflate(R.menu.unenroll, menu)
         }
         inflater.inflate(R.menu.share, menu)
