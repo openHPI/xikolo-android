@@ -191,7 +191,7 @@ open class ExoPlayerVideoView : PlayerView {
         val subtitleMediaSource = SingleSampleMediaSource.Factory(dataSourceFactory)
             .createMediaSource(
                 Uri.parse(uri),
-                Format.createTextSampleFormat(null, MimeTypes.TEXT_VTT, C.SELECTION_FLAG_FORCED, language),
+                Format.createTextSampleFormat(null, MimeTypes.TEXT_VTT, C.SELECTION_FLAG_DEFAULT, language),
                 C.TIME_UNSET
             )
 
