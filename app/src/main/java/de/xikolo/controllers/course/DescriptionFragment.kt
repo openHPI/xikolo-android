@@ -111,7 +111,7 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
         }
 
         when {
-            course.teaserStream.thumbnailUrl != null -> GlideApp.with(this)
+            course.teaserStream != null && course.teaserStream.thumbnailUrl != null -> GlideApp.with(this)
                 .load(course.teaserStream.thumbnailUrl)
                 .override(imageVideoThumbnail.forcedWidth, imageVideoThumbnail.forcedHeight)
                 .into(imageVideoThumbnail)
