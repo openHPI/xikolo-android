@@ -17,7 +17,15 @@
             android:id="@+id/videoPlayerFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_alignParentTop="true" />
+
+        <RelativeLayout
+            android:id="@+id/videoSecondaryFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/videoPlayerFragment"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone" />
 
         <View
             android:id="@+id/screenOverlay"

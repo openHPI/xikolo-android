@@ -1,5 +1,6 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:res="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -9,23 +10,33 @@
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/activity_horizontal_margin">
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/layout_header"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/collapsing_toolbar_height" />
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/container_video_preview" />
+
+            <ImageView
+                android:id="@+id/courseImage"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/collapsing_toolbar_height"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
 
         <View
             android:id="@+id/space"
             android:layout_width="match_parent"
             android:layout_height="16dp"
-            android:layout_below="@+id/layout_header"/>
+            android:layout_below="@+id/layout_header" />
 
         <TextView
             android:id="@+id/text_teacher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@+id/space"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="@dimen/content_horizontal_margin"
             android:layout_marginRight="@dimen/content_horizontal_margin"
             android:textColor="@color/text_second"
@@ -35,11 +46,11 @@
             android:id="@+id/text_date_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@+id/text_teacher"
-            android:layout_marginLeft="@dimen/content_horizontal_margin"
-            android:layout_marginRight="6dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/content_horizontal_margin"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="6dp"
             android:maxLines="1"
             android:text="@string/icon_cal"
             android:textColor="@color/text_main_icon"
@@ -51,9 +62,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_teacher"
-            android:layout_marginRight="12dp"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@+id/text_date_icon"
+            android:layout_marginEnd="12dp"
+            android:layout_toEndOf="@+id/text_date_icon"
             android:singleLine="true"
             android:textSize="14sp" />
 
@@ -62,9 +73,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_teacher"
-            android:layout_marginRight="6dp"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@+id/text_date"
+            android:layout_marginEnd="6dp"
+            android:layout_toEndOf="@+id/text_date"
             android:maxLines="1"
             android:text="@string/icon_lang"
             android:textColor="@color/text_main_icon"
@@ -77,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_teacher"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@+id/text_lang_icon"
+            android:layout_toEndOf="@+id/text_lang_icon"
             android:maxLines="1"
             android:textSize="14sp" />
 
@@ -85,12 +96,12 @@
             android:id="@+id/text_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@+id/text_lang_icon"
-            android:lineSpacingExtra="4dp"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="@dimen/content_horizontal_margin"
-            android:layout_marginRight="@dimen/content_horizontal_margin"
             android:layout_marginTop="16dp"
+            android:layout_marginRight="@dimen/content_horizontal_margin"
+            android:lineSpacingExtra="4dp"
             android:textColor="@color/text_main"
             android:textColorLink="@color/apptheme_second"
             android:textSize="14sp" />

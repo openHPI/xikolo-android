@@ -15,6 +15,7 @@
     <string name="preference_download_network" translatable="false">download_network</string>
     <string name="preference_video_playback_speed" translatable="false">video_playback_speed</string>
     <string name="preference_video_subtitles_language" translatable="false">video_subtitles_language</string>
+    <string name="preference_video_immersive" translatable="false">video_immersive</string>
     <string name="preference_video_pip" translatable="false">video_pip</string>
     <string name="preference_copyright" translatable="false">copyright</string>
     <string name="preference_imprint" translatable="false">imprint</string>
@@ -41,6 +42,7 @@
     <string name="percentage" translatable="false">%1$d%%</string>
 
     <string name="settings_default_value_video_subtitles_language" translatable="false">und</string>
+    <bool name="settings_default_value_video_immersive">false</bool>
     <string name="settings_default_value_video_playback_speed" translatable="false">x1.0</string>
     <string-array name="settings_values_video_playback_speed" translatable="false">
         <item>x0.7</item>

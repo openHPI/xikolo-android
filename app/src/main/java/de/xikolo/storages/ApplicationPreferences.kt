@@ -50,6 +50,13 @@ class ApplicationPreferences {
             )
         }
 
+    var isVideoShownImmersive: Boolean
+        get() = getBoolean(
+            context.getString(R.string.preference_video_immersive),
+            context.resources.getBoolean(R.bool.settings_default_value_video_immersive)
+        )
+        set(value) = putBoolean(context.getString(R.string.preference_video_immersive), value)
+
     var confirmBeforeDeleting: Boolean
         get() = getBoolean(context.getString(R.string.preference_confirm_delete))
         set(value) = putBoolean(context.getString(R.string.preference_confirm_delete), value)

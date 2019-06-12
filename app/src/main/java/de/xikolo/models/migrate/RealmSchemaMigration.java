@@ -107,6 +107,13 @@ public class RealmSchemaMigration implements RealmMigration {
 
             oldVersion++;
         }
+
+        if (oldVersion == 6) {
+            schema.get("Course")
+                .addRealmObjectField("teaserStream", schema.get("VideoStream"));
+
+            oldVersion++;
+        }
     }
 
 }

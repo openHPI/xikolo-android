@@ -12,13 +12,16 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import de.xikolo.R
+import de.xikolo.config.Config
 import de.xikolo.config.FeatureConfig
 import de.xikolo.managers.PermissionManager
 import de.xikolo.models.VideoSubtitles
+import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.PlaybackSpeedUtil
+import de.xikolo.views.CustomFontTextView
 import java.util.*
 
-class VideoSettingsHelper(private val context: Context, private val subtitles: List<VideoSubtitles>?, private val changeListener: OnSettingsChangeListener, private val clickListener: OnSettingsClickListener, private val qualityOfflineInfo: QualityOfflineInfo) {
+class VideoSettingsHelper(private val context: Context, private val subtitles: List<VideoSubtitles>?, private val changeListener: OnSettingsChangeListener, private val clickListener: OnSettingsClickListener, private val videoInfoCallback: VideoInfoCallback) {
 
     enum class VideoMode(val title: String) {
         SD("SD"), HD("HD"), AUTO("Auto")
@@ -26,9 +29,26 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
+    private val applicationPreferences: ApplicationPreferences = ApplicationPreferences()
+
     var currentQuality: VideoMode = VideoMode.HD
     var currentSpeed: PlaybackSpeedUtil = PlaybackSpeedUtil.x10
     var currentVideoSubtitles: VideoSubtitles? = null
+    var isImmersiveModeEnabled: Boolean = false
+
+    init {
+        currentSpeed = applicationPreferences.videoPlaybackSpeed
+
+        subtitles?.let {
+            for (videoSubtitles in it) {
+                if (videoSubtitles.language == applicationPreferences.videoSubtitlesLanguage) {
+                    currentVideoSubtitles = videoSubtitles
+                }
+            }
+        }
+
+        isImmersiveModeEnabled = applicationPreferences.isVideoShownImmersive
+    }
 
     fun buildSettingsView(): ViewGroup {
         val list = buildSettingsPanel(null)
@@ -37,7 +57,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
             buildSettingsItem(
                 R.string.icon_quality,
                 context.getString(R.string.video_settings_quality) + "  " + context.getString(R.string.video_settings_separator) + "  " + currentQuality.title +
-                    if (qualityOfflineInfo.isOfflineAvailable(currentQuality)) " " + context.getString(R.string.video_settings_quality_offline) else "",
+                    if (videoInfoCallback.isOfflineAvailable(currentQuality)) " " + context.getString(R.string.video_settings_quality_offline) else "",
                 View.OnClickListener { clickListener.onQualityClick() },
                 false
             )
@@ -63,13 +83,19 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 )
             )
         }
-        if(FeatureConfig.PIP && PermissionManager.hasPipPermission(context)) {
+        if (videoInfoCallback.isImmersiveModeAvailable()) {
+            list.addView(
+                buildImmersiveSettingsItem(list)
+            )
+        }
+        if (FeatureConfig.PIP && PermissionManager.hasPipPermission(context)) {
             list.addView(
                 buildSettingsItem(
                     R.string.icon_pip,
                     context.getString(R.string.video_settings_pip),
                     View.OnClickListener { clickListener.onPipClick() },
-                    false
+                    false,
+                    Config.FONT_MATERIAL
                 )
             )
         }
@@ -80,12 +106,12 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     fun buildQualityView(): ViewGroup {
         val list = buildSettingsPanel(context.getString(R.string.video_settings_quality))
 
-        if(FeatureConfig.HLS_VIDEO) {
+        if (FeatureConfig.HLS_VIDEO) {
             list.addView(
                 buildSettingsItem(
                     null,
                     VideoMode.AUTO.title +
-                        if (qualityOfflineInfo.isOfflineAvailable(VideoMode.AUTO)) " " + context.getString(R.string.video_settings_quality_offline) else "",
+                        if (videoInfoCallback.isOfflineAvailable(VideoMode.AUTO)) " " + context.getString(R.string.video_settings_quality_offline) else "",
                     View.OnClickListener {
                         val oldQuality = currentQuality
                         currentQuality = VideoMode.AUTO
@@ -99,7 +125,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
             buildSettingsItem(
                 null,
                 VideoMode.HD.title +
-                    if (qualityOfflineInfo.isOfflineAvailable(VideoMode.HD)) " " + context.getString(R.string.video_settings_quality_offline) else "",
+                    if (videoInfoCallback.isOfflineAvailable(VideoMode.HD)) " " + context.getString(R.string.video_settings_quality_offline) else "",
                 View.OnClickListener {
                     val oldQuality = currentQuality
                     currentQuality = VideoMode.HD
@@ -112,7 +138,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
             buildSettingsItem(
                 null,
                 VideoMode.SD.title +
-                    if (qualityOfflineInfo.isOfflineAvailable(VideoMode.SD)) " " + context.getString(R.string.video_settings_quality_offline) else "",
+                    if (videoInfoCallback.isOfflineAvailable(VideoMode.SD)) " " + context.getString(R.string.video_settings_quality_offline) else "",
                 View.OnClickListener {
                     val oldQuality = currentQuality
                     currentQuality = VideoMode.SD
@@ -162,6 +188,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 View.OnClickListener {
                     val oldVideoSubtitles = currentVideoSubtitles
                     currentVideoSubtitles = null
+                    applicationPreferences.videoSubtitlesLanguage = null
                     changeListener.onSubtitleChanged(oldVideoSubtitles, currentVideoSubtitles)
                 },
                 currentVideoSubtitles == null
@@ -176,6 +203,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                     View.OnClickListener {
                         val oldVideoSubtitles = currentVideoSubtitles
                         currentVideoSubtitles = videoSubtitles
+                        applicationPreferences.videoSubtitlesLanguage = videoSubtitles.language
                         changeListener.onSubtitleChanged(oldVideoSubtitles, currentVideoSubtitles)
                     },
                     currentVideoSubtitles == videoSubtitles
@@ -212,13 +240,14 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     }
 
     @SuppressLint("InflateParams")
-    private fun buildSettingsItem(@StringRes icon: Int?, title: String, clickListener: View.OnClickListener, active: Boolean): ViewGroup {
+    private fun buildSettingsItem(@StringRes icon: Int?, title: String, clickListener: View.OnClickListener, active: Boolean, font: String = Config.FONT_XIKOLO): ViewGroup {
         val item = inflater.inflate(R.layout.item_settings, null) as LinearLayout
 
-        val iconView = item.findViewById(R.id.item_settings_icon) as TextView
+        val iconView = item.findViewById(R.id.item_settings_icon) as CustomFontTextView
         val titleView = item.findViewById(R.id.item_settings_title) as TextView
 
         if (icon != null) {
+            iconView.setCustomFont(context, font)
             iconView.setText(icon)
         } else {
             iconView.setText(R.string.icon_settings)
@@ -236,6 +265,25 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
 
         return item
     }
+
+    private fun buildImmersiveSettingsItem(parent: ViewGroup): View {
+        return buildSettingsItem(
+            if (isImmersiveModeEnabled) R.string.icon_show_fitting else R.string.icon_show_immersive,
+            if (isImmersiveModeEnabled) context.getString(R.string.video_settings_show_fitting) else context.getString(R.string.video_settings_show_immersive),
+            View.OnClickListener {
+                isImmersiveModeEnabled = !isImmersiveModeEnabled
+
+                applicationPreferences.isVideoShownImmersive = isImmersiveModeEnabled
+                changeListener.onImmersiveModeChanged(!isImmersiveModeEnabled, isImmersiveModeEnabled)
+
+                val index = parent.indexOfChild(it)
+                parent.removeViewAt(index)
+                parent.addView(buildImmersiveSettingsItem(parent), index)
+            },
+            false
+        )
+    }
+
 
     interface OnSettingsClickListener {
 
@@ -257,10 +305,14 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
 
         // subtitle is null if 'None' is selected
         fun onSubtitleChanged(old: VideoSubtitles?, new: VideoSubtitles?)
+
+        fun onImmersiveModeChanged(old: Boolean, new: Boolean)
     }
 
-    interface QualityOfflineInfo {
+    interface VideoInfoCallback {
 
         fun isOfflineAvailable(videoMode: VideoMode): Boolean
+
+        fun isImmersiveModeAvailable(): Boolean
     }
 }
