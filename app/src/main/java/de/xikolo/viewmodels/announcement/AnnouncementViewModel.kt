@@ -4,32 +4,29 @@ import androidx.lifecycle.LiveData
 import de.xikolo.models.Announcement
 import de.xikolo.models.dao.AnnouncementDao
 import de.xikolo.network.jobs.UpdateAnnouncementVisitedJob
-import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.main.AnnouncementListViewModel
+import de.xikolo.viewmodels.shared.AnnouncementListViewModelDelegate
 
-class AnnouncementViewModel(val announcementId: String) : BaseViewModel() {
+class AnnouncementViewModel(private val announcementId: String) : BaseViewModel() {
+
+    private val announcementListDelegate = AnnouncementListViewModelDelegate(realm)
 
     private val announcementsDao = AnnouncementDao(realm)
-    private val announcementListViewModel = AnnouncementListViewModel()
 
     val announcement: LiveData<Announcement> by lazy {
         announcementsDao.find(announcementId)
     }
 
     override fun onFirstCreate() {
-        announcementListViewModel.onFirstCreate()
+        announcementListDelegate.requestAnnouncementList(networkState, false)
     }
 
     override fun onRefresh() {
-        announcementListViewModel.onRefresh()
+        announcementListDelegate.requestAnnouncementList(networkState, true)
     }
 
     fun updateAnnouncementVisited(announcementId: String) {
         UpdateAnnouncementVisitedJob.schedule(announcementId)
     }
-
-    override val networkState: NetworkStateLiveData
-        get() = announcementListViewModel.networkState
 
 }

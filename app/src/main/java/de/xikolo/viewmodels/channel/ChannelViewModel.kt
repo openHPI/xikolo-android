@@ -5,7 +5,6 @@ import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.BuildFlavor
-import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
 import de.xikolo.models.dao.ChannelDao
@@ -13,18 +12,19 @@ import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.GetChannelWithCoursesJob
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.main.CourseListViewModel
+import de.xikolo.viewmodels.shared.CourseListViewModelDelegate
 
-class ChannelViewModel(val channelId: String) : BaseViewModel() {
+class ChannelViewModel(private val channelId: String) : BaseViewModel() {
+
+    private val courseListDelegate = CourseListViewModelDelegate(realm)
 
     private val channelsDao = ChannelDao(realm)
-    private val courseListViewModel = CourseListViewModel(CourseListFilter.ALL)
 
     val channel: LiveData<Channel> by lazy {
         channelsDao.find(channelId)
     }
 
-    val courses: LiveData<List<Course>> = courseListViewModel.courses
+    val courses = courseListDelegate.courses
 
     fun buildContentList(channel: Channel): MetaSectionList<String, String, List<Course>> {
         val contentList = MetaSectionList<String, String, List<Course>>(channel.description)

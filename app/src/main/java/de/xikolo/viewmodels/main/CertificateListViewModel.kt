@@ -1,30 +1,24 @@
 package de.xikolo.viewmodels.main
 
-import androidx.lifecycle.LiveData
-import de.xikolo.controllers.helper.CourseListFilter
-import de.xikolo.models.Course
 import de.xikolo.models.dao.CourseDao
-import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.viewmodels.base.BaseViewModel
+import de.xikolo.viewmodels.shared.CourseListViewModelDelegate
 
 class CertificateListViewModel : BaseViewModel() {
 
-    private val courseListViewModel = CourseListViewModel(CourseListFilter.ALL)
+    private val courseListDelegate = CourseListViewModelDelegate(realm)
 
-    val courses: LiveData<List<Course>> = courseListViewModel.courses
+    val courses = courseListDelegate.courses
 
     val coursesWithCertificates
         get() = CourseDao.Unmanaged.allWithCertificates()
 
     override fun onFirstCreate() {
-        courseListViewModel.onFirstCreate()
+        courseListDelegate.requestCourseList(networkState, false)
     }
 
     override fun onRefresh() {
-        courseListViewModel.onRefresh()
+        courseListDelegate.requestCourseList(networkState, true)
     }
-
-    override val networkState: NetworkStateLiveData
-        get() = courseListViewModel.networkState
 
 }
