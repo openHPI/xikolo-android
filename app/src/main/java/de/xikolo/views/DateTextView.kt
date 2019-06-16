@@ -102,8 +102,10 @@ class DateTextView : AppCompatTextView, View.OnClickListener {
         }
 
     override fun onClick(v: View?) {
-        (context as? FragmentActivity)?.let {
-            DateInfoDialog(infoTitle, localText, utcText).show(it.supportFragmentManager, DateInfoDialog.TAG)
+        if(valid) {
+            (context as? FragmentActivity)?.let {
+                DateInfoDialog(infoTitle, localText, utcText).show(it.supportFragmentManager, DateInfoDialog.TAG)
+            }
         }
     }
 
