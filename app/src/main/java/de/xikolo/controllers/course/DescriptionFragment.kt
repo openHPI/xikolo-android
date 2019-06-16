@@ -11,8 +11,10 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.models.Course
+import de.xikolo.utils.DateUtil
 import de.xikolo.utils.DisplayUtil
 import de.xikolo.utils.MarkdownUtil
 import de.xikolo.viewmodels.course.DescriptionViewModel
@@ -121,7 +123,9 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
         }
 
         textDate.text = course.formattedDate
-        textDate.setDateSpan(course.startDate, course.endDate)
+        if (DateUtil.isFuture(course.endDate)) {
+            textDate.setDateSpan(course.startDate, course.endDate)
+        }
 
         textLanguage.text = course.formattedLanguage
         MarkdownUtil.formatAndSet(course.description, textDescription)

@@ -52,7 +52,7 @@
         android:orientation="horizontal"
         android:paddingTop="2dp">
 
-        <TextView
+        <de.xikolo.views.DateTextView
             android:id="@+id/textDateDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

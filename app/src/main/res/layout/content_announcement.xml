@@ -1,34 +1,31 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:res="http://schemas.android.com/apk/res-auto"
     android:id="@+id/content_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/content_horizontal_margin">
 
-        <TextView
+        <de.xikolo.views.DateTextView
             android:id="@+id/date"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="16dp"
             android:textColor="@color/text_second"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            res:infoTitle="@string/dialog_date_info_title_announcement" />
 
         <TextView
             android:id="@+id/text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@+id/date"
+            android:layout_alignParentLeft="true"
             android:lineSpacingExtra="4dp"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:paddingTop="4dp"
             android:textColor="@color/text_main"
             android:textColorLink="@color/apptheme_second"
@@ -39,10 +36,8 @@
             style="@style/ButtonContained"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/text"
-            android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="16dp"
             android:text="@string/btn_continue_course"
             android:visibility="gone" />

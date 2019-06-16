@@ -124,6 +124,15 @@
     <string name="dialog_course_dates_title">Course dates</string>
     <string name="dialog_course_dates_no">Close</string>
 
+    <string name="dialog_date_info_default_title">Date details</string>
+    <string name="dialog_date_info_local">Local</string>
+    <string name="dialog_date_info_utc">World time</string>
+    <string name="dialog_date_info_no">Close</string>
+
+    <string name="dialog_date_info_title_announcement">Publishing date</string>
+    <string name="dialog_date_info_title_course">Course duration</string>
+    <string name="dialog_date_info_title_section">Start date</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- dirty hack, but works -->
+    <item
+        android:left="-5000dp"
+        android:right="-5000dp"
+        android:top="-5000dp">
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="1dp"
+                android:color="@color/text_second"
+                android:dashWidth="3dp"
+                android:dashGap="4dp" />
+        </shape>
+    </item>
+</layer-list>

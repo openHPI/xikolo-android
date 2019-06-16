@@ -17,6 +17,7 @@ import de.xikolo.managers.UserManager
 import de.xikolo.models.Announcement
 import de.xikolo.utils.MarkdownUtil
 import de.xikolo.viewmodels.announcement.AnnouncementViewModel
+import de.xikolo.views.DateTextView
 import java.text.DateFormat
 import java.util.*
 
@@ -35,7 +36,7 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementViewModel>() {
     @BindView(R.id.text)
     internal lateinit var text: TextView
     @BindView(R.id.date)
-    internal lateinit var date: TextView
+    internal lateinit var date: DateTextView
     @BindView(R.id.course_button)
     internal lateinit var courseButton: Button
 
@@ -77,6 +78,7 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementViewModel>() {
 
         val dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
         date.text = dateFormat.format(announcement.publishedAt)
+        date.setDate(announcement.publishedAt)
 
         MarkdownUtil.formatAndSet(announcement.text, text)
 

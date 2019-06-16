@@ -13,6 +13,7 @@ import de.xikolo.controllers.base.BaseMetaRecyclerViewAdapter
 import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
 import de.xikolo.utils.TimeUtil
+import de.xikolo.views.DateTextView
 import java.text.DateFormat
 import java.util.*
 
@@ -71,6 +72,10 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
                     }
                 } else {
                     holder.container.isClickable = false
+
+                    courseDate.date?.let {
+                        holder.textDate.setDate(it)
+                    }
                 }
 
 
@@ -127,7 +132,7 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
         lateinit var container: View
 
         @BindView(R.id.textDateDate)
-        lateinit var textDate: TextView
+        lateinit var textDate: DateTextView
 
         @BindView(R.id.textDateType)
         lateinit var textType: TextView
