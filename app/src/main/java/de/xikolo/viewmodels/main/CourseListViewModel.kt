@@ -12,13 +12,13 @@ import de.xikolo.models.dao.DateDao
 import de.xikolo.models.dao.EnrollmentDao
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.shared.CourseListViewModelDelegate
-import de.xikolo.viewmodels.shared.DateListViewModelDelegate
+import de.xikolo.viewmodels.shared.CourseListDelegate
+import de.xikolo.viewmodels.shared.DateListDelegate
 
 class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel() {
 
-    private val courseListDelegate = CourseListViewModelDelegate(realm)
-    private val dateListDelegate = DateListViewModelDelegate(realm)
+    private val courseListDelegate = CourseListDelegate(realm)
+    private val dateListDelegate = DateListDelegate(realm)
 
     val enrollmentCount
         get() = EnrollmentDao.Unmanaged.count()

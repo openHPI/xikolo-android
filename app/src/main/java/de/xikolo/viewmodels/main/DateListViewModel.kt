@@ -8,13 +8,13 @@ import de.xikolo.models.DateOverview
 import de.xikolo.models.dao.DateDao
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.shared.CourseListViewModelDelegate
-import de.xikolo.viewmodels.shared.DateListViewModelDelegate
+import de.xikolo.viewmodels.shared.CourseListDelegate
+import de.xikolo.viewmodels.shared.DateListDelegate
 
 open class DateListViewModel(private val courseId: String? = null) : BaseViewModel() {
 
-    private val courseListDelegate = CourseListViewModelDelegate(realm)
-    private val dateListDelegate = DateListViewModelDelegate(realm)
+    private val courseListDelegate = CourseListDelegate(realm)
+    private val dateListDelegate = DateListDelegate(realm)
 
     private val dateDao = DateDao(realm)
 

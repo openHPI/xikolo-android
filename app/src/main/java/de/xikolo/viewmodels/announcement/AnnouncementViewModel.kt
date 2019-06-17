@@ -5,11 +5,11 @@ import de.xikolo.models.Announcement
 import de.xikolo.models.dao.AnnouncementDao
 import de.xikolo.network.jobs.UpdateAnnouncementVisitedJob
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.shared.AnnouncementListViewModelDelegate
+import de.xikolo.viewmodels.shared.AnnouncementListDelegate
 
 class AnnouncementViewModel(private val announcementId: String) : BaseViewModel() {
 
-    private val announcementListDelegate = AnnouncementListViewModelDelegate(realm)
+    private val announcementListDelegate = AnnouncementListDelegate(realm)
 
     private val announcementsDao = AnnouncementDao(realm)
 

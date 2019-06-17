@@ -7,7 +7,7 @@ import de.xikolo.network.jobs.GetCourseJob
 import de.xikolo.network.jobs.base.NetworkStateLiveData
 import io.realm.Realm
 
-class CourseViewModelDelegate(realm: Realm, private val courseId: String) {
+class CourseDelegate(realm: Realm, private val courseId: String) {
 
     private val courseDao = CourseDao(realm)
 

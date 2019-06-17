@@ -7,7 +7,7 @@ import de.xikolo.network.jobs.ListAnnouncementsJob
 import de.xikolo.network.jobs.base.NetworkStateLiveData
 import io.realm.Realm
 
-class AnnouncementListViewModelDelegate(realm: Realm, private val courseId: String? = null) {
+class AnnouncementListDelegate(realm: Realm, private val courseId: String? = null) {
 
     private val announcementsDao = AnnouncementDao(realm)
 

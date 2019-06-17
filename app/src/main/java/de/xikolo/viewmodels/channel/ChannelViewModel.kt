@@ -12,11 +12,11 @@ import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.GetChannelWithCoursesJob
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.shared.CourseListViewModelDelegate
+import de.xikolo.viewmodels.shared.CourseListDelegate
 
 class ChannelViewModel(private val channelId: String) : BaseViewModel() {
 
-    private val courseListDelegate = CourseListViewModelDelegate(realm)
+    private val courseListDelegate = CourseListDelegate(realm)
 
     private val channelsDao = ChannelDao(realm)
 

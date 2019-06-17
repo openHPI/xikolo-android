@@ -1,13 +1,13 @@
 package de.xikolo.viewmodels.course
 
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.shared.CourseViewModelDelegate
-import de.xikolo.viewmodels.shared.DateListViewModelDelegate
+import de.xikolo.viewmodels.shared.CourseDelegate
+import de.xikolo.viewmodels.shared.DateListDelegate
 
 class CourseViewModel(courseId: String) : BaseViewModel() {
 
-    private val courseDelegate = CourseViewModelDelegate(realm, courseId)
-    private val dateListDelegate = DateListViewModelDelegate(realm)
+    private val courseDelegate = CourseDelegate(realm, courseId)
+    private val dateListDelegate = DateListDelegate(realm)
 
     val course = courseDelegate.course
 

@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import de.xikolo.models.Announcement
 import de.xikolo.models.dao.AnnouncementDao
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.shared.AnnouncementListViewModelDelegate
+import de.xikolo.viewmodels.shared.AnnouncementListDelegate
 
 class AnnouncementListViewModel(private val courseId: String? = null) : BaseViewModel() {
 
-    private val announcementListDelegate = AnnouncementListViewModelDelegate(realm, courseId)
+    private val announcementListDelegate = AnnouncementListDelegate(realm, courseId)
 
     private val announcementsDao = AnnouncementDao(realm)
 
