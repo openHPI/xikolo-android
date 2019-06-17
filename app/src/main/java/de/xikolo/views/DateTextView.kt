@@ -1,6 +1,7 @@
 package de.xikolo.views
 
 import android.content.Context
+import android.graphics.drawable.LayerDrawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
@@ -62,7 +63,9 @@ class DateTextView : AppCompatTextView, View.OnClickListener {
                 compoundDrawables[0],
                 compoundDrawables[1],
                 compoundDrawables[2],
-                resources.getDrawable(R.drawable.dotted_line, context.theme)
+                (resources.getDrawable(R.drawable.dotted_line, context.theme) as? LayerDrawable)?.apply {
+                    this.setTint(currentTextColor)
+                } ?: compoundDrawables[3]
             )
         } else {
             isClickable = false
@@ -102,7 +105,7 @@ class DateTextView : AppCompatTextView, View.OnClickListener {
         }
 
     override fun onClick(v: View?) {
-        if(valid) {
+        if (valid) {
             (context as? FragmentActivity)?.let {
                 DateInfoDialog(infoTitle, localText, utcText).show(it.supportFragmentManager, DateInfoDialog.TAG)
             }

@@ -2,15 +2,18 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- dirty hack, but works -->
     <item
+        android:id="@+id/dotted_line"
         android:left="-5000dp"
         android:right="-5000dp"
         android:top="-5000dp">
-        <shape android:shape="rectangle">
+        <shape
+            android:shape="rectangle"
+            android:tint="@color/text_second">
             <stroke
-                android:width="1dp"
-                android:color="@color/text_second"
-                android:dashWidth="3dp"
+                android:width="2dp"
+                android:dashWidth="2dp"
                 android:dashGap="4dp" />
+            <solid android:color="@color/transparent" />
         </shape>
     </item>
 </layer-list>
