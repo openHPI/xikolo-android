@@ -59,12 +59,12 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer:2.10.1"
 
     // play services
-    implementation "com.google.android.gms:play-services-cast-framework:16.2.0"
-    implementation "com.google.android.gms:play-services-gcm:16.1.0"
+    implementation "com.google.android.gms:play-services-cast-framework:17.0.0"
+    implementation "com.google.android.gms:play-services-gcm:17.0.0"
 
     // firebase
-    implementation "com.google.firebase:firebase-core:16.0.9"
-    implementation "com.crashlytics.sdk.android:crashlytics:2.10.0"
+    implementation "com.google.firebase:firebase-core:17.0.0"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.10.1"
 
     // material design
     implementation 'com.google.android.material:material:1.0.0'
@@ -83,9 +83,9 @@ dependencies {
     implementation project(path: ":lanalytics", configuration: "default")
 
     // testing
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.1'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test:rules:1.1.1'
-    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    testImplementation        'junit:junit:4.12'
 }
