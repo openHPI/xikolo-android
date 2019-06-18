@@ -3,17 +3,19 @@ package de.xikolo.viewmodels.main
 import androidx.lifecycle.LiveData
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
 import de.xikolo.models.dao.DateDao
-import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
+import de.xikolo.viewmodels.shared.CourseListDelegate
+import de.xikolo.viewmodels.shared.DateListDelegate
 
-open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
+open class DateListViewModel(private val courseId: String? = null) : BaseViewModel() {
 
-    private val courseListViewModel = CourseListViewModel(CourseListFilter.MY)
+    private val courseListDelegate = CourseListDelegate(realm)
+    private val dateListDelegate = DateListDelegate(realm)
+
     private val dateDao = DateDao(realm)
 
     val dates: LiveData<List<CourseDate>> by lazy {
@@ -92,16 +94,13 @@ open class DateListViewModel(val courseId: String? = null) : BaseViewModel() {
         }
 
     override fun onFirstCreate() {
-        // includes requesting of date list
-        courseListViewModel.onFirstCreate()
+        courseListDelegate.requestCourseList(networkState, false)
+        dateListDelegate.requestDateList(networkState, false)
     }
 
     override fun onRefresh() {
-        // includes requesting of date list
-        courseListViewModel.onRefresh()
+        courseListDelegate.requestCourseList(networkState, true)
+        dateListDelegate.requestDateList(networkState, true)
     }
-
-    override val networkState: NetworkStateLiveData
-        get() = courseListViewModel.networkState
 
 }

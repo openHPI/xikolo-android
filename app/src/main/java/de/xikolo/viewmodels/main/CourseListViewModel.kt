@@ -1,37 +1,31 @@
 package de.xikolo.viewmodels.main
 
-import androidx.lifecycle.LiveData
 import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.BuildFlavor
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.Course
-import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.models.dao.DateDao
 import de.xikolo.models.dao.EnrollmentDao
-import de.xikolo.network.jobs.ListCoursesJob
-import de.xikolo.network.jobs.ListDatesJob
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
+import de.xikolo.viewmodels.shared.CourseListDelegate
+import de.xikolo.viewmodels.shared.DateListDelegate
 
 class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel() {
 
-    private val coursesDao = CourseDao(realm)
-    private val dateDao = DateDao(realm)
+    private val courseListDelegate = CourseListDelegate(realm)
+    private val dateListDelegate = DateListDelegate(realm)
 
     val enrollmentCount
         get() = EnrollmentDao.Unmanaged.count()
 
-    val courses: LiveData<List<Course>> by lazy {
-        coursesDao.all()
-    }
+    val courses = courseListDelegate.courses
 
-    val dates: LiveData<List<CourseDate>> by lazy {
-        dateDao.all()
-    }
+    val dates = dateListDelegate.dates
 
     val sectionedCourseList: MetaSectionList<String, DateOverview, List<Course>>
         get() {
@@ -111,26 +105,18 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
         CourseDao.Unmanaged.search(query, filter == CourseListFilter.MY)
 
     override fun onFirstCreate() {
-        requestCourseList(false)
+        courseListDelegate.requestCourseList(networkState, false)
 
         if (filter == CourseListFilter.MY) {
-            requestDateList(false)
+            dateListDelegate.requestDateList(networkState, false)
         }
     }
 
     override fun onRefresh() {
-        requestCourseList(true)
+        courseListDelegate.requestCourseList(networkState, true)
 
         if (filter == CourseListFilter.MY) {
-            requestDateList(true)
+            dateListDelegate.requestDateList(networkState, true)
         }
-    }
-
-    private fun requestCourseList(userRequest: Boolean) {
-        ListCoursesJob(networkState, userRequest).run()
-    }
-
-    private fun requestDateList(userRequest: Boolean) {
-        ListDatesJob(networkState, userRequest).run()
     }
 }

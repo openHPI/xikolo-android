@@ -1,42 +1,28 @@
 package de.xikolo.viewmodels.course
 
-import androidx.lifecycle.LiveData
-import de.xikolo.models.Course
-import de.xikolo.models.CourseDate
-import de.xikolo.models.dao.CourseDao
-import de.xikolo.network.jobs.GetCourseJob
-import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.main.DateListViewModel
+import de.xikolo.viewmodels.shared.CourseDelegate
+import de.xikolo.viewmodels.shared.DateListDelegate
 
-class CourseViewModel(val courseId: String) : BaseViewModel() {
+class CourseViewModel(courseId: String) : BaseViewModel() {
 
-    private val courseDao = CourseDao(realm)
-    private val dateListViewModel = DateListViewModel(courseId)
+    private val courseDelegate = CourseDelegate(realm, courseId)
+    private val dateListDelegate = DateListDelegate(realm)
 
-    val course: LiveData<Course> by lazy {
-        courseDao.find(courseId)
-    }
+    val course = courseDelegate.course
 
-    val dates: LiveData<List<CourseDate>> = dateListViewModel.dates
+    val dates = dateListDelegate.dates
 
     val dateCount: Int
         get() = dates.value?.size ?: 0
 
     override fun onFirstCreate() {
-        requestCourse(false)
-        dateListViewModel.onFirstCreate()
+        courseDelegate.requestCourse(networkState, false)
+        dateListDelegate.requestDateList(networkState, false)
     }
 
     override fun onRefresh() {
-        requestCourse(true)
-        dateListViewModel.onRefresh()
+        courseDelegate.requestCourse(networkState, true)
+        dateListDelegate.requestDateList(networkState, true)
     }
-
-    private fun requestCourse(userRequest: Boolean) {
-        GetCourseJob(courseId, networkState, userRequest).run()
-    }
-
-    override val networkState: NetworkStateLiveData
-        get() = dateListViewModel.networkState
 }
