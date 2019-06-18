@@ -63,9 +63,7 @@ class DateTextView : AppCompatTextView, View.OnClickListener {
                 compoundDrawables[0],
                 compoundDrawables[1],
                 compoundDrawables[2],
-                (resources.getDrawable(R.drawable.dotted_line, context.theme) as? LayerDrawable)?.apply {
-                    this.setTint(currentTextColor)
-                } ?: compoundDrawables[3]
+                resources.getDrawable(R.drawable.dotted_line, context.theme)
             )
         } else {
             isClickable = false
