@@ -107,15 +107,15 @@
                     android:textSize="20sp"
                     res:customFont="xikolo.ttf" />
 
-                <TextView
+                <de.xikolo.views.DateTextView
                     android:id="@+id/moduleNotificationLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:paddingRight="8dp"
                     android:text="@string/module_notification_no_content"
                     android:textColor="@color/text_light"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    res:infoTitle="@string/dialog_date_info_title_section" />
 
             </LinearLayout>
 

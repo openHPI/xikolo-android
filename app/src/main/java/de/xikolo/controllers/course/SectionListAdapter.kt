@@ -18,6 +18,7 @@ import de.xikolo.models.Section
 import de.xikolo.utils.DateUtil
 import de.xikolo.utils.DisplayUtil
 import de.xikolo.views.AutofitRecyclerView
+import de.xikolo.views.DateTextView
 import de.xikolo.views.SpaceItemDecoration
 import java.text.DateFormat
 import java.util.*
@@ -126,6 +127,7 @@ class SectionListAdapter(private val activity: FragmentActivity,
 
             holder.textModuleNotification.text = String.format(activity.getString(R.string.available_at),
                 dateOut.format(section.startDate))
+            holder.textModuleNotification.setDate(section.startDate)
         } else {
             holder.textModuleNotification.text = activity.getString(R.string.module_notification_no_content)
         }
@@ -159,7 +161,7 @@ class SectionListAdapter(private val activity: FragmentActivity,
         lateinit var viewModuleNotification: View
 
         @BindView(R.id.moduleNotificationLabel)
-        lateinit var textModuleNotification: TextView
+        lateinit var textModuleNotification: DateTextView
 
         @BindView(R.id.downloadBtn)
         lateinit var viewDownloadButton: View

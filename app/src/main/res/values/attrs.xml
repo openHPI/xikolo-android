@@ -9,6 +9,10 @@
         <attr name="customFont" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="DateTextView">
+        <attr name="infoTitle" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="Theme">
         <attr name="circularImageViewStyle" format="reference" />
     </declare-styleable>

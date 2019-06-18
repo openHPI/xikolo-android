@@ -57,7 +57,7 @@
             android:textSize="20sp"
             res:customFont="xikolo.ttf" />
 
-        <TextView
+        <de.xikolo.views.DateTextView
             android:id="@+id/text_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,7 +66,8 @@
             android:layout_marginEnd="12dp"
             android:layout_toEndOf="@+id/text_date_icon"
             android:singleLine="true"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            res:infoTitle="@string/dialog_date_info_title_course" />
 
         <de.xikolo.views.CustomFontTextView
             android:id="@+id/text_lang_icon"

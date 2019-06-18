@@ -2,11 +2,13 @@ package de.xikolo.utils;
 
 import android.util.Log;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import de.xikolo.config.Config;
 
@@ -77,6 +79,18 @@ public class DateUtil {
     public static String format(Date date) {
         SimpleDateFormat dateFm = new SimpleDateFormat(XIKOLO_DATE_FORMAT, Locale.getDefault());
         return dateFm.format(date);
+    }
+
+    public static String formatLocal(Date date) {
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.getDefault());
+        dateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
+        return dateFormat.format(date);
+    }
+
+    public static String formatUTC(Date date) {
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.getDefault());
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return dateFormat.format(date);
     }
 
     public static int compare(String lhs, String rhs) {
