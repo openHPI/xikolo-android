@@ -19,17 +19,6 @@
     <color name="offline_mode_toolbar">#424242</color>
     <color name="offline_mode_statusbar">#282828</color>
 
-    <color name="navi_main_bg">#252525</color>
-    <color name="navi_sub_bg">#151515</color>
-    <color name="navi_profile_bg">#333333</color>
-
-    <color name="navi_main_light_bg">#3b3b3b</color>
-    <color name="navi_sub_light_bg">#2d2d2d</color>
-    <color name="navi_profile_light_bg">#5b5b5b</color>
-    <color name="navi_profile_light_fg">#0dffffff</color>
-
-    <color name="navi_text">@color/white</color>
-
     <color name="list_divider">#1F000000</color>
 
     <color name="white">#ffffff</color>
@@ -37,6 +26,7 @@
     <color name="transparent">#00000000</color>
 
     <color name="white_30">#4dffffff</color>
+    <color name="white_60">#99FFFFFF</color>
 
     <color name="tab_text_unfocused">#b3ffffff</color>
 

@@ -1,8 +1,6 @@
 package de.xikolo.controllers.main
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import butterknife.BindView
 import de.xikolo.App
@@ -108,20 +106,13 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
 
     override fun onStart() {
         super.onStart()
-
-        activityCallback?.onFragmentAttached(NavigationAdapter.NAV_CHANNELS.position, getString(R.string.title_section_channels))
+        activityCallback?.onFragmentAttached(R.id.navigation_channels)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
         EventBus.getDefault().unregister(this)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (activityCallback?.isDrawerOpen == false) {
-            inflater?.inflate(R.menu.refresh, menu)
-        }
     }
 
     @Suppress("UNUSED_PARAMETER")

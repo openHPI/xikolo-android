@@ -81,7 +81,7 @@ class UserManager {
             realm.executeTransaction { it.deleteAll() }
             realm.close()
 
-            EventBus.getDefault().post(LogoutEvent())
+            EventBus.getDefault().postSticky(LogoutEvent())
         }
     }
 

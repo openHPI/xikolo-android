@@ -1,8 +1,6 @@
 package de.xikolo.controllers.main
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -67,8 +65,7 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
 
     override fun onStart() {
         super.onStart()
-
-        activityCallback?.onFragmentAttached(NavigationAdapter.NAV_NEWS.position, getString(R.string.title_section_news))
+        activityCallback?.onFragmentAttached(R.id.navigation_news)
     }
 
     override fun onDestroy() {
@@ -90,12 +87,6 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
         val intent = AnnouncementActivityAutoBundle.builder(announcementId, true).build(activity!!)
         startActivity(intent)
         LanalyticsUtil.trackVisitedAnnouncementDetail(announcementId)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (activityCallback?.isDrawerOpen == false) {
-            inflater?.inflate(R.menu.refresh, menu)
-        }
     }
 
     @Suppress("UNUSED_PARAMETER")

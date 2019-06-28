@@ -45,7 +45,7 @@ class DateListFragment : ViewModelMainFragment<DateListViewModel>() {
 
     override fun onStart() {
         super.onStart()
-        activityCallback?.onFragmentAttached(NavigationAdapter.NAV_DATES.position, getString(R.string.course_date_list_title))
+        activityCallback?.onFragmentAttached(R.id.navigation_dates)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,7 +84,7 @@ class DateListFragment : ViewModelMainFragment<DateListViewModel>() {
 
     private fun showLoginRequired() {
         showLoginRequired {
-            activityCallback?.selectDrawerSection(NavigationAdapter.NAV_PROFILE.position)
+            activityCallback?.selectDrawerSection(R.id.navigation_profile)
         }
     }
 
