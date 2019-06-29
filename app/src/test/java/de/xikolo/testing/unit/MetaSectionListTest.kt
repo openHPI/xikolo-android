@@ -1,10 +1,11 @@
 package de.xikolo.testing.unit
 
 import de.xikolo.utils.MetaSectionList
-import junit.framework.TestCase
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class MetaSectionListTest : TestCase() {
+class MetaSectionListTest {
 
     private lateinit var list: MetaSectionList<String, String, List<String>>
 
