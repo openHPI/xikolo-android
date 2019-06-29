@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import butterknife.BindView
 import de.xikolo.App
 import de.xikolo.R
@@ -54,15 +55,15 @@ class ProfileFragment : ViewModelMainFragment<ProfileViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.user
-            .observe(this) {
+            .observe(this, Observer {
                 showUser(it)
                 showContent()
-            }
+            })
 
         viewModel.enrollments
-            .observe(this) {
+            .observe(this, Observer {
                 updateEnrollmentCount(viewModel.enrollmentCount)
-            }
+            })
     }
 
     private fun showUser(user: User) {

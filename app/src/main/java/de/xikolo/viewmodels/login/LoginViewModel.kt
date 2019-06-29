@@ -9,8 +9,8 @@ class LoginViewModel : BaseViewModel() {
 
     private val userDelegate = UserDelegate(realm)
 
-    val loginNetworkState = networkState
-    val profileNetworkState by lazy {
+    val loginNetworkState: NetworkStateLiveData = networkState
+    val profileNetworkState: NetworkStateLiveData by lazy {
         NetworkStateLiveData()
     }
 

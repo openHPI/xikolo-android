@@ -260,4 +260,8 @@ class LoginFragment : NetworkStateFragment<LoginViewModel>() {
         startActivity(intent)
     }
 
+    override fun onRefresh() {
+        hideAnyProgress()
+    }
+
 }
