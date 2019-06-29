@@ -1,7 +1,8 @@
 package de.xikolo.ui.helper
 
 import de.xikolo.managers.UserManager
-import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.CreateAccessTokenJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 
 class AuthorizationHelper {
 
@@ -12,10 +13,7 @@ class AuthorizationHelper {
 
         fun login() {
             if (!UserManager.isAuthorized) {
-                UserManager().login(EMAIL, PASSWORD, object : RequestJobCallback() {
-                    override fun onSuccess() {}
-                    override fun onError(code: ErrorCode) {}
-                })
+                CreateAccessTokenJob(EMAIL, PASSWORD, NetworkStateLiveData(), true).run()
 
                 Thread.sleep(NavigationHelper.WAIT_LOADING_SHORT)
             }
