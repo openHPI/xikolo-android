@@ -9,7 +9,7 @@
       "attributes": {
         "type": "item_submission_deadline",
         "title": "Week 2: Unit 2: Assignment",
-        "date": "2019-04-24T09:00:00.000+00:00"
+        "date": "2099-04-24T09:00:00.000+00:00"
       },
       "relationships": {
         "course": {

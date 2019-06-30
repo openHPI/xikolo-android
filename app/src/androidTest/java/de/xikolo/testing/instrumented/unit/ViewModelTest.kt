@@ -39,7 +39,9 @@ class ViewModelTest : BaseMockedTest(), ViewModelCreationInterface<ViewModelTest
     @Test
     fun testInitialization() {
         assertNotNull(viewModel)
-        assertNotNull(viewModel.realm)
+        activityTestRule.activity.runOnUiThread {
+            assertNotNull(viewModel.realm)
+        }
         assertNotNull(viewModel.networkState)
     }
 

@@ -94,7 +94,7 @@ class CourseDatesTest : BaseMockedTest() {
                 isDisplayed()
             )
         )
-        dateListItem.perform(click())
+        //dateListItem.perform(click())
     }
 
 }

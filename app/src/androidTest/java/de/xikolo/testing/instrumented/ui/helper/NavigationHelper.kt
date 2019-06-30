@@ -16,6 +16,21 @@ class NavigationHelper {
     companion object {
 
         /**
+         * Timeout for very short UI events.
+         */
+        const val WAIT_UI_SHORT = 50L
+
+        /**
+         * Timeout for short UI events such as animations.
+         */
+        const val WAIT_UI_ANIMATION = 300L
+
+        /**
+         * Timeout for longer UI events.
+         */
+        const val WAIT_UI_LONG = 1000L
+
+        /**
          * Timeout for short network operations such as loading a single course.
          */
         const val WAIT_LOADING_SHORT = 3000L
@@ -37,6 +52,7 @@ class NavigationHelper {
             )
 
             navButton.perform(ViewActions.click())
+            Thread.sleep(WAIT_UI_ANIMATION)
         }
 
         /**
@@ -45,11 +61,12 @@ class NavigationHelper {
         fun selectNavigationItem(context: Context, @IntegerRes withText: Int) {
             openNavigation(context)
 
-            val channelsButton = onView(
+            val itemButton = onView(
                 ViewMatchers.withText(context.getString(withText))
             )
 
-            channelsButton.perform(ViewActions.click())
+            itemButton.perform(ViewActions.click())
+            Thread.sleep(WAIT_UI_ANIMATION)
         }
 
         /**
@@ -57,6 +74,7 @@ class NavigationHelper {
          */
         fun openOverflowMenu(context: Context) {
             openActionBarOverflowOrOptionsMenu(context)
+            Thread.sleep(WAIT_UI_SHORT)
         }
 
         /**
@@ -73,6 +91,7 @@ class NavigationHelper {
             )
 
             refreshView.perform(ViewActions.click())
+            Thread.sleep(WAIT_UI_SHORT)
         }
     }
 
