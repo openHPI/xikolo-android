@@ -1,4 +1,4 @@
-package de.xikolo.ui
+package de.xikolo.testing.instrumented.ui
 
 
 import android.content.pm.ActivityInfo
@@ -13,8 +13,8 @@ import de.xikolo.R
 import de.xikolo.controllers.video.VideoStreamPlayerActivity
 import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.controllers.video.VideoStreamPlayerFragment
-import de.xikolo.mocking.SingleObjects
-import de.xikolo.mocking.base.BaseMockedTest
+import de.xikolo.testing.instrumented.mocking.SingleObjects
+import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.Assert.assertFalse

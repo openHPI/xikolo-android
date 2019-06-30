@@ -1,4 +1,4 @@
-package de.xikolo.ui
+package de.xikolo.testing.instrumented.ui
 
 
 import androidx.test.espresso.Espresso.onView
@@ -13,9 +13,9 @@ import androidx.test.rule.ActivityTestRule
 import de.xikolo.R
 import de.xikolo.config.FeatureConfig
 import de.xikolo.controllers.main.MainActivity
-import de.xikolo.mocking.base.BaseMockedTest
-import de.xikolo.ui.helper.NavigationHelper
-import de.xikolo.ui.helper.ViewHierarchyHelper.Companion.childAtPosition
+import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
+import de.xikolo.testing.instrumented.ui.helper.NavigationHelper
+import de.xikolo.testing.instrumented.ui.helper.ViewHierarchyHelper.Companion.childAtPosition
 import org.hamcrest.Matchers.allOf
 import org.junit.Before
 import org.junit.Rule

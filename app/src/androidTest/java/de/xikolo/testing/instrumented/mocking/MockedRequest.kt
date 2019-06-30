@@ -1,4 +1,4 @@
-package de.xikolo.mocking
+package de.xikolo.testing.instrumented.mocking
 
 /**
  * Holder of requests which might be mocked.

@@ -1,11 +1,11 @@
-package de.xikolo.unit
+package de.xikolo.testing.instrumented.unit
 
 import android.content.Intent
 import androidx.test.filters.SmallTest
 import androidx.test.rule.ActivityTestRule
 import de.xikolo.controllers.base.ViewModelCreationInterface
 import de.xikolo.controllers.main.SplashActivity
-import de.xikolo.mocking.base.BaseMockedTest
+import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
 import de.xikolo.viewmodels.base.BaseViewModel
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue

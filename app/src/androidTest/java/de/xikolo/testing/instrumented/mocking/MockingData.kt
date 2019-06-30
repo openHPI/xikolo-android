@@ -1,8 +1,8 @@
-package de.xikolo.mocking
+package de.xikolo.testing.instrumented.mocking
 
 import android.content.Context
 import de.xikolo.config.BuildFlavor
-import de.xikolo.mocking.base.BaseMockedResponse
+import de.xikolo.testing.instrumented.mocking.base.BaseMockedResponse
 import okhttp3.Request
 
 class MockingData {

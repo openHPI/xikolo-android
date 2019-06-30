@@ -1,4 +1,4 @@
-package de.xikolo.ui.helper
+package de.xikolo.testing.instrumented.ui.helper
 
 import de.xikolo.managers.UserManager
 import de.xikolo.network.jobs.CreateAccessTokenJob

@@ -1,4 +1,4 @@
-package de.xikolo.ui.helper
+package de.xikolo.testing.instrumented.ui.helper
 
 import android.content.Context
 import androidx.appcompat.widget.Toolbar

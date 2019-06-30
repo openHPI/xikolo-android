@@ -1,4 +1,4 @@
-package de.xikolo.mocking.base
+package de.xikolo.testing.instrumented.mocking.base
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
