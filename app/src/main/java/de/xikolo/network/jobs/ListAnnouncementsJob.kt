@@ -27,6 +27,8 @@ class ListAnnouncementsJob(private val courseId: String?, userRequest: Boolean, 
             val sync = Sync.Data.with(response.body()!!)
             if (courseId != null) {
                 sync.addFilter("courseId", courseId)
+            } else {
+                sync.saveOnly()
             }
             sync.run()
 
