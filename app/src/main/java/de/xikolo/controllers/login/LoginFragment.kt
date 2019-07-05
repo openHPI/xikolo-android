@@ -14,7 +14,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NavUtils
-import androidx.lifecycle.Observer
 import butterknife.BindView
 import com.google.android.material.textfield.TextInputEditText
 import com.yatatsu.autobundle.AutoBundleField
@@ -28,6 +27,7 @@ import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.events.LoginEvent
+import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.storages.UserStorage
@@ -135,15 +135,15 @@ class LoginFragment : NetworkStateFragment<LoginViewModel>() {
         }
 
         viewModel.loginNetworkState
-            .observe(this, Observer {
+            .observe(this) {
                 when (it.code) {
                     NetworkCode.SUCCESS -> viewModel.requestUserWithProfile()
                     else                -> handleCode(it.code)
                 }
-            })
+            }
 
         viewModel.profileNetworkState
-            .observe(this, Observer {
+            .observe(this) {
                 when (it.code) {
                     NetworkCode.SUCCESS -> {
                         hideProgressDialog()
@@ -153,7 +153,7 @@ class LoginFragment : NetworkStateFragment<LoginViewModel>() {
                     }
                     else                -> handleCode(it.code)
                 }
-            })
+            }
 
         showContent()
     }
