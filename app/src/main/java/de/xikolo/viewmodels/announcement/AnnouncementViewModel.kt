@@ -3,13 +3,11 @@ package de.xikolo.viewmodels.announcement
 import androidx.lifecycle.LiveData
 import de.xikolo.models.Announcement
 import de.xikolo.models.dao.AnnouncementDao
+import de.xikolo.network.jobs.GetAnnouncementJob
 import de.xikolo.network.jobs.UpdateAnnouncementVisitedJob
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.viewmodels.shared.AnnouncementListDelegate
 
 class AnnouncementViewModel(private val announcementId: String) : BaseViewModel() {
-
-    private val announcementListDelegate = AnnouncementListDelegate(realm)
 
     private val announcementsDao = AnnouncementDao(realm)
 
@@ -18,15 +16,19 @@ class AnnouncementViewModel(private val announcementId: String) : BaseViewModel(
     }
 
     override fun onFirstCreate() {
-        announcementListDelegate.requestAnnouncementList(networkState, false)
+        requestAnnouncement(false)
     }
 
     override fun onRefresh() {
-        announcementListDelegate.requestAnnouncementList(networkState, true)
+        requestAnnouncement(true)
     }
 
     fun updateAnnouncementVisited(announcementId: String) {
         UpdateAnnouncementVisitedJob.schedule(announcementId)
+    }
+
+    private fun requestAnnouncement(userRequest: Boolean) {
+        GetAnnouncementJob(announcementId, networkState, userRequest).run()
     }
 
 }
