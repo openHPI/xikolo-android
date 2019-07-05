@@ -26,7 +26,7 @@ class GetAnnouncementJob(private val announcementId: String, networkState: Netwo
 
             success()
         } else {
-            if (Config.DEBUG) Log.e(TAG, "Error while fetching course")
+            if (Config.DEBUG) Log.e(TAG, "Error while fetching announcement")
             error()
         }
     }
