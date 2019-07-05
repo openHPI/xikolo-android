@@ -91,7 +91,7 @@ public class ProfileFragment extends PresenterMainFragment<ProfilePresenter, Pro
     }
 
     private void showHeader(Profile profile) {
-        getActivityCallback().onFragmentAttached(R.id.navigation_profile, profile.firstName + " " + profile.lastName);
+        getActivityCallback().onFragmentAttached(R.id.navigation_login, profile.firstName + " " + profile.lastName);
     }
 
     @Override

@@ -252,7 +252,7 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
 
     private fun showLoginRequired() {
         showLoginRequired {
-            activityCallback?.selectDrawerSection(R.id.navigation_profile)
+            activityCallback?.selectDrawerSection(R.id.navigation_login)
         }
     }
 

@@ -98,7 +98,7 @@ class CertificateListFragment : ViewModelMainFragment<CertificateListViewModel>(
 
     private fun showLoginRequired() {
         showLoginRequired {
-            activityCallback?.selectDrawerSection(R.id.navigation_profile)
+            activityCallback?.selectDrawerSection(R.id.navigation_login)
         }
     }
 

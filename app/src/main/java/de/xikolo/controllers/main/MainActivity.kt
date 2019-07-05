@@ -135,7 +135,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         var newFragment: BaseFragment? = null
 
         when (item.itemId) {
-            R.id.navigation_profile      -> {
+            R.id.navigation_login        -> {
                 if (UserManager.isAuthorized) {
                     newFragment = ProfileFragment()
                     tag = "profile"
@@ -241,7 +241,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         if (UserManager.isAuthorized) {
             val headerView = navigationView.inflateHeaderView(R.layout.item_navigation_profile)
             headerView.setOnClickListener {
-                onNavigationItemSelected(navigationView.menu.findItem(R.id.navigation_profile))
+                onNavigationItemSelected(navigationView.menu.findItem(R.id.navigation_login))
             }
 
             viewModel.user?.let { user ->
@@ -261,7 +261,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
                     .into(headerView.findViewById(R.id.imgProfile))
             }
 
-            navigationView.menu.findItem(R.id.navigation_profile).isVisible = false
+            navigationView.menu.findItem(R.id.navigation_login).isVisible = false
 
             if (viewModel.unreadAnnouncementsCount > 0) {
                 navigationView.menu.findItem(R.id.navigation_news).setActionView(R.layout.item_navigation_counter).apply {
