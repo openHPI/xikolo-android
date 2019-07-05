@@ -11,10 +11,11 @@ import io.realm.kotlin.where
 
 class UserDao(realm: Realm) : BaseDao<User>(User::class, realm) {
 
-    fun getCurrent(): LiveData<User> = query()
-        .equalTo("id", UserManager.userId)
-        .findFirstAsync()
-        .asLiveData()
+    fun current(): LiveData<User> =
+        query()
+            .equalTo("id", UserManager.userId)
+            .findFirstAsync()
+            .asLiveData()
 
     class Unmanaged {
         companion object {

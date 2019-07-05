@@ -3,6 +3,7 @@ package de.xikolo.viewmodels.main
 import androidx.lifecycle.LiveData
 import de.xikolo.models.User
 import de.xikolo.models.dao.UserDao
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.shared.EnrollmentDelegate
 import de.xikolo.viewmodels.shared.UserDelegate
@@ -15,7 +16,7 @@ class ProfileViewModel : BaseViewModel() {
     private val userDao = UserDao(realm)
 
     val user: LiveData<User> by lazy {
-        userDao.getCurrent()
+        userDao.current()
     }
 
     val enrollments = enrollmentDelegate.enrollments
@@ -25,12 +26,12 @@ class ProfileViewModel : BaseViewModel() {
 
     override fun onFirstCreate() {
         userDelegate.requestUserWithProfile(networkState, false)
-        enrollmentDelegate.requestEnrollmentList(networkState, false)
+        enrollmentDelegate.requestEnrollmentList(NetworkStateLiveData(), false)
     }
 
     override fun onRefresh() {
         userDelegate.requestUserWithProfile(networkState, true)
-        enrollmentDelegate.requestEnrollmentList(networkState, true)
+        enrollmentDelegate.requestEnrollmentList(NetworkStateLiveData(), true)
     }
 
 }

@@ -149,7 +149,7 @@ class LoginFragment : NetworkStateFragment<LoginViewModel>() {
                         hideProgressDialog()
                         activity?.finish()
 
-                        EventBus.getDefault().postSticky(LoginEvent())
+                        EventBus.getDefault().post(LoginEvent())
                     }
                     else                -> handleCode(it.code)
                 }
@@ -191,16 +191,19 @@ class LoginFragment : NetworkStateFragment<LoginViewModel>() {
         hideKeyboard(view)
         val email = editTextEmail.text.toString().trim { it <= ' ' }
         val password = editTextPassword.text.toString()
-        if (isEmailValid(email)) {
-            if (password != "") {
-                showProgressDialog()
-                viewModel.login(email, password)
-            } else {
-                editTextPassword.error = getString(R.string.error_password)
-            }
-        } else {
+
+        if (!isEmailValid(email)) {
             editTextEmail.error = getString(R.string.error_email)
+            return
         }
+
+        if (password.isEmpty()) {
+            editTextPassword.error = getString(R.string.error_password)
+            return
+        }
+
+        showProgressDialog()
+        viewModel.login(email, password)
     }
 
     private fun startSSOLogin() {
