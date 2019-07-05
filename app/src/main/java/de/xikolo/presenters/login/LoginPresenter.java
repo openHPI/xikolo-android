@@ -88,7 +88,7 @@ public class LoginPresenter extends Presenter<LoginView> {
                     getView().hideProgressDialog();
                     getView().finishActivity();
                 }
-                EventBus.getDefault().postSticky(new LoginEvent());
+                EventBus.getDefault().post(new LoginEvent());
             }
 
             @Override
