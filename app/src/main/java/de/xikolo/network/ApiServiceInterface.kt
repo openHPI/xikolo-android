@@ -94,6 +94,9 @@ interface ApiServiceInterface {
     @GET("announcements")
     fun listCourseAnnouncements(@Query("filter[course]") courseId: String): Call<Array<Announcement.JsonModel>>
 
+    @GET("announcements/{id}")
+    fun getAnnouncement(@Path("id") id: String): Call<Announcement.JsonModel>
+
     @PATCH("announcements/{id}")
     fun updateAnnouncement(@Path("id") id: String, @Body item: Announcement.JsonModel): Call<Announcement.JsonModel>
 
