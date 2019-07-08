@@ -95,6 +95,12 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         drawerToggle.syncState()
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        updateDrawer()
+    }
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
