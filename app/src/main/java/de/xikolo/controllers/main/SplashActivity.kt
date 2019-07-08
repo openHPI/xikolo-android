@@ -2,9 +2,7 @@ package de.xikolo.controllers.main
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.DialogFragment
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.*
@@ -22,6 +20,8 @@ class SplashActivity : AppCompatActivity() {
     companion object {
         val TAG: String = SplashActivity::class.java.simpleName
     }
+
+    private var isActivityVisible = false
 
     private val healthCheckCallback: RequestJobCallback
         get() = object : RequestJobCallback() {
@@ -86,9 +86,16 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onResume() {
+        super.onResume()
+        isActivityVisible = true
+
         migrateStorage()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isActivityVisible = false
     }
 
     private fun showApiVersionExpiredDialog() {
@@ -140,8 +147,10 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startApp() {
-        val intent = Intent(this@SplashActivity, MainActivity::class.java)
-        startActivity(intent)
+        if (isActivityVisible) {
+            val intent = Intent(this@SplashActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
         finish()
     }
 
