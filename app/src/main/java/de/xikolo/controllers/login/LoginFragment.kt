@@ -146,10 +146,10 @@ class LoginFragment : NetworkStateFragment<LoginViewModel>() {
             .observe(this) {
                 when (it.code) {
                     NetworkCode.SUCCESS -> {
+                        EventBus.getDefault().post(LoginEvent())
+
                         hideProgressDialog()
                         activity?.finish()
-
-                        EventBus.getDefault().post(LoginEvent())
                     }
                     else                -> handleCode(it.code)
                 }
