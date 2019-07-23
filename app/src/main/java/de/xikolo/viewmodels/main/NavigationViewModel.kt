@@ -20,7 +20,8 @@ class NavigationViewModel : BaseViewModel() {
             R.id.navigation_all_courses
         }
 
-    val user = UserDao.Unmanaged.current
+    val user
+        get() = UserDao.Unmanaged.current
 
     val unreadAnnouncementsCount
         get() = AnnouncementDao.Unmanaged.countNotVisited()

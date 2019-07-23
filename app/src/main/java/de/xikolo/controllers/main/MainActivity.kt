@@ -282,13 +282,13 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         }
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLoginEvent(event: LoginEvent) {
         updateDrawer()
         viewModel.onRefresh()
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLogoutEvent(event: LogoutEvent) {
         updateDrawer()
         viewModel.onRefresh()

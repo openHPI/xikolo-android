@@ -157,7 +157,7 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
                 hideContent()
                 showLoginRequired()
                 return
-            } else if (viewModel.enrollmentCount == 0L) {
+            } else if (!viewModel.hasEnrollments) {
                 hideContent()
                 showNoEnrollmentsMessage()
                 return
