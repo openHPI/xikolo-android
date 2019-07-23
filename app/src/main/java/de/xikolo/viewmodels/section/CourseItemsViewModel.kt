@@ -5,6 +5,7 @@ import de.xikolo.managers.ItemManager
 import de.xikolo.models.Item
 import de.xikolo.models.Section
 import de.xikolo.models.dao.SectionDao
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.shared.CourseDelegate
 import de.xikolo.viewmodels.shared.SectionDelegate
@@ -33,12 +34,12 @@ class CourseItemsViewModel(courseId: String, sectionId: String) : BaseViewModel(
     }
 
     override fun onFirstCreate() {
-        courseDelegate.requestCourse(networkState, false)
+        courseDelegate.requestCourse(NetworkStateLiveData(), false)
         sectionDelegate.requestSectionListWithItems(networkState, false)
     }
 
     override fun onRefresh() {
-        courseDelegate.requestCourse(networkState, true)
+        courseDelegate.requestCourse(NetworkStateLiveData(), true)
         sectionDelegate.requestSectionListWithItems(networkState, true)
     }
 
