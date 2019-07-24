@@ -3,12 +3,13 @@ package de.xikolo.network.jobs
 import android.util.Log
 import de.xikolo.config.Config
 import de.xikolo.network.ApiService
-import de.xikolo.network.jobs.base.RequestJob
-import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.base.ItemSyncHelper
+import de.xikolo.network.jobs.base.NetworkJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.network.sync.Sync
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class GetItemWithContentJob(callback: RequestJobCallback, private val itemId: String) : RequestJob(callback, Precondition.AUTH) {
+class GetItemWithContentJob(private val itemId: String, networkState: NetworkStateLiveData, userRequest: Boolean) : NetworkJob(networkState, userRequest, Precondition.AUTH) {
 
     companion object {
         val TAG: String = GetItemWithContentJob::class.java.simpleName
@@ -21,14 +22,15 @@ class GetItemWithContentJob(callback: RequestJobCallback, private val itemId: St
             if (Config.DEBUG) Log.i(TAG, "Item received")
 
             Sync.Data.with(response.body()!!)
-                    .saveOnly()
-                    .run()
-            syncItemContent(response.body()!!)
+                .saveOnly()
+                .run()
 
-            callback?.success()
+            ItemSyncHelper.syncItemContent(response.body()!!)
+
+            success()
         } else {
-            if (Config.DEBUG) Log.e(TAG, "Error while fetching section list")
-            callback?.error(RequestJobCallback.ErrorCode.ERROR)
+            if (Config.DEBUG) Log.e(TAG, "Error while fetching item")
+            error()
         }
     }
 
