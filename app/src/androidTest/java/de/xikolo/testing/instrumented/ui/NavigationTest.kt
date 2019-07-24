@@ -13,7 +13,7 @@ import de.xikolo.controllers.main.MainActivity
 import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
 import de.xikolo.testing.instrumented.ui.helper.AssertionHelper
 import de.xikolo.testing.instrumented.ui.helper.NavigationHelper
-import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.Companion.WAIT_UI_ANIMATION
+import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_UI_ANIMATION
 import org.hamcrest.Matchers.allOf
 import org.junit.Rule
 import org.junit.Test

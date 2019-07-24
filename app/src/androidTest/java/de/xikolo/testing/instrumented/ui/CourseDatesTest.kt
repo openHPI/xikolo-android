@@ -14,7 +14,7 @@ import de.xikolo.managers.UserManager
 import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
 import de.xikolo.testing.instrumented.ui.helper.AuthorizationHelper
 import de.xikolo.testing.instrumented.ui.helper.NavigationHelper
-import de.xikolo.testing.instrumented.ui.helper.ViewHierarchyHelper.Companion.childAtPosition
+import de.xikolo.testing.instrumented.ui.helper.ViewHierarchyHelper.childAtPosition
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.instanceOf
 import org.junit.After

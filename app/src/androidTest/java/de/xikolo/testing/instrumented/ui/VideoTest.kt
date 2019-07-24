@@ -15,8 +15,8 @@ import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.controllers.video.VideoStreamPlayerFragment
 import de.xikolo.testing.instrumented.mocking.SingleObjects
 import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
-import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.Companion.WAIT_UI_ANIMATION
-import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.Companion.WAIT_UI_LONG
+import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_UI_ANIMATION
+import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_UI_LONG
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.Assert.assertFalse

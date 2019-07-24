@@ -4,26 +4,22 @@ import de.xikolo.managers.UserManager
 import de.xikolo.network.jobs.CreateAccessTokenJob
 import de.xikolo.network.jobs.base.NetworkStateLiveData
 
-class AuthorizationHelper {
+object AuthorizationHelper {
 
-    companion object {
+    const val EMAIL = "credentials@beingmocked.com"
+    const val PASSWORD = "12345678"
 
-        const val EMAIL = "credentials@beingmocked.com"
-        const val PASSWORD = "12345678"
+    fun login() {
+        if (!UserManager.isAuthorized) {
+            CreateAccessTokenJob(EMAIL, PASSWORD, NetworkStateLiveData(), true).run()
 
-        fun login() {
-            if (!UserManager.isAuthorized) {
-                CreateAccessTokenJob(EMAIL, PASSWORD, NetworkStateLiveData(), true).run()
-
-                Thread.sleep(NavigationHelper.WAIT_LOADING_SHORT)
-            }
-        }
-
-        fun logout() {
-            if (UserManager.isAuthorized) {
-                UserManager.logout()
-            }
+            Thread.sleep(NavigationHelper.WAIT_LOADING_SHORT)
         }
     }
 
+    fun logout() {
+        if (UserManager.isAuthorized) {
+            UserManager.logout()
+        }
+    }
 }

@@ -3,7 +3,6 @@ package de.xikolo.testing.instrumented.ui
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -16,7 +15,8 @@ import de.xikolo.managers.UserManager
 import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
 import de.xikolo.testing.instrumented.ui.helper.AuthorizationHelper
 import de.xikolo.testing.instrumented.ui.helper.NavigationHelper
-import de.xikolo.testing.instrumented.ui.helper.ViewHierarchyHelper.Companion.childAtPosition
+import de.xikolo.testing.instrumented.ui.helper.ViewActionHelper
+import de.xikolo.testing.instrumented.ui.helper.ViewHierarchyHelper.childAtPosition
 import org.hamcrest.Matchers.allOf
 import org.junit.*
 
@@ -107,8 +107,7 @@ class MyCoursesTest : BaseMockedTest() {
         cardView.check(
             ViewAssertions.matches(isDisplayed())
         )
-
-        cardView.perform(click())
+        cardView.perform(ViewActionHelper.clickIgnoringConstraints())
 
         pressBack()
     }

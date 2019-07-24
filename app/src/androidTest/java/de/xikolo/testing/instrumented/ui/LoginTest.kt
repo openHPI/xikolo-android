@@ -12,7 +12,7 @@ import de.xikolo.controllers.login.LoginActivity
 import de.xikolo.managers.UserManager
 import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
 import de.xikolo.testing.instrumented.ui.helper.AuthorizationHelper
-import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.Companion.WAIT_LOADING_SHORT
+import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_LOADING_SHORT
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
 import org.junit.After
