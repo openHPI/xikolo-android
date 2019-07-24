@@ -5,7 +5,7 @@ import androidx.test.filters.SmallTest
 import androidx.test.rule.ActivityTestRule
 import de.xikolo.controllers.base.ViewModelCreationInterface
 import de.xikolo.controllers.main.SplashActivity
-import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
+import de.xikolo.testing.instrumented.mocking.base.BaseTest
 import de.xikolo.viewmodels.base.BaseViewModel
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -14,7 +14,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @SmallTest
-class ViewModelTest : BaseMockedTest(), ViewModelCreationInterface<ViewModelTest.TestViewModel> {
+class ViewModelTest : BaseTest(), ViewModelCreationInterface<ViewModelTest.TestViewModel> {
 
     @Rule
     @JvmField
