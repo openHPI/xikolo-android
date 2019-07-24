@@ -1,8 +1,6 @@
 package de.xikolo.models.dao
 
-import androidx.lifecycle.LiveData
 import de.xikolo.extensions.asCopy
-import de.xikolo.extensions.asLiveData
 import de.xikolo.models.*
 import de.xikolo.models.Item.*
 import de.xikolo.models.dao.base.BaseDao
@@ -22,18 +20,6 @@ class ItemDao(realm: Realm) : BaseDao<Item>(Item::class, realm) {
 
     fun allAccessibleForSection(sectionId: String?) =
         all("sectionId" to sectionId, "accessible" to true)
-
-    fun findContent(id: String?): LiveData<RealmObject>? {
-        val item = Unmanaged.find(id)
-        return when (item?.contentType) {
-            TYPE_TEXT  -> realm.where<RichText>().equalTo("id", item.contentId).findFirstAsync()?.asLiveData()
-            TYPE_VIDEO -> realm.where<Video>().equalTo("id", item.contentId).findFirstAsync()?.asLiveData()
-            TYPE_QUIZ  -> realm.where<Quiz>().equalTo("id", item.contentId).findFirstAsync()?.asLiveData()
-            TYPE_LTI   -> realm.where<LtiExercise>().equalTo("id", item.contentId).findFirstAsync()?.asLiveData()
-            TYPE_PEER  -> realm.where<PeerAssessment>().equalTo("id", item.contentId).findFirstAsync()?.asLiveData()
-            else       -> null
-        }
-    }
 
     class Unmanaged {
         companion object {
