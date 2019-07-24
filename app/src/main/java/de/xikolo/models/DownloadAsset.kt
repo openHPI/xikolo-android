@@ -7,7 +7,7 @@ import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
 import java.io.File
 
-sealed class DownloadAsset(val url: String?, open val fileName: String, var storage: File = StorageUtil.getStorage(App.instance)) {
+open class DownloadAsset(val url: String?, open val fileName: String, var storage: File = StorageUtil.getStorage(App.instance)) {
 
     // must not end with separator and always have a getter function, otherwise dynamic storage changes will not work
     protected open val fileFolder: String
