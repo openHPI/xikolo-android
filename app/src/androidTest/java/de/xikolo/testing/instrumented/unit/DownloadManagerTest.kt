@@ -8,12 +8,14 @@ import de.xikolo.managers.DownloadManager
 import de.xikolo.models.DownloadAsset
 import de.xikolo.testing.instrumented.mocking.SingleObjects
 import de.xikolo.testing.instrumented.mocking.base.BaseTest
+import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_LOADING_SHORT
 import de.xikolo.utils.StorageUtil
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.io.File
 
 @LargeTest
 class DownloadManagerTest : BaseTest() {
@@ -24,7 +26,7 @@ class DownloadManagerTest : BaseTest() {
     private val TEST_DOWNLOAD_SIZE_SECONDARY: Long = 0L
     private val TEST_DOWNLOAD_ASSET_SECONDARY: DownloadAsset = TestDownloadAsset(
         TEST_DOWNLOAD_URL_SECONDARY,
-        TEST_DOWNLOAD_TITLE,
+        "$TEST_DOWNLOAD_TITLE Secondary",
         TEST_DOWNLOAD_SIZE_SECONDARY,
         mutableSetOf()
     )
@@ -46,7 +48,7 @@ class DownloadManagerTest : BaseTest() {
 
     private fun waitForDownload(manager: DownloadManager, asset: DownloadAsset) {
         while (manager.downloadRunningWithSecondaryAssets(asset)) {
-            Thread.sleep(10)
+            Thread.sleep(WAIT_LOADING_SHORT)
         }
     }
 
@@ -72,7 +74,7 @@ class DownloadManagerTest : BaseTest() {
 
     @Test
     fun testDownloadAndDelete() {
-        val asset = TEST_DOWNLOAD_ASSET_SECONDARY
+        val asset = TEST_DOWNLOAD_ASSET
 
         manager.startAssetDownload(asset)
         Thread.sleep(1000)
@@ -89,7 +91,7 @@ class DownloadManagerTest : BaseTest() {
         assertNotNull(manager.getDownloadFile(asset))
         val file = manager.getDownloadFile(asset)!!
 
-        assertTrue(file.nameWithoutExtension == TEST_DOWNLOAD_TITLE)
+        assertTrue(file.nameWithoutExtension == asset.fileName)
         assertTrue(manager.getFoldersWithDownloads(StorageUtil.getStorage(context)).isNotEmpty())
 
         manager.deleteAssetDownload(asset)
@@ -104,7 +106,7 @@ class DownloadManagerTest : BaseTest() {
         val secondary = asset.secondaryAssets.first()
 
         manager.startAssetDownload(asset)
-        Thread.sleep(1000)
+        Thread.sleep(WAIT_LOADING_SHORT)
 
         assertTrue(manager.downloadRunning(asset))
         assertTrue(manager.downloadRunningWithSecondaryAssets(asset))
@@ -145,7 +147,7 @@ class DownloadManagerTest : BaseTest() {
         val secondary = asset.secondaryAssets.first()
 
         manager.startAssetDownload(asset)
-        Thread.sleep(1000)
+        Thread.sleep(WAIT_LOADING_SHORT)
 
         waitForDownload(manager, asset)
 
@@ -163,7 +165,7 @@ class DownloadManagerTest : BaseTest() {
         val secondary = asset.secondaryAssets.first()
 
         manager.startAssetDownload(asset)
-        Thread.sleep(1000)
+        Thread.sleep(WAIT_LOADING_SHORT)
 
         assertTrue(manager.downloadRunning(asset))
         assertTrue(manager.downloadRunningWithSecondaryAssets(asset))
@@ -180,7 +182,10 @@ class DownloadManagerTest : BaseTest() {
         assertNull(manager.getDownloadFile(secondary))
     }
 
-    class TestDownloadAsset(url: String?, assetTitle: String, assetSize: Long, secondaries: MutableSet<DownloadAsset>) : DownloadAsset(url, assetTitle) {
+    class TestDownloadAsset(url: String?, private val assetTitle: String, assetSize: Long, secondaries: MutableSet<DownloadAsset>) : DownloadAsset(url, assetTitle) {
+
+        override val fileFolder: String
+            get() = super.fileFolder + File.separator + assetTitle
 
         override val title = assetTitle
 
