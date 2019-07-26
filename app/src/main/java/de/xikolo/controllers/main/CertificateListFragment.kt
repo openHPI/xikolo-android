@@ -1,8 +1,6 @@
 package de.xikolo.controllers.main
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -100,32 +98,25 @@ class CertificateListFragment : ViewModelMainFragment<CertificateListViewModel>(
 
     private fun showLoginRequired() {
         showLoginRequired {
-            activityCallback?.selectDrawerSection(NavigationAdapter.NAV_PROFILE.position)
+            activityCallback?.selectDrawerSection(R.id.navigation_login)
         }
     }
 
     private fun showNoCertificatesMessage() {
         showMessage(R.string.notification_no_certificates, R.string.notification_no_certificates_summary) {
-            activityCallback?.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.position)
+            activityCallback?.selectDrawerSection(R.id.navigation_all_courses)
         }
     }
 
     override fun onStart() {
         super.onStart()
-
-        activityCallback?.onFragmentAttached(NavigationAdapter.NAV_CERTIFICATES.position, getString(R.string.title_section_certificates))
+        activityCallback?.onFragmentAttached(R.id.navigation_certificates)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
         EventBus.getDefault().unregister(this)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (activityCallback?.isDrawerOpen == false) {
-            inflater?.inflate(R.menu.refresh, menu)
-        }
     }
 
     @Suppress("UNUSED_PARAMETER")

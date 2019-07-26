@@ -83,7 +83,7 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
             },
             object : CourseListAdapter.OnDateOverviewClickListener {
                 override fun onDateOverviewClicked() {
-                    activityCallback?.selectDrawerSection(NavigationAdapter.NAV_DATES.position)
+                    activityCallback?.selectDrawerSection(R.id.navigation_dates)
                 }
             }
         )
@@ -139,9 +139,9 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         super.onStart()
 
         if (filter === CourseListFilter.ALL) {
-            activityCallback?.onFragmentAttached(NavigationAdapter.NAV_ALL_COURSES.position, getString(R.string.title_section_all_courses))
+            activityCallback?.onFragmentAttached(R.id.navigation_all_courses)
         } else {
-            activityCallback?.onFragmentAttached(NavigationAdapter.NAV_MY_COURSES.position, getString(R.string.title_section_my_courses))
+            activityCallback?.onFragmentAttached(R.id.navigation_my_courses)
         }
     }
 
@@ -157,7 +157,7 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
                 hideContent()
                 showLoginRequired()
                 return
-            } else if (viewModel.enrollmentCount == 0L) {
+            } else if (!viewModel.hasEnrollments) {
                 hideContent()
                 showNoEnrollmentsMessage()
                 return
@@ -172,24 +172,23 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (activityCallback?.isDrawerOpen == false) {
-            inflater?.inflate(R.menu.refresh, menu)
-            inflater?.inflate(R.menu.search, menu)
+        super.onCreateOptionsMenu(menu, inflater)
 
-            val searchView = menu?.findItem(R.id.search)?.actionView as SearchView
-            searchView.setIconifiedByDefault(false)
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    onSearch(query)
-                    return false
-                }
+        inflater?.inflate(R.menu.search, menu)
 
-                override fun onQueryTextChange(newText: String): Boolean {
-                    onSearch(newText)
-                    return false
-                }
-            })
-        }
+        val searchView = menu?.findItem(R.id.search)?.actionView as SearchView
+        searchView.setIconifiedByDefault(false)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                onSearch(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                onSearch(newText)
+                return false
+            }
+        })
     }
 
     fun onSearch(query: String?) {
@@ -253,13 +252,13 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
 
     private fun showLoginRequired() {
         showLoginRequired {
-            activityCallback?.selectDrawerSection(NavigationAdapter.NAV_PROFILE.position)
+            activityCallback?.selectDrawerSection(R.id.navigation_login)
         }
     }
 
     private fun showNoEnrollmentsMessage() {
         showMessage(R.string.notification_no_enrollments, R.string.notification_no_enrollments_summary) {
-            activityCallback?.selectDrawerSection(NavigationAdapter.NAV_ALL_COURSES.position)
+            activityCallback?.selectDrawerSection(R.id.navigation_all_courses)
         }
     }
 

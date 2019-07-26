@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
 import butterknife.BindView;
 import de.xikolo.App;
 import de.xikolo.R;
@@ -90,7 +91,7 @@ public class ProfileFragment extends PresenterMainFragment<ProfilePresenter, Pro
     }
 
     private void showHeader(Profile profile) {
-        getActivityCallback().onFragmentAttached(NavigationAdapter.NAV_PROFILE.getPosition(), profile.firstName + " " + profile.lastName);
+        getActivityCallback().onFragmentAttached(R.id.navigation_login, profile.firstName + " " + profile.lastName);
     }
 
     @Override

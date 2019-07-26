@@ -1,6 +1,7 @@
 package de.xikolo.models.dao
 
 import de.xikolo.extensions.asCopy
+import de.xikolo.managers.UserManager
 import de.xikolo.models.User
 import de.xikolo.models.dao.base.BaseDao
 import io.realm.Realm
@@ -16,6 +17,15 @@ class UserDao(realm: Realm) : BaseDao<User>(User::class, realm) {
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<User>()
                         .equalTo("id", id)
+                        .findFirst()
+                        ?.asCopy()
+                }
+
+            @JvmStatic
+            val current: User? =
+                Realm.getDefaultInstance().use { realm ->
+                    realm.where<User>()
+                        .equalTo("id", UserManager.userId)
                         .findFirst()
                         ?.asCopy()
                 }

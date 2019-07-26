@@ -1,13 +1,11 @@
 package de.xikolo.controllers.main
 
+import androidx.annotation.IdRes
+
 interface MainActivityCallback {
 
-    val isDrawerOpen: Boolean
+    fun onFragmentAttached(@IdRes itemId: Int, title: String? = null)
 
-    fun onFragmentAttached(id: Int, title: String)
-
-    fun updateDrawer()
-
-    fun selectDrawerSection(pos: Int)
+    fun selectDrawerSection(@IdRes itemId: Int)
 
 }

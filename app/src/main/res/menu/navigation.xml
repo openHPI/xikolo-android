@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/navigation_group_login"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_login"
+            android:icon="@drawable/ic_nav_profile"
+            android:title="@string/title_section_login" />
+    </group>
+
+    <group
+        android:id="@+id/navigation_group_main"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_channels"
+            android:icon="@drawable/ic_nav_channels"
+            android:title="@string/title_section_channels" />
+        <item
+            android:id="@+id/navigation_all_courses"
+            android:icon="@drawable/ic_nav_all_courses"
+            android:title="@string/title_section_all_courses" />
+        <item
+            android:id="@+id/navigation_my_courses"
+            android:icon="@drawable/ic_nav_my_courses"
+            android:title="@string/title_section_my_courses" />
+        <item
+            android:id="@+id/navigation_dates"
+            android:icon="@drawable/ic_nav_dates"
+            android:title="@string/title_section_dates" />
+        <item
+            android:id="@+id/navigation_news"
+            android:icon="@drawable/ic_nav_news"
+            android:title="@string/title_section_news" />
+        <item
+            android:id="@+id/navigation_certificates"
+            android:icon="@drawable/ic_nav_certificates"
+            android:title="@string/title_section_certificates" />
+    </group>
+
+    <group
+        android:id="@+id/navigation_group_sub"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_second_screen"
+            android:icon="@drawable/ic_nav_second_screen"
+            android:title="@string/title_section_second_screen" />
+        <item
+            android:id="@+id/navigation_downloads"
+            android:icon="@drawable/ic_nav_downloads"
+            android:title="@string/title_section_downloads" />
+        <item
+            android:id="@+id/navigation_settings"
+            android:icon="@drawable/ic_nav_settings"
+            android:title="@string/title_section_settings" />
+    </group>
+
+</menu>

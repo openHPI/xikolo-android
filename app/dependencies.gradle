@@ -78,6 +78,7 @@ dependencies {
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.work:work-runtime-ktx:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
     // local libraries
     implementation project(path: ":lanalytics", configuration: "default")

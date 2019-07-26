@@ -20,8 +20,8 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
     private val courseListDelegate = CourseListDelegate(realm)
     private val dateListDelegate = DateListDelegate(realm)
 
-    val enrollmentCount
-        get() = EnrollmentDao.Unmanaged.count()
+    val hasEnrollments
+        get() = EnrollmentDao.Unmanaged.count() > 0
 
     val courses = courseListDelegate.courses
 
