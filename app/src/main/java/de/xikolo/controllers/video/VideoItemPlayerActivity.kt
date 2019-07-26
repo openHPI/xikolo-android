@@ -58,7 +58,7 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
     }
 
     private fun updateDescriptionFragment() {
-        descriptionFragment = VideoDescriptionFragment(courseId, sectionId, itemId, videoId)
+        descriptionFragment = VideoDescriptionFragment(itemId, videoId)
 
         val fragmentTag = descriptionFragment.hashCode().toString()
         val fragmentManager = supportFragmentManager

@@ -3,27 +3,29 @@ package de.xikolo.controllers.section
 import android.content.res.Configuration
 import android.graphics.Point
 import android.os.Bundle
-import android.view.*
+import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.GlideApp
-import de.xikolo.controllers.base.LoadingStatePresenterFragment
+import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.controllers.video.VideoItemPlayerActivityAutoBundle
-import de.xikolo.models.*
-import de.xikolo.presenters.base.PresenterFactory
-import de.xikolo.presenters.section.VideoPreviewPresenter
-import de.xikolo.presenters.section.VideoPreviewPresenterFactory
-import de.xikolo.presenters.section.VideoPreviewView
+import de.xikolo.extensions.observe
+import de.xikolo.models.DownloadAsset
+import de.xikolo.models.Item
+import de.xikolo.models.Video
 import de.xikolo.utils.CastUtil
 import de.xikolo.utils.DisplayUtil
+import de.xikolo.utils.LanalyticsUtil
+import de.xikolo.viewmodels.section.VideoPreviewViewModel
 import de.xikolo.views.CustomSizeImageView
 import java.util.concurrent.TimeUnit
 
-class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter, VideoPreviewView>(), VideoPreviewView {
+class VideoPreviewFragment : NetworkStateFragment<VideoPreviewViewModel>() {
 
     companion object {
         val TAG: String = VideoPreviewFragment::class.java.simpleName
@@ -61,13 +63,17 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
 
     private var downloadViewHelpers: MutableList<DownloadViewHelper> = ArrayList()
 
+    private var video: Video? = null
+
+    override val layoutResource = R.layout.content_video
+
+    override fun createViewModel(): VideoPreviewViewModel {
+        return VideoPreviewViewModel(itemId)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    override fun getLayoutResource(): Int {
-        return R.layout.content_video
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,10 +91,18 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
                 videoMetadata.layoutParams = paramsMeta
             }
         }
+
+        viewModel.item
+            .observe(this) { item ->
+                this.video = viewModel.video
+                video?.let { video ->
+                    updateView(item, video)
+                    showContent()
+                }
+            }
     }
 
-    override fun setupView(course: Course, section: Section, item: Item, video: Video) {
-        hideProgress()
+    private fun updateView(item: Item, video: Video) {
         viewContainer.visibility = View.VISIBLE
 
         GlideApp.with(this)
@@ -108,7 +122,7 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
                     DownloadAsset.Course.Item.VideoHD(item, video),
                     activity.getText(R.string.video_hd_as_mp4)
                 )
-                dvh.onOpenFileClick(R.string.play) { presenter.onPlayClicked() }
+                dvh.onOpenFileClick(R.string.play) { play() }
                 linearLayoutDownloads.addView(dvh.view)
                 downloadViewHelpers.add(dvh)
             }
@@ -119,7 +133,7 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
                     DownloadAsset.Course.Item.VideoSD(item, video),
                     activity.getText(R.string.video_sd_as_mp4)
                 )
-                dvh.onOpenFileClick(R.string.play) { presenter.onPlayClicked() }
+                dvh.onOpenFileClick(R.string.play) { play() }
                 linearLayoutDownloads.addView(dvh.view)
                 downloadViewHelpers.add(dvh)
             }
@@ -149,45 +163,32 @@ class VideoPreviewFragment : LoadingStatePresenterFragment<VideoPreviewPresenter
         val seconds = video.duration - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(video.duration.toLong()))
         textDuration.text = getString(R.string.duration, minutes, seconds)
 
-        viewPlay.setOnClickListener { presenter.onPlayClicked() }
+        viewPlay.setOnClickListener { play() }
     }
 
-    override fun startVideo(video: Video) {
-        activity?.let {
-            val intent = VideoItemPlayerActivityAutoBundle
-                .builder(courseId, sectionId, itemId, video.id)
-                .parentIntent(it.intent)
-                .build(it)
-            startActivity(intent)
-        }
-    }
+    private fun play() {
+        video?.let { video ->
+            if (CastUtil.isConnected()) {
+                LanalyticsUtil.trackVideoPlay(itemId, courseId, sectionId, video.progress, 1.0f,
+                    Configuration.ORIENTATION_LANDSCAPE, "hd", "cast")
 
-    override fun startCast(video: Video) {
-        CastUtil.loadMedia(activity, video, true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.refresh, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.action_refresh -> {
-                presenter.onRefresh()
-                return true
+                CastUtil.loadMedia(activity, video, true)
+            } else {
+                activity?.let {
+                    val intent = VideoItemPlayerActivityAutoBundle
+                        .builder(courseId, sectionId, itemId, video.id)
+                        .parentIntent(it.intent)
+                        .build(it)
+                    startActivity(intent)
+                }
             }
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
 
         downloadViewHelpers.forEach { it.onDestroy() }
-    }
-
-    override fun getPresenterFactory(): PresenterFactory<VideoPreviewPresenter> {
-        return VideoPreviewPresenterFactory(courseId, sectionId, itemId)
     }
 
 }

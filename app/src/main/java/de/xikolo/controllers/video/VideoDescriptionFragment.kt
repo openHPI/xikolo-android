@@ -9,9 +9,9 @@ import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.extensions.observe
 import de.xikolo.utils.MarkdownUtil
-import de.xikolo.viewmodels.video.VideoViewModel
+import de.xikolo.viewmodels.section.VideoDescriptionViewModel
 
-class VideoDescriptionFragment(var courseId: String, var sectionId: String, var itemId: String, var videoId: String) : NetworkStateFragment<VideoViewModel>() {
+class VideoDescriptionFragment(val itemId: String, val videoId: String) : NetworkStateFragment<VideoDescriptionViewModel>() {
 
     companion object {
         val TAG: String = VideoDescriptionFragment::class.java.simpleName
@@ -28,8 +28,8 @@ class VideoDescriptionFragment(var courseId: String, var sectionId: String, var 
 
     override val layoutResource = R.layout.content_video_description
 
-    override fun createViewModel(): VideoViewModel {
-        return VideoViewModel(courseId, sectionId, itemId, videoId)
+    override fun createViewModel(): VideoDescriptionViewModel {
+        return VideoDescriptionViewModel(itemId, videoId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,8 +70,4 @@ class VideoDescriptionFragment(var courseId: String, var sectionId: String, var 
             }
     }
 
-    override fun onRefresh() {
-        // ToDo remove this when Items are refactored to ViewModel
-        hideAnyProgress()
-    }
 }

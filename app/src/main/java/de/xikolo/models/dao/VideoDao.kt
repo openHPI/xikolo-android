@@ -11,6 +11,7 @@ class VideoDao(realm: Realm) : BaseDao<Video>(Video::class, realm) {
     class Unmanaged {
         companion object {
 
+            // Refactor all accesses of this to `ItemDao.Unmanaged.findContent(id) as Video?` at some point
             @JvmStatic
             fun find(id: String?): Video? =
                 Realm.getDefaultInstance().use { realm ->

@@ -45,7 +45,7 @@ class ItemDao(realm: Realm) : BaseDao<Item>(Item::class, realm) {
                         TYPE_PEER  -> realm.where<PeerAssessment>().equalTo("id", item.contentId).findFirst()?.asCopy()
                         else       -> null
                     }
-            }
+                }
 
             @JvmStatic
             fun allAccessibleForSection(sectionId: String?): List<Item> =
