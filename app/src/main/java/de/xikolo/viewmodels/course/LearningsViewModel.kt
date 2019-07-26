@@ -3,10 +3,12 @@ package de.xikolo.viewmodels.course
 import androidx.lifecycle.LiveData
 import de.xikolo.models.Item
 import de.xikolo.models.dao.ItemDao
-import de.xikolo.network.jobs.ListSectionsWithItemsJob
 import de.xikolo.viewmodels.base.BaseViewModel
+import de.xikolo.viewmodels.shared.SectionDelegate
 
 open class LearningsViewModel(private val courseId: String) : BaseViewModel() {
+
+    private val sectionDelegate = SectionDelegate(realm, courseId)
 
     private val itemsDao = ItemDao(realm)
 
@@ -15,15 +17,11 @@ open class LearningsViewModel(private val courseId: String) : BaseViewModel() {
     }
 
     override fun onFirstCreate() {
-        requestSectionListWithItems(false)
+        sectionDelegate.requestSectionListWithItems(networkState, false)
     }
 
     override fun onRefresh() {
-        requestSectionListWithItems(true)
-    }
-
-    private fun requestSectionListWithItems(userRequest: Boolean) {
-        ListSectionsWithItemsJob(courseId, networkState, userRequest).run()
+        sectionDelegate.requestSectionListWithItems(networkState, true)
     }
 }
 
