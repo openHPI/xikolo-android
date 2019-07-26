@@ -29,9 +29,14 @@ object DisplayUtil {
         return dpHeight >= 720 || dpWidth >= 720
     }
 
+    fun getDisplaySize(activity: Activity?): Point {
+        val size = Point(0, 0)
+        activity?.windowManager?.defaultDisplay?.getSize(size)
+        return size
+    }
+
     fun getVideoThumbnailSize(activity: Activity): Point {
-        var size = Point()
-        activity.windowManager.defaultDisplay.getSize(size)
+        var size = getDisplaySize(activity)
         size = if (activity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             Point(size.x, size.x / 16 * 9)
         } else {
@@ -43,7 +48,7 @@ object DisplayUtil {
     fun getAspectRatio(activity: Activity): Float {
         val displayMetrics = DisplayMetrics()
         activity.windowManager.defaultDisplay.getRealMetrics(displayMetrics)
-        return if(activity.resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        return if (activity.resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {
             displayMetrics.heightPixels.toFloat() / displayMetrics.widthPixels
         } else {
             displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels

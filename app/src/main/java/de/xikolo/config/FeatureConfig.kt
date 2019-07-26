@@ -35,4 +35,9 @@ object FeatureConfig {
     val PIP =
         Build.VERSION.SDK_INT >= 26 && App.instance.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
 
+    val SSO_LOGIN =
+        BuildConfig.X_FLAVOR === BuildFlavor.OPEN_WHO ||
+        BuildConfig.X_FLAVOR === BuildFlavor.OPEN_SAP ||
+        BuildConfig.X_FLAVOR === BuildFlavor.OPEN_HPI
+
 }

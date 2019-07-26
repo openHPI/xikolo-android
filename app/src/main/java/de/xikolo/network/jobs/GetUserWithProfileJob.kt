@@ -4,13 +4,13 @@ import android.util.Log
 import de.xikolo.config.Config
 import de.xikolo.models.Profile
 import de.xikolo.network.ApiService
-import de.xikolo.network.jobs.base.RequestJob
-import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.base.NetworkJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.network.sync.Sync
 import de.xikolo.storages.UserStorage
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class GetUserWithProfileJob(callback: RequestJobCallback) : RequestJob(callback, Precondition.AUTH) {
+class GetUserWithProfileJob(networkState: NetworkStateLiveData, userRequest: Boolean) : NetworkJob(networkState, userRequest, Precondition.AUTH) {
 
     companion object {
         val TAG: String = GetUserWithProfileJob::class.java.simpleName
@@ -28,10 +28,10 @@ class GetUserWithProfileJob(callback: RequestJobCallback) : RequestJob(callback,
             Sync.Data.with(response.body()!!).run()
             Sync.Included.with<Profile>(response.body()!!).run()
 
-            callback?.success()
+            success()
         } else {
             if (Config.DEBUG) Log.e(TAG, "Error while fetching user")
-            callback?.error(RequestJobCallback.ErrorCode.ERROR)
+            error()
         }
     }
 
