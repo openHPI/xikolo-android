@@ -4,8 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.*
 import de.xikolo.network.jobs.CheckHealthJob
@@ -88,6 +88,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         migrateStorage()
     }
 
@@ -140,8 +141,10 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startApp() {
-        val intent = Intent(this@SplashActivity, MainActivity::class.java)
-        startActivity(intent)
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            val intent = Intent(this@SplashActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
         finish()
     }
 
