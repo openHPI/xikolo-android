@@ -73,7 +73,7 @@ class ProfileFragment : ViewModelMainFragment<ProfileViewModel>() {
             user.profile.lastName
         )
 
-        activityCallback?.onFragmentAttached(NavigationAdapter.NAV_PROFILE.position, userTitle)
+        activityCallback?.onFragmentAttached(R.id.navigation_login, userTitle)
 
         textName.text = userTitle
         textEmail.text = user.profile.email
