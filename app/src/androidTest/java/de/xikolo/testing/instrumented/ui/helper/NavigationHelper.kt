@@ -5,10 +5,10 @@ import androidx.annotation.IntegerRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.matcher.ViewMatchers.*
+import com.google.android.material.navigation.NavigationView
 import de.xikolo.R
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 
 object NavigationHelper {
@@ -60,7 +60,10 @@ object NavigationHelper {
         openNavigation(context)
 
         val itemButton = onView(
-            ViewMatchers.withText(context.getString(withText))
+            allOf(
+                withText(context.getString(withText)),
+                isDescendantOfA(Matchers.instanceOf(NavigationView::class.java))
+            )
         )
 
         itemButton.perform(ViewActions.click())
@@ -83,7 +86,7 @@ object NavigationHelper {
 
         val refreshView = onView(
             allOf(
-                ViewMatchers.withText(context.getString(R.string.action_refresh)),
+                withText(context.getString(R.string.action_refresh)),
                 isDisplayed()
             )
         )

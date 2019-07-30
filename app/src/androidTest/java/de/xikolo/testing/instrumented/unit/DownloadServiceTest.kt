@@ -18,8 +18,8 @@ import java.io.File
 class DownloadServiceTest : BaseTest() {
 
     private val TEST_DOWNLOAD_TITLE: String = DownloadServiceTest::class.java.simpleName
-    private val TEST_DOWNLOAD_URL: String = SingleObjects.testVideoStream.hdUrl
-    private val TEST_DOWNLOAD_SIZE: Long = SingleObjects.testVideoStream.hdSize.toLong()
+    private val TEST_DOWNLOAD_URL: String = SingleObjects.testVideoStreamHdUrl
+    private val TEST_DOWNLOAD_SIZE: Long = SingleObjects.testVideoStreamHdSize.toLong()
     private val TEST_DOWNLOAD_PATH: String = StorageUtil.getStorage(context).absolutePath + File.separator + "test"
     private val TEST_DOWNLOAD_BUNDLE: Bundle = Bundle().let { bundle ->
         bundle.putString(DownloadService.ARG_TITLE, TEST_DOWNLOAD_TITLE)

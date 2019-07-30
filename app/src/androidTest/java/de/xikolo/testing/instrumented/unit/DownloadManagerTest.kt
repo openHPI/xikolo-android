@@ -22,7 +22,7 @@ class DownloadManagerTest : BaseTest() {
 
     private val TEST_DOWNLOAD_TITLE: String = DownloadManagerTest::class.java.simpleName
 
-    private val TEST_DOWNLOAD_URL_SECONDARY: String = SingleObjects.testVideoStream.thumbnailUrl
+    private val TEST_DOWNLOAD_URL_SECONDARY: String = SingleObjects.testVideoStreamThumbnailUrl
     private val TEST_DOWNLOAD_SIZE_SECONDARY: Long = 0L
     private val TEST_DOWNLOAD_ASSET_SECONDARY: DownloadAsset = TestDownloadAsset(
         TEST_DOWNLOAD_URL_SECONDARY,
@@ -31,8 +31,8 @@ class DownloadManagerTest : BaseTest() {
         mutableSetOf()
     )
 
-    private val TEST_DOWNLOAD_URL: String = SingleObjects.testVideoStream.sdUrl
-    private val TEST_DOWNLOAD_SIZE: Long = SingleObjects.testVideoStream.sdSize.toLong()
+    private val TEST_DOWNLOAD_URL: String = SingleObjects.testVideoStreamSdUrl
+    private val TEST_DOWNLOAD_SIZE: Long = SingleObjects.testVideoStreamSdSize.toLong()
     private val TEST_DOWNLOAD_ASSET: DownloadAsset = TestDownloadAsset(
         TEST_DOWNLOAD_URL,
         TEST_DOWNLOAD_TITLE,

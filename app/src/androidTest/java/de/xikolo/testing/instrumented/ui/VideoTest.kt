@@ -73,14 +73,14 @@ class VideoTest : BaseMockedTest() {
             )
         )
 
+        ui.perform(
+            click()
+        )
+
         val controls = onView(
             allOf(
                 withId(R.id.controlsContainer)
             )
-        )
-
-        ui.perform(
-            click()
         )
 
         controls.check(
