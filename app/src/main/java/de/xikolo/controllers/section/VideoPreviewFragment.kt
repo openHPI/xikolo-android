@@ -93,7 +93,7 @@ class VideoPreviewFragment : NetworkStateFragment<VideoPreviewViewModel>() {
         }
 
         viewModel.item
-            .observe(this) { item ->
+            .observe(viewLifecycleOwner) { item ->
                 this.video = viewModel.video
                 video?.let { video ->
                     updateView(item, video)

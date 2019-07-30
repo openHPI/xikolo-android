@@ -55,13 +55,13 @@ class ProfileFragment : ViewModelMainFragment<ProfileViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.user
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 showUser(it)
                 showContent()
             }
 
         viewModel.enrollments
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 updateEnrollmentCount(viewModel.enrollmentCount)
             }
     }

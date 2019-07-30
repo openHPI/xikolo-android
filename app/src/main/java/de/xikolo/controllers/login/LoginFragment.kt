@@ -135,7 +135,7 @@ class LoginFragment : NetworkStateFragment<LoginViewModel>() {
         }
 
         viewModel.loginNetworkState
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 when (it.code) {
                     NetworkCode.SUCCESS -> viewModel.requestUserWithProfile()
                     else                -> handleCode(it.code)
@@ -143,7 +143,7 @@ class LoginFragment : NetworkStateFragment<LoginViewModel>() {
             }
 
         viewModel.profileNetworkState
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 when (it.code) {
                     NetworkCode.SUCCESS -> {
                         EventBus.getDefault().post(LoginEvent())

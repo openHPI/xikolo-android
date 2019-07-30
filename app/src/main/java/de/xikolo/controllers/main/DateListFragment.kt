@@ -64,7 +64,7 @@ class DateListFragment : ViewModelMainFragment<DateListViewModel>() {
         recyclerView.adapter = adapter
 
         viewModel.dates
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 if (UserManager.isAuthorized) {
                     if (it.isNotEmpty()) {
                         showDateList(viewModel.sectionedDateList)

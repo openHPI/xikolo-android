@@ -45,10 +45,10 @@ class DocumentListFragment : NetworkStateFragment<DocumentListViewModel>() {
         }
 
         viewModel.documentsForCourse
-            .observe(this) { showDocuments() }
+            .observe(viewLifecycleOwner) { showDocuments() }
 
         viewModel.localizations
-            .observe(this) { showDocuments() }
+            .observe(viewLifecycleOwner) { showDocuments() }
     }
 
     private fun showDocuments() {

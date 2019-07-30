@@ -69,7 +69,7 @@ class LearningsFragment : NetworkStateFragment<LearningsViewModel>(), SectionLis
         ))
 
         viewModel.accessibleItems
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 setupSections(SectionDao.Unmanaged.allForCourse(courseId))
                 showContent()
             }
