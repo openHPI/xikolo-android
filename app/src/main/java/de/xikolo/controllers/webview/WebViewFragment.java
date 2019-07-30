@@ -6,30 +6,29 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Browser;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 
+import androidx.annotation.Nullable;
+
 import com.crashlytics.android.Crashlytics;
 import com.yatatsu.autobundle.AutoBundleField;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
-import de.xikolo.controllers.base.LoadingStatePresenterFragment;
+import de.xikolo.controllers.base.NetworkStateFragment;
 import de.xikolo.controllers.helper.WebViewHelper;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
-import de.xikolo.presenters.base.LoadingStatePresenter;
-import de.xikolo.presenters.base.PresenterFactory;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
+import de.xikolo.viewmodels.base.NullViewModel;
 
-public class WebViewFragment extends LoadingStatePresenterFragment implements WebViewInterface {
+public class WebViewFragment extends NetworkStateFragment<NullViewModel> {
 
     public static final String TAG = WebViewFragment.class.getSimpleName();
 
@@ -42,6 +41,12 @@ public class WebViewFragment extends LoadingStatePresenterFragment implements We
     private WebViewHelper webViewHelper;
 
     private MutableContextWrapper mutableContextWrapper;
+
+    @NotNull
+    @Override
+    public NullViewModel createViewModel() {
+        return new NullViewModel();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +84,7 @@ public class WebViewFragment extends LoadingStatePresenterFragment implements We
         super.onViewCreated(view, savedInstanceState);
 
         if (!NetworkUtil.isOnline()) {
-            showNetworkRequiredMessage();
+            showNetworkRequired();
         } else if (webViewHelper.requestedUrl() == null) {
             webViewHelper.request(url);
         } else {
@@ -104,11 +109,6 @@ public class WebViewFragment extends LoadingStatePresenterFragment implements We
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.refresh, menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
@@ -123,21 +123,14 @@ public class WebViewFragment extends LoadingStatePresenterFragment implements We
         ToastUtil.show(R.string.notification_url_invalid);
     }
 
-    public void showErrorToast(String message) {
-        ToastUtil.show("An error occurred: " + message);
-    }
-
-    @Override
     public boolean inAppLinksEnabled() {
         return inAppLinksEnabled;
     }
 
-    @Override
     public boolean externalLinksEnabled() {
         return externalLinksEnabled;
     }
 
-    @Override
     public void openUrlInBrowser(Uri uri, String token) {
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         if (token != null) {
@@ -148,7 +141,6 @@ public class WebViewFragment extends LoadingStatePresenterFragment implements We
         getActivity().startActivity(i);
     }
 
-    @Override
     public void interceptSSOLogin(String token) {
         Intent intent = LoginActivityAutoBundle.builder().token(token).build(getActivity());
         getActivity().startActivity(intent);
@@ -161,16 +153,6 @@ public class WebViewFragment extends LoadingStatePresenterFragment implements We
         } else {
             webViewHelper.request(url);
         }
-    }
-
-    // quite hacky, we want the loading state capabilities but don't need a presenter
-    @NonNull
-    @Override
-    protected PresenterFactory getPresenterFactory() {
-        return () -> new LoadingStatePresenter() {
-            @Override
-            public void onRefresh() { }
-        };
     }
 
 }
