@@ -8,6 +8,9 @@ import org.hamcrest.Matcher
 
 object ViewActionHelper {
 
+    /**
+     * Clicks a view regardless of visibility and other constraints.
+     */
     fun clickIgnoringConstraints(): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> {

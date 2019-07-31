@@ -14,16 +14,16 @@ import org.junit.Rule
 import org.junit.Test
 
 @SmallTest
-class ViewModelTest : BaseTest(), ViewModelCreationInterface<ViewModelTest.TestViewModel> {
+class ViewModelTest : BaseTest(), ViewModelCreationInterface<ViewModelTest.MockViewModel> {
 
     @Rule
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java, false, false)
 
-    override lateinit var viewModel: TestViewModel
+    override lateinit var viewModel: MockViewModel
 
-    override fun createViewModel(): TestViewModel {
-        return TestViewModel()
+    override fun createViewModel(): MockViewModel {
+        return MockViewModel()
     }
 
     @Before
@@ -60,7 +60,7 @@ class ViewModelTest : BaseTest(), ViewModelCreationInterface<ViewModelTest.TestV
         assertTrue(viewModel.refreshCount == 2)
     }
 
-    class TestViewModel : BaseViewModel() {
+    class MockViewModel : BaseViewModel() {
 
         var refreshCount = 0
         var firstCreateCalled: Boolean = false

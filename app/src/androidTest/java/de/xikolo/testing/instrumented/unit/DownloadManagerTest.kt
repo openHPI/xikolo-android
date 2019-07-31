@@ -24,7 +24,7 @@ class DownloadManagerTest : BaseTest() {
 
     private val TEST_DOWNLOAD_URL_SECONDARY: String = SingleObjects.testVideoStreamThumbnailUrl
     private val TEST_DOWNLOAD_SIZE_SECONDARY: Long = 0L
-    private val TEST_DOWNLOAD_ASSET_SECONDARY: DownloadAsset = TestDownloadAsset(
+    private val TEST_DOWNLOAD_ASSET_SECONDARY: DownloadAsset = MockDownloadAsset(
         TEST_DOWNLOAD_URL_SECONDARY,
         "$TEST_DOWNLOAD_TITLE Secondary",
         TEST_DOWNLOAD_SIZE_SECONDARY,
@@ -33,7 +33,7 @@ class DownloadManagerTest : BaseTest() {
 
     private val TEST_DOWNLOAD_URL: String = SingleObjects.testVideoStreamSdUrl
     private val TEST_DOWNLOAD_SIZE: Long = SingleObjects.testVideoStreamSdSize.toLong()
-    private val TEST_DOWNLOAD_ASSET: DownloadAsset = TestDownloadAsset(
+    private val TEST_DOWNLOAD_ASSET: DownloadAsset = MockDownloadAsset(
         TEST_DOWNLOAD_URL,
         TEST_DOWNLOAD_TITLE,
         TEST_DOWNLOAD_SIZE,
@@ -182,7 +182,7 @@ class DownloadManagerTest : BaseTest() {
         assertNull(manager.getDownloadFile(secondary))
     }
 
-    class TestDownloadAsset(url: String?, private val assetTitle: String, assetSize: Long, secondaries: MutableSet<DownloadAsset>) : DownloadAsset(url, assetTitle) {
+    class MockDownloadAsset(url: String?, private val assetTitle: String, assetSize: Long, secondaries: MutableSet<DownloadAsset>) : DownloadAsset(url, assetTitle) {
 
         override val fileFolder: String
             get() = super.fileFolder + File.separator + assetTitle
