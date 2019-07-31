@@ -13,7 +13,7 @@ import de.xikolo.R
 import de.xikolo.controllers.video.VideoStreamPlayerActivity
 import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.controllers.video.VideoStreamPlayerFragment
-import de.xikolo.testing.instrumented.mocking.SingleObjects
+import de.xikolo.testing.instrumented.mocking.SampleMockData
 import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
 import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_UI_ANIMATION
 import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_UI_LONG
@@ -38,7 +38,7 @@ class VideoTest : BaseMockedTest() {
     @Before
     fun startActivity() {
         activityTestRule.launchActivity(
-            VideoStreamPlayerActivityAutoBundle.builder(SingleObjects.testVideoStream).build(context)
+            VideoStreamPlayerActivityAutoBundle.builder(SampleMockData.mockVideoStream).build(context)
         )
 
         activity = activityTestRule.activity as VideoStreamPlayerActivity

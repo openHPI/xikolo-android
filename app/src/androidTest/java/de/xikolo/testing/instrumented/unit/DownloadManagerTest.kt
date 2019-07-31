@@ -6,7 +6,7 @@ import androidx.test.rule.ActivityTestRule
 import de.xikolo.controllers.main.SplashActivity
 import de.xikolo.managers.DownloadManager
 import de.xikolo.models.DownloadAsset
-import de.xikolo.testing.instrumented.mocking.SingleObjects
+import de.xikolo.testing.instrumented.mocking.SampleMockData
 import de.xikolo.testing.instrumented.mocking.base.BaseTest
 import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_LOADING_SHORT
 import de.xikolo.utils.StorageUtil
@@ -22,7 +22,7 @@ class DownloadManagerTest : BaseTest() {
 
     private val TEST_DOWNLOAD_TITLE: String = DownloadManagerTest::class.java.simpleName
 
-    private val TEST_DOWNLOAD_URL_SECONDARY: String = SingleObjects.testVideoStreamThumbnailUrl
+    private val TEST_DOWNLOAD_URL_SECONDARY: String = SampleMockData.mockVideoStreamThumbnailUrl
     private val TEST_DOWNLOAD_SIZE_SECONDARY: Long = 0L
     private val TEST_DOWNLOAD_ASSET_SECONDARY: DownloadAsset = MockDownloadAsset(
         TEST_DOWNLOAD_URL_SECONDARY,
@@ -31,8 +31,8 @@ class DownloadManagerTest : BaseTest() {
         mutableSetOf()
     )
 
-    private val TEST_DOWNLOAD_URL: String = SingleObjects.testVideoStreamSdUrl
-    private val TEST_DOWNLOAD_SIZE: Long = SingleObjects.testVideoStreamSdSize.toLong()
+    private val TEST_DOWNLOAD_URL: String = SampleMockData.mockVideoStreamSdUrl
+    private val TEST_DOWNLOAD_SIZE: Long = SampleMockData.mockVideoStreamSdSize.toLong()
     private val TEST_DOWNLOAD_ASSET: DownloadAsset = MockDownloadAsset(
         TEST_DOWNLOAD_URL,
         TEST_DOWNLOAD_TITLE,
