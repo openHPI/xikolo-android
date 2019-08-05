@@ -47,7 +47,7 @@ class CourseDateListDialog : ViewModelDialogFragment<DateListViewModel>() {
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)
 
-        viewModel.dates.observe(this) {
+        viewModel.dates.observe(viewLifecycleOwner) {
             adapter.update(viewModel.sectionedDateList)
             showContent()
         }

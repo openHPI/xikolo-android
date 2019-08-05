@@ -46,7 +46,7 @@ class CertificatesFragment : NetworkStateFragment<CertificateListViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.course
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 showCertificates(
                     it,
                     EnrollmentDao.Unmanaged.findForCourse(it.id)

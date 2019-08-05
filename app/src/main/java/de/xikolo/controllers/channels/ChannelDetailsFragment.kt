@@ -111,12 +111,12 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
         ))
 
         viewModel.channel
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 updateView(it)
             }
 
         viewModel.courses
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 viewModel.channel.value?.let {
                     showContentList(
                         viewModel.buildContentList(it)

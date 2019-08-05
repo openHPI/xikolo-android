@@ -7,11 +7,11 @@ import androidx.annotation.StringRes
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.xikolo.R
 import de.xikolo.controllers.helper.NetworkStateHelper
+import de.xikolo.extensions.observe
+import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.utils.NetworkUtil
 import de.xikolo.utils.ToastUtil
 import de.xikolo.viewmodels.base.BaseViewModel
-import de.xikolo.network.jobs.base.NetworkCode
-import de.xikolo.extensions.observe
 
 abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, ViewModelCreationInterface<T> {
 
@@ -57,7 +57,7 @@ abstract class NetworkStateFragment<T : BaseViewModel> : BaseFragment(), SwipeRe
 
         networkStateHelper = NetworkStateHelper(activity, view, this)
 
-        viewModel.networkState.observe(this) {
+        viewModel.networkState.observe(viewLifecycleOwner) {
             if (it.code != NetworkCode.STARTED) hideAnyProgress()
             when (it.code) {
                 NetworkCode.STARTED                   -> showAnyProgress()

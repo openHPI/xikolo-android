@@ -58,7 +58,7 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
         recyclerView.adapter = announcementListAdapter
 
         viewModel.announcements
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 showAnnouncementList(it)
             }
     }

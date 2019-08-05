@@ -68,7 +68,7 @@ class RichTextFragment : NetworkStateFragment<RichTextViewModel>() {
         }
 
         viewModel.item
-            .observe(this) { item ->
+            .observe(viewLifecycleOwner) { item ->
                 this.item = item
                 title.text = item.title
 

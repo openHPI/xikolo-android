@@ -52,7 +52,7 @@ abstract class ViewModelDialogFragment<T : BaseViewModel> : BaseDialogFragment()
 
         networkStateHelper = NetworkStateHelper(activity, view, this)
 
-        viewModel.networkState.observe(this) {
+        viewModel.networkState.observe(viewLifecycleOwner) {
             if (it.code != NetworkCode.STARTED) hideAnyProgress()
             when (it.code) {
                 NetworkCode.STARTED                   -> showAnyProgress()

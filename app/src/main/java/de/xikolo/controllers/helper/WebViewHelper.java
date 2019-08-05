@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.xikolo.R;
 import de.xikolo.config.Config;
-import de.xikolo.controllers.webview.WebViewInterface;
+import de.xikolo.controllers.webview.WebViewFragment;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.managers.UserManager;
 import de.xikolo.utils.LanalyticsUtil;
@@ -43,9 +43,9 @@ public class WebViewHelper {
 
     protected String url;
 
-    private WebViewInterface webViewInterface;
+    private WebViewFragment webViewInterface;
 
-    public WebViewHelper(View view, WebViewInterface callback) {
+    public WebViewHelper(View view, WebViewFragment callback) {
         ButterKnife.bind(this, view);
         webViewInterface = callback;
 
@@ -107,7 +107,7 @@ public class WebViewHelper {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                webViewInterface.hideProgress();
+                webViewInterface.hideAnyProgress();
                 webViewInterface.hideMessage();
                 showWebView();
                 EventBus.getDefault().postSticky(new NetworkStateEvent(true));
@@ -159,7 +159,7 @@ public class WebViewHelper {
 
             if (!webViewInterface.externalLinksEnabled() || Patterns.WEB_URL.matcher(this.url).matches()) {
                 if (NetworkUtil.isOnline()) {
-                    webViewInterface.showProgress();
+                    webViewInterface.showAnyProgress();
                     if (url.contains(Config.HOST)) {
                         Map<String, String> header = new HashMap<>();
                         header.put(Config.HEADER_USER_PLATFORM, Config.HEADER_USER_PLATFORM_VALUE);
@@ -176,16 +176,16 @@ public class WebViewHelper {
                         loadUrl(this.url, null);
                     }
                 } else {
-                    webViewInterface.hideProgress();
-                    webViewInterface.showNetworkRequiredMessage();
+                    webViewInterface.hideAnyProgress();
+                    webViewInterface.showNetworkRequired();
                     EventBus.getDefault().postSticky(new NetworkStateEvent(false));
                 }
             } else {
-                webViewInterface.hideProgress();
+                webViewInterface.hideAnyProgress();
                 webViewInterface.showInvalidUrlToast();
             }
         } else {
-            webViewInterface.hideProgress();
+            webViewInterface.hideAnyProgress();
         }
     }
 

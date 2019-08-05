@@ -55,7 +55,7 @@ class AnnouncementFragment : NetworkStateFragment<AnnouncementViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.announcement
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 showAnnouncement(it)
             }
     }

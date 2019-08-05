@@ -92,7 +92,7 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
         ))
 
         viewModel.channels
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 showChannelList(
                     it,
                     viewModel.buildCourseLists(it))

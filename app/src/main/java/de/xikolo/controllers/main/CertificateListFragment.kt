@@ -76,7 +76,7 @@ class CertificateListFragment : ViewModelMainFragment<CertificateListViewModel>(
         recyclerView.adapter = certificateListAdapter
 
         viewModel.courses
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 showCertificateList(
                     viewModel.coursesWithCertificates
                 )

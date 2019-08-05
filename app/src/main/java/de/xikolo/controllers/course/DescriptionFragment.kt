@@ -79,7 +79,7 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
         }
 
         viewModel.course
-            .observe(this) {
+            .observe(viewLifecycleOwner) {
                 showDescription(it)
             }
     }

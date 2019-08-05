@@ -63,7 +63,7 @@ class ProgressFragment : NetworkStateFragment<ProgressViewModel>() {
         ))
 
         viewModel.sectionProgresses
-            .observe(this) { sp ->
+            .observe(viewLifecycleOwner) { sp ->
                 val cp = CourseProgressDao.Unmanaged.find(courseId)
                 if (sp.isNotEmpty() && cp != null) {
                     adapter.update(cp, sp)

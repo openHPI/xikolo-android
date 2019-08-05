@@ -41,7 +41,7 @@ class VideoDescriptionFragment(val itemId: String, val videoId: String) : Networ
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.video
-            .observe(this) { video ->
+            .observe(viewLifecycleOwner) { video ->
                 if (video.summary != null
                     && video.summary.trim { it <= ' ' }.isNotEmpty()
                     && !video.summary.trim { it <= ' ' }.contentEquals("Enter content")) {
@@ -63,7 +63,7 @@ class VideoDescriptionFragment(val itemId: String, val videoId: String) : Networ
             }
 
         viewModel.item
-            .observe(this) { item ->
+            .observe(viewLifecycleOwner) { item ->
                 videoTitleText.text = item.title
 
                 showContent()
