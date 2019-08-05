@@ -3,6 +3,7 @@ package de.xikolo.network.jobs
 import android.content.Context
 import android.util.Log
 import androidx.work.*
+import de.xikolo.App
 import de.xikolo.config.Config
 import de.xikolo.models.Announcement
 import de.xikolo.network.ApiService
@@ -38,7 +39,7 @@ class UpdateAnnouncementVisitedJob(
                 .setConstraints(constraints)
                 .build()
 
-            WorkManager.getInstance().enqueue(workRequest)
+            WorkManager.getInstance(App.instance).enqueue(workRequest)
         }
     }
 

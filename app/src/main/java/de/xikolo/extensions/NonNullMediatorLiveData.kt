@@ -14,14 +14,14 @@ fun <T> LiveData<T>.nonNull(): NonNullMediatorLiveData<T> {
 }
 
 fun <T> NonNullMediatorLiveData<T>.observe(owner: LifecycleOwner, observer: (t: T) -> Unit): (t: T) -> Unit {
-    this.observe(owner, Observer {
+    this.observe(owner, Observer<T> {
         it?.let(observer)
     })
     return observer
 }
 
 fun <T> LiveData<T>.observe(owner: LifecycleOwner, observer: (t: T) -> Unit): (t: T) -> Unit {
-    this.observe(owner, Observer {
+    this.observe(owner, Observer<T> {
         it?.let(observer)
     })
     return observer

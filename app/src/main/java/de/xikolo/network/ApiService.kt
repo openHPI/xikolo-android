@@ -24,7 +24,7 @@ object ApiService {
         val original = chain.request()
 
         val builder = original.newBuilder()
-        if (original.url().host() == App.instance.getString(R.string.app_host) && UserManager.isAuthorized) {
+        if (original.url.host == App.instance.getString(R.string.app_host) && UserManager.isAuthorized) {
             builder.header(
                 Config.HEADER_AUTH,
                 Config.HEADER_AUTH_VALUE_PREFIX_JSON_API + UserManager.token!!
@@ -128,7 +128,7 @@ object ApiService {
                 val plainJson = Arrays.asList(
                     "/api/v2/authenticate"
                 )
-                if (plainJson.contains(original.url().encodedPath())) {
+                if (plainJson.contains(original.url.encodedPath)) {
                     mediaType = Config.MEDIA_TYPE_JSON
                     xikoloVersionExtension = ""
                 }

@@ -2,10 +2,9 @@ package de.xikolo.network.jobs
 
 import android.util.Log
 import de.xikolo.config.Config
+import de.xikolo.network.ApiService
 import de.xikolo.network.jobs.base.RequestJob
 import de.xikolo.network.jobs.base.RequestJobCallback
-import de.xikolo.network.ApiService
-import okhttp3.internal.http.HttpDate
 import ru.gildor.coroutines.retrofit.awaitResponse
 
 class CheckHealthJob(callback: RequestJobCallback) : RequestJob(callback) {
@@ -19,11 +18,10 @@ class CheckHealthJob(callback: RequestJobCallback) : RequestJob(callback) {
 
         when (response.code()) {
             in 200..299 -> {
-                val apiVersionExpirationDate = response.headers().get(Config.HEADER_API_VERSION_EXPIRATION_DATE)
+                val apiVersionExpirationDate = response.headers().getDate(Config.HEADER_API_VERSION_EXPIRATION_DATE)
                 if (apiVersionExpirationDate != null) {
                     if (Config.DEBUG) Log.e(TAG, "Health check: api deprecated and will expire at $apiVersionExpirationDate")
-                    val expirationDate = HttpDate.parse(apiVersionExpirationDate)
-                    callback?.deprecated(expirationDate)
+                    callback?.deprecated(apiVersionExpirationDate)
                 } else {
                     if (Config.DEBUG) Log.i(TAG, "Health check: successful")
                     callback?.success()
