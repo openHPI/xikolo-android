@@ -1,12 +1,12 @@
-package de.xikolo.ui
+package de.xikolo.testing.instrumented.ui
 
 
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import de.xikolo.controllers.main.SplashActivity
-import de.xikolo.mocking.base.BaseMockedTest
-import de.xikolo.ui.helper.AssertionHelper
-import de.xikolo.ui.helper.NavigationHelper
+import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
+import de.xikolo.testing.instrumented.ui.helper.AssertionHelper
+import de.xikolo.testing.instrumented.ui.helper.NavigationHelper
 import org.junit.Rule
 import org.junit.Test
 

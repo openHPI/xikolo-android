@@ -1,7 +1,7 @@
-package de.xikolo.mocking
+package de.xikolo.testing.instrumented.mocking
 
 import android.content.Context
-import de.xikolo.mocking.base.BaseMockedResponse
+import de.xikolo.testing.instrumented.mocking.base.BaseMockedResponse
 
 /**
  * Represents a mocked response read from a .json file in the app's assets directory.

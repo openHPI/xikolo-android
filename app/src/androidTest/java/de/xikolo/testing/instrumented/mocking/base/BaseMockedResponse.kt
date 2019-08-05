@@ -1,4 +1,4 @@
-package de.xikolo.mocking.base
+package de.xikolo.testing.instrumented.mocking.base
 
 /**
  * Represents the data of a mocked response from the ApiService.

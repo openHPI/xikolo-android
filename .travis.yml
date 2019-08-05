@@ -26,4 +26,4 @@ env:
   - FLAVOR="openwho"
 
 script:
-   - ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest
+  - ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest

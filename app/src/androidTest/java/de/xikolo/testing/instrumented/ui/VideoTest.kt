@@ -1,4 +1,4 @@
-package de.xikolo.ui
+package de.xikolo.testing.instrumented.ui
 
 
 import android.content.pm.ActivityInfo
@@ -13,8 +13,10 @@ import de.xikolo.R
 import de.xikolo.controllers.video.VideoStreamPlayerActivity
 import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.controllers.video.VideoStreamPlayerFragment
-import de.xikolo.mocking.SingleObjects
-import de.xikolo.mocking.base.BaseMockedTest
+import de.xikolo.testing.instrumented.mocking.SampleMockData
+import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
+import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_UI_ANIMATION
+import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_UI_LONG
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.Assert.assertFalse
@@ -36,7 +38,7 @@ class VideoTest : BaseMockedTest() {
     @Before
     fun startActivity() {
         activityTestRule.launchActivity(
-            VideoStreamPlayerActivityAutoBundle.builder(SingleObjects.testVideoStream).build(context)
+            VideoStreamPlayerActivityAutoBundle.builder(SampleMockData.mockVideoStream).build(context)
         )
 
         activity = activityTestRule.activity as VideoStreamPlayerActivity
@@ -45,13 +47,13 @@ class VideoTest : BaseMockedTest() {
 
     private fun waitForVideo() {
         while (fragment.playerView.visibility != View.VISIBLE) {
-            Thread.sleep(1000)
+            Thread.sleep(WAIT_UI_LONG)
         }
     }
 
     private fun waitForProgress() {
         while (fragment.progressBar.visibility == View.VISIBLE) {
-            Thread.sleep(1000)
+            Thread.sleep(WAIT_UI_LONG)
         }
     }
 
@@ -71,14 +73,14 @@ class VideoTest : BaseMockedTest() {
             )
         )
 
+        ui.perform(
+            click()
+        )
+
         val controls = onView(
             allOf(
                 withId(R.id.controlsContainer)
             )
-        )
-
-        ui.perform(
-            click()
         )
 
         controls.check(
@@ -339,12 +341,12 @@ class VideoTest : BaseMockedTest() {
             click()
         )
 
-        Thread.sleep(1000) // wait for panel to open
+        Thread.sleep(WAIT_UI_ANIMATION) // wait for panel to open
 
         val firstBackPress = fragment.handleBackPress()
         assertFalse(firstBackPress)
 
-        Thread.sleep(1000) // wait for panel to close
+        Thread.sleep(WAIT_UI_ANIMATION) // wait for panel to close
 
         val secondBackPress = fragment.handleBackPress()
         assertTrue(secondBackPress)

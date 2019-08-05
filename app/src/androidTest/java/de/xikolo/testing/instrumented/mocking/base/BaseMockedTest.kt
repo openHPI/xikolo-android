@@ -1,7 +1,7 @@
-package de.xikolo.mocking.base
+package de.xikolo.testing.instrumented.mocking.base
 
-import de.xikolo.mocking.MockingInterceptor
 import de.xikolo.network.ApiService
+import de.xikolo.testing.instrumented.mocking.MockingInterceptor
 import org.junit.After
 import org.junit.Before
 
