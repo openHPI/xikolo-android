@@ -44,7 +44,9 @@ public class ContextUtil {
             wm.getDefaultDisplay().getRealMetrics(metrics);
             contextMap.put("screen_width", String.valueOf(metrics.widthPixels));
             contextMap.put("screen_height", String.valueOf(metrics.heightPixels));
-            contextMap.put("screen_density", String.valueOf((int) metrics.density * 160));
+
+            // one dip (density independent pixel) is one pixel on an approximately 160 dpi screen
+            contextMap.put("screen_density", String.valueOf((int) (metrics.density * 160)));
         }
 
         // network details
