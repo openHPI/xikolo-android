@@ -8,8 +8,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.*
+import de.xikolo.extensions.observe
 import de.xikolo.network.jobs.CheckHealthJob
-import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.base.NetworkCode
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
@@ -23,33 +25,49 @@ class SplashActivity : AppCompatActivity() {
         val TAG: String = SplashActivity::class.java.simpleName
     }
 
-    private val healthCheckCallback: RequestJobCallback
-        get() = object : RequestJobCallback() {
-            override fun onSuccess() {
-                startApp()
-            }
+    private val networkState: NetworkStateLiveData by lazy {
+        NetworkStateLiveData()
+    }
 
-            override fun onError(code: RequestJobCallback.ErrorCode) {
-                when (code) {
-                    ErrorCode.NO_NETWORK          -> startApp()
-                    ErrorCode.API_VERSION_EXPIRED -> showApiVersionExpiredDialog()
-                    ErrorCode.MAINTENANCE         -> showServerMaintenanceDialog()
-                    else                          -> showServerErrorDialog()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        networkState
+            .observe(this) {
+                if (it.code == NetworkCode.STARTED) {
+                    return@observe
+                }
+
+                when (it.code) {
+                    NetworkCode.SUCCESS                -> startApp()
+                    NetworkCode.NO_NETWORK             -> startApp()
+                    NetworkCode.API_VERSION_EXPIRED    -> showApiVersionExpiredDialog()
+                    NetworkCode.MAINTENANCE            -> showServerMaintenanceDialog()
+                    NetworkCode.API_VERSION_DEPRECATED -> {
+                        it.deprecationDate?.let { deprecationDate ->
+                            val now = Date()
+                            val distance = deprecationDate.time - now.time
+                            val days = TimeUnit.DAYS.convert(distance, TimeUnit.MILLISECONDS)
+
+                            if (days <= 14) {
+                                showApiVersionDeprecatedDialog(deprecationDate)
+                            } else {
+                                startApp()
+                            }
+                        } ?: run {
+                            startApp()
+                        }
+                    }
+                    else                               -> showServerErrorDialog()
                 }
             }
 
-            override fun onDeprecated(deprecationDate: Date) {
-                val now = Date()
-                val distance = deprecationDate.time - now.time
-                val days = TimeUnit.DAYS.convert(distance, TimeUnit.MILLISECONDS)
+        migrateStorage()
+    }
 
-                if (days <= 14) {
-                    showApiVersionDeprecatedDialog(deprecationDate)
-                } else {
-                    startApp()
-                }
-            }
-        }
+    private fun runHealthJob() {
+        CheckHealthJob(networkState, false).run()
+    }
 
     private fun migrateStorage() {
         if (!ApplicationPreferences().contains(getString(R.string.preference_storage))) {
@@ -77,19 +95,13 @@ class SplashActivity : AppCompatActivity() {
                         StorageUtil.cleanStorage(new)
                         progressDialog.dismiss()
                         ApplicationPreferences().setToDefault(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))
-                        CheckHealthJob(healthCheckCallback).run()
+                        runHealthJob()
                     }
                 }
             })
         } else {
-            CheckHealthJob(healthCheckCallback).run()
+            runHealthJob()
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        migrateStorage()
     }
 
     private fun showApiVersionExpiredDialog() {
