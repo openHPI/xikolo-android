@@ -31,9 +31,12 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
 import de.xikolo.events.NetworkStateEvent
 import de.xikolo.extensions.observe
+import de.xikolo.extensions.observeOnce
 import de.xikolo.managers.CourseManager
 import de.xikolo.models.Course
 import de.xikolo.models.dao.EnrollmentDao
+import de.xikolo.network.jobs.base.NetworkCode
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.network.jobs.base.RequestJobCallback
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
@@ -297,22 +300,32 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
     private fun enroll() {
         showProgressDialog()
-        courseManager.createEnrollment(course.id, object : RequestJobCallback() {
-            public override fun onSuccess() {
-                restartActivity()
-                hideProgressDialog()
-            }
 
-            public override fun onError(code: RequestJobCallback.ErrorCode) {
-                hideProgressDialog()
-                if (code === RequestJobCallback.ErrorCode.NO_NETWORK) {
-                    showNoNetworkToast()
-                } else if (code === RequestJobCallback.ErrorCode.NO_AUTH) {
-                    showLoginRequiredMessage()
-                    openLogin()
+        val enrollmentCreationNetworkState = NetworkStateLiveData()
+        enrollmentCreationNetworkState
+            .observeOnce(this) {
+                when (it.code) {
+                    NetworkCode.SUCCESS    -> {
+                        restartActivity()
+                        hideProgressDialog()
+                        true
+                    }
+                    NetworkCode.NO_NETWORK -> {
+                        hideProgressDialog()
+                        showNoNetworkToast()
+                        true
+                    }
+                    NetworkCode.NO_AUTH    -> {
+                        hideProgressDialog()
+                        showLoginRequiredMessage()
+                        openLogin()
+                        true
+                    }
+                    else                   -> false
                 }
             }
-        })
+
+        viewModel.enroll(enrollmentCreationNetworkState)
     }
 
     private fun unenroll() {

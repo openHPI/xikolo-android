@@ -10,13 +10,16 @@ import de.xikolo.models.Course
 import de.xikolo.models.dao.ChannelDao
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.GetChannelWithCoursesJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.shared.CourseListDelegate
+import de.xikolo.viewmodels.shared.EnrollmentDelegate
 
 class ChannelViewModel(private val channelId: String) : BaseViewModel() {
 
     private val courseListDelegate = CourseListDelegate(realm)
+    private val enrollmentDelegate = EnrollmentDelegate(realm)
 
     private val channelsDao = ChannelDao(realm)
 
@@ -61,6 +64,10 @@ class ChannelViewModel(private val channelId: String) : BaseViewModel() {
             }
         }
         return contentList
+    }
+
+    fun enroll(courseId: String, networkState: NetworkStateLiveData) {
+        enrollmentDelegate.createEnrollment(courseId, networkState, true)
     }
 
     override fun onFirstCreate() {
