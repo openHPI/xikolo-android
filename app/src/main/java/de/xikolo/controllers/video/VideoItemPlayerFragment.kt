@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.managers.DownloadManager
-import de.xikolo.managers.ItemManager
 import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Item
 import de.xikolo.models.Video
@@ -31,6 +30,8 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
     private var videoDownloadAssetSD: DownloadAsset.Course.Item.VideoSD = DownloadAsset.Course.Item.VideoSD(item, video)
 
     private lateinit var downloadManager: DownloadManager
+
+    private val videoDao = VideoDao(Realm.getDefaultInstance())
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -116,7 +117,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
 
     override fun saveCurrentPosition() {
         super.saveCurrentPosition()
-        ItemManager().updateVideoProgress(video, currentPosition, Realm.getDefaultInstance())
+        videoDao.updateProgress(video, currentPosition)
     }
 
     override fun getSubtitleList(): List<VideoSubtitles>? {

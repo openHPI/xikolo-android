@@ -1,10 +1,10 @@
 package de.xikolo.viewmodels.section
 
 import androidx.lifecycle.LiveData
-import de.xikolo.managers.ItemManager
 import de.xikolo.models.Item
 import de.xikolo.models.Section
 import de.xikolo.models.dao.SectionDao
+import de.xikolo.network.jobs.UpdateItemVisitedJob
 import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.shared.CourseDelegate
@@ -17,8 +17,6 @@ class CourseItemsViewModel(courseId: String, sectionId: String) : BaseViewModel(
 
     private val sectionDao = SectionDao(realm)
 
-    private val itemManager = ItemManager()
-
     val course = courseDelegate.course
 
     val section: LiveData<Section> by lazy {
@@ -30,7 +28,7 @@ class CourseItemsViewModel(courseId: String, sectionId: String) : BaseViewModel(
         item.visited = true
         realm.commitTransaction()
 
-        itemManager.updateItemVisited(item.id)
+        UpdateItemVisitedJob.schedule(item.id)
     }
 
     override fun onFirstCreate() {
