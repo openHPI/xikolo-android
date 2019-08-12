@@ -1,11 +1,10 @@
 package de.xikolo.network.jobs.base
 
 import androidx.lifecycle.LiveData
-import de.xikolo.events.NetworkStateEvent
+import de.xikolo.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
 open class NetworkStateLiveData : LiveData<NetworkState>() {
 
@@ -19,9 +18,9 @@ open class NetworkStateLiveData : LiveData<NetworkState>() {
 
     fun state(code: NetworkCode, userRequest: Boolean) {
         when (code) {
-            NetworkCode.SUCCESS    -> EventBus.getDefault().postSticky(NetworkStateEvent(true))
-            NetworkCode.NO_NETWORK -> EventBus.getDefault().postSticky(NetworkStateEvent(false))
-            else                   -> Unit
+            NetworkCode.SUCCESS    -> App.instance.state.connectivity.online()
+            NetworkCode.NO_NETWORK -> App.instance.state.connectivity.offline()
+            else -> Unit
         }
 
         GlobalScope.launch(Dispatchers.Main) {

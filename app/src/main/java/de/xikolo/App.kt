@@ -5,6 +5,7 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import androidx.preference.PreferenceManager
 import de.xikolo.config.Config
+import de.xikolo.events.base.ConnectivityStateLiveData
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.models.migrate.RealmSchemaMigration
 import de.xikolo.utils.ClientUtil
@@ -21,6 +22,12 @@ class App : Application() {
             private set
     }
 
+    data class State(val connectivity: ConnectivityStateLiveData)
+
+    val state: State = State(
+        ConnectivityStateLiveData()
+    )
+
     val lanalytics: Lanalytics by lazy {
         Lanalytics.getInstance(this, Config.API_URL + Config.LANALYTICS_PATH)
     }
@@ -31,6 +38,8 @@ class App : Application() {
 
     init {
         instance = this
+
+        state.connectivity.online()
     }
 
     override fun onCreate() {

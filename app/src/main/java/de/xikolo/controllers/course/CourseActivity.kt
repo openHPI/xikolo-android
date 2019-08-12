@@ -31,7 +31,6 @@ import de.xikolo.controllers.helper.CourseArea
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
-import de.xikolo.events.NetworkStateEvent
 import de.xikolo.extensions.observe
 import de.xikolo.extensions.observeOnce
 import de.xikolo.managers.UserManager
@@ -43,8 +42,6 @@ import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.*
 import de.xikolo.viewmodels.course.CourseViewModel
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.Listener {
 
@@ -454,11 +451,10 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         startActivity(intent)
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    override fun onNetworkEvent(event: NetworkStateEvent) {
-        super.onNetworkEvent(event)
+    override fun onNetworkEvent(isOnline: Boolean) {
+        super.onNetworkEvent(isOnline)
 
-        if (event.isOnline) {
+        if (isOnline) {
             toolbar.subtitle = ""
             tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_toolbar))
             setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar)

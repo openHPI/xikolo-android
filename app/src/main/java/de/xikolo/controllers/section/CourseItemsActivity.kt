@@ -21,15 +21,12 @@ import de.xikolo.config.Config
 import de.xikolo.controllers.base.ViewModelActivity
 import de.xikolo.controllers.helper.SectionDownloadHelper
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
-import de.xikolo.events.NetworkStateEvent
 import de.xikolo.extensions.observe
 import de.xikolo.models.Course
 import de.xikolo.models.Item
 import de.xikolo.models.Section
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.viewmodels.section.CourseItemsViewModel
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
 
@@ -151,11 +148,10 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         }
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    override fun onNetworkEvent(event: NetworkStateEvent) {
-        super.onNetworkEvent(event)
+    override fun onNetworkEvent(isOnline: Boolean) {
+        super.onNetworkEvent(isOnline)
 
-        if (event.isOnline) {
+        if (isOnline) {
             tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_toolbar))
         } else {
             tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.offline_mode_toolbar))

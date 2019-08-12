@@ -33,12 +33,11 @@ import com.yatatsu.autobundle.AutoBundle;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.events.NetworkStateEvent;
+import de.xikolo.events.LoginEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
 import de.xikolo.receivers.NetworkChangeReceiver;
@@ -102,6 +101,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         }
 
         handleIntent(getIntent());
+
+        App.getInstance().getState().getConnectivity().observe(this, this::onNetworkEvent);
     }
 
     @Override
@@ -282,11 +283,9 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         }
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onNetworkEvent(NetworkStateEvent event) {
+    public void onNetworkEvent(boolean isOnline) {
         if (toolbar != null && offlineModeToolbar) {
-            if (event.isOnline()) {
+            if (isOnline) {
                 toolbar.setSubtitle("");
                 setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
             } else {
@@ -294,6 +293,11 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
                 setColorScheme(R.color.offline_mode_toolbar, R.color.offline_mode_statusbar);
             }
         }
+    }
+
+    @Subscribe
+    public void dummySubscriber(LoginEvent event) {
+        // there has to be at least one subscribing method in the base class or else the EventBus' register() throws an exception
     }
 
     @Override
