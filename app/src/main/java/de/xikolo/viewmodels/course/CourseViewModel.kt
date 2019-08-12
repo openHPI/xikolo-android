@@ -23,6 +23,10 @@ class CourseViewModel(private val courseId: String) : BaseViewModel() {
         enrollmentDelegate.createEnrollment(courseId, networkState, true)
     }
 
+    fun unenroll(enrollmentId: String, networkState: NetworkStateLiveData) {
+        enrollmentDelegate.deleteEnrollment(enrollmentId, networkState, true)
+    }
+
     override fun onFirstCreate() {
         courseDelegate.requestCourse(networkState, false)
         dateListDelegate.requestDateList(networkState, false)

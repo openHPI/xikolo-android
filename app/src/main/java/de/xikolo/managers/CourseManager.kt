@@ -2,7 +2,6 @@ package de.xikolo.managers
 
 import de.xikolo.models.Course
 import de.xikolo.models.Enrollment
-import de.xikolo.network.jobs.DeleteEnrollmentJob
 import de.xikolo.network.jobs.GetCourseWithSectionsJob
 import de.xikolo.network.jobs.ListEnrollmentsJob
 import de.xikolo.network.jobs.base.RequestJobCallback
@@ -106,10 +105,6 @@ class CourseManager {
 
     fun requestEnrollmentList(callback: RequestJobCallback) {
         ListEnrollmentsJob(callback).run()
-    }
-
-    fun deleteEnrollment(id: String, callback: RequestJobCallback) {
-        DeleteEnrollmentJob(id, callback).run()
     }
 
 }
