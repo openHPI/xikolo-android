@@ -2,8 +2,6 @@ package de.xikolo.managers
 
 import de.xikolo.models.Course
 import de.xikolo.models.Enrollment
-import de.xikolo.network.jobs.ListEnrollmentsJob
-import de.xikolo.network.jobs.base.RequestJobCallback
 import io.realm.Realm
 import io.realm.RealmChangeListener
 import io.realm.RealmResults
@@ -96,10 +94,6 @@ class CourseManager {
         courseListPromise.addChangeListener(listener)
 
         return courseListPromise
-    }
-
-    fun requestEnrollmentList(callback: RequestJobCallback) {
-        ListEnrollmentsJob(callback).run()
     }
 
 }
