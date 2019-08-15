@@ -5,20 +5,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ConnectivityStateLiveData : LiveData<Boolean>() {
+open class EventLiveData<T>(initialState: T) : LiveData<T>() {
 
-    fun online() {
-        state(true)
+    init {
+        state(initialState)
     }
 
-    fun offline() {
-        state(false)
-    }
-
-    private fun state(online: Boolean) {
+    fun state(state: T) {
         GlobalScope.launch(Dispatchers.Main) {
-            value = online
+            value = state
         }
     }
-
 }
