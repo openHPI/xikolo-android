@@ -22,7 +22,7 @@ class App : Application() {
             private set
     }
 
-    inner class AppState {
+    inner class State {
 
         val connectivity: ConnectivityEventLiveData by lazy {
             ConnectivityEventLiveData(true)
@@ -33,7 +33,7 @@ class App : Application() {
         //}
     }
 
-    val state = AppState()
+    val state = State()
 
     val lanalytics: Lanalytics by lazy {
         Lanalytics.getInstance(this, Config.API_URL + Config.LANALYTICS_PATH)
