@@ -5,7 +5,6 @@ import de.xikolo.utils.NetworkUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 abstract class NetworkJob(private val networkState: NetworkStateLiveData, private val userRequest: Boolean, private vararg val preconditions: Precondition) {
 
@@ -33,12 +32,6 @@ abstract class NetworkJob(private val networkState: NetworkStateLiveData, privat
     fun success() = networkState.success(userRequest)
 
     fun error() = networkState.error(userRequest)
-
-    fun deprecated(deprecationDate: Date) = networkState.deprecated(deprecationDate, userRequest)
-
-    fun apiVersionExpired() = networkState.apiVersionExpired(userRequest)
-
-    fun maintenance() = networkState.maintenance(userRequest)
 
     protected abstract suspend fun onRun()
 

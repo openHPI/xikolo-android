@@ -6,9 +6,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import java.util.*
 
-class NetworkStateLiveData : LiveData<NetworkState>() {
+open class NetworkStateLiveData : LiveData<NetworkState>() {
 
     fun success(userRequest: Boolean) {
         state(NetworkCode.SUCCESS, userRequest)
@@ -18,19 +17,7 @@ class NetworkStateLiveData : LiveData<NetworkState>() {
         state(NetworkCode.ERROR, userRequest)
     }
 
-    fun deprecated(deprecationDate: Date, userRequest: Boolean) {
-        state(NetworkCode.API_VERSION_DEPRECATED, userRequest, deprecationDate)
-    }
-
-    fun apiVersionExpired(userRequest: Boolean) {
-        state(NetworkCode.API_VERSION_EXPIRED, userRequest)
-    }
-
-    fun maintenance(userRequest: Boolean) {
-        state(NetworkCode.MAINTENANCE, userRequest)
-    }
-
-    fun state(code: NetworkCode, userRequest: Boolean, deprecationDate: Date? = null) {
+    fun state(code: NetworkCode, userRequest: Boolean) {
         when (code) {
             NetworkCode.SUCCESS    -> EventBus.getDefault().postSticky(NetworkStateEvent(true))
             NetworkCode.NO_NETWORK -> EventBus.getDefault().postSticky(NetworkStateEvent(false))
@@ -38,14 +25,10 @@ class NetworkStateLiveData : LiveData<NetworkState>() {
         }
 
         GlobalScope.launch(Dispatchers.Main) {
-            value = NetworkState(code, userRequest, deprecationDate)
+            value = NetworkState(code, userRequest)
         }
     }
 
 }
 
-data class NetworkState(val code: NetworkCode, val userRequest: Boolean = false, val deprecationDate: Date? = null)
-
-enum class NetworkCode {
-    STARTED, SUCCESS, ERROR, CANCEL, NO_NETWORK, NO_AUTH, MAINTENANCE, API_VERSION_EXPIRED, API_VERSION_DEPRECATED
-}
+open class NetworkState(val code: NetworkCode, val userRequest: Boolean = false)

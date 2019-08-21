@@ -3,11 +3,12 @@ package de.xikolo.network.jobs
 import android.util.Log
 import de.xikolo.config.Config
 import de.xikolo.network.ApiService
+import de.xikolo.network.jobs.base.HealthCheckNetworkStateLiveData
 import de.xikolo.network.jobs.base.NetworkJob
-import de.xikolo.network.jobs.base.NetworkStateLiveData
 import ru.gildor.coroutines.retrofit.awaitResponse
+import java.util.*
 
-class CheckHealthJob(networkState: NetworkStateLiveData, userRequest: Boolean) : NetworkJob(networkState, userRequest) {
+class CheckHealthJob(private val networkState: HealthCheckNetworkStateLiveData, private val userRequest: Boolean) : NetworkJob(networkState, userRequest) {
 
     companion object {
         val TAG: String = CheckHealthJob::class.java.simpleName
@@ -41,5 +42,11 @@ class CheckHealthJob(networkState: NetworkStateLiveData, userRequest: Boolean) :
             }
         }
     }
+
+    private fun deprecated(deprecationDate: Date) = networkState.deprecated(deprecationDate, userRequest)
+
+    private fun apiVersionExpired() = networkState.apiVersionExpired(userRequest)
+
+    private fun maintenance() = networkState.maintenance(userRequest)
 
 }

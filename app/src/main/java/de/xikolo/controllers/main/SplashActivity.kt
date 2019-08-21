@@ -10,8 +10,9 @@ import de.xikolo.R
 import de.xikolo.controllers.dialogs.*
 import de.xikolo.extensions.observe
 import de.xikolo.network.jobs.CheckHealthJob
+import de.xikolo.network.jobs.base.HealthCheckNetworkState
+import de.xikolo.network.jobs.base.HealthCheckNetworkStateLiveData
 import de.xikolo.network.jobs.base.NetworkCode
-import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
@@ -25,8 +26,8 @@ class SplashActivity : AppCompatActivity() {
         val TAG: String = SplashActivity::class.java.simpleName
     }
 
-    private val networkState: NetworkStateLiveData by lazy {
-        NetworkStateLiveData()
+    private val networkState: HealthCheckNetworkStateLiveData by lazy {
+        HealthCheckNetworkStateLiveData()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +45,8 @@ class SplashActivity : AppCompatActivity() {
                     NetworkCode.API_VERSION_EXPIRED    -> showApiVersionExpiredDialog()
                     NetworkCode.MAINTENANCE            -> showServerMaintenanceDialog()
                     NetworkCode.API_VERSION_DEPRECATED -> {
+                        it as HealthCheckNetworkState
+
                         it.deprecationDate?.let { deprecationDate ->
                             val now = Date()
                             val distance = deprecationDate.time - now.time
