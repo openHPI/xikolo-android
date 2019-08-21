@@ -11,11 +11,6 @@ object FeatureConfig {
 
     val DOCUMENTS = BuildConfig.X_FLAVOR === BuildFlavor.OPEN_WHO
 
-    @JvmField
-    val SECOND_SCREEN =
-        BuildConfig.X_FLAVOR === BuildFlavor.OPEN_HPI ||
-        BuildConfig.X_FLAVOR === BuildFlavor.OPEN_SAP
-
     val TRACKING =
         BuildConfig.X_TYPE === BuildType.RELEASE && (BuildConfig.X_FLAVOR === BuildFlavor.OPEN_HPI ||
                 BuildConfig.X_FLAVOR === BuildFlavor.OPEN_SAP ||

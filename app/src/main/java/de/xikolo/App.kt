@@ -5,10 +5,7 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import androidx.preference.PreferenceManager
 import de.xikolo.config.Config
-import de.xikolo.config.FeatureConfig
 import de.xikolo.lanalytics.Lanalytics
-import de.xikolo.managers.SecondScreenManager
-import de.xikolo.managers.WebSocketManager
 import de.xikolo.models.migrate.RealmSchemaMigration
 import de.xikolo.utils.ClientUtil
 import io.realm.Realm
@@ -28,15 +25,9 @@ class App : Application() {
         Lanalytics.getInstance(this, Config.API_URL + Config.LANALYTICS_PATH)
     }
 
-    val webSocketManager by lazy {
-        WebSocketManager(Config.WEBSOCKET_URL)
-    }
-
     val clientId: String by lazy {
         ClientUtil.id(this)
     }
-
-    private var secondScreenManager: SecondScreenManager? = null
 
     init {
         instance = this
@@ -48,7 +39,6 @@ class App : Application() {
         configureRealm()
         configureDefaultSettings()
         configureWebView()
-        configureSecondScreenManager()
     }
 
     private fun configureRealm() {
@@ -80,15 +70,6 @@ class App : Application() {
         CookieManager.getInstance().removeAllCookies(null)
         CookieManager.getInstance().removeSessionCookies(null)
         CookieManager.getInstance().flush()
-    }
-
-    @Synchronized
-    fun configureSecondScreenManager() {
-        if (FeatureConfig.SECOND_SCREEN) {
-            if (secondScreenManager == null) {
-                secondScreenManager = SecondScreenManager()
-            }
-        }
     }
 
 }

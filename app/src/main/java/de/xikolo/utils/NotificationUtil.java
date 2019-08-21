@@ -10,16 +10,16 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
-import java.util.List;
-
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.ContextCompat;
+
+import java.util.List;
+
 import de.xikolo.BuildConfig;
 import de.xikolo.R;
 import de.xikolo.controllers.downloads.DownloadsActivity;
 import de.xikolo.controllers.main.MainActivity;
-import de.xikolo.controllers.secondscreen.SecondScreenActivity;
 import de.xikolo.models.Download;
 import de.xikolo.receivers.CancelDownloadsReceiver;
 import de.xikolo.receivers.NotificationDeletedReceiver;
@@ -29,13 +29,9 @@ public class NotificationUtil extends ContextWrapper {
 
     public static final String DOWNLOADS_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".downloads";
 
-    public static final String SECOND_SCREEN_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".second_screen";
-
     public static final int DOWNLOAD_RUNNING_NOTIFICATION_ID = 1000;
 
     public static final int DOWNLOAD_COMPLETED_SUMMARY_NOTIFICATION_ID = 1001;
-
-    public static final int SECOND_SCREEN_NOTIFICATION_ID = 1002;
 
     public static final String DOWNLOAD_COMPLETED_NOTIFICATION_GROUP = "download_completed";
 
@@ -142,29 +138,6 @@ public class NotificationUtil extends ContextWrapper {
                 .setDeleteIntent(createDownloadCompletedDeleteIntent(NOTIFICATION_DELETED_KEY_DOWNLOAD_ALL, "true"));
     }
 
-    public void showSecondScreenNotification(String title) {
-        notify(SECOND_SCREEN_NOTIFICATION_ID, getSecondScreenNotification(title).build());
-    }
-
-    public void cancelSecondScreenNotification() {
-        cancel(SECOND_SCREEN_NOTIFICATION_ID);
-    }
-
-    private NotificationCompat.Builder getSecondScreenNotification(String title) {
-        Intent intent = new Intent(this, SecondScreenActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        return new NotificationCompat.Builder(this, SECOND_SCREEN_CHANNEL_ID)
-                .setContentText(title)
-                .setContentTitle(getString(R.string.notification_start_second_screen))
-                .setColor(ContextCompat.getColor(this, R.color.apptheme_main))
-                .setSmallIcon(R.drawable.ic_notification_second_screen)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setVibrate(new long[0])
-                .setContentIntent(contentIntent);
-    }
-
     private void createChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel downloadsChannel = new NotificationChannel(
@@ -175,15 +148,6 @@ public class NotificationUtil extends ContextWrapper {
             downloadsChannel.setShowBadge(false);
 
             getManager().createNotificationChannel(downloadsChannel);
-
-            NotificationChannel secondScreenChannel = new NotificationChannel(
-                    SECOND_SCREEN_CHANNEL_ID,
-                    getString(R.string.notification_channel_second_screen),
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            secondScreenChannel.setShowBadge(false);
-
-            getManager().createNotificationChannel(secondScreenChannel);
         }
     }
 

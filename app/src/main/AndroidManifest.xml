@@ -216,49 +216,6 @@
                 android:value=".controllers.main.MainActivity" />
         </activity>
 
-        <!-- SECOND SCREEN -->
-
-        <activity
-            android:name=".controllers.secondscreen.SecondScreenActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controllers.main.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.main.MainActivity" />
-        </activity>
-        <activity
-            android:name=".controllers.secondscreen.QuizActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controllers.secondscreen.SecondScreenActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.secondscreen.SecondScreenActivity" />
-        </activity>
-        <activity
-            android:name=".controllers.secondscreen.PinboardActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controllers.secondscreen.SecondScreenActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.secondscreen.SecondScreenActivity" />
-        </activity>
-        <activity
-            android:name=".controllers.secondscreen.SlideViewerActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controllers.secondscreen.SecondScreenActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.secondscreen.SecondScreenActivity" />
-        </activity>
-        <activity
-            android:name=".controllers.secondscreen.TranscriptViewerActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".controllers.secondscreen.SecondScreenActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.secondscreen.SecondScreenActivity" />
-        </activity>
-
         <!-- CAST -->
 
         <activity

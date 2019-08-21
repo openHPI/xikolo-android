@@ -85,8 +85,6 @@ object ApiService {
             .add(Video.JsonModel::class.java)
             .add(LtiExercise.JsonModel::class.java)
             .add(PeerAssessment.JsonModel::class.java)
-            .add(SubtitleTrack.JsonModel::class.java)
-            .add(SubtitleCue.JsonModel::class.java)
             .add(Announcement.JsonModel::class.java)
             .add(Document.JsonModel::class.java)
             .add(DocumentLocalization.JsonModel::class.java)

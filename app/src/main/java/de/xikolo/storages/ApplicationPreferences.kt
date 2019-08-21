@@ -61,11 +61,6 @@ class ApplicationPreferences {
         get() = getBoolean(context.getString(R.string.preference_confirm_delete))
         set(value) = putBoolean(context.getString(R.string.preference_confirm_delete), value)
 
-
-    var usedSecondScreen: Boolean
-        get() = getBoolean(context.getString(R.string.preference_used_second_screen), false)
-        set(value) = putBoolean(context.getString(R.string.preference_used_second_screen), value)
-
     var firstAndroid4DeprecationWarningShown: Boolean
         get() = getBoolean(context.getString(R.string.preference_first_android_4_deprecation_dialog), false)
         set(value) = putBoolean(context.getString(R.string.preference_first_android_4_deprecation_dialog), value)
