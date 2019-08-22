@@ -31,8 +31,8 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
 import de.xikolo.events.NetworkStateEvent
 import de.xikolo.extensions.observe
-import de.xikolo.managers.UserManager
 import de.xikolo.extensions.observeOnce
+import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
 import de.xikolo.models.dao.EnrollmentDao
 import de.xikolo.network.jobs.base.NetworkCode
@@ -52,7 +52,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     @AutoBundleField(required = false)
-    var courseId: String? = null
+    lateinit var courseId: String
 
     @BindView(R.id.viewpager)
     lateinit var viewPager: ViewPager
@@ -74,22 +74,29 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     private var courseTab: CourseArea = CourseArea.LEARNINGS
     private var lastTrackedCourseTab: CourseArea? = null
 
-    private lateinit var course: Course
+    private var course: Course? = null
 
     override fun createViewModel(): CourseViewModel {
+        var id: String? = null
+
         if (intent?.action === Intent.ACTION_VIEW) { // deep linking
-            courseId = DeepLinkingUtil.getCourseIdentifier(intent.data?.path)
+            id = DeepLinkingUtil.getCourseIdentifier(intent.data?.path)
         }
-        if (courseId == null) {
+        if (id == null) {
             val cacheController = CacheHelper()
             cacheController.readCachedExtras()
             if (cacheController.course != null) {
-                courseId = cacheController.course.id
+                id = cacheController.course.id
             }
         }
-        return if (courseId != null) {
-            CourseViewModel(courseId!!)
-        } else {
+
+        if (id != null) {
+            courseId = id
+        }
+
+        return try {
+            CourseViewModel(courseId)
+        } catch (e: Exception) {
             showErrorToast()
             finishActivity()
             CourseViewModel("")
@@ -104,10 +111,19 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
         setupView()
 
+        viewModel.networkState
+            .observe(this) {
+                if (it.code == NetworkCode.ERROR || it.code == NetworkCode.CANCEL) {
+                    showErrorToast()
+                }
+            }
+
         viewModel.course
             .observe(this) {
-                course = it
-                setupCourse()
+                if (it.isValid) {
+                    course = it
+                    setupCourse(it)
+                }
             }
 
         viewModel.dates
@@ -124,19 +140,6 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             enrollButton?.setOnClickListener { enroll() }
         }
 
-        val previousCourseTab = courseTab
-        adapter = CoursePagerAdapter(supportFragmentManager)
-        adapter?.let {
-            viewPager.adapter = it
-
-            tabLayout.clearOnTabSelectedListeners()
-            tabLayout.addOnTabSelectedListener(it)
-            tabLayout.setupWithViewPager(viewPager)
-        }
-
-        setCourseTab(previousCourseTab)
-        updateViewPagerTab()
-
         hideEnrollBar()
     }
 
@@ -144,7 +147,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         viewPager.currentItem = areaState.indexOf(courseTab)
     }
 
-    private fun setupCourse() {
+    private fun setupCourse(course: Course) {
         Crashlytics.setString("course_id", course.id)
 
         if (!course.isEnrolled) {
@@ -159,6 +162,19 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         }
 
         title = course.title
+
+        val previousCourseTab = courseTab
+        adapter = CoursePagerAdapter(supportFragmentManager)
+        adapter?.let {
+            viewPager.adapter = it
+
+            tabLayout.clearOnTabSelectedListeners()
+            tabLayout.addOnTabSelectedListener(it)
+            tabLayout.setupWithViewPager(viewPager)
+        }
+
+        setCourseTab(previousCourseTab)
+        updateViewPagerTab()
 
         if (intent?.action == Intent.ACTION_VIEW) {
             val tab = DeepLinkingUtil.getTab(intent.data?.path)
@@ -186,7 +202,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
 
-        if (course.isEnrolled) {
+        if (course?.isEnrolled == true) {
             if (viewModel.dateCount > 0) {
                 inflater.inflate(R.menu.course_dates, menu)
             }
@@ -205,7 +221,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                 return true
             }
             R.id.action_share    -> {
-                ShareUtil.shareCourseLink(this, course.id)
+                ShareUtil.shareCourseLink(this, courseId)
                 return true
             }
             R.id.action_unenroll -> {
@@ -215,7 +231,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                 return true
             }
             R.id.course_dates    -> {
-                val dialog = CourseDateListDialogAutoBundle.builder(course.id).build()
+                val dialog = CourseDateListDialogAutoBundle.builder(courseId).build()
                 dialog.show(supportFragmentManager, UnenrollDialog.TAG)
                 return true
             }
@@ -225,7 +241,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
     private fun setCourseTab(tab: CourseArea) {
         courseTab = tab
-        courseId?.let {
+        courseId.let {
             if (lastTrackedCourseTab !== courseTab) {
                 when (tab) {
                     CourseArea.DISCUSSIONS   -> LanalyticsUtil.trackVisitedPinboard(it)
@@ -340,7 +356,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     private fun unenroll() {
-        EnrollmentDao.Unmanaged.findForCourse(course.id)?.id?.let { enrollmentId ->
+        EnrollmentDao.Unmanaged.findForCourse(courseId)?.id?.let { enrollmentId ->
             showProgressDialog()
 
             val enrollmentDeletionNetworkState = NetworkStateLiveData()
@@ -403,16 +419,16 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             var fragment: Fragment? = fragmentManager.findFragmentByTag(name)
             if (fragment == null) {
                 when (areaState.get(position)) {
-                    CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(course.id).build()
+                    CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(courseId).build()
                     CourseArea.DISCUSSIONS    -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)
                         .build()
-                    CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(course.id).build()
-                    CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(course.id).build()
-                    CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(course.id).build()
-                    CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(course.id).build()
-                    CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(course.id).build()
+                    CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(courseId).build()
+                    CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(courseId).build()
+                    CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(courseId).build()
+                    CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(courseId).build()
+                    CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build()
                     CourseArea.RECAP          -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)
