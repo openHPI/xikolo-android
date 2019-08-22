@@ -6,14 +6,14 @@ import de.xikolo.config.Config
 import de.xikolo.models.Course
 import de.xikolo.models.Enrollment
 import de.xikolo.network.ApiService
-import de.xikolo.network.jobs.base.RequestJob
-import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.base.NetworkJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.network.sync.Sync
 import io.realm.kotlin.where
 import moe.banana.jsonapi2.HasOne
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class CreateEnrollmentJob(private val courseId: String, callback: RequestJobCallback) : RequestJob(callback, Precondition.AUTH) {
+class CreateEnrollmentJob(private val courseId: String, networkState: NetworkStateLiveData, userRequest: Boolean) : NetworkJob(networkState, userRequest, Precondition.AUTH) {
 
     companion object {
         val TAG: String = CreateEnrollmentJob::class.java.simpleName
@@ -29,19 +29,19 @@ class CreateEnrollmentJob(private val courseId: String, callback: RequestJobCall
             if (Config.DEBUG) Log.i(TAG, "Enrollment created")
 
             Sync.Data.with(response.body()!!)
-                    .saveOnly()
-                    .setBeforeCommitCallback { realm, model ->
-                        realm.where<Course>()
-                            .equalTo("id", courseId)
-                            .findFirst()
-                            ?.enrollmentId = model.id
-                    }
-                    .run()
+                .saveOnly()
+                .setBeforeCommitCallback { realm, model ->
+                    realm.where<Course>()
+                        .equalTo("id", courseId)
+                        .findFirst()
+                        ?.enrollmentId = model.id
+                }
+                .run()
 
-            callback?.success()
+            success()
         } else {
             if (Config.DEBUG) Log.w(TAG, "Enrollment not created")
-            callback?.error(RequestJobCallback.ErrorCode.ERROR)
+            error()
         }
     }
 

@@ -9,6 +9,7 @@ import de.xikolo.models.Course
 import de.xikolo.models.DateOverview
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.models.dao.DateDao
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.shared.CourseListDelegate
@@ -104,6 +105,10 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
 
     fun searchCourses(query: String): List<Course> =
         CourseDao.Unmanaged.search(query, filter == CourseListFilter.MY)
+
+    fun enroll(courseId: String, networkState: NetworkStateLiveData) {
+        enrollmentDelegate.createEnrollment(courseId, networkState, true)
+    }
 
     override fun onFirstCreate() {
         courseListDelegate.requestCourseList(networkState, false)

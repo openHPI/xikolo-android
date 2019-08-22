@@ -31,10 +31,11 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
 import de.xikolo.events.NetworkStateEvent
 import de.xikolo.extensions.observe
-import de.xikolo.managers.CourseManager
+import de.xikolo.extensions.observeOnce
 import de.xikolo.models.Course
 import de.xikolo.models.dao.EnrollmentDao
-import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.base.NetworkCode
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.ShareUtil
@@ -60,8 +61,6 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
     @BindView(R.id.stub_bottom)
     lateinit var stubBottom: ViewStub
-
-    private val courseManager = CourseManager()
 
     private var progressDialog: ProgressDialogIndeterminate? = null
 
@@ -297,42 +296,63 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
     private fun enroll() {
         showProgressDialog()
-        courseManager.createEnrollment(course.id, object : RequestJobCallback() {
-            public override fun onSuccess() {
-                restartActivity()
-                hideProgressDialog()
-            }
 
-            public override fun onError(code: RequestJobCallback.ErrorCode) {
-                hideProgressDialog()
-                if (code === RequestJobCallback.ErrorCode.NO_NETWORK) {
-                    showNoNetworkToast()
-                } else if (code === RequestJobCallback.ErrorCode.NO_AUTH) {
-                    showLoginRequiredMessage()
-                    openLogin()
+        val enrollmentCreationNetworkState = NetworkStateLiveData()
+        enrollmentCreationNetworkState
+            .observeOnce(this) {
+                when (it.code) {
+                    NetworkCode.SUCCESS    -> {
+                        restartActivity()
+                        hideProgressDialog()
+                        true
+                    }
+                    NetworkCode.NO_NETWORK -> {
+                        hideProgressDialog()
+                        showNoNetworkToast()
+                        true
+                    }
+                    NetworkCode.NO_AUTH    -> {
+                        hideProgressDialog()
+                        showLoginRequiredMessage()
+                        openLogin()
+                        true
+                    }
+                    else                   -> false
                 }
             }
-        })
+
+        viewModel.enroll(enrollmentCreationNetworkState)
     }
 
     private fun unenroll() {
         EnrollmentDao.Unmanaged.findForCourse(course.id)?.id?.let { enrollmentId ->
             showProgressDialog()
-            courseManager.deleteEnrollment(enrollmentId, object : RequestJobCallback() {
-                public override fun onSuccess() {
-                    finishActivity()
-                    hideProgressDialog()
+
+            val enrollmentDeletionNetworkState = NetworkStateLiveData()
+            enrollmentDeletionNetworkState
+                .observeOnce(this) {
+                    if (it.code == NetworkCode.STARTED) {
+                        return@observeOnce false
+                    }
+
+                    when (it.code) {
+                        NetworkCode.SUCCESS    -> {
+                            finishActivity()
+                            hideProgressDialog()
+                        }
+                        NetworkCode.NO_NETWORK -> {
+                            hideProgressDialog()
+                            showNoNetworkToast()
+                        }
+                        else                   -> {
+                            hideProgressDialog()
+                            showErrorToast()
+                        }
+                    }
+                    true
                 }
 
-                public override fun onError(code: ErrorCode) {
-                    hideProgressDialog()
-                    if (code === ErrorCode.NO_NETWORK) {
-                        showNoNetworkToast()
-                    } else {
-                        showErrorToast()
-                    }
-                }
-            })
+            viewModel.unenroll(enrollmentId, enrollmentDeletionNetworkState)
         }
     }
 

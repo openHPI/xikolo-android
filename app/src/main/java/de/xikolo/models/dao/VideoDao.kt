@@ -8,6 +8,13 @@ import io.realm.kotlin.where
 
 class VideoDao(realm: Realm) : BaseDao<Video>(Video::class, realm) {
 
+    fun updateProgress(video: Video, position: Int) {
+        realm.executeTransaction {
+            video.progress = position
+            it.copyToRealmOrUpdate(video)
+        }
+    }
+
     class Unmanaged {
         companion object {
 

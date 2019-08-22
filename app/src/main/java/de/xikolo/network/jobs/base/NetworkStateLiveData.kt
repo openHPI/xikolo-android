@@ -7,7 +7,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-class NetworkStateLiveData : LiveData<NetworkState>() {
+open class NetworkStateLiveData : LiveData<NetworkState>() {
 
     fun success(userRequest: Boolean) {
         state(NetworkCode.SUCCESS, userRequest)
@@ -21,7 +21,7 @@ class NetworkStateLiveData : LiveData<NetworkState>() {
         when (code) {
             NetworkCode.SUCCESS    -> EventBus.getDefault().postSticky(NetworkStateEvent(true))
             NetworkCode.NO_NETWORK -> EventBus.getDefault().postSticky(NetworkStateEvent(false))
-            else -> Unit
+            else                   -> Unit
         }
 
         GlobalScope.launch(Dispatchers.Main) {
@@ -31,8 +31,4 @@ class NetworkStateLiveData : LiveData<NetworkState>() {
 
 }
 
-data class NetworkState(val code: NetworkCode, val userRequest: Boolean = false)
-
-enum class NetworkCode {
-    STARTED, SUCCESS, ERROR, CANCEL, NO_NETWORK, NO_AUTH, MAINTENANCE, API_VERSION_EXPIRED
-}
+open class NetworkState(val code: NetworkCode, val userRequest: Boolean = false)

@@ -26,3 +26,15 @@ fun <T> LiveData<T>.observe(owner: LifecycleOwner, observer: (t: T) -> Unit): (t
     })
     return observer
 }
+
+// observing stops when the observer function returns true
+fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, observer: (t: T) -> Boolean): (t: T) -> Boolean {
+    this.observe(owner, object : Observer<T> {
+        override fun onChanged(t: T) {
+            if (t?.let(observer) == true) {
+                removeObserver(this)
+            }
+        }
+    })
+    return observer
+}

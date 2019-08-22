@@ -3,12 +3,12 @@ package de.xikolo.network.jobs
 import android.util.Log
 import de.xikolo.config.Config
 import de.xikolo.network.ApiService
-import de.xikolo.network.jobs.base.RequestJob
-import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.base.NetworkJob
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.network.sync.Sync
 import ru.gildor.coroutines.retrofit.awaitResponse
 
-class ListEnrollmentsJob(callback: RequestJobCallback) : RequestJob(callback, Precondition.AUTH) {
+class ListEnrollmentsJob(networkState: NetworkStateLiveData, userRequest: Boolean) : NetworkJob(networkState, userRequest, Precondition.AUTH) {
 
     companion object {
         val TAG: String = ListEnrollmentsJob::class.java.simpleName
@@ -22,10 +22,10 @@ class ListEnrollmentsJob(callback: RequestJobCallback) : RequestJob(callback, Pr
 
             Sync.Data.with(response.body()!!)
 
-            callback?.success()
+            success()
         } else {
             if (Config.DEBUG) Log.e(TAG, "Error while fetching enrollment list")
-            callback?.error(RequestJobCallback.ErrorCode.ERROR)
+            error()
         }
     }
 

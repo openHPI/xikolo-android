@@ -3,11 +3,12 @@ package de.xikolo.network.jobs
 import android.util.Log
 import de.xikolo.config.Config
 import de.xikolo.network.ApiService
-import de.xikolo.network.jobs.base.RequestJob
-import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.base.HealthCheckNetworkStateLiveData
+import de.xikolo.network.jobs.base.NetworkJob
 import ru.gildor.coroutines.retrofit.awaitResponse
+import java.util.*
 
-class CheckHealthJob(callback: RequestJobCallback) : RequestJob(callback) {
+class CheckHealthJob(private val networkState: HealthCheckNetworkStateLiveData, private val userRequest: Boolean) : NetworkJob(networkState, userRequest) {
 
     companion object {
         val TAG: String = CheckHealthJob::class.java.simpleName
@@ -21,25 +22,31 @@ class CheckHealthJob(callback: RequestJobCallback) : RequestJob(callback) {
                 val apiVersionExpirationDate = response.headers().getDate(Config.HEADER_API_VERSION_EXPIRATION_DATE)
                 if (apiVersionExpirationDate != null) {
                     if (Config.DEBUG) Log.e(TAG, "Health check: api deprecated and will expire at $apiVersionExpirationDate")
-                    callback?.deprecated(apiVersionExpirationDate)
+                    deprecated(apiVersionExpirationDate)
                 } else {
                     if (Config.DEBUG) Log.i(TAG, "Health check: successful")
-                    callback?.success()
+                    success()
                 }
             }
-            406 -> {
+            406         -> {
                 if (Config.DEBUG) Log.e(TAG, "Health check: api version expired")
-                callback?.error(RequestJobCallback.ErrorCode.API_VERSION_EXPIRED)
+                apiVersionExpired()
             }
-            503 -> {
+            503         -> {
                 if (Config.DEBUG) Log.e(TAG, "Health check: server maintenance ongoing")
-                callback?.error(RequestJobCallback.ErrorCode.MAINTENANCE)
+                maintenance()
             }
-            else -> {
+            else        -> {
                 if (Config.DEBUG) Log.e(TAG, "Health check: unclassified error")
-                callback?.error(RequestJobCallback.ErrorCode.ERROR)
+                error()
             }
         }
     }
+
+    private fun deprecated(deprecationDate: Date) = networkState.deprecated(deprecationDate, userRequest)
+
+    private fun apiVersionExpired() = networkState.apiVersionExpired(userRequest)
+
+    private fun maintenance() = networkState.maintenance(userRequest)
 
 }

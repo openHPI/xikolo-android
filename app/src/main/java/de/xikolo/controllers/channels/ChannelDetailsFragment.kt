@@ -16,12 +16,13 @@ import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.extensions.observe
-import de.xikolo.managers.CourseManager
+import de.xikolo.extensions.observeOnce
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
 import de.xikolo.models.dao.CourseDao
-import de.xikolo.network.jobs.base.RequestJobCallback
+import de.xikolo.network.jobs.base.NetworkCode
+import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.channel.ChannelViewModel
 import de.xikolo.views.AutofitRecyclerView
@@ -48,8 +49,6 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
 
     @BindView(R.id.text_title)
     internal lateinit var textTitle: TextView
-
-    private val courseManager = CourseManager()
 
     @BindView(R.id.course_list)
     internal lateinit var recyclerView: AutofitRecyclerView
@@ -165,29 +164,35 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
 
     private fun enroll(courseId: String) {
         showBlockingProgress()
-        courseManager.createEnrollment(courseId, object : RequestJobCallback() {
-            public override fun onSuccess() {
-                if (view != null) {
-                    hideAnyProgress()
-                    val course = CourseDao.Unmanaged.find(courseId)
-                    if (course?.accessible == true) {
-                        enterCourse(courseId)
+
+        val enrollmentCreationNetworkState = NetworkStateLiveData()
+        enrollmentCreationNetworkState
+            .observeOnce(viewLifecycleOwner) {
+                when (it.code) {
+                    NetworkCode.SUCCESS    -> {
+                        hideAnyProgress()
+                        val course = CourseDao.Unmanaged.find(courseId)
+                        if (course?.accessible == true) {
+                            enterCourse(courseId)
+                        }
+                        true
                     }
+                    NetworkCode.NO_NETWORK -> {
+                        hideAnyProgress()
+                        showNetworkRequired()
+                        true
+                    }
+                    NetworkCode.NO_AUTH    -> {
+                        hideAnyProgress()
+                        showLoginRequired()
+                        openLogin()
+                        true
+                    }
+                    else                   -> false
                 }
             }
 
-            public override fun onError(code: RequestJobCallback.ErrorCode) {
-                if (view != null) {
-                    hideAnyProgress()
-                    if (code === ErrorCode.NO_NETWORK) {
-                        showNetworkRequired()
-                    } else if (code === RequestJobCallback.ErrorCode.NO_AUTH) {
-                        showLoginRequired()
-                        openLogin()
-                    }
-                }
-            }
-        })
+        viewModel.enroll(courseId, enrollmentCreationNetworkState)
     }
 
     private fun enterCourse(courseId: String) {
