@@ -31,6 +31,7 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
 import de.xikolo.events.NetworkStateEvent
 import de.xikolo.extensions.observe
+import de.xikolo.managers.UserManager
 import de.xikolo.extensions.observeOnce
 import de.xikolo.models.Course
 import de.xikolo.models.dao.EnrollmentDao
@@ -76,11 +77,8 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     private lateinit var course: Course
 
     override fun createViewModel(): CourseViewModel {
-        if (intent.action === Intent.ACTION_VIEW) { // deep linking
-            courseId = DeepLinkingUtil.getCourseIdentifierFromResumeUri(intent.data)
-            setCourseTab(
-                DeepLinkingUtil.getTab(intent?.data?.path)
-            )
+        if (intent?.action === Intent.ACTION_VIEW) { // deep linking
+            courseId = DeepLinkingUtil.getCourseIdentifier(intent.data?.path)
         }
         if (courseId == null) {
             val cacheController = CacheHelper()
@@ -161,6 +159,23 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         }
 
         title = course.title
+
+        if (intent?.action == Intent.ACTION_VIEW) {
+            val tab = DeepLinkingUtil.getTab(intent.data?.path)
+            if (!areaState.areas.contains(tab)) {
+                ToastUtil.show(
+                    if (!UserManager.isAuthorized) {
+                        R.string.notification_please_login_summary
+                    } else {
+                        R.string.notification_deep_link_error
+                    }
+                )
+            } else {
+                setCourseTab(tab)
+                updateViewPagerTab()
+            }
+            intent = null
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {

@@ -121,23 +121,7 @@
 
                 <data
                     android:host="@string/app_host"
-                    android:pathPattern="/courses/..*/resume"
-                    android:scheme="https" />
-                <data
-                    android:host="@string/app_host"
-                    android:pathPattern="/courses/..*/pinboard"
-                    android:scheme="https" />
-                <data
-                    android:host="@string/app_host"
-                    android:pathPattern="/courses/..*/progress"
-                    android:scheme="https" />
-                <data
-                    android:host="@string/app_host"
-                    android:pathPattern="/courses/..*/learning_rooms"
-                    android:scheme="https" />
-                <data
-                    android:host="@string/app_host"
-                    android:pathPattern="/courses/..*/announcements"
+                    android:pathPattern="/courses/..*"
                     android:scheme="https" />
             </intent-filter>
         </activity>

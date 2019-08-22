@@ -21,7 +21,7 @@ enum class CourseArea(@StringRes val titleRes: Int) {
 
     abstract class State {
 
-        protected val areas: MutableList<CourseArea> = mutableListOf()
+        val areas: MutableList<CourseArea> = mutableListOf()
 
         val size: Int
             get() = areas.size
