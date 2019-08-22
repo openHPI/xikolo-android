@@ -21,7 +21,6 @@ import de.xikolo.controllers.base.ViewModelActivity
 import de.xikolo.controllers.downloads.DownloadsActivity
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.controllers.login.LoginActivityAutoBundle
-import de.xikolo.controllers.secondscreen.SecondScreenActivity
 import de.xikolo.controllers.settings.SettingsActivity
 import de.xikolo.events.LoginEvent
 import de.xikolo.events.LogoutEvent
@@ -180,9 +179,6 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         }
 
         when (item.itemId) {
-            R.id.navigation_second_screen -> {
-                intent = Intent(this, SecondScreenActivity::class.java)
-            }
             R.id.navigation_downloads     -> {
                 intent = Intent(this, DownloadsActivity::class.java)
 
@@ -240,9 +236,6 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
 
         if (!FeatureConfig.CHANNELS) {
             navigationView.menu.findItem(R.id.navigation_channels).isVisible = false
-        }
-        if (!FeatureConfig.SECOND_SCREEN) {
-            navigationView.menu.findItem(R.id.navigation_second_screen).isVisible = false
         }
         if (UserManager.isAuthorized) {
             val headerView = navigationView.inflateHeaderView(R.layout.item_navigation_profile)

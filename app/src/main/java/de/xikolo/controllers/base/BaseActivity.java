@@ -38,11 +38,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.config.FeatureConfig;
 import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
-import de.xikolo.managers.UserManager;
 import de.xikolo.receivers.NetworkChangeReceiver;
 import de.xikolo.utils.NotificationUtil;
 import de.xikolo.utils.PlayServicesUtil;
@@ -153,10 +151,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         if (castContext != null) {
             castContext.addCastStateListener(this);
             setupCastMiniController();
-        }
-
-        if (UserManager.isAuthorized() && FeatureConfig.SECOND_SCREEN) {
-            app.getWebSocketManager().initConnection(UserManager.getToken());
         }
     }
 

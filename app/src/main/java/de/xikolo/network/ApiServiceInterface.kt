@@ -76,11 +76,6 @@ interface ApiServiceInterface {
     @GET("course-dates")
     fun listDates(): Call<Array<CourseDate.JsonModel>>
 
-    // Subtitle
-
-    @GET("subtitle-tracks?include=cues")
-    fun listSubtitlesWithCuesForVideo(@Query("filter[video]") videoId: String): Call<Array<SubtitleTrack.JsonModel>>
-
     // User and Profile
 
     @GET("users/me?include=profile")

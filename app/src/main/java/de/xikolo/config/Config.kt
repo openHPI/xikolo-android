@@ -100,8 +100,6 @@ object Config {
     const val ITEMS = "items/"
     const val RECAP = "learn?course_id="
 
-    @JvmField val WEBSOCKET_URL = "wss://$HOST/ws"
-
     const val PRESENTER_LIFECYCLE_LOGGING = false
     const val WEBVIEW_LOGGING = false
 

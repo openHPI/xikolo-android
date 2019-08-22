@@ -268,41 +268,6 @@ object LanalyticsUtil {
                 .track()
     }
 
-    // Second Screen Events
-
-    enum class SecondScreenEvent {
-        SLIDES_VISITED, SLIDES_START, SLIDES_STOP,
-        TRANSCRIPT_VISITED, TRANSCRIPT_START, TRANSCRIPT_STOP,
-        PINBOARD_VISITED, PINBOARD_START, PINBOARD_STOP,
-        QUIZ_VISITED, QUIZ_START, QUIZ_STOP
-    }
-
-    @JvmStatic
-    fun trackSecondScreenEvent(type: SecondScreenEvent, videoId: String, courseId: String, sectionId: String) {
-        val builder = createEventBuilder()
-                .setResource(videoId, "video")
-                .putContext(CONTEXT_COURSE_ID, courseId)
-                .putContext(CONTEXT_SECTION_ID, sectionId)
-                .setOnlyWifi(true)
-
-        when (type) {
-            SecondScreenEvent.SLIDES_VISITED -> builder.setVerb("VISITED_SECOND_SCREEN_SLIDES")
-            SecondScreenEvent.SLIDES_START -> builder.setVerb("SECOND_SCREEN_SLIDES_START")
-            SecondScreenEvent.SLIDES_STOP -> builder.setVerb("SECOND_SCREEN_SLIDES_STOP")
-            SecondScreenEvent.TRANSCRIPT_VISITED -> builder.setVerb("VISITED_SECOND_SCREEN_TRANSCRIPT")
-            SecondScreenEvent.TRANSCRIPT_START -> builder.setVerb("SECOND_SCREEN_TRANSCRIPT_START")
-            SecondScreenEvent.TRANSCRIPT_STOP -> builder.setVerb("SECOND_SCREEN_TRANSCRIPT_STOP")
-            SecondScreenEvent.PINBOARD_VISITED -> builder.setVerb("VISITED_SECOND_SCREEN_PINBOARD")
-            SecondScreenEvent.PINBOARD_START -> builder.setVerb("SECOND_SCREEN_PINBOARD_START")
-            SecondScreenEvent.PINBOARD_STOP -> builder.setVerb("SECOND_SCREEN_PINBOARD_STOP")
-            SecondScreenEvent.QUIZ_VISITED -> builder.setVerb("VISITED_SECOND_SCREEN_QUIZ")
-            SecondScreenEvent.QUIZ_START -> builder.setVerb("SECOND_SCREEN_QUIZ_START")
-            SecondScreenEvent.QUIZ_STOP -> builder.setVerb("SECOND_SCREEN_QUIZ_STOP")
-        }
-
-        builder.build().track()
-    }
-
     // Text Item Events
 
     @JvmStatic

@@ -45,10 +45,6 @@
         android:id="@+id/navigation_group_sub"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_second_screen"
-            android:icon="@drawable/ic_nav_second_screen"
-            android:title="@string/title_section_second_screen" />
-        <item
             android:id="@+id/navigation_downloads"
             android:icon="@drawable/ic_nav_downloads"
             android:title="@string/title_section_downloads" />

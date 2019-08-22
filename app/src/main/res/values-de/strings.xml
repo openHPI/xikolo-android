@@ -12,7 +12,6 @@
     <string name="title_section_settings">Einstellungen</string>
     <string name="title_section_my_courses">Meine Kurse</string>
     <string name="title_section_certificates">Zertifikate</string>
-    <string name="title_section_second_screen">Second Screen</string>
 
     <string name="title_section_channels">Channels</string>
 
@@ -96,10 +95,6 @@
     <string name="dialog_storage_migration_title">Speichermigration</string>
     <string name="dialog_storage_migration_message">Verschieben der Dateien läuft. Bitte warten Sie bis dies abgeschlossen ist. Entfernen Sie auf keinen Fall das Speichermedium.</string>
     <string name="dialog_storage_migration_successful">Vorgang erfolgreich abgeschlossen!</string>
-
-    <string name="dialog_second_screen_title">Probieren Sie Second Screen aus!</string>
-    <string name="dialog_second_screen_message">Entdecken Sie zusätzliche Inhalte auf ihrem mobilen Gerät, während Sie Video-Lektionen auf Ihrem Computer schauen. Um zu starten, spielen Sie einfach eine Video-Lektion in dem Browser Ihres Computers ab.</string>
-    <string name="dialog_second_screen_yes">Öffnen</string>
 
     <string name="dialog_api_deprecation_title">%1$s aktualisieren</string>
     <string name="dialog_api_deprecation_message">%1$s wird nach dem %2$s nur ausgeführt, wenn du die App aktualisierst.</string>
@@ -230,7 +225,6 @@
     <!-- -->
     <string name="notification_download_completed">Download abgeschlossen</string>
     <string name="notification_multiple_downloads_completed">%1$d Downloads abgeschlossen</string>
-    <string name="notification_start_second_screen">Starte Second Screen</string>
 
     <string name="notification_multiple_downloads_running">%1$d Dateien werden heruntergeladen</string>
 
@@ -297,31 +291,6 @@
     <string name="settings_terms_of_use">Nutzungsbedingungen</string>
 
     <string name="settings_send_app_feedback">Feedback zur App senden</string>
-
-    <!-- -->
-    <string name="second_screen_introduction_title">Probieren Sie Second Screen aus!</string>
-    <string name="second_screen_introduction_text">Der Second Screen Modus ist eine neue Beta-Funktionalität, die es Ihnen ermöglicht zusätzliche Inhalte auf ihrem mobilen Gerät zu entdecken, während Sie Video-Lektionen auf Ihrem Computer schauen. Um zu starten, spielen Sie einfach eine Video-Lektion in dem Browser Ihres Computers ab. Verfügbare Inhalte und Funktionen werden dann hier erscheinen.</string>
-
-    <string name="second_screen_action_title_pdf_viewer">Slides Reader</string>
-    <string name="second_screen_action_description_pdf_viewer">Lesen Sie die Slides der Lektion</string>
-    <string name="second_screen_action_title_quiz">Quiz</string>
-    <string name="second_screen_action_description_quiz">Testen Sie Ihr Wissen über die Lektion</string>
-    <string name="second_screen_action_title_pinboard">Fragen und Diskussionen</string>
-    <string name="second_screen_action_description_pinboard">Entdecken Sie Fragen und Diskussionen zum Video</string>
-    <string name="second_screen_action_title_transcript">Interaktives Transkript</string>
-    <string name="second_screen_action_description_transcript">Folgen Sie dem Redner mit synchronisierten Untertiteln</string>
-
-    <string name="second_screen_survey_title">Wie hat es Ihnen gefallen?</string>
-    <string name="second_screen_survey_text">Helfen Sie uns bei unserer Forschung und fortlaufenden Verbesserung der Platform und der Apps: Wir sind gespannt, wie Ihnen diese neue Funktionalität gefallen hat. Bitte klicken Sie hier und erzählen Sie uns in einer kurzen Umfrage, wie Ihre Nutzungererfahrung war.</string>
-
-    <string name="second_screen_slides">Slides</string>
-    <string name="second_screen_transcript">Transkript</string>
-
-    <string name="second_screen_no_video">Kein wiedergegebenes Video erkannt.</string>
-
-    <string name="second_screen_pdf_pager">Aktuelle Slide: %1$d</string>
-
-    <string name="second_screen_survey_url">https://tools.openhpi.de/survey/index.php?r=survey/index&amp;sid=374459&amp;newtest=Y&amp;lang=de</string>
 
     <!-- -->
     <string name="lang_en">Englisch</string>
