@@ -13,7 +13,6 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     implementation "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
 
-    implementation "org.java-websocket:Java-WebSocket:1.4.0"
     implementation "com.coolerfall:android-http-download-manager:1.6.2"
 
     // images
