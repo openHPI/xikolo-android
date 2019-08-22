@@ -114,6 +114,13 @@ public class RealmSchemaMigration implements RealmMigration {
 
             oldVersion++;
         }
+
+        if (oldVersion == 7) {
+            schema.remove("SubtitleTrack");
+            schema.remove("SubtitleCue");
+
+            oldVersion++;
+        }
     }
 
 }
