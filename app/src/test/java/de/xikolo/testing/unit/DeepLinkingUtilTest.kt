@@ -2,7 +2,8 @@ package de.xikolo.testing.unit
 
 import de.xikolo.controllers.helper.CourseArea
 import de.xikolo.utils.DeepLinkingUtil
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class DeepLinkingUtilTest {
@@ -26,19 +27,19 @@ class DeepLinkingUtilTest {
 
     @Test
     fun testCourseTab() {
-        assertTrue(
-            CourseArea.LEARNINGS ==
-                DeepLinkingUtil.getTab("/courses/123456/resume")
+        assertEquals(
+            CourseArea.LEARNINGS,
+            DeepLinkingUtil.getTab("/courses/123456/resume")
         )
 
-        assertTrue(
-            CourseArea.COURSE_DETAILS ==
-                DeepLinkingUtil.getTab("/courses/123456")
+        assertEquals(
+            CourseArea.COURSE_DETAILS,
+            DeepLinkingUtil.getTab("/courses/123456")
         )
 
-        assertTrue(
-            CourseArea.COURSE_DETAILS ==
-                DeepLinkingUtil.getTab("/courses/123456/invalid")
+        assertEquals(
+            CourseArea.COURSE_DETAILS,
+            DeepLinkingUtil.getTab("/courses/123456/invalid")
         )
     }
 
