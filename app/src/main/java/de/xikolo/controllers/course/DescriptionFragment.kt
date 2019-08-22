@@ -123,7 +123,9 @@ class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
         }
 
         textDate.text = course.formattedDate
-        if (DateUtil.isFuture(course.endDate)) {
+        if (course.endDate == null) {
+            textDate.setDate(course.startDate)
+        } else if (DateUtil.isFuture(course.endDate)) {
             textDate.setDateSpan(course.startDate, course.endDate)
         }
 
