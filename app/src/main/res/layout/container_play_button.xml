@@ -9,6 +9,6 @@
     android:elevation="2dp"
     android:gravity="center"
     android:text="@string/icon_play"
-    android:textColor="@color/white"
+    android:textColor="@color/apptheme_play_button_fg"
     android:textSize="32sp"
     app:customFont="xikolo.ttf" />

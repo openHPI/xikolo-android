@@ -3,7 +3,7 @@
     android:color="@color/apptheme_main_light">
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/apptheme_main" />
+            <solid android:color="@color/apptheme_play_button_bg" />
             <size android:width="56dp" android:height="56dp" />
         </shape>
     </item>
