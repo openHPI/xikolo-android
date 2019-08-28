@@ -34,6 +34,9 @@
     <color name="apptheme_section_header_bg_locked">@color/transparent</color>
     <color name="apptheme_section_header_text_locked">@color/text_light</color>
 
+    <color name="apptheme_play_button_bg">@color/white</color>
+    <color name="apptheme_play_button_fg">@color/apptheme_main</color>
+
     <color name="offline_mode_toolbar">#cccccc</color>
     <color name="offline_mode_statusbar">#7a7a7a</color>
 
