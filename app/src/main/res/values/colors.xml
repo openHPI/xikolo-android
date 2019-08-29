@@ -32,6 +32,7 @@
 
     <color name="banner_yellow">#F5A704</color>
     <color name="banner_green">#8CB30D</color>
+    <color name="banner_grey">#5F5F5F</color>
 
     <color name="progress_green">#80B600</color>
 

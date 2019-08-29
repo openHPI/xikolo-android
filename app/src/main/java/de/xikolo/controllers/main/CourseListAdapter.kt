@@ -83,12 +83,18 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
                     holder.textDescription.text = course.shortAbstract
                     holder.textDescription.visibility = View.VISIBLE
 
-                    if (DateUtil.nowIsBetween(course.startDate, course.endDate)) {
-                        holder.textBanner.visibility = View.VISIBLE
-                        holder.textBanner.text = App.instance.getText(R.string.banner_running)
-                        holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_green))
-                    } else {
-                        holder.textBanner.visibility = View.GONE
+                    when {
+                        course.external                                         -> {
+                            holder.textBanner.visibility = View.VISIBLE
+                            holder.textBanner.text = App.instance.getText(R.string.banner_external)
+                            holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_grey))
+                        }
+                        DateUtil.nowIsBetween(course.startDate, course.endDate) -> {
+                            holder.textBanner.visibility = View.VISIBLE
+                            holder.textBanner.text = App.instance.getText(R.string.banner_running)
+                            holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_green))
+                        }
+                        else                                                    -> holder.textBanner.visibility = View.GONE
                     }
                 } else {
                     holder.textDescription.visibility = View.GONE

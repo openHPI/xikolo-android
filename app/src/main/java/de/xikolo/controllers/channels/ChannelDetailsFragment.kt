@@ -1,5 +1,7 @@
 package de.xikolo.controllers.channels
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -80,6 +82,10 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
 
             override fun onDetailButtonClicked(courseId: String) {
                 enterCourseDetails(courseId)
+            }
+
+            override fun onExternalButtonClicked(course: Course) {
+                enterExternalCourse(course)
             }
         })
 
@@ -207,6 +213,11 @@ class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
 
     private fun enterCourseDetails(courseId: String) {
         val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(App.instance)
+        startActivity(intent)
+    }
+
+    private fun enterExternalCourse(course: Course){
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(course.externalUrl))
         startActivity(intent)
     }
 

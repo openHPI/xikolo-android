@@ -1,5 +1,7 @@
 package de.xikolo.controllers.main
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -78,6 +80,10 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
 
                 override fun onDetailButtonClicked(courseId: String) {
                     enterCourseDetails(courseId)
+                }
+
+                override fun onExternalButtonClicked(course: Course) {
+                    enterExternalCourse(course)
                 }
             },
             object : CourseListAdapter.OnDateOverviewClickListener {
@@ -214,6 +220,11 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
 
     private fun enterCourseDetails(courseId: String) {
         val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(activity!!)
+        startActivity(intent)
+    }
+
+    private fun enterExternalCourse(course: Course){
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(course.externalUrl))
         startActivity(intent)
     }
 

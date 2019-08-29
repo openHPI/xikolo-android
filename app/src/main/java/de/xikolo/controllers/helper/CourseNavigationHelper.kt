@@ -52,4 +52,10 @@ enum class CourseArea(@StringRes val titleRes: Int) {
         }
     }
 
+    object External : State() {
+        init {
+            areas.add(COURSE_DETAILS)
+        }
+    }
+
 }
