@@ -123,6 +123,11 @@
                     android:host="@string/app_host"
                     android:pathPattern="/courses/..*"
                     android:scheme="https" />
+
+                <data
+                    android:host="@string/app_host"
+                    android:pathPattern="/learn"
+                    android:scheme="https"/>
             </intent-filter>
         </activity>
         <activity

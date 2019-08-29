@@ -13,7 +13,7 @@ class MockingData {
          * Returns null if request cannot be mocked and the {@link MockingInterceptor} should proceed without mocking.
          */
         fun getResponse(context: Context, request: Request, flavor: BuildFlavor): BaseMockedResponse? {
-            return when (request.url().encodedPath()) {
+            return when (request.url.encodedPath) {
                 MockedRequest.AUTHENTICATE.path -> MockedResponseFromJsonAsset(context, "mockdata/authenticate")
                 MockedRequest.COURSES.path      -> MockedResponseFromJsonAsset(context, "mockdata/courses")
                 MockedRequest.CHANNELS.path     -> MockedResponseFromJsonAsset(context, "mockdata/channels")
