@@ -149,7 +149,6 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
         title = course.title
 
-        val previousCourseTab = courseTab
         adapter = CoursePagerAdapter(supportFragmentManager, course.id)
         adapter?.let {
             viewPager.adapter = it
@@ -158,7 +157,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             tabLayout.addOnTabSelectedListener(it)
             tabLayout.setupWithViewPager(viewPager)
         }
-        setCourseTab(previousCourseTab)
+        setCourseTab(courseTab)
 
         handleCourseDeepLinkTab(intent)
 
