@@ -139,7 +139,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
         if (course.external) {
             setAreaState(CourseArea.External)
-            showCourseExternalBar(course.externalUrl)
+            showCourseExternalBar(course)
 
             enrollButton?.setOnClickListener { enterExternalCourse(course) }
         } else if (!course.isEnrolled) {
@@ -309,12 +309,13 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         enrollButton?.setText(R.string.btn_enroll)
     }
 
-    private fun showCourseExternalBar(externalUrl: String) {
+    private fun showCourseExternalBar(course: Course) {
         enrollBar?.visibility = View.VISIBLE
         enrollButton?.isEnabled = true
         enrollButton?.isClickable = true
 
-        Uri.parse(externalUrl)?.host?.let {
+        enrollButton?.setText(R.string.btn_external_course)
+        Uri.parse(course.externalUrl)?.host?.let {
             enrollButton?.setText(
                 getString(R.string.btn_external_course_target, it)
             )
