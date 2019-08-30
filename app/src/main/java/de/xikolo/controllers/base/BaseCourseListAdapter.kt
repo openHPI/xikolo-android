@@ -49,7 +49,7 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
         holder.buttonCourseDetails.visibility = View.VISIBLE
         holder.buttonCourseDetails.setOnClickListener { onCourseButtonClickListener?.onDetailButtonClicked(course.id) }
 
-        if(course.external){
+        if (course.external) {
             holder.layout.setOnClickListener { onCourseButtonClickListener?.onDetailButtonClicked(course.id) }
 
             holder.buttonCourseAction.text = App.instance.getString(R.string.btn_external_course)

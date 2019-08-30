@@ -137,9 +137,9 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     private fun setupCourse(course: Course) {
         Crashlytics.setString("course_id", course.id)
 
-        if(course.external){
+        if (course.external) {
             setAreaState(CourseArea.External)
-            showCourseExternalBar()
+            showCourseExternalBar(course.externalUrl)
 
             enrollButton?.setOnClickListener { enterExternalCourse(course) }
         } else if (!course.isEnrolled) {
@@ -309,11 +309,16 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         enrollButton?.setText(R.string.btn_enroll)
     }
 
-    private fun showCourseExternalBar() {
+    private fun showCourseExternalBar(externalUrl: String) {
         enrollBar?.visibility = View.VISIBLE
         enrollButton?.isEnabled = true
         enrollButton?.isClickable = true
-        enrollButton?.setText(R.string.btn_external_course)
+
+        Uri.parse(externalUrl)?.host?.let {
+            enrollButton?.setText(
+                getString(R.string.btn_external_course_target, it)
+            )
+        }
     }
 
     private fun showCourseUnavailableEnrollBar() {
@@ -440,7 +445,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         }
     }
 
-    private fun enterExternalCourse(course: Course){
+    private fun enterExternalCourse(course: Course) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(course.externalUrl))
         startActivity(intent)
     }

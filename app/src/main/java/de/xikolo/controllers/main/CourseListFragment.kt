@@ -223,7 +223,7 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         startActivity(intent)
     }
 
-    private fun enterExternalCourse(course: Course){
+    private fun enterExternalCourse(course: Course) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(course.externalUrl))
         startActivity(intent)
     }

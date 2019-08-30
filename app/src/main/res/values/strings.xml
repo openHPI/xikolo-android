@@ -53,7 +53,8 @@
     <!-- -->
     <string name="btn_enroll">Enroll</string>
     <string name="btn_continue_course">Continue</string>
-    <string name="btn_external_course">Go to external course</string>
+    <string name="btn_external_course">Open external</string>
+    <string name="btn_external_course_target">Go to external course on %1$s</string>
     <string name="btn_course_details">Show details</string>
     <string name="btn_channel_courses">Show more</string>
     <string name="btn_channel_slider_more">Show more courses</string>
