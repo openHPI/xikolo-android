@@ -77,10 +77,12 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         // check Play Services, display dialog is update needed
         PlayServicesUtil.checkPlayServicesWithDialog(this)
 
-        handleIntent(intent)
-
         updateDrawer()
-        selectDrawerSection(viewModel.drawerSection)
+
+        val intentHandled = handleIntent(intent)
+        if(!intentHandled){
+            selectDrawerSection(viewModel.drawerSection)
+        }
 
         viewModel.announcements
             .observe(this) {
@@ -106,17 +108,19 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         handleIntent(intent)
     }
 
-    private fun handleIntent(intent: Intent?) {
+    private fun handleIntent(intent: Intent?): Boolean {
         if (intent?.action == Intent.ACTION_VIEW) {
             val uri = intent.data
-            DeepLinkingUtil.getType(uri)?.let {
+            DeepLinkingUtil.getType(uri?.path)?.let {
                 when (it) {
-                    DeepLinkingUtil.Type.ALL_COURSES -> selectDrawerSection(R.id.navigation_all_courses)
-                    DeepLinkingUtil.Type.NEWS        -> selectDrawerSection(R.id.navigation_news)
-                    DeepLinkingUtil.Type.MY_COURSES  -> selectDrawerSection(R.id.navigation_my_courses)
+                    DeepLinkingUtil.AppArea.ALL_COURSES -> selectDrawerSection(R.id.navigation_all_courses)
+                    DeepLinkingUtil.AppArea.NEWS        -> selectDrawerSection(R.id.navigation_news)
+                    DeepLinkingUtil.AppArea.MY_COURSES  -> selectDrawerSection(R.id.navigation_my_courses)
                 }
+                return true
             }
         }
+        return false
     }
 
     override fun selectDrawerSection(@IdRes itemId: Int) {

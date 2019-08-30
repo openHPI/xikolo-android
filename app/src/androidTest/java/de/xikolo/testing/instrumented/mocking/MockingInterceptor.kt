@@ -2,7 +2,11 @@ package de.xikolo.testing.instrumented.mocking
 
 import android.content.Context
 import de.xikolo.BuildConfig
-import okhttp3.*
+import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.Protocol
+import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
 
 /**
  * An Interceptor which mocks request responses.
@@ -14,10 +18,11 @@ class MockingInterceptor(private val context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         return try {
             val mockedResponse = MockingData.getResponse(context, chain.request(), BuildConfig.X_FLAVOR)!!
-            val responseBody = ResponseBody.create(
-                MediaType.parse(mockedResponse.contentType),
-                mockedResponse.responseString.toByteArray()
-            )
+            val responseBody = mockedResponse.responseString
+                .toByteArray()
+                .toResponseBody(
+                    mockedResponse.contentType.toMediaTypeOrNull()
+                )
             Response.Builder()
                 .code(mockedResponse.statusCode)
                 .message(mockedResponse.responseString)

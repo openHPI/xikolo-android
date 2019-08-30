@@ -2,6 +2,7 @@ package de.xikolo.controllers.course
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -25,21 +26,21 @@ import de.xikolo.controllers.dialogs.CourseDateListDialogAutoBundle
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.controllers.dialogs.UnenrollDialog
-import de.xikolo.controllers.helper.CacheHelper
 import de.xikolo.controllers.helper.CourseArea
 import de.xikolo.controllers.login.LoginActivityAutoBundle
+import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
 import de.xikolo.events.NetworkStateEvent
 import de.xikolo.extensions.observe
 import de.xikolo.extensions.observeOnce
+import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
 import de.xikolo.models.dao.EnrollmentDao
+import de.xikolo.models.dao.ItemDao
+import de.xikolo.network.jobs.GetItemWithContentJob
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkStateLiveData
-import de.xikolo.utils.DeepLinkingUtil
-import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.utils.ShareUtil
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.*
 import de.xikolo.viewmodels.course.CourseViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -73,43 +74,53 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     private var courseTab: CourseArea = CourseArea.LEARNINGS
     private var lastTrackedCourseTab: CourseArea? = null
 
-    private lateinit var course: Course
+    private var course: Course? = null
 
     override fun createViewModel(): CourseViewModel {
-        if (intent.action === Intent.ACTION_VIEW) { // deep linking
-            courseId = DeepLinkingUtil.getCourseIdentifierFromResumeUri(intent.data)
-            setCourseTab(
-                DeepLinkingUtil.getTab(intent?.data?.path)
-            )
-        }
-        if (courseId == null) {
-            val cacheController = CacheHelper()
-            cacheController.readCachedExtras()
-            if (cacheController.course != null) {
-                courseId = cacheController.course.id
-            }
-        }
-        return if (courseId != null) {
-            CourseViewModel(courseId!!)
-        } else {
-            showErrorToast()
+        return courseId?.let {
+            CourseViewModel(it)
+        } ?: run {
+            showDeepLinkErrorMessage()
+            createChooserFromCurrentIntent()
             finishActivity()
             CourseViewModel("")
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (courseId == null) {
+            courseId = handleCourseDeepLink(intent)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blank_tabs)
         setupActionBar(false)
         enableOfflineModeToolbar(true)
 
-        setupView()
+        if (stubBottom.parent != null) {
+            stubBottom.layoutResource = R.layout.content_enroll_button
+            enrollBar = stubBottom.inflate()
+            enrollButton = enrollBar?.findViewById(R.id.button_enroll)
+            enrollButton?.setOnClickListener { enroll() }
+        }
+        hideEnrollBar()
+    }
 
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+
+        handleItemDeepLink(intent)
         viewModel.course
-            .observe(this) {
-                course = it
-                setupCourse()
+            .observeOnce(this) {
+                if (it.isValid) {
+                    course = it
+                    setupCourse(it)
+                } else {
+                    showDeepLinkErrorMessage()
+                    createChooserFromCurrentIntent()
+                    finishActivity()
+                }
+                true
             }
 
         viewModel.dates
@@ -118,35 +129,11 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             }
     }
 
-    private fun setupView() {
-        if (stubBottom.parent != null) {
-            stubBottom.layoutResource = R.layout.content_enroll_button
-            enrollBar = stubBottom.inflate()
-            enrollButton = enrollBar?.findViewById(R.id.button_enroll)
-            enrollButton?.setOnClickListener { enroll() }
-        }
-
-        val previousCourseTab = courseTab
-        adapter = CoursePagerAdapter(supportFragmentManager)
-        adapter?.let {
-            viewPager.adapter = it
-
-            tabLayout.clearOnTabSelectedListeners()
-            tabLayout.addOnTabSelectedListener(it)
-            tabLayout.setupWithViewPager(viewPager)
-        }
-
-        setCourseTab(previousCourseTab)
-        updateViewPagerTab()
-
-        hideEnrollBar()
-    }
-
     private fun updateViewPagerTab() {
         viewPager.currentItem = areaState.indexOf(courseTab)
     }
 
-    private fun setupCourse() {
+    private fun setupCourse(course: Course) {
         Crashlytics.setString("course_id", course.id)
 
         if (!course.isEnrolled) {
@@ -161,17 +148,85 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         }
 
         title = course.title
+
+        adapter = CoursePagerAdapter(supportFragmentManager, course.id)
+        adapter?.let {
+            viewPager.adapter = it
+
+            tabLayout.clearOnTabSelectedListeners()
+            tabLayout.addOnTabSelectedListener(it)
+            tabLayout.setupWithViewPager(viewPager)
+        }
+        setCourseTab(courseTab)
+
+        handleCourseDeepLinkTab(intent)
+
+        updateViewPagerTab()
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        updateViewPagerTab()
+        restartActivity()
+    }
+
+    private fun handleCourseDeepLink(intent: Intent?): String? {
+        if (intent?.action === Intent.ACTION_VIEW) {
+            DeepLinkingUtil.getCourseIdentifier(intent.data)?.let {
+                return it
+            }
+        }
+        return null
+    }
+
+    private fun handleCourseDeepLinkTab(intent: Intent?) {
+        if (intent?.action == Intent.ACTION_VIEW) {
+            val tab = DeepLinkingUtil.getTab(intent.data?.path)
+            if (!areaState.areas.contains(tab)) {
+                if (!UserManager.isAuthorized) {
+                    showLoginRequiredMessage()
+                } else {
+                    showDeepLinkErrorMessage()
+                }
+                createChooserFromCurrentIntent()
+            } else {
+                setCourseTab(tab)
+            }
+        }
+    }
+
+    private fun handleItemDeepLink(intent: Intent?) {
+        // if the deeplink leads to an item, fetch it here to start the CourseItemsActivity
+        DeepLinkingUtil.getItemIdentifier(intent?.data?.path)?.let { itemId ->
+            if (UserManager.isAuthorized) {
+                ItemDao(viewModel.realm).find(IdUtil.base62ToUUID(itemId))
+                    .observeOnce(this) {
+                        if (it.isValid) {
+                            startActivity(
+                                CourseItemsActivityAutoBundle.builder(
+                                    it.courseId,
+                                    it.sectionId,
+                                    it.position - 1 // positions in the API are not zero-indexed
+                                ).build(this)
+                            )
+                            finishActivity()
+                        } else {
+                            showDeepLinkErrorMessage()
+                            createChooserFromCurrentIntent()
+                        }
+                        true
+                    }
+                GetItemWithContentJob(itemId, viewModel.networkState, false).run()
+            } else {
+                showLoginRequiredMessage()
+                createChooserFromCurrentIntent()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
 
-        if (course.isEnrolled) {
+        if (course?.isEnrolled == true) {
             if (viewModel.dateCount > 0) {
                 inflater.inflate(R.menu.course_dates, menu)
             }
@@ -190,7 +245,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                 return true
             }
             R.id.action_share    -> {
-                ShareUtil.shareCourseLink(this, course.id)
+                ShareUtil.shareCourseLink(this, courseId!!)
                 return true
             }
             R.id.action_unenroll -> {
@@ -200,7 +255,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                 return true
             }
             R.id.course_dates    -> {
-                val dialog = CourseDateListDialogAutoBundle.builder(course.id).build()
+                val dialog = CourseDateListDialogAutoBundle.builder(courseId!!).build()
                 dialog.show(supportFragmentManager, UnenrollDialog.TAG)
                 return true
             }
@@ -264,6 +319,18 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         startActivity(intent)
     }
 
+    private fun createChooserFromCurrentIntent() {
+        intent?.let {
+            Handler().postDelayed({
+                startActivity(
+                    Intent.createChooser(
+                        Intent(it.action, it.data),
+                        null)
+                )
+            }, 300)
+        }
+    }
+
     private fun showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = ProgressDialogIndeterminateAutoBundle.builder().build()
@@ -287,6 +354,10 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
     private fun showLoginRequiredMessage() {
         ToastUtil.show(R.string.toast_please_log_in)
+    }
+
+    private fun showDeepLinkErrorMessage() {
+        ToastUtil.show(R.string.notification_deep_link_error)
     }
 
     private fun openLogin() {
@@ -325,7 +396,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     private fun unenroll() {
-        EnrollmentDao.Unmanaged.findForCourse(course.id)?.id?.let { enrollmentId ->
+        EnrollmentDao.Unmanaged.findForCourse(courseId)?.id?.let { enrollmentId ->
             showProgressDialog()
 
             val enrollmentDeletionNetworkState = NetworkStateLiveData()
@@ -371,7 +442,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         }
     }
 
-    inner class CoursePagerAdapter internal constructor(private val fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager), TabLayout.OnTabSelectedListener {
+    inner class CoursePagerAdapter internal constructor(private val fragmentManager: FragmentManager, private val courseId: String) : FragmentPagerAdapter(fragmentManager), TabLayout.OnTabSelectedListener {
 
         override fun getPageTitle(position: Int): CharSequence? {
             return getString(areaState.get(position).titleRes)
@@ -388,16 +459,16 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             var fragment: Fragment? = fragmentManager.findFragmentByTag(name)
             if (fragment == null) {
                 when (areaState.get(position)) {
-                    CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(course.id).build()
+                    CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(courseId).build()
                     CourseArea.DISCUSSIONS    -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)
                         .build()
-                    CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(course.id).build()
-                    CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(course.id).build()
-                    CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(course.id).build()
-                    CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(course.id).build()
-                    CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(course.id).build()
+                    CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(courseId).build()
+                    CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(courseId).build()
+                    CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(courseId).build()
+                    CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(courseId).build()
+                    CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build()
                     CourseArea.RECAP          -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)

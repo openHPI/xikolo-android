@@ -235,6 +235,8 @@
     <string name="notification_channel_downloads">Downloads</string>
     <string name="notification_downloads_cancel">Cancel</string>
 
+    <string name="notification_deep_link_error">Action not supported or content unavailable</string>
+
     <!-- -->
     <string name="toast_no_courses">No courses received.</string>
     <string name="toast_no_network">Please enable network connection.</string>
