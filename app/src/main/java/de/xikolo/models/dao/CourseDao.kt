@@ -17,16 +17,6 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
         defaultSort = "startDate" to Sort.DESCENDING
     }
 
-    fun all() = all("external" to false)
-
-    fun allEnrolled(): LiveData<List<Course>> =
-        query()
-            .equalTo("external", false)
-            .isNotNull("enrollmentId")
-            .sort("startDate", Sort.DESCENDING)
-            .findAllAsync()
-            .asLiveData()
-
     override fun find(id: String?): LiveData<Course> =
         query()
             .beginGroup()
@@ -56,7 +46,6 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
             fun allWithCertificates(): List<Course> =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<Course>()
-                        .equalTo("external", false)
                         .sort("startDate", Sort.DESCENDING)
                         .findAll()
                         .asCopy()
@@ -69,7 +58,6 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
             fun search(query: String?, withEnrollment: Boolean): List<Course> =
                 Realm.getDefaultInstance().use { realm ->
                     val realmQuery = realm.where<Course>()
-                        .equalTo("external", false)
                         .beginGroup()
                             .like("title", "*$query*", Case.INSENSITIVE)
                             .or()
@@ -93,7 +81,6 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
             fun allCurrentAndFuture(): List<Course> =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<Course>()
-                        .equalTo("external", false)
                         .beginGroup()
                             .isNull("endDate")
                             .or()
@@ -107,7 +94,6 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
             fun allCurrentAndPast(): List<Course> =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<Course>()
-                        .equalTo("external", false)
                         .lessThanOrEqualTo("startDate", Date())
                         .sort("startDate", Sort.DESCENDING)
                         .findAll()
@@ -117,7 +103,6 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
             fun allPast(): List<Course> =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<Course>()
-                        .equalTo("external", false)
                         .beginGroup()
                             .isNotNull("endDate")
                             .and()
@@ -131,7 +116,6 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
             fun allFuture(): List<Course> =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<Course>()
-                        .equalTo("external", false)
                         .greaterThan("startDate", Date())
                         .sort("startDate", Sort.ASCENDING)
                         .findAll()

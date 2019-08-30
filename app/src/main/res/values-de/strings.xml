@@ -26,6 +26,7 @@
     <string name="header_my_future_courses">Meine zukünftigen Kurse</string>
     <string name="banner_running">Läuft</string>
     <string name="banner_self_paced">Selbststudium</string>
+    <string name="banner_external">Extern</string>
 
     <!-- -->
     <string name="navigation_drawer_open">Öffne Navigation</string>
@@ -51,6 +52,8 @@
     <!-- -->
     <string name="btn_enroll">Einschreiben</string>
     <string name="btn_continue_course">Fortsetzen</string>
+    <string name="btn_external_course">Extern öffnen</string>
+    <string name="btn_external_course_target">Externen Kurs auf %1$s öffnen</string>
     <string name="btn_course_details">Details zeigen</string>
     <string name="btn_channel_courses">Mehr anzeigen</string>
     <string name="btn_channel_slider_more">Mehr Kurse anzeigen</string>

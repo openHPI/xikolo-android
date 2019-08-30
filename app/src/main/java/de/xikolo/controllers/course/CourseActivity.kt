@@ -1,6 +1,7 @@
 package de.xikolo.controllers.course
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
@@ -136,7 +137,12 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     private fun setupCourse(course: Course) {
         Crashlytics.setString("course_id", course.id)
 
-        if (!course.isEnrolled) {
+        if (course.external) {
+            setAreaState(CourseArea.External)
+            showCourseExternalBar(course)
+
+            enrollButton?.setOnClickListener { enterExternalCourse(course) }
+        } else if (!course.isEnrolled) {
             setAreaState(CourseArea.Locked)
             showEnrollBar()
         } else if (course.accessible) {
@@ -303,6 +309,19 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         enrollButton?.setText(R.string.btn_enroll)
     }
 
+    private fun showCourseExternalBar(course: Course) {
+        enrollBar?.visibility = View.VISIBLE
+        enrollButton?.isEnabled = true
+        enrollButton?.isClickable = true
+
+        enrollButton?.setText(R.string.btn_external_course)
+        Uri.parse(course.externalUrl)?.host?.let {
+            enrollButton?.setText(
+                getString(R.string.btn_external_course_target, it)
+            )
+        }
+    }
+
     private fun showCourseUnavailableEnrollBar() {
         enrollBar?.visibility = View.VISIBLE
         enrollButton?.isEnabled = false
@@ -425,6 +444,11 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
             viewModel.unenroll(enrollmentId, enrollmentDeletionNetworkState)
         }
+    }
+
+    private fun enterExternalCourse(course: Course) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(course.externalUrl))
+        startActivity(intent)
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)

@@ -37,6 +37,7 @@
     <!-- -->
     <string name="btn_enroll">注册该课程</string>
     <string name="btn_continue_course">进入课程</string>
+    <string name="btn_external_course">去外部课程</string>
     <string name="btn_starts_soon">课程未开始</string>
 
     <!-- -->

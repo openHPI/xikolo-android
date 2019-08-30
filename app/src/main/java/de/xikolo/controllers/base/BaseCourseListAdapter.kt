@@ -49,7 +49,13 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
         holder.buttonCourseDetails.visibility = View.VISIBLE
         holder.buttonCourseDetails.setOnClickListener { onCourseButtonClickListener?.onDetailButtonClicked(course.id) }
 
-        if (course.isEnrolled && course.accessible) {
+        if (course.external) {
+            holder.layout.setOnClickListener { onCourseButtonClickListener?.onDetailButtonClicked(course.id) }
+
+            holder.buttonCourseAction.text = App.instance.getString(R.string.btn_external_course)
+            holder.buttonCourseAction.setOnClickListener { onCourseButtonClickListener?.onExternalButtonClicked(course) }
+
+        } else if (course.isEnrolled && course.accessible) {
             holder.layout.setOnClickListener { onCourseButtonClickListener?.onContinueButtonClicked(course.id) }
 
             holder.buttonCourseAction.text = App.instance.getString(R.string.btn_continue_course)
@@ -79,6 +85,8 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
         fun onContinueButtonClicked(courseId: String)
 
         fun onDetailButtonClicked(courseId: String)
+
+        fun onExternalButtonClicked(course: Course)
     }
 
     class CourseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
