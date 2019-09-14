@@ -1,11 +1,9 @@
 package de.xikolo.managers
 
 import de.xikolo.App
-import de.xikolo.events.LogoutEvent
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.storages.UserStorage
 import io.realm.Realm
-import org.greenrobot.eventbus.EventBus
 
 class UserManager {
 
@@ -48,7 +46,7 @@ class UserManager {
             realm.executeTransaction { it.deleteAll() }
             realm.close()
 
-            EventBus.getDefault().post(LogoutEvent())
+            App.instance.state.login.loggedOut()
         }
     }
 

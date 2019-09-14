@@ -8,18 +8,13 @@ import butterknife.BindView
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.course.CourseActivityAutoBundle
-import de.xikolo.events.LoginEvent
-import de.xikolo.events.LogoutEvent
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
 import de.xikolo.viewmodels.main.CertificateListViewModel
 import de.xikolo.views.SpaceItemDecoration
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
-class CertificateListFragment : ViewModelMainFragment<CertificateListViewModel>() {
+class CertificateListFragment : MainFragment<CertificateListViewModel>() {
 
     companion object {
         val TAG: String = CertificateListFragment::class.java.simpleName
@@ -40,8 +35,6 @@ class CertificateListFragment : ViewModelMainFragment<CertificateListViewModel>(
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-
-        EventBus.getDefault().register(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -107,21 +100,4 @@ class CertificateListFragment : ViewModelMainFragment<CertificateListViewModel>(
         activityCallback?.onFragmentAttached(R.id.navigation_certificates)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        EventBus.getDefault().unregister(this)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLoginEvent(event: LoginEvent) {
-        onRefresh()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLogoutEvent(event: LogoutEvent) {
-        onRefresh()
-    }
 }

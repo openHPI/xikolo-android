@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import butterknife.BindView
 import com.google.android.material.navigation.NavigationView
+import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
@@ -22,16 +23,12 @@ import de.xikolo.controllers.downloads.DownloadsActivity
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.settings.SettingsActivity
-import de.xikolo.events.LoginEvent
-import de.xikolo.events.LogoutEvent
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.PlayServicesUtil
 import de.xikolo.viewmodels.main.NavigationViewModel
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.OnNavigationItemSelectedListener, MainActivityCallback {
 
@@ -80,13 +77,19 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         updateDrawer()
 
         val intentHandled = handleIntent(intent)
-        if(!intentHandled){
+        if (!intentHandled) {
             selectDrawerSection(viewModel.drawerSection)
         }
 
         viewModel.announcements
             .observe(this) {
                 updateDrawer()
+            }
+
+        App.instance.state.login
+            .observe(this) {
+                updateDrawer()
+                viewModel.onRefresh()
             }
     }
 
@@ -183,12 +186,12 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         }
 
         when (item.itemId) {
-            R.id.navigation_downloads     -> {
+            R.id.navigation_downloads -> {
                 intent = Intent(this, DownloadsActivity::class.java)
 
                 LanalyticsUtil.trackVisitedDownloads()
             }
-            R.id.navigation_settings      -> {
+            R.id.navigation_settings  -> {
                 intent = Intent(this, SettingsActivity::class.java)
 
                 LanalyticsUtil.trackVisitedPreferences()
@@ -277,18 +280,6 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         checkedItem?.let {
             navigationView.setCheckedItem(it)
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLoginEvent(event: LoginEvent) {
-        updateDrawer()
-        viewModel.onRefresh()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLogoutEvent(event: LogoutEvent) {
-        updateDrawer()
-        viewModel.onRefresh()
     }
 
 }

@@ -6,6 +6,7 @@ import android.webkit.WebView
 import androidx.preference.PreferenceManager
 import de.xikolo.config.Config
 import de.xikolo.events.ConnectivityStateLiveData
+import de.xikolo.events.LoginStateLiveData
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.models.migrate.RealmSchemaMigration
 import de.xikolo.utils.ClientUtil
@@ -26,6 +27,10 @@ class App : Application() {
 
         val connectivity: ConnectivityStateLiveData by lazy {
             ConnectivityStateLiveData(this@App, true)
+        }
+
+        val login: LoginStateLiveData by lazy {
+            LoginStateLiveData()
         }
     }
 

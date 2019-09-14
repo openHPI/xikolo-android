@@ -35,7 +35,6 @@ import org.greenrobot.eventbus.Subscribe;
 import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.events.LoginEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
 import de.xikolo.utils.NotificationUtil;
@@ -282,7 +281,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     }
 
     @Subscribe
-    public void dummySubscriber(LoginEvent event) {
+    public void dummySubscriber(PermissionDeniedEvent event) {
         // there has to be at least one subscribing method in the base class or else the EventBus' register() throws an exception
     }
 
