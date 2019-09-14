@@ -5,7 +5,7 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import androidx.preference.PreferenceManager
 import de.xikolo.config.Config
-import de.xikolo.events.ConnectivityEventLiveData
+import de.xikolo.events.ConnectivityStateLiveData
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.models.migrate.RealmSchemaMigration
 import de.xikolo.utils.ClientUtil
@@ -24,13 +24,9 @@ class App : Application() {
 
     inner class State {
 
-        val connectivity: ConnectivityEventLiveData by lazy {
-            ConnectivityEventLiveData(true)
+        val connectivity: ConnectivityStateLiveData by lazy {
+            ConnectivityStateLiveData(this@App, true)
         }
-
-        //val login: LoginStateLiveData by lazy {
-        //  LoginStateLiveData(false)
-        //}
     }
 
     val state = State()

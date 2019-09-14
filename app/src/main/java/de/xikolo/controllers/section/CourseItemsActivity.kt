@@ -148,8 +148,8 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         }
     }
 
-    override fun onNetworkEvent(isOnline: Boolean) {
-        super.onNetworkEvent(isOnline)
+    override fun onConnectivityChange(isOnline: Boolean) {
+        super.onConnectivityChange(isOnline)
 
         if (isOnline) {
             tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_toolbar))

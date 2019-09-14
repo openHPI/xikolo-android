@@ -451,8 +451,8 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         startActivity(intent)
     }
 
-    override fun onNetworkEvent(isOnline: Boolean) {
-        super.onNetworkEvent(isOnline)
+    override fun onConnectivityChange(isOnline: Boolean) {
+        super.onConnectivityChange(isOnline)
 
         if (isOnline) {
             toolbar.subtitle = ""

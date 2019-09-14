@@ -1,9 +1,7 @@
 package de.xikolo.controllers.base;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -40,7 +38,6 @@ import de.xikolo.R;
 import de.xikolo.events.LoginEvent;
 import de.xikolo.events.PermissionDeniedEvent;
 import de.xikolo.events.PermissionGrantedEvent;
-import de.xikolo.receivers.NetworkChangeReceiver;
 import de.xikolo.utils.NotificationUtil;
 import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.TintUtil;
@@ -69,8 +66,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     private boolean translucentActionbar = false;
 
-    private NetworkChangeReceiver networkChangeReceiver;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +81,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
         offlineModeToolbar = true;
 
-        networkChangeReceiver = new NetworkChangeReceiver();
-
         try {
             if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
                 castContext = CastContext.getSharedInstance(this);
@@ -102,7 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
         handleIntent(getIntent());
 
-        App.getInstance().getState().getConnectivity().observe(this, this::onNetworkEvent);
+        App.getInstance().getState().getConnectivity().observe(this, this::onConnectivityChange);
     }
 
     @Override
@@ -156,15 +149,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(networkChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(networkChangeReceiver);
         app.syncCookieSyncManager();
     }
 
@@ -283,7 +269,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         }
     }
 
-    public void onNetworkEvent(boolean isOnline) {
+    public void onConnectivityChange(boolean isOnline) {
         if (toolbar != null && offlineModeToolbar) {
             if (isOnline) {
                 toolbar.setSubtitle("");
