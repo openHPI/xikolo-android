@@ -172,7 +172,10 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        restartActivity()
+
+        handleCourseDeepLink(intent)?.let {
+            restartActivity()
+        }
     }
 
     private fun handleCourseDeepLink(intent: Intent?): String? {
