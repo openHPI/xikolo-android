@@ -28,13 +28,13 @@ class ListCoursesJob(networkState: NetworkStateLiveData, userRequest: Boolean) :
         if (response.isSuccessful && response.body() != null) {
             if (Config.DEBUG) Log.i(TAG, "Courses received")
 
+            Sync.Included.with<Enrollment>(response.body()!!)
+                .run()
             Sync.Data.with(response.body()!!)
                 .setBeforeCommitCallback { realm, model ->
                     val course = realm.where<Course>().equalTo("id", model.id).findFirst()
                     if (course != null) model.description = course.description
                 }
-                .run()
-            Sync.Included.with<Enrollment>(response.body()!!)
                 .run()
 
             success()
