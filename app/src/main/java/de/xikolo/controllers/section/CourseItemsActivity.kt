@@ -112,6 +112,7 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         }
 
         viewPager.currentItem = index
+        onItemSelected(index)
     }
 
     private fun onItemSelected(position: Int) {
