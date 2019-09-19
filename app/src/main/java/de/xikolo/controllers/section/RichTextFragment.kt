@@ -8,7 +8,7 @@ import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.webview.WebViewActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.models.Item
@@ -16,7 +16,7 @@ import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.MarkdownUtil
 import de.xikolo.viewmodels.section.RichTextViewModel
 
-class RichTextFragment : NetworkStateFragment<RichTextViewModel>() {
+class RichTextFragment : ViewModelFragment<RichTextViewModel>() {
 
     companion object {
         val TAG: String = RichTextFragment::class.java.simpleName

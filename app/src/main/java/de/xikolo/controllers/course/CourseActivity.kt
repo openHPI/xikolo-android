@@ -192,7 +192,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             val tab = DeepLinkingUtil.getTab(intent.data?.path)
             if (!areaState.areas.contains(tab)) {
                 if (!UserManager.isAuthorized) {
-                    showLoginRequiredMessage()
+                    showLoginRequiredToast()
                 } else {
                     showDeepLinkErrorMessage()
                 }
@@ -226,7 +226,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                     }
                 GetItemWithContentJob(itemId, viewModel.networkState, false).run()
             } else {
-                showLoginRequiredMessage()
+                showLoginRequiredToast()
                 createChooserFromCurrentIntent()
             }
         }
@@ -374,7 +374,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         ToastUtil.show(R.string.toast_no_network)
     }
 
-    private fun showLoginRequiredMessage() {
+    private fun showLoginRequiredToast() {
         ToastUtil.show(R.string.toast_please_log_in)
     }
 
@@ -406,7 +406,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                     }
                     NetworkCode.NO_AUTH    -> {
                         hideProgressDialog()
-                        showLoginRequiredMessage()
+                        showLoginRequiredToast()
                         openLogin()
                         true
                     }

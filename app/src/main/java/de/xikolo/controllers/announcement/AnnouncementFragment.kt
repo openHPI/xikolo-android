@@ -10,7 +10,7 @@ import android.widget.TextView
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
-import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
@@ -21,7 +21,7 @@ import de.xikolo.views.DateTextView
 import java.text.DateFormat
 import java.util.*
 
-class AnnouncementFragment : NetworkStateFragment<AnnouncementViewModel>() {
+class AnnouncementFragment : ViewModelFragment<AnnouncementViewModel>() {
 
     companion object {
         val TAG: String = AnnouncementFragment::class.java.simpleName

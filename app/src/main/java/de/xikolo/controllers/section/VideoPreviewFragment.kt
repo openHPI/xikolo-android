@@ -11,7 +11,7 @@ import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.GlideApp
-import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.controllers.video.VideoItemPlayerActivityAutoBundle
 import de.xikolo.extensions.observe
@@ -25,7 +25,7 @@ import de.xikolo.viewmodels.section.VideoPreviewViewModel
 import de.xikolo.views.CustomSizeImageView
 import java.util.concurrent.TimeUnit
 
-class VideoPreviewFragment : NetworkStateFragment<VideoPreviewViewModel>() {
+class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
 
     companion object {
         val TAG: String = VideoPreviewFragment::class.java.simpleName

@@ -23,7 +23,7 @@ import de.xikolo.config.BuildFlavor
 import de.xikolo.config.Config
 import de.xikolo.config.FeatureConfig
 import de.xikolo.config.GlideApp
-import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.events.LoginEvent
@@ -35,7 +35,7 @@ import de.xikolo.utils.ToastUtil
 import de.xikolo.viewmodels.login.LoginViewModel
 import org.greenrobot.eventbus.EventBus
 
-class LoginFragment : NetworkStateFragment<LoginViewModel>() {
+class LoginFragment : ViewModelFragment<LoginViewModel>() {
 
     companion object {
         val TAG: String = LoginFragment::class.java.simpleName

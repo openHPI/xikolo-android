@@ -96,12 +96,6 @@ class CertificateListFragment : ViewModelMainFragment<CertificateListViewModel>(
         }
     }
 
-    private fun showLoginRequired() {
-        showLoginRequired {
-            activityCallback?.selectDrawerSection(R.id.navigation_login)
-        }
-    }
-
     private fun showNoCertificatesMessage() {
         showMessage(R.string.notification_no_certificates, R.string.notification_no_certificates_summary) {
             activityCallback?.selectDrawerSection(R.id.navigation_all_courses)

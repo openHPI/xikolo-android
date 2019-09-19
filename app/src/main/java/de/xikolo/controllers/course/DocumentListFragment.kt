@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
-import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.extensions.observe
 import de.xikolo.viewmodels.course.DocumentListViewModel
 
-class DocumentListFragment : NetworkStateFragment<DocumentListViewModel>() {
+class DocumentListFragment : ViewModelFragment<DocumentListViewModel>() {
 
     @AutoBundleField
     lateinit var courseId: String

@@ -9,14 +9,14 @@ import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
-import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.main.AnnouncementListAdapter
 import de.xikolo.extensions.observe
 import de.xikolo.models.Announcement
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.viewmodels.main.AnnouncementListViewModel
 
-class AnnouncementListFragment : NetworkStateFragment<AnnouncementListViewModel>() {
+class AnnouncementListFragment : ViewModelFragment<AnnouncementListViewModel>() {
 
     companion object {
         val TAG: String = AnnouncementListFragment::class.java.simpleName
