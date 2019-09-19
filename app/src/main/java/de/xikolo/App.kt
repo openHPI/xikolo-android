@@ -5,10 +5,13 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import androidx.preference.PreferenceManager
 import de.xikolo.config.Config
-import de.xikolo.events.ConnectivityStateLiveData
-import de.xikolo.events.LoginStateLiveData
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.models.migrate.RealmSchemaMigration
+import de.xikolo.states.ConnectivityStateLiveData
+import de.xikolo.states.DownloadStateLiveData
+import de.xikolo.states.LoginStateLiveData
+import de.xikolo.states.PermissionStateLiveData
+import de.xikolo.states.base.LiveDataEvent
 import de.xikolo.utils.ClientUtil
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -31,6 +34,18 @@ class App : Application() {
 
         val login: LoginStateLiveData by lazy {
             LoginStateLiveData()
+        }
+
+        val downloadCancellation by lazy {
+            LiveDataEvent()
+        }
+
+        val download: DownloadStateLiveData.Companion by lazy {
+            DownloadStateLiveData
+        }
+
+        val permission: PermissionStateLiveData.Companion by lazy {
+            PermissionStateLiveData
         }
     }
 

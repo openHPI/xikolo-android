@@ -1,6 +1,6 @@
-package de.xikolo.events
+package de.xikolo.states
 
-import de.xikolo.models.LiveDataState
+import de.xikolo.states.base.LiveDataState
 
 class LoginStateLiveData : LiveDataState<Boolean>() {
 

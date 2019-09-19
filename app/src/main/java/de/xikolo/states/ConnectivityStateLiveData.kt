@@ -1,4 +1,4 @@
-package de.xikolo.events
+package de.xikolo.states
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,7 +8,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
-import de.xikolo.models.LiveDataState
+import de.xikolo.states.base.LiveDataState
 import de.xikolo.utils.NetworkUtil
 
 class ConnectivityStateLiveData(private val context: Context, initialState: Boolean) : LiveDataState<Boolean>(initialState) {

@@ -19,20 +19,15 @@ import de.xikolo.R
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialogAutoBundle
 import de.xikolo.controllers.dialogs.MobileDownloadDialog
-import de.xikolo.events.AllDownloadsCancelledEvent
-import de.xikolo.events.DownloadCompletedEvent
-import de.xikolo.events.DownloadDeletedEvent
-import de.xikolo.events.DownloadStartedEvent
+import de.xikolo.extensions.observe
 import de.xikolo.managers.DownloadManager
 import de.xikolo.models.DownloadAsset
+import de.xikolo.states.DownloadStateLiveData
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.FileProviderUtil
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.NetworkUtil
 import de.xikolo.utils.ToastUtil
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  * When the url of the DownloadAsset's URL is null, the urlNotAvailableMessage is shown and the UI will be disabled.
@@ -181,8 +176,6 @@ class DownloadViewHelper(
             }
         }
 
-        EventBus.getDefault().register(this)
-
         progressBarUpdater = object : Runnable {
             override fun run() {
                 Handler(Looper.getMainLooper()).post {
@@ -213,10 +206,8 @@ class DownloadViewHelper(
             downloadManager.downloadExists(downloadAsset)                     -> showEndState()
             else                                                              -> showStartState()
         }
-    }
 
-    fun onDestroy() {
-        EventBus.getDefault().unregister(this)
+        registerDownloadStateObservers()
     }
 
     private fun deleteFile() {
@@ -277,35 +268,50 @@ class DownloadViewHelper(
         progressBarUpdaterRunning = false
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDownloadCompletedEvent(event: DownloadCompletedEvent) {
-        if ((downloadAsset.url == event.url || downloadAsset.secondaryAssets.any { it.url == event.url })
-            && !downloadManager.downloadRunningWithSecondaryAssets(downloadAsset)
-            && downloadManager.downloadExists(downloadAsset)) {
-            showEndState()
-        }
-    }
+    private val wholeDownloadComplete
+        get() = !downloadManager.downloadRunningWithSecondaryAssets(downloadAsset)
+            && downloadManager.downloadExists(downloadAsset)
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDownloadStartedEvent(event: DownloadStartedEvent) {
-        if (event.downloadAsset == downloadAsset && !progressBarUpdaterRunning) {
-            showRunningState()
-        }
-    }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDownloadDeletedEvent(event: DownloadDeletedEvent) {
-        if (event.downloadAsset == downloadAsset && progressBarUpdaterRunning) {
-            showStartState()
+    private fun registerDownloadStateObservers() {
+        // necessary because secondary download assets can complete after the main asset which would then not receive another event
+        downloadAsset.secondaryAssets.forEach { asset ->
+            App.instance.state.download.of(asset.url)
+                .observe(activity) {
+                    if (it == DownloadStateLiveData.DownloadStateCode.COMPLETED
+                        && wholeDownloadComplete) {
+                        showEndState()
+                    }
+                }
         }
-    }
 
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onAllDownloadCancelledEvent(event: AllDownloadsCancelledEvent) {
-        if (progressBarUpdaterRunning) {
-            showStartState()
-        }
+        App.instance.state.download.of(downloadAsset.url)
+            .observe(activity) {
+                when (it) {
+                    DownloadStateLiveData.DownloadStateCode.COMPLETED -> {
+                        if (wholeDownloadComplete) {
+                            showEndState()
+                        }
+                    }
+                    DownloadStateLiveData.DownloadStateCode.STARTED   -> {
+                        if (!progressBarUpdaterRunning) {
+                            showRunningState()
+                        }
+                    }
+                    DownloadStateLiveData.DownloadStateCode.DELETED   -> {
+                        if (progressBarUpdaterRunning) {
+                            showStartState()
+                        }
+                    }
+                }
+            }
+
+        App.instance.state.downloadCancellation
+            .observe(activity) {
+                if (progressBarUpdaterRunning) {
+                    showStartState()
+                }
+            }
     }
 
     fun onOpenFileClick(@StringRes buttonText: Int, onClick: () -> Unit) {

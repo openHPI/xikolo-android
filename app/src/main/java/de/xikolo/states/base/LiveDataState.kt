@@ -1,4 +1,4 @@
-package de.xikolo.models
+package de.xikolo.states.base
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ abstract class LiveDataState<T>(initialState: T? = null) : LiveData<T>() {
         }
     }
 
-    private fun applyState(state: T){
+    private fun applyState(state: T) {
         GlobalScope.launch(Dispatchers.Main) {
             value = state
         }

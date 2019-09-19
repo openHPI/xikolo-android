@@ -29,14 +29,9 @@ import com.google.android.gms.cast.framework.IntroductoryOverlay;
 import com.google.android.material.appbar.AppBarLayout;
 import com.yatatsu.autobundle.AutoBundle;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.events.PermissionDeniedEvent;
-import de.xikolo.events.PermissionGrantedEvent;
 import de.xikolo.utils.NotificationUtil;
 import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.TintUtil;
@@ -139,8 +134,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     protected void onStart() {
         super.onStart();
 
-        EventBus.getDefault().register(this);
-
         if (castContext != null) {
             castContext.addCastStateListener(this);
             setupCastMiniController();
@@ -156,8 +149,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     @Override
     protected void onStop() {
         super.onStop();
-
-        EventBus.getDefault().unregister(this);
 
         if (castContext != null) {
             castContext.removeCastStateListener(this);
@@ -280,22 +271,13 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         }
     }
 
-    @Subscribe
-    public void dummySubscriber(PermissionDeniedEvent event) {
-        // there has to be at least one subscribing method in the base class or else the EventBus' register() throws an exception
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            EventBus.getDefault().post(new PermissionGrantedEvent(requestCode));
-
+            App.getInstance().getState().getPermission().of(requestCode).granted();
         } else {
-
-            EventBus.getDefault().post(new PermissionDeniedEvent(requestCode));
-
+            App.getInstance().getState().getPermission().of(requestCode).denied();
         }
     }
 

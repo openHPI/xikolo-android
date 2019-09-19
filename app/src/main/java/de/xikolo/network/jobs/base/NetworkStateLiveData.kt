@@ -1,7 +1,7 @@
 package de.xikolo.network.jobs.base
 
 import de.xikolo.App
-import de.xikolo.models.LiveDataState
+import de.xikolo.states.base.LiveDataState
 
 open class NetworkStateLiveData : LiveDataState<NetworkState>() {
 

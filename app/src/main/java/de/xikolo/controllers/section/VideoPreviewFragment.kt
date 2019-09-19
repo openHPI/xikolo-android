@@ -185,10 +185,4 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        downloadViewHelpers.forEach { it.onDestroy() }
-    }
-
 }

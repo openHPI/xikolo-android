@@ -30,7 +30,6 @@ import de.xikolo.utils.DeviceUtil
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
 import de.xikolo.utils.ToastUtil
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -316,11 +315,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 resources.getString(R.string.settings_send_app_feedback)
             )
         )
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
     }
 
 }
