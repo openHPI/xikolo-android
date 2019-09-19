@@ -21,7 +21,7 @@ class DownloadStateLiveData : LiveDataState<DownloadStateLiveData.DownloadStateC
         }
     }
 
-    fun running() {
+    fun started() {
         super.state(DownloadStateCode.STARTED)
     }
 

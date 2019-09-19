@@ -81,7 +81,7 @@ class DownloadManager(activity: FragmentActivity) {
                             LanalyticsUtil.trackDownloadedFile(downloadAsset)
                         }
 
-                        App.instance.state.download.of(downloadAsset.url).running()
+                        App.instance.state.download.of(downloadAsset.url).started()
 
                         downloadAsset.secondaryAssets.forEach {
                             startAssetDownload(it)
