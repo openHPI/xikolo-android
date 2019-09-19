@@ -11,7 +11,7 @@ import android.os.Build
 import de.xikolo.states.base.LiveDataState
 import de.xikolo.utils.NetworkUtil
 
-class ConnectivityStateLiveData(private val context: Context, initialState: Boolean) : LiveDataState<Boolean>(initialState) {
+class ConnectivityStateLiveData(private val context: Context) : LiveDataState<Boolean>(false) {
 
     private var connectivityManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
 

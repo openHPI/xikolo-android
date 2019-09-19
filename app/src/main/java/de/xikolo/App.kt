@@ -29,7 +29,7 @@ class App : Application() {
     inner class State {
 
         val connectivity: ConnectivityStateLiveData by lazy {
-            ConnectivityStateLiveData(this@App, true)
+            ConnectivityStateLiveData(this@App)
         }
 
         val login: LoginStateLiveData by lazy {
