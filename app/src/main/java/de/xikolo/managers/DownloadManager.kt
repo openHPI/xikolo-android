@@ -111,11 +111,12 @@ class DownloadManager(activity: FragmentActivity) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 if (Config.DEBUG) Log.d(TAG, "Delete download " + downloadAsset.filePath)
 
-                App.instance.state.download.of(downloadAsset.url).deleted()
                 if (!downloadExists(downloadAsset)) {
                     StorageUtil.cleanStorage(File(downloadAsset.filePath).parentFile)
                     return false
                 } else {
+                    App.instance.state.download.of(downloadAsset.url).deleted()
+
                     if (getDownloadFile(downloadAsset)?.delete() == true) {
                         if (deleteSecondaryDownloads) {
                             downloadAsset.secondaryAssets.forEach {
