@@ -6,12 +6,12 @@ import android.view.View
 import android.widget.TextView
 import butterknife.BindView
 import de.xikolo.R
-import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.extensions.observe
 import de.xikolo.utils.MarkdownUtil
 import de.xikolo.viewmodels.section.VideoDescriptionViewModel
 
-class VideoDescriptionFragment(val itemId: String, val videoId: String) : NetworkStateFragment<VideoDescriptionViewModel>() {
+class VideoDescriptionFragment(val itemId: String, val videoId: String) : ViewModelFragment<VideoDescriptionViewModel>() {
 
     companion object {
         val TAG: String = VideoDescriptionFragment::class.java.simpleName

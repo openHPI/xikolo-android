@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
-import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.helper.SectionDownloadHelper
 import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
 import de.xikolo.extensions.observe
@@ -17,7 +17,7 @@ import de.xikolo.models.dao.SectionDao
 import de.xikolo.viewmodels.course.LearningsViewModel
 import de.xikolo.views.SpaceItemDecoration
 
-class LearningsFragment : NetworkStateFragment<LearningsViewModel>(), SectionListAdapter.OnSectionClickListener, ItemListAdapter.OnItemClickListener {
+class LearningsFragment : ViewModelFragment<LearningsViewModel>(), SectionListAdapter.OnSectionClickListener, ItemListAdapter.OnItemClickListener {
 
     companion object {
         val TAG: String = LearningsFragment::class.java.simpleName

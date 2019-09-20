@@ -16,8 +16,6 @@ import androidx.annotation.Nullable;
 import com.crashlytics.android.Crashlytics;
 import com.yatatsu.autobundle.AutoBundleField;
 
-import org.jetbrains.annotations.NotNull;
-
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
@@ -26,9 +24,8 @@ import de.xikolo.controllers.helper.WebViewHelper;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.utils.NetworkUtil;
 import de.xikolo.utils.ToastUtil;
-import de.xikolo.viewmodels.base.NullViewModel;
 
-public class WebViewFragment extends NetworkStateFragment<NullViewModel> {
+public class WebViewFragment extends NetworkStateFragment {
 
     public static final String TAG = WebViewFragment.class.getSimpleName();
 
@@ -41,12 +38,6 @@ public class WebViewFragment extends NetworkStateFragment<NullViewModel> {
     private WebViewHelper webViewHelper;
 
     private MutableContextWrapper mutableContextWrapper;
-
-    @NotNull
-    @Override
-    public NullViewModel createViewModel() {
-        return new NullViewModel();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -10,7 +10,7 @@ import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.GlideApp
-import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.models.Course
@@ -21,7 +21,7 @@ import de.xikolo.viewmodels.course.DescriptionViewModel
 import de.xikolo.views.CustomSizeImageView
 import de.xikolo.views.DateTextView
 
-class DescriptionFragment : NetworkStateFragment<DescriptionViewModel>() {
+class DescriptionFragment : ViewModelFragment<DescriptionViewModel>() {
 
     companion object {
         val TAG: String = DescriptionFragment::class.java.simpleName

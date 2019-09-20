@@ -1,18 +1,23 @@
 package de.xikolo.controllers.helper
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewStub
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-
 import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
+import de.xikolo.utils.NetworkUtil
+import de.xikolo.utils.ToastUtil
 import de.xikolo.views.CustomFontTextView
 
 class NetworkStateHelper(private val activity: FragmentActivity?, view: View, onRefreshListener: SwipeRefreshLayout.OnRefreshListener) {
@@ -168,4 +173,94 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
         refreshLayout.isEnabled = enabled
     }
 
+
+    interface NetworkStateOwner {
+
+        val networkStateHelper: NetworkStateHelper
+
+        fun inflateHelper(inflater: LayoutInflater, container: ViewGroup?, layoutResource: Int): View {
+            val networkStateView = inflater.inflate(R.layout.fragment_loading_state, container, false) as ViewGroup
+
+            val contentView = networkStateView.findViewById<ViewStub>(R.id.content_view)
+            contentView.layoutResource = layoutResource
+            contentView.inflate()
+
+            return networkStateView
+        }
+
+        fun hideContent() {
+            networkStateHelper.hideContent()
+        }
+
+        fun showContent() {
+            networkStateHelper.showContent()
+        }
+
+        fun showBlockingProgress() {
+            networkStateHelper.showBlockingProgress()
+        }
+
+        fun showAnyProgress() {
+            networkStateHelper.showAnyProgress()
+        }
+
+        fun hideAnyProgress() {
+            networkStateHelper.hideAnyProgress()
+        }
+
+        fun showNetworkRequired() {
+            if (networkStateHelper.contentViewVisible) {
+                NetworkUtil.showNoConnectionToast()
+            } else {
+                networkStateHelper.setMessageTitle(R.string.notification_no_network)
+                networkStateHelper.setMessageSummary(R.string.notification_no_network_summary)
+                networkStateHelper.showMessage()
+            }
+        }
+
+        fun showLoginRequired(onClick: () -> Unit = {}) {
+            if (networkStateHelper.contentViewVisible) {
+                ToastUtil.show(R.string.toast_please_log_in)
+            } else {
+                networkStateHelper.setMessageTitle(R.string.notification_please_login)
+                networkStateHelper.setMessageSummary(R.string.notification_please_login_summary)
+                networkStateHelper.setMessageOnClickListener(View.OnClickListener { onClick() })
+                networkStateHelper.showMessage()
+            }
+        }
+
+        fun showErrorMessage() {
+            if (networkStateHelper.contentViewVisible) {
+                ToastUtil.show(R.string.error)
+            } else {
+                networkStateHelper.setMessageTitle(R.string.error)
+                networkStateHelper.setMessageSummary(null)
+                networkStateHelper.showMessage()
+            }
+        }
+
+        fun hideMessage() {
+            networkStateHelper.hideMessage()
+        }
+
+        fun showEmptyMessage(@StringRes title: Int, @StringRes summary: Int = 0) {
+            if (!networkStateHelper.anyProgressVisible) {
+                hideContent()
+                networkStateHelper.setMessageTitle(title)
+                networkStateHelper.setMessageSummary(summary)
+                networkStateHelper.showMessage()
+            }
+        }
+
+        fun showMessage(@StringRes title: Int, @StringRes summary: Int, onClick: () -> Unit = {}) {
+            if (networkStateHelper.contentViewVisible) {
+                ToastUtil.show(title)
+            } else {
+                networkStateHelper.setMessageTitle(title)
+                networkStateHelper.setMessageSummary(summary)
+                networkStateHelper.setMessageOnClickListener(View.OnClickListener { onClick() })
+                networkStateHelper.showMessage()
+            }
+        }
+    }
 }

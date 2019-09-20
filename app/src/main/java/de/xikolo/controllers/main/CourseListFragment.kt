@@ -266,12 +266,6 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         startActivity(intent)
     }
 
-    private fun showLoginRequired() {
-        showLoginRequired {
-            activityCallback?.selectDrawerSection(R.id.navigation_login)
-        }
-    }
-
     private fun showNoEnrollmentsMessage() {
         showMessage(R.string.notification_no_enrollments, R.string.notification_no_enrollments_summary) {
             activityCallback?.selectDrawerSection(R.id.navigation_all_courses)

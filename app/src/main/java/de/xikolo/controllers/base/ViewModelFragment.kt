@@ -1,25 +1,25 @@
-package de.xikolo.controllers.dialogs.base
+package de.xikolo.controllers.base
+
 
 import android.os.Bundle
 import android.view.View
-import de.xikolo.controllers.base.ViewModelCreationInterface
 import de.xikolo.extensions.observe
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.viewmodels.base.BaseViewModel
 
-abstract class ViewModelDialogFragment<T : BaseViewModel> : NetworkStateDialogFragment(), ViewModelCreationInterface<T> {
+abstract class ViewModelFragment<T : BaseViewModel> : NetworkStateFragment(), ViewModelCreationInterface<T> {
 
     override lateinit var viewModel: T
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initViewModel(this)
         super.onCreate(savedInstanceState)
+        initViewModel(this)
     }
 
-    override fun onDialogViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onDialogViewCreated(view, savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewModel.networkState.observe(this) {
+        viewModel.networkState.observe(viewLifecycleOwner) {
             if (it.code != NetworkCode.STARTED) hideAnyProgress()
             when (it.code) {
                 NetworkCode.STARTED                   -> showAnyProgress()

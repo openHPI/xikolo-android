@@ -14,7 +14,7 @@ import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.BaseCourseListAdapter
-import de.xikolo.controllers.base.NetworkStateFragment
+import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.extensions.observe
@@ -30,7 +30,7 @@ import de.xikolo.viewmodels.channel.ChannelViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
 
-class ChannelDetailsFragment : NetworkStateFragment<ChannelViewModel>() {
+class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
 
     companion object {
         val TAG: String = ChannelDetailsFragment::class.java.simpleName

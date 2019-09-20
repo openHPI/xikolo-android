@@ -19,7 +19,7 @@ abstract class ViewModelActivity<T : BaseViewModel> : BaseActivity(), ViewModelC
         initViewModel()
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         initViewModel(this)
         viewModel.onCreate()
     }

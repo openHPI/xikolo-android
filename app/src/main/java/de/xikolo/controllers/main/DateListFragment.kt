@@ -82,12 +82,6 @@ class DateListFragment : ViewModelMainFragment<DateListViewModel>() {
         showContent()
     }
 
-    private fun showLoginRequired() {
-        showLoginRequired {
-            activityCallback?.selectDrawerSection(R.id.navigation_login)
-        }
-    }
-
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLogoutEvent(event: LogoutEvent) {
