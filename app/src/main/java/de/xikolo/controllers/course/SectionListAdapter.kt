@@ -47,7 +47,7 @@ class SectionListAdapter(private val activity: FragmentActivity,
         val view = LayoutInflater
             .from(parent.context)
             .inflate(
-                R.layout.item_section,
+                R.layout.item_section_list,
                 parent,
                 false
             )
@@ -92,8 +92,8 @@ class SectionListAdapter(private val activity: FragmentActivity,
     private fun contentAvailable(section: Section, holder: SectionViewHolder) {
         holder.progressBar.visibility = View.GONE
         holder.viewModuleNotification.visibility = View.GONE
-        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_bg))
-        holder.textTitle.setTextColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_text))
+        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.section_header_bg))
+        holder.textTitle.setTextColor(ContextCompat.getColor(activity, R.color.section_header_text))
 
         val outValue = TypedValue()
         activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
@@ -111,8 +111,8 @@ class SectionListAdapter(private val activity: FragmentActivity,
     private fun contentLocked(section: Section, holder: SectionViewHolder) {
         holder.progressBar.visibility = View.GONE
         holder.viewModuleNotification.visibility = View.VISIBLE
-        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_bg_locked))
-        holder.textTitle.setTextColor(ContextCompat.getColor(activity, R.color.apptheme_section_header_text_locked))
+        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.section_header_locked_bg))
+        holder.textTitle.setTextColor(ContextCompat.getColor(activity, R.color.section_header_locked_text))
 
         holder.layout.isClickable = false
         holder.layout.foreground = null

@@ -85,7 +85,7 @@ class ChannelListAdapter(private val callback: OnChannelCardClickListener) : Rec
             val listItem = LayoutInflater
                 .from(App.instance)
                 .inflate(
-                    R.layout.item_channel_list_scroll,
+                    R.layout.item_channel_course_list,
                     holder.scrollContainer,
                     false
                 )
@@ -108,7 +108,7 @@ class ChannelListAdapter(private val callback: OnChannelCardClickListener) : Rec
             val showMoreCard = LayoutInflater
                 .from(App.instance)
                 .inflate(
-                    R.layout.item_channel_list_scroll_more,
+                    R.layout.item_channel_course_list_more,
                     holder.scrollContainer,
                     false
                 )

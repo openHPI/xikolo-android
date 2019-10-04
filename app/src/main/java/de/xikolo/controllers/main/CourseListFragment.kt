@@ -44,7 +44,7 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
 
     private var courseList: MetaSectionList<String, DateOverview, List<Course>> = MetaSectionList()
 
-    override val layoutResource = R.layout.content_course_list
+    override val layoutResource = R.layout.fragment_course_list
 
     override fun createViewModel(): CourseListViewModel {
         return CourseListViewModel(filter)

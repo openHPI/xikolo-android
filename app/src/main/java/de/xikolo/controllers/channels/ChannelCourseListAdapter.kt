@@ -30,7 +30,7 @@ class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_VIEW_TYPE_META   -> DescriptionViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_description, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.content_channel_description, parent, false)
             )
             ITEM_VIEW_TYPE_HEADER -> createHeaderViewHolder(parent, viewType)
             else                  -> createCourseViewHolder(parent, viewType)

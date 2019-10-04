@@ -29,7 +29,7 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
         return when (viewType) {
             ITEM_VIEW_TYPE_META   ->
                 OverviewViewHolder(
-                    LayoutInflater.from(parent.context).inflate(R.layout.container_date_overview, parent, false)
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_date_list_overview, parent, false)
                 )
             ITEM_VIEW_TYPE_HEADER ->
                 HeaderViewHolder(

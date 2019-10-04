@@ -23,7 +23,7 @@ class DateListFragment : MainFragment<DateListViewModel>() {
 
     private lateinit var adapter: DateListAdapter
 
-    override val layoutResource: Int = R.layout.content_date_list
+    override val layoutResource: Int = R.layout.fragment_date_list
 
     override fun createViewModel(): DateListViewModel {
         return DateListViewModel()

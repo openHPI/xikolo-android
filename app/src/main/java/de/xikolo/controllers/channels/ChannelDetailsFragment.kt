@@ -57,7 +57,7 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
 
     private lateinit var contentListAdapter: ChannelCourseListAdapter
 
-    override val layoutResource = R.layout.content_channel_details
+    override val layoutResource = R.layout.fragment_channel_details
 
     override fun createViewModel(): ChannelViewModel {
         return ChannelViewModel(channelId)

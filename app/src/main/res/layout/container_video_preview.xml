@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/videoPreview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentStart="true"
-    android:background="@color/video_bg">
+    android:background="@color/content_video_preview">
 
     <de.xikolo.views.CustomSizeImageView
         android:id="@+id/videoThumbnail"
@@ -13,7 +14,18 @@
         android:layout_centerInParent="true"
         android:scaleType="centerCrop" />
 
-    <include layout="@layout/container_play_button" />
+    <de.xikolo.views.CustomFontTextView
+        android:id="@+id/playButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/button_play"
+        android:elevation="2dp"
+        android:gravity="center"
+        android:text="@string/icon_play"
+        android:textColor="@color/button_play_fg"
+        android:textSize="32sp"
+        app:customFont="xikolo.ttf" />
 
     <TextView
         android:id="@+id/durationText"
@@ -28,7 +40,7 @@
         android:paddingTop="3dp"
         android:paddingRight="6dp"
         android:paddingBottom="3dp"
-        android:textColor="@color/white"
+        android:textColor="@color/text_white"
         android:textSize="12sp" />
 
 </RelativeLayout>

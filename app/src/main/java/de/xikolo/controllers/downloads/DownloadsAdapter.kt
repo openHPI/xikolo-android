@@ -49,13 +49,13 @@ class DownloadsAdapter(private val callback: OnDeleteButtonClickedListener) : Re
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == ITEM_VIEW_TYPE_HEADER) {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_section_header, parent, false)
+                .inflate(R.layout.item_header_secondary, parent, false)
             view.isEnabled = false
             view.setOnClickListener(null)
             HeaderViewHolder(view)
         } else {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_download, parent, false)
+                .inflate(R.layout.item_download_list, parent, false)
             view.isEnabled = false
             view.setOnClickListener(null)
             FolderViewHolder(view)

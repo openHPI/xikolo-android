@@ -24,12 +24,12 @@
                 android:clickable="true"
                 android:ellipsize="end"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackground"
                 android:includeFontPadding="false"
                 android:maxLines="2"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp"
                 android:paddingTop="16dp"
+                android:paddingRight="16dp"
                 android:textSize="20sp" />
 
             <LinearLayout
@@ -39,8 +39,8 @@
                 android:layout_marginBottom="16dp"
                 android:orientation="vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp" />
+                android:paddingTop="8dp"
+                android:paddingRight="16dp" />
 
         </LinearLayout>
 

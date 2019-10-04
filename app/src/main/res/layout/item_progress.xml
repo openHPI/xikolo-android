@@ -11,10 +11,10 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="6dp"
         android:paddingLeft="8dp"
+        android:paddingTop="6dp"
         android:paddingRight="8dp"
-        android:paddingTop="6dp">
+        android:paddingBottom="6dp">
 
         <TextView
             android:id="@+id/text_title"
@@ -28,35 +28,35 @@
 
         <include
             android:id="@+id/progress_selftest"
-            layout="@layout/container_progress"
+            layout="@layout/view_progress_element"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/text_title" />
+            android:layout_below="@+id/text_title"
+            android:layout_alignParentLeft="true" />
 
         <include
             android:id="@+id/progress_main"
-            layout="@layout/container_progress"
+            layout="@layout/view_progress_element"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/progress_selftest" />
+            android:layout_below="@+id/progress_selftest"
+            android:layout_alignParentLeft="true" />
 
         <include
             android:id="@+id/progress_bonus"
-            layout="@layout/container_progress"
+            layout="@layout/view_progress_element"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/progress_main" />
+            android:layout_below="@+id/progress_main"
+            android:layout_alignParentLeft="true" />
 
         <include
             android:id="@+id/progress_visits"
-            layout="@layout/container_progress"
+            layout="@layout/view_progress_element"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/progress_bonus" />
+            android:layout_below="@+id/progress_bonus"
+            android:layout_alignParentLeft="true" />
 
     </RelativeLayout>
 

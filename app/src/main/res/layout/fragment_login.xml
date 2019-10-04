@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/content_view"
-    android:background="@color/apptheme_login_bg"
+    android:background="@color/content"
     android:fitsSystemWindows="true">
 
     <androidx.core.widget.NestedScrollView
@@ -25,8 +25,8 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:paddingLeft="24dp"
-                android:paddingRight="24dp"
-                android:paddingTop="56dp">
+                android:paddingTop="56dp"
+                android:paddingRight="24dp">
 
                 <ImageView
                     android:id="@+id/top_image"
@@ -34,30 +34,29 @@
                     android:layout_height="72dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="24dp"
-                    android:layout_marginTop="24dp" />
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp" />
 
                 <TextView
                     android:id="@+id/text_credentials"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/top_image"
-                    android:layout_marginBottom="2dp"
+                    android:layout_alignParentLeft="true"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="2dp"
                     android:padding="4dp"
                     android:text="@string/login_with_credentials"
-                    android:textColor="@color/apptheme_login_text"
                     android:textSize="14sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/input_layout_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/text_credentials"
-                    android:layout_marginBottom="8dp"
+                    android:layout_alignParentLeft="true"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:theme="@style/LoginTextInput">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -67,8 +66,7 @@
                         android:hint="@string/hint_email"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
-                        android:maxLines="1"
-                        android:textColor="@color/apptheme_login_text" />
+                        android:maxLines="1" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,10 +74,10 @@
                     android:id="@+id/input_layout_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/input_layout_email"
-                    android:layout_marginBottom="8dp"
+                    android:layout_alignParentLeft="true"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:theme="@style/LoginTextInput">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -89,8 +87,7 @@
                         android:hint="@string/hint_password"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:textColor="@color/apptheme_login_text" />
+                        android:maxLines="1" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -98,13 +95,12 @@
                     android:id="@+id/textForgotPw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_below="@+id/input_layout_password"
-                    android:layout_marginBottom="16dp"
+                    android:layout_alignParentRight="true"
                     android:layout_marginTop="2dp"
+                    android:layout_marginBottom="16dp"
                     android:padding="4dp"
                     android:text="@string/forgot_password"
-                    android:textColor="@color/apptheme_login_text"
                     android:textSize="14sp" />
 
                 <Button
@@ -112,10 +108,10 @@
                     style="@style/ButtonContained"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/textForgotPw"
-                    android:layout_marginBottom="24dp"
+                    android:layout_alignParentLeft="true"
                     android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
                     android:padding="12dp"
                     android:text="@string/login" />
 
@@ -124,8 +120,8 @@
                     style="@style/ButtonOutlined"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/btnLogin"
+                    android:layout_alignParentLeft="true"
                     android:layout_marginBottom="24dp"
                     android:padding="12dp"
                     android:text="@string/button_new" />
@@ -150,8 +146,7 @@
                         <View
                             android:layout_width="0dp"
                             android:layout_height="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/apptheme_login_text" />
+                            android:layout_weight="1" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -159,14 +154,12 @@
                             android:includeFontPadding="false"
                             android:padding="6dp"
                             android:text="@string/or"
-                            android:textColor="@color/apptheme_login_text"
                             android:textSize="14sp" />
 
                         <View
                             android:layout_width="0dp"
                             android:layout_height="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/apptheme_login_text" />
+                            android:layout_weight="1" />
 
                     </LinearLayout>
 
@@ -175,8 +168,8 @@
                         style="@style/ButtonContained"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_below="@+id/line"
+                        android:layout_alignParentLeft="true"
                         android:layout_marginBottom="6dp"
                         android:padding="12dp"
                         android:text="@string/login_sso" />
@@ -184,11 +177,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_below="@+id/btnSSO"
+                        android:layout_alignParentLeft="true"
                         android:layout_marginBottom="24dp"
                         android:text="@string/login_sso_hint"
-                        android:textColor="@color/apptheme_login_text"
                         android:textSize="12sp" />
 
                 </RelativeLayout>
@@ -199,6 +191,6 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <include layout="@layout/toolbar_login" />
+    <include layout="@layout/view_toolbar_login" />
 
 </FrameLayout>

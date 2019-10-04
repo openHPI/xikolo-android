@@ -4,13 +4,13 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/corner_radius"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 
     <include
-        layout="@layout/container_date_overview"
+        layout="@layout/item_date_list_overview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

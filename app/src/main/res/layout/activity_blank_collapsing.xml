@@ -25,9 +25,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
+                app:contentScrim="@color/toolbar_collapsing_scrim"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-                app:statusBarScrim="?attr/colorPrimary">
+                app:statusBarScrim="@color/toolbar_collapsing_scrim">
 
                 <ImageView
                     android:id="@+id/toolbar_image"
@@ -70,7 +70,7 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/background_main"
+            android:background="@color/content"
             android:fitsSystemWindows="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

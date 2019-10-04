@@ -152,16 +152,16 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         super.onConnectivityChange(isOnline)
 
         if (isOnline) {
-            tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_toolbar))
+            tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.toolbar))
         } else {
-            tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.offline_mode_toolbar))
+            tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.toolbar_offline))
         }
     }
 
     inner class ItemsPagerAdapter(private val fragmentManager: FragmentManager, private val items: List<Item>) : FragmentPagerAdapter(fragmentManager), TabLayout.OnTabSelectedListener {
 
         fun getCustomTabView(position: Int, currentPosition: Int, parent: ViewGroup): View =
-            layoutInflater.inflate(R.layout.container_custom_tab, parent, false).apply {
+            layoutInflater.inflate(R.layout.view_tab_section, parent, false).apply {
                 val label = findViewById<TextView>(R.id.tabLabel)
                 val unseenIndicator = findViewById<View>(R.id.unseenIndicator)
 

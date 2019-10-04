@@ -164,7 +164,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_video, container, false)
+        return inflater.inflate(R.layout.fragment_video_player, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

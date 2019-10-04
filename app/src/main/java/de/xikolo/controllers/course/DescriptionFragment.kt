@@ -57,7 +57,7 @@ class DescriptionFragment : ViewModelFragment<DescriptionViewModel>() {
     @BindView(R.id.text_description)
     internal lateinit var textDescription: TextView
 
-    override val layoutResource = R.layout.content_course_description
+    override val layoutResource = R.layout.fragment_course_description
 
     override fun createViewModel(): DescriptionViewModel {
         return DescriptionViewModel(courseId)
