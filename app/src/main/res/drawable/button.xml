@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/button_gray">
+    android:color="@color/button_ripple">
     <item android:id="@android:id/mask">
         <shape android:shape="rectangle">
             <!-- This color is needed to be set - doesn't affect anything -->
+            <corners android:radius="@dimen/button_corner_radius" />
             <solid android:color="@color/white" />
-            <corners android:radius="@dimen/corner_radius" />
         </shape>
     </item>
     <!-- This is the button background -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/transparent" />
-            <corners android:radius="@dimen/corner_radius" />
+            <corners android:radius="@dimen/button_corner_radius" />
+            <solid android:color="@color/button_bg" />
         </shape>
     </item>
 </ripple>

@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/sheet_text_scrim_height_bottom"
                 android:layout_gravity="bottom"
-                android:background="@drawable/scrim_bottom" />
+                android:background="@drawable/gradient_dark_to_transparent_from_bottom" />
 
             <TextView
                 android:id="@+id/text_title"

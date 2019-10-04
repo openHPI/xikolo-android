@@ -28,13 +28,13 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_alignParentTop="true"
-            android:background="@drawable/gradient_black_transparent_top" />
+            android:background="@drawable/gradient_dark_to_transparent_from_top" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/gradient_black_transparent_bottom" />
+            android:background="@drawable/gradient_dark_to_transparent_from_bottom" />
 
     </RelativeLayout>
 

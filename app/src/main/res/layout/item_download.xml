@@ -15,7 +15,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/icon_toggle_bg_gray_on_light"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
         android:contentDescription="@string/delete"

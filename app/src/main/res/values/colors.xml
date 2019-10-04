@@ -10,7 +10,7 @@
     <color name="background_main">#fafafa</color>
     <color name="background_light_gray">#cacaca</color>
 
-    <color name="video_overlay_gradient_black">#99000000</color>
+    <color name="gradient_dark">#9A000000</color>
     <color name="video_overlay_button">#ccffffff</color>
     <color name="video_bg">#CC000000</color>
     <color name="video_hd_disabled">#5a6065</color>
@@ -34,12 +34,47 @@
     <color name="banner_green">#8CB30D</color>
     <color name="banner_grey">#5F5F5F</color>
 
-    <color name="progress_green">#80B600</color>
+    <color name="progress_bar_fg">#80B600</color>
+    <color name="progress_bar_bg">#1F000000</color>
 
-    <color name="button_contained_disabled_bg">#e5e5e5</color>
-    <color name="button_contained_disabled_text">#888888</color>
-    <color name="button_gray">#99c4c4c4</color>
-    <color name="outlined_button_stroke">#c4c4c4</color>
+    <color name="disabled_dark">#888888</color>
+    <color name="disabled_normal">#c4c4c4</color>
+    <color name="disabled_light">#e5e5e5</color>
+
+    <color name="ripple">#99c4c4c4</color>
+
+    <!-- Buttons -->
+    <color name="button_text_color">@color/apptheme_main</color>
+    <color name="button_text_color_disabled">@color/disabled_normal</color>
+    <color name="button_bg">@color/transparent</color>
+    <color name="button_ripple">@color/ripple</color>
+
+    <color name="button_outlined_border">#c4c4c4</color>
+
+    <color name="button_contained_text_color">@color/white</color>
+    <color name="button_contained_text_color_disabled">@color/disabled_dark</color>
+    <color name="button_contained_bg">@color/apptheme_main</color>
+    <color name="button_contained_bg_disabled">@color/disabled_light</color>
+    <color name="button_contained_ripple">@color/apptheme_main_light</color>
+
+
+    <color name="counter_badge_bg">@color/apptheme_main</color>
+
+    <color name="button_play_bg">@color/apptheme_button_play_bg</color>
+    <color name="button_play_fg">@color/apptheme_button_play_fg</color>
+    <color name="button_play_ripple">@color/apptheme_button_play_ripple</color>
+
+    <color name="circle_indicator">@color/apptheme_main</color>
+
+    <color name="underline">@color/text_light</color>
+
+    <color name="gradient_placeholder_start">@color/apptheme_gradient_placeholder_start</color>
+    <color name="gradient_placeholder_end">@color/apptheme_gradient_placeholder_end</color>
+
+    <color name="splash_bg">@color/apptheme_splash_background</color>
+
+    <color name="tab_text">@color/apptheme_tab_text</color>
+
 
     <!-- this is needed as preference_category_material layout is using this color as the text color -->
     <color name="preference_fallback_accent_color" tools:override="true">@color/apptheme_second</color>
@@ -54,8 +89,8 @@
     <color name="apptheme_login_bg">@color/background_main</color>
     <color name="apptheme_login_text">@color/text_main</color>
 
-    <color name="apptheme_placeholder_gradient_start">@color/apptheme_third_60</color>
-    <color name="apptheme_placeholder_gradient_end">@color/apptheme_second_60</color>
+    <color name="apptheme_gradient_placeholder_start">@color/apptheme_third_60</color>
+    <color name="apptheme_gradient_placeholder_end">@color/apptheme_second_60</color>
 
     <color name="apptheme_tab_text">@color/white</color>
     <color name="apptheme_tab_text_unfocused">@color/tab_text_unfocused</color>
@@ -69,10 +104,8 @@
 
     <color name="apptheme_splash_background">@color/white</color>
 
-    <color name="apptheme_play_button_bg">@color/apptheme_main</color>
-    <color name="apptheme_play_button_fg">@color/white</color>
-
-    <color name="translucent_scrim_top">#9A000000</color>
-    <color name="translucent_scrim_bottom">#9A000000</color>
+    <color name="apptheme_button_play_bg">@color/apptheme_main</color>
+    <color name="apptheme_button_play_fg">@color/white</color>
+    <color name="apptheme_button_play_ripple">@color/apptheme_main_light</color>
 
 </resources>

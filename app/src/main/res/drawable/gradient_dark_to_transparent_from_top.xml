@@ -2,10 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:dither="true"
     android:shape="rectangle">
-
     <gradient
         android:angle="90"
-        android:endColor="@color/video_overlay_gradient_black"
+        android:endColor="@color/gradient_dark"
         android:startColor="@color/transparent" />
-
 </shape>

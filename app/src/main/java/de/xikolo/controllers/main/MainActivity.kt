@@ -270,7 +270,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
             navigationView.menu.findItem(R.id.navigation_login).isVisible = false
 
             if (viewModel.unreadAnnouncementsCount > 0) {
-                navigationView.menu.findItem(R.id.navigation_news).setActionView(R.layout.item_navigation_counter).apply {
+                navigationView.menu.findItem(R.id.navigation_news).setActionView(R.layout.element_counter_pill).apply {
                     actionView.findViewById<TextView>(R.id.textCounter).text = viewModel.unreadAnnouncementsCount.toString()
                 }
             }

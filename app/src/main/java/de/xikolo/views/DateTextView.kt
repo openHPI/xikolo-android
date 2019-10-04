@@ -1,7 +1,6 @@
 package de.xikolo.views
 
 import android.content.Context
-import android.graphics.drawable.LayerDrawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
@@ -63,7 +62,7 @@ class DateTextView : AppCompatTextView, View.OnClickListener {
                 compoundDrawables[0],
                 compoundDrawables[1],
                 compoundDrawables[2],
-                resources.getDrawable(R.drawable.dotted_line, context.theme)
+                resources.getDrawable(R.drawable.line_dotted, context.theme)
             )
         } else {
             isClickable = false

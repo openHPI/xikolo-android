@@ -45,7 +45,7 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/spash_screen</item>
+        <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
     <style name="TextViewTheme" parent="android:Widget.TextView">

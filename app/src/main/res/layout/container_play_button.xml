@@ -5,10 +5,10 @@
     android:layout_width="56dp"
     android:layout_height="56dp"
     android:layout_centerInParent="true"
-    android:background="@drawable/circle_button"
+    android:background="@drawable/button_play"
     android:elevation="2dp"
     android:gravity="center"
     android:text="@string/icon_play"
-    android:textColor="@color/apptheme_play_button_fg"
+    android:textColor="@color/button_play_fg"
     android:textSize="32sp"
     app:customFont="xikolo.ttf" />

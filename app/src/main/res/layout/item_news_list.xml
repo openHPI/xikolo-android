@@ -14,7 +14,8 @@
         android:layout_marginLeft="3dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="24dp"
-        android:background="@drawable/circle_main"
+        android:background="@drawable/circle_indicator"
+        android:backgroundTint="@color/circle_indicator"
         android:visibility="visible" />
 
     <TextView
