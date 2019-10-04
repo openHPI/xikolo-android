@@ -22,8 +22,11 @@ abstract class NetworkStateDialogFragment : BaseDialogFragment(), SwipeRefreshLa
         super.onCreate(savedInstanceState)
 
         dialogView = createView(LayoutInflater.from(activity), null, savedInstanceState)
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         onDialogViewCreated(dialogView, savedInstanceState)
+        return dialogView
     }
 
     private fun createView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
