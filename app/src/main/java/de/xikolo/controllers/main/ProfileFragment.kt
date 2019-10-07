@@ -10,13 +10,12 @@ import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.config.GlideApp
 import de.xikolo.extensions.observe
-import de.xikolo.managers.UserManager
 import de.xikolo.models.User
 import de.xikolo.utils.DisplayUtil
 import de.xikolo.viewmodels.main.ProfileViewModel
 import de.xikolo.views.CustomSizeImageView
 
-class ProfileFragment : ViewModelMainFragment<ProfileViewModel>() {
+class ProfileFragment : MainFragment<ProfileViewModel>() {
 
     companion object {
         val TAG: String = ProfileFragment::class.java.simpleName
@@ -41,14 +40,6 @@ class ProfileFragment : ViewModelMainFragment<ProfileViewModel>() {
 
     override fun createViewModel(): ProfileViewModel {
         return ProfileViewModel()
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        if (!UserManager.isAuthorized) {
-            activity?.supportFragmentManager?.popBackStack()
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -111,6 +102,14 @@ class ProfileFragment : ViewModelMainFragment<ProfileViewModel>() {
 
     private fun updateEnrollmentCount(count: Long) {
         textEnrollCounts.text = count.toString()
+    }
+
+    override fun onLoginStateChange(isLoggedIn: Boolean) {
+        if (!isLoggedIn) {
+            viewModel.user.removeObservers(viewLifecycleOwner)
+            viewModel.enrollments.removeObservers(viewLifecycleOwner)
+            fragmentManager?.popBackStack()
+        }
     }
 
 }

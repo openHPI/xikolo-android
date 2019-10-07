@@ -16,17 +16,15 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
 import de.xikolo.controllers.webview.WebViewFragment;
-import de.xikolo.events.NetworkStateEvent;
 import de.xikolo.managers.UserManager;
 import de.xikolo.utils.LanalyticsUtil;
 import de.xikolo.utils.NetworkUtil;
@@ -110,7 +108,7 @@ public class WebViewHelper {
                 webViewInterface.hideAnyProgress();
                 webViewInterface.hideMessage();
                 showWebView();
-                EventBus.getDefault().postSticky(new NetworkStateEvent(true));
+                App.getInstance().getState().getConnectivity().online();
                 super.onPageFinished(view, url);
             }
 
@@ -178,7 +176,7 @@ public class WebViewHelper {
                 } else {
                     webViewInterface.hideAnyProgress();
                     webViewInterface.showNetworkRequired();
-                    EventBus.getDefault().postSticky(new NetworkStateEvent(false));
+                    App.getInstance().getState().getConnectivity().offline();
                 }
             } else {
                 webViewInterface.hideAnyProgress();

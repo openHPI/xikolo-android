@@ -1,9 +1,7 @@
 package de.xikolo.controllers.base;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -31,17 +29,9 @@ import com.google.android.gms.cast.framework.IntroductoryOverlay;
 import com.google.android.material.appbar.AppBarLayout;
 import com.yatatsu.autobundle.AutoBundle;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.events.NetworkStateEvent;
-import de.xikolo.events.PermissionDeniedEvent;
-import de.xikolo.events.PermissionGrantedEvent;
-import de.xikolo.receivers.NetworkChangeReceiver;
 import de.xikolo.utils.NotificationUtil;
 import de.xikolo.utils.PlayServicesUtil;
 import de.xikolo.utils.TintUtil;
@@ -70,8 +60,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     private boolean translucentActionbar = false;
 
-    private NetworkChangeReceiver networkChangeReceiver;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,8 +75,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
         offlineModeToolbar = true;
 
-        networkChangeReceiver = new NetworkChangeReceiver();
-
         try {
             if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
                 castContext = CastContext.getSharedInstance(this);
@@ -102,6 +88,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         }
 
         handleIntent(getIntent());
+
+        App.getInstance().getState().getConnectivity().observe(this, this::onConnectivityChange);
     }
 
     @Override
@@ -146,8 +134,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     protected void onStart() {
         super.onStart();
 
-        EventBus.getDefault().register(this);
-
         if (castContext != null) {
             castContext.addCastStateListener(this);
             setupCastMiniController();
@@ -155,23 +141,14 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(networkChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(networkChangeReceiver);
         app.syncCookieSyncManager();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        EventBus.getDefault().unregister(this);
 
         if (castContext != null) {
             castContext.removeCastStateListener(this);
@@ -282,11 +259,9 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         }
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onNetworkEvent(NetworkStateEvent event) {
+    public void onConnectivityChange(boolean isOnline) {
         if (toolbar != null && offlineModeToolbar) {
-            if (event.isOnline()) {
+            if (isOnline) {
                 toolbar.setSubtitle("");
                 setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
             } else {
@@ -300,13 +275,9 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            EventBus.getDefault().post(new PermissionGrantedEvent(requestCode));
-
+            App.getInstance().getState().getPermission().of(requestCode).granted();
         } else {
-
-            EventBus.getDefault().post(new PermissionDeniedEvent(requestCode));
-
+            App.getInstance().getState().getPermission().of(requestCode).denied();
         }
     }
 

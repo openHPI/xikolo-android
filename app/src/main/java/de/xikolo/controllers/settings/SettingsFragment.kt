@@ -22,8 +22,7 @@ import de.xikolo.controllers.dialogs.ProgressDialogHorizontalAutoBundle
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
 import de.xikolo.controllers.dialogs.StorageMigrationDialogAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
-import de.xikolo.events.LoginEvent
-import de.xikolo.events.LogoutEvent
+import de.xikolo.extensions.observe
 import de.xikolo.managers.PermissionManager
 import de.xikolo.managers.UserManager
 import de.xikolo.services.DownloadService
@@ -31,9 +30,6 @@ import de.xikolo.utils.DeviceUtil
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
 import de.xikolo.utils.ToastUtil
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -46,7 +42,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState ?: Bundle())
-        EventBus.getDefault().register(this)
+
+        App.instance.state.login
+            .observe(this) {
+                if (it) {
+                    buildLogoutView(loginOut)
+                } else {
+                    buildLoginView(loginOut)
+                }
+            }
     }
 
     override fun onResume() {
@@ -269,18 +273,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLoginEvent(event: LoginEvent) {
-        buildLogoutView(loginOut)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLogoutEvent(event: LogoutEvent) {
-        buildLoginView(loginOut)
-    }
-
     private fun openUrl(url: String) {
         val customTabsIntent = CustomTabsIntent.Builder()
             .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_main))
@@ -323,11 +315,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 resources.getString(R.string.settings_send_app_feedback)
             )
         )
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
     }
 
 }

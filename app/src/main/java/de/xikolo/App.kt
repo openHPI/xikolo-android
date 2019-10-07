@@ -7,6 +7,11 @@ import androidx.preference.PreferenceManager
 import de.xikolo.config.Config
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.models.migrate.RealmSchemaMigration
+import de.xikolo.states.ConnectivityStateLiveData
+import de.xikolo.states.DownloadStateLiveData
+import de.xikolo.states.LoginStateLiveData
+import de.xikolo.states.PermissionStateLiveData
+import de.xikolo.states.base.LiveDataEvent
 import de.xikolo.utils.ClientUtil
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -20,6 +25,31 @@ class App : Application() {
         lateinit var instance: App
             private set
     }
+
+    inner class State {
+
+        val connectivity: ConnectivityStateLiveData by lazy {
+            ConnectivityStateLiveData(this@App)
+        }
+
+        val login: LoginStateLiveData by lazy {
+            LoginStateLiveData()
+        }
+
+        val downloadCancellation by lazy {
+            LiveDataEvent()
+        }
+
+        val download: DownloadStateLiveData.Companion by lazy {
+            DownloadStateLiveData
+        }
+
+        val permission: PermissionStateLiveData.Companion by lazy {
+            PermissionStateLiveData
+        }
+    }
+
+    val state = State()
 
     val lanalytics: Lanalytics by lazy {
         Lanalytics.getInstance(this, Config.API_URL + Config.LANALYTICS_PATH)

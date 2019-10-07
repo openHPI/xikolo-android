@@ -4,21 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LifecycleOwner
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.events.DownloadDeletedEvent
-import de.xikolo.events.DownloadStartedEvent
-import de.xikolo.events.PermissionDeniedEvent
-import de.xikolo.events.PermissionGrantedEvent
+import de.xikolo.extensions.observe
 import de.xikolo.models.DownloadAsset
 import de.xikolo.services.DownloadService
+import de.xikolo.states.PermissionStateLiveData
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.StorageUtil
 import de.xikolo.utils.ToastUtil
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import java.io.File
 import java.util.*
 
@@ -33,13 +30,29 @@ class DownloadManager(activity: FragmentActivity) {
     private var pendingAction: PendingAction? = null
 
     init {
-        EventBus.getDefault().register(this)
+        registerPermissionStateObserver(activity)
     }
 
     data class PendingAction(val type: ActionType, val downloadAsset: DownloadAsset)
 
     enum class ActionType {
         START, DELETE, CANCEL
+    }
+
+    private fun registerPermissionStateObserver(owner: LifecycleOwner) {
+        App.instance.state.permission.of(PermissionManager.REQUEST_CODE_WRITE_EXTERNAL_STORAGE)
+            .observe(owner) { state ->
+                if (state == PermissionStateLiveData.PermissionStateCode.GRANTED) {
+                    pendingAction?.let { pendingAction ->
+                        when (pendingAction.type) {
+                            ActionType.START  -> startAssetDownload(pendingAction.downloadAsset)
+                            ActionType.DELETE -> deleteAssetDownload(pendingAction.downloadAsset)
+                            ActionType.CANCEL -> cancelAssetDownload(pendingAction.downloadAsset)
+                        }
+                    }
+                }
+                pendingAction = null
+            }
     }
 
     fun startAssetDownload(downloadAsset: DownloadAsset): Boolean {
@@ -68,7 +81,7 @@ class DownloadManager(activity: FragmentActivity) {
                             LanalyticsUtil.trackDownloadedFile(downloadAsset)
                         }
 
-                        EventBus.getDefault().post(DownloadStartedEvent(downloadAsset))
+                        App.instance.state.download.of(downloadAsset.url).started()
 
                         downloadAsset.secondaryAssets.forEach {
                             startAssetDownload(it)
@@ -102,7 +115,7 @@ class DownloadManager(activity: FragmentActivity) {
                     StorageUtil.cleanStorage(File(downloadAsset.filePath).parentFile)
                     return false
                 } else {
-                    EventBus.getDefault().post(DownloadDeletedEvent(downloadAsset))
+                    App.instance.state.download.of(downloadAsset.url).deleted()
 
                     if (getDownloadFile(downloadAsset)?.delete() == true) {
                         if (deleteSecondaryDownloads) {
@@ -169,27 +182,6 @@ class DownloadManager(activity: FragmentActivity) {
         }
 
         return folders
-    }
-
-    @Subscribe
-    fun onPermissionGrantedEvent(permissionGrantedEvent: PermissionGrantedEvent) {
-        if (permissionGrantedEvent.requestCode == PermissionManager.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
-            pendingAction?.let {
-                when (it.type) {
-                    ActionType.START  -> startAssetDownload(it.downloadAsset)
-                    ActionType.DELETE -> deleteAssetDownload(it.downloadAsset)
-                    ActionType.CANCEL -> cancelAssetDownload(it.downloadAsset)
-                }
-            }
-            pendingAction = null
-        }
-    }
-
-    @Subscribe
-    fun onPermissionDeniedEvent(permissionDeniedEvent: PermissionDeniedEvent) {
-        if (permissionDeniedEvent.requestCode == PermissionManager.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
-            pendingAction = null
-        }
     }
 
     fun getDownloadTotalBytes(downloadAsset: DownloadAsset): Long {

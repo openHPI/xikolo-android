@@ -8,14 +8,13 @@ import com.coolerfall.download.DownloadCallback
 import com.coolerfall.download.DownloadManager
 import com.coolerfall.download.DownloadRequest
 import com.coolerfall.download.OkHttpDownloader
+import de.xikolo.App
 import de.xikolo.config.Config
-import de.xikolo.events.DownloadCompletedEvent
 import de.xikolo.models.Download
 import de.xikolo.network.ApiService
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.NotificationUtil
 import okhttp3.OkHttpClient
-import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -232,7 +231,8 @@ class DownloadService : Service() {
             if (download.showNotification) {
                 notificationUtil?.showDownloadCompletedNotification(download)
             }
-            EventBus.getDefault().post(DownloadCompletedEvent(download.url))
+
+            App.instance.state.download.of(download.url).completed()
         }
     }
 

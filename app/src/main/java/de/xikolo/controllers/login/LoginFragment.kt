@@ -17,6 +17,7 @@ import androidx.core.app.NavUtils
 import butterknife.BindView
 import com.google.android.material.textfield.TextInputEditText
 import com.yatatsu.autobundle.AutoBundleField
+import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.BuildFlavor
@@ -26,14 +27,12 @@ import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
-import de.xikolo.events.LoginEvent
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.storages.UserStorage
 import de.xikolo.utils.ToastUtil
 import de.xikolo.viewmodels.login.LoginViewModel
-import org.greenrobot.eventbus.EventBus
 
 class LoginFragment : ViewModelFragment<LoginViewModel>() {
 
@@ -146,7 +145,7 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
             .observe(viewLifecycleOwner) {
                 when (it.code) {
                     NetworkCode.SUCCESS -> {
-                        EventBus.getDefault().post(LoginEvent())
+                        App.instance.state.login.loggedIn()
 
                         hideProgressDialog()
                         activity?.finish()

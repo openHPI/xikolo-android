@@ -7,18 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import de.xikolo.R
 import de.xikolo.controllers.course.CourseActivityAutoBundle
-import de.xikolo.events.LogoutEvent
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.models.CourseDate
-import de.xikolo.models.DateOverview
-import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.main.DateListViewModel
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
-class DateListFragment : ViewModelMainFragment<DateListViewModel>() {
+class DateListFragment : MainFragment<DateListViewModel>() {
 
     companion object {
         val TAG: String = DateListFragment::class.java.simpleName
@@ -39,8 +33,6 @@ class DateListFragment : ViewModelMainFragment<DateListViewModel>() {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-
-        EventBus.getDefault().register(this)
     }
 
     override fun onStart() {
@@ -65,27 +57,28 @@ class DateListFragment : ViewModelMainFragment<DateListViewModel>() {
 
         viewModel.dates
             .observe(viewLifecycleOwner) {
-                if (UserManager.isAuthorized) {
-                    if (it.isNotEmpty()) {
-                        showDateList(viewModel.sectionedDateList)
-                    } else {
-                        showEmptyMessage(R.string.empty_message_dates)
-                    }
-                } else {
-                    showLoginRequired()
-                }
+                showDateList(it)
             }
     }
 
-    private fun showDateList(dateList: MetaSectionList<String, DateOverview, List<CourseDate>>) {
-        adapter.update(dateList)
-        showContent()
+    private fun showDateList(list: List<CourseDate>) {
+        if (!UserManager.isAuthorized) {
+            hideContent()
+            showLoginRequired()
+        } else if (list.isEmpty()) {
+            hideContent()
+            showEmptyMessage(R.string.empty_message_dates)
+        } else {
+            adapter.update(viewModel.sectionedDateList)
+            showContent()
+        }
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLogoutEvent(event: LogoutEvent) {
-        activity?.finish()
+    override fun onLoginStateChange(isLoggedIn: Boolean) {
+        super.onLoginStateChange(isLoggedIn)
+
+        // refreshing itself does not trigger a change of the dates, so it is done manually
+        showDateList(listOf())
     }
 
 }

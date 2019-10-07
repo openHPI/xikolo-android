@@ -15,8 +15,6 @@ import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.controllers.login.LoginActivityAutoBundle
-import de.xikolo.events.LoginEvent
-import de.xikolo.events.LogoutEvent
 import de.xikolo.extensions.observe
 import de.xikolo.extensions.observeOnce
 import de.xikolo.managers.UserManager
@@ -29,11 +27,8 @@ import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.main.CourseListViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
-class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
+class CourseListFragment : MainFragment<CourseListViewModel>() {
 
     companion object {
         val TAG: String = CourseListFragment::class.java.simpleName
@@ -59,8 +54,6 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-
-        EventBus.getDefault().register(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -148,12 +141,6 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         } else {
             activityCallback?.onFragmentAttached(R.id.navigation_my_courses)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        EventBus.getDefault().unregister(this)
     }
 
     private fun showCourseList() {
@@ -270,18 +257,6 @@ class CourseListFragment : ViewModelMainFragment<CourseListViewModel>() {
         showMessage(R.string.notification_no_enrollments, R.string.notification_no_enrollments_summary) {
             activityCallback?.selectDrawerSection(R.id.navigation_all_courses)
         }
-    }
-
-    @Suppress("unused", "UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLoginEvent(event: LoginEvent) {
-        onRefresh()
-    }
-
-    @Suppress("unused", "UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLogoutEvent(event: LogoutEvent) {
-        onRefresh()
     }
 
 }

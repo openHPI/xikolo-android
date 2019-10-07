@@ -1,10 +1,8 @@
 package de.xikolo.network.jobs.base
 
-import de.xikolo.events.NetworkStateEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 class HealthCheckNetworkStateLiveData : NetworkStateLiveData() {
@@ -22,11 +20,7 @@ class HealthCheckNetworkStateLiveData : NetworkStateLiveData() {
     }
 
     fun state(code: NetworkCode, userRequest: Boolean, deprecationDate: Date? = null) {
-        when (code) {
-            NetworkCode.SUCCESS    -> EventBus.getDefault().postSticky(NetworkStateEvent(true))
-            NetworkCode.NO_NETWORK -> EventBus.getDefault().postSticky(NetworkStateEvent(false))
-            else                   -> Unit
-        }
+        super.notifyAboutConnectivityChange(code)
 
         GlobalScope.launch(Dispatchers.Main) {
             value = HealthCheckNetworkState(code, userRequest, deprecationDate)

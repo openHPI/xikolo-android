@@ -7,19 +7,14 @@ import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.channels.ChannelDetailsActivityAutoBundle
 import de.xikolo.controllers.course.CourseActivityAutoBundle
-import de.xikolo.events.LoginEvent
-import de.xikolo.events.LogoutEvent
 import de.xikolo.extensions.observe
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
 import de.xikolo.viewmodels.main.ChannelListViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
-class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
+class ChannelListFragment : MainFragment<ChannelListViewModel>() {
 
     companion object {
         val TAG: String = ChannelListFragment::class.java.simpleName
@@ -40,8 +35,6 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-
-        EventBus.getDefault().register(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -107,24 +100,6 @@ class ChannelListFragment : ViewModelMainFragment<ChannelListViewModel>() {
     override fun onStart() {
         super.onStart()
         activityCallback?.onFragmentAttached(R.id.navigation_channels)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        EventBus.getDefault().unregister(this)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLoginEvent(event: LoginEvent) {
-        onRefresh()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLogoutEvent(event: LogoutEvent) {
-        onRefresh()
     }
 
 }

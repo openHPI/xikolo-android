@@ -8,17 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import de.xikolo.R
 import de.xikolo.controllers.announcement.AnnouncementActivityAutoBundle
-import de.xikolo.events.LoginEvent
-import de.xikolo.events.LogoutEvent
 import de.xikolo.extensions.observe
 import de.xikolo.models.Announcement
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.viewmodels.main.AnnouncementListViewModel
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
-class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
+class NewsListFragment : MainFragment<AnnouncementListViewModel>() {
 
     companion object {
         val TAG: String = NewsListFragment::class.java.simpleName
@@ -39,8 +34,6 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-
-        EventBus.getDefault().register(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,12 +61,6 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
         activityCallback?.onFragmentAttached(R.id.navigation_news)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        EventBus.getDefault().unregister(this)
-    }
-
     private fun showAnnouncementList(announcements: List<Announcement>) {
         if (announcements.isEmpty()) {
             showEmptyMessage(R.string.empty_message_global_announcements_title)
@@ -87,18 +74,6 @@ class NewsListFragment : ViewModelMainFragment<AnnouncementListViewModel>() {
         val intent = AnnouncementActivityAutoBundle.builder(announcementId, true).build(activity!!)
         startActivity(intent)
         LanalyticsUtil.trackVisitedAnnouncementDetail(announcementId)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLoginEvent(event: LoginEvent) {
-        onRefresh()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLogoutEvent(event: LogoutEvent) {
-        onRefresh()
     }
 
 }

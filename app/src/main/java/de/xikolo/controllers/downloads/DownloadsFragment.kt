@@ -9,21 +9,19 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.config.FeatureConfig
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialogAutoBundle
 import de.xikolo.controllers.helper.LoadingStateHelper
-import de.xikolo.events.PermissionDeniedEvent
-import de.xikolo.events.PermissionGrantedEvent
+import de.xikolo.extensions.observe
 import de.xikolo.managers.DownloadManager
 import de.xikolo.managers.PermissionManager
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
 import de.xikolo.utils.ToastUtil
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import java.io.File
 import java.util.*
 
@@ -48,8 +46,6 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
             downloadManager = DownloadManager(activity)
             permissionManager = PermissionManager(activity)
             adapter = DownloadsAdapter(this)
-
-            EventBus.getDefault().register(this)
         }
     }
 
@@ -67,6 +63,15 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
         return layout
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        App.instance.state.permission.of(PermissionManager.REQUEST_CODE_WRITE_EXTERNAL_STORAGE)
+            .observe(viewLifecycleOwner) {
+                fetchItems()
+            }
+    }
+
     override fun onStart() {
         super.onStart()
         fetchItems()
@@ -75,20 +80,6 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
     override fun onRefresh() {
         fetchItems()
         notificationController?.hideProgress()
-    }
-
-    @Subscribe
-    fun onPermissionGrantedEvent(permissionGrantedEvent: PermissionGrantedEvent) {
-        if (permissionGrantedEvent.requestCode == PermissionManager.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
-            fetchItems()
-        }
-    }
-
-    @Subscribe
-    fun onPermissionDeniedEvent(permissionDeniedEvent: PermissionDeniedEvent) {
-        if (permissionDeniedEvent.requestCode == PermissionManager.REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
-            fetchItems()
-        }
     }
 
     private fun fetchItems() {

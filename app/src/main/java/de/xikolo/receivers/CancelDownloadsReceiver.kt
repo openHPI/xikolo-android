@@ -4,9 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import de.xikolo.events.AllDownloadsCancelledEvent
+import de.xikolo.App
 import de.xikolo.services.DownloadService
-import org.greenrobot.eventbus.EventBus
 
 class CancelDownloadsReceiver : BroadcastReceiver() {
 
@@ -14,7 +13,8 @@ class CancelDownloadsReceiver : BroadcastReceiver() {
         val service = Intent()
         service.component = ComponentName(context, DownloadService::class.java)
         context.stopService(service)
-        EventBus.getDefault().post(AllDownloadsCancelledEvent())
+
+        App.instance.state.downloadCancellation.signal()
     }
 
 }
