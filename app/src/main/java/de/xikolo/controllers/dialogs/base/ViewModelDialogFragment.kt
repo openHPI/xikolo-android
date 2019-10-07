@@ -12,8 +12,8 @@ abstract class ViewModelDialogFragment<T : BaseViewModel> : NetworkStateDialogFr
     override lateinit var viewModel: T
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initViewModel(this)
         super.onCreate(savedInstanceState)
+        initViewModel(this)
     }
 
     override fun onDialogViewCreated(view: View, savedInstanceState: Bundle?) {
