@@ -28,7 +28,7 @@ class CourseDateListDialog : ViewModelDialogFragment<DateListViewModel>() {
     @BindView(R.id.content_view)
     lateinit var recyclerView: RecyclerView
 
-    override val layoutResource = R.layout.content_date_list
+    override val layoutResource = R.layout.fragment_date_list
 
     private var adapter: DateListAdapter = DateListAdapter(null)
 

@@ -209,7 +209,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         drawerLayout = findViewById(R.id.drawer_layout);
         contentLayout = findViewById(R.id.contentLayout);
         appBar = findViewById(R.id.appbar);
-        setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
+        setColorScheme(R.color.toolbar, R.color.statusbar);
     }
 
     private boolean setupCastMiniController() {
@@ -263,10 +263,10 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         if (toolbar != null && offlineModeToolbar) {
             if (isOnline) {
                 toolbar.setSubtitle("");
-                setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar);
+                setColorScheme(R.color.toolbar, R.color.statusbar);
             } else {
                 toolbar.setSubtitle(getString(R.string.offline_mode));
-                setColorScheme(R.color.offline_mode_toolbar, R.color.offline_mode_statusbar);
+                setColorScheme(R.color.toolbar_offline, R.color.statusbar_offline);
             }
         }
     }

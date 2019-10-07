@@ -26,7 +26,7 @@ class VideoDescriptionFragment(val itemId: String, val videoId: String) : ViewMo
     @BindView(R.id.textSubtitles)
     lateinit var videoSubtitlesText: TextView
 
-    override val layoutResource = R.layout.content_video_description
+    override val layoutResource = R.layout.fragment_video_description
 
     override fun createViewModel(): VideoDescriptionViewModel {
         return VideoDescriptionViewModel(itemId, videoId)

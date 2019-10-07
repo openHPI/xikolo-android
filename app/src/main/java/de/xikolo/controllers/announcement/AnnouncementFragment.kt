@@ -40,7 +40,7 @@ class AnnouncementFragment : ViewModelFragment<AnnouncementViewModel>() {
     @BindView(R.id.course_button)
     internal lateinit var courseButton: Button
 
-    override val layoutResource = R.layout.content_announcement
+    override val layoutResource = R.layout.fragment_announcement
 
     override fun createViewModel(): AnnouncementViewModel {
         return AnnouncementViewModel(announcementId)

@@ -25,7 +25,7 @@ class CertificateListFragment : MainFragment<CertificateListViewModel>() {
 
     private lateinit var certificateListAdapter: CertificateListAdapter
 
-    override val layoutResource = R.layout.content_certificate_list
+    override val layoutResource = R.layout.fragment_certificate_list
 
     override fun createViewModel(): CertificateListViewModel {
         return CertificateListViewModel()

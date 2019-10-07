@@ -48,7 +48,7 @@ public class WebViewFragment extends NetworkStateFragment {
 
     @Override
     public int getLayoutResource() {
-        return R.layout.content_webview;
+        return R.layout.fragment_webview;
     }
 
     @Override

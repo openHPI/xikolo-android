@@ -32,7 +32,7 @@ class CertificatesFragment : ViewModelFragment<CertificateListViewModel>() {
     @BindView(R.id.container)
     internal lateinit var container: LinearLayout
 
-    override val layoutResource = R.layout.content_certificates
+    override val layoutResource = R.layout.fragment_course_certificates
 
     override fun createViewModel(): CertificateListViewModel {
         return CertificateListViewModel(courseId)

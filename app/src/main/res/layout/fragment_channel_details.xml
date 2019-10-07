@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image_channel"
+            android:layout_width="match_parent"
+            android:layout_height="176dp"
+            android:layout_gravity="bottom"
+            android:scaleType="centerCrop" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sheet_text_scrim_height_bottom"
+            android:layout_gravity="bottom"
+            android:background="@drawable/gradient_dark_to_transparent_from_bottom" />
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:layout_marginLeft="@dimen/content_horizontal_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="@dimen/content_horizontal_margin"
+            android:layout_marginBottom="2dp"
+            android:ellipsize="end"
+            android:gravity="bottom"
+            android:maxLines="2"
+            android:paddingBottom="8dp"
+            android:textColor="@color/text_white"
+            android:textSize="24sp" />
+
+    </FrameLayout>
+
+    <de.xikolo.views.AutofitRecyclerView
+        android:id="@+id/course_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:clipToPadding="false"
+        android:columnWidth="400dp"
+        android:focusable="true"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Main theme colors -->
     <color name="apptheme_main">#0b72b5</color>
 
     <!-- 30% white overlay -->
@@ -19,13 +20,12 @@
 
     <color name="apptheme_second_26">#429164a7</color>
 
-    <color name="apptheme_toolbar">#0b72b5</color>
 
-    <!-- toolbar with 40% black overlay -->
-    <color name="apptheme_statusbar">#07446d</color>
 
-    <color name="apptheme_placeholder_gradient_start">@color/apptheme_main_light</color>
-
+    <!-- Overrides -->
     <color name="apptheme_splash_background">@color/apptheme_main</color>
+    <color name="apptheme_toolbar">#0b72b5</color>
+    <color name="apptheme_statusbar">#07446d</color>
+    <color name="apptheme_gradient_placeholder_start">@color/apptheme_main_light</color>
 
 </resources>

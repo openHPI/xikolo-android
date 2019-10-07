@@ -36,7 +36,7 @@ class ProfileFragment : MainFragment<ProfileViewModel>() {
     @BindView(R.id.textEmail)
     lateinit var textEmail: TextView
 
-    override val layoutResource = R.layout.content_profile
+    override val layoutResource = R.layout.fragment_profile
 
     override fun createViewModel(): ProfileViewModel {
         return ProfileViewModel()

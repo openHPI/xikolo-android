@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:res="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="120dp"
+    android:layout_height="120dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingLeft="2dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:clickable="false"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        res:cardCornerRadius="@dimen/corner_radius"
+        res:cardPreventCornerOverlap="true"
+        res:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:id="@+id/imageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/gradient_dark_to_transparent_from_bottom"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="2"
+                android:paddingLeft="12dp"
+                android:paddingTop="16sp"
+                android:paddingRight="12dp"
+                android:paddingBottom="8dp"
+                android:text="@string/btn_channel_slider_more"
+                android:textColor="@color/text_white"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

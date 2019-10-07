@@ -23,7 +23,7 @@ class ProgressFragment : ViewModelFragment<ProgressViewModel>() {
 
     private lateinit var adapter: ProgressListAdapter
 
-    override val layoutResource: Int = R.layout.content_progress
+    override val layoutResource: Int = R.layout.fragment_course_progress
 
     override fun createViewModel(): ProgressViewModel {
         return ProgressViewModel(courseId)

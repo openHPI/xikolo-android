@@ -31,7 +31,7 @@ class AnnouncementListAdapter(private val announcementClickListener: (String) ->
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnnouncementViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_news_list, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_announcement_list, parent, false)
         return AnnouncementViewHolder(view)
     }
 

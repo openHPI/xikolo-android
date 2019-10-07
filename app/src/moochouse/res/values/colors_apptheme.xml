@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Main theme colors -->
     <color name="apptheme_main">#abb324</color>
 
     <!-- 30% white overlay -->
@@ -19,10 +20,13 @@
 
     <color name="apptheme_second_26">#42abb324</color>
 
-    <color name="apptheme_toolbar">@color/white</color>
 
-    <!-- toolbar with 40% black overlay -->
+
+    <!-- Overrides -->
+    <color name="apptheme_toolbar">@color/white</color>
     <color name="apptheme_statusbar">#999999</color>
+    <color name="apptheme_toolbar_offline">#cccccc</color>
+    <color name="apptheme_statusbar_offline">#7a7a7a</color>
 
     <color name="apptheme_tab_text">@color/text_main</color>
     <color name="apptheme_tab_text_unfocused">@color/text_light</color>
@@ -30,14 +34,10 @@
 
     <color name="apptheme_section_header_text">@color/apptheme_main</color>
     <color name="apptheme_section_header_bg">@color/transparent</color>
-    <color name="apptheme_section_header_toggle_bg">@color/apptheme_main_light</color>
     <color name="apptheme_section_header_bg_locked">@color/transparent</color>
     <color name="apptheme_section_header_text_locked">@color/text_light</color>
 
-    <color name="apptheme_play_button_bg">@color/white</color>
-    <color name="apptheme_play_button_fg">@color/apptheme_main</color>
-
-    <color name="offline_mode_toolbar">#cccccc</color>
-    <color name="offline_mode_statusbar">#7a7a7a</color>
+    <color name="apptheme_button_play_bg">@color/white</color>
+    <color name="apptheme_button_play_fg">@color/apptheme_main</color>
 
 </resources>

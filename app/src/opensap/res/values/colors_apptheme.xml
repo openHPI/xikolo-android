@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Main theme colors -->
     <color name="apptheme_main">#f0ab00</color>
 
     <!-- 30% white overlay -->
@@ -19,6 +20,9 @@
 
     <color name="apptheme_second_26">#42226CA9</color>
 
+
+
+    <!-- Overrides -->
     <color name="apptheme_splash_background">#4A4A4A</color>
 
 </resources>

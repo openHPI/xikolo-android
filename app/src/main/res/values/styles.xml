@@ -7,41 +7,35 @@
     <style name="TextDropShadow">
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingBottom">4dp</item>
-        <item name="android:shadowColor">@color/video_overlay_gradient_black</item>
+        <item name="android:shadowColor">@color/gradient_dark</item>
         <item name="android:shadowDx">0</item>
         <item name="android:shadowDy">0</item>
         <item name="android:shadowRadius">8</item>
     </style>
 
-    <style name="ButtonContained">
-        <item name="android:textColor">@color/button_contained_color</item>
+    <style name="ButtonText">
+        <item name="android:textColor">@color/button_text</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:translationZ">0dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
         <item name="android:minWidth">88dp</item>
         <item name="android:minHeight">36dp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:stateListAnimator">@null</item>
-        <item name="android:elevation">0dp</item>
-        <item name="android:translationZ">0dp</item>
+        <item name="android:background">@drawable/button</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="ButtonContained" parent="ButtonText">
+        <item name="android:textColor">@color/button_contained_text</item>
         <item name="android:background">@drawable/button_contained</item>
     </style>
 
-    <style name="ButtonOutlined" parent="ButtonContained">
-        <item name="android:textColor">@color/button_text_color</item>
-        <item name="android:stateListAnimator">@null</item>
-        <item name="android:elevation">0dp</item>
-        <item name="android:translationZ">0dp</item>
+    <style name="ButtonOutlined" parent="ButtonText">
+        <item name="android:textColor">@color/button_text</item>
         <item name="android:background">@drawable/button_outlined</item>
-    </style>
-
-    <style name="ButtonText" parent="ButtonContained">
-        <item name="android:textColor">@color/button_text_color</item>
-        <item name="android:stateListAnimator">@null</item>
-        <item name="android:elevation">0dp</item>
-        <item name="android:translationZ">0dp</item>
-        <item name="android:background">@drawable/button_text</item>
     </style>
 
     <style name="TabLayout" parent="Widget.Design.TabLayout">

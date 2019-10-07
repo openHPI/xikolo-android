@@ -20,7 +20,7 @@ import java.io.InputStream
 class GlideConfig : AppGlideModule() {
 
     companion object {
-        private const val DEFAULT_PLACEHOLDER = R.drawable.gradient_default_image
+        private const val DEFAULT_PLACEHOLDER = R.drawable.gradient_placeholder
     }
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {

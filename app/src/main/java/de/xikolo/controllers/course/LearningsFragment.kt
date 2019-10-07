@@ -31,7 +31,7 @@ class LearningsFragment : ViewModelFragment<LearningsViewModel>(), SectionListAd
 
     private lateinit var adapter: SectionListAdapter
 
-    override val layoutResource: Int = R.layout.content_learnings
+    override val layoutResource: Int = R.layout.fragment_course_learnings
 
     override fun createViewModel(): LearningsViewModel {
         return LearningsViewModel(courseId)

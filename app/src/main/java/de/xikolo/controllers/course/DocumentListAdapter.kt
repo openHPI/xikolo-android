@@ -35,7 +35,7 @@ class DocumentListAdapter(val activity: FragmentActivity) : RecyclerView.Adapter
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DocumentListAdapter.DocumentViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_documents_list, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_document_list, parent, false)
         return DocumentViewHolder(view)
     }
 

@@ -87,7 +87,7 @@ class DownloadViewHelper(
 
     init {
         val inflater = LayoutInflater.from(App.instance)
-        view = inflater.inflate(R.layout.container_download, null)
+        view = inflater.inflate(R.layout.item_download_helper, null)
 
         ButterKnife.bind(this, view)
 

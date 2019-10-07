@@ -24,7 +24,7 @@ class NewsListFragment : MainFragment<AnnouncementListViewModel>() {
 
     private lateinit var announcementListAdapter: AnnouncementListAdapter
 
-    override val layoutResource = R.layout.content_news_list
+    override val layoutResource = R.layout.fragment_announcement_list
 
     override fun createViewModel(): AnnouncementListViewModel {
         return AnnouncementListViewModel()

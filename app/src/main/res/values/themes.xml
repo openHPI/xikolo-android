@@ -21,7 +21,7 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
-        <item name="android:windowBackground">@color/background_main</item>
+        <item name="android:windowBackground">@color/content</item>
     </style>
 
     <style name="AppThemeDarkStatusBar" parent="AppTheme">
@@ -30,7 +30,7 @@
 
     <style name="AppThemeTranslucentStatus" parent="AppTheme.Base">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
@@ -45,7 +45,7 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/spash_screen</item>
+        <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
     <style name="TextViewTheme" parent="android:Widget.TextView">

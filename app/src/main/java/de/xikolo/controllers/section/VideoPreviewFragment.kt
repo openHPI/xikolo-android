@@ -65,7 +65,7 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
 
     private var video: Video? = null
 
-    override val layoutResource = R.layout.content_video
+    override val layoutResource = R.layout.fragment_video_preview
 
     override fun createViewModel(): VideoPreviewViewModel {
         return VideoPreviewViewModel(itemId)

@@ -26,7 +26,7 @@ class DocumentListFragment : ViewModelFragment<DocumentListViewModel>() {
         return DocumentListViewModel(courseId)
     }
 
-    override val layoutResource = R.layout.content_documents_list
+    override val layoutResource = R.layout.fragment_course_documents
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

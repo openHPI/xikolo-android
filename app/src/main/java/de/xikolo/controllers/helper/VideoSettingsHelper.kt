@@ -217,7 +217,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     @SuppressLint("InflateParams")
     private fun buildSettingsPanel(title: String?): ViewGroup {
         val list = inflater
-            .inflate(R.layout.content_settings, null)
+            .inflate(R.layout.container_video_settings, null)
             .findViewById(R.id.content_settings) as LinearLayout
 
         val titleView = list.findViewById(R.id.content_settings_title) as TextView
@@ -241,7 +241,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
 
     @SuppressLint("InflateParams")
     private fun buildSettingsItem(@StringRes icon: Int?, title: String, clickListener: View.OnClickListener, active: Boolean, font: String = Config.FONT_XIKOLO): ViewGroup {
-        val item = inflater.inflate(R.layout.item_settings, null) as LinearLayout
+        val item = inflater.inflate(R.layout.item_video_settings, null) as LinearLayout
 
         val iconView = item.findViewById(R.id.item_settings_icon) as CustomFontTextView
         val titleView = item.findViewById(R.id.item_settings_title) as TextView

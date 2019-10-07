@@ -96,7 +96,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         enableOfflineModeToolbar(true)
 
         if (stubBottom.parent != null) {
-            stubBottom.layoutResource = R.layout.content_enroll_button
+            stubBottom.layoutResource = R.layout.view_enroll_button
             enrollBar = stubBottom.inflate()
             enrollButton = enrollBar?.findViewById(R.id.button_enroll)
             enrollButton?.setOnClickListener { enroll() }
@@ -456,12 +456,12 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
         if (isOnline) {
             toolbar.subtitle = ""
-            tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.apptheme_toolbar))
-            setColorScheme(R.color.apptheme_toolbar, R.color.apptheme_statusbar)
+            tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.toolbar))
+            setColorScheme(R.color.toolbar, R.color.statusbar)
         } else {
             toolbar.subtitle = getString(R.string.offline_mode)
-            tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.offline_mode_toolbar))
-            setColorScheme(R.color.offline_mode_toolbar, R.color.offline_mode_statusbar)
+            tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.toolbar_offline))
+            setColorScheme(R.color.toolbar_offline, R.color.statusbar_offline)
         }
     }
 

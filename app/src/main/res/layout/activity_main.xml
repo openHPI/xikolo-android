@@ -24,7 +24,7 @@
 
                 <include
                     android:id="@+id/toolbar"
-                    layout="@layout/toolbar" />
+                    layout="@layout/view_toolbar" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -32,7 +32,7 @@
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/background_main"
+                android:background="@color/content"
                 android:fitsSystemWindows="true"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
@@ -61,4 +61,3 @@
         android:fitsSystemWindows="true" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
-

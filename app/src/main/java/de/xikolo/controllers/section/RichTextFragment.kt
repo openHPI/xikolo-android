@@ -40,7 +40,7 @@ class RichTextFragment : ViewModelFragment<RichTextViewModel>() {
     @BindView(R.id.fallback_button)
     lateinit var fallbackButton: Button
 
-    override val layoutResource = R.layout.content_richtext
+    override val layoutResource = R.layout.fragment_richtext
 
     private var item: Item? = null
 

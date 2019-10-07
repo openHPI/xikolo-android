@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/miniController"
@@ -10,4 +9,4 @@
     android:layout_gravity="bottom"
     android:layout_marginTop="-5dp"
     android:visibility="gone"
-    app:castProgressBarColor="@color/apptheme_second" />
+    app:castProgressBarColor="@color/progress_cast" />
