@@ -14,8 +14,10 @@ import de.xikolo.network.jobs.base.HealthCheckNetworkState
 import de.xikolo.network.jobs.base.HealthCheckNetworkStateLiveData
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
+import de.xikolo.utils.extensions.createIfNotExists
+import de.xikolo.utils.extensions.fileCount
+import de.xikolo.utils.extensions.publicAppStorageFolder
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -74,11 +76,11 @@ class SplashActivity : AppCompatActivity() {
 
     private fun migrateStorage() {
         if (!ApplicationPreferences().contains(getString(R.string.preference_storage))) {
-            val old = File(FileUtil.getPublicAppStorageFolderPath())
-            val new = File(FileUtil.createStorageFolderPath(
-                File(StorageUtil.getInternalStorage(this).absolutePath + File.separator + "Courses"))
-            )
-            val fileCount = FileUtil.folderFileNumber(old)
+            val old = publicAppStorageFolder
+            val new = File(StorageUtil.getInternalStorage(this).absolutePath + File.separator + "Courses")
+            new.createIfNotExists()
+
+            val fileCount = old.fileCount
 
             val progressDialog = ProgressDialogHorizontalAutoBundle.builder()
                 .title(getString(R.string.app_name))

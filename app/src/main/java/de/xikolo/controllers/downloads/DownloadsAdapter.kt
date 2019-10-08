@@ -9,8 +9,10 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.utils.FileUtil
 import de.xikolo.utils.MetaSectionList
+import de.xikolo.utils.extensions.asFormattedFileSize
+import de.xikolo.utils.extensions.fileCount
+import de.xikolo.utils.extensions.folderSize
 import java.io.File
 
 class DownloadsAdapter(private val callback: OnDeleteButtonClickedListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -75,7 +77,7 @@ class DownloadsAdapter(private val callback: OnDeleteButtonClickedListener) : Re
             val dir = File(folderItem.path)
             viewHolder.textTitle.text = folderItem.title.replace("_".toRegex(), " ")
 
-            val numberOfFiles = FileUtil.folderFileNumber(dir).toLong()
+            val numberOfFiles = dir.fileCount.toLong()
 
             viewHolder.textButtonDelete.setOnClickListener {
                 callback.onDeleteButtonClicked(
@@ -84,7 +86,7 @@ class DownloadsAdapter(private val callback: OnDeleteButtonClickedListener) : Re
             }
 
             if (numberOfFiles > 0) {
-                viewHolder.textSubTitle.text = numberOfFiles.toString() + " " + context.getString(R.string.files) + ": " + FileUtil.getFormattedFileSize(FileUtil.folderSize(dir))
+                viewHolder.textSubTitle.text = numberOfFiles.toString() + " " + context.getString(R.string.files) + ": " + dir.folderSize.asFormattedFileSize
                 viewHolder.textButtonDelete.visibility = View.VISIBLE
             } else {
                 viewHolder.textSubTitle.text = numberOfFiles.toString() + " " + context.getString(R.string.files)

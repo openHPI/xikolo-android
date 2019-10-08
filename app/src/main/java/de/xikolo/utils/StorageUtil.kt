@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import de.xikolo.R
 import de.xikolo.services.DownloadService
 import de.xikolo.storages.ApplicationPreferences
+import de.xikolo.utils.extensions.fileCount
 import java.io.File
 import java.io.IOException
 
@@ -69,7 +70,7 @@ object StorageUtil {
         Thread(Runnable {
             if (from.exists() && from.listFiles() != null) {
                 callback.onProgressChanged(0)
-                val totalFiles = FileUtil.folderFileNumber(from)
+                val totalFiles = from.fileCount
                 var copiedFiles = 0
                 for (file in from.listFiles()) {
                     copiedFiles += move(file, File(to.absolutePath + File.separator + file.name), callback)

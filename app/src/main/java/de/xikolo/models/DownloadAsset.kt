@@ -3,8 +3,8 @@ package de.xikolo.models
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.managers.DownloadManager
-import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
+import de.xikolo.utils.extensions.asEscapedFileName
 import java.io.File
 
 open class DownloadAsset(val url: String?, open val fileName: String, var storage: File = StorageUtil.getStorage(App.instance)) {
@@ -46,14 +46,14 @@ open class DownloadAsset(val url: String?, open val fileName: String, var storag
         documentLocalization.language + "_" + documentLocalization.revision + "_" + documentLocalization.id + ".pdf"
     ) {
         override val fileFolder
-            get() = super.fileFolder + File.separator + "Documents" + File.separator + FileUtil.escapeFilename(document.title) + "_" + document.id
+            get() = super.fileFolder + File.separator + "Documents" + File.separator + document.title?.asEscapedFileName + "_" + document.id
 
         override val title = "Document (" + documentLocalization.language + "): " + document.title
     }
 
     sealed class Certificate(url: String?, fileName: String, val course: de.xikolo.models.Course) : DownloadAsset(url, fileName) {
         override val fileFolder
-            get() = super.fileFolder + File.separator + "Certificates" + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
+            get() = super.fileFolder + File.separator + "Certificates" + File.separator + course.title.asEscapedFileName + "_" + course.id
 
         class ConfirmationOfParticipation(url: String?, course: de.xikolo.models.Course) : Certificate(url, "confirmation_of_participation.pdf", course) {
             override val title = App.instance.getString(R.string.course_confirmation_of_participation) + ": " + course.title
@@ -71,14 +71,14 @@ open class DownloadAsset(val url: String?, open val fileName: String, var storag
     sealed class Course(url: String?, override val fileName: String, val course: de.xikolo.models.Course) : DownloadAsset(url, fileName) {
 
         override val fileFolder
-            get() = super.fileFolder + File.separator + "Courses" + File.separator + FileUtil.escapeFilename(course.title) + "_" + course.id
+            get() = super.fileFolder + File.separator + "Courses" + File.separator + course.title.asEscapedFileName + "_" + course.id
 
         sealed class Item(url: String?, fileName: String, val item: de.xikolo.models.Item) : Course(url, fileName, item.section.course) {
 
             override val fileFolder
-                get() = super.fileFolder + File.separator + FileUtil.escapeFilename(item.section.title) + "_" + item.section.id
+                get() = super.fileFolder + File.separator + item.section.title.asEscapedFileName + "_" + item.section.id
 
-            override val fileName = FileUtil.escapeFilename(item.title) + "_" + fileName
+            override val fileName = item.title.asEscapedFileName + "_" + fileName
 
             class Slides(item: de.xikolo.models.Item, video: Video) : Item(video.slidesUrl, "slides_${item.id}.pdf", item) {
                 override val title = "Slides: " + item.title

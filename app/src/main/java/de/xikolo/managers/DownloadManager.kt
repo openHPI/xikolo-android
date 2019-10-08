@@ -12,9 +12,9 @@ import de.xikolo.extensions.observe
 import de.xikolo.models.DownloadAsset
 import de.xikolo.services.DownloadService
 import de.xikolo.states.PermissionStateLiveData
-import de.xikolo.utils.FileUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.StorageUtil
+import de.xikolo.utils.extensions.createIfNotExists
 import de.xikolo.utils.extensions.showToast
 import java.io.File
 import java.util.*
@@ -64,9 +64,7 @@ class DownloadManager(private val activity: FragmentActivity) {
                 when {
                     downloadRunning(downloadAsset) || downloadExists(downloadAsset) -> return false
                     downloadAsset.url != null                                       -> {
-                        FileUtil.createFolderIfNotExists(
-                            File(downloadAsset.filePath.substring(0, downloadAsset.filePath.lastIndexOf(File.separator)))
-                        )
+                        File(downloadAsset.filePath.substring(0, downloadAsset.filePath.lastIndexOf(File.separator))).createIfNotExists()
 
                         val bundle = Bundle()
                         bundle.putString(DownloadService.ARG_TITLE, downloadAsset.title)

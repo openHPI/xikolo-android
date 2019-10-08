@@ -19,8 +19,9 @@ import de.xikolo.extensions.observe
 import de.xikolo.managers.DownloadManager
 import de.xikolo.managers.PermissionManager
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
+import de.xikolo.utils.extensions.createIfNotExists
+import de.xikolo.utils.extensions.deleteAll
 import de.xikolo.utils.extensions.showToast
 import java.io.File
 import java.util.*
@@ -115,14 +116,17 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
 
                 var list: MutableList<DownloadsAdapter.FolderItem> = ArrayList()
 
+                val storage = StorageUtil.getInternalStorage(activity)
+                storage.createIfNotExists()
                 list.add(buildTotalItem(
-                    FileUtil.createStorageFolderPath(StorageUtil.getInternalStorage(activity)),
+                    storage.absolutePath,
                     getString(R.string.settings_title_storage_internal) + internalAddition
                 ))
 
                 StorageUtil.getSdcardStorage(activity)?.let { sdcardStorage ->
+                    sdcardStorage.createIfNotExists()
                     list.add(buildTotalItem(
-                        FileUtil.createStorageFolderPath(sdcardStorage),
+                        sdcardStorage.absolutePath,
                         getString(R.string.settings_title_storage_external) + sdcardAddition
                     ))
                 }
@@ -251,7 +255,7 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
         val dir = File(item.path)
 
         if (dir.exists()) {
-            FileUtil.delete(dir)
+            dir.deleteAll()
         } else {
             showToast(R.string.error)
         }

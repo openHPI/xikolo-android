@@ -25,8 +25,9 @@ import de.xikolo.models.DownloadAsset
 import de.xikolo.states.DownloadStateLiveData
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.FileProviderUtil
-import de.xikolo.utils.FileUtil
 import de.xikolo.utils.NetworkUtil
+import de.xikolo.utils.extensions.asFormattedFileSize
+import de.xikolo.utils.extensions.fileSize
 import de.xikolo.utils.extensions.showToast
 
 /**
@@ -190,8 +191,8 @@ class DownloadViewHelper(
                         } else {
                             progressBarDownload.progress = (bytesWritten * 100 / totalBytes).toInt()
                         }
-                        textFileSize.text = (FileUtil.getFormattedFileSize(bytesWritten) + " / "
-                            + FileUtil.getFormattedFileSize(totalBytes))
+                        textFileSize.text = (bytesWritten.asFormattedFileSize + " / "
+                            + totalBytes.asFormattedFileSize)
                     }
                 }
 
@@ -233,7 +234,7 @@ class DownloadViewHelper(
 
         if (downloadAsset.sizeWithSecondaryAssets != 0L) {
             textFileSize.visibility = View.VISIBLE
-            textFileSize.text = FileUtil.getFormattedFileSize(downloadAsset.sizeWithSecondaryAssets)
+            textFileSize.text = downloadAsset.sizeWithSecondaryAssets.asFormattedFileSize
         } else {
             textFileSize.visibility = View.GONE
         }
@@ -257,12 +258,10 @@ class DownloadViewHelper(
 
         textFileSize.visibility = View.VISIBLE
 
-        if (downloadAsset.sizeWithSecondaryAssets != 0L) {
-            textFileSize.text = FileUtil.getFormattedFileSize(downloadAsset.sizeWithSecondaryAssets)
+        textFileSize.text = if (downloadAsset.sizeWithSecondaryAssets != 0L) {
+            downloadAsset.sizeWithSecondaryAssets.asFormattedFileSize
         } else {
-            textFileSize.text = FileUtil.getFormattedFileSize(
-                downloadManager.getDownloadFile(downloadAsset)
-            )
+            downloadManager.getDownloadFile(downloadAsset).fileSize.asFormattedFileSize
         }
 
         progressBarUpdaterRunning = false

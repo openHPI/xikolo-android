@@ -27,8 +27,8 @@ import de.xikolo.managers.PermissionManager
 import de.xikolo.managers.UserManager
 import de.xikolo.services.DownloadService
 import de.xikolo.utils.DeviceUtil
-import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
+import de.xikolo.utils.extensions.fileCount
 import de.xikolo.utils.extensions.showToast
 import java.util.*
 
@@ -80,7 +80,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             // clean up before
             StorageUtil.cleanStorage(oldStorage)
 
-            val fileCount = FileUtil.folderFileNumber(oldStorage)
+            val fileCount = oldStorage.fileCount
             if (fileCount > 0) {
                 val dialog = StorageMigrationDialogAutoBundle.builder(oldStorageType).build()
                 dialog.listener = object : StorageMigrationDialog.Listener {
