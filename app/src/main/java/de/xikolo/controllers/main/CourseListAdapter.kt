@@ -16,7 +16,7 @@ import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.Course
 import de.xikolo.models.DateOverview
 import de.xikolo.utils.DateUtil
-import de.xikolo.utils.TimeUtil
+import de.xikolo.utils.extensions.timeLeftUntilString
 import java.text.DateFormat
 import java.util.*
 
@@ -46,10 +46,7 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
 
                 dateOverview.nextDate?.let { nextDate ->
                     nextDate.date?.let {
-                        holder.textTimeLeft.text = TimeUtil.getTimeLeftString(
-                            it.time - Date().time,
-                            App.instance
-                        )
+                        holder.textTimeLeft.text = it.timeLeftUntilString(App.instance)
                     }
 
                     holder.textDate.text = DateFormat.getDateTimeInstance(
