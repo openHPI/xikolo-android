@@ -15,8 +15,8 @@ import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.models.Course
 import de.xikolo.utils.DisplayUtil
-import de.xikolo.utils.MarkdownUtil
 import de.xikolo.utils.extensions.isFuture
+import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.course.DescriptionViewModel
 import de.xikolo.views.CustomSizeImageView
 import de.xikolo.views.DateTextView
@@ -130,7 +130,7 @@ class DescriptionFragment : ViewModelFragment<DescriptionViewModel>() {
         }
 
         textLanguage.text = course.formattedLanguage
-        MarkdownUtil.formatAndSet(course.description, textDescription)
+        textDescription.setMarkdownText(course.description)
 
         if (!course.teachers.isNullOrEmpty()) {
             textTeacher.text = course.teachers

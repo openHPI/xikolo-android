@@ -33,14 +33,14 @@ fun <T : Date> T.isBetween(from: Date?, to: Date?): Boolean {
     return from != null && to != null && this.after(from) && this.before(to)
 }
 
-val <T : Date> T.isPast: Boolean
+val <T : Date?> T.isPast: Boolean
     get() {
-        return Date().after(this)
+        return this != null && Date().after(this)
     }
 
-val <T : Date> T.isFuture: Boolean
+val <T : Date?> T.isFuture: Boolean
     get() {
-        return Date().before(this)
+        return this != null && Date().before(this)
     }
 
 val <T : String?> T.asDate: Date?

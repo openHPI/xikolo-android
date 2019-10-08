@@ -14,8 +14,8 @@ import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.models.Course
-import de.xikolo.utils.MarkdownUtil
 import de.xikolo.utils.extensions.isBetween
+import de.xikolo.utils.extensions.setMarkdownText
 import java.util.*
 
 class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: OnCourseButtonClickListener) : BaseCourseListAdapter<String>(fragment, onCourseButtonClickListener) {
@@ -44,7 +44,7 @@ class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: 
             is DescriptionViewHolder -> {
                 val description = super.contentList.get(position) as String?
                 if (description != null) {
-                    MarkdownUtil.formatAndSet(description, holder.text)
+                    holder.text.setMarkdownText(description)
                 } else {
                     holder.text.visibility = View.GONE
                 }
