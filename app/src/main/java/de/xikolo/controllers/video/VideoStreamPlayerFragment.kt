@@ -23,7 +23,6 @@ import de.xikolo.models.VideoStream
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.NetworkUtil
-import de.xikolo.utils.PlaybackSpeedUtil
 import de.xikolo.views.CustomFontTextView
 import de.xikolo.views.CustomSizeVideoView
 import de.xikolo.views.ExoPlayerVideoView
@@ -121,7 +120,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
     private val applicationPreferences = ApplicationPreferences()
 
-    val currentPlaybackSpeed: PlaybackSpeedUtil
+    val currentPlaybackSpeed: VideoSettingsHelper.PlaybackSpeed
         get() = videoSettingsHelper.currentSpeed
 
     val currentPosition: Int
@@ -377,7 +376,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         showProgress()
         setupVideo()
         updateVideo()
-        if(autoPlay == true) {
+        if (autoPlay == true) {
             playerView.start()
         }
         prepare()
@@ -402,7 +401,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
                     }
                 }
 
-                override fun onPlaybackSpeedChanged(old: PlaybackSpeedUtil, new: PlaybackSpeedUtil) {
+                override fun onPlaybackSpeedChanged(old: VideoSettingsHelper.PlaybackSpeed, new: VideoSettingsHelper.PlaybackSpeed) {
                     hideSettings()
                     if (old != new) {
                         changePlaybackSpeed(old, new, true)
@@ -526,7 +525,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         prepare()
     }
 
-    protected open fun changePlaybackSpeed(oldSpeed: PlaybackSpeedUtil, newSpeed: PlaybackSpeedUtil, fromUser: Boolean) {
+    protected open fun changePlaybackSpeed(oldSpeed: VideoSettingsHelper.PlaybackSpeed, newSpeed: VideoSettingsHelper.PlaybackSpeed, fromUser: Boolean) {
         updatePlaybackSpeed()
     }
 
@@ -661,7 +660,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
     }
 
     private fun updatePlaybackSpeed() {
-        playerView.setPlaybackSpeed(currentPlaybackSpeed.speed)
+        playerView.setPlaybackSpeed(currentPlaybackSpeed.value)
     }
 
     private fun updateSubtitles() {
@@ -716,7 +715,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
     private fun prepare() {
         initialPlaybackState = isPlaying
-        if(!isInitialPreparing) {
+        if (!isInitialPreparing) {
             initialVideoPosition = currentPosition
         }
         playerView.pause()

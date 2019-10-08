@@ -10,11 +10,11 @@ import butterknife.BindView
 import com.google.android.gms.cast.framework.CastState
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
+import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.controllers.video.base.BaseVideoPlayerActivity
 import de.xikolo.models.dao.VideoDao
 import de.xikolo.utils.CastUtil
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.utils.PlaybackSpeedUtil
 
 class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
 
@@ -83,7 +83,7 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
             LanalyticsUtil.trackVideoPlay(itemId,
                 courseId, sectionId,
                 playerFragment.currentPosition,
-                PlaybackSpeedUtil.x10.speed,
+                VideoSettingsHelper.PlaybackSpeed.X10.value,
                 Configuration.ORIENTATION_LANDSCAPE,
                 "hd",
                 "cast"

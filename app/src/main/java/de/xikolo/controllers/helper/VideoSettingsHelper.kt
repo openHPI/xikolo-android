@@ -17,7 +17,6 @@ import de.xikolo.config.FeatureConfig
 import de.xikolo.managers.PermissionManager
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.PlaybackSpeedUtil
 import de.xikolo.views.CustomFontTextView
 import java.util.*
 
@@ -27,12 +26,34 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         SD("SD"), HD("HD"), AUTO("Auto")
     }
 
+    enum class PlaybackSpeed(val value: Float) {
+        X07(0.7f), X10(1.0f), X13(1.3f), X15(1.5f), X18(1.8f), X20(2.0f);
+
+        override fun toString(): String {
+            return "x$value"
+        }
+
+        companion object {
+            fun get(str: String?): PlaybackSpeed {
+                return when (str) {
+                    "x0.7" -> X07
+                    "x1.0" -> X10
+                    "x1.3" -> X13
+                    "x1.5" -> X15
+                    "x1.8" -> X18
+                    "x2.0" -> X20
+                    else   -> X10
+                }
+            }
+        }
+    }
+
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     private val applicationPreferences: ApplicationPreferences = ApplicationPreferences()
 
     var currentQuality: VideoMode = VideoMode.HD
-    var currentSpeed: PlaybackSpeedUtil = PlaybackSpeedUtil.x10
+    var currentSpeed: PlaybackSpeed = PlaybackSpeed.X10
     var currentVideoSubtitles: VideoSubtitles? = null
     var isImmersiveModeEnabled: Boolean = false
 
@@ -154,7 +175,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     fun buildPlaybackSpeedView(): ViewGroup {
         val list = buildSettingsPanel(context.getString(R.string.video_settings_speed))
 
-        for (speed in PlaybackSpeedUtil.values()) {
+        for (speed in PlaybackSpeed.values()) {
             list.addView(
                 buildSettingsItem(
                     null,
@@ -301,7 +322,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
 
         fun onQualityChanged(old: VideoMode, new: VideoMode)
 
-        fun onPlaybackSpeedChanged(old: PlaybackSpeedUtil, new: PlaybackSpeedUtil)
+        fun onPlaybackSpeedChanged(old: PlaybackSpeed, new: PlaybackSpeed)
 
         // subtitle is null if 'None' is selected
         fun onSubtitleChanged(old: VideoSubtitles?, new: VideoSubtitles?)
