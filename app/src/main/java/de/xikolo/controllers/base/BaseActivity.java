@@ -34,7 +34,6 @@ import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.utils.NotificationUtil;
 import de.xikolo.utils.PlayServicesUtil;
-import de.xikolo.utils.TintUtil;
 
 public abstract class BaseActivity extends AppCompatActivity implements CastStateListener {
 
@@ -114,8 +113,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         } catch (Exception e) {
             Crashlytics.logException(e);
         }
-
-        TintUtil.tintMenu(this, menu);
 
         return true;
     }

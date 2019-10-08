@@ -14,7 +14,7 @@
         android:layout_height="120dp"
         android:clickable="false"
         android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackground"
         res:cardCornerRadius="@dimen/corner_radius"
         res:cardPreventCornerOverlap="true"
         res:cardUseCompatPadding="true">

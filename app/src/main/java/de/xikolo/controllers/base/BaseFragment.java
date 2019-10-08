@@ -1,16 +1,14 @@
 package de.xikolo.controllers.base;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
-
-import com.yatatsu.autobundle.AutoBundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.yatatsu.autobundle.AutoBundle;
+
 import butterknife.ButterKnife;
-import de.xikolo.utils.TintUtil;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -30,12 +28,6 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        TintUtil.tintMenu(getActivity(), menu);
     }
 
     @Override
