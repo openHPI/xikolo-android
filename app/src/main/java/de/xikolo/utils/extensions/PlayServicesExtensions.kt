@@ -1,4 +1,4 @@
-@file:JvmName("PlayServicesUtil")
+@file:JvmName("PlayServicesExtensions")
 
 package de.xikolo.utils.extensions
 
@@ -25,8 +25,9 @@ fun <T : Activity> T.checkPlayServicesWithDialog(): Boolean {
     return true
 }
 
-fun <T : Context> T.checkPlayServices(): Boolean {
-    val googleAPI = GoogleApiAvailability.getInstance()
-    val result = googleAPI.isGooglePlayServicesAvailable(this)
-    return result == ConnectionResult.SUCCESS
-}
+val <T : Context> T.hasPlayServices: Boolean
+    get() {
+        val googleAPI = GoogleApiAvailability.getInstance()
+        val result = googleAPI.isGooglePlayServicesAvailable(this)
+        return result == ConnectionResult.SUCCESS
+    }
