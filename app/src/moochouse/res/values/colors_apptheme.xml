@@ -27,6 +27,7 @@
     <color name="apptheme_statusbar">#999999</color>
     <color name="apptheme_toolbar_offline">#cccccc</color>
     <color name="apptheme_statusbar_offline">#7a7a7a</color>
+    <color name="apptheme_toolbar_icon">@color/text_main</color>
 
     <color name="apptheme_tab_text">@color/text_main</color>
     <color name="apptheme_tab_text_unfocused">@color/text_light</color>

@@ -8,6 +8,7 @@
         android:orderInCategory="110"
         android:title="@string/action_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:iconTint="@color/toolbar_icon"
         app:showAsAction="collapseActionView|ifRoom" />
 
 </menu>

@@ -7,6 +7,7 @@
         android:icon="@drawable/ic_share"
         android:orderInCategory="100"
         android:title="@string/action_share"
+        app:iconTint="@color/toolbar_icon"
         app:showAsAction="ifRoom" />
 
 </menu>

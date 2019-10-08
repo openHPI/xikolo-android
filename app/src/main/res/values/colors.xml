@@ -36,6 +36,7 @@
     <color name="toolbar">@color/apptheme_toolbar</color>
     <color name="toolbar_offline">@color/apptheme_toolbar_offline</color>
     <color name="toolbar_collapsing_scrim">@color/apptheme_main</color>
+    <color name="toolbar_icon">@color/apptheme_toolbar_icon</color>
 
     <color name="statusbar">@color/apptheme_statusbar</color>
     <color name="statusbar_offline">@color/apptheme_statusbar_offline</color>
@@ -91,6 +92,7 @@
     <color name="apptheme_statusbar">@color/apptheme_main_dark</color>
     <color name="apptheme_toolbar_offline">#424242</color>
     <color name="apptheme_statusbar_offline">#282828</color>
+    <color name="apptheme_toolbar_icon">@color/white</color>
 
     <color name="apptheme_gradient_placeholder_start">@color/apptheme_third_60</color>
     <color name="apptheme_gradient_placeholder_end">@color/apptheme_second_60</color>
