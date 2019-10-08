@@ -14,9 +14,9 @@ import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.models.Course
-import de.xikolo.utils.DateUtil
 import de.xikolo.utils.DisplayUtil
 import de.xikolo.utils.MarkdownUtil
+import de.xikolo.utils.extensions.isFuture
 import de.xikolo.viewmodels.course.DescriptionViewModel
 import de.xikolo.views.CustomSizeImageView
 import de.xikolo.views.DateTextView
@@ -125,7 +125,7 @@ class DescriptionFragment : ViewModelFragment<DescriptionViewModel>() {
         textDate.text = course.formattedDate
         if (course.endDate == null) {
             textDate.setDate(course.startDate)
-        } else if (DateUtil.isFuture(course.endDate)) {
+        } else if (course.endDate.isFuture) {
             textDate.setDateSpan(course.startDate, course.endDate)
         }
 

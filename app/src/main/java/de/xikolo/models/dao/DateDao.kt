@@ -5,7 +5,8 @@ import de.xikolo.extensions.asCopy
 import de.xikolo.extensions.asLiveData
 import de.xikolo.models.CourseDate
 import de.xikolo.models.dao.base.BaseDao
-import de.xikolo.utils.DateUtil
+import de.xikolo.utils.extensions.midnight
+import de.xikolo.utils.extensions.sevenDaysAhead
 import io.realm.Realm
 import io.realm.Sort
 import io.realm.kotlin.where
@@ -39,7 +40,7 @@ class DateDao(realm: Realm) : BaseDao<CourseDate>(CourseDate::class, realm) {
             fun countToday(): Long =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<CourseDate>()
-                        .between("date", Date(), DateUtil.todaysMidnight())
+                        .between("date", Date(), Date().midnight)
                         .sort("date", Sort.ASCENDING)
                         .count()
                 }
@@ -47,7 +48,7 @@ class DateDao(realm: Realm) : BaseDao<CourseDate>(CourseDate::class, realm) {
             fun countNextSevenDays(): Long =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<CourseDate>()
-                        .between("date", Date(), DateUtil.nextSevenDays())
+                        .between("date", Date(), Date().sevenDaysAhead)
                         .sort("date", Sort.ASCENDING)
                         .count()
                 }
@@ -64,7 +65,7 @@ class DateDao(realm: Realm) : BaseDao<CourseDate>(CourseDate::class, realm) {
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<CourseDate>()
                         .equalTo("courseId", courseId)
-                        .between("date", Date(), DateUtil.todaysMidnight())
+                        .between("date", Date(), Date().midnight)
                         .sort("date", Sort.ASCENDING)
                         .count()
                 }
@@ -73,7 +74,7 @@ class DateDao(realm: Realm) : BaseDao<CourseDate>(CourseDate::class, realm) {
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<CourseDate>()
                         .equalTo("courseId", courseId)
-                        .between("date", Date(), DateUtil.nextSevenDays())
+                        .between("date", Date(), Date().sevenDaysAhead)
                         .sort("date", Sort.ASCENDING)
                         .count()
                 }
@@ -90,7 +91,7 @@ class DateDao(realm: Realm) : BaseDao<CourseDate>(CourseDate::class, realm) {
             fun allToday(): List<CourseDate> =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<CourseDate>()
-                        .between("date", Date(), DateUtil.todaysMidnight())
+                        .between("date", Date(), Date().midnight)
                         .sort("date", Sort.ASCENDING)
                         .findAll()
                         .asCopy()
@@ -99,7 +100,7 @@ class DateDao(realm: Realm) : BaseDao<CourseDate>(CourseDate::class, realm) {
             fun allNextSevenDaysWithoutToday(): List<CourseDate> =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<CourseDate>()
-                        .between("date", DateUtil.todaysMidnight(), DateUtil.nextSevenDays())
+                        .between("date", Date().midnight, Date().sevenDaysAhead)
                         .sort("date", Sort.ASCENDING)
                         .findAll()
                         .asCopy()
@@ -108,7 +109,7 @@ class DateDao(realm: Realm) : BaseDao<CourseDate>(CourseDate::class, realm) {
             fun allFutureWithoutNextSevenDays(): List<CourseDate> =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<CourseDate>()
-                        .greaterThan("date", DateUtil.nextSevenDays())
+                        .greaterThan("date", Date().sevenDaysAhead)
                         .sort("date", Sort.ASCENDING)
                         .findAll()
                         .asCopy()
@@ -118,7 +119,7 @@ class DateDao(realm: Realm) : BaseDao<CourseDate>(CourseDate::class, realm) {
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<CourseDate>()
                         .equalTo("courseId", courseId)
-                        .between("date", Date(), DateUtil.todaysMidnight())
+                        .between("date", Date(), Date().midnight)
                         .sort("date", Sort.ASCENDING)
                         .findAll()
                         .asCopy()
@@ -128,7 +129,7 @@ class DateDao(realm: Realm) : BaseDao<CourseDate>(CourseDate::class, realm) {
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<CourseDate>()
                         .equalTo("courseId", courseId)
-                        .between("date", DateUtil.todaysMidnight(), DateUtil.nextSevenDays())
+                        .between("date", Date().midnight, Date().sevenDaysAhead)
                         .sort("date", Sort.ASCENDING)
                         .findAll()
                         .asCopy()
@@ -138,7 +139,7 @@ class DateDao(realm: Realm) : BaseDao<CourseDate>(CourseDate::class, realm) {
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<CourseDate>()
                         .equalTo("courseId", courseId)
-                        .greaterThan("date", DateUtil.nextSevenDays())
+                        .greaterThan("date", Date().sevenDaysAhead)
                         .sort("date", Sort.ASCENDING)
                         .findAll()
                         .asCopy()

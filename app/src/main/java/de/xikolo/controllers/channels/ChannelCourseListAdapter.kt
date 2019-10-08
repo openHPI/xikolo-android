@@ -14,8 +14,9 @@ import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.models.Course
-import de.xikolo.utils.DateUtil
 import de.xikolo.utils.MarkdownUtil
+import de.xikolo.utils.extensions.isBetween
+import java.util.*
 
 class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: OnCourseButtonClickListener) : BaseCourseListAdapter<String>(fragment, onCourseButtonClickListener) {
 
@@ -54,7 +55,7 @@ class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: 
                 holder.textDescription.text = course.shortAbstract
                 holder.textDescription.visibility = View.VISIBLE
 
-                if (DateUtil.nowIsBetween(course.startDate, course.endDate)) {
+                if (Date().isBetween(course.startDate, course.endDate)) {
                     holder.textBanner.visibility = View.VISIBLE
                     holder.textBanner.text = App.instance.getText(R.string.banner_running)
                     holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_green))
