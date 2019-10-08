@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.utils.NotificationUtil;
-import de.xikolo.utils.PlayServicesUtil;
+import de.xikolo.utils.PlayServicesUtils;
 
 public abstract class BaseActivity extends AppCompatActivity implements CastStateListener {
 
