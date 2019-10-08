@@ -9,8 +9,8 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.utils.SectionList
 import de.xikolo.utils.FileUtil
+import de.xikolo.utils.MetaSectionList
 import java.io.File
 
 class DownloadsAdapter(private val callback: OnDeleteButtonClickedListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -21,8 +21,8 @@ class DownloadsAdapter(private val callback: OnDeleteButtonClickedListener) : Re
         private const val ITEM_VIEW_TYPE_ITEM = 1
     }
 
-    private val sectionList: SectionList<String, List<FolderItem>> =
-        SectionList()
+    private val sectionList: MetaSectionList<String, Any, List<FolderItem>> =
+        MetaSectionList()
 
     fun addItem(header: String, folder: List<FolderItem>) {
         if (folder.isNotEmpty()) {
@@ -36,7 +36,7 @@ class DownloadsAdapter(private val callback: OnDeleteButtonClickedListener) : Re
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = sectionList.size()
+    override fun getItemCount(): Int = sectionList.size
 
     override fun getItemViewType(position: Int): Int {
         return if (sectionList.isHeader(position)) {
@@ -64,11 +64,11 @@ class DownloadsAdapter(private val callback: OnDeleteButtonClickedListener) : Re
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is HeaderViewHolder) {
-            holder.title.text = sectionList.getItem(position) as String
+            holder.title.text = sectionList.get(position) as String
         } else {
             val viewHolder = holder as FolderViewHolder
 
-            val folderItem = sectionList.getItem(position) as FolderItem
+            val folderItem = sectionList.get(position) as FolderItem
 
             val context = App.instance
 
