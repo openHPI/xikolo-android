@@ -15,7 +15,7 @@ import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.BaseActivity
 import de.xikolo.controllers.helper.CollapsingToolbarHelper
 import de.xikolo.models.dao.ChannelDao
-import de.xikolo.utils.ShareUtil
+import de.xikolo.utils.extensions.shareCourseLink
 
 class ChannelDetailsActivity : BaseActivity() {
 
@@ -98,7 +98,7 @@ class ChannelDetailsActivity : BaseActivity() {
                 return true
             }
             R.id.action_share -> {
-                ShareUtil.shareCourseLink(this, channelId)
+                shareCourseLink(channelId)
                 return true
             }
         }

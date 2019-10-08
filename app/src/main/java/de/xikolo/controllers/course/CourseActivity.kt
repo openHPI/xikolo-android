@@ -43,7 +43,7 @@ import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.IdUtil
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.utils.ShareUtil
+import de.xikolo.utils.extensions.shareCourseLink
 import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.course.CourseViewModel
 
@@ -255,7 +255,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                 return true
             }
             R.id.action_share    -> {
-                ShareUtil.shareCourseLink(this, courseId!!)
+                shareCourseLink(courseId!!)
                 return true
             }
             R.id.action_unenroll -> {
