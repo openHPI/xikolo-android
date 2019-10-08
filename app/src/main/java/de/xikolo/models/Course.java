@@ -16,9 +16,9 @@ import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.ChannelDao;
 import de.xikolo.models.dao.EnrollmentDao;
-import de.xikolo.utils.DisplayUtil;
 import de.xikolo.utils.LanguageUtil;
 import de.xikolo.utils.extensions.DateExtensions;
+import de.xikolo.utils.extensions.DisplayExtensions;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
@@ -127,7 +127,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         Context context = App.getInstance();
 
         DateFormat dateOut;
-        if (DisplayUtil.is7inchTablet(context)) {
+        if (DisplayExtensions.is7inchTablet(context)) {
             dateOut = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
         } else {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());

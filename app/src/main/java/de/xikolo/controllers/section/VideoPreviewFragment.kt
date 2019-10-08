@@ -19,8 +19,8 @@ import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Item
 import de.xikolo.models.Video
 import de.xikolo.utils.CastUtil
-import de.xikolo.utils.DisplayUtil
 import de.xikolo.utils.LanalyticsUtil
+import de.xikolo.utils.extensions.videoThumbnailSize
 import de.xikolo.viewmodels.section.VideoPreviewViewModel
 import de.xikolo.views.CustomSizeImageView
 import java.util.concurrent.TimeUnit
@@ -82,7 +82,7 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
         this.viewContainer.visibility = View.GONE
 
         activity?.let {
-            val thumbnailSize: Point = DisplayUtil.getVideoThumbnailSize(it)
+            val thumbnailSize: Point = it.videoThumbnailSize
             imageVideoThumbnail.setDimensions(thumbnailSize.x, thumbnailSize.y)
 
             if (it.resources?.configuration?.orientation != Configuration.ORIENTATION_PORTRAIT) {

@@ -22,7 +22,8 @@ import de.xikolo.config.Config
 import de.xikolo.config.FeatureConfig
 import de.xikolo.controllers.base.BaseActivity
 import de.xikolo.controllers.video.VideoStreamPlayerFragment
-import de.xikolo.utils.DisplayUtil
+import de.xikolo.utils.extensions.aspectRatio
+import de.xikolo.utils.extensions.hasDisplayCutouts
 import de.xikolo.utils.extensions.showToast
 import java.util.*
 
@@ -51,7 +52,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
 
     private var pipControlsBroadcastReceiver: BroadcastReceiver? = null
     private var isBackStackLost = false
-    private var hasDisplayCutout = false
+    private var hasCutout = false
     private var isInImmersiveMode = false
 
     lateinit var playerFragment: VideoStreamPlayerFragment
@@ -149,7 +150,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
     }
 
     override fun isImmersiveModeAvailable(): Boolean {
-        return hasDisplayCutout || DisplayUtil.getAspectRatio(this) - playerFragment.playerView.aspectRatio > 0.01
+        return hasCutout || aspectRatio - playerFragment.playerView.aspectRatio > 0.01
     }
 
     @TargetApi(26)
@@ -235,7 +236,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        hasDisplayCutout = DisplayUtil.hasDisplayCutouts(this)
+        hasCutout = hasDisplayCutouts
     }
 
     override fun onStart() {

@@ -11,7 +11,7 @@ import de.xikolo.R
 import de.xikolo.config.GlideApp
 import de.xikolo.extensions.observe
 import de.xikolo.models.User
-import de.xikolo.utils.DisplayUtil
+import de.xikolo.utils.extensions.displaySize
 import de.xikolo.viewmodels.main.ProfileViewModel
 import de.xikolo.views.CustomSizeImageView
 
@@ -70,7 +70,7 @@ class ProfileFragment : MainFragment<ProfileViewModel>() {
         textEmail.text = user.profile.email
 
 
-        val size = DisplayUtil.getDisplaySize(activity)
+        val size = activity.displaySize
         val heightHeader: Int
         val heightProfile: Int
         if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {

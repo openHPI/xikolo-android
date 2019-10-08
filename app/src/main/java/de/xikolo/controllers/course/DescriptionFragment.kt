@@ -14,9 +14,9 @@ import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.video.VideoStreamPlayerActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.models.Course
-import de.xikolo.utils.DisplayUtil
 import de.xikolo.utils.extensions.isFuture
 import de.xikolo.utils.extensions.setMarkdownText
+import de.xikolo.utils.extensions.videoThumbnailSize
 import de.xikolo.viewmodels.course.DescriptionViewModel
 import de.xikolo.views.CustomSizeImageView
 import de.xikolo.views.DateTextView
@@ -74,7 +74,7 @@ class DescriptionFragment : ViewModelFragment<DescriptionViewModel>() {
         textDuration.visibility = View.GONE
 
         activity?.let {
-            val thumbnailSize: Point = DisplayUtil.getVideoThumbnailSize(it)
+            val thumbnailSize: Point = it.videoThumbnailSize
             imageVideoThumbnail.setDimensions(thumbnailSize.x, thumbnailSize.y)
         }
 
