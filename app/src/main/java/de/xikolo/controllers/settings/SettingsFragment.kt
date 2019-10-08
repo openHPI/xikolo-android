@@ -29,7 +29,7 @@ import de.xikolo.services.DownloadService
 import de.xikolo.utils.DeviceUtil
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.extensions.showToast
 import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -100,9 +100,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                             override fun onCompleted(success: Boolean) {
                                 activity?.runOnUiThread {
                                     if (success) {
-                                        ToastUtil.show(R.string.dialog_storage_migration_successful)
+                                        showToast(R.string.dialog_storage_migration_successful)
                                     } else {
-                                        ToastUtil.show(R.string.error_plain)
+                                        showToast(R.string.error_plain)
                                     }
                                     progressDialog.dismiss()
                                 }
@@ -140,7 +140,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         findPreference(getString(R.string.preference_storage)).onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _, _ ->
                 if (DownloadService.instance?.isDownloading == true) {
-                    ToastUtil.show(R.string.notification_storage_locked)
+                    showToast(R.string.notification_storage_locked)
                     return@OnPreferenceChangeListener false
                 }
                 true
@@ -267,7 +267,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             pref.title = getString(R.string.logout)
             pref.setOnPreferenceClickListener { _ ->
                 UserManager.logout()
-                ToastUtil.show(R.string.toast_successful_logout)
+                showToast(R.string.toast_successful_logout)
                 true
             }
         }

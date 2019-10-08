@@ -27,7 +27,7 @@ import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.FileProviderUtil
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.NetworkUtil
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.extensions.showToast
 
 /**
  * When the url of the DownloadAsset's URL is null, the urlNotAvailableMessage is shown and the UI will be disabled.
@@ -172,7 +172,7 @@ class DownloadViewHelper(
             try {
                 App.instance.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                ToastUtil.show(R.string.toast_no_file_viewer_found)
+                activity.showToast(R.string.toast_no_file_viewer_found)
             }
         }
 

@@ -23,7 +23,7 @@ import de.xikolo.controllers.base.NetworkStateFragment;
 import de.xikolo.controllers.helper.WebViewHelper;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
 import de.xikolo.utils.NetworkUtil;
-import de.xikolo.utils.ToastUtil;
+import de.xikolo.utils.extensions.ToastExtensions;
 
 public class WebViewFragment extends NetworkStateFragment {
 
@@ -111,7 +111,7 @@ public class WebViewFragment extends NetworkStateFragment {
     }
 
     public void showInvalidUrlToast() {
-        ToastUtil.show(R.string.notification_url_invalid);
+        ToastExtensions.showToast(this, R.string.notification_url_invalid);
     }
 
     public boolean inAppLinksEnabled() {

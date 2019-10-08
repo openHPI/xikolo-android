@@ -31,7 +31,7 @@ import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.storages.UserStorage
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.login.LoginViewModel
 
 class LoginFragment : ViewModelFragment<LoginViewModel>() {
@@ -230,11 +230,11 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
     }
 
     private fun showNoNetworkToast() {
-        ToastUtil.show(R.string.toast_no_network)
+        showToast(R.string.toast_no_network)
     }
 
     private fun showLoginFailedToast() {
-        ToastUtil.show(R.string.toast_log_in_failed)
+        showToast(R.string.toast_log_in_failed)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

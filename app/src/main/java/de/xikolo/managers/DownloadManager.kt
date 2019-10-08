@@ -15,11 +15,11 @@ import de.xikolo.states.PermissionStateLiveData
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.StorageUtil
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.extensions.showToast
 import java.io.File
 import java.util.*
 
-class DownloadManager(activity: FragmentActivity) {
+class DownloadManager(private val activity: FragmentActivity) {
 
     companion object {
         val TAG: String = DownloadManager::class.java.simpleName
@@ -101,7 +101,7 @@ class DownloadManager(activity: FragmentActivity) {
         } else {
             val msg = StorageUtil.buildWriteErrorMessage(App.instance)
             Log.w(TAG, msg)
-            ToastUtil.show(msg)
+            activity.showToast(msg)
             return false
         }
     }
@@ -136,7 +136,7 @@ class DownloadManager(activity: FragmentActivity) {
         } else {
             val msg = StorageUtil.buildWriteErrorMessage(App.instance)
             Log.w(TAG, msg)
-            ToastUtil.show(msg)
+            activity.showToast(msg)
             return false
         }
     }
@@ -155,7 +155,7 @@ class DownloadManager(activity: FragmentActivity) {
                         cancelAssetDownload(it)
                     }
                 } else {
-                    ToastUtil.show(R.string.error_plain)
+                    activity.showToast(R.string.error_plain)
                 }
             } else {
                 pendingAction = PendingAction(ActionType.CANCEL, downloadAsset)
@@ -163,7 +163,7 @@ class DownloadManager(activity: FragmentActivity) {
         } else {
             val msg = StorageUtil.buildWriteErrorMessage(App.instance)
             Log.w(TAG, msg)
-            ToastUtil.show(msg)
+            activity.showToast(msg)
         }
     }
 

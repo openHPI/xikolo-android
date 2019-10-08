@@ -17,7 +17,7 @@ import de.xikolo.R
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.utils.NetworkUtil
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.extensions.showToast
 import de.xikolo.views.CustomFontTextView
 
 class NetworkStateHelper(private val activity: FragmentActivity?, view: View, onRefreshListener: SwipeRefreshLayout.OnRefreshListener) {
@@ -220,7 +220,7 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
 
         fun showLoginRequired(onClick: () -> Unit = {}) {
             if (networkStateHelper.contentViewVisible) {
-                ToastUtil.show(R.string.toast_please_log_in)
+                networkStateHelper.activity?.showToast(R.string.toast_please_log_in)
             } else {
                 networkStateHelper.setMessageTitle(R.string.notification_please_login)
                 networkStateHelper.setMessageSummary(R.string.notification_please_login_summary)
@@ -231,7 +231,7 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
 
         fun showErrorMessage() {
             if (networkStateHelper.contentViewVisible) {
-                ToastUtil.show(R.string.error)
+                networkStateHelper.activity?.showToast(R.string.error)
             } else {
                 networkStateHelper.setMessageTitle(R.string.error)
                 networkStateHelper.setMessageSummary(null)
@@ -254,7 +254,7 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
 
         fun showMessage(@StringRes title: Int, @StringRes summary: Int, onClick: () -> Unit = {}) {
             if (networkStateHelper.contentViewVisible) {
-                ToastUtil.show(title)
+                networkStateHelper.activity?.showToast(title)
             } else {
                 networkStateHelper.setMessageTitle(title)
                 networkStateHelper.setMessageSummary(summary)

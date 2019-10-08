@@ -23,7 +23,7 @@ import de.xikolo.config.FeatureConfig
 import de.xikolo.controllers.base.BaseActivity
 import de.xikolo.controllers.video.VideoStreamPlayerFragment
 import de.xikolo.utils.DisplayUtil
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.extensions.showToast
 import java.util.*
 
 abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragment.ControllerInterface {
@@ -155,7 +155,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
     @TargetApi(26)
     private fun enterPip(userInteraction: Boolean) {
         if (!enterPictureInPictureMode(getPipParams(playerFragment.isPlaying)) && userInteraction) {
-            ToastUtil.show(R.string.toast_pip_error)
+            showToast(R.string.toast_pip_error)
         }
     }
 

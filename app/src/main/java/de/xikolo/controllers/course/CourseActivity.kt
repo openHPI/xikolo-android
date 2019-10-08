@@ -40,7 +40,11 @@ import de.xikolo.models.dao.ItemDao
 import de.xikolo.network.jobs.GetItemWithContentJob
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkStateLiveData
-import de.xikolo.utils.*
+import de.xikolo.utils.DeepLinkingUtil
+import de.xikolo.utils.IdUtil
+import de.xikolo.utils.LanalyticsUtil
+import de.xikolo.utils.ShareUtil
+import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.course.CourseViewModel
 
 class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.Listener {
@@ -364,19 +368,19 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     private fun showErrorToast() {
-        ToastUtil.show(R.string.error)
+        showToast(R.string.error)
     }
 
     private fun showNoNetworkToast() {
-        ToastUtil.show(R.string.toast_no_network)
+        showToast(R.string.toast_no_network)
     }
 
     private fun showLoginRequiredToast() {
-        ToastUtil.show(R.string.toast_please_log_in)
+        showToast(R.string.toast_please_log_in)
     }
 
     private fun showDeepLinkErrorMessage() {
-        ToastUtil.show(R.string.notification_deep_link_error)
+        showToast(R.string.notification_deep_link_error)
     }
 
     private fun openLogin() {

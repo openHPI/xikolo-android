@@ -21,7 +21,7 @@ import de.xikolo.managers.PermissionManager
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.FileUtil
 import de.xikolo.utils.StorageUtil
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.extensions.showToast
 import java.io.File
 import java.util.*
 
@@ -253,7 +253,7 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
         if (dir.exists()) {
             FileUtil.delete(dir)
         } else {
-            ToastUtil.show(R.string.error)
+            showToast(R.string.error)
         }
 
         fetchItems()
