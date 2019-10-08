@@ -27,7 +27,7 @@ import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.utils.PlayServicesUtil
+import de.xikolo.utils.extensions.checkPlayServicesWithDialog
 import de.xikolo.viewmodels.main.NavigationViewModel
 
 class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.OnNavigationItemSelectedListener, MainActivityCallback {
@@ -72,7 +72,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         }
 
         // check Play Services, display dialog is update needed
-        PlayServicesUtil.checkPlayServicesWithDialog(this)
+        checkPlayServicesWithDialog()
 
         updateDrawer()
 

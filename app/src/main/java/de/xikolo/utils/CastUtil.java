@@ -20,6 +20,7 @@ import com.google.android.gms.common.images.WebImage;
 import de.xikolo.App;
 import de.xikolo.controllers.cast.CastActivity;
 import de.xikolo.models.Video;
+import de.xikolo.utils.extensions.PlayServicesUtil;
 
 public class CastUtil {
 

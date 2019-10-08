@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.utils.NotificationUtil;
-import de.xikolo.utils.PlayServicesUtils;
+import de.xikolo.utils.extensions.PlayServicesUtil;
 
 public abstract class BaseActivity extends AppCompatActivity implements CastStateListener {
 
@@ -75,7 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         offlineModeToolbar = true;
 
         try {
-            if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
+            if (PlayServicesUtil.checkPlayServices(this)) {
                 castContext = CastContext.getSharedInstance(this);
             }
         } catch (Exception e) {
@@ -102,7 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
         super.onCreateOptionsMenu(menu);
 
         try {
-            if (PlayServicesUtil.checkPlayServices(getApplicationContext())) {
+            if (PlayServicesUtil.checkPlayServices(this)) {
                 castContext = CastContext.getSharedInstance(this);
                 getMenuInflater().inflate(R.menu.cast, menu);
                 mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
@@ -291,7 +291,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CastStat
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (PlayServicesUtil.checkPlayServices(getApplicationContext()) && castContext != null) {
+        if (PlayServicesUtil.checkPlayServices(this) && castContext != null) {
             return castContext.onDispatchVolumeKeyEventBeforeJellyBean(event)
                     || super.dispatchKeyEvent(event);
         } else {
