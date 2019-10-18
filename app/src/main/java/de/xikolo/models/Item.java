@@ -11,7 +11,7 @@ import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.CourseDao;
 import de.xikolo.models.dao.ItemDao;
 import de.xikolo.models.dao.SectionDao;
-import de.xikolo.utils.extensions.DateExtensions;
+import de.xikolo.utils.extensions.DateUtil;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -144,7 +144,7 @@ public class Item extends RealmObject {
             item.id = getId();
             item.title = title;
             item.position = position;
-            item.deadline = DateExtensions.getAsDate(deadline);
+            item.deadline = DateUtil.getAsDate(deadline);
             item.contentType = contentType;
             item.exerciseType = exerciseType;
             item.proctored = proctored;

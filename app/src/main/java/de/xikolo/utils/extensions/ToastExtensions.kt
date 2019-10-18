@@ -1,4 +1,4 @@
-@file:JvmName("ToastExtensions")
+@file:JvmName("ToastUtil")
 
 package de.xikolo.utils.extensions
 

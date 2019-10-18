@@ -9,14 +9,15 @@ import androidx.lifecycle.Lifecycle
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.*
 import de.xikolo.extensions.observe
+import de.xikolo.models.Storage
 import de.xikolo.network.jobs.CheckHealthJob
 import de.xikolo.network.jobs.base.HealthCheckNetworkState
 import de.xikolo.network.jobs.base.HealthCheckNetworkStateLiveData
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.StorageUtil
 import de.xikolo.utils.extensions.createIfNotExists
 import de.xikolo.utils.extensions.fileCount
+import de.xikolo.utils.extensions.internalStorage
 import de.xikolo.utils.extensions.publicAppStorageFolder
 import java.io.File
 import java.util.*
@@ -76,11 +77,11 @@ class SplashActivity : AppCompatActivity() {
 
     private fun migrateStorage() {
         if (!ApplicationPreferences().contains(getString(R.string.preference_storage))) {
-            val old = publicAppStorageFolder
-            val new = File(StorageUtil.getInternalStorage(this).absolutePath + File.separator + "Courses")
-            new.createIfNotExists()
+            val old = Storage(publicAppStorageFolder)
+            val new = Storage(File(internalStorage.file.absolutePath + File.separator + "Courses"))
+            new.file.createIfNotExists()
 
-            val fileCount = old.fileCount
+            val fileCount = old.file.fileCount
 
             val progressDialog = ProgressDialogHorizontalAutoBundle.builder()
                 .title(getString(R.string.app_name))
@@ -89,15 +90,15 @@ class SplashActivity : AppCompatActivity() {
             progressDialog.max = 100
             progressDialog.show(supportFragmentManager, ProgressDialogHorizontal.TAG)
 
-            StorageUtil.migrateAsync(old, new, object : StorageUtil.StorageMigrationCallback {
+            old.migrateTo(new, object : Storage.MigrationCallback {
                 override fun onProgressChanged(count: Int) {
                     runOnUiThread { progressDialog.progress = Math.ceil(100.0 * count / fileCount).toInt() }
                 }
 
                 override fun onCompleted(success: Boolean) {
                     runOnUiThread {
-                        StorageUtil.cleanStorage(old)
-                        StorageUtil.cleanStorage(new)
+                        old.clean()
+                        new.clean()
                         progressDialog.dismiss()
                         ApplicationPreferences().setToDefault(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))
                         runHealthJob()

@@ -25,11 +25,10 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.managers.PermissionManager
 import de.xikolo.managers.UserManager
+import de.xikolo.models.Storage
 import de.xikolo.services.DownloadService
 import de.xikolo.utils.DeviceUtil
-import de.xikolo.utils.StorageUtil
-import de.xikolo.utils.extensions.fileCount
-import de.xikolo.utils.extensions.showToast
+import de.xikolo.utils.extensions.*
 import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -69,18 +68,18 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             val newStoragePreference = sharedPreferences?.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
             findPreference(getString(R.string.preference_storage)).summary = newStoragePreference
 
-            val newStorageType = StorageUtil.toStorageType(App.instance, newStoragePreference)
-            var oldStorageType = StorageUtil.StorageType.INTERNAL
-            var oldStorage = StorageUtil.getInternalStorage(App.instance)
-            if (newStorageType == StorageUtil.StorageType.INTERNAL) {
-                oldStorageType = StorageUtil.StorageType.SDCARD
-                oldStorage = StorageUtil.getSdcardStorage(App.instance)!!
+            val newStorageType = newStoragePreference.asStorageType
+            var oldStorageType = Storage.Type.INTERNAL
+            var oldStorage = App.instance.internalStorage
+            if (newStorageType == Storage.Type.INTERNAL) {
+                oldStorageType = Storage.Type.SDCARD
+                oldStorage = App.instance.sdcardStorage!!
             }
 
             // clean up before
-            StorageUtil.cleanStorage(oldStorage)
+            oldStorage.clean()
 
-            val fileCount = oldStorage.fileCount
+            val fileCount = oldStorage.file.fileCount
             if (fileCount > 0) {
                 val dialog = StorageMigrationDialogAutoBundle.builder(oldStorageType).build()
                 dialog.listener = object : StorageMigrationDialog.Listener {
@@ -92,7 +91,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                         progressDialog.max = fileCount
                         progressDialog.show(fragmentManager, ProgressDialogHorizontal.TAG)
 
-                        val migrationCallback = object : StorageUtil.StorageMigrationCallback {
+                        val migrationCallback = object : Storage.MigrationCallback {
                             override fun onProgressChanged(count: Int) {
                                 activity?.runOnUiThread { progressDialog.progress = count }
                             }
@@ -109,16 +108,14 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                             }
                         }
 
-                        if (newStorageType == StorageUtil.StorageType.INTERNAL) {
-                            StorageUtil.migrateAsync(
-                                StorageUtil.getSdcardStorage(App.instance)!!,
-                                StorageUtil.getInternalStorage(App.instance),
+                        if (newStorageType == Storage.Type.INTERNAL) {
+                            App.instance.sdcardStorage!!.migrateTo(
+                                App.instance.internalStorage,
                                 migrationCallback
                             )
                         } else {
-                            StorageUtil.migrateAsync(
-                                StorageUtil.getInternalStorage(App.instance),
-                                StorageUtil.getSdcardStorage(App.instance)!!,
+                            App.instance.internalStorage.migrateTo(
+                                App.instance.sdcardStorage!!,
                                 migrationCallback
                             )
                         }
@@ -146,7 +143,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 true
             }
 
-        if (StorageUtil.getStorages(App.instance).size < 2) {
+        if (App.instance.storages.size < 2) {
             val general = findPreference(getString(R.string.preference_category_general)) as PreferenceCategory
             val storagePref = findPreference(getString(R.string.preference_storage))
             general.removePreference(storagePref)

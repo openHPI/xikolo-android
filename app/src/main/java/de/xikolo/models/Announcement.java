@@ -6,7 +6,7 @@ import java.util.Date;
 
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.CourseDao;
-import de.xikolo.utils.extensions.DateExtensions;
+import de.xikolo.utils.extensions.DateUtil;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -58,7 +58,7 @@ public class Announcement extends RealmObject {
             model.title = title;
             model.text = text;
             model.imageUrl = imageUrl;
-            model.publishedAt = DateExtensions.getAsDate(publishedAt);
+            model.publishedAt = DateUtil.getAsDate(publishedAt);
             model.visited = visited;
 
             if (course != null) {

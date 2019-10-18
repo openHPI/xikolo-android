@@ -3,15 +3,15 @@ package de.xikolo.models
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.managers.DownloadManager
-import de.xikolo.utils.StorageUtil
 import de.xikolo.utils.extensions.asEscapedFileName
+import de.xikolo.utils.extensions.preferredStorage
 import java.io.File
 
-open class DownloadAsset(val url: String?, open val fileName: String, var storage: File = StorageUtil.getStorage(App.instance)) {
+open class DownloadAsset(val url: String?, open val fileName: String, var storage: Storage = App.instance.preferredStorage) {
 
     // must not end with separator and always have a getter function, otherwise dynamic storage changes will not work
     protected open val fileFolder: String
-        get() = storage.absolutePath
+        get() = storage.file.absolutePath
 
     open val title: String
         get() = fileName

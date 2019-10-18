@@ -1,4 +1,4 @@
-@file:JvmName("PlayServicesExtensions")
+@file:JvmName("PlayServicesUtil")
 
 package de.xikolo.utils.extensions
 

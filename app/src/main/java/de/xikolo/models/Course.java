@@ -17,8 +17,8 @@ import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.ChannelDao;
 import de.xikolo.models.dao.EnrollmentDao;
 import de.xikolo.utils.LanguageUtil;
-import de.xikolo.utils.extensions.DateExtensions;
-import de.xikolo.utils.extensions.DisplayExtensions;
+import de.xikolo.utils.extensions.DateUtil;
+import de.xikolo.utils.extensions.DisplayUtil;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
@@ -93,8 +93,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         model.setId(id);
         model.title = title;
         model.slug = slug;
-        model.startDate = DateExtensions.getFormattedString(startDate);
-        model.endDate = DateExtensions.getFormattedString(endDate);
+        model.startDate = DateUtil.getFormattedString(startDate);
+        model.endDate = DateUtil.getFormattedString(endDate);
         model.shortAbstract = shortAbstract;
         model.description = description;
         model.imageUrl = imageUrl;
@@ -127,17 +127,17 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         Context context = App.getInstance();
 
         DateFormat dateOut;
-        if (DisplayExtensions.is7inchTablet(context)) {
+        if (DisplayUtil.is7inchTablet(context)) {
             dateOut = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
         } else {
             dateOut = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
         }
 
-        if (DateExtensions.isPast(endDate)) {
+        if (DateUtil.isPast(endDate)) {
             return context.getString(R.string.course_date_self_paced);
         }
 
-        if (DateExtensions.isPast(startDate) && endDate == null) {
+        if (DateUtil.isPast(startDate) && endDate == null) {
             if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
                 return context.getString(R.string.course_date_self_paced);
             } else {
@@ -145,7 +145,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             }
         }
 
-        if (DateExtensions.isFuture(startDate) && endDate == null) {
+        if (DateUtil.isFuture(startDate) && endDate == null) {
             if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
                 return context.getString(R.string.course_date_coming_soon);
             } else {
@@ -230,8 +230,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.id = getId();
             course.title = title;
             course.slug = slug;
-            course.startDate = DateExtensions.getAsDate(startDate);
-            course.endDate = DateExtensions.getAsDate(endDate);
+            course.startDate = DateUtil.getAsDate(startDate);
+            course.endDate = DateUtil.getAsDate(endDate);
             course.shortAbstract = shortAbstract;
             course.description = description;
             course.imageUrl = imageUrl;

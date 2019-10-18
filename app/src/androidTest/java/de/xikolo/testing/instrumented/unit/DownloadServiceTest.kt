@@ -8,7 +8,7 @@ import de.xikolo.services.DownloadService
 import de.xikolo.testing.instrumented.mocking.SampleMockData
 import de.xikolo.testing.instrumented.mocking.base.BaseTest
 import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_LOADING_LONG
-import de.xikolo.utils.StorageUtil
+import de.xikolo.utils.extensions.preferredStorage
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -20,7 +20,7 @@ class DownloadServiceTest : BaseTest() {
     private val TEST_DOWNLOAD_TITLE: String = DownloadServiceTest::class.java.simpleName
     private val TEST_DOWNLOAD_URL: String = SampleMockData.mockVideoStreamHdUrl
     private val TEST_DOWNLOAD_SIZE: Long = SampleMockData.mockVideoStreamHdSize.toLong()
-    private val TEST_DOWNLOAD_PATH: String = StorageUtil.getStorage(context).absolutePath + File.separator + "test"
+    private val TEST_DOWNLOAD_PATH: String = context.preferredStorage.file.absolutePath + File.separator + "test"
     private val TEST_DOWNLOAD_BUNDLE: Bundle = Bundle().let { bundle ->
         bundle.putString(DownloadService.ARG_TITLE, TEST_DOWNLOAD_TITLE)
         bundle.putString(DownloadService.ARG_URL, TEST_DOWNLOAD_URL)

@@ -10,12 +10,11 @@ import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.extensions.observe
 import de.xikolo.models.DownloadAsset
+import de.xikolo.models.Storage
 import de.xikolo.services.DownloadService
 import de.xikolo.states.PermissionStateLiveData
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.utils.StorageUtil
-import de.xikolo.utils.extensions.createIfNotExists
-import de.xikolo.utils.extensions.showToast
+import de.xikolo.utils.extensions.*
 import java.io.File
 import java.util.*
 
@@ -56,7 +55,7 @@ class DownloadManager(private val activity: FragmentActivity) {
     }
 
     fun startAssetDownload(downloadAsset: DownloadAsset): Boolean {
-        if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
+        if (downloadAsset.storage.isWritable) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 val context = App.instance
                 val intent = Intent(context, DownloadService::class.java)
@@ -97,7 +96,7 @@ class DownloadManager(private val activity: FragmentActivity) {
                 return false
             }
         } else {
-            val msg = StorageUtil.buildWriteErrorMessage(App.instance)
+            val msg = App.instance.buildWriteErrorMessage()
             Log.w(TAG, msg)
             activity.showToast(msg)
             return false
@@ -105,12 +104,12 @@ class DownloadManager(private val activity: FragmentActivity) {
     }
 
     fun deleteAssetDownload(downloadAsset: DownloadAsset, deleteSecondaryDownloads: Boolean = true): Boolean {
-        if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
+        if (downloadAsset.storage.isWritable) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 if (Config.DEBUG) Log.d(TAG, "Delete download " + downloadAsset.filePath)
 
                 if (!downloadExists(downloadAsset)) {
-                    StorageUtil.cleanStorage(File(downloadAsset.filePath).parentFile)
+                    Storage(File(downloadAsset.filePath).parentFile).clean()
                     return false
                 } else {
                     App.instance.state.download.of(downloadAsset.url).deleted()
@@ -132,7 +131,7 @@ class DownloadManager(private val activity: FragmentActivity) {
                 return false
             }
         } else {
-            val msg = StorageUtil.buildWriteErrorMessage(App.instance)
+            val msg = App.instance.buildWriteErrorMessage()
             Log.w(TAG, msg)
             activity.showToast(msg)
             return false
@@ -140,7 +139,7 @@ class DownloadManager(private val activity: FragmentActivity) {
     }
 
     fun cancelAssetDownload(downloadAsset: DownloadAsset) {
-        if (StorageUtil.isStorageWritable(downloadAsset.storage)) {
+        if (downloadAsset.storage.isWritable) {
             if (permissionManager.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
                 if (Config.DEBUG) Log.d(TAG, "Cancel download " + downloadAsset.url)
 
@@ -159,7 +158,7 @@ class DownloadManager(private val activity: FragmentActivity) {
                 pendingAction = PendingAction(ActionType.CANCEL, downloadAsset)
             }
         } else {
-            val msg = StorageUtil.buildWriteErrorMessage(App.instance)
+            val msg = App.instance.buildWriteErrorMessage()
             Log.w(TAG, msg)
             activity.showToast(msg)
         }
@@ -233,16 +232,16 @@ class DownloadManager(private val activity: FragmentActivity) {
     }
 
     fun getDownloadFile(downloadAsset: DownloadAsset): File? {
-        val originalStorage: File = downloadAsset.storage
+        val originalStorage: Storage = downloadAsset.storage
 
-        downloadAsset.storage = StorageUtil.getInternalStorage(App.instance)
+        downloadAsset.storage = App.instance.internalStorage
         val internalFile = File(downloadAsset.filePath)
         if (internalFile.exists() && internalFile.isFile) {
             downloadAsset.storage = originalStorage
             return internalFile
         }
 
-        val sdcardStorage: File? = StorageUtil.getSdcardStorage(App.instance)
+        val sdcardStorage: Storage? = App.instance.sdcardStorage
         if (sdcardStorage != null) {
             downloadAsset.storage = sdcardStorage
             val sdcardFile = File(downloadAsset.filePath)

@@ -1,4 +1,4 @@
-@file:JvmName("DisplayExtensions")
+@file:JvmName("DisplayUtil")
 
 package de.xikolo.utils.extensions
 

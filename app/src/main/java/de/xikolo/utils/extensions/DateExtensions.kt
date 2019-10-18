@@ -1,4 +1,4 @@
-@file:JvmName("DateExtensions")
+@file:JvmName("DateUtil")
 
 package de.xikolo.utils.extensions
 

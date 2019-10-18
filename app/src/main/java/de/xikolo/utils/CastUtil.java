@@ -20,7 +20,7 @@ import com.google.android.gms.common.images.WebImage;
 import de.xikolo.App;
 import de.xikolo.controllers.cast.CastActivity;
 import de.xikolo.models.Video;
-import de.xikolo.utils.extensions.PlayServicesExtensions;
+import de.xikolo.utils.extensions.PlayServicesUtil;
 
 public class CastUtil {
 
@@ -28,7 +28,7 @@ public class CastUtil {
         Context context = App.getInstance();
 
         try {
-            if (PlayServicesExtensions.getHasPlayServices(context)) {
+            if (PlayServicesUtil.getHasPlayServices(context)) {
                 CastContext castContext = CastContext.getSharedInstance(context);
                 SessionManager sessionManager = castContext.getSessionManager();
 
@@ -46,7 +46,7 @@ public class CastUtil {
         Context context = App.getInstance();
 
         try {
-            if (PlayServicesExtensions.getHasPlayServices(context)) {
+            if (PlayServicesUtil.getHasPlayServices(context)) {
                 CastContext castContext = CastContext.getSharedInstance(context);
 
                 return castContext.getCastState() != CastState.NO_DEVICES_AVAILABLE;
@@ -60,7 +60,7 @@ public class CastUtil {
     }
 
     public static MediaInfo buildCastMetadata(Video video) {
-        if (!PlayServicesExtensions.getHasPlayServices(App.getInstance())) {
+        if (!PlayServicesUtil.getHasPlayServices(App.getInstance())) {
             return null;
         }
 
@@ -83,7 +83,7 @@ public class CastUtil {
     }
 
     public static PendingResult<RemoteMediaClient.MediaChannelResult> loadMedia(final Activity activity, Video video, boolean autoPlay) {
-        if (!PlayServicesExtensions.getHasPlayServices(App.getInstance())) {
+        if (!PlayServicesUtil.getHasPlayServices(App.getInstance())) {
             return null;
         }
 

@@ -6,7 +6,7 @@ import android.net.NetworkInfo;
 
 import de.xikolo.App;
 import de.xikolo.R;
-import de.xikolo.utils.extensions.ToastExtensions;
+import de.xikolo.utils.extensions.ToastUtil;
 
 public class NetworkUtil {
 
@@ -47,7 +47,7 @@ public class NetworkUtil {
     }
 
     public static void showNoConnectionToast() {
-        ToastExtensions.showToast(App.getInstance(), R.string.toast_no_network);
+        ToastUtil.showToast(App.getInstance(), R.string.toast_no_network);
     }
 
 }
