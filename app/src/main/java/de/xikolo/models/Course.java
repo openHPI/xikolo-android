@@ -16,7 +16,6 @@ import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.ChannelDao;
 import de.xikolo.models.dao.EnrollmentDao;
-import de.xikolo.utils.LanguageUtil;
 import de.xikolo.utils.extensions.DateUtil;
 import de.xikolo.utils.extensions.DisplayUtil;
 import io.realm.RealmObject;
@@ -161,7 +160,18 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
     }
 
     public String getFormattedLanguage() {
-        return LanguageUtil.languageForCode(App.getInstance(), language);
+        switch (language) {
+            case "en":
+                return App.getInstance().getString(R.string.lang_en);
+            case "de":
+                return App.getInstance().getString(R.string.lang_de);
+            case "fr":
+                return App.getInstance().getString(R.string.lang_fr);
+            case "cn":
+                return App.getInstance().getString(R.string.lang_zh);
+            default:
+                return language;
+        }
     }
 
     @JsonApi(type = "courses")
