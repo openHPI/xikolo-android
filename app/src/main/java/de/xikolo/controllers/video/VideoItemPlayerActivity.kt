@@ -13,8 +13,8 @@ import de.xikolo.R
 import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.controllers.video.base.BaseVideoPlayerActivity
 import de.xikolo.models.dao.VideoDao
-import de.xikolo.utils.CastUtil
 import de.xikolo.utils.LanalyticsUtil
+import de.xikolo.utils.extensions.cast
 
 class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
 
@@ -90,7 +90,7 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
             )
 
             VideoDao.Unmanaged.find(videoId)?.let {
-                CastUtil.loadMedia(this, it, true)
+                it.cast(this, true)
             }
 
             finish()
