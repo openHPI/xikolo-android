@@ -9,7 +9,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
 import de.xikolo.states.base.LiveDataState
-import de.xikolo.utils.NetworkUtil
+import de.xikolo.utils.extensions.isOnline
 
 class ConnectivityStateLiveData(private val context: Context) : LiveDataState<Boolean>(false) {
 
@@ -33,7 +33,7 @@ class ConnectivityStateLiveData(private val context: Context) : LiveDataState<Bo
     private var networkChangeReceiver: BroadcastReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
-            state(NetworkUtil.isOnline())
+            state(context.isOnline)
         }
     }
 

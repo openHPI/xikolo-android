@@ -22,7 +22,7 @@ import de.xikolo.config.Config;
 import de.xikolo.controllers.base.NetworkStateFragment;
 import de.xikolo.controllers.helper.WebViewHelper;
 import de.xikolo.controllers.login.LoginActivityAutoBundle;
-import de.xikolo.utils.NetworkUtil;
+import de.xikolo.utils.extensions.NetworkUtil;
 import de.xikolo.utils.extensions.ToastUtil;
 
 public class WebViewFragment extends NetworkStateFragment {
@@ -74,7 +74,7 @@ public class WebViewFragment extends NetworkStateFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (!NetworkUtil.isOnline()) {
+        if (!NetworkUtil.isOnline(getContext())) {
             showNetworkRequired();
         } else if (webViewHelper.requestedUrl() == null) {
             webViewHelper.request(url);

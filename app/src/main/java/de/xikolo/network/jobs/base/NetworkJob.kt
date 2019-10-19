@@ -1,7 +1,8 @@
 package de.xikolo.network.jobs.base
 
+import de.xikolo.App
 import de.xikolo.managers.UserManager
-import de.xikolo.utils.NetworkUtil
+import de.xikolo.utils.extensions.isOnline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -14,7 +15,7 @@ abstract class NetworkJob(private val networkState: NetworkStateLiveData, privat
             return
         }
 
-        if (!NetworkUtil.isOnline()) {
+        if (!App.instance.isOnline) {
             networkState.state(NetworkCode.NO_NETWORK, userRequest)
             return
         }

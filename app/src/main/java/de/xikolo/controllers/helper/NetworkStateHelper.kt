@@ -16,7 +16,6 @@ import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
-import de.xikolo.utils.NetworkUtil
 import de.xikolo.utils.extensions.showToast
 import de.xikolo.views.CustomFontTextView
 
@@ -210,7 +209,7 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
 
         fun showNetworkRequired() {
             if (networkStateHelper.contentViewVisible) {
-                NetworkUtil.showNoConnectionToast()
+                networkStateHelper.activity?.showToast(R.string.toast_no_network)
             } else {
                 networkStateHelper.setMessageTitle(R.string.notification_no_network)
                 networkStateHelper.setMessageSummary(R.string.notification_no_network_summary)
