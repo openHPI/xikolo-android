@@ -13,7 +13,6 @@ import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.models.Item
 import de.xikolo.models.Section
-import de.xikolo.utils.ItemTitleUtil
 
 class ItemListAdapter(private val section: Section, private val listener: OnItemClickListener) : RecyclerView.Adapter<ItemListAdapter.ItemViewHolder>() {
 
@@ -42,7 +41,7 @@ class ItemListAdapter(private val section: Section, private val listener: OnItem
 
         val item = items[position]
 
-        holder.textTitle.text = ItemTitleUtil.format(section.title, item.title)
+        holder.textTitle.text = formatTitle(section.title, item.title)
 
         holder.textIcon.setText(item.iconRes)
 
@@ -67,6 +66,16 @@ class ItemListAdapter(private val section: Section, private val listener: OnItem
     interface OnItemClickListener {
 
         fun onItemClicked(sectionId: String, position: Int)
+    }
+
+    private fun formatTitle(moduleTitle: String, itemTitle: String): String {
+        return if (itemTitle.length > moduleTitle.length + 2 &&
+            itemTitle.startsWith(moduleTitle) &&
+            itemTitle.substring(moduleTitle.length + 1, moduleTitle.length + 2) == " ") {
+            itemTitle.substring(moduleTitle.length + 2)
+        } else {
+            itemTitle
+        }
     }
 
     class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
