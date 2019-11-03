@@ -41,4 +41,6 @@
     <color name="apptheme_button_play_bg">@color/white</color>
     <color name="apptheme_button_play_fg">@color/apptheme_main</color>
 
+    <color name="apptheme_launcher_icon_bg">@color/apptheme_main</color>
+
 </resources>
