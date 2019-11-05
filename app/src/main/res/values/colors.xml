@@ -85,6 +85,7 @@
     <color name="circle_indicator">@color/apptheme_main</color>
     <color name="underline">@color/text_light</color>
     <color name="tab_text">@color/apptheme_tab_text</color>
+    <color name="launcher_icon_bg">@color/apptheme_launcher_icon_bg</color>
 
 
     <!-- Colors that may be overridden by flavor. Only for internal use, use the wrapper above instead. -->
@@ -110,6 +111,8 @@
 
     <color name="apptheme_button_play_bg">@color/apptheme_main</color>
     <color name="apptheme_button_play_fg">@color/white</color>
+
+    <color name="apptheme_launcher_icon_bg">#FFFFFF</color>
 
 
     <!-- Overrides -->

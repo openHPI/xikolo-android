@@ -24,5 +24,6 @@
 
     <!-- Overrides -->
     <color name="apptheme_splash_background">#4A4A4A</color>
+    <color name="apptheme_launcher_icon_bg">@color/apptheme_splash_background</color>
 
 </resources>

@@ -27,5 +27,6 @@
     <color name="apptheme_toolbar">#0b72b5</color>
     <color name="apptheme_statusbar">#07446d</color>
     <color name="apptheme_gradient_placeholder_start">@color/apptheme_main_light</color>
+    <color name="apptheme_launcher_icon_bg">@color/apptheme_main</color>
 
 </resources>
