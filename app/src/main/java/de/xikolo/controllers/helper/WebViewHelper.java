@@ -27,7 +27,7 @@ import de.xikolo.config.Config;
 import de.xikolo.controllers.webview.WebViewFragment;
 import de.xikolo.managers.UserManager;
 import de.xikolo.utils.LanalyticsUtil;
-import de.xikolo.utils.NetworkUtil;
+import de.xikolo.utils.extensions.NetworkUtil;
 
 import static android.os.Build.VERSION_CODES.M;
 import static android.os.Build.VERSION_CODES.N;
@@ -156,7 +156,7 @@ public class WebViewHelper {
             this.url = url;
 
             if (!webViewInterface.externalLinksEnabled() || Patterns.WEB_URL.matcher(this.url).matches()) {
-                if (NetworkUtil.isOnline()) {
+                if (NetworkUtil.isOnline(App.getInstance())) {
                     webViewInterface.showAnyProgress();
                     if (url.contains(Config.HOST)) {
                         Map<String, String> header = new HashMap<>();

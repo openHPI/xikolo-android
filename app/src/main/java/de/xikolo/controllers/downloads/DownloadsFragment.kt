@@ -18,10 +18,9 @@ import de.xikolo.controllers.helper.LoadingStateHelper
 import de.xikolo.extensions.observe
 import de.xikolo.managers.DownloadManager
 import de.xikolo.managers.PermissionManager
+import de.xikolo.models.Storage
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.FileUtil
-import de.xikolo.utils.StorageUtil
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.extensions.*
 import java.io.File
 import java.util.*
 
@@ -93,10 +92,10 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
                 var internalAddition = ""
                 var sdcardAddition = ""
 
-                val sdcardStorageAvailable = StorageUtil.getSdcardStorage(activity) != null
+                val sdcardStorageAvailable = activity.sdcardStorage != null
 
                 if (sdcardStorageAvailable) {
-                    if (StorageUtil.getStorage(activity) == StorageUtil.getSdcardStorage(activity)) {
+                    if (activity.preferredStorage.file == activity.sdcardStorage?.file) {
                         sdcardAddition = " " + getString(R.string.settings_storage_addition)
                     } else {
                         internalAddition = " " + getString(R.string.settings_storage_addition)
@@ -105,7 +104,7 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
 
                 fun buildTotalItem(appFolder: String, title: String): DownloadsAdapter.FolderItem {
                     // clean up the storage before fetching items
-                    StorageUtil.cleanStorage(File(appFolder))
+                    Storage(File(appFolder)).clean()
 
                     return DownloadsAdapter.FolderItem(
                         title,
@@ -115,14 +114,17 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
 
                 var list: MutableList<DownloadsAdapter.FolderItem> = ArrayList()
 
+                val storage = activity.internalStorage
+                storage.file.createIfNotExists()
                 list.add(buildTotalItem(
-                    FileUtil.createStorageFolderPath(StorageUtil.getInternalStorage(activity)),
+                    storage.file.absolutePath,
                     getString(R.string.settings_title_storage_internal) + internalAddition
                 ))
 
-                StorageUtil.getSdcardStorage(activity)?.let { sdcardStorage ->
+                activity.sdcardStorage?.let { sdcardStorage ->
+                    sdcardStorage.file.createIfNotExists()
                     list.add(buildTotalItem(
-                        FileUtil.createStorageFolderPath(sdcardStorage),
+                        sdcardStorage.file.absolutePath,
                         getString(R.string.settings_title_storage_external) + sdcardAddition
                     ))
                 }
@@ -135,13 +137,13 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
                     list = ArrayList()
 
                     list.add(buildTotalItem(
-                        StorageUtil.getInternalStorage(activity).absolutePath + File.separator + "Documents",
+                        activity.internalStorage.file.absolutePath + File.separator + "Documents",
                         getString(R.string.settings_title_storage_internal) + internalAddition
                     ))
 
-                    StorageUtil.getSdcardStorage(activity)?.let { sdcardStorage ->
+                    activity.sdcardStorage?.let { sdcardStorage ->
                         list.add(buildTotalItem(
-                            sdcardStorage.absolutePath + File.separator + "Documents",
+                            sdcardStorage.file.absolutePath + File.separator + "Documents",
                             getString(R.string.settings_title_storage_external) + sdcardAddition
                         ))
                     }
@@ -154,13 +156,13 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
                 list = ArrayList()
 
                 list.add(buildTotalItem(
-                    StorageUtil.getInternalStorage(activity).absolutePath + File.separator + "Certificates",
+                    activity.internalStorage.file.absolutePath + File.separator + "Certificates",
                     getString(R.string.settings_title_storage_internal) + internalAddition
                 ))
 
-                StorageUtil.getSdcardStorage(activity)?.let { sdcardStorage ->
+                activity.sdcardStorage?.let { sdcardStorage ->
                     list.add(buildTotalItem(
-                        sdcardStorage.absolutePath + File.separator + "Certificates",
+                        sdcardStorage.file.absolutePath + File.separator + "Certificates",
                         getString(R.string.settings_title_storage_external) + sdcardAddition
                     ))
                 }
@@ -199,10 +201,10 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
                 }
                 adapter?.addItem(
                     internalCourseTitle,
-                    buildCourseItems(StorageUtil.getInternalStorage(activity))
+                    buildCourseItems(activity.internalStorage.file)
                 )
 
-                StorageUtil.getSdcardStorage(activity)?.let { sdcardStorage ->
+                activity.sdcardStorage?.let { sdcardStorage ->
                     val sdcardCourseTitle = if (sdcardStorageAvailable) {
                         getString(R.string.courses) + " (" + getString(R.string.settings_title_storage_external) + ")"
                     } else {
@@ -210,7 +212,7 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
                     }
                     adapter?.addItem(
                         sdcardCourseTitle,
-                        buildCourseItems(sdcardStorage)
+                        buildCourseItems(sdcardStorage.file)
                     )
                 }
             } else {
@@ -251,9 +253,9 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
         val dir = File(item.path)
 
         if (dir.exists()) {
-            FileUtil.delete(dir)
+            dir.deleteAll()
         } else {
-            ToastUtil.show(R.string.error)
+            showToast(R.string.error)
         }
 
         fetchItems()

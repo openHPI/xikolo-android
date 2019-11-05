@@ -9,7 +9,7 @@ import de.xikolo.models.DownloadAsset
 import de.xikolo.testing.instrumented.mocking.SampleMockData
 import de.xikolo.testing.instrumented.mocking.base.BaseTest
 import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_LOADING_SHORT
-import de.xikolo.utils.StorageUtil
+import de.xikolo.utils.extensions.preferredStorage
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -92,7 +92,7 @@ class DownloadManagerTest : BaseTest() {
         val file = manager.getDownloadFile(asset)!!
 
         assertTrue(file.nameWithoutExtension == asset.fileName)
-        assertTrue(manager.getFoldersWithDownloads(StorageUtil.getStorage(context)).isNotEmpty())
+        assertTrue(manager.getFoldersWithDownloads(context.preferredStorage.file).isNotEmpty())
 
         manager.deleteAssetDownload(asset)
 

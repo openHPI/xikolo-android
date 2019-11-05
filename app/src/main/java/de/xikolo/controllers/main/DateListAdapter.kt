@@ -12,7 +12,7 @@ import de.xikolo.R
 import de.xikolo.controllers.base.BaseMetaRecyclerViewAdapter
 import de.xikolo.models.CourseDate
 import de.xikolo.models.DateOverview
-import de.xikolo.utils.TimeUtil
+import de.xikolo.utils.extensions.timeLeftUntilString
 import de.xikolo.views.DateTextView
 import java.text.DateFormat
 import java.util.*
@@ -92,13 +92,10 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
 
                 holder.textDateTitle.text = courseDate.title
 
-                courseDate.date?.time?.let {
+                courseDate.date?.let {
                     holder.textTimeLeft.text = String.format(
                         App.instance.getString(R.string.time_left),
-                        TimeUtil.getTimeLeftString(
-                            it - Date().time,
-                            App.instance
-                        )
+                        it.timeLeftUntilString(App.instance)
                     )
                 }
             }

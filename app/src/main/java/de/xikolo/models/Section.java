@@ -8,7 +8,7 @@ import java.util.List;
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.CourseDao;
 import de.xikolo.models.dao.ItemDao;
-import de.xikolo.utils.DateUtil;
+import de.xikolo.utils.extensions.DateUtil;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
@@ -82,8 +82,8 @@ public class Section extends RealmObject {
             section.title = title;
             section.description = description;
             section.position = position;
-            section.startDate = DateUtil.parse(startDate);
-            section.endDate = DateUtil.parse(endDate);
+            section.startDate = DateUtil.getAsDate(startDate);
+            section.endDate = DateUtil.getAsDate(endDate);
             section.accessible = accessible;
 
             if (course != null) {

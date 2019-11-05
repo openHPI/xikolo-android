@@ -25,9 +25,7 @@ import de.xikolo.models.DownloadAsset
 import de.xikolo.states.DownloadStateLiveData
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.utils.FileProviderUtil
-import de.xikolo.utils.FileUtil
-import de.xikolo.utils.NetworkUtil
-import de.xikolo.utils.ToastUtil
+import de.xikolo.utils.extensions.*
 
 /**
  * When the url of the DownloadAsset's URL is null, the urlNotAvailableMessage is shown and the UI will be disabled.
@@ -93,9 +91,9 @@ class DownloadViewHelper(
 
         val appPreferences = ApplicationPreferences()
 
-        buttonDownloadStart.setOnClickListener { _ ->
-            if (NetworkUtil.isOnline()) {
-                if (NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_MOBILE && appPreferences.isDownloadNetworkLimitedOnMobile) {
+        buttonDownloadStart.setOnClickListener {
+            if (activity.isOnline) {
+                if (activity.connectivityType == ConnectivityType.CELLULAR && appPreferences.isDownloadNetworkLimitedOnMobile) {
                     val dialog = MobileDownloadDialog()
                     dialog.listener = object : MobileDownloadDialog.Listener {
                         override fun onDialogPositiveClick(dialog: DialogFragment) {
@@ -108,7 +106,7 @@ class DownloadViewHelper(
                     startDownload()
                 }
             } else {
-                NetworkUtil.showNoConnectionToast()
+                activity.showToast(R.string.toast_no_network)
             }
         }
 
@@ -172,7 +170,7 @@ class DownloadViewHelper(
             try {
                 App.instance.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                ToastUtil.show(R.string.toast_no_file_viewer_found)
+                activity.showToast(R.string.toast_no_file_viewer_found)
             }
         }
 
@@ -190,8 +188,8 @@ class DownloadViewHelper(
                         } else {
                             progressBarDownload.progress = (bytesWritten * 100 / totalBytes).toInt()
                         }
-                        textFileSize.text = (FileUtil.getFormattedFileSize(bytesWritten) + " / "
-                            + FileUtil.getFormattedFileSize(totalBytes))
+                        textFileSize.text = (bytesWritten.asFormattedFileSize + " / "
+                            + totalBytes.asFormattedFileSize)
                     }
                 }
 
@@ -233,7 +231,7 @@ class DownloadViewHelper(
 
         if (downloadAsset.sizeWithSecondaryAssets != 0L) {
             textFileSize.visibility = View.VISIBLE
-            textFileSize.text = FileUtil.getFormattedFileSize(downloadAsset.sizeWithSecondaryAssets)
+            textFileSize.text = downloadAsset.sizeWithSecondaryAssets.asFormattedFileSize
         } else {
             textFileSize.visibility = View.GONE
         }
@@ -257,12 +255,10 @@ class DownloadViewHelper(
 
         textFileSize.visibility = View.VISIBLE
 
-        if (downloadAsset.sizeWithSecondaryAssets != 0L) {
-            textFileSize.text = FileUtil.getFormattedFileSize(downloadAsset.sizeWithSecondaryAssets)
+        textFileSize.text = if (downloadAsset.sizeWithSecondaryAssets != 0L) {
+            downloadAsset.sizeWithSecondaryAssets.asFormattedFileSize
         } else {
-            textFileSize.text = FileUtil.getFormattedFileSize(
-                downloadManager.getDownloadFile(downloadAsset)
-            )
+            downloadManager.getDownloadFile(downloadAsset).fileSize.asFormattedFileSize
         }
 
         progressBarUpdaterRunning = false

@@ -1,16 +1,17 @@
 package de.xikolo.models;
 
+import androidx.annotation.StringRes;
+
 import com.squareup.moshi.Json;
 
 import java.util.Date;
 
-import androidx.annotation.StringRes;
 import de.xikolo.R;
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.CourseDao;
 import de.xikolo.models.dao.ItemDao;
 import de.xikolo.models.dao.SectionDao;
-import de.xikolo.utils.DateUtil;
+import de.xikolo.utils.extensions.DateUtil;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasOne;
@@ -143,7 +144,7 @@ public class Item extends RealmObject {
             item.id = getId();
             item.title = title;
             item.position = position;
-            item.deadline = DateUtil.parse(deadline);
+            item.deadline = DateUtil.getAsDate(deadline);
             item.contentType = contentType;
             item.exerciseType = exerciseType;
             item.proctored = proctored;

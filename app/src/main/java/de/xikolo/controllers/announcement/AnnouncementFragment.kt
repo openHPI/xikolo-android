@@ -15,7 +15,7 @@ import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Announcement
-import de.xikolo.utils.MarkdownUtil
+import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.announcement.AnnouncementViewModel
 import de.xikolo.views.DateTextView
 import java.text.DateFormat
@@ -80,7 +80,7 @@ class AnnouncementFragment : ViewModelFragment<AnnouncementViewModel>() {
         date.text = dateFormat.format(announcement.publishedAt)
         date.setDate(announcement.publishedAt)
 
-        MarkdownUtil.formatAndSet(announcement.text, text)
+        text.setMarkdownText(announcement.text)
 
         showContent()
     }

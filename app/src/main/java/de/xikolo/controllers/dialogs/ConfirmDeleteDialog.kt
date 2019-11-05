@@ -7,7 +7,7 @@ import androidx.fragment.app.DialogFragment
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.base.BaseDialogFragment
-import de.xikolo.utils.DisplayUtil
+import de.xikolo.utils.extensions.is7inchTablet
 
 class ConfirmDeleteDialog : BaseDialogFragment() {
 
@@ -28,7 +28,7 @@ class ConfirmDeleteDialog : BaseDialogFragment() {
             .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog.cancel() }
             .setCancelable(true)
 
-        if (DisplayUtil.is7inchTablet(activity!!)) {
+        if (activity?.is7inchTablet == true) {
             builder.setNeutralButton(R.string.dialog_confirm_delete_yes_always) { _, _ -> listener?.onDialogPositiveAndAlwaysClick(this) }
         }
 

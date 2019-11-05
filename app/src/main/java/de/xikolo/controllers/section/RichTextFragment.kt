@@ -13,7 +13,7 @@ import de.xikolo.controllers.webview.WebViewActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.models.Item
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.utils.MarkdownUtil
+import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.section.RichTextViewModel
 
 class RichTextFragment : ViewModelFragment<RichTextViewModel>() {
@@ -72,7 +72,7 @@ class RichTextFragment : ViewModelFragment<RichTextViewModel>() {
                 this.item = item
                 title.text = item.title
 
-                MarkdownUtil.formatAndSet(viewModel.richText?.text, text)
+                text.setMarkdownText(viewModel.richText?.text)
                 showContent()
             }
     }

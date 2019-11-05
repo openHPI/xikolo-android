@@ -7,7 +7,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.FragmentActivity
 import de.xikolo.R
 import de.xikolo.controllers.dialogs.DateInfoDialog
-import de.xikolo.utils.DateUtil
+import de.xikolo.utils.extensions.localString
+import de.xikolo.utils.extensions.utcString
 import java.util.*
 
 class DateTextView : AppCompatTextView, View.OnClickListener {
@@ -72,26 +73,26 @@ class DateTextView : AppCompatTextView, View.OnClickListener {
 
     private val localText: String
         get() {
-            return if (startDate != null) {
-                if (endDate != null) { // date span
-                    "${DateUtil.formatLocal(startDate)} - \n${DateUtil.formatLocal(endDate)}"
-                } else { // simple date
-                    DateUtil.formatLocal(startDate)
+            return startDate?.let { start ->
+                endDate?.let { end ->
+                    "${start.localString} - \n${end.localString}"
+                } ?: run {
+                    start.localString
                 }
-            } else {
+            } ?: run {
                 ""
             }
         }
 
     private val utcText: String
         get() {
-            return if (startDate != null) {
-                if (endDate != null) { // date span
-                    "${DateUtil.formatUTC(startDate)} - \n${DateUtil.formatUTC(endDate)}"
-                } else { // simple date
-                    DateUtil.formatUTC(startDate)
+            return startDate?.let { start ->
+                endDate?.let { end ->
+                    "${start.utcString} - \n${end.utcString}"
+                } ?: run {
+                    start.utcString
                 }
-            } else {
+            } ?: run {
                 ""
             }
         }

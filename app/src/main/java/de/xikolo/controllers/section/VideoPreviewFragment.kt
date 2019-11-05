@@ -18,9 +18,10 @@ import de.xikolo.extensions.observe
 import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Item
 import de.xikolo.models.Video
-import de.xikolo.utils.CastUtil
-import de.xikolo.utils.DisplayUtil
 import de.xikolo.utils.LanalyticsUtil
+import de.xikolo.utils.extensions.cast
+import de.xikolo.utils.extensions.isCastConnected
+import de.xikolo.utils.extensions.videoThumbnailSize
 import de.xikolo.viewmodels.section.VideoPreviewViewModel
 import de.xikolo.views.CustomSizeImageView
 import java.util.concurrent.TimeUnit
@@ -82,7 +83,7 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
         this.viewContainer.visibility = View.GONE
 
         activity?.let {
-            val thumbnailSize: Point = DisplayUtil.getVideoThumbnailSize(it)
+            val thumbnailSize: Point = it.videoThumbnailSize
             imageVideoThumbnail.setDimensions(thumbnailSize.x, thumbnailSize.y)
 
             if (it.resources?.configuration?.orientation != Configuration.ORIENTATION_PORTRAIT) {
@@ -168,11 +169,13 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
 
     private fun play() {
         video?.let { video ->
-            if (CastUtil.isConnected()) {
+            if (activity?.isCastConnected == true) {
                 LanalyticsUtil.trackVideoPlay(itemId, courseId, sectionId, video.progress, 1.0f,
                     Configuration.ORIENTATION_LANDSCAPE, "hd", "cast")
 
-                CastUtil.loadMedia(activity, video, true)
+                activity?.let {
+                    video.cast(it, true)
+                }
             } else {
                 activity?.let {
                     val intent = VideoItemPlayerActivityAutoBundle

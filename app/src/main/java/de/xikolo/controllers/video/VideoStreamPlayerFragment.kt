@@ -22,8 +22,9 @@ import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.models.VideoStream
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.NetworkUtil
-import de.xikolo.utils.PlaybackSpeedUtil
+import de.xikolo.utils.extensions.ConnectivityType
+import de.xikolo.utils.extensions.connectivityType
+import de.xikolo.utils.extensions.isOnline
 import de.xikolo.views.CustomFontTextView
 import de.xikolo.views.CustomSizeVideoView
 import de.xikolo.views.ExoPlayerVideoView
@@ -121,7 +122,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
     private val applicationPreferences = ApplicationPreferences()
 
-    val currentPlaybackSpeed: PlaybackSpeedUtil
+    val currentPlaybackSpeed: VideoSettingsHelper.PlaybackSpeed
         get() = videoSettingsHelper.currentSpeed
 
     val currentPosition: Int
@@ -377,7 +378,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         showProgress()
         setupVideo()
         updateVideo()
-        if(autoPlay == true) {
+        if (autoPlay == true) {
             playerView.start()
         }
         prepare()
@@ -402,7 +403,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
                     }
                 }
 
-                override fun onPlaybackSpeedChanged(old: PlaybackSpeedUtil, new: PlaybackSpeedUtil) {
+                override fun onPlaybackSpeedChanged(old: VideoSettingsHelper.PlaybackSpeed, new: VideoSettingsHelper.PlaybackSpeed) {
                     hideSettings()
                     if (old != new) {
                         changePlaybackSpeed(old, new, true)
@@ -460,7 +461,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
     protected open fun getVideoMode(): VideoSettingsHelper.VideoMode {
         return when {
             FeatureConfig.HLS_VIDEO && videoStream.hlsUrl != null        -> VideoSettingsHelper.VideoMode.AUTO
-            NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_WIFI
+            context.connectivityType == ConnectivityType.WIFI
                 || !applicationPreferences.isVideoQualityLimitedOnMobile -> VideoSettingsHelper.VideoMode.HD
             else                                                         -> VideoSettingsHelper.VideoMode.SD
         }
@@ -494,7 +495,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         }
 
         return when {
-            NetworkUtil.isOnline()                                                 -> { // device has internet connection
+            context.isOnline                                                 -> { // device has internet connection
                 if (isHls) {
                     setHlsVideoUri(stream)
                 } else {
@@ -526,7 +527,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         prepare()
     }
 
-    protected open fun changePlaybackSpeed(oldSpeed: PlaybackSpeedUtil, newSpeed: PlaybackSpeedUtil, fromUser: Boolean) {
+    protected open fun changePlaybackSpeed(oldSpeed: VideoSettingsHelper.PlaybackSpeed, newSpeed: VideoSettingsHelper.PlaybackSpeed, fromUser: Boolean) {
         updatePlaybackSpeed()
     }
 
@@ -661,7 +662,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
     }
 
     private fun updatePlaybackSpeed() {
-        playerView.setPlaybackSpeed(currentPlaybackSpeed.speed)
+        playerView.setPlaybackSpeed(currentPlaybackSpeed.value)
     }
 
     private fun updateSubtitles() {
@@ -683,7 +684,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
                 playerView.uri?.let {
                     playerView.setPreviewUri(it)
                 }
-            } else if (NetworkUtil.isOnline()) {
+            } else if (context.isOnline) {
                 if (videoStream.sdUrl != null) {
                     playerView.setPreviewUri(Uri.parse(videoStream.sdUrl))
                 } else if (videoStream.hdUrl != null) {
@@ -716,7 +717,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
     private fun prepare() {
         initialPlaybackState = isPlaying
-        if(!isInitialPreparing) {
+        if (!isInitialPreparing) {
             initialVideoPosition = currentPosition
         }
         playerView.pause()

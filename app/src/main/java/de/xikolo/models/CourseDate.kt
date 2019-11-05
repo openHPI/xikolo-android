@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import de.xikolo.R
 import de.xikolo.models.base.RealmAdapter
 import de.xikolo.models.dao.CourseDao
-import de.xikolo.utils.DateUtil
+import de.xikolo.utils.extensions.asDate
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import moe.banana.jsonapi2.HasOne
@@ -57,7 +57,7 @@ open class CourseDate : RealmObject() {
             val courseDate = CourseDate()
             courseDate.id = id
             courseDate.title = title
-            courseDate.date = DateUtil.parse(date)
+            courseDate.date = date.asDate
             courseDate.type = dateType
 
             course?.let {

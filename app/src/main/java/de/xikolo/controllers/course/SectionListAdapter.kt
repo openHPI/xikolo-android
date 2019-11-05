@@ -15,8 +15,8 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.R
 import de.xikolo.models.Section
-import de.xikolo.utils.DateUtil
-import de.xikolo.utils.DisplayUtil
+import de.xikolo.utils.extensions.is7inchTablet
+import de.xikolo.utils.extensions.isFuture
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.DateTextView
 import de.xikolo.views.SpaceItemDecoration
@@ -117,9 +117,9 @@ class SectionListAdapter(private val activity: FragmentActivity,
         holder.layout.isClickable = false
         holder.layout.foreground = null
         holder.viewDownloadButton.visibility = View.GONE
-        if (section.startDate != null && DateUtil.isFuture(section.startDate)) {
+        if (section.startDate != null && section.startDate.isFuture) {
             val dateOut: DateFormat
-            if (DisplayUtil.is7inchTablet(activity)) {
+            if (activity.is7inchTablet) {
                 dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault())
             } else {
                 dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault())

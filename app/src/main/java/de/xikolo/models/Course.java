@@ -16,9 +16,8 @@ import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.ChannelDao;
 import de.xikolo.models.dao.EnrollmentDao;
-import de.xikolo.utils.DateUtil;
-import de.xikolo.utils.DisplayUtil;
-import de.xikolo.utils.LanguageUtil;
+import de.xikolo.utils.extensions.DateUtil;
+import de.xikolo.utils.extensions.DisplayUtil;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
@@ -93,8 +92,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         model.setId(id);
         model.title = title;
         model.slug = slug;
-        model.startDate = DateUtil.format(startDate);
-        model.endDate = DateUtil.format(endDate);
+        model.startDate = DateUtil.getFormattedString(startDate);
+        model.endDate = DateUtil.getFormattedString(endDate);
         model.shortAbstract = shortAbstract;
         model.description = description;
         model.imageUrl = imageUrl;
@@ -161,7 +160,18 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
     }
 
     public String getFormattedLanguage() {
-        return LanguageUtil.languageForCode(App.getInstance(), language);
+        switch (language) {
+            case "en":
+                return App.getInstance().getString(R.string.lang_en);
+            case "de":
+                return App.getInstance().getString(R.string.lang_de);
+            case "fr":
+                return App.getInstance().getString(R.string.lang_fr);
+            case "cn":
+                return App.getInstance().getString(R.string.lang_zh);
+            default:
+                return language;
+        }
     }
 
     @JsonApi(type = "courses")
@@ -230,8 +240,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.id = getId();
             course.title = title;
             course.slug = slug;
-            course.startDate = DateUtil.parse(startDate);
-            course.endDate = DateUtil.parse(endDate);
+            course.startDate = DateUtil.getAsDate(startDate);
+            course.endDate = DateUtil.getAsDate(endDate);
             course.shortAbstract = shortAbstract;
             course.description = description;
             course.imageUrl = imageUrl;

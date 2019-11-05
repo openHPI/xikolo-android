@@ -15,8 +15,9 @@ import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.Course
 import de.xikolo.models.DateOverview
-import de.xikolo.utils.DateUtil
-import de.xikolo.utils.TimeUtil
+import de.xikolo.utils.extensions.isBetween
+import de.xikolo.utils.extensions.isPast
+import de.xikolo.utils.extensions.timeLeftUntilString
 import java.text.DateFormat
 import java.util.*
 
@@ -46,10 +47,7 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
 
                 dateOverview.nextDate?.let { nextDate ->
                     nextDate.date?.let {
-                        holder.textTimeLeft.text = TimeUtil.getTimeLeftString(
-                            it.time - Date().time,
-                            App.instance
-                        )
+                        holder.textTimeLeft.text = it.timeLeftUntilString(App.instance)
                     }
 
                     holder.textDate.text = DateFormat.getDateTimeInstance(
@@ -89,7 +87,7 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
                             holder.textBanner.text = App.instance.getText(R.string.banner_external)
                             holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_grey))
                         }
-                        DateUtil.nowIsBetween(course.startDate, course.endDate) -> {
+                        Date().isBetween(course.startDate, course.endDate) -> {
                             holder.textBanner.visibility = View.VISIBLE
                             holder.textBanner.text = App.instance.getText(R.string.banner_running)
                             holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_green))
@@ -99,12 +97,12 @@ class CourseListAdapter(fragment: Fragment, private val courseFilter: CourseList
                 } else {
                     holder.textDescription.visibility = View.GONE
                     when {
-                        DateUtil.nowIsBetween(course.startDate, course.endDate) -> {
+                        Date().isBetween(course.startDate, course.endDate) -> {
                             holder.textBanner.visibility = View.VISIBLE
                             holder.textBanner.text = App.instance.getText(R.string.banner_running)
                             holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_green))
                         }
-                        DateUtil.isPast(course.endDate)                         -> {
+                        course.endDate.isPast                      -> {
                             holder.textBanner.visibility = View.VISIBLE
                             holder.textBanner.text = App.instance.getText(R.string.banner_self_paced)
                             holder.textBanner.setBackgroundColor(ContextCompat.getColor(App.instance, R.color.banner_yellow))

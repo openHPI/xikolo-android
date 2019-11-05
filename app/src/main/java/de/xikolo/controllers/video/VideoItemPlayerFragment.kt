@@ -12,7 +12,6 @@ import de.xikolo.models.VideoSubtitles
 import de.xikolo.models.dao.ItemDao
 import de.xikolo.models.dao.VideoDao
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.utils.PlaybackSpeedUtil
 import io.realm.Realm
 
 class VideoItemPlayerFragment(private var courseId: String, private var sectionId: String, private var itemId: String, videoId: String, autoPlay: Boolean? = true) : VideoStreamPlayerFragment(VideoDao.Unmanaged.find(videoId)!!.singleStream, autoPlay) {
@@ -48,7 +47,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
             LanalyticsUtil.trackVideoPlay(itemId,
                 courseId, sectionId,
                 currentPosition,
-                currentPlaybackSpeed.speed,
+                currentPlaybackSpeed.value,
                 activity!!.resources.configuration.orientation,
                 currentQualityString,
                 sourceString)
@@ -61,7 +60,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
             LanalyticsUtil.trackVideoPause(itemId,
                 courseId, sectionId,
                 currentPosition,
-                currentPlaybackSpeed.speed,
+                currentPlaybackSpeed.value,
                 activity!!.resources.configuration.orientation,
                 currentQualityString,
                 sourceString)
@@ -75,7 +74,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
                 courseId, sectionId,
                 currentPosition,
                 progress,
-                currentPlaybackSpeed.speed,
+                currentPlaybackSpeed.value,
                 activity!!.resources.configuration.orientation,
                 currentQualityString,
                 sourceString)
@@ -90,7 +89,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
             LanalyticsUtil.trackVideoChangeQuality(itemId,
                 courseId, sectionId,
                 currentPosition,
-                currentPlaybackSpeed.speed,
+                currentPlaybackSpeed.value,
                 activity!!.resources.configuration.orientation,
                 getQualityString(oldVideoMode),
                 getQualityString(newVideoMode),
@@ -101,14 +100,14 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
         }
     }
 
-    override fun changePlaybackSpeed(oldSpeed: PlaybackSpeedUtil, newSpeed: PlaybackSpeedUtil, fromUser: Boolean) {
+    override fun changePlaybackSpeed(oldSpeed: VideoSettingsHelper.PlaybackSpeed, newSpeed: VideoSettingsHelper.PlaybackSpeed, fromUser: Boolean) {
         super.changePlaybackSpeed(oldSpeed, newSpeed, fromUser)
         if (fromUser) {
             LanalyticsUtil.trackVideoChangeSpeed(itemId,
                 courseId, sectionId,
                 currentPosition,
-                oldSpeed.speed,
-                newSpeed.speed,
+                oldSpeed.value,
+                newSpeed.value,
                 activity!!.resources.configuration.orientation,
                 currentQualityString,
                 sourceString)
@@ -174,7 +173,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
         LanalyticsUtil.trackVideoChangeOrientation(itemId,
             courseId, sectionId,
             currentPosition,
-            currentPlaybackSpeed.speed,
+            currentPlaybackSpeed.value,
             newConfig!!.orientation,
             currentQualityString,
             sourceString)

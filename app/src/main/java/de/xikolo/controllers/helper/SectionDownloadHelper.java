@@ -3,6 +3,7 @@ package de.xikolo.controllers.helper;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 
+import de.xikolo.R;
 import de.xikolo.controllers.dialogs.MobileDownloadDialog;
 import de.xikolo.controllers.dialogs.ModuleDownloadDialog;
 import de.xikolo.controllers.dialogs.ModuleDownloadDialogAutoBundle;
@@ -20,7 +21,9 @@ import de.xikolo.network.jobs.base.NetworkState;
 import de.xikolo.network.jobs.base.NetworkStateLiveData;
 import de.xikolo.storages.ApplicationPreferences;
 import de.xikolo.utils.LanalyticsUtil;
-import de.xikolo.utils.NetworkUtil;
+import de.xikolo.utils.extensions.ConnectivityType;
+import de.xikolo.utils.extensions.NetworkUtil;
+import de.xikolo.utils.extensions.ToastUtil;
 
 public class SectionDownloadHelper {
 
@@ -49,8 +52,8 @@ public class SectionDownloadHelper {
             final ApplicationPreferences appPreferences = new ApplicationPreferences();
 
             if (hdVideo || sdVideo || slides) {
-                if (NetworkUtil.isOnline()) {
-                    if (NetworkUtil.getConnectivityStatus() == NetworkUtil.TYPE_MOBILE &&
+                if (NetworkUtil.isOnline(activity)) {
+                    if (NetworkUtil.getConnectivityType(activity) == ConnectivityType.CELLULAR &&
                             appPreferences.isDownloadNetworkLimitedOnMobile()) {
                         MobileDownloadDialog permissionDialog = new MobileDownloadDialog();
                         permissionDialog.setListener(dialog1 -> {
@@ -62,7 +65,7 @@ public class SectionDownloadHelper {
                         startSectionDownloads(course, section);
                     }
                 } else {
-                    NetworkUtil.showNoConnectionToast();
+                    ToastUtil.showToast(activity, R.string.toast_no_network);
                 }
             }
         });

@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.utils.PlaybackSpeedUtil
+import de.xikolo.controllers.helper.VideoSettingsHelper
 
 class ApplicationPreferences {
 
@@ -26,8 +26,8 @@ class ApplicationPreferences {
         get() = getBoolean(context.getString(R.string.preference_download_network))
         set(value) = putBoolean(context.getString(R.string.preference_download_network), value)
 
-    var videoPlaybackSpeed: PlaybackSpeedUtil
-        get() = PlaybackSpeedUtil.get(getString(
+    var videoPlaybackSpeed: VideoSettingsHelper.PlaybackSpeed
+        get() = VideoSettingsHelper.PlaybackSpeed.get(getString(
             context.getString(R.string.preference_video_playback_speed),
             context.getString(R.string.settings_default_value_video_playback_speed)
         ))

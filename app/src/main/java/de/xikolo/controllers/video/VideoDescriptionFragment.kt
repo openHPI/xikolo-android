@@ -8,7 +8,7 @@ import butterknife.BindView
 import de.xikolo.R
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.extensions.observe
-import de.xikolo.utils.MarkdownUtil
+import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.section.VideoDescriptionViewModel
 
 class VideoDescriptionFragment(val itemId: String, val videoId: String) : ViewModelFragment<VideoDescriptionViewModel>() {
@@ -46,7 +46,7 @@ class VideoDescriptionFragment(val itemId: String, val videoId: String) : ViewMo
                     && video.summary.trim { it <= ' ' }.isNotEmpty()
                     && !video.summary.trim { it <= ' ' }.contentEquals("Enter content")) {
                     videoDescriptionText.setTypeface(videoDescriptionText.typeface, Typeface.NORMAL)
-                    MarkdownUtil.formatAndSet(video.summary, videoDescriptionText)
+                    videoDescriptionText.setMarkdownText(video.summary)
                 }
 
                 if (video.subtitles != null && video.subtitles.isNotEmpty()) {
