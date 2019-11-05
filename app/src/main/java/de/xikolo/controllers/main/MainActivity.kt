@@ -216,9 +216,10 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
 
     override fun onBackPressed() {
         if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            if (UserManager.isAuthorized
-                && navigationView.checkedItem?.itemId == R.id.navigation_all_courses
-                || navigationView.checkedItem?.itemId == R.id.navigation_my_courses) {
+            if ((UserManager.isAuthorized
+                    && navigationView.checkedItem?.itemId == R.id.navigation_my_courses)
+                || (!UserManager.isAuthorized &&
+                    navigationView.checkedItem?.itemId == R.id.navigation_all_courses)) {
                 finish()
             } else if (supportFragmentManager.backStackEntryCount > 1) {
                 supportFragmentManager.popBackStack()
