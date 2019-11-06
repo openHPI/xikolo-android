@@ -17,13 +17,12 @@ abstract class NetworkStateFragment : BaseFragment(), SwipeRefreshLayout.OnRefre
         return inflateHelper(inflater, container, layoutResource)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.refresh, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.refresh, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val itemId = item?.itemId
-        when (itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_refresh -> {
                 onRefresh()
                 return true

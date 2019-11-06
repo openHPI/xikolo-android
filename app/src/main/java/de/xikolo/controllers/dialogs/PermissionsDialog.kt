@@ -20,7 +20,7 @@ class PermissionsDialog : BaseDialogFragment() {
             .setPositiveButton(R.string.title_section_settings) { _, _ ->
                 PermissionManager.startAppInfo(activity!!)
             }
-            .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog.cancel() }
+            .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog?.cancel() }
             .setCancelable(true)
 
         val dialog = builder.create()

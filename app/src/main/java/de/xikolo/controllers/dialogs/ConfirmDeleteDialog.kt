@@ -25,7 +25,7 @@ class ConfirmDeleteDialog : BaseDialogFragment() {
         builder.setMessage(if (multipleFiles) R.string.dialog_confirm_delete_message_multi else R.string.dialog_confirm_delete_message)
             .setTitle(if (multipleFiles) R.string.dialog_confirm_delete_title_multi else R.string.dialog_confirm_delete_title)
             .setPositiveButton(R.string.dialog_confirm_delete_yes) { _, _ -> listener?.onDialogPositiveClick(this) }
-            .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog.cancel() }
+            .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog?.cancel() }
             .setCancelable(true)
 
         if (activity?.is7inchTablet == true) {

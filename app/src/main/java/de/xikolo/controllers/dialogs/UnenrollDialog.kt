@@ -20,7 +20,7 @@ class UnenrollDialog : BaseDialogFragment() {
         builder.setMessage(R.string.dialog_unenroll_message)
             .setTitle(R.string.dialog_unenroll_title)
             .setPositiveButton(R.string.dialog_unenroll_yes) { _, _ -> listener?.onDialogPositiveClick(this) }
-            .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog.cancel() }
+            .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog?.cancel() }
             .setCancelable(true)
 
         val dialog = builder.create()
