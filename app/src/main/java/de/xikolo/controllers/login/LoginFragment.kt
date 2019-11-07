@@ -237,8 +237,8 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
         showToast(R.string.toast_log_in_failed)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(activity!!)
             return true
         }

@@ -7,10 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
+import androidx.preference.*
 import de.psdev.licensesdialog.LicensesDialog
 import de.xikolo.App
 import de.xikolo.BuildConfig
@@ -66,7 +63,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key.equals(getString(R.string.preference_storage))) {
             val newStoragePreference = sharedPreferences?.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
-            findPreference(getString(R.string.preference_storage)).summary = newStoragePreference
+            findPreference<ListPreference>(getString(R.string.preference_storage))?.summary = newStoragePreference
 
             val newStorageType = newStoragePreference.asStorageType
             var oldStorageType = Storage.Type.INTERNAL
@@ -89,7 +86,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                             .message(getString(R.string.dialog_storage_migration_message))
                             .build()
                         progressDialog.max = fileCount
-                        progressDialog.show(fragmentManager, ProgressDialogHorizontal.TAG)
+                        progressDialog.show(fragmentManager!!, ProgressDialogHorizontal.TAG)
 
                         val migrationCallback = object : Storage.MigrationCallback {
                             override fun onProgressChanged(count: Int) {
@@ -123,7 +120,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 }
 
 
-                dialog.show(activity?.supportFragmentManager, StorageMigrationDialog.TAG)
+                dialog.show(fragmentManager!!, StorageMigrationDialog.TAG)
             }
         }
     }
@@ -133,8 +130,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(activity)
 
-        findPreference(getString(R.string.preference_storage)).summary = prefs.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
-        findPreference(getString(R.string.preference_storage)).onPreferenceChangeListener =
+        findPreference<ListPreference>(getString(R.string.preference_storage))?.summary = prefs.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
+        findPreference<ListPreference>(getString(R.string.preference_storage))?.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _, _ ->
                 if (DownloadService.instance?.isDownloading == true) {
                     showToast(R.string.notification_storage_locked)
@@ -144,17 +141,17 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             }
 
         if (App.instance.storages.size < 2) {
-            val general = findPreference(getString(R.string.preference_category_general)) as PreferenceCategory
-            val storagePref = findPreference(getString(R.string.preference_storage))
-            general.removePreference(storagePref)
+            val general = findPreference<PreferenceCategory>(getString(R.string.preference_category_general))
+            val storagePref = findPreference<ListPreference>(getString(R.string.preference_storage))
+            general?.removePreference(storagePref)
         }
 
-        val pipSettings = findPreference(getString(R.string.preference_video_pip))
+        val pipSettings = findPreference<Preference>(getString(R.string.preference_video_pip))
         if (!FeatureConfig.PIP) {
-            val video = findPreference(getString(R.string.preference_category_video_playback_speed)) as PreferenceCategory
-            video.removePreference(pipSettings)
+            val video = findPreference<PreferenceCategory>(getString(R.string.preference_category_video_playback_speed))
+            video?.removePreference(pipSettings)
         } else {
-            pipSettings.setOnPreferenceClickListener {
+            pipSettings?.setOnPreferenceClickListener {
                 try {
                     val intent = Intent("android.settings.PICTURE_IN_PICTURE_SETTINGS")
                     val uri = Uri.fromParts("package", activity?.packageName, null)
@@ -168,53 +165,53 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             refreshPipStatus()
         }
 
-        val copyright = findPreference(getString(R.string.preference_copyright))
-        copyright.title = String.format(copyright.title.toString(), Calendar.getInstance().get(Calendar.YEAR))
-        copyright.setOnPreferenceClickListener { _ ->
+        val copyright = findPreference<Preference>(getString(R.string.preference_copyright))
+        copyright?.title = String.format(copyright?.title.toString(), Calendar.getInstance().get(Calendar.YEAR))
+        copyright?.setOnPreferenceClickListener { _ ->
             openUrl(Config.COPYRIGHT_URL)
             true
         }
 
-        val imprint = findPreference(getString(R.string.preference_imprint))
+        val imprint = findPreference<Preference>(getString(R.string.preference_imprint))
         if (Config.IMPRINT_URL != null) {
-            imprint.setOnPreferenceClickListener { _ ->
+            imprint?.setOnPreferenceClickListener { _ ->
                 openUrl(Config.IMPRINT_URL)
                 true
             }
         } else {
-            val info = findPreference(getString(R.string.preference_category_info)) as PreferenceCategory
-            info.removePreference(imprint)
+            val info = findPreference<PreferenceCategory>(getString(R.string.preference_category_info))
+            info?.removePreference(imprint)
         }
 
-        val privacy = findPreference(getString(R.string.preference_privacy))
+        val privacy = findPreference<Preference>(getString(R.string.preference_privacy))
         if (Config.PRIVACY_URL != null) {
-            privacy.setOnPreferenceClickListener { _ ->
+            privacy?.setOnPreferenceClickListener { _ ->
                 openUrl(Config.PRIVACY_URL)
                 true
             }
         } else {
-            val info = findPreference(getString(R.string.preference_category_info)) as PreferenceCategory
-            info.removePreference(privacy)
+            val info = findPreference<PreferenceCategory>(getString(R.string.preference_category_info))
+            info?.removePreference(privacy)
         }
 
-        val termsOfUse = findPreference(getString(R.string.preference_terms_of_use))
+        val termsOfUse = findPreference<Preference>(getString(R.string.preference_terms_of_use))
         if (Config.TERMS_OF_USE_URL != null) {
-            termsOfUse.setOnPreferenceClickListener { _ ->
+            termsOfUse?.setOnPreferenceClickListener { _ ->
                 openUrl(Config.TERMS_OF_USE_URL)
                 true
             }
         } else {
-            val info = findPreference(getString(R.string.preference_category_info)) as PreferenceCategory
-            info.removePreference(termsOfUse)
+            val info = findPreference<PreferenceCategory>(getString(R.string.preference_category_info))
+            info?.removePreference(termsOfUse)
         }
 
-        val buildVersion = findPreference(getString(R.string.preference_build_version))
-        buildVersion.summary = (buildVersion.summary.toString()
+        val buildVersion = findPreference<Preference>(getString(R.string.preference_build_version))
+        buildVersion?.summary = (buildVersion?.summary.toString()
             + " "
             + BuildConfig.VERSION_NAME)
 
-        val licenses = findPreference(getString(R.string.preference_open_source_licenses))
-        licenses.setOnPreferenceClickListener { _ ->
+        val licenses = findPreference<Preference>(getString(R.string.preference_open_source_licenses))
+        licenses?.setOnPreferenceClickListener { _ ->
             LicensesDialog.Builder(activity)
                 .setNotices(R.raw.notices)
                 .setTitle(R.string.settings_title_licenses)
@@ -223,8 +220,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             true
         }
 
-        val sendFeedback = findPreference(getString(R.string.preference_send_feedback))
-        sendFeedback.setOnPreferenceClickListener { _ ->
+        val sendFeedback = findPreference<Preference>(getString(R.string.preference_send_feedback))
+        sendFeedback?.setOnPreferenceClickListener { _ ->
             startFeedbackIntent()
             true
         }
@@ -238,7 +235,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     private fun refreshPipStatus() {
-        val pipSettings = findPreference(getString(R.string.preference_video_pip))
+        val pipSettings = findPreference<Preference>(getString(R.string.preference_video_pip))
         pipSettings?.let {
             if (!PermissionManager.hasPipPermission(context)) {
                 it.summary = getString(R.string.settings_summary_video_pip_unavailable)

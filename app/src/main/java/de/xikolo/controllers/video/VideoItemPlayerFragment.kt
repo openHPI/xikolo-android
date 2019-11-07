@@ -32,7 +32,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
 
     private val videoDao = VideoDao(Realm.getDefaultInstance())
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         downloadManager = DownloadManager(activity!!)
     }
@@ -167,7 +167,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
         LanalyticsUtil.trackVideoChangeOrientation(itemId,

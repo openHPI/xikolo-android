@@ -9,8 +9,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewStub
 import android.widget.Button
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.app.NavUtils
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -479,7 +481,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             return areaState.size
         }
 
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
             // Check if this Fragment already exists.
             // Fragment Name is saved by FragmentPagerAdapter implementation.
             val name = makeFragmentName(R.id.viewpager, position)

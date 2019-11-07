@@ -46,7 +46,7 @@ class ModuleDownloadDialog : BaseDialogFragment() {
             .setPositiveButton(R.string.download) { _, _ ->
                 listener?.onDialogPositiveClick(this, hdVideo, sdVideo, slides)
             }
-            .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog.cancel() }
+            .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog?.cancel() }
             .setCancelable(true)
 
         val dialog = builder.create()

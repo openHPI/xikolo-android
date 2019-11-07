@@ -39,7 +39,7 @@ class ApiVersionExpiredDialog : BaseDialogFragment() {
         return dialog
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         listener?.onDismissed()
     }
 

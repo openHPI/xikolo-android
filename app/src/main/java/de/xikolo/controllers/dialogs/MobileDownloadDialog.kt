@@ -22,7 +22,7 @@ class MobileDownloadDialog : BaseDialogFragment() {
             .setPositiveButton(R.string.dialog_mobile_download_yes) { _, _ ->
                 listener?.onDialogPositiveClick(this)
             }
-            .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog.cancel() }
+            .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog?.cancel() }
             .setCancelable(true)
 
         val dialog = builder.create()
