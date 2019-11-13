@@ -62,7 +62,6 @@ object LanalyticsUtil {
 
         currentTime?.let { builder.putContext(CONTEXT_CURRENT_TIME, formatTime(currentTime)) }
         currentSpeed?.let { builder.putContext(CONTEXT_CURRENT_SPEED, currentSpeed.toString()) }
-        currentSpeed?.let { builder.putContext(CONTEXT_CURRENT_SPEED, currentSpeed.toString()) }
         currentOrientation?.let {
             builder.putContext(CONTEXT_CURRENT_ORIENTATION, if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) CONTEXT_PORTRAIT else CONTEXT_LANDSCAPE)
         }
