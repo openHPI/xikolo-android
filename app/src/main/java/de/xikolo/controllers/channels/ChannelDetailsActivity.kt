@@ -8,6 +8,8 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.CollapsingToolbarActivity
+import de.xikolo.controllers.dialogs.CreateTicketDialog
+import de.xikolo.controllers.dialogs.CreateTicketDialogAutoBundle
 import de.xikolo.models.dao.ChannelDao
 import de.xikolo.utils.extensions.shareCourseLink
 
@@ -56,18 +58,24 @@ class ChannelDetailsActivity : CollapsingToolbarActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.helpdesk, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemId = item.itemId
         when (itemId) {
-            android.R.id.home -> {
+            android.R.id.home    -> {
                 NavUtils.navigateUpFromSameTask(this)
                 return true
             }
-            R.id.action_share -> {
+            R.id.action_share    -> {
                 shareCourseLink(channelId)
+                return true
+            }
+            R.id.action_helpdesk -> {
+                val dialog = CreateTicketDialogAutoBundle.builder().build()
+                dialog.show(supportFragmentManager, CreateTicketDialog.TAG)
                 return true
             }
         }

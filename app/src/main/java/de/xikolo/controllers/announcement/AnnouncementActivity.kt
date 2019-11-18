@@ -1,10 +1,14 @@
 package de.xikolo.controllers.announcement
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.CollapsingToolbarActivity
+import de.xikolo.controllers.dialogs.CreateTicketDialog
+import de.xikolo.controllers.dialogs.CreateTicketDialogAutoBundle
 import de.xikolo.models.dao.AnnouncementDao
 
 class AnnouncementActivity : CollapsingToolbarActivity() {
@@ -51,6 +55,22 @@ class AnnouncementActivity : CollapsingToolbarActivity() {
                 transaction.commit()
             }
         }
+
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.helpdesk, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_helpdesk -> {
+                val dialog = CreateTicketDialogAutoBundle.builder().build()
+                dialog.show(supportFragmentManager, CreateTicketDialog.TAG)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

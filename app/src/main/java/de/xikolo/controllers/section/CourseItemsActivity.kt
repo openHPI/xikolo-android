@@ -19,6 +19,8 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.controllers.base.ViewModelActivity
+import de.xikolo.controllers.dialogs.CreateTicketDialog
+import de.xikolo.controllers.dialogs.CreateTicketDialogAutoBundle
 import de.xikolo.controllers.helper.SectionDownloadHelper
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
 import de.xikolo.extensions.observe
@@ -130,6 +132,7 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         if (section?.hasDownloadableContent() == true) {
             menuInflater.inflate(R.menu.download, menu)
         }
+        menuInflater.inflate(R.menu.helpdesk, menu)
         super.onCreateOptionsMenu(menu)
         return true
     }
@@ -142,6 +145,11 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
             }
             R.id.action_download -> {
                 SectionDownloadHelper(this).initSectionDownloads(course, section)
+                true
+            }
+            R.id.action_helpdesk -> {
+                val dialog = CreateTicketDialogAutoBundle.builder().build()
+                dialog.show(supportFragmentManager, CreateTicketDialog.TAG)
                 true
             }
             else                 -> super.onOptionsItemSelected(item)

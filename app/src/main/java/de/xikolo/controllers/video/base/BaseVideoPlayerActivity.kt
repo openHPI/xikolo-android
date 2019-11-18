@@ -328,9 +328,11 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            navigateUp()
-            return true
+        when (item.itemId) {
+            android.R.id.home -> {
+                navigateUp()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }

@@ -20,6 +20,7 @@
 
 
     <!-- Content backgrounds -->
+    <color name="dialog_background">#FFFFFF</color>
     <color name="content">#fafafa</color>
     <color name="content_video">#000000</color>
     <color name="content_video_preview">#CC000000</color>

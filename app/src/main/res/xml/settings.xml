@@ -83,10 +83,6 @@
             android:summary="@string/settings_summary_build"
             android:title="@string/settings_title_build" />
 
-        <androidx.preference.Preference
-            android:key="@string/preference_send_feedback"
-            android:title="@string/settings_send_app_feedback" />
-
         <androidx.preference.Preference android:key="@string/preference_login_out" />
 
     </androidx.preference.PreferenceCategory>

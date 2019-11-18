@@ -106,4 +106,9 @@ interface ApiServiceInterface {
     @POST("authenticate")
     fun createToken(@Field("email") email: String, @Field("password") password: String): Call<AccessToken>
 
+    // Ticket
+
+    @POST("tickets")
+    fun createTicket(@Body ticket: Ticket.JsonModel): Call<Ticket.JsonModel>
+
 }

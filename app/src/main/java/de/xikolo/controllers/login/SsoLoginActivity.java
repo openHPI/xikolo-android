@@ -1,6 +1,8 @@
 package de.xikolo.controllers.login;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -11,6 +13,8 @@ import com.yatatsu.autobundle.AutoBundleField;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.controllers.base.BaseActivity;
+import de.xikolo.controllers.dialogs.CreateTicketDialog;
+import de.xikolo.controllers.dialogs.CreateTicketDialogAutoBundle;
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle;
 
 public class SsoLoginActivity extends BaseActivity {
@@ -48,6 +52,24 @@ public class SsoLoginActivity extends BaseActivity {
                     finish();
                 }
             });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.helpdesk, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_helpdesk:
+                CreateTicketDialog dialog = CreateTicketDialogAutoBundle.builder().build();
+                dialog.show(getSupportFragmentManager(), CreateTicketDialog.TAG);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

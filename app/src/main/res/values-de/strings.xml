@@ -39,6 +39,7 @@
     <string name="action_search">Suche</string>
     <string name="action_share">Kurs teilen</string>
     <string name="action_course_dates">Termine</string>
+    <string name="action_helpdesk">Hilfe</string>
 
     <!-- -->
     <string name="tab_learnings">Lernmaterial</string>
@@ -191,7 +192,7 @@
     <string name="course_date_type_course_start">Kursstart</string>
     <string name="course_date_type_section_start">Sektionsstart</string>
     <string name="course_date_type_submission_publishing">Aufgabe</string>
-    <string name="course_date_type_submission_deadline">Abgabefrist</string> <!-- ToDo -->
+    <string name="course_date_type_submission_deadline">Abgabefrist</string>
     <string name="time_left">%1$s verbleiben</string>
     <string name="time_left_format">%dt %dh %dm</string>
 
@@ -295,7 +296,25 @@
     <string name="settings_privacy">Hinweise zum Datenschutz</string>
     <string name="settings_terms_of_use">Nutzungsbedingungen</string>
 
-    <string name="settings_send_app_feedback">Feedback zur App senden</string>
+    <!-- -->
+    <string name="helpdesk_topic_technical_question">Technische Frage</string>
+    <string name="hint_issue">Anliegen</string>
+    <string name="helpdesk_info_text_logged_in">Bitte beschreiben Sie Ihr Anliegen. Informationen über Ihr Mobilgerät und Ihre E-Mail-Adresse werden automatisch mit Ihrer Anfrage übermittelt.</string>
+    <string name="helpdesk_info_text_logged_out">Bitte beschreiben Sie Ihr Anliegen. Informationen über Ihr Mobilgerät und Ihre E-Mail-Adresse werden mit Ihrer Anfrage übermittelt.</string>
+    <string name="hint_title">Titel</string>
+    <string name="hint_topic">Thema</string>
+    <string name="helpdesk_dialog_header">Hilfe</string>
+    <string name="helpdesk_topic_dialog_header">Bitte wählen Sie Ihr Thema</string>
+    <string name="helpdesk_topic_list_general">Allgemeine Frage</string>
+    <string name="helpdesk_topic_list_reactivation">Kurs reaktivieren</string>
+    <string name="helpdesk_topic_list_course">Kursspezifische Frage</string>
+    <string name="dialog_send">Senden</string>
+    <string name="helpdesk_default_topic">Bitte wählen Sie ein Thema</string>
+    <string name="helpdesk_title_error">Bitte Titel eingeben</string>
+    <string name="helpdesk_message_error">Bitte Anliegen beschreiben</string>
+    <string name="helpdesk_email_error">Bitte gültige E-Mail Adresse eingeben</string>
+    <string name="dialog_discard_positive">Verwerfen</string>
+    <string name="dialog_discard_inputs">Möchten Sie alle Ihre Eingaben verwerfen?</string>
 
     <!-- -->
     <string name="lang_en">Englisch</string>

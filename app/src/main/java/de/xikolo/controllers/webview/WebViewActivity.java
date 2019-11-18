@@ -3,13 +3,16 @@ package de.xikolo.controllers.webview;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.yatatsu.autobundle.AutoBundleField;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.yatatsu.autobundle.AutoBundleField;
+
 import de.xikolo.R;
 import de.xikolo.controllers.base.BaseActivity;
+import de.xikolo.controllers.dialogs.CreateTicketDialog;
+import de.xikolo.controllers.dialogs.CreateTicketDialogAutoBundle;
 
 public class WebViewActivity extends BaseActivity {
 
@@ -48,6 +51,10 @@ public class WebViewActivity extends BaseActivity {
         switch (itemId) {
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.action_helpdesk:
+                CreateTicketDialog dialog = CreateTicketDialogAutoBundle.builder().build();
+                dialog.show(getSupportFragmentManager(), CreateTicketDialog.TAG);
                 return true;
         }
         return super.onOptionsItemSelected(item);

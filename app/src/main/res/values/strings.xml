@@ -39,6 +39,7 @@
     <string name="action_search">Search</string>
     <string name="action_share">Share course</string>
     <string name="action_course_dates">Course dates</string>
+    <string name="action_helpdesk">Help</string>
 
     <!-- -->
     <string name="tab_learnings">Learnings</string>
@@ -299,12 +300,7 @@
 
     <string name="settings_title_build">Build version</string>
     <string name="settings_summary_build">Version:</string>
-
-    <string name="settings_send_app_feedback">Send app feedback</string>
-    <string name="settings_send_app_feedback_mail_address" translatable="false">mobile-feedback@hpi.de</string>
-    <string name="settings_send_app_feedback_subject" translatable="false"> %s | App Feedback</string>
-    <string name="settings_send_app_feedback_message" translatable="false">\n\n\n\n------------------------------\nSystem Info\n------------------------------\nplatform: Android\nos version: %s\ndevice: %s\napp name: %s\napp version: %s\napp build: %s</string>
-
+    
     <string name="settings_title_storage">Choose storage</string>
     <string name="settings_title_storage_internal">Internal Storage</string>
     <string name="settings_title_storage_external">SD Card</string>
@@ -328,4 +324,23 @@
     <string name="empty_message_course_certificates">No certificates available for this course</string>
     <string name="empty_message_dates">No upcoming dates right now</string>
 
+    <string name="helpdesk_topic_technical_question">Technical question</string>
+    <string name="hint_issue">Issue</string>
+    <string name="helpdesk_info_text_logged_in">Please describe your issue. Information about your mobile device and your email address will be automatically submitted along with your issue report.</string>
+    <string name="helpdesk_info_text_logged_out">Please describe your issue. Information about your mobile device and your email address will be submitted along with your issue report.</string>
+
+    <string name="hint_title">Title</string>
+    <string name="hint_topic">Topic</string>
+    <string name="helpdesk_dialog_header">Help</string>
+    <string name="helpdesk_topic_dialog_header">Please select your topic</string>
+    <string name="helpdesk_topic_list_general">General question</string>
+    <string name="helpdesk_topic_list_reactivation">Course Reactivation Option</string>
+    <string name="helpdesk_topic_list_course">Course specific question</string>
+    <string name="dialog_send">Send</string>
+    <string name="helpdesk_default_topic">Please choose a topic</string>
+    <string name="helpdesk_title_error">Please enter a title</string>
+    <string name="helpdesk_message_error">Please describe your issue</string>
+    <string name="helpdesk_email_error">Please enter a valid email</string>
+    <string name="dialog_discard_positive">Discard</string>
+    <string name="dialog_discard_inputs">Do you want to discard of your input?</string>
 </resources>

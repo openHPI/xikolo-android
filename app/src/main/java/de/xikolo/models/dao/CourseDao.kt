@@ -17,6 +17,14 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
         defaultSort = "startDate" to Sort.DESCENDING
     }
 
+    fun all() = all("external" to false)
+
+    fun allSortedByTitle(): LiveData<List<Course>> =
+        query()
+            .sort("title", Sort.ASCENDING)
+            .findAllAsync()
+            .asLiveData()
+
     override fun find(id: String?): LiveData<Course> =
         query()
             .beginGroup()

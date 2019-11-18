@@ -35,4 +35,6 @@ object FeatureConfig {
         BuildConfig.X_FLAVOR === BuildFlavor.OPEN_SAP ||
         BuildConfig.X_FLAVOR === BuildFlavor.OPEN_HPI
 
+    val HELPDESK_COURSE_REACTIVATION = BuildConfig.X_FLAVOR === BuildFlavor.OPEN_SAP
+
 }

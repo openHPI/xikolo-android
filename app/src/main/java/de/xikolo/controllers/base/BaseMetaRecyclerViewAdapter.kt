@@ -47,7 +47,7 @@ abstract class BaseMetaRecyclerViewAdapter<M, S> : RecyclerView.Adapter<Recycler
         return contentList.size
     }
 
-    protected fun createHeaderViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    protected open fun createHeaderViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return HeaderViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_header, parent, false)
         )
