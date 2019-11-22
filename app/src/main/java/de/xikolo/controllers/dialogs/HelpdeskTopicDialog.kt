@@ -43,11 +43,11 @@ class HelpdeskTopicDialog : ViewModelDialogFragment<HelpdeskTopicViewModel>() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return androidx.appcompat.app.AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
             .setNegativeButton(R.string.dialog_negative) { _: DialogInterface, _: Int ->
-                overlappingClose()
+                closeDialog()
             }
             .setOnKeyListener { _, keyCode, keyEvent ->
                 if (keyEvent.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    overlappingClose()
+                    closeDialog()
                 }
                 false
             }
@@ -108,7 +108,7 @@ class HelpdeskTopicDialog : ViewModelDialogFragment<HelpdeskTopicViewModel>() {
         return calendar.get(Calendar.YEAR)
     }
 
-    private fun overlappingClose() {
+    private fun closeDialog() {
         if (fromTicketDialog) {
             dialog?.dismiss()
         } else {

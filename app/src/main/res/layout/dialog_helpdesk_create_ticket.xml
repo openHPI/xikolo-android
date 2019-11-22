@@ -4,7 +4,7 @@
     android:id="@+id/content_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/dialog_background"
+    android:background="@color/transparent"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
