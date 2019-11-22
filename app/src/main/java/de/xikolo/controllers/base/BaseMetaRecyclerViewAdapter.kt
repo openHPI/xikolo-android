@@ -9,6 +9,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.R
 import de.xikolo.utils.MetaSectionList
+import javax.annotation.Nullable
 
 abstract class BaseMetaRecyclerViewAdapter<M, S> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
