@@ -14,7 +14,6 @@ import de.xikolo.controllers.helper.DownloadViewHelper
 import de.xikolo.models.Course
 import de.xikolo.models.DownloadAsset
 import de.xikolo.models.dao.EnrollmentDao
-import java.util.*
 
 class CertificateListAdapter(private val fragment: CertificateListFragment, private val callback: OnCertificateCardClickListener) : RecyclerView.Adapter<CertificateListAdapter.CertificateViewHolder>() {
 
@@ -22,10 +21,11 @@ class CertificateListAdapter(private val fragment: CertificateListFragment, priv
         val TAG: String = CertificateListAdapter::class.java.simpleName
     }
 
-    private var courseList: List<Course> = ArrayList()
+    private val courseList: MutableList<Course> = mutableListOf()
 
     fun update(courseList: List<Course>) {
-        this.courseList = courseList
+        this.courseList.clear()
+        this.courseList.addAll(courseList)
         notifyDataSetChanged()
     }
 

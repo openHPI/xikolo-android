@@ -20,10 +20,11 @@ class ItemListAdapter(private val section: Section, private val listener: OnItem
         val TAG: String = ItemListAdapter::class.java.simpleName
     }
 
-    private var items: List<Item> = arrayListOf()
+    private val items: MutableList<Item> = mutableListOf()
 
     fun updateItems(items: List<Item>) {
-        this.items = items
+        this.items.clear()
+        this.items.addAll(items)
         this.notifyDataSetChanged()
     }
 

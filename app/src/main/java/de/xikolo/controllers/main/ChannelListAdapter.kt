@@ -23,19 +23,23 @@ class ChannelListAdapter(private val callback: OnChannelCardClickListener) : Rec
         const val PREVIEW_COURSES_COUNT = 7
     }
 
-    private var channelList: List<Channel> = listOf()
+    private var channelList: MutableList<Channel> = mutableListOf()
 
-    private var courseLists: List<List<Course>> = listOf(listOf())
+    private val courseLists: MutableList<List<Course>> = mutableListOf(listOf())
 
     fun update(channelList: List<Channel>, courseLists: List<List<Course>>) {
-        this.channelList = channelList
-        this.courseLists = courseLists
+        this.channelList.clear()
+        this.channelList.addAll(channelList)
+
+        this.courseLists.clear()
+        this.courseLists.addAll(courseLists)
+
         this.notifyDataSetChanged()
     }
 
     fun clear() {
-        channelList = listOf()
-        courseLists = listOf(listOf())
+        channelList.clear()
+        courseLists.clear()
         this.notifyDataSetChanged()
     }
 
