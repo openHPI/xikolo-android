@@ -5,8 +5,11 @@ class MetaSectionList<H, M, S : List<*>>(private var metaItem: M? = null, privat
     private val headers: MutableList<H?> = mutableListOf()
     private val sections: MutableList<S> = mutableListOf()
 
-    private val hasMetaItem = metaItem != null
-    private val hasMetaHeader = metaHeader != null
+    private val hasMetaItem: Boolean
+        get() = metaItem != null
+
+    private val hasMetaHeader: Boolean
+        get() = metaHeader != null
 
     private val metaOffset
         get() = (if (hasMetaItem) 1 else 0) + if (hasMetaHeader) 1 else 0
