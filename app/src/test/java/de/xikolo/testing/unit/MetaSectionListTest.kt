@@ -56,11 +56,11 @@ class MetaSectionListTest {
 
         list.clear()
 
-        assertTrue(list.size == 1)
+        assertTrue(list.size == 0)
 
         list.add(null, listOf("item"))
 
-        assertTrue(list.size == 3)
+        assertTrue(list.size == 2)
     }
 
     @Test
@@ -85,11 +85,11 @@ class MetaSectionListTest {
 
         list.clear()
 
-        assertTrue(list.size == 2)
+        assertTrue(list.size == 0)
 
         list.add(null, listOf("item"))
 
-        assertTrue(list.size == 4)
+        assertTrue(list.size == 2)
     }
 
     @Test
