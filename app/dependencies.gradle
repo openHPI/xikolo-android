@@ -28,7 +28,7 @@ dependencies {
 
     // json
     implementation "com.google.code.gson:gson:2.8.6"
-    implementation "com.squareup.moshi:moshi:1.9.1"
+    implementation "com.squareup.moshi:moshi:1.9.2"
 
     // json:api
     def moshijsonapiVersion = "3.5.0"
@@ -52,7 +52,7 @@ dependencies {
     kapt           "com.github.yatatsu:autobundle-processor:${autobundleVersion}"
 
     // video
-    implementation "com.google.android.exoplayer:exoplayer:2.10.7"
+    implementation "com.google.android.exoplayer:exoplayer:2.10.8"
 
     // play services
     implementation "com.google.android.gms:play-services-cast-framework:17.1.0"
@@ -68,7 +68,7 @@ dependencies {
     // androidx
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.mediarouter:mediarouter:1.1.0'
     implementation 'androidx.preference:preference:1.1.0'
     implementation 'androidx.browser:browser:1.0.0'
