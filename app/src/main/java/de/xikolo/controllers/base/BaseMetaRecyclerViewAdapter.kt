@@ -20,10 +20,10 @@ abstract class BaseMetaRecyclerViewAdapter<M, S> : RecyclerView.Adapter<Recycler
         const val ITEM_VIEW_TYPE_ITEM = 2
     }
 
-    protected var contentList: MetaSectionList<String, M, List<S>> = MetaSectionList()
+    protected val contentList: MetaSectionList<String, M, List<S>> = MetaSectionList()
 
     fun update(contentList: MetaSectionList<String, M, List<S>>) {
-        this.contentList = contentList
+        this.contentList.replace(contentList)
         notifyDataSetChanged()
     }
 

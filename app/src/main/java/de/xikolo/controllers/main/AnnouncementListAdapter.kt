@@ -19,10 +19,11 @@ class AnnouncementListAdapter(private val announcementClickListener: (String) ->
         val TAG: String = AnnouncementListAdapter::class.java.simpleName
     }
 
-    private var announcementList: List<Announcement> = listOf()
+    private val announcementList: MutableList<Announcement> = mutableListOf()
 
     fun update(announcementList: List<Announcement>) {
-        this.announcementList = announcementList
+        this.announcementList.clear()
+        this.announcementList.addAll(announcementList)
         notifyDataSetChanged()
     }
 

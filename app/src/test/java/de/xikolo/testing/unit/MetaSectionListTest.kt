@@ -56,11 +56,11 @@ class MetaSectionListTest {
 
         list.clear()
 
-        assertTrue(list.size == 1)
+        assertTrue(list.size == 0)
 
         list.add(null, listOf("item"))
 
-        assertTrue(list.size == 3)
+        assertTrue(list.size == 2)
     }
 
     @Test
@@ -85,10 +85,24 @@ class MetaSectionListTest {
 
         list.clear()
 
-        assertTrue(list.size == 2)
+        assertTrue(list.size == 0)
 
         list.add(null, listOf("item"))
 
-        assertTrue(list.size == 4)
+        assertTrue(list.size == 2)
+    }
+
+    @Test
+    fun testReplace() {
+        list = MetaSectionList("meta item", "meta header")
+        list.add("header", listOf("item1", "item2", "item3"))
+
+        val anotherList = MetaSectionList<String, String, List<String>>("another meta item", "another meta header")
+
+        list.replace(anotherList)
+
+        assertTrue(list.get(0) == "another meta header")
+        assertTrue(list.get(1) == "another meta item")
+        assertTrue(list.size == 2)
     }
 }

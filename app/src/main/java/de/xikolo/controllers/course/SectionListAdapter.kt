@@ -32,10 +32,11 @@ class SectionListAdapter(private val activity: FragmentActivity,
         val TAG: String = SectionListAdapter::class.java.simpleName
     }
 
-    private var sections: List<Section> = arrayListOf()
+    private val sections: MutableList<Section> = mutableListOf()
 
     fun updateSections(sections: List<Section>) {
-        this.sections = sections
+        this.sections.clear()
+        this.sections.addAll(sections)
         this.notifyDataSetChanged()
     }
 

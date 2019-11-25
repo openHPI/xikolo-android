@@ -1,12 +1,15 @@
 package de.xikolo.utils
 
-class MetaSectionList<H, out M, S : List<*>>(private var metaItem: M? = null, private var metaHeader: H? = null) {
+class MetaSectionList<H, M, S : List<*>>(private var metaItem: M? = null, private var metaHeader: H? = null) {
 
     private val headers: MutableList<H?> = mutableListOf()
     private val sections: MutableList<S> = mutableListOf()
 
-    private val hasMetaItem = metaItem != null
-    private val hasMetaHeader = metaHeader != null
+    private val hasMetaItem: Boolean
+        get() = metaItem != null
+
+    private val hasMetaHeader: Boolean
+        get() = metaHeader != null
 
     private val metaOffset
         get() = (if (hasMetaItem) 1 else 0) + if (hasMetaHeader) 1 else 0
@@ -19,6 +22,15 @@ class MetaSectionList<H, out M, S : List<*>>(private var metaItem: M? = null, pr
         metaHeader = null
         headers.clear()
         sections.clear()
+    }
+
+    fun replace(list: MetaSectionList<H, M, S>) {
+        metaItem = list.metaItem
+        metaHeader = list.metaHeader
+        headers.clear()
+        headers.addAll(list.headers)
+        sections.clear()
+        sections.addAll(list.sections)
     }
 
     fun add(header: H?, section: S) {
