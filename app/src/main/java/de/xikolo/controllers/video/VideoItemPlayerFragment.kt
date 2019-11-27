@@ -3,18 +3,18 @@ package de.xikolo.controllers.video
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.managers.DownloadManager
-import de.xikolo.models.DownloadAsset
-import de.xikolo.models.Item
-import de.xikolo.models.Video
-import de.xikolo.models.VideoSubtitles
+import de.xikolo.models.*
 import de.xikolo.models.dao.ItemDao
 import de.xikolo.models.dao.VideoDao
 import de.xikolo.utils.LanalyticsUtil
 import io.realm.Realm
+import java.util.*
+import kotlin.math.max
 
-class VideoItemPlayerFragment(private var courseId: String, private var sectionId: String, private var itemId: String, videoId: String, autoPlay: Boolean? = true) : VideoStreamPlayerFragment(VideoDao.Unmanaged.find(videoId)!!.singleStream, autoPlay) {
+class VideoItemPlayerFragment : VideoStreamPlayerFragment() {
 
     companion object {
         val TAG: String = VideoItemPlayerFragment::class.java.simpleName
@@ -22,11 +22,32 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
         private const val VIDEO_POSITION_REWIND_TIME = 10000
     }
 
-    private var video: Video = VideoDao.Unmanaged.find(videoId)!!
-    private var item: Item = ItemDao.Unmanaged.find(itemId)!!
+    @AutoBundleField
+    lateinit var courseId: String
 
-    private var videoDownloadAssetHD: DownloadAsset.Course.Item.VideoHD = DownloadAsset.Course.Item.VideoHD(item, video)
-    private var videoDownloadAssetSD: DownloadAsset.Course.Item.VideoSD = DownloadAsset.Course.Item.VideoSD(item, video)
+    @AutoBundleField
+    lateinit var sectionId: String
+
+    @AutoBundleField
+    lateinit var itemId: String
+
+    @AutoBundleField
+    lateinit var videoId: String
+
+    override val videoStream: VideoStream
+        get() = video.singleStream
+
+    private val video: Video
+        get() = VideoDao.Unmanaged.find(videoId)!!
+
+    private val item: Item
+        get() = ItemDao.Unmanaged.find(itemId)!!
+
+    private val videoDownloadAssetHD: DownloadAsset.Course.Item.VideoHD
+        get() = DownloadAsset.Course.Item.VideoHD(item, video)
+
+    private val videoDownloadAssetSD: DownloadAsset.Course.Item.VideoSD
+        get() = DownloadAsset.Course.Item.VideoSD(item, video)
 
     private lateinit var downloadManager: DownloadManager
 
@@ -39,7 +60,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initialVideoPosition = Math.max(video.progress - VIDEO_POSITION_REWIND_TIME, 0)
+        initialVideoPosition = max(video.progress - VIDEO_POSITION_REWIND_TIME, 0)
     }
 
     override fun play(fromUser: Boolean) {
@@ -133,12 +154,10 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
     }
 
     override fun setVideoUri(currentQuality: VideoSettingsHelper.VideoMode): Boolean {
-        val videoAssetDownload: DownloadAsset.Course.Item?
-
-        when (currentQuality) {
-            VideoSettingsHelper.VideoMode.HD -> videoAssetDownload = videoDownloadAssetHD
-            VideoSettingsHelper.VideoMode.SD -> videoAssetDownload = videoDownloadAssetSD
-            else                             -> videoAssetDownload = null
+        val videoAssetDownload: DownloadAsset.Course.Item? = when (currentQuality) {
+            VideoSettingsHelper.VideoMode.HD -> videoDownloadAssetHD
+            VideoSettingsHelper.VideoMode.SD -> videoDownloadAssetSD
+            else                             -> null
         }
 
         return if (videoAssetDownload != null && videoDownloadPresent(videoAssetDownload)) {
@@ -174,7 +193,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
             courseId, sectionId,
             currentPosition,
             currentPlaybackSpeed.value,
-            newConfig!!.orientation,
+            newConfig.orientation,
             currentQualityString,
             sourceString)
     }
@@ -184,7 +203,7 @@ class VideoItemPlayerFragment(private var courseId: String, private var sectionI
     }
 
     private fun getQualityString(videoMode: VideoSettingsHelper.VideoMode): String {
-        return videoMode.name.toLowerCase()
+        return videoMode.name.toLowerCase(Locale.ENGLISH)
     }
 
 }

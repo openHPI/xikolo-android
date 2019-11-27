@@ -5,17 +5,24 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import butterknife.BindView
+import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.extensions.observe
 import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.section.VideoDescriptionViewModel
 
-class VideoDescriptionFragment(val itemId: String, val videoId: String) : ViewModelFragment<VideoDescriptionViewModel>() {
+class VideoDescriptionFragment : ViewModelFragment<VideoDescriptionViewModel>() {
 
     companion object {
         val TAG: String = VideoDescriptionFragment::class.java.simpleName
     }
+
+    @AutoBundleField
+    lateinit var itemId: String
+
+    @AutoBundleField
+    lateinit var videoId: String
 
     @BindView(R.id.textTitle)
     lateinit var videoTitleText: TextView
