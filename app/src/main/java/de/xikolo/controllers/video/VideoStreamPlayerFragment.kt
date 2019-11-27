@@ -260,9 +260,7 @@ open class VideoStreamPlayerFragment : BaseFragment() {
 
         playerView.onErrorListener = object : ExoPlayerVideoView.OnErrorListener {
             override fun onError(e: Exception?): Boolean {
-                saveCurrentPosition()
-                warningContainer.visibility = View.VISIBLE
-                warningText.text = getString(R.string.error_plain)
+                showError()
                 return true
             }
         }
@@ -359,10 +357,13 @@ open class VideoStreamPlayerFragment : BaseFragment() {
 
         retryButton.setOnClickListener {
             showProgress()
-            updateVideo()
-            seekTo(0, true)
-            playerView.start()
-            prepare()
+            if (updateVideo()) {
+                seekTo(0, true)
+                playerView.start()
+                prepare()
+            } else {
+                showError()
+            }
         }
 
         controllerInterface?.onCreateSettings()?.let {
@@ -390,11 +391,14 @@ open class VideoStreamPlayerFragment : BaseFragment() {
 
         showProgress()
         setupVideo()
-        updateVideo()
-        if (autoPlay) {
-            playerView.start()
+        if (updateVideo()) {
+            if (autoPlay) {
+                playerView.start()
+            }
+            prepare()
+        } else {
+            showError()
         }
-        prepare()
     }
 
     private fun setupVideo() {
@@ -536,8 +540,11 @@ open class VideoStreamPlayerFragment : BaseFragment() {
 
     protected open fun changeQuality(oldVideoMode: VideoSettingsHelper.VideoMode, newVideoMode: VideoSettingsHelper.VideoMode, fromUser: Boolean) {
         showProgress()
-        updateVideo()
-        prepare()
+        if (updateVideo()) {
+            prepare()
+        } else {
+            showError()
+        }
     }
 
     protected open fun changePlaybackSpeed(oldSpeed: VideoSettingsHelper.PlaybackSpeed, newSpeed: VideoSettingsHelper.PlaybackSpeed, fromUser: Boolean) {
@@ -546,6 +553,12 @@ open class VideoStreamPlayerFragment : BaseFragment() {
 
     protected open fun changeImmersiveMode(oldMode: Boolean, newMode: Boolean, fromUser: Boolean) {
         controllerInterface?.onImmersiveModeChanged(newMode)
+    }
+
+    private fun showError() {
+        saveCurrentPosition()
+        warningContainer.visibility = View.VISIBLE
+        warningText.text = getString(R.string.error_plain)
     }
 
     private fun startSeekBarUpdater() {
@@ -687,7 +700,7 @@ open class VideoStreamPlayerFragment : BaseFragment() {
         }
     }
 
-    private fun updateVideo() {
+    private fun updateVideo(): Boolean {
         warningContainer.visibility = View.GONE
 
         if (setVideoUri(videoSettingsHelper.currentQuality)) {
@@ -704,7 +717,9 @@ open class VideoStreamPlayerFragment : BaseFragment() {
                     playerView.setPreviewUri(Uri.parse(videoStream.hdUrl))
                 }
             }
+            return true
         }
+        return false
     }
 
     protected fun setLocalVideoUri(localUri: String) {
