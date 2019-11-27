@@ -12,7 +12,9 @@ val <T : Context> T.storages: Array<Storage>
     get() {
         val storageList = mutableListOf<Storage>()
         ContextCompat.getExternalFilesDirs(this, null).forEach {
-            storageList.add(Storage(it))
+            if (it != null) {
+                storageList.add(Storage(it))
+            }
         }
         return storageList.toTypedArray()
     }
