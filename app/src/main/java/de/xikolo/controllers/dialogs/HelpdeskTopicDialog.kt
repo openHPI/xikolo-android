@@ -16,7 +16,6 @@ import de.xikolo.controllers.dialogs.base.ViewModelDialogFragment
 import de.xikolo.models.Course
 import de.xikolo.models.TicketTopic
 import de.xikolo.viewmodels.helpdesk.HelpdeskTopicViewModel
-import java.util.*
 
 class HelpdeskTopicDialog : ViewModelDialogFragment<HelpdeskTopicViewModel>() {
 
@@ -81,31 +80,24 @@ class HelpdeskTopicDialog : ViewModelDialogFragment<HelpdeskTopicViewModel>() {
     private fun createHelpdeskTopicList(courseList: List<Course>): HelpdeskTopicList {
         val helpdeskTopicList = HelpdeskTopicList()
         val generalList = mutableListOf<HelpdeskTopic>()
-        val technicalTopic = HelpdeskTopic(getString(R.string.helpdesk_topic_technical_question), TicketTopic.TECHNICAL, null)
+        val technicalTopic = HelpdeskTopic(TicketTopic.TECHNICAL, null)
 
         generalList.add(technicalTopic)
 
         if (FeatureConfig.HELPDESK_COURSE_REACTIVATION) {
-            val reactivationTopic = HelpdeskTopic(getString(R.string.helpdesk_topic_list_reactivation), TicketTopic.REACTIVATION, null)
+            val reactivationTopic = HelpdeskTopic(TicketTopic.REACTIVATION, null)
             generalList.add(reactivationTopic)
         }
 
         helpdeskTopicList.add(getString(R.string.helpdesk_topic_list_general), generalList)
 
         val courseTopicList = courseList.map { course ->
-            val year = getCourseYear(course)
-            HelpdeskTopic("[$year] ${course.title}", TicketTopic.COURSE, course.id)
+            HelpdeskTopic(TicketTopic.COURSE, course.id)
         }
 
         helpdeskTopicList.add(getString(R.string.helpdesk_topic_list_course), courseTopicList)
 
         return helpdeskTopicList
-    }
-
-    private fun getCourseYear(course: Course): Int {
-        val calendar = Calendar.getInstance()
-        calendar.time = course.startDate
-        return calendar.get(Calendar.YEAR)
     }
 
     private fun closeDialog() {
@@ -118,9 +110,9 @@ class HelpdeskTopicDialog : ViewModelDialogFragment<HelpdeskTopicViewModel>() {
     }
 
     interface HelpdeskTopicListener {
-
         fun onTopicChosen(title: String, topic: TicketTopic, courseId: String?)
 
         fun closeTicketDialog()
     }
+
 }

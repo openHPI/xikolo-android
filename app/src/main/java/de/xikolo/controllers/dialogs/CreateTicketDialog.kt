@@ -19,6 +19,8 @@ import de.xikolo.controllers.dialogs.base.ViewModelDialogFragment
 import de.xikolo.managers.UserManager
 import de.xikolo.models.TicketTopic
 import de.xikolo.models.dao.CourseDao
+import de.xikolo.utils.extensions.isOnline
+import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.helpdesk.TicketViewModel
 
 class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskTopicDialog.HelpdeskTopicListener, ConfirmCancelDialog.ConfirmCancelListener {
@@ -56,6 +58,12 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
 
     override fun onDialogViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onDialogViewCreated(view, savedInstanceState)
+
+        if (!context.isOnline) {
+            showToast(R.string.toast_no_network)
+            dialog!!.cancel()
+            return
+        }
 
         networkStateHelper.enableSwipeRefresh(false)
 
@@ -124,18 +132,28 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
             getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
                 cancel(this)
             }
+            getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                if (context.isOnline) {
+                    viewModel.send(titleEditText.text.toString(), messageEditText.text.toString(), topic, emailEditText.text.toString(), courseId)
+                    (dialog as AlertDialog).dismiss()
+                } else {
+                    showToast(R.string.toast_no_network)
+                }
+            }
         }
         //needed for initial disabling of positive button
         setPositiveButton()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+
+
         return AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
             .setNegativeButton(R.string.dialog_negative) { _: DialogInterface, _: Int ->
 
             }
             .setPositiveButton(R.string.dialog_send) { _: DialogInterface, _: Int ->
-                viewModel.send(titleEditText.text.toString(), messageEditText.text.toString(), topic, emailEditText.text.toString(), courseId)
+
             }
             .setView(dialogView)
             .setTitle(R.string.helpdesk_dialog_header)

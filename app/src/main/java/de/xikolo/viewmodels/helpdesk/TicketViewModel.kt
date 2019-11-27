@@ -1,7 +1,6 @@
 package de.xikolo.viewmodels.helpdesk
 
 import de.xikolo.models.TicketTopic
-import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.CreateTicketJob
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.shared.CourseListDelegate

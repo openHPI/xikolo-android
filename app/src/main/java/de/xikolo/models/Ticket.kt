@@ -1,5 +1,7 @@
 package de.xikolo.models
 
+import de.xikolo.App
+import de.xikolo.R
 import moe.banana.jsonapi2.HasOne
 import moe.banana.jsonapi2.JsonApi
 import moe.banana.jsonapi2.Resource
@@ -23,5 +25,14 @@ enum class TicketTopic(val apiTitle: String) {
     TECHNICAL("technical"),
     COURSE("course"),
     REACTIVATION("reactivation"),
-    NONE("none")
+    NONE("none");
+
+    override fun toString(): String {
+        return when (this) {
+            TECHNICAL    -> App.instance.getString(R.string.helpdesk_topic_list_technical_question)
+            REACTIVATION -> App.instance.getString(R.string.helpdesk_topic_list_reactivation)
+            else         -> apiTitle
+        }
+    }
+
 }

@@ -324,7 +324,6 @@
     <string name="empty_message_course_certificates">No certificates available for this course</string>
     <string name="empty_message_dates">No upcoming dates right now</string>
 
-    <string name="helpdesk_topic_technical_question">Technical question</string>
     <string name="hint_issue">Issue</string>
     <string name="helpdesk_info_text_logged_in">Please describe your issue. Information about your mobile device and your email address will be automatically submitted along with your issue report.</string>
     <string name="helpdesk_info_text_logged_out">Please describe your issue. Information about your mobile device and your email address will be submitted along with your issue report.</string>
@@ -334,6 +333,7 @@
     <string name="helpdesk_dialog_header">Help</string>
     <string name="helpdesk_topic_dialog_header">Please select your topic</string>
     <string name="helpdesk_topic_list_general">General question</string>
+    <string name="helpdesk_topic_list_technical_question">Technical question</string>
     <string name="helpdesk_topic_list_reactivation">Course Reactivation Option</string>
     <string name="helpdesk_topic_list_course">Course specific question</string>
     <string name="dialog_send">Send</string>
