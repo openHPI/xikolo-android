@@ -48,7 +48,7 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
     override val layoutResource = R.layout.activity_video_dual
 
     override fun createPlayerFragment(): VideoStreamPlayerFragment {
-        return VideoItemPlayerFragment(courseId, sectionId, itemId, videoId)
+        return VideoItemPlayerFragmentAutoBundle.builder(courseId, sectionId, itemId, videoId).build()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
     }
 
     private fun updateDescriptionFragment() {
-        descriptionFragment = VideoDescriptionFragment(itemId, videoId)
+        descriptionFragment = VideoDescriptionFragmentAutoBundle.builder(itemId, videoId).build()
 
         val fragmentTag = descriptionFragment.hashCode().toString()
         val fragmentManager = supportFragmentManager
@@ -89,9 +89,7 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
                 "cast"
             )
 
-            VideoDao.Unmanaged.find(videoId)?.let {
-                it.cast(this, true)
-            }
+            VideoDao.Unmanaged.find(videoId)?.cast(this, true)
 
             finish()
         }

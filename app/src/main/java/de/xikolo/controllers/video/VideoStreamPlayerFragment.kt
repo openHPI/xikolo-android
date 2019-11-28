@@ -14,6 +14,7 @@ import butterknife.BindView
 import com.github.rubensousa.previewseekbar.PreviewSeekBar
 import com.github.rubensousa.previewseekbar.PreviewView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.config.FeatureConfig
@@ -30,8 +31,11 @@ import de.xikolo.views.CustomSizeVideoView
 import de.xikolo.views.ExoPlayerVideoView
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
-open class VideoStreamPlayerFragment(private var videoStream: VideoStream, private var autoPlay: Boolean? = true) : BaseFragment() {
+open class VideoStreamPlayerFragment : BaseFragment() {
 
     companion object {
         val TAG: String = VideoStreamPlayerFragment::class.java.simpleName
@@ -47,6 +51,15 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
         private const val VIDEO_STEPPING_DURATION = 10000
     }
+
+    @AutoBundleField
+    lateinit var stream: VideoStream
+
+    open val videoStream: VideoStream
+        get() = stream
+
+    @AutoBundleField(required = false)
+    var autoPlay: Boolean = true
 
     @BindView(R.id.playerView)
     lateinit var playerView: CustomSizeVideoView
@@ -113,7 +126,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
     private val seekBarPreviewHandler: Handler
 
     protected var initialVideoPosition: Int = 0
-    private var initialPlaybackState: Boolean = autoPlay ?: true
+    private var initialPlaybackState: Boolean = autoPlay
     private var isInitialPreparing = true
 
     private lateinit var controlsVisibilityHandler: ControlsVisibilityHandler
@@ -144,7 +157,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         get() = if (isOfflineVideo) "offline" else "online"
 
     val currentQualityString: String
-        get() = videoSettingsHelper.currentQuality.name.toLowerCase()
+        get() = videoSettingsHelper.currentQuality.name.toLowerCase(Locale.ENGLISH)
 
     var isShowingControls: Boolean = false
         private set
@@ -247,9 +260,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
         playerView.onErrorListener = object : ExoPlayerVideoView.OnErrorListener {
             override fun onError(e: Exception?): Boolean {
-                saveCurrentPosition()
-                warningContainer.visibility = View.VISIBLE
-                warningText.text = getString(R.string.error_plain)
+                showError()
                 return true
             }
         }
@@ -312,7 +323,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
             private var lastPosition: Long = -1
 
             override fun loadPreview(currentPosition: Long, max: Long) {
-                if (System.currentTimeMillis() - lastPreview > SEEKBAR_PREVIEW_INTERVAL && (lastPosition < 0 || Math.abs(currentPosition - lastPosition) > SEEKBAR_PREVIEW_POSITION_DIFFERENCE)) {
+                if (System.currentTimeMillis() - lastPreview > SEEKBAR_PREVIEW_INTERVAL && (lastPosition < 0 || abs(currentPosition - lastPosition) > SEEKBAR_PREVIEW_POSITION_DIFFERENCE)) {
                     seekBarPreviewHandler.removeCallbacksAndMessages(null)
                     seekBarPreviewHandler.postAtFrontOfQueue {
                         val frame = playerView.getFrameAt(currentPosition)
@@ -346,10 +357,13 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
         retryButton.setOnClickListener {
             showProgress()
-            updateVideo()
-            seekTo(0, true)
-            playerView.start()
-            prepare()
+            if (updateVideo()) {
+                seekTo(0, true)
+                playerView.start()
+                prepare()
+            } else {
+                showError()
+            }
         }
 
         controllerInterface?.onCreateSettings()?.let {
@@ -377,11 +391,14 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
         showProgress()
         setupVideo()
-        updateVideo()
-        if (autoPlay == true) {
-            playerView.start()
+        if (updateVideo()) {
+            if (autoPlay) {
+                playerView.start()
+            }
+            prepare()
+        } else {
+            showError()
         }
-        prepare()
     }
 
     private fun setupVideo() {
@@ -495,7 +512,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         }
 
         return when {
-            context.isOnline                                                 -> { // device has internet connection
+            context.isOnline                                                       -> { // device has internet connection
                 if (isHls) {
                     setHlsVideoUri(stream)
                 } else {
@@ -523,8 +540,11 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
     protected open fun changeQuality(oldVideoMode: VideoSettingsHelper.VideoMode, newVideoMode: VideoSettingsHelper.VideoMode, fromUser: Boolean) {
         showProgress()
-        updateVideo()
-        prepare()
+        if (updateVideo()) {
+            prepare()
+        } else {
+            showError()
+        }
     }
 
     protected open fun changePlaybackSpeed(oldSpeed: VideoSettingsHelper.PlaybackSpeed, newSpeed: VideoSettingsHelper.PlaybackSpeed, fromUser: Boolean) {
@@ -533,6 +553,12 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
     protected open fun changeImmersiveMode(oldMode: Boolean, newMode: Boolean, fromUser: Boolean) {
         controllerInterface?.onImmersiveModeChanged(newMode)
+    }
+
+    private fun showError() {
+        saveCurrentPosition()
+        warningContainer.visibility = View.VISIBLE
+        warningText.text = getString(R.string.error_plain)
     }
 
     private fun startSeekBarUpdater() {
@@ -562,7 +588,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
     private fun stepForward() {
         seekTo(
-            Math.min(
+            min(
                 currentPosition + VIDEO_STEPPING_DURATION,
                 duration
             ),
@@ -572,7 +598,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
 
     private fun stepBackward() {
         seekTo(
-            Math.max(
+            max(
                 currentPosition - VIDEO_STEPPING_DURATION,
                 0
             ),
@@ -674,7 +700,7 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
         }
     }
 
-    private fun updateVideo() {
+    private fun updateVideo(): Boolean {
         warningContainer.visibility = View.GONE
 
         if (setVideoUri(videoSettingsHelper.currentQuality)) {
@@ -691,7 +717,9 @@ open class VideoStreamPlayerFragment(private var videoStream: VideoStream, priva
                     playerView.setPreviewUri(Uri.parse(videoStream.hdUrl))
                 }
             }
+            return true
         }
+        return false
     }
 
     protected fun setLocalVideoUri(localUri: String) {
