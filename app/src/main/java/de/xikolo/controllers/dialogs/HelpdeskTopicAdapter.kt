@@ -9,11 +9,10 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.R
 import de.xikolo.controllers.base.BaseMetaRecyclerViewAdapter
-import de.xikolo.models.Course
 import de.xikolo.models.TicketTopic
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.utils.MetaSectionList
-import java.util.*
+import de.xikolo.utils.extensions.calendarYear
 
 typealias HelpdeskTopic = Pair<TicketTopic, String?>
 typealias HelpdeskTopicList = MetaSectionList<String, Any, List<HelpdeskTopic>>
@@ -39,7 +38,7 @@ class HelpdeskTopicAdapter(private val onTopicClickedListener: OnTopicClickedLis
     }
 
     interface OnTopicClickedListener {
-        fun onTopicClicked(title: String, topic: TicketTopic, courseId: String?)
+        fun onTopicClicked(title: String?, topic: TicketTopic, courseId: String?)
     }
 
     class CourseTitleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -71,23 +70,24 @@ class HelpdeskTopicAdapter(private val onTopicClickedListener: OnTopicClickedLis
     }
 
     private fun bindTopicViewHolder(holder: CourseTitleViewHolder, position: Int) {
-
         val topic = contentList.get(position) as HelpdeskTopic
+        val title: String?
+
         if (topic.first == TicketTopic.COURSE) {
             val course = CourseDao.Unmanaged.find(topic.second)
-            holder.topicTitle.text = course?.title
+            title = course?.title
             holder.topicSlug.text = course?.slug
-            holder.topicYear.text = getCourseYear(course).toString()
+            holder.topicYear.text = course?.startDate?.calendarYear.toString()
             holder.optionalViewGroup.visibility = View.VISIBLE
         } else {
-            holder.topicTitle.text = topic.first.toString()
+            title = topic.first.toString()
             holder.optionalViewGroup.visibility = View.GONE
         }
+        holder.topicTitle.text = title
 
         holder.layout.setOnClickListener {
-            onTopicClickedListener?.onTopicClicked(holder.topicTitle.text.toString(), topic.first, topic.second)
+            onTopicClickedListener?.onTopicClicked(title, topic.first, topic.second)
         }
-
     }
 
     override fun createHeaderViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -99,12 +99,6 @@ class HelpdeskTopicAdapter(private val onTopicClickedListener: OnTopicClickedLis
                 }
             }
         )
-    }
-
-    private fun getCourseYear(course: Course?): Int {
-        val calendar = Calendar.getInstance()
-        calendar.time = course!!.startDate
-        return calendar.get(Calendar.YEAR)
     }
 
 }

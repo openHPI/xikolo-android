@@ -61,7 +61,7 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
 
         if (!context.isOnline) {
             showToast(R.string.toast_no_network)
-            dialog!!.cancel()
+            dialog?.cancel()
             return
         }
 
@@ -128,14 +128,14 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
 
     override fun onResume() {
         super.onResume()
-        (dialog as AlertDialog).apply {
+        (dialog as? AlertDialog)?.apply {
             getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
                 cancel(this)
             }
             getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if (context.isOnline) {
                     viewModel.send(titleEditText.text.toString(), messageEditText.text.toString(), topic, emailEditText.text.toString(), courseId)
-                    (dialog as AlertDialog).dismiss()
+                    dialog?.dismiss()
                 } else {
                     showToast(R.string.toast_no_network)
                 }
@@ -146,14 +146,12 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-
-
         return AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
             .setNegativeButton(R.string.dialog_negative) { _: DialogInterface, _: Int ->
-
+                //see onResume
             }
             .setPositiveButton(R.string.dialog_send) { _: DialogInterface, _: Int ->
-
+                //see onResume
             }
             .setView(dialogView)
             .setTitle(R.string.helpdesk_dialog_header)
@@ -184,7 +182,7 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
         dialog.show(fragmentManager!!, HelpdeskTopicDialog.TAG)
     }
 
-    override fun onTopicChosen(title: String, topic: TicketTopic, courseId: String?) {
+    override fun onTopicChosen(title: String?, topic: TicketTopic, courseId: String?) {
         this.courseId = courseId
         this.topic = topic
         ticketTopicEditText.setText(title)

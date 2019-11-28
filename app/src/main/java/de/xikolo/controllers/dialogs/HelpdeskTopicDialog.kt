@@ -60,7 +60,7 @@ class HelpdeskTopicDialog : ViewModelDialogFragment<HelpdeskTopicViewModel>() {
         super.onDialogViewCreated(view, savedInstanceState)
 
         helpdeskTopicAdapter = HelpdeskTopicAdapter(object : HelpdeskTopicAdapter.OnTopicClickedListener {
-            override fun onTopicClicked(title: String, topic: TicketTopic, courseId: String?) {
+            override fun onTopicClicked(title: String?, topic: TicketTopic, courseId: String?) {
                 dialog?.dismiss()
                 listener?.onTopicChosen(title, topic, courseId)
             }
@@ -110,7 +110,7 @@ class HelpdeskTopicDialog : ViewModelDialogFragment<HelpdeskTopicViewModel>() {
     }
 
     interface HelpdeskTopicListener {
-        fun onTopicChosen(title: String, topic: TicketTopic, courseId: String?)
+        fun onTopicChosen(title: String?, topic: TicketTopic, courseId: String?)
 
         fun closeTicketDialog()
     }
