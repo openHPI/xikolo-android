@@ -148,7 +148,7 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
                 true
             }
             R.id.action_helpdesk -> {
-                val dialog = CreateTicketDialogAutoBundle.builder().build()
+                val dialog = CreateTicketDialogAutoBundle.builder().courseId(courseId).build()
                 dialog.show(supportFragmentManager, CreateTicketDialog.TAG)
                 true
             }
