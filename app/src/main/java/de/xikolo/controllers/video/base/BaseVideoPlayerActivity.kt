@@ -85,7 +85,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
         if (fragmentManager.findFragmentByTag(fragmentTag) == null) {
             val transaction = fragmentManager.beginTransaction()
             transaction.replace(R.id.videoPlayerFragment, playerFragment, fragmentTag)
-            transaction.commit()
+            transaction.commitNow()
         }
     }
 
@@ -219,7 +219,6 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
             registerReceiver(pipControlsBroadcastReceiver, IntentFilter(ACTION_SWITCH_PLAYBACK_STATE))
         } else {
             updateVideoView()
-            playerFragment.showControls()
 
             try {
                 unregisterReceiver(pipControlsBroadcastReceiver)
