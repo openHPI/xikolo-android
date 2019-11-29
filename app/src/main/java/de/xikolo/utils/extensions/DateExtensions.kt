@@ -6,9 +6,11 @@ import android.content.Context
 import android.util.Log
 import de.xikolo.R
 import de.xikolo.config.Config
+import de.xikolo.models.Course
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.Year
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -108,4 +110,11 @@ val <T : Date> T.sevenDaysAhead: Date
         c.time = this.midnight
         c.add(Calendar.DAY_OF_YEAR, 7)
         return c.time
+    }
+
+val <T : Date> T.calendarYear: Int
+    get() {
+        val c = Calendar.getInstance()
+        c.time = this
+        return c.get(Calendar.YEAR)
     }

@@ -9,10 +9,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewStub
 import android.widget.Button
-import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.app.NavUtils
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -25,10 +23,7 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.controllers.base.ViewModelActivity
-import de.xikolo.controllers.dialogs.CourseDateListDialogAutoBundle
-import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
-import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
-import de.xikolo.controllers.dialogs.UnenrollDialog
+import de.xikolo.controllers.dialogs.*
 import de.xikolo.controllers.helper.CourseArea
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
@@ -245,6 +240,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             inflater.inflate(R.menu.unenroll, menu)
         }
         inflater.inflate(R.menu.share, menu)
+        inflater.inflate(R.menu.helpdesk, menu)
 
         super.onCreateOptionsMenu(menu)
         return true
@@ -269,6 +265,11 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             R.id.course_dates    -> {
                 val dialog = CourseDateListDialogAutoBundle.builder(courseId!!).build()
                 dialog.show(supportFragmentManager, UnenrollDialog.TAG)
+                return true
+            }
+            R.id.action_helpdesk -> {
+                val dialog = CreateTicketDialogAutoBundle.builder().courseId(courseId).build()
+                dialog.show(supportFragmentManager, CreateTicketDialog.TAG)
                 return true
             }
         }

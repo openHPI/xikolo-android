@@ -3,6 +3,7 @@ package de.xikolo.controllers.main
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.annotation.IdRes
@@ -19,6 +20,8 @@ import de.xikolo.config.FeatureConfig
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.BaseFragment
 import de.xikolo.controllers.base.ViewModelActivity
+import de.xikolo.controllers.dialogs.CreateTicketDialog
+import de.xikolo.controllers.dialogs.CreateTicketDialogAutoBundle
 import de.xikolo.controllers.downloads.DownloadsActivity
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.controllers.login.LoginActivityAutoBundle
@@ -183,6 +186,10 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
 
                 LanalyticsUtil.trackVisitedAnnouncements(null)
             }
+            R.id.navigation_helpdesk     -> {
+                val dialog = CreateTicketDialogAutoBundle.builder().build()
+                dialog.show(fragmentManager, CreateTicketDialog.TAG)
+            }
         }
 
         when (item.itemId) {
@@ -283,4 +290,20 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.helpdesk, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_helpdesk -> {
+                val dialog = CreateTicketDialogAutoBundle.builder().build()
+                dialog.show(supportFragmentManager, CreateTicketDialog.TAG)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

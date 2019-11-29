@@ -3,7 +3,6 @@ package de.xikolo.controllers.settings
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
@@ -24,7 +23,6 @@ import de.xikolo.managers.PermissionManager
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Storage
 import de.xikolo.services.DownloadService
-import de.xikolo.utils.DeviceUtil
 import de.xikolo.utils.extensions.*
 import java.util.*
 
@@ -220,12 +218,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             true
         }
 
-        val sendFeedback = findPreference<Preference>(getString(R.string.preference_send_feedback))
-        sendFeedback?.setOnPreferenceClickListener { _ ->
-            startFeedbackIntent()
-            true
-        }
-
         loginOut = findPreference(getString(R.string.preference_login_out))
         if (UserManager.isAuthorized) {
             buildLogoutView(loginOut)
@@ -273,42 +265,4 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             .build()
         customTabsIntent.launchUrl(activity, Uri.parse(url))
     }
-
-    private fun startFeedbackIntent() {
-        val osVersion = Build.VERSION.RELEASE.toString()
-        val deviceName = DeviceUtil.deviceName
-        val brand = resources.getString(R.string.app_name)
-        val versionName = BuildConfig.VERSION_NAME
-        val buildId = BuildConfig.VERSION_CODE.toString()
-
-        val intent = Intent(Intent.ACTION_SENDTO)
-        intent.data = Uri.parse("mailto:")
-        intent.putExtra(
-            Intent.EXTRA_EMAIL,
-            arrayOf(resources.getString(R.string.settings_send_app_feedback_mail_address))
-        )
-        intent.putExtra(
-            Intent.EXTRA_SUBJECT,
-            String.format(resources.getString(R.string.settings_send_app_feedback_subject), brand)
-        )
-        intent.putExtra(
-            Intent.EXTRA_TEXT,
-            String.format(
-                resources.getString(R.string.settings_send_app_feedback_message),
-                osVersion,
-                deviceName,
-                brand,
-                versionName,
-                buildId
-            )
-        )
-
-        startActivity(
-            Intent.createChooser(
-                intent,
-                resources.getString(R.string.settings_send_app_feedback)
-            )
-        )
-    }
-
 }
