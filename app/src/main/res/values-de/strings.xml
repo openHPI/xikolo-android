@@ -205,6 +205,16 @@
     <string name="course_certificate_view">Ansehen</string>
     <string name="course_certificate_not_achieved">Noch nicht erreicht</string>
 
+    <string name="course_lti_graded">Dies ist eine bewertete Aufgabe</string> <!-- ToDo Translation -->
+    <string name="course_lti_ungraded">Dies ist eine unbewertete Aufgabe</string>
+    <string name="course_lti_points">%1$s Punkte</string>
+    <string name="course_lti_allowed_attempts">Erlaubte Versuche: %1$s</string>
+    <string name="course_lti_allowed_attempts_infinite">Beliebige Versuchsanzahl</string>
+    <string name="course_lti_launch">Bearbeitungstool starten</string>
+
+    <string name="course_peer_type_solo">Einzelaufgabe</string> <!-- Todo -->
+    <string name="course_peer_type_team">Teamaufgabe</string>
+
     <string name="document_lang">Sprache: %s</string>
 
     <!-- -->

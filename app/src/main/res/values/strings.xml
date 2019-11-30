@@ -209,6 +209,16 @@
     <string name="course_certificate_view">View</string>
     <string name="course_certificate_not_achieved">Not yet achieved</string>
 
+    <string name="course_lti_graded">This is a graded exercise</string>
+    <string name="course_lti_ungraded">This is an ungraded exercise</string>
+    <string name="course_lti_points">%1$s points</string>
+    <string name="course_lti_allowed_attempts">Allowed attempts: %1$s</string><!-- ToDo -->
+    <string name="course_lti_allowed_attempts_infinite">No restriction on number of attempts</string>
+    <string name="course_lti_launch">Launch exercise tool</string>
+
+    <string name="course_peer_type_solo">Solo assessment</string> <!-- Todo -->
+    <string name="course_peer_type_team">Team assessment</string>
+
     <string name="document_lang">Language: %s</string>
 
     <!-- -->

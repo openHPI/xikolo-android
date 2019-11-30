@@ -129,6 +129,20 @@ public class RealmSchemaMigration implements RealmMigration {
 
             oldVersion++;
         }
+
+        if (oldVersion == 9) {
+            schema.get("Item")
+                .addField("maxPoints", float.class);
+
+            schema.get("LtiExercise")
+                .addField("launchUrl", String.class);
+
+            schema.get("PeerAssessment")
+                .addField("instructions", String.class)
+                .addField("type", String.class);
+
+            oldVersion++;
+        }
     }
 
 }
