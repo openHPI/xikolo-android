@@ -39,7 +39,9 @@ class ChannelDetailsActivity : CollapsingToolbarActivity() {
 
             val tag = "content"
 
-            if (channel.imageUrl != null) {
+            if (channel.stageStream != null) {
+                lockCollapsingToolbar(channel.title)
+            } else if (channel.imageUrl != null) {
                 GlideApp.with(this).load(channel.imageUrl).into(imageView)
             } else {
                 lockCollapsingToolbar(channel.title)

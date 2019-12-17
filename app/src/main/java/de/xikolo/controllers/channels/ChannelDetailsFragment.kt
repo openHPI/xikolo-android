@@ -22,6 +22,7 @@ import de.xikolo.extensions.observeOnce
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
+import de.xikolo.models.VideoStream
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkStateLiveData
@@ -132,16 +133,23 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
 
     private fun updateView(channel: Channel) {
         if (activity is ChannelDetailsActivity) {
-            layoutHeader.visibility = View.GONE
+
+            if (channel.stageStream != null) {
+                layoutHeader.visibility = View.GONE
+            } else {
+                layoutHeader.visibility = View.GONE
+            }
+
         } else {
             GlideApp.with(this).load(channel.imageUrl).into(imageChannel)
             textTitle.text = channel.title
         }
 
         contentListAdapter.setThemeColor(channel.colorOrDefault)
+        showContent()
     }
 
-    private fun showContentList(contents: MetaSectionList<String, String, List<Course>>) {
+    private fun showContentList(contents: MetaSectionList<String, Pair<String, VideoStream?>, List<Course>>) {
         contentListAdapter.update(contents)
 
         if (scrollToCoursePosition >= 0) {
@@ -216,7 +224,7 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
         startActivity(intent)
     }
 
-    private fun enterExternalCourse(course: Course){
+    private fun enterExternalCourse(course: Course) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(course.externalUrl))
         startActivity(intent)
     }
