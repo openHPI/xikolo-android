@@ -205,15 +205,16 @@
     <string name="course_certificate_view">Ansehen</string>
     <string name="course_certificate_not_achieved">Noch nicht erreicht</string>
 
-    <string name="course_lti_graded">Dies ist eine bewertete Aufgabe</string> <!-- ToDo Translation -->
+    <string name="course_lti_graded">Dies ist eine bewertete Aufgabe</string>
     <string name="course_lti_ungraded">Dies ist eine unbewertete Aufgabe</string>
+    <string name="course_lti_bonus">Dies ist eine Bonusaufgabe</string>
     <string name="course_lti_points">%1$s Punkte</string>
     <string name="course_lti_allowed_attempts">Erlaubte Versuche: %1$s</string>
     <string name="course_lti_allowed_attempts_infinite">Beliebige Versuchsanzahl</string>
     <string name="course_lti_launch">Bearbeitungstool starten</string>
 
-    <string name="course_peer_type_solo">Einzelaufgabe</string> <!-- Todo -->
-    <string name="course_peer_type_team">Teamaufgabe</string>
+    <string name="course_peer_type_solo">Peer Assessment</string>
+    <string name="course_peer_type_team">Team peer assessment</string>
 
     <string name="document_lang">Sprache: %s</string>
 
@@ -230,7 +231,8 @@
     <string name="notification_please_login_summary">Bitte melden Sie sich an, um auf diesen Inhalt zuzugreifen.</string>
     <string name="notification_url_invalid">URL fehlerhaft</string>
     <string name="notification_course_locked">Dieser Kurs ist vorerst gesperrt</string>
-
+    <string name="notification_submission_deadline_surpassed">Die Abgabefrist ist bereits abgelaufen</string>
+    <string name="notification_submission_deadline_surpassed_summary">Sie können keine neuen Lösungen einreichen.</string>
     <string name="notification_storage_locked">Bitte warten Sie bis der aktuelle Download abgeschlossen ist und versuchen Sie es erneut.</string>
 
     <string name="video_notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>

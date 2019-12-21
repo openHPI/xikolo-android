@@ -39,6 +39,8 @@
     <string name="icon_show_fitting" translatable="false">&#xe659;</string>
     <string name="icon_graded" translatable="false">&#xe61c;</string>
     <string name="icon_points" translatable="false">&#xe672;</string>
+    <string name="icon_solo" translatable="false">&#xe624;</string>
+    <string name="icon_team" translatable="false">&#xe622;</string>
 
     <!-- materialdesign.ttf from https://materialdesignicons.com/ -->
     <string name="icon_step_forward" translatable="false">&#xf467;</string>

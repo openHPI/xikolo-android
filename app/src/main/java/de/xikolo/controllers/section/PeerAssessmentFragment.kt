@@ -10,6 +10,7 @@ import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.extensions.observe
 import de.xikolo.models.Item
 import de.xikolo.models.PeerAssessment
+import de.xikolo.utils.extensions.isPast
 import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.section.PeerAssessmentViewModel
 
@@ -43,6 +44,9 @@ class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
     @BindView(R.id.type)
     lateinit var typeText: TextView
 
+    @BindView(R.id.typeIcon)
+    lateinit var typeIcon: TextView
+
     override val layoutResource = R.layout.fragment_peer_assessment
 
     private var item: Item? = null
@@ -70,28 +74,39 @@ class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
             }
     }
 
-    //ToDo "not available, because not assigned to team"
     private fun updateView() {
         title.text = item?.title
+
         instructionsText.setMarkdownText(peerAssessment?.instructions)
+
         gradingText.text = getString(
-            when (item?.exerciseType) { //ToDo
+            when (item?.exerciseType) {
                 Item.EXERCISE_TYPE_MAIN     -> R.string.course_lti_graded
                 Item.EXERCISE_TYPE_SELFTEST -> R.string.course_lti_ungraded
+                Item.EXERCISE_TYPE_BONUS    -> R.string.course_lti_bonus
                 else                        -> R.string.course_lti_ungraded
             }
         )
-        pointsText.text = getString(R.string.course_lti_points).format(item?.maxPoints)
-        typeText.text = getString(
-            if (peerAssessment?.type == PeerAssessment.TYPE_SOLO) {
-                R.string.course_peer_type_solo
-            } else {
-                R.string.course_peer_type_team
-            }
-        )
+        if (item?.exerciseType == Item.EXERCISE_TYPE_SURVEY) {
+            gradingText.visibility = View.GONE
+        }
 
-        // ToDo what about weight, time effort, accessible, deadline? Is it important?
-        showContent()
+        pointsText.text = getString(R.string.course_lti_points).format(item?.maxPoints)
+
+        if (peerAssessment?.type == PeerAssessment.TYPE_SOLO) {
+            typeText.text = getString(R.string.course_peer_type_solo)
+            typeIcon.text = getString(R.string.icon_solo)
+        } else {
+            typeText.text = getString(R.string.course_peer_type_team)
+            typeIcon.text = getString(R.string.icon_team)
+        }
+
+        if (item?.deadline?.isPast == true) {
+            hideContent()
+            showMessage(R.string.notification_submission_deadline_surpassed, R.string.notification_submission_deadline_surpassed_summary)
+        } else {
+            showContent()
+        }
     }
 
 }

@@ -14,6 +14,7 @@ import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.extensions.observe
 import de.xikolo.models.Item
 import de.xikolo.models.LtiExercise
+import de.xikolo.utils.extensions.isPast
 import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.section.LtiExerciseViewModel
 
@@ -46,6 +47,9 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
 
     @BindView(R.id.attempts)
     lateinit var attemptsText: TextView
+
+    @BindView(R.id.attemptsIcon)
+    lateinit var attemptsIcon: TextView
 
     @BindView(R.id.launch_button)
     lateinit var launchButton: Button
@@ -87,23 +91,38 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
 
     private fun updateView() {
         title.text = item?.title
+
         instructionsText.setMarkdownText(ltiExercise?.instructions)
+
         gradingText.text = getString(
-            when (item?.exerciseType) { //ToDo
+            when (item?.exerciseType) {
                 Item.EXERCISE_TYPE_MAIN     -> R.string.course_lti_graded
                 Item.EXERCISE_TYPE_SELFTEST -> R.string.course_lti_ungraded
+                Item.EXERCISE_TYPE_BONUS    -> R.string.course_lti_bonus
                 else                        -> R.string.course_lti_ungraded
             }
         )
+        if (item?.exerciseType == Item.EXERCISE_TYPE_SURVEY) {
+            gradingText.visibility = View.GONE
+        }
+
         pointsText.text = getString(R.string.course_lti_points).format(item?.maxPoints)
-        attemptsText.text =
-            if (ltiExercise?.allowedAttempts == 0) {
-                getString(R.string.course_lti_allowed_attempts_infinite)
-            } else {
-                getString(R.string.course_lti_allowed_attempts).format(ltiExercise?.allowedAttempts)
-            }
-        // ToDo what about weight, time effort, accessible, deadline, time_effort? Is it important?
-        showContent()
+
+        if (ltiExercise?.allowedAttempts == 0) {
+            attemptsText.visibility = View.GONE
+            attemptsIcon.visibility = View.GONE
+        } else {
+            attemptsText.visibility = View.VISIBLE
+            attemptsIcon.visibility = View.VISIBLE
+            attemptsText.text = getString(R.string.course_lti_allowed_attempts).format(ltiExercise?.allowedAttempts)
+        }
+
+        if (item?.deadline?.isPast == true) {
+            hideContent()
+            showMessage(R.string.notification_submission_deadline_surpassed, R.string.notification_submission_deadline_surpassed_summary)
+        } else {
+            showContent()
+        }
     }
 
 }
