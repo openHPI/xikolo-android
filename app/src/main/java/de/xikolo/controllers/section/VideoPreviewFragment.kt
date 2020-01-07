@@ -117,7 +117,7 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
         downloadViewHelpers.clear()
 
         activity?.let { activity ->
-            if (video.streamToPlay.hdUrl != null) {
+            if (video.streamToPlay?.hdUrl != null) {
                 val dvh = DownloadViewHelper(
                     activity,
                     DownloadAsset.Course.Item.VideoHD(item, video),
@@ -128,7 +128,7 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
                 downloadViewHelpers.add(dvh)
             }
 
-            if (video.streamToPlay.sdUrl != null) {
+            if (video.streamToPlay?.sdUrl != null) {
                 val dvh = DownloadViewHelper(
                     activity,
                     DownloadAsset.Course.Item.VideoSD(item, video),
