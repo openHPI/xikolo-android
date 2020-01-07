@@ -101,7 +101,7 @@ class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
             typeIcon.text = getString(R.string.icon_team)
         }
 
-        if (item?.deadline?.isPast == true) {
+        if (item?.deadline.isPast) {
             hideContent()
             showMessage(R.string.notification_submission_deadline_surpassed, R.string.notification_submission_deadline_surpassed_summary)
         } else {
