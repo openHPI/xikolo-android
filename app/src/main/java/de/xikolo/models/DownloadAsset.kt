@@ -90,10 +90,10 @@ open class DownloadAsset(val url: String?, open val fileName: String, var storag
                 override val size = video.transcriptSize.toLong()
             }
 
-            class VideoSD(item: de.xikolo.models.Item, val video: Video) : Item(video.singleStream.sdUrl, "video_sd_${item.id}.mp4", item) {
+            class VideoSD(item: de.xikolo.models.Item, val video: Video) : Item(video.streamToPlay.sdUrl, "video_sd_${item.id}.mp4", item) {
                 override val title = "Video (SD): " + item.title
                 override val mimeType = "video/mp4"
-                override val size = video.singleStream.sdSize.toLong()
+                override val size = video.streamToPlay.sdSize.toLong()
 
                 override val secondaryAssets: MutableSet<DownloadAsset>
                     get() {
@@ -108,10 +108,10 @@ open class DownloadAsset(val url: String?, open val fileName: String, var storag
                 }
             }
 
-            class VideoHD(item: de.xikolo.models.Item, val video: Video) : Item(video.singleStream.hdUrl, "video_hd_${item.id}.mp4", item) {
+            class VideoHD(item: de.xikolo.models.Item, val video: Video) : Item(video.streamToPlay.hdUrl, "video_hd_${item.id}.mp4", item) {
                 override val title = "Video (HD): " + item.title
                 override val mimeType = "video/mp4"
-                override val size = video.singleStream.hdSize.toLong()
+                override val size = video.streamToPlay.hdSize.toLong()
 
                 override val secondaryAssets: MutableSet<DownloadAsset>
                     get() {
