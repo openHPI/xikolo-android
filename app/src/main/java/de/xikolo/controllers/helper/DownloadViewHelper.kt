@@ -95,8 +95,8 @@ class DownloadViewHelper(
             if (activity.isOnline) {
                 if (activity.connectivityType == ConnectivityType.CELLULAR && appPreferences.isDownloadNetworkLimitedOnMobile) {
                     val dialog = MobileDownloadDialog()
-                    dialog.listener = object : MobileDownloadDialog.Listener {
-                        override fun onDialogPositiveClick(dialog: DialogFragment) {
+                    dialog.listener = object : MobileDownloadDialog.MobileDownloadGrantedListener {
+                        override fun onGranted(dialog: DialogFragment) {
                             appPreferences.isDownloadNetworkLimitedOnMobile = false
                             startDownload()
                         }
