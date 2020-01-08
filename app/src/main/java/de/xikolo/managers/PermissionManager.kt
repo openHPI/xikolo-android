@@ -32,16 +32,20 @@ class PermissionManager(private val activity: FragmentActivity) {
             return 0
         }
 
-        fun startAppInfo(activity: Activity) {
+        fun startAppInfo(activity: Activity?) {
             val intent = Intent()
             intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-            val uri = Uri.fromParts("package", activity.packageName, null)
+            val uri = Uri.fromParts("package", activity?.packageName, null)
             intent.data = uri
-            activity.startActivity(intent)
+            activity?.startActivity(intent)
         }
 
         @TargetApi(26)
-        fun hasPipPermission(context: Context): Boolean {
+        fun hasPipPermission(context: Context?): Boolean {
+            if(context == null){
+                return false
+            }
+
             try {
                 val manager = ContextCompat.getSystemService(context, AppOpsManager::class.java)
                 if (manager != null) {

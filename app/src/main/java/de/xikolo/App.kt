@@ -56,7 +56,7 @@ class App : Application() {
     }
 
     val clientId: String by lazy {
-        ClientUtil.id(this)
+        ClientUtil.id!!
     }
 
     init {
