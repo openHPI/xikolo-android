@@ -158,10 +158,12 @@ class DownloadViewHelper(
             }
         }
 
-        buttonOpenDownload.setOnClickListener { _ ->
+        buttonOpenDownload.setOnClickListener {
             val file = downloadManager.getDownloadFile(downloadAsset)
             val target = Intent(Intent.ACTION_VIEW)
-            target.setDataAndType(FileProviderUtil.getUriForFile(file), downloadAsset.mimeType)
+            if (file != null) {
+                target.setDataAndType(FileProviderUtil.getUriForFile(file), downloadAsset.mimeType)
+            }
             target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
