@@ -72,22 +72,22 @@ class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: 
                         val thumbnailSize: Point = it.videoThumbnailSize
                         holder.imageVideoThumbnail.setDimensions(thumbnailSize.x, thumbnailSize.y)
                     }
+
+                    holder.playButton.setOnClickListener {
+                        fragment.activity?.let { activity ->
+                            activity.startActivity(
+                                VideoStreamPlayerActivityAutoBundle.builder(stageStream)
+                                    .parentIntent(activity.intent)
+                                    .overrideActualParent(true)
+                                    .build(activity)
+                            )
+                        }
+                    }
                 } else {
                     holder.videoPreview.visibility = View.GONE
                 }
 
                 holder.durationText.visibility = View.GONE
-
-                holder.playButton.setOnClickListener {
-                    fragment.activity?.let { activity ->
-                        activity.startActivity(
-                            VideoStreamPlayerActivityAutoBundle.builder(meta?.second as VideoStream)
-                                .parentIntent(activity.intent)
-                                .overrideActualParent(true)
-                                .build(activity)
-                        )
-                    }
-                }
             }
             is CourseViewHolder      -> {
                 val course = super.contentList.get(position) as Course
