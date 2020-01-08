@@ -230,7 +230,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
 
         if (course?.isEnrolled == true) {

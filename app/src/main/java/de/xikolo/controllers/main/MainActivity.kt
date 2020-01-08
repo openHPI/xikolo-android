@@ -290,7 +290,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.helpdesk, menu)
         return true

@@ -58,7 +58,7 @@ class AnnouncementActivity : CollapsingToolbarActivity() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.helpdesk, menu)
         return super.onCreateOptionsMenu(menu)
     }
