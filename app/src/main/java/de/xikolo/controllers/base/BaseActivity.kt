@@ -81,7 +81,7 @@ abstract class BaseActivity : AppCompatActivity(), CastStateListener {
         ButterKnife.bind(this, findViewById<View>(android.R.id.content))
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
 
         try {
@@ -100,7 +100,7 @@ abstract class BaseActivity : AppCompatActivity(), CastStateListener {
         return true
     }
 
-    override fun onNewIntent(intent: Intent) {
+    override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
         setIntent(intent)
@@ -233,7 +233,7 @@ abstract class BaseActivity : AppCompatActivity(), CastStateListener {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             App.instance.state.permission.of(requestCode).granted()
         } else {
@@ -246,7 +246,7 @@ abstract class BaseActivity : AppCompatActivity(), CastStateListener {
         invalidateOptionsMenu()
     }
 
-    private fun handleIntent(intent: Intent) {
+    private fun handleIntent(intent: Intent?) {
         NotificationUtil.deleteDownloadNotificationsFromIntent(intent)
     }
 

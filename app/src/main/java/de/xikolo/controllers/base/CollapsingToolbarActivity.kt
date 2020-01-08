@@ -47,8 +47,7 @@ abstract class CollapsingToolbarActivity : BaseActivity() {
 
         collapsingToolbar.isTitleEnabled = false
 
-        if (toolbar != null)
-            toolbar.title = title
+        toolbar?.title = title
 
         scrimTop.visibility = View.INVISIBLE
 
