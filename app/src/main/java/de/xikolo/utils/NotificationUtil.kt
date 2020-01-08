@@ -64,7 +64,7 @@ class NotificationUtil(base: Context) : ContextWrapper(base) {
         createChannels()
     }
 
-    fun notify(id: Int, notification: Notification) {
+    fun notify(id: Int, notification: Notification?) {
         getManager()?.notify(id, notification)
     }
 
