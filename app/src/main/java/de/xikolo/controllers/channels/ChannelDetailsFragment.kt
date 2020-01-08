@@ -146,11 +146,11 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
         showContent()
     }
 
-    private fun updateContentList(contents: MetaSectionList<String, Pair<String?, VideoStream?>, List<Course>>) {
+    private fun updateContentList(contents: MetaSectionList<String, Triple<String?, VideoStream?, String?>, List<Course>>) {
         contentListAdapter.update(contents)
     }
 
-    private fun updateContentListAndScroll(contents: MetaSectionList<String, Pair<String?, VideoStream?>, List<Course>>) {
+    private fun updateContentListAndScroll(contents: MetaSectionList<String, Triple<String?, VideoStream?, String?>, List<Course>>) {
         updateContentList(contents)
 
         if (scrollToCoursePosition >= 0) {

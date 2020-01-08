@@ -24,7 +24,7 @@ import de.xikolo.utils.extensions.videoThumbnailSize
 import de.xikolo.views.CustomSizeImageView
 import java.util.*
 
-class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: OnCourseButtonClickListener) : BaseCourseListAdapter<Pair<String?, VideoStream?>>(fragment, onCourseButtonClickListener) {
+class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: OnCourseButtonClickListener) : BaseCourseListAdapter<Triple<String?, VideoStream?, String?>>(fragment, onCourseButtonClickListener) {
 
     companion object {
         val TAG: String = ChannelCourseListAdapter::class.java.simpleName
@@ -48,9 +48,10 @@ class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: 
         when (holder) {
             is HeaderViewHolder      -> bindHeaderViewHolder(holder, position)
             is DescriptionViewHolder -> {
-                val meta = super.contentList.get(position) as Pair<*, *>?
+                val meta = super.contentList.get(position) as Triple<*, *, *>?
                 val description = meta?.first as String?
                 val stageStream = meta?.second as VideoStream?
+                val imageUrl = meta?.third as String?
 
                 if (description != null) {
                     holder.text.setMarkdownText(description)
@@ -61,9 +62,9 @@ class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: 
                 if (stageStream?.hdUrl != null || stageStream?.sdUrl != null) {
                     holder.videoPreview.visibility = View.VISIBLE
 
-                    if (stageStream.thumbnailUrl != null) {
+                    if (imageUrl != null) {
                         GlideApp.with(fragment)
-                            .load(stageStream.thumbnailUrl)
+                            .load(imageUrl)
                             .override(holder.imageVideoThumbnail.forcedWidth, holder.imageVideoThumbnail.forcedHeight)
                             .into(holder.imageVideoThumbnail)
                     }
