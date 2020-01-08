@@ -14,6 +14,7 @@ import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.extensions.observe
 import de.xikolo.models.Item
 import de.xikolo.models.LtiExercise
+import de.xikolo.utils.extensions.is7inchTablet
 import de.xikolo.utils.extensions.isPast
 import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.section.LtiExerciseViewModel
@@ -54,6 +55,9 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
     @BindView(R.id.launch_button)
     lateinit var launchButton: Button
 
+    @BindView(R.id.device_hint)
+    lateinit var deviceHint: TextView
+
     override val layoutResource = R.layout.fragment_lti_exercise
 
     private var item: Item? = null
@@ -78,6 +82,10 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
                 intent.data = url
                 startActivity(intent)
             }
+        }
+
+        if (context?.is7inchTablet == true) {
+            deviceHint.visibility = View.GONE
         }
 
         viewModel.item
