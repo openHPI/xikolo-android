@@ -212,6 +212,7 @@
     <string name="course_lti_allowed_attempts">Erlaubte Versuche: %1$s</string>
     <string name="course_lti_allowed_attempts_infinite">Beliebige Versuchsanzahl</string>
     <string name="course_lti_launch">Bearbeitungstool starten</string>
+    <string name="course_lti_device_hint">Hinweis: Bitte beachten Sie, dass ein Mobilgerät möglicherweise nicht die optimale Wahl für die Bearbeitung dieser Aufgabe ist.</string>
 
     <string name="course_peer_type_solo">Peer Assessment</string>
     <string name="course_peer_type_team">Team peer assessment</string>

@@ -216,6 +216,7 @@
     <string name="course_lti_allowed_attempts">Allowed attempts: %1$s</string>
     <string name="course_lti_allowed_attempts_infinite">No restriction on number of attempts</string>
     <string name="course_lti_launch">Launch exercise tool</string>
+    <string name="course_lti_device_hint">Please note that a mobile device might not be the optimal choice for completing this task.</string>
 
     <string name="course_peer_type_solo">Peer assessment</string>
     <string name="course_peer_type_team">Team peer assessment</string>
