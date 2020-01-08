@@ -24,7 +24,7 @@ import de.xikolo.utils.extensions.videoThumbnailSize
 import de.xikolo.views.CustomSizeImageView
 import java.util.*
 
-class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: OnCourseButtonClickListener) : BaseCourseListAdapter<Pair<String, VideoStream?>>(fragment, onCourseButtonClickListener) {
+class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: OnCourseButtonClickListener) : BaseCourseListAdapter<Pair<String?, VideoStream?>>(fragment, onCourseButtonClickListener) {
 
     companion object {
         val TAG: String = ChannelCourseListAdapter::class.java.simpleName
@@ -48,19 +48,35 @@ class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: 
         when (holder) {
             is HeaderViewHolder      -> bindHeaderViewHolder(holder, position)
             is DescriptionViewHolder -> {
-                val meta = super.contentList.get(position) as Pair<String, VideoStream?>?
-                val description = meta?.first
+                val meta = super.contentList.get(position) as Pair<*, *>?
+                val description = meta?.first as String?
+                val stageStream = meta?.second as VideoStream?
+
                 if (description != null) {
                     holder.text.setMarkdownText(description)
                 } else {
                     holder.text.visibility = View.GONE
                 }
 
-                if (meta?.second == null) {
-                    holder.videoPreview.visibility = View.GONE
+                if (stageStream?.hdUrl != null || stageStream?.sdUrl != null) {
+                    holder.videoPreview.visibility = View.VISIBLE
+
+                    if (stageStream.thumbnailUrl != null) {
+                        GlideApp.with(fragment)
+                            .load(stageStream.thumbnailUrl)
+                            .override(holder.imageVideoThumbnail.forcedWidth, holder.imageVideoThumbnail.forcedHeight)
+                            .into(holder.imageVideoThumbnail)
+                    }
+
+                    fragment.activity?.let {
+                        val thumbnailSize: Point = it.videoThumbnailSize
+                        holder.imageVideoThumbnail.setDimensions(thumbnailSize.x, thumbnailSize.y)
+                    }
                 } else {
-                    holder.durationText.visibility = View.GONE
+                    holder.videoPreview.visibility = View.GONE
                 }
+
+                holder.durationText.visibility = View.GONE
 
                 holder.playButton.setOnClickListener {
                     fragment.activity?.let { activity ->
@@ -72,19 +88,6 @@ class ChannelCourseListAdapter(fragment: Fragment, onCourseButtonClickListener: 
                         )
                     }
                 }
-
-                if (meta?.second != null && meta.second?.thumbnailUrl != null) {
-                    GlideApp.with(fragment)
-                        .load(meta.second?.thumbnailUrl)
-                        .override(holder.imageVideoThumbnail.forcedWidth, holder.imageVideoThumbnail.forcedHeight)
-                        .into(holder.imageVideoThumbnail)
-                }
-
-                fragment.activity?.let {
-                    val thumbnailSize: Point = it.videoThumbnailSize
-                    holder.imageVideoThumbnail.setDimensions(thumbnailSize.x, thumbnailSize.y)
-                }
-
             }
             is CourseViewHolder      -> {
                 val course = super.contentList.get(position) as Course

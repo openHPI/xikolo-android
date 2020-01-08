@@ -5,10 +5,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <!-- -6dp margin is workaround to remove parent RecyclerView padding -->
     <include
         layout="@layout/container_video_preview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-6dp"
+        android:layout_marginRight="-6dp" />
 
     <TextView
         android:id="@+id/text"

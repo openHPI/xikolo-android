@@ -112,19 +112,21 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
 
                 override val itemCount: Int
                     get() = contentListAdapter.itemCount
-
             }
         ))
 
         viewModel.channel
             .observe(viewLifecycleOwner) {
                 updateView(it)
+                updateContentList(
+                    viewModel.buildContentList(it)
+                )
             }
 
         viewModel.courses
             .observe(viewLifecycleOwner) {
                 viewModel.channel.value?.let {
-                    showContentList(
+                    updateContentListAndScroll(
                         viewModel.buildContentList(it)
                     )
                 }
@@ -133,24 +135,23 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
 
     private fun updateView(channel: Channel) {
         if (activity is ChannelDetailsActivity) {
-
-            if (channel.stageStream != null) {
-                layoutHeader.visibility = View.GONE
-            } else {
-                layoutHeader.visibility = View.GONE
-            }
-
+            layoutHeader.visibility = View.GONE
         } else {
             GlideApp.with(this).load(channel.imageUrl).into(imageChannel)
             textTitle.text = channel.title
+            layoutHeader.visibility = View.VISIBLE
         }
 
         contentListAdapter.setThemeColor(channel.colorOrDefault)
         showContent()
     }
 
-    private fun showContentList(contents: MetaSectionList<String, Pair<String, VideoStream?>, List<Course>>) {
+    private fun updateContentList(contents: MetaSectionList<String, Pair<String?, VideoStream?>, List<Course>>) {
         contentListAdapter.update(contents)
+    }
+
+    private fun updateContentListAndScroll(contents: MetaSectionList<String, Pair<String?, VideoStream?>, List<Course>>) {
+        updateContentList(contents)
 
         if (scrollToCoursePosition >= 0) {
             try {

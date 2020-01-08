@@ -30,8 +30,8 @@ class ChannelViewModel(private val channelId: String) : BaseViewModel() {
 
     val courses = courseListDelegate.courses
 
-    fun buildContentList(channel: Channel): MetaSectionList<String, Pair<String, VideoStream?>, List<Course>> {
-        val contentList = MetaSectionList<String, Pair<String, VideoStream?>, List<Course>>(Pair<String, VideoStream?>(channel.description, channel.stageStream))
+    fun buildContentList(channel: Channel): MetaSectionList<String, Pair<String?, VideoStream?>, List<Course>> {
+        val contentList = MetaSectionList<String, Pair<String?, VideoStream?>, List<Course>>(Pair<String?, VideoStream?>(channel.description, channel.stageStream))
         var subList: List<Course>
         if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
             subList = CourseDao.Unmanaged.allFutureForChannel(channelId)
