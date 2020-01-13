@@ -60,6 +60,13 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     init {
         currentSpeed = applicationPreferences.videoPlaybackSpeed
 
+        currentQuality = when {
+            videoInfoCallback.isAvailable(VideoMode.HD)   -> VideoMode.HD
+            videoInfoCallback.isAvailable((VideoMode.SD)) -> VideoMode.SD
+            videoInfoCallback.isAvailable(VideoMode.AUTO) -> VideoMode.AUTO
+            else                                          -> throw IllegalArgumentException("No video available")
+        }
+
         subtitles?.let {
             for (videoSubtitles in it) {
                 if (videoSubtitles.language == applicationPreferences.videoSubtitlesLanguage) {
@@ -127,7 +134,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     fun buildQualityView(): ViewGroup {
         val list = buildSettingsPanel(context.getString(R.string.video_settings_quality))
 
-        if (FeatureConfig.HLS_VIDEO) {
+        if (videoInfoCallback.isAvailable(VideoMode.AUTO)) {
             list.addView(
                 buildSettingsItem(
                     null,
@@ -142,32 +149,36 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 )
             )
         }
-        list.addView(
-            buildSettingsItem(
-                null,
-                VideoMode.HD.title +
-                    if (videoInfoCallback.isOfflineAvailable(VideoMode.HD)) " " + context.getString(R.string.video_settings_quality_offline) else "",
-                View.OnClickListener {
-                    val oldQuality = currentQuality
-                    currentQuality = VideoMode.HD
-                    changeListener.onQualityChanged(oldQuality, currentQuality)
-                },
-                currentQuality == VideoMode.HD
+        if (videoInfoCallback.isAvailable(VideoMode.HD)) {
+            list.addView(
+                buildSettingsItem(
+                    null,
+                    VideoMode.HD.title +
+                        if (videoInfoCallback.isOfflineAvailable(VideoMode.HD)) " " + context.getString(R.string.video_settings_quality_offline) else "",
+                    View.OnClickListener {
+                        val oldQuality = currentQuality
+                        currentQuality = VideoMode.HD
+                        changeListener.onQualityChanged(oldQuality, currentQuality)
+                    },
+                    currentQuality == VideoMode.HD
+                )
             )
-        )
-        list.addView(
-            buildSettingsItem(
-                null,
-                VideoMode.SD.title +
-                    if (videoInfoCallback.isOfflineAvailable(VideoMode.SD)) " " + context.getString(R.string.video_settings_quality_offline) else "",
-                View.OnClickListener {
-                    val oldQuality = currentQuality
-                    currentQuality = VideoMode.SD
-                    changeListener.onQualityChanged(oldQuality, currentQuality)
-                },
-                currentQuality == VideoMode.SD
+        }
+        if (videoInfoCallback.isAvailable(VideoMode.SD)) {
+            list.addView(
+                buildSettingsItem(
+                    null,
+                    VideoMode.SD.title +
+                        if (videoInfoCallback.isOfflineAvailable(VideoMode.SD)) " " + context.getString(R.string.video_settings_quality_offline) else "",
+                    View.OnClickListener {
+                        val oldQuality = currentQuality
+                        currentQuality = VideoMode.SD
+                        changeListener.onQualityChanged(oldQuality, currentQuality)
+                    },
+                    currentQuality == VideoMode.SD
+                )
             )
-        )
+        }
 
         return list.parent as ViewGroup
     }
@@ -331,6 +342,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
     }
 
     interface VideoInfoCallback {
+
+        fun isAvailable(videoMode: VideoMode): Boolean
 
         fun isOfflineAvailable(videoMode: VideoMode): Boolean
 
