@@ -24,6 +24,10 @@ public class Video extends RealmObject {
 
     public VideoStream singleStream;
 
+    public VideoStream lecturerStream;
+
+    public VideoStream slidesStream;
+
     public String slidesUrl;
 
     public int slidesSize;
@@ -43,6 +47,18 @@ public class Video extends RealmObject {
     // local field
     public int progress = 0;
 
+    public VideoStream getStreamToPlay() {
+        if (singleStream != null && (singleStream.hdUrl != null || singleStream.sdUrl != null)) {
+            return singleStream;
+        }
+
+        if (lecturerStream != null && (lecturerStream.hdUrl != null || lecturerStream.sdUrl != null)) {
+            return lecturerStream;
+        }
+
+        return slidesStream;
+    }
+
     @JsonApi(type = "videos")
     public static class JsonModel extends Resource implements RealmAdapter<Video> {
 
@@ -54,6 +70,12 @@ public class Video extends RealmObject {
 
         @Json(name = "single_stream")
         public VideoStream singleStream;
+
+        @Json(name = "lecturer_stream")
+        public VideoStream lecturerStream;
+
+        @Json(name = "slides_stream")
+        public VideoStream slidesStream;
 
         @Json(name = "slides_url")
         public String slidesUrl;
@@ -86,6 +108,8 @@ public class Video extends RealmObject {
             video.summary = summary;
             video.duration = duration;
             video.singleStream = singleStream;
+            video.lecturerStream = lecturerStream;
+            video.slidesStream = slidesStream;
             video.slidesUrl = slidesUrl;
             video.slidesSize = slidesSize;
             video.audioUrl = audioUrl;

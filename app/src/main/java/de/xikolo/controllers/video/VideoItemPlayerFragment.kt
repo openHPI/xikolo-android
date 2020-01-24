@@ -35,7 +35,7 @@ class VideoItemPlayerFragment : VideoStreamPlayerFragment() {
     lateinit var videoId: String
 
     override val videoStream: VideoStream
-        get() = video.singleStream
+        get() = video.streamToPlay
 
     private val video: Video
         get() = VideoDao.Unmanaged.find(videoId)!!
