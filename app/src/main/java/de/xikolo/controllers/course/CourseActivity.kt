@@ -82,7 +82,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         } ?: run {
             showDeepLinkErrorMessage()
             createChooserFromCurrentIntent()
-            finishActivity()
+            finish()
             CourseViewModel("")
         }
     }
@@ -118,7 +118,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                 } else {
                     showDeepLinkErrorMessage()
                     createChooserFromCurrentIntent()
-                    finishActivity()
+                    finish()
                 }
                 true
             }
@@ -216,7 +216,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                                     it.position - 1 // positions in the API are not zero-indexed
                                 ).build(this)
                             )
-                            finishActivity()
+                            finish()
                         } else {
                             showDeepLinkErrorMessage()
                             createChooserFromCurrentIntent()
@@ -299,6 +299,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         adapter?.getItem(viewPager.currentItem)?.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun setAreaState(state: CourseArea.State) {
@@ -335,10 +336,6 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         enrollButton?.isEnabled = false
         enrollButton?.isClickable = false
         enrollButton?.setText(R.string.btn_starts_soon)
-    }
-
-    private fun finishActivity() {
-        finish()
     }
 
     private fun restartActivity() {
@@ -413,6 +410,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                         hideProgressDialog()
                         showLoginRequiredToast()
                         openLogin()
+                        finish()
                         true
                     }
                     else                   -> false
@@ -435,7 +433,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
                     when (it.code) {
                         NetworkCode.SUCCESS    -> {
-                            finishActivity()
+                            finish()
                             hideProgressDialog()
                         }
                         NetworkCode.NO_NETWORK -> {
