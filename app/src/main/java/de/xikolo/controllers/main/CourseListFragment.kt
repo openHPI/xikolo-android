@@ -115,17 +115,19 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
     }
 
     private fun registerObservers() {
-        viewModel.courses
-            .observe(viewLifecycleOwner) {
-                courseList = viewModel.sectionedCourseList
-                showCourseList()
-            }
+        view?.also {
+            viewModel.courses
+                .observe(viewLifecycleOwner) {
+                    courseList = viewModel.sectionedCourseList
+                    showCourseList()
+                }
 
-        viewModel.dates
-            .observe(viewLifecycleOwner) {
-                courseList = viewModel.sectionedCourseList
-                showCourseList()
-            }
+            viewModel.dates
+                .observe(viewLifecycleOwner) {
+                    courseList = viewModel.sectionedCourseList
+                    showCourseList()
+                }
+        }
     }
 
     private fun unregisterObservers() {
