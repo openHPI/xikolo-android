@@ -30,6 +30,7 @@ import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.extensions.observeOnce
+import de.xikolo.extensions.observeUnsafeOnce
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Course
 import de.xikolo.models.dao.EnrollmentDao
@@ -110,7 +111,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
         handleItemDeepLink(intent)
         viewModel.course
-            .observeOnce(this) {
+            .observeUnsafeOnce(this) {
                 if (it.isValid) {
                     course = it
                     setupCourse(it)
@@ -206,7 +207,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         DeepLinkingUtil.getItemIdentifier(intent?.data?.path)?.let { itemId ->
             if (UserManager.isAuthorized) {
                 ItemDao(viewModel.realm).find(IdUtil.base62ToUUID(itemId))
-                    .observeOnce(this) {
+                    .observeUnsafeOnce(this) {
                         if (it.isValid) {
                             startActivity(
                                 CourseItemsActivityAutoBundle.builder(
