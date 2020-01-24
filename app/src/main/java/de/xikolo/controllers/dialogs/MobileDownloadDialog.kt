@@ -10,17 +10,18 @@ import de.xikolo.controllers.dialogs.base.BaseDialogFragment
 class MobileDownloadDialog : BaseDialogFragment() {
 
     companion object {
-        @JvmField val TAG: String = MobileDownloadDialog::class.java.simpleName
+
+        val TAG: String = MobileDownloadDialog::class.java.simpleName
     }
 
-    var listener: Listener? = null
+    var listener: MobileDownloadGrantedListener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
         builder.setMessage(R.string.dialog_mobile_download_message)
             .setTitle(R.string.dialog_mobile_download_title)
             .setPositiveButton(R.string.dialog_mobile_download_yes) { _, _ ->
-                listener?.onDialogPositiveClick(this)
+                listener?.onGranted(this)
             }
             .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog?.cancel() }
             .setCancelable(true)
@@ -31,8 +32,8 @@ class MobileDownloadDialog : BaseDialogFragment() {
         return dialog
     }
 
-    interface Listener {
-        fun onDialogPositiveClick(dialog: DialogFragment)
+    interface MobileDownloadGrantedListener {
+        fun onGranted(dialog: DialogFragment)
     }
 
 }

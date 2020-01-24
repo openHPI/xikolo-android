@@ -128,7 +128,7 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         if (section?.hasDownloadableContent() == true) {
             menuInflater.inflate(R.menu.download, menu)
         }
@@ -144,7 +144,7 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
                 true
             }
             R.id.action_download -> {
-                SectionDownloadHelper(this).initSectionDownloads(course, section)
+                SectionDownloadHelper(this).initSectionDownloads(course!!, section!!)
                 true
             }
             R.id.action_helpdesk -> {

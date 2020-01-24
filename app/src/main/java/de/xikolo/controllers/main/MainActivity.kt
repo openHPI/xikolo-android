@@ -56,8 +56,8 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         setContentView(R.layout.activity_main)
         setupActionBar()
 
-        actionBar.setDisplayHomeAsUpEnabled(true)
-        actionBar.setHomeButtonEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar?.setHomeButtonEnabled(true)
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
         drawerToggle = ActionBarDrawerToggle(
             this,
@@ -290,7 +290,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.helpdesk, menu)
         return true

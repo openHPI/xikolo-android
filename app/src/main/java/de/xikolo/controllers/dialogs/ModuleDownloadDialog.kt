@@ -14,7 +14,7 @@ class ModuleDownloadDialog : BaseDialogFragment() {
         @JvmField val TAG: String = ModuleDownloadDialog::class.java.simpleName
     }
 
-    var listener: Listener? = null
+    var listener: ItemSelectionListener? = null
 
     @AutoBundleField(required = false)
     var hdVideo: Boolean = false
@@ -44,7 +44,7 @@ class ModuleDownloadDialog : BaseDialogFragment() {
                 }
             }
             .setPositiveButton(R.string.download) { _, _ ->
-                listener?.onDialogPositiveClick(this, hdVideo, sdVideo, slides)
+                listener?.onSelected(this, hdVideo, sdVideo, slides)
             }
             .setNegativeButton(R.string.dialog_negative) { _, _ -> dialog?.cancel() }
             .setCancelable(true)
@@ -55,8 +55,8 @@ class ModuleDownloadDialog : BaseDialogFragment() {
         return dialog
     }
 
-    interface Listener {
-        fun onDialogPositiveClick(dialog: DialogFragment, hdVideo: Boolean, sdVideo: Boolean, slides: Boolean)
+    interface ItemSelectionListener {
+        fun onSelected(dialog: DialogFragment, hdVideo: Boolean, sdVideo: Boolean, slides: Boolean)
     }
 
 }

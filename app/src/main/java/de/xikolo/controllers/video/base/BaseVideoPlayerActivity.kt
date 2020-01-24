@@ -71,8 +71,8 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
         setupActionBar()
         enableOfflineModeToolbar(false)
         setColorScheme(R.color.transparent, R.color.black)
-        actionBar.title = ""
-        actionBar.subtitle = ""
+        actionBar?.title = ""
+        actionBar?.subtitle = ""
 
         updatePlayerFragment()
     }
@@ -98,24 +98,24 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
                 disableImmersiveMode()
             }
             if (!playerFragment.isShowingControls) {
-                actionBar.hide()
+                actionBar?.hide()
             }
         } else {
             disableImmersiveMode()
             showSystemBars()
-            actionBar.show()
+            actionBar?.show()
         }
     }
 
     override fun onControlsShown() {
-        actionBar.show()
+        actionBar?.show()
     }
 
     override fun onControlsHidden() {
         if (isInLandscape()) {
-            actionBar.hide()
+            actionBar?.hide()
         } else {
-            actionBar.show()
+            actionBar?.show()
         }
     }
 
@@ -199,7 +199,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
         if (isInPictureInPictureMode) {
             playerFragment.hideSettings()
             playerFragment.hideControls()
-            actionBar.hide()
+            actionBar?.hide()
             disableImmersiveMode()
 
             pipControlsBroadcastReceiver = object : BroadcastReceiver() {

@@ -110,13 +110,13 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
         }
 
         if (!playerFragment.isShowingControls) {
-            actionBar.hide()
+            actionBar?.hide()
         }
     }
 
     override fun onControlsHidden() {
         super.onControlsHidden()
-        actionBar.hide()
+        actionBar?.hide()
     }
 
 }

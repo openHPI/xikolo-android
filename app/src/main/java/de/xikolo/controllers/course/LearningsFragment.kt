@@ -80,8 +80,8 @@ class LearningsFragment : ViewModelFragment<LearningsViewModel>(), SectionListAd
     }
 
     override fun onSectionDownloadClicked(sectionId: String) {
-        val sectionDownloadHelper = SectionDownloadHelper(activity)
-        sectionDownloadHelper.initSectionDownloads(CourseDao.Unmanaged.find(courseId), SectionDao.Unmanaged.find(sectionId))
+        val sectionDownloadHelper = SectionDownloadHelper(activity!!)
+        sectionDownloadHelper.initSectionDownloads(CourseDao.Unmanaged.find(courseId)!!, SectionDao.Unmanaged.find(sectionId)!!)
     }
 
     override fun onItemClicked(sectionId: String, position: Int) {

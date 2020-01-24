@@ -14,7 +14,7 @@ import de.xikolo.R
 import de.xikolo.config.FeatureConfig
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialogAutoBundle
-import de.xikolo.controllers.helper.LoadingStateHelper
+import de.xikolo.controllers.helper.NetworkStateHelper
 import de.xikolo.extensions.observe
 import de.xikolo.managers.DownloadManager
 import de.xikolo.managers.PermissionManager
@@ -24,7 +24,7 @@ import de.xikolo.utils.extensions.*
 import java.io.File
 import java.util.*
 
-class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, DownloadsAdapter.OnDeleteButtonClickedListener {
+class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, DownloadsAdapter.OnDeleteButtonClickedListener, NetworkStateHelper.NetworkStateOwner {
 
     companion object {
         val TAG: String = DownloadsFragment::class.java.simpleName
@@ -36,7 +36,7 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
 
     private var permissionManager: PermissionManager? = null
 
-    private var notificationController: LoadingStateHelper? = null
+    override lateinit var networkStateHelper: NetworkStateHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +57,7 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
 
-        notificationController = LoadingStateHelper(activity, layout, this)
+        networkStateHelper = NetworkStateHelper(activity, layout, this)
 
         return layout
     }
@@ -78,14 +78,14 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
 
     override fun onRefresh() {
         fetchItems()
-        notificationController?.hideProgress()
+        networkStateHelper.hideAnyProgress()
     }
 
     private fun fetchItems() {
         activity?.let { activity ->
             adapter?.clear()
             if (permissionManager?.requestPermission(PermissionManager.WRITE_EXTERNAL_STORAGE) == 1) {
-                notificationController?.showContentView()
+                networkStateHelper.showContent()
 
                 // total items
 
@@ -216,12 +216,12 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
                     )
                 }
             } else {
-                notificationController?.setMessageTitle(R.string.dialog_title_permissions)
-                notificationController?.setMessageSummary(R.string.dialog_permissions)
-                notificationController?.setMessageOnClickListener {
+                networkStateHelper.setMessageTitle(R.string.dialog_title_permissions)
+                networkStateHelper.setMessageSummary(R.string.dialog_permissions)
+                networkStateHelper.setMessageOnClickListener(View.OnClickListener {
                     PermissionManager.startAppInfo(activity)
-                }
-                notificationController?.showMessage()
+                })
+                networkStateHelper.showMessage()
             }
         }
     }

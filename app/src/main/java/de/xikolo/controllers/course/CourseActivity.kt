@@ -231,7 +231,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
 
         if (course?.isEnrolled == true) {
@@ -461,11 +461,11 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         super.onConnectivityChange(isOnline)
 
         if (isOnline) {
-            toolbar.subtitle = ""
+            toolbar?.subtitle = ""
             tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.toolbar))
             setColorScheme(R.color.toolbar, R.color.statusbar)
         } else {
-            toolbar.subtitle = getString(R.string.offline_mode)
+            toolbar?.subtitle = getString(R.string.offline_mode)
             tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.toolbar_offline))
             setColorScheme(R.color.toolbar_offline, R.color.statusbar_offline)
         }
