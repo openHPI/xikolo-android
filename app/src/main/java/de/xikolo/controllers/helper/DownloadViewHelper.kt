@@ -160,19 +160,21 @@ class DownloadViewHelper(
 
         buttonOpenDownload.setOnClickListener {
             val file = downloadManager.getDownloadFile(downloadAsset)
-            val target = Intent(Intent.ACTION_VIEW)
             if (file != null) {
+                val target = Intent(Intent.ACTION_VIEW)
                 target.setDataAndType(FileProviderUtil.getUriForFile(file), downloadAsset.mimeType)
-            }
-            target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-            target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-            val intent = Intent.createChooser(target, null)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            try {
-                App.instance.startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                activity.showToast(R.string.toast_no_file_viewer_found)
+                val intent = Intent.createChooser(target, null)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                try {
+                    App.instance.startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    activity.showToast(R.string.toast_no_file_viewer_found)
+                }
+            } else {
+                activity.showToast(R.string.error_plain)
             }
         }
 

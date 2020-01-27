@@ -26,7 +26,6 @@ import de.xikolo.storages.NotificationStorage
 class NotificationUtil(base: Context) : ContextWrapper(base) {
 
     companion object {
-
         const val DOWNLOADS_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".downloads"
         const val DOWNLOAD_RUNNING_NOTIFICATION_ID = 1000
         const val DOWNLOAD_COMPLETED_SUMMARY_NOTIFICATION_ID = 1001

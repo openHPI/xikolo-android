@@ -9,7 +9,6 @@ import java.io.File
 class FileProviderUtil : FileProvider() {
 
     companion object {
-
         fun getUriForFile(file: File): Uri {
             return getUriForFile(App.instance, BuildConfig.APPLICATION_ID + ".fileprovider", file)
         }
