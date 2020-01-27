@@ -59,4 +59,23 @@
             android:title="@string/title_section_settings" />
     </group>
 
+
+
+    <item android:title="Links">
+    <menu>
+        <group>
+
+        <item
+            android:id="@+id/navigation_microlearning"
+            android:icon="@drawable/ic_nav_microlearning"
+            android:title="Microleaning" />
+        <item
+            android:id="@+id/navigation_podcasts"
+            android:icon="@drawable/ic_nav_podcasts"
+            android:title="Podcasts" />
+
+    </group>
+    </menu>
+    </item>
+
 </menu>
