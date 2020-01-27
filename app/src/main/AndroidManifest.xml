@@ -154,8 +154,7 @@
         <activity
             android:name=".controllers.section.CourseItemsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".controllers.course.CourseActivity"
-            android:configChanges="keyboardHidden|screenSize|orientation"><!-- workaround fix for disappearing fragments on rotation -->
+            android:parentActivityName=".controllers.course.CourseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controllers.course.CourseActivity" />
