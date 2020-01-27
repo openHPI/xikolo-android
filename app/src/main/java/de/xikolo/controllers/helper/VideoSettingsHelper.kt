@@ -62,7 +62,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
 
         currentQuality = when {
             videoInfoCallback.isAvailable(VideoMode.HD)   -> VideoMode.HD
-            videoInfoCallback.isAvailable((VideoMode.SD)) -> VideoMode.SD
+            videoInfoCallback.isAvailable(VideoMode.SD)   -> VideoMode.SD
             videoInfoCallback.isAvailable(VideoMode.AUTO) -> VideoMode.AUTO
             else                                          -> throw IllegalArgumentException("No video available")
         }
