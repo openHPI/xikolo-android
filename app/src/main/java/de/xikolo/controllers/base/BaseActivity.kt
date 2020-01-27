@@ -247,7 +247,9 @@ abstract class BaseActivity : AppCompatActivity(), CastStateListener {
     }
 
     private fun handleIntent(intent: Intent?) {
-        NotificationUtil.deleteDownloadNotificationsFromIntent(intent)
+        if (intent != null) {
+            NotificationUtil.deleteDownloadNotificationsFromIntent(intent)
+        }
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
