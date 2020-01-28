@@ -453,6 +453,10 @@ open class VideoStreamPlayerFragment : BaseFragment() {
                 }
             },
             object : VideoSettingsHelper.VideoInfoCallback {
+                override fun isAvailable(videoMode: VideoSettingsHelper.VideoMode): Boolean {
+                    return getVideoAvailability(videoMode)
+                }
+
                 override fun isOfflineAvailable(videoMode: VideoSettingsHelper.VideoMode): Boolean {
                     return getOfflineAvailability(videoMode)
                 }
@@ -467,6 +471,12 @@ open class VideoStreamPlayerFragment : BaseFragment() {
         controllerInterface?.onImmersiveModeChanged(videoSettingsHelper.isImmersiveModeEnabled)
     }
 
+    protected open fun getVideoAvailability(videoMode: VideoSettingsHelper.VideoMode): Boolean {
+        return (videoMode == VideoSettingsHelper.VideoMode.HD && videoStream.hdUrl != null)
+            || (videoMode == VideoSettingsHelper.VideoMode.SD && videoStream.sdUrl != null)
+            || (videoMode == VideoSettingsHelper.VideoMode.AUTO && FeatureConfig.HLS_VIDEO && videoStream.hlsUrl != null)
+    }
+
     protected open fun getSubtitleList(): List<VideoSubtitles>? {
         return null
     }
@@ -476,11 +486,21 @@ open class VideoStreamPlayerFragment : BaseFragment() {
     }
 
     protected open fun getVideoMode(): VideoSettingsHelper.VideoMode {
-        return when {
-            FeatureConfig.HLS_VIDEO && videoStream.hlsUrl != null        -> VideoSettingsHelper.VideoMode.AUTO
-            context.connectivityType == ConnectivityType.WIFI
-                || !applicationPreferences.isVideoQualityLimitedOnMobile -> VideoSettingsHelper.VideoMode.HD
-            else                                                         -> VideoSettingsHelper.VideoMode.SD
+        return if (getVideoAvailability(VideoSettingsHelper.VideoMode.AUTO)) {
+            VideoSettingsHelper.VideoMode.AUTO
+        } else if (context.connectivityType == ConnectivityType.WIFI
+            || !applicationPreferences.isVideoQualityLimitedOnMobile) {
+            if (getVideoAvailability(VideoSettingsHelper.VideoMode.HD)) {
+                VideoSettingsHelper.VideoMode.HD
+            } else {
+                VideoSettingsHelper.VideoMode.SD
+            }
+        } else {
+            if (getVideoAvailability(VideoSettingsHelper.VideoMode.SD)) {
+                VideoSettingsHelper.VideoMode.SD
+            } else {
+                VideoSettingsHelper.VideoMode.HD
+            }
         }
     }
 
