@@ -84,8 +84,6 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
 
                 updateViewPager(it.accessibleItems)
             }
-
-        updateViewPager(listOf())
     }
 
     private fun updateViewPager(itemList: List<Item>) {
