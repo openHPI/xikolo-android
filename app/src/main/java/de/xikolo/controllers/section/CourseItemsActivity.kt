@@ -114,6 +114,12 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
 
     private fun onItemSelected(position: Int) {
         index = position
+
+        Bundle().also { bundle ->
+            CourseItemsActivityAutoBundle.pack(this, bundle)
+            intent.replaceExtras(bundle)
+        }
+
         section?.accessibleItems?.get(index)?.let {
             Crashlytics.setString("item_id", it.id)
 
