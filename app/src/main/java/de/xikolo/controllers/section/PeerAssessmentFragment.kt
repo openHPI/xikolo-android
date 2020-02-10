@@ -1,17 +1,26 @@
 package de.xikolo.controllers.section
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
+import de.xikolo.App
 import de.xikolo.R
+import de.xikolo.config.Config
 import de.xikolo.controllers.base.ViewModelFragment
+import de.xikolo.controllers.dialogs.OpenExternalContentDialog
 import de.xikolo.extensions.observe
+import de.xikolo.managers.UserManager
 import de.xikolo.models.Item
 import de.xikolo.models.PeerAssessment
-import de.xikolo.utils.extensions.isPast
-import de.xikolo.utils.extensions.setMarkdownText
+import de.xikolo.storages.ApplicationPreferences
+import de.xikolo.utils.extensions.*
 import de.xikolo.viewmodels.section.PeerAssessmentViewModel
 
 class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
@@ -47,11 +56,16 @@ class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
     @BindView(R.id.typeIcon)
     lateinit var typeIcon: TextView
 
+    @BindView(R.id.launch_button)
+    lateinit var launchButton: Button
+
     override val layoutResource = R.layout.fragment_peer_assessment
 
     private var item: Item? = null
 
     private var peerAssessment: PeerAssessment? = null
+
+    private val appPreferences = ApplicationPreferences()
 
     override fun createViewModel(): PeerAssessmentViewModel {
         return PeerAssessmentViewModel(itemId)
@@ -65,6 +79,28 @@ class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        launchButton.setOnClickListener {
+            if (appPreferences.confirmOpenExternalContent) {
+                val dialog = OpenExternalContentDialog()
+                dialog.listener = object : OpenExternalContentDialog.ExternalContentDialogListener {
+                    override fun onOpen(dialog: DialogFragment) {
+                        openExternalContent()
+                    }
+
+                    override fun onOpenAlways(dialog: DialogFragment) {
+                        appPreferences.confirmOpenExternalContent = false
+                        openExternalContent()
+                    }
+                }
+                activity?.let {
+                    dialog.show(it.supportFragmentManager, OpenExternalContentDialog.TAG)
+                }
+            } else {
+                openExternalContent()
+            }
+
+        }
+
         viewModel.item
             .observe(viewLifecycleOwner) {
                 item = it
@@ -72,6 +108,25 @@ class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
 
                 updateView()
             }
+    }
+
+    private fun openExternalContent() {
+        peerAssessment?.let {
+            val url = "${Config.HOST_URL}peer_assessments/${it.id}"
+            val customTabsIntent = CustomTabsIntent.Builder()
+                .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_main))
+                .build()
+
+            val intent = customTabsIntent.intent.apply {
+                data = Uri.parse(url)
+                includeAuthToken(UserManager.token!!)
+            }
+            context?.let { context ->
+                startActivity(intent.createChooser(context, null, arrayOf(context.packageName)))
+            }
+        } ?: run {
+            showToast(R.string.error_plain)
+        }
     }
 
     private fun updateView() {

@@ -17,6 +17,11 @@
             android:key="@string/preference_storage"
             android:title="@string/settings_title_storage" />
 
+        <androidx.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/preference_confirm_open_external_content"
+            android:title="@string/settings_title_ask_open_external_content" />
+
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory android:title="@string/settings_category_data_usage">

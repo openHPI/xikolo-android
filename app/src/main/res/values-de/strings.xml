@@ -130,6 +130,11 @@
     <string name="dialog_date_info_title_course">Kursdauer</string>
     <string name="dialog_date_info_title_section">Startdatum</string>
 
+    <string name="dialog_external_content_title">Externer Inhalt</string>
+    <string name="dialog_external_content_message">Diese Aufgabe wird in einem externen Tool geöffnet, welches nicht Teil der openHPI App ist. Dieses ist möglicherweise nicht für Mobilgeräte optimiert, weshalb die Bearbeitung an einem Computer empfohlen wird.\n\nSoll es dennoch geöffnet werden?</string>
+    <string name="dialog_external_content_yes">Öffnen</string>
+    <string name="dialog_external_content_yes_always">Öffnen und nicht erneut nachfragen</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -212,10 +217,10 @@
     <string name="course_lti_allowed_attempts">Erlaubte Versuche: %1$s</string>
     <string name="course_lti_allowed_attempts_infinite">Beliebige Versuchsanzahl</string>
     <string name="course_lti_launch">Bearbeitungstool starten</string>
-    <string name="course_lti_device_hint">Diese Aufgabe wird in einem externen Tool geöffnet, welches nicht Teil der openHPI App ist. Dieses ist möglicherweise nicht für Mobilgeräte optimiert, weshalb die Bearbeitung an einem Computer empfohlen wird.</string>
 
     <string name="course_peer_type_solo">Peer Assessment</string>
     <string name="course_peer_type_team">Team peer assessment</string>
+    <string name="course_peer_launch">Peer Assessment öffnen</string>
 
     <string name="document_lang">Sprache: %s</string>
 
@@ -275,6 +280,8 @@
     <string name="settings_category_general">Allgemein</string>
 
     <string name="settings_title_ask_delete">Vor Löschen bestätigen</string>
+
+    <string name="settings_title_ask_open_external_content">Vor Öffnen externer Inhalte bestätigen</string>
 
     <string name="settings_title_storage">Speichermedium auswählen</string>
     <string name="settings_title_storage_internal">Interner Speicher</string>

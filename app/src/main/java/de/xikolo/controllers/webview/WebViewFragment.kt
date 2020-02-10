@@ -4,16 +4,15 @@ import android.content.Intent
 import android.content.MutableContextWrapper
 import android.net.Uri
 import android.os.Bundle
-import android.provider.Browser
 import android.view.*
 import com.crashlytics.android.Crashlytics
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.config.Config
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.helper.WebViewHelper
 import de.xikolo.controllers.login.LoginActivityAutoBundle
+import de.xikolo.utils.extensions.includeAuthToken
 import de.xikolo.utils.extensions.isOnline
 import de.xikolo.utils.extensions.showToast
 
@@ -117,9 +116,7 @@ class WebViewFragment : NetworkStateFragment() {
     fun openUrlInBrowser(uri: Uri, token: String?) {
         val i = Intent(Intent.ACTION_VIEW, uri)
         if (token != null) {
-            val headers = Bundle()
-            headers.putString(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX + token)
-            i.putExtra(Browser.EXTRA_HEADERS, headers)
+            i.includeAuthToken(token)
         }
         activity?.startActivity(i)
     }

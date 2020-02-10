@@ -25,6 +25,7 @@
     <string name="preference_open_source_contributors" translatable="false">open_source_contributors</string>
     <string name="preference_build_version" translatable="false">build_version</string>
     <string name="preference_login_out" translatable="false">login_out</string>
+    <string name="preference_confirm_open_external_content" translatable="false">confirm_open_external_content</string>
 
     <string name="preference_category_general" translatable="false">general</string>
     <string name="preference_category_video_playback_speed" translatable="false">category_video_playback_speed</string>

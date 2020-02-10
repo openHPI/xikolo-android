@@ -102,6 +102,16 @@
             android:textColorLink="@color/apptheme_second"
             android:textSize="14sp" />
 
+        <Button
+            android:id="@+id/launch_button"
+            style="@style/ButtonContained"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/instructions"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="32dp"
+            android:text="@string/course_peer_launch" />
+
     </RelativeLayout>
 
 </androidx.core.widget.NestedScrollView>

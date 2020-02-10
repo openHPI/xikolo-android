@@ -1,21 +1,25 @@
 package de.xikolo.controllers.section
 
-import android.content.Intent
-import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
+import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.base.ViewModelFragment
+import de.xikolo.controllers.dialogs.OpenExternalContentDialog
 import de.xikolo.extensions.observe
+import de.xikolo.managers.UserManager
 import de.xikolo.models.Item
 import de.xikolo.models.LtiExercise
-import de.xikolo.utils.extensions.isPast
-import de.xikolo.utils.extensions.setMarkdownText
+import de.xikolo.storages.ApplicationPreferences
+import de.xikolo.utils.extensions.*
 import de.xikolo.viewmodels.section.LtiExerciseViewModel
 
 class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
@@ -54,10 +58,9 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
     @BindView(R.id.launch_button)
     lateinit var launchButton: Button
 
-    @BindView(R.id.device_hint)
-    lateinit var deviceHint: TextView
-
     override val layoutResource = R.layout.fragment_lti_exercise
+
+    private val appPreferences = ApplicationPreferences()
 
     private var item: Item? = null
 
@@ -76,11 +79,25 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         launchButton.setOnClickListener {
-            Uri.parse(ltiExercise?.launchUrl)?.let { url ->
-                val intent = Intent(ACTION_VIEW)
-                intent.data = url
-                startActivity(intent)
+            if (appPreferences.confirmOpenExternalContent) {
+                val dialog = OpenExternalContentDialog()
+                dialog.listener = object : OpenExternalContentDialog.ExternalContentDialogListener {
+                    override fun onOpen(dialog: DialogFragment) {
+                        openExternalContent()
+                    }
+
+                    override fun onOpenAlways(dialog: DialogFragment) {
+                        appPreferences.confirmOpenExternalContent = false
+                        openExternalContent()
+                    }
+                }
+                activity?.let {
+                    dialog.show(it.supportFragmentManager, OpenExternalContentDialog.TAG)
+                }
+            } else {
+                openExternalContent()
             }
+
         }
 
         viewModel.item
@@ -90,6 +107,24 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
 
                 updateView()
             }
+    }
+
+    private fun openExternalContent() {
+        Uri.parse(ltiExercise?.launchUrl)?.let { uri ->
+            val customTabsIntent = CustomTabsIntent.Builder()
+                .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_main))
+                .build()
+
+            val intent = customTabsIntent.intent.apply {
+                data = uri
+                includeAuthToken(UserManager.token!!)
+            }
+            context?.let { context ->
+                startActivity(intent.createChooser(context, null, arrayOf(context.packageName)))
+            }
+        } ?: run {
+            showToast(R.string.error_plain)
+        }
     }
 
     private fun updateView() {

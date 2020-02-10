@@ -112,17 +112,6 @@
             android:layout_marginTop="32dp"
             android:text="@string/course_lti_launch" />
 
-        <TextView
-            android:id="@+id/device_hint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/launch_button"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="@string/course_lti_device_hint"
-            android:textColor="@color/text_light"
-            android:textSize="12sp" />
-
     </RelativeLayout>
 
 </androidx.core.widget.NestedScrollView>
