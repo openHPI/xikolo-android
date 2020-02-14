@@ -10,17 +10,22 @@
             android:key="@string/preference_confirm_delete"
             android:title="@string/settings_title_ask_delete" />
 
+        <androidx.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/preference_confirm_open_external_content_lti"
+            android:title="@string/settings_title_ask_open_external_content_lti" />
+
+        <androidx.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/preference_confirm_open_external_content_peer"
+            android:title="@string/settings_title_ask_open_external_content_peer" />
+
         <androidx.preference.ListPreference
             android:defaultValue="@string/settings_default_value_storage"
             android:entries="@array/settings_values_storages"
             android:entryValues="@array/settings_values_storages"
             android:key="@string/preference_storage"
             android:title="@string/settings_title_storage" />
-
-        <androidx.preference.CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/preference_confirm_open_external_content"
-            android:title="@string/settings_title_ask_open_external_content" />
 
     </androidx.preference.PreferenceCategory>
 

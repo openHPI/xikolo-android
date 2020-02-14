@@ -14,6 +14,7 @@ import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.dialogs.OpenExternalContentDialog
+import de.xikolo.controllers.dialogs.OpenExternalContentDialogAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Item
@@ -79,15 +80,15 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         launchButton.setOnClickListener {
-            if (appPreferences.confirmOpenExternalContent) {
-                val dialog = OpenExternalContentDialog()
+            if (appPreferences.confirmOpenExternalContentLti) {
+                val dialog = OpenExternalContentDialogAutoBundle.builder().type(Item.TYPE_LTI).build()
                 dialog.listener = object : OpenExternalContentDialog.ExternalContentDialogListener {
                     override fun onOpen(dialog: DialogFragment) {
                         openExternalContent()
                     }
 
                     override fun onOpenAlways(dialog: DialogFragment) {
-                        appPreferences.confirmOpenExternalContent = false
+                        appPreferences.confirmOpenExternalContentLti = false
                         openExternalContent()
                     }
                 }

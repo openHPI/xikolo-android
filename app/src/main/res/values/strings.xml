@@ -133,9 +133,12 @@
     <string name="dialog_date_info_title_section">Start date</string>
 
     <string name="dialog_external_content_title">External content</string>
-    <string name="dialog_external_content_message">This task is opened with an external tool that is not part of the openHPI app. It may not be optimized for mobile devices, so we recommend that you complete it on a computer.\n\nDo you want to open it anyway?</string>
-    <string name="dialog_external_content_yes">Open</string>
-    <string name="dialog_external_content_yes_always">Open and don\'t ask again</string>
+    <string name="dialog_external_content_message_lti">This task is opened with an external tool that is not part of the %1$s app. It may not be optimized for mobile devices, so we recommend that you complete it on a computer.\n\nDo you want to launch it anyway?</string>
+    <string name="dialog_external_content_message_peer">Peer Assessments are not optimized for mobile, so we recommend that you complete it on a computer.\n\nDo you want to open it anyway?</string>
+    <string name="dialog_external_content_yes_lti">Launch</string>
+    <string name="dialog_external_content_yes_always_lti">Launch and don\'t ask again</string>
+    <string name="dialog_external_content_yes_peer">Open</string>
+    <string name="dialog_external_content_yes_always_peer">Open and don\'t ask again</string>
 
     <!-- -->
     <string name="title_activity_module">Module</string>
@@ -295,7 +298,8 @@
 
     <string name="settings_title_ask_delete">Confirm before deleting</string>
 
-    <string name="settings_title_ask_open_external_content">Confirm before opening external content</string>
+    <string name="settings_title_ask_open_external_content_lti">Confirm before opening external exercises</string>
+    <string name="settings_title_ask_open_external_content_peer">Confirm before opening peer assessments</string>
 
     <string name="settings_category_data_usage">Mobile Data Usage</string>
 
