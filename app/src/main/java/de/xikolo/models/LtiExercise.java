@@ -19,6 +19,8 @@ public class LtiExercise extends RealmObject {
 
     public int allowedAttempts;
 
+    public String launchUrl;
+
     @JsonApi(type = "lti-exercises")
     public static class JsonModel extends Resource implements RealmAdapter<LtiExercise> {
 
@@ -29,6 +31,9 @@ public class LtiExercise extends RealmObject {
         @Json(name = "allowed_attempts")
         public int allowedAttempts;
 
+        @Json(name = "launch_url")
+        public String launchUrl;
+
         @Override
         public LtiExercise convertToRealmObject() {
             LtiExercise lti = new LtiExercise();
@@ -36,6 +41,7 @@ public class LtiExercise extends RealmObject {
             lti.instructions = instructions;
             lti.weight = weight;
             lti.allowedAttempts = allowedAttempts;
+            lti.launchUrl = launchUrl;
             return lti;
         }
 

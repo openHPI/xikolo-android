@@ -1,0 +1,117 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/text_main"
+            android:textSize="20sp" />
+
+        <de.xikolo.views.CustomFontTextView
+            android:id="@+id/gradedIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="16dp"
+            android:maxLines="1"
+            android:text="@string/icon_graded"
+            android:textColor="@color/text_main_icon"
+            android:textSize="20sp"
+            app:customFont="xikolo.ttf" />
+
+        <TextView
+            android:id="@+id/graded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/gradedIcon"
+            android:layout_alignBottom="@id/gradedIcon"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/gradedIcon"
+            android:gravity="center_vertical"
+            android:textSize="14sp" />
+
+        <de.xikolo.views.CustomFontTextView
+            android:id="@+id/pointsIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/gradedIcon"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:text="@string/icon_points"
+            android:textColor="@color/text_main_icon"
+            android:textSize="20sp"
+            app:customFont="xikolo.ttf" />
+
+        <TextView
+            android:id="@+id/points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/pointsIcon"
+            android:layout_alignBottom="@id/pointsIcon"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/pointsIcon"
+            android:gravity="center_vertical"
+            android:textSize="14sp" />
+
+        <de.xikolo.views.CustomFontTextView
+            android:id="@+id/typeIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pointsIcon"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:text="@string/icon_team"
+            android:textColor="@color/text_main_icon"
+            android:textSize="20sp"
+            app:customFont="xikolo.ttf" />
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/typeIcon"
+            android:layout_alignBottom="@id/typeIcon"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/typeIcon"
+            android:gravity="center_vertical"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/instructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/typeIcon"
+            android:layout_marginTop="16dp"
+            android:lineSpacingExtra="4dp"
+            android:textColor="@color/text_main"
+            android:textColorLink="@color/apptheme_second"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/launch_button"
+            style="@style/ButtonContained"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/instructions"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="32dp"
+            android:text="@string/course_peer_launch" />
+
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

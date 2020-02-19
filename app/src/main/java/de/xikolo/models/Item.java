@@ -33,6 +33,8 @@ public class Item extends RealmObject {
 
     public String exerciseType;
 
+    public float maxPoints;
+
     public boolean proctored;
 
     public boolean visited;
@@ -127,6 +129,9 @@ public class Item extends RealmObject {
         @Json(name = "exercise_type")
         public String exerciseType;
 
+        @Json(name = "max_points")
+        public float maxPoints;
+
         public boolean proctored;
 
         public boolean visited;
@@ -147,6 +152,7 @@ public class Item extends RealmObject {
             item.deadline = DateUtil.getAsDate(deadline);
             item.contentType = contentType;
             item.exerciseType = exerciseType;
+            item.maxPoints = maxPoints;
             item.proctored = proctored;
             item.visited = visited;
             item.accessible = accessible;

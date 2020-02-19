@@ -130,6 +130,14 @@
     <string name="dialog_date_info_title_course">Kursdauer</string>
     <string name="dialog_date_info_title_section">Startdatum</string>
 
+    <string name="dialog_external_content_title">Externer Inhalt</string>
+    <string name="dialog_external_content_message_lti">Diese Aufgabe wird in einem externen Tool geöffnet, welches nicht Teil der %1$s App ist. Dieses ist möglicherweise nicht für Mobilgeräte optimiert, weshalb die Bearbeitung an einem Computer empfohlen wird.\n\nSoll es dennoch gestartet werden?</string>
+    <string name="dialog_external_content_message_peer">Peer Assessments sind nicht für Mobilgeräte optimiert, weshalb die Bearbeitung an einem Computer empfohlen wird.\n\nSoll es dennoch geöffnet werden?</string>
+    <string name="dialog_external_content_yes_lti">Starten</string>
+    <string name="dialog_external_content_yes_always_lti">Starten und nicht erneut nachfragen</string>
+    <string name="dialog_external_content_yes_peer">Öffnen</string>
+    <string name="dialog_external_content_yes_always_peer">Öffnen und nicht erneut nachfragen</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -205,6 +213,18 @@
     <string name="course_certificate_view">Ansehen</string>
     <string name="course_certificate_not_achieved">Noch nicht erreicht</string>
 
+    <string name="course_lti_graded">Dies ist eine bewertete Aufgabe</string>
+    <string name="course_lti_ungraded">Dies ist eine unbewertete Aufgabe</string>
+    <string name="course_lti_bonus">Dies ist eine Bonusaufgabe</string>
+    <string name="course_lti_points">%1$s Punkte</string>
+    <string name="course_lti_allowed_attempts">Erlaubte Versuche: %1$s</string>
+    <string name="course_lti_allowed_attempts_infinite">Beliebige Versuchsanzahl</string>
+    <string name="course_lti_launch">Bearbeitungstool starten</string>
+
+    <string name="course_peer_type_solo">Peer Assessment</string>
+    <string name="course_peer_type_team">Team peer assessment</string>
+    <string name="course_peer_launch">Peer Assessment öffnen</string>
+
     <string name="document_lang">Sprache: %s</string>
 
     <!-- -->
@@ -220,7 +240,8 @@
     <string name="notification_please_login_summary">Bitte melden Sie sich an, um auf diesen Inhalt zuzugreifen.</string>
     <string name="notification_url_invalid">URL fehlerhaft</string>
     <string name="notification_course_locked">Dieser Kurs ist vorerst gesperrt</string>
-
+    <string name="notification_submission_deadline_surpassed">Die Abgabefrist ist bereits abgelaufen</string>
+    <string name="notification_submission_deadline_surpassed_summary">Sie können keine neuen Lösungen einreichen.</string>
     <string name="notification_storage_locked">Bitte warten Sie bis der aktuelle Download abgeschlossen ist und versuchen Sie es erneut.</string>
 
     <string name="video_notification_no_offline_video">Keine Netzwerk-Verbindung oder heruntergeladene Video Datei verfügbar.</string>
@@ -262,6 +283,9 @@
     <string name="settings_category_general">Allgemein</string>
 
     <string name="settings_title_ask_delete">Vor Löschen bestätigen</string>
+
+    <string name="settings_title_ask_open_external_content_lti">Vor Öffnen externer Übungen bestätigen</string>
+    <string name="settings_title_ask_open_external_content_peer">Vor Öffnen von Peer Assessments bestätigen</string>
 
     <string name="settings_title_storage">Speichermedium auswählen</string>
     <string name="settings_title_storage_internal">Interner Speicher</string>
