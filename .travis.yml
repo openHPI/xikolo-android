@@ -14,7 +14,7 @@ android:
     - tools
     - platform-tools
     - tools # called twice to get the newest android sdk tools
-    - build-tools-29.0.2
+    - build-tools-29.0.3
     - android-29
     - extra-android-m2repository
     - extra-google-m2repository
