@@ -126,9 +126,7 @@ public class RealmSchemaMigration implements RealmMigration {
             schema.get("Video")
                 .addRealmObjectField("lecturerStream", schema.get("VideoStream"))
                 .addRealmObjectField("slidesStream", schema.get("VideoStream"));
-                
-            schema.get("Channel").addRealmObjectField("stageStream", schema.get("VideoStream"));
-            
+
             oldVersion++;
         }
 
@@ -145,6 +143,9 @@ public class RealmSchemaMigration implements RealmMigration {
 
             oldVersion++;
         }
-    }
 
+        if (oldVersion == 10) {
+            schema.get("Channel").addRealmObjectField("stageStream", schema.get("VideoStream"));
+        }
+    }
 }
