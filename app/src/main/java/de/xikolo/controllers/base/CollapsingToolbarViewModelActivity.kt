@@ -49,7 +49,7 @@ abstract class CollapsingToolbarViewModelActivity<T : BaseViewModel> : ViewModel
         collapsingToolbar.isTitleEnabled = false
 
         if (toolbar != null) {
-            toolbar.title = title
+            toolbar!!.title = title
         }
 
         scrimTop.visibility = View.INVISIBLE
