@@ -148,4 +148,5 @@ public class RealmSchemaMigration implements RealmMigration {
             schema.get("Channel").addRealmObjectField("stageStream", schema.get("VideoStream"));
         }
     }
+    
 }
