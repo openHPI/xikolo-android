@@ -14,7 +14,6 @@ import butterknife.BindView
 import com.github.rubensousa.previewseekbar.PreviewSeekBar
 import com.github.rubensousa.previewseekbar.PreviewView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.config.FeatureConfig
@@ -50,15 +49,36 @@ open class VideoStreamPlayerFragment : BaseFragment() {
         private const val SEEKBAR_UPDATER_INTERVAL = 100L
 
         private const val VIDEO_STEPPING_DURATION = 10000
+
+        private const val BUNDLING_KEY_STREAM = "stream"
+        private const val BUNDLING_KEY_AUTOPLAY = "autoplay"
+
+        fun bundle(instance: VideoStreamPlayerFragment, stream: VideoStream, autoPlay: Boolean = true) {
+            val arguments = instance.arguments ?: Bundle()
+            arguments.putAll(
+                Bundle().apply {
+                    putParcelable(BUNDLING_KEY_STREAM, stream)
+                    putBoolean(BUNDLING_KEY_AUTOPLAY, autoPlay)
+                })
+            instance.arguments = arguments
+        }
+
+        fun create(stream: VideoStream, autoPlay: Boolean = true): VideoStreamPlayerFragment {
+            return VideoStreamPlayerFragment().apply {
+                bundle(this, stream, autoPlay)
+            }
+        }
+
+        fun unbundle(instance: VideoStreamPlayerFragment, arguments: Bundle?) {
+            arguments?.let {
+                instance.videoStream = it.getParcelable(BUNDLING_KEY_STREAM)!!
+                instance.autoPlay = it.getBoolean(BUNDLING_KEY_AUTOPLAY)
+            }
+        }
     }
 
-    @AutoBundleField
-    lateinit var stream: VideoStream
+    lateinit var videoStream: VideoStream
 
-    open val videoStream: VideoStream
-        get() = stream
-
-    @AutoBundleField(required = false)
     var autoPlay: Boolean = true
 
     @BindView(R.id.playerView)
@@ -173,6 +193,7 @@ open class VideoStreamPlayerFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        VideoStreamPlayerFragment.unbundle(this, arguments)
 
         controlsVisibilityHandler = ControlsVisibilityHandler(this)
     }
