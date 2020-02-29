@@ -8,8 +8,6 @@ import butterknife.BindView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import de.xikolo.R
-import de.xikolo.R.id.appbar
-import de.xikolo.R.id.collapsing_toolbar
 import de.xikolo.viewmodels.base.BaseViewModel
 
 abstract class CollapsingToolbarViewModelActivity<T : BaseViewModel> : ViewModelActivity<T>() {
@@ -21,10 +19,10 @@ abstract class CollapsingToolbarViewModelActivity<T : BaseViewModel> : ViewModel
     @BindView(R.id.toolbar_image)
     lateinit var imageView: ImageView
 
-    @BindView(appbar)
+    @BindView(R.id.appbar)
     lateinit var appBarLayout: AppBarLayout
 
-    @BindView(collapsing_toolbar)
+    @BindView(R.id.collapsing_toolbar)
     protected lateinit var collapsingToolbar: CollapsingToolbarLayout
 
     @BindView(R.id.scrim_top)
@@ -47,13 +45,9 @@ abstract class CollapsingToolbarViewModelActivity<T : BaseViewModel> : ViewModel
         lp.height = actionBarHeight + statusBarHeight
 
         collapsingToolbar.isTitleEnabled = false
-
-        if (toolbar != null) {
-            toolbar!!.title = title
-        }
+        toolbar?.title = title
 
         scrimTop.visibility = View.INVISIBLE
-
         scrimBottom.visibility = View.INVISIBLE
     }
 
@@ -70,7 +64,8 @@ abstract class CollapsingToolbarViewModelActivity<T : BaseViewModel> : ViewModel
     private val actionBarHeight: Int
         get() {
             val styledAttributes = theme.obtainStyledAttributes(
-                intArrayOf(android.R.attr.actionBarSize))
+                intArrayOf(android.R.attr.actionBarSize)
+            )
             val result = styledAttributes.getDimension(0, 0f).toInt()
             styledAttributes.recycle()
             return result
