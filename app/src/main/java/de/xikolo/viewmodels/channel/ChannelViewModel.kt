@@ -7,6 +7,7 @@ import de.xikolo.R
 import de.xikolo.config.BuildFlavor
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
+import de.xikolo.models.VideoStream
 import de.xikolo.models.dao.ChannelDao
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.GetChannelWithCoursesJob
@@ -29,8 +30,8 @@ class ChannelViewModel(private val channelId: String) : BaseViewModel() {
 
     val courses = courseListDelegate.courses
 
-    fun buildContentList(channel: Channel): MetaSectionList<String, String, List<Course>> {
-        val contentList = MetaSectionList<String, String, List<Course>>(channel.description)
+    fun buildContentList(channel: Channel): MetaSectionList<String, Triple<String?, VideoStream?, String?>, List<Course>> {
+        val contentList = MetaSectionList<String, Triple<String?, VideoStream?, String?>, List<Course>>(Triple<String?, VideoStream?, String>(channel.description, channel.stageStream, channel.imageUrl))
         var subList: List<Course>
         if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
             subList = CourseDao.Unmanaged.allFutureForChannel(channelId)

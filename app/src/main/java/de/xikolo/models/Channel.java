@@ -34,6 +34,8 @@ public class Channel extends RealmObject {
 
     public String imageUrl;
 
+    public VideoStream stageStream;
+
     public int getColorOrDefault() {
         if (color != null)
             try {
@@ -61,6 +63,9 @@ public class Channel extends RealmObject {
         @Json(name = "mobile_image_url")
         public String mobileImageUrl;
 
+        @Json(name = "stage_stream")
+        public VideoStream stageStream;
+
         @Override
         public Channel convertToRealmObject() {
             Channel model = new Channel();
@@ -71,6 +76,7 @@ public class Channel extends RealmObject {
             model.position = position;
             model.description = description;
             model.imageUrl = mobileImageUrl;
+            model.stageStream = stageStream;
 
             return model;
         }

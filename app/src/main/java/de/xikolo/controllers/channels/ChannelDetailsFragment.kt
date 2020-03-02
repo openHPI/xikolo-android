@@ -22,6 +22,7 @@ import de.xikolo.extensions.observeOnce
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
+import de.xikolo.models.VideoStream
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkStateLiveData
@@ -111,19 +112,21 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
 
                 override val itemCount: Int
                     get() = contentListAdapter.itemCount
-
             }
         ))
 
         viewModel.channel
             .observe(viewLifecycleOwner) {
                 updateView(it)
+                updateContentList(
+                    viewModel.buildContentList(it)
+                )
             }
 
         viewModel.courses
             .observe(viewLifecycleOwner) {
                 viewModel.channel.value?.let {
-                    showContentList(
+                    updateContentListAndScroll(
                         viewModel.buildContentList(it)
                     )
                 }
@@ -136,13 +139,19 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
         } else {
             GlideApp.with(this).load(channel.imageUrl).into(imageChannel)
             textTitle.text = channel.title
+            layoutHeader.visibility = View.VISIBLE
         }
 
         contentListAdapter.setThemeColor(channel.colorOrDefault)
+        showContent()
     }
 
-    private fun showContentList(contents: MetaSectionList<String, String, List<Course>>) {
+    private fun updateContentList(contents: MetaSectionList<String, Triple<String?, VideoStream?, String?>, List<Course>>) {
         contentListAdapter.update(contents)
+    }
+
+    private fun updateContentListAndScroll(contents: MetaSectionList<String, Triple<String?, VideoStream?, String?>, List<Course>>) {
+        updateContentList(contents)
 
         if (scrollToCoursePosition >= 0) {
             try {
@@ -216,7 +225,7 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
         startActivity(intent)
     }
 
-    private fun enterExternalCourse(course: Course){
+    private fun enterExternalCourse(course: Course) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(course.externalUrl))
         startActivity(intent)
     }
