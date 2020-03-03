@@ -47,6 +47,8 @@ public class Item extends RealmObject {
 
     public String courseId;
 
+    public Integer timeEffort;
+
     public Section getSection() {
         return SectionDao.Unmanaged.find(sectionId);
     }
@@ -142,6 +144,9 @@ public class Item extends RealmObject {
 
         public HasOne<Course.JsonModel> course;
 
+        @Json(name = "time_effort")
+        public Integer timeEffort;
+
         @Override
         public Item convertToRealmObject() {
             Item item = new Item();
@@ -156,6 +161,7 @@ public class Item extends RealmObject {
             item.proctored = proctored;
             item.visited = visited;
             item.accessible = accessible;
+            item.timeEffort = timeEffort;
 
             if (content != null) {
                 item.contentId = content.get().getId();

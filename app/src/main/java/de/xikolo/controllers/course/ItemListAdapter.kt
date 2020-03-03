@@ -46,6 +46,8 @@ class ItemListAdapter(private val section: Section, private val listener: OnItem
 
         holder.textIcon.setText(item.iconRes)
 
+        holder.duration.text = (item.timeEffort / 60 + 1).toString() + "min"
+
         if (!item.visited) {
             holder.viewUnseenIndicator.visibility = View.VISIBLE
         } else {
@@ -92,6 +94,9 @@ class ItemListAdapter(private val section: Section, private val listener: OnItem
 
         @BindView(R.id.container)
         lateinit var layout: FrameLayout
+
+        @BindView(R.id.itemDuration)
+        lateinit var duration: TextView
 
         init {
             ButterKnife.bind(this, view)

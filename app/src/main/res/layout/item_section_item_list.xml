@@ -24,19 +24,29 @@
             android:paddingRight="8dp"
             android:paddingBottom="8dp"
             android:textColor="@color/text_main_icon"
-            android:textSize="22sp"
+            android:textSize="32sp"
             app:customFont="xikolo.ttf" />
 
         <TextView
             android:id="@+id/textTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="6dp"
             android:layout_toLeftOf="@+id/unseenIndicator"
             android:layout_toRightOf="@+id/textIcon"
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/itemDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textTitle"
+            android:layout_alignStart="@+id/textTitle"
+            android:layout_marginTop="-2dp"
+            android:textColor="@color/banner_grey"
+            android:textSize="12sp" />
 
         <View
             android:id="@+id/unseenIndicator"
