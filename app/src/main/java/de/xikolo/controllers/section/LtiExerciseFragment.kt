@@ -156,12 +156,7 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
             attemptsText.text = getString(R.string.course_lti_allowed_attempts).format(ltiExercise?.allowedAttempts)
         }
 
-        if (item?.deadline.isPast && item?.exerciseType != Item.EXERCISE_TYPE_SELFTEST) {
-            hideContent()
-            showMessage(R.string.notification_submission_deadline_surpassed, R.string.notification_submission_deadline_surpassed_summary)
-        } else {
-            showContent()
-        }
+        showContent()
     }
 
 }
