@@ -48,7 +48,7 @@ class VideoItemPlayerActivity : BaseVideoPlayerActivity() {
     override val layoutResource = R.layout.activity_video_dual
 
     override fun createPlayerFragment(): VideoStreamPlayerFragment {
-        return VideoItemPlayerFragmentAutoBundle.builder(courseId, sectionId, itemId, videoId).build()
+        return VideoItemPlayerFragment.create(courseId, sectionId, itemId, videoId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

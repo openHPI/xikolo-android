@@ -3,10 +3,12 @@ package de.xikolo.controllers.video
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.managers.DownloadManager
-import de.xikolo.models.*
+import de.xikolo.models.DownloadAsset
+import de.xikolo.models.Item
+import de.xikolo.models.Video
+import de.xikolo.models.VideoSubtitles
 import de.xikolo.models.dao.ItemDao
 import de.xikolo.models.dao.VideoDao
 import de.xikolo.utils.LanalyticsUtil
@@ -20,22 +22,50 @@ class VideoItemPlayerFragment : VideoStreamPlayerFragment() {
         val TAG: String = VideoItemPlayerFragment::class.java.simpleName
 
         private const val VIDEO_POSITION_REWIND_TIME = 10000
+
+        private const val BUNDLING_KEY_COURSE_ID = "course_id"
+        private const val BUNDLING_KEY_SECTION_ID = "section_id"
+        private const val BUNDLING_KEY_ITEM_ID = "item_id"
+        private const val BUNDLING_KEY_VIDEO_ID = "video_id"
+
+        fun bundle(instance: VideoItemPlayerFragment, courseId: String, sectionId: String, itemId: String, videoId: String, autoPlay: Boolean = true) {
+            bundle(instance, VideoDao.Unmanaged.find(videoId)!!.streamToPlay, autoPlay)
+
+            val arguments = instance.arguments ?: Bundle()
+            arguments.putAll(
+                Bundle().apply {
+                    putString(BUNDLING_KEY_COURSE_ID, courseId)
+                    putString(BUNDLING_KEY_SECTION_ID, sectionId)
+                    putString(BUNDLING_KEY_ITEM_ID, itemId)
+                    putString(BUNDLING_KEY_VIDEO_ID, videoId)
+                })
+
+            instance.arguments = arguments
+        }
+
+        fun create(courseId: String, sectionId: String, itemId: String, videoId: String, autoPlay: Boolean = true): VideoItemPlayerFragment {
+            return VideoItemPlayerFragment().apply {
+                bundle(this, courseId, sectionId, itemId, videoId, autoPlay)
+            }
+        }
+
+        fun unbundle(instance: VideoItemPlayerFragment, arguments: Bundle?) {
+            arguments?.let {
+                instance.courseId = arguments.getString(BUNDLING_KEY_COURSE_ID)!!
+                instance.sectionId = arguments.getString(BUNDLING_KEY_SECTION_ID)!!
+                instance.itemId = arguments.getString(BUNDLING_KEY_ITEM_ID)!!
+                instance.videoId = arguments.getString(BUNDLING_KEY_VIDEO_ID)!!
+            }
+        }
     }
 
-    @AutoBundleField
     lateinit var courseId: String
 
-    @AutoBundleField
     lateinit var sectionId: String
 
-    @AutoBundleField
     lateinit var itemId: String
 
-    @AutoBundleField
     lateinit var videoId: String
-
-    override val videoStream: VideoStream
-        get() = video.streamToPlay
 
     private val video: Video
         get() = VideoDao.Unmanaged.find(videoId)!!
@@ -60,6 +90,9 @@ class VideoItemPlayerFragment : VideoStreamPlayerFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        unbundle(this, arguments)
+
         initialVideoPosition = max(video.progress - VIDEO_POSITION_REWIND_TIME, 0)
     }
 

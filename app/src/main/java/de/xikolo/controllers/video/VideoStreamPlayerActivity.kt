@@ -25,7 +25,7 @@ class VideoStreamPlayerActivity : BaseVideoPlayerActivity(), VideoStreamPlayerFr
     override val layoutResource = R.layout.activity_video
 
     override fun createPlayerFragment(): VideoStreamPlayerFragment {
-        return VideoStreamPlayerFragmentAutoBundle.builder(videoStream).build()
+        return VideoStreamPlayerFragment.create(videoStream)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
