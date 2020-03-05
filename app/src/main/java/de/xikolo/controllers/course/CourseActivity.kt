@@ -41,6 +41,7 @@ import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.IdUtil
 import de.xikolo.utils.LanalyticsUtil
+import de.xikolo.utils.extensions.createChooser
 import de.xikolo.utils.extensions.shareCourseLink
 import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.course.CourseViewModel
@@ -347,9 +348,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         intent?.let {
             Handler().postDelayed({
                 startActivity(
-                    Intent.createChooser(
-                        Intent(it.action, it.data),
-                        null)
+                    Intent(it.action, it.data).createChooser(this, null, arrayOf(this.packageName))
                 )
             }, 300)
         }
