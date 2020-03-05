@@ -353,4 +353,7 @@
     <string name="empty_message_course_certificates">Für diesen Kurs gibt es keine Zertifikate</string>
     <string name="empty_message_dates">Aktuell keine zukünftigen Termine</string>
 
+    <string name="item_duration_hour_minute">%1$d Std. %2$d Min.</string>
+    <string name="item_duration_hour">%1$d Std.</string>
+    <string name="item_duration_minute">%1$d Min.</string>
 </resources>

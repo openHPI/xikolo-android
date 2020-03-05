@@ -46,7 +46,11 @@ class ItemListAdapter(private val section: Section, private val listener: OnItem
 
         holder.textIcon.setText(item.iconRes)
 
-        holder.duration.text = (item.timeEffort / 60 + 1).toString() + "min"
+        if (item.timeEffort > 0) {
+            holder.duration.text = item.formatTimeEffort()
+        } else {
+            holder.duration.visibility = View.GONE
+        }
 
         if (!item.visited) {
             holder.viewUnseenIndicator.visibility = View.VISIBLE
@@ -103,5 +107,4 @@ class ItemListAdapter(private val section: Section, private val listener: OnItem
         }
 
     }
-
 }

@@ -367,4 +367,9 @@
     <string name="helpdesk_email_error">Please enter a valid email</string>
     <string name="dialog_discard_positive">Discard</string>
     <string name="dialog_discard_inputs">Do you want to discard of your input?</string>
+
+    <string name="item_duration_hour_minute">%1$d hr, %2$d min</string>
+    <string name="item_duration_hour">%1$d hr</string>
+    <string name="item_duration_minute">%1$d min</string>
+
 </resources>
