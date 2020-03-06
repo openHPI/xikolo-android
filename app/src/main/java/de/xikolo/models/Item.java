@@ -130,8 +130,6 @@ public class Item extends RealmObject {
         } else {
             return null;
         }
-
-
     }
 
     @JsonApi(type = "course-items")
