@@ -27,15 +27,15 @@ object Config {
             BuildFlavor.OPEN_HPI -> {
                 COPYRIGHT_URL = "https://hpi.de/"
                 IMPRINT_URL = "https://open.hpi.de/pages/imprint"
-                PRIVACY_URL = "https://open.hpi.de/pages/privacy"
+                PRIVACY_URL = "https://open.hpi.de/pages/data-protection"
                 TERMS_OF_USE_URL = null
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604"
             }
             BuildFlavor.OPEN_SAP -> {
-                COPYRIGHT_URL = "http://sap.com/corporate-en/legal/copyright/index.epx"
-                IMPRINT_URL = "http://sap.com/corporate-en/legal/impressum.epx"
-                PRIVACY_URL = "http://sap.com/corporate/en/legal/privacy.html"
-                TERMS_OF_USE_URL = "http://sap.com/corporate-en/about/legal/terms-of-use.html"
+                COPYRIGHT_URL = "https://sap.com/corporate/en/legal/copyright.html"
+                IMPRINT_URL = "https://sap.com/corporate/en/legal/impressum.html"
+                PRIVACY_URL = "https://open.sap.com/pages/privacy"
+                TERMS_OF_USE_URL = "https://sap.com/corporate/en/legal/terms-of-use.html"
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "2C63C05D"
             }
             BuildFlavor.OPEN_WHO -> {
