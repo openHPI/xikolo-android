@@ -263,6 +263,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         val customTabsIntent = CustomTabsIntent.Builder()
             .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_main))
             .build()
-        customTabsIntent.launchUrl(App.instance, Uri.parse(url))
+        customTabsIntent.launchUrl(activity!!, Uri.parse(url))
     }
 }
