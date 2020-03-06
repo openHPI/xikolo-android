@@ -123,7 +123,11 @@ class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
                 includeAuthToken(UserManager.token!!)
             }
             context?.let { context ->
-                startActivity(intent.createChooser(context, null, arrayOf(context.packageName)))
+                intent.createChooser(context, null, arrayOf(context.packageName))?.let { intent ->
+                    startActivity(intent)
+                } ?: run {
+                    showToast(R.string.error_plain)
+                }
             }
         } ?: run {
             showToast(R.string.error_plain)

@@ -20,7 +20,10 @@ import de.xikolo.managers.UserManager
 import de.xikolo.models.Item
 import de.xikolo.models.LtiExercise
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.extensions.*
+import de.xikolo.utils.extensions.createChooser
+import de.xikolo.utils.extensions.includeAuthToken
+import de.xikolo.utils.extensions.setMarkdownText
+import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.section.LtiExerciseViewModel
 
 class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
@@ -121,7 +124,11 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
                 includeAuthToken(UserManager.token!!)
             }
             context?.let { context ->
-                startActivity(intent.createChooser(context, null, arrayOf(context.packageName)))
+                intent.createChooser(context, null, arrayOf(context.packageName))?.let { intent ->
+                    startActivity(intent)
+                } ?: run {
+                    showToast(R.string.error_plain)
+                }
             }
         } ?: run {
             showToast(R.string.error_plain)
