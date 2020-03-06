@@ -121,18 +121,17 @@ public class Item extends RealmObject {
 
         if (hours > 0) {
             if (minutes > 0) {
-                return App.getInstance().getString(R.string.item_duration_hour_minute, hours, minutes);
+                return String.format(App.getInstance().getString(R.string.item_duration_hour_minute), hours, minutes);
             } else {
-                return App.getInstance().getString(R.string.item_duration_hour, hours);
+                return String.format(App.getInstance().getString(R.string.item_duration_hour), hours);
             }
-        }
-        if (hours == 0) {
-            if (minutes > 0) {
-                String res = App.getInstance().getString(R.string.item_duration_minute);
-                return String.format(res, minutes);
-            }
-        }
+        } else if (minutes > 0) {
+            return String.format(App.getInstance().getString(R.string.item_duration_minute), minutes);
+        } else {
             return null;
+        }
+
+
     }
 
     @JsonApi(type = "course-items")

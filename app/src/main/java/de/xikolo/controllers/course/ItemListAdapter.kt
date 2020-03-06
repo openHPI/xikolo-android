@@ -48,6 +48,7 @@ class ItemListAdapter(private val section: Section, private val listener: OnItem
 
         if (item.timeEffort > 0) {
             holder.duration.text = item.formatTimeEffort()
+            holder.duration.visibility = View.VISIBLE
         } else {
             holder.duration.visibility = View.GONE
         }

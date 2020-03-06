@@ -149,7 +149,7 @@ public class RealmSchemaMigration implements RealmMigration {
         }
 
         if (oldVersion == 11) {
-            schema.get("Item").addRealmObjectField("timeEffort", schema.get("time_effort"));
+            schema.get("Item").addField("timeEffort", int.class);
         }
     }
 
