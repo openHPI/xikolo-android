@@ -6,6 +6,7 @@ import com.squareup.moshi.Json;
 
 import java.util.Date;
 
+import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.CourseDao;
@@ -46,6 +47,8 @@ public class Item extends RealmObject {
     public String sectionId;
 
     public String courseId;
+
+    public int timeEffort;
 
     public Section getSection() {
         return SectionDao.Unmanaged.find(sectionId);
@@ -112,6 +115,23 @@ public class Item extends RealmObject {
         return icon;
     }
 
+    public String formatTimeEffort() {
+        int hours = timeEffort / 3600;
+        int minutes = (int) Math.ceil((timeEffort % 3600) / 60.0);
+
+        if (hours > 0) {
+            if (minutes > 0) {
+                return String.format(App.getInstance().getString(R.string.item_duration_hour_minute), hours, minutes);
+            } else {
+                return String.format(App.getInstance().getString(R.string.item_duration_hour), hours);
+            }
+        } else if (minutes > 0) {
+            return String.format(App.getInstance().getString(R.string.item_duration_minute), minutes);
+        } else {
+            return null;
+        }
+    }
+
     @JsonApi(type = "course-items")
     public static class JsonModel extends Resource implements RealmAdapter<Item> {
 
@@ -142,6 +162,9 @@ public class Item extends RealmObject {
 
         public HasOne<Course.JsonModel> course;
 
+        @Json(name = "time_effort")
+        public Integer timeEffort;
+
         @Override
         public Item convertToRealmObject() {
             Item item = new Item();
@@ -156,6 +179,10 @@ public class Item extends RealmObject {
             item.proctored = proctored;
             item.visited = visited;
             item.accessible = accessible;
+
+            if (timeEffort != null) {
+                item.timeEffort = timeEffort;
+            }
 
             if (content != null) {
                 item.contentId = content.get().getId();

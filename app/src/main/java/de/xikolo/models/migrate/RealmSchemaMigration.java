@@ -147,6 +147,10 @@ public class RealmSchemaMigration implements RealmMigration {
         if (oldVersion == 10) {
             schema.get("Channel").addRealmObjectField("stageStream", schema.get("VideoStream"));
         }
+
+        if (oldVersion == 11) {
+            schema.get("Item").addField("timeEffort", int.class);
+        }
     }
 
 }
