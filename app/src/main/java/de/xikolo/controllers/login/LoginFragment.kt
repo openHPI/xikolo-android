@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NavUtils
+import androidx.lifecycle.Observer
 import butterknife.BindView
 import com.google.android.material.textfield.TextInputEditText
 import com.yatatsu.autobundle.AutoBundleField
@@ -27,9 +28,9 @@ import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
-import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.network.jobs.base.NetworkCode
+import de.xikolo.network.jobs.base.NetworkState
 import de.xikolo.storages.UserStorage
 import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.login.LoginViewModel
@@ -134,25 +135,41 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
         }
 
         viewModel.loginNetworkState
-            .observe(viewLifecycleOwner) {
-                when (it.code) {
-                    NetworkCode.SUCCESS -> viewModel.requestUserWithProfile()
-                    else                -> handleCode(it.code)
+            .observeForever(
+                object : Observer<NetworkState> {
+                    override fun onChanged(it: NetworkState) {
+                        when (it.code) {
+                            NetworkCode.SUCCESS -> {
+                                viewModel.loginNetworkState.removeObserver(this)
+
+                                viewModel.requestUserWithProfile()
+                            }
+                            else                -> handleCode(it.code)
+                        }
+                    }
                 }
-            }
+            )
 
         viewModel.profileNetworkState
-            .observe(viewLifecycleOwner) {
-                when (it.code) {
-                    NetworkCode.SUCCESS -> {
-                        App.instance.state.login.loggedIn()
+            .observeForever(
+                object : Observer<NetworkState> {
+                    override fun onChanged(it: NetworkState) {
+                        when (it.code) {
+                            NetworkCode.SUCCESS -> {
+                                viewModel.profileNetworkState.removeObserver(this)
 
-                        hideProgressDialog()
-                        activity?.finish()
+                                App.instance.state.login.loggedIn()
+
+                                if (this@LoginFragment.view != null) {
+                                    hideProgressDialog()
+                                }
+                                activity?.finish()
+                            }
+                            else                -> handleCode(it.code)
+                        }
                     }
-                    else                -> handleCode(it.code)
                 }
-            }
+            )
 
         showContent()
     }
