@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
 
     <group
@@ -42,6 +43,23 @@
     </group>
 
     <group
+        android:id="@+id/navigation_group_links"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/navigation_microlearning"
+            android:icon="@drawable/ic_nav_microlearning"
+            android:title="@string/title_section_microlearning"
+            app:actionLayout="@layout/view_external_icon"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/navigation_podcasts"
+            android:icon="@drawable/ic_nav_podcasts"
+            android:title="@string/title_section_podcasts"
+            app:actionLayout="@layout/view_external_icon"
+            app:showAsAction="always"/>
+    </group>
+
+    <group
         android:id="@+id/navigation_group_sub"
         android:checkableBehavior="single">
         <item
@@ -58,24 +76,5 @@
             android:icon="@drawable/ic_nav_settings"
             android:title="@string/title_section_settings" />
     </group>
-
-
-
-    <item android:title="Links">
-    <menu>
-        <group>
-
-        <item
-            android:id="@+id/navigation_microlearning"
-            android:icon="@drawable/ic_nav_microlearning"
-            android:title="Microleaning" />
-        <item
-            android:id="@+id/navigation_podcasts"
-            android:icon="@drawable/ic_nav_podcasts"
-            android:title="Podcasts" />
-
-    </group>
-    </menu>
-    </item>
 
 </menu>
