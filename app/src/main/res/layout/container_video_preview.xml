@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/videoPreview"
     android:layout_width="match_parent"
@@ -11,28 +11,38 @@
         android:id="@+id/videoThumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:scaleType="centerCrop" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <de.xikolo.views.CustomFontTextView
         android:id="@+id/playButton"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:background="@drawable/button_play"
         android:elevation="2dp"
         android:gravity="center"
         android:text="@string/icon_play"
         android:textColor="@color/button_play_fg"
         android:textSize="32sp"
-        app:customFont="xikolo.ttf" />
+        app:customFont="xikolo.ttf"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/durationText"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="6dp"
         android:background="@color/black"
@@ -41,6 +51,8 @@
         android:paddingRight="6dp"
         android:paddingBottom="3dp"
         android:textColor="@color/text_white"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/videoThumbnail"
+        app:layout_constraintEnd_toEndOf="@id/videoThumbnail" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
