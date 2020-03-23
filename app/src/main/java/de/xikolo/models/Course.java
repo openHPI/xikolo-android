@@ -2,6 +2,8 @@ package de.xikolo.models;
 
 import android.content.Context;
 
+import androidx.annotation.StringRes;
+
 import com.squareup.moshi.Json;
 
 import java.text.DateFormat;
@@ -160,18 +162,15 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
     }
 
     public String getFormattedLanguage() {
-        switch (language) {
-            case "en":
-                return App.getInstance().getString(R.string.lang_en);
-            case "de":
-                return App.getInstance().getString(R.string.lang_de);
-            case "fr":
-                return App.getInstance().getString(R.string.lang_fr);
-            case "cn":
-                return App.getInstance().getString(R.string.lang_zh);
-            default:
-                return language;
-        }
+        @StringRes int resId = App.getInstance().getResources().getIdentifier(
+            "lang_" + language,
+            "string",
+            App.getInstance().getPackageName()
+        );
+
+        if (resId == 0) return language;
+
+        return App.getInstance().getString(resId);
     }
 
     @JsonApi(type = "courses")

@@ -341,12 +341,6 @@
     <string name="dialog_discard_inputs">Möchten Sie alle Ihre Eingaben verwerfen?</string>
 
     <!-- -->
-    <string name="lang_en">Englisch</string>
-    <string name="lang_de">Deutsch</string>
-    <string name="lang_fr">Französisch</string>
-    <string name="lang_zh">Chinesisch</string>
-
-    <!-- -->
     <string name="empty_message_documents_title">Für diesen Kurs sind keine Dokumente verfügbar</string>
     <string name="empty_message_global_announcements_title">Keine Neuigkeiten vorhanden</string>
     <string name="empty_message_course_announcements_title">Für diesen Kurs gibt es keine Neuigkeiten</string>
