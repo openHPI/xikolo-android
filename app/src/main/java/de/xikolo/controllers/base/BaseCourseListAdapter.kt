@@ -35,7 +35,7 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
         holder.textDate.text = course.formattedDate
         holder.textTitle.text = course.title
         holder.textTeacher.text = course.teachers
-        holder.textLanguage.text = course.formattedLanguage
+        holder.textLanguage.text = course.languageAsNativeName
         holder.textTeacher.visibility = if (course.teachers.isNullOrEmpty()) View.GONE else View.VISIBLE
 
         if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {

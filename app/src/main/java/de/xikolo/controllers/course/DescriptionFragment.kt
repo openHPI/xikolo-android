@@ -129,7 +129,7 @@ class DescriptionFragment : ViewModelFragment<DescriptionViewModel>() {
             textDate.setDateSpan(course.startDate, course.endDate)
         }
 
-        textLanguage.text = course.formattedLanguage
+        textLanguage.text = course.languageAsNativeName
         textDescription.setMarkdownText(course.description)
 
         if (!course.teachers.isNullOrEmpty()) {

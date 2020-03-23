@@ -18,7 +18,6 @@ import de.xikolo.managers.PermissionManager
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.storages.ApplicationPreferences
 import de.xikolo.views.CustomFontTextView
-import java.util.*
 
 class VideoSettingsHelper(private val context: Context, private val subtitles: List<VideoSubtitles>?, private val changeListener: OnSettingsChangeListener, private val clickListener: OnSettingsClickListener, private val videoInfoCallback: VideoInfoCallback) {
 
@@ -103,7 +102,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 buildSettingsItem(
                     R.string.icon_subtitles,
                     context.getString(R.string.video_settings_subtitles) + if (currentVideoSubtitles != null)
-                        "  " + context.getString(R.string.video_settings_separator) + "  " + Locale(currentVideoSubtitles?.language).displayLanguage
+                        "  " + context.getString(R.string.video_settings_separator) + "  " + currentVideoSubtitles!!.languageAsNativeName
                     else
                         "",
                     View.OnClickListener { clickListener.onSubtitleClick() },
@@ -230,7 +229,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
             list.addView(
                 buildSettingsItem(
                     null,
-                    Locale(videoSubtitles.language).displayLanguage +
+                    videoSubtitles.languageAsNativeName +
                         if (videoSubtitles.createdByMachine) " " + context.getString(R.string.video_settings_subtitles_generated) else "",
                     View.OnClickListener {
                         val oldVideoSubtitles = currentVideoSubtitles

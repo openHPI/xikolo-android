@@ -59,7 +59,7 @@ class VideoDescriptionFragment : ViewModelFragment<VideoDescriptionViewModel>() 
                 if (video.subtitles != null && video.subtitles.isNotEmpty()) {
                     val text = StringBuilder(getString(R.string.video_settings_subtitles) + ": ")
                     for (subtitles in video.subtitles) {
-                        text.append(subtitles.language).append(", ")
+                        text.append(subtitles.languageAsNativeName).append(", ")
                     }
                     text.delete(text.length - 2, text.length)
                     videoSubtitlesText.text = text
