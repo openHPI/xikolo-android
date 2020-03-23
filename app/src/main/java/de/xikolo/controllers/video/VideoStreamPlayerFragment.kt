@@ -715,7 +715,10 @@ open class VideoStreamPlayerFragment : BaseFragment() {
     }
 
     override fun onDestroy() {
-        playerView.release()
+        // onDestroy is called regardless of whether the fragment's view has been created. If this is not the case, the call to playerView will fail.
+        if(view != null) {
+            playerView.release()
+        }
         seekBarPreviewThread.quit()
         super.onDestroy()
     }
