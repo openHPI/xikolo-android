@@ -1,0 +1,107 @@
+name: PR Pipeline
+
+# Execute PR Pipeline Workflow on pull requests to master
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  ###########################################################
+  # Compile Job:
+  # Install dependencies and compile sources
+  ###########################################################
+  compile:
+    name: Compile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby 2.6
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
+
+      - name: Install Dependencies
+        run: gem install bundler && bundle install
+
+      - name: Run Fastlane Compile
+        run: bundle exec fastlane compile_debug
+
+  ###########################################################
+  # Lint Job:
+  # Install dependencies, execute lint and report with danger
+  ###########################################################
+  lint:
+    name: Lint
+    needs: compile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby 2.6
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
+
+      - name: Install Dependencies
+        run: gem install bundler && bundle install
+
+      - name: Run Fastlane KtLint
+        run: bundle exec fastlane ktlint
+
+      - name: Run Fastlane Android Lint
+        run: bundle exec fastlane lint_debug
+
+      - name: Run Fastlane Lint Reporting with Danger
+        run: bundle exec danger
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  ###########################################################
+  # Unit Test Job:
+  # Install dependencies and execute unit tests
+  ###########################################################
+  unit_test:
+    name: Unit Tests
+    needs: compile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby 2.6
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
+
+      - name: Install Dependencies
+        run: gem install bundler && bundle install
+
+      - name: Run Fastlane Unit Tests
+        run: bundle exec fastlane unit_test_debug
+
+  ###########################################################
+  # Assemble Job:
+  # Install dependencies and assemble packages
+  ###########################################################
+  assemble:
+    name: Assemble
+    needs: compile
+    runs-on: macos-latest # ndk issue with ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby 2.6
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
+
+      - name: Install Dependencies
+        run: gem install bundler && bundle install
+
+      - name: Run Fastlane Assemble
+        run: bundle exec fastlane assemble_debug

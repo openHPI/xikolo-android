@@ -1,0 +1,11 @@
+brands = [:openhpi, :opensap, :openwho, :moochouse]
+
+ENV["XIKOLO_BRANDS"] = brands.join(',')
+
+json_key_file("") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+
+brands.each do |brand|
+  for_lane brand do
+    package_name "de.xikolo.#{brand}"
+  end
+end

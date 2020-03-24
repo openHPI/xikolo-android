@@ -35,4 +35,6 @@ build/
 
 *.key
 
+fastlane/report.xml
+
 !gradle-wrapper.jar

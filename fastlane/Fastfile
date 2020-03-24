@@ -1,0 +1,88 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+brands = ENV["XIKOLO_BRANDS"].split(',')
+
+def gradle_exec(task_start, flavor = nil, type = nil, task_end = nil)
+  task = task_start
+    .split('_')
+    .map.with_index {|x, i| i == 0 ? x : x.capitalize }
+    .join
+
+  if flavor
+    task += flavor.capitalize
+  end
+
+  if type
+    task += type.capitalize
+  end
+
+  if task_end
+    task += task_end
+      .split('_')
+      .collect(&:capitalize)
+      .join
+  end
+
+  gradle(task: task)
+end
+
+platform :android do
+  desc 'Compile sources for debug build'
+  lane :compile_debug do
+    brands.each {|brand| public_send(:"compile_#{brand}", type: 'debug') }
+  end
+
+  desc 'Lint kotlin sources'
+  lane :ktlint do
+    gradle_exec('ktlintCheck')
+  end
+
+  desc 'Lint sources for debug build'
+  lane :lint_debug do
+    brands.each {|brand| public_send(:"lint_#{brand}", type: 'debug') }
+  end
+
+  desc "Execute unit tests for debug build"
+  lane :unit_test_debug do
+    brands.each {|brand| public_send(:"unit_test_#{brand}", type: 'debug') }
+  end
+
+  desc 'Assemble packages for debug build'
+  lane :assemble_debug do
+    brands.each {|brand| public_send(:"assemble_#{brand}", type: 'debug') }
+  end
+
+  brands.each do |brand|
+    lane :"compile_#{brand}" do |options|
+      gradle_exec('compile', brand, options[:type], 'sources')
+      gradle_exec('compile', brand, options[:type], 'unit_test_sources')
+    end
+
+    lane :"lint_#{brand}" do |options|
+      gradle_exec('lint', brand, options[:type])
+    end
+
+    lane :"unit_test_#{brand}" do |options|
+      gradle_exec('test', brand, options[:type], 'unit_test')
+    end
+
+    lane :"assemble_#{brand}" do |options|
+      gradle_exec('assemble', brand, options[:type])
+    end
+  end
+end

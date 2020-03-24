@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'io.fabric'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 android {
     buildToolsVersion rootProject.buildToolsVersion
@@ -127,8 +128,10 @@ android {
         variant.resValue "string", "service_download", name + " Download Service"
     }
     lintOptions {
+        setLintConfig(file("lint.xml"))
         abortOnError false
-        disable 'InconsistentArrays'
+        xmlReport true
+        htmlReport false
     }
     dexOptions {
         // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
@@ -140,6 +143,14 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+ktlint {
+    android = true
+    ignoreFailures = true
+    reporters {
+        reporter "checkstyle"
     }
 }
 
