@@ -28,6 +28,7 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.settings.SettingsActivity
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
+import de.xikolo.models.Profile
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.extensions.checkPlayServicesWithDialog
@@ -259,14 +260,14 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
             }
 
             viewModel.user?.let { user ->
-                val profile = user.profile
+                val profile: Profile? = user.profile
                 headerView.findViewById<TextView>(R.id.textName).text = String.format(
                     getString(R.string.user_name),
-                    profile.firstName,
-                    profile.lastName
+                    profile?.firstName ?: "",
+                    profile?.lastName ?: ""
                 )
 
-                headerView.findViewById<TextView>(R.id.textEmail).text = profile.email
+                headerView.findViewById<TextView>(R.id.textEmail).text = profile?.email ?: ""
 
                 GlideApp.with(this)
                     .load(user.avatarUrl)
