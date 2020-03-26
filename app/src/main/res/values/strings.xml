@@ -37,6 +37,7 @@
     <string name="action_unenroll">Un-enroll</string>
     <string name="action_language">Change language</string>
     <string name="action_search">Search</string>
+    <string name="action_filter">Filter</string>
     <string name="action_share">Share course</string>
     <string name="action_course_dates">Course dates</string>
     <string name="action_helpdesk">Help</string>
@@ -262,6 +263,9 @@
 
     <string name="notification_deep_link_error">Action not supported or content unavailable</string>
 
+    <string name="title_search_results">Search results</string>
+    <string name="notification_empty_search">No search results found</string>
+
     <!-- -->
     <string name="toast_no_courses">No courses received.</string>
     <string name="toast_no_network">Please enable network connection.</string>
@@ -391,5 +395,10 @@
     <string name="item_duration_hour_minute">%1$d hr, %2$d min</string>
     <string name="item_duration_hour">%1$d hr</string>
     <string name="item_duration_minute">%1$d min</string>
+
+    <string name="course_filter_classifier_channel" translatable="false">channel</string>
+    <string name="course_filter_classifier_language" translatable="false">language</string>
+    <string name="course_filter_classifier_all" translatable="false">all</string>
+    <string name="course_filter_all">All</string>
 
 </resources>

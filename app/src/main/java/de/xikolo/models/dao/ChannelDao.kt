@@ -29,6 +29,14 @@ class ChannelDao(realm: Realm) : BaseDao<Channel>(Channel::class, realm) {
         companion object {
 
             @JvmStatic
+            fun all(): List<Channel> =
+                Realm.getDefaultInstance().use { realm ->
+                    realm.where<Channel>()
+                        .findAll()
+                        .asCopy()
+                }
+
+            @JvmStatic
             fun find(id: String?): Channel? =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where<Channel>()

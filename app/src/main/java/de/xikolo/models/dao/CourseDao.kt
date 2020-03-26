@@ -1,6 +1,8 @@
 package de.xikolo.models.dao
 
 import androidx.lifecycle.LiveData
+import de.xikolo.App
+import de.xikolo.R
 import de.xikolo.extensions.asCopy
 import de.xikolo.extensions.asLiveData
 import de.xikolo.models.Course
@@ -63,18 +65,34 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
                         }
                 }
 
-            fun search(query: String?, withEnrollment: Boolean): List<Course> =
+            fun filter(searchQuery: String?, filterMap: Map<String, String>, withEnrollment: Boolean): List<Course> =
                 Realm.getDefaultInstance().use { realm ->
                     val realmQuery = realm.where<Course>()
                         .beginGroup()
-                            .like("title", "*$query*", Case.INSENSITIVE)
+                            .like("title", "*$searchQuery*", Case.INSENSITIVE)
                             .or()
-                            .like("shortAbstract", "*$query*", Case.INSENSITIVE)
+                            .like("shortAbstract", "*$searchQuery*", Case.INSENSITIVE)
                             .or()
-                            .like("description", "*$query*", Case.INSENSITIVE)
+                            .like("description", "*$searchQuery*", Case.INSENSITIVE)
                             .or()
-                            .like("teachers", "*$query*", Case.INSENSITIVE)
+                            .like("teachers", "*$searchQuery*", Case.INSENSITIVE)
                         .endGroup()
+
+                    filterMap.forEach {
+                        if (it.value != App.instance.getString(R.string.course_filter_classifier_all)) {
+                            when (it.key) {
+                                App.instance.getString(R.string.course_filter_classifier_channel)  -> {
+                                    realmQuery.equalTo("channelId", it.value, Case.INSENSITIVE)
+                                }
+                                App.instance.getString(R.string.course_filter_classifier_language) -> {
+                                    realmQuery.equalTo("language", it.value, Case.INSENSITIVE)
+                                }
+                                else                                                               -> {
+                                    realmQuery.like("classifiers.value", "${it.key}:*${it.value},*", Case.INSENSITIVE)
+                                }
+                            }
+                        }
+                    }
 
                     if (withEnrollment) {
                         realmQuery.isNotNull("enrollmentId")

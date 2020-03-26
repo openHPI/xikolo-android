@@ -3,4 +3,24 @@
 
     <string name="settings_copyright">&#169; 2012 &#8211; %d Hasso Plattner Institute</string>
 
+    <string-array name="course_filter_classifier_keys">// non-translatable custom identifiers
+        <item>@string/course_filter_classifier_channel</item> // course top-level classifier
+        <item>@string/course_filter_classifier_language</item> // course top-level classifier
+    </string-array>
+
+    <string-array name="course_filter_classifier_titles">
+        <item>Channel</item>
+        <item>Language</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_language_keys">// non-translatable identifiers
+        <item>en</item>
+        <item>de</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_language_titles">// same for all locales
+        <item>English</item>
+        <item>Deutsch</item>
+    </string-array>
+
 </resources>

@@ -5,10 +5,19 @@
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_magnify"
-        android:orderInCategory="110"
+        android:orderInCategory="10"
         android:title="@string/action_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:iconTint="@color/toolbar_icon"
-        app:showAsAction="collapseActionView|ifRoom" />
+        app:showAsAction="collapseActionView|always" />
+
+    <item
+        android:id="@+id/search_filter"
+        android:icon="@drawable/ic_filter"
+        android:orderInCategory="11"
+        android:title="@string/action_filter"
+        android:visible="false"
+        app:iconTint="@color/toolbar_icon"
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -5,12 +5,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
+import de.xikolo.controllers.base.BaseActivity
 import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.controllers.helper.CourseListFilter
@@ -26,6 +28,7 @@ import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.main.CourseListViewModel
 import de.xikolo.views.AutofitRecyclerView
+import de.xikolo.views.CourseFilterView
 import de.xikolo.views.SpaceItemDecoration
 
 class CourseListFragment : MainFragment<CourseListViewModel>() {
@@ -37,8 +40,11 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
     @AutoBundleField
     lateinit var filter: CourseListFilter
 
-    @BindView(R.id.content_view)
+    @BindView(R.id.recyclerView)
     lateinit var recyclerView: AutofitRecyclerView
+
+    @BindView(R.id.filter_container)
+    lateinit var filterView: CourseFilterView
 
     private lateinit var courseListAdapter: CourseListAdapter
 
@@ -170,27 +176,74 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
 
         inflater.inflate(R.menu.search, menu)
 
-        val searchView = menu.findItem(R.id.search)?.actionView as SearchView
+        val castItem = menu.findItem(R.id.media_route_menu_item)
+        val filterItem = menu.findItem(R.id.search_filter)
+        val searchItem = menu.findItem(R.id.search)
+
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                (activity as? BaseActivity)?.setScrollingBehavior(false) // lock action bar in place
+                networkStateHelper.enableSwipeRefresh(false)
+
+                castItem.isVisible = false
+                filterItem.isVisible = true
+
+                filterView.update()
+
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                (activity as? BaseActivity)?.setScrollingBehavior(true) // make action bar auto-hide again
+                networkStateHelper.enableSwipeRefresh(true)
+
+                castItem.isVisible = true
+                filterItem.isVisible = false
+
+                filterView.visibility = View.GONE
+                filterView.clear()
+                onFilter("", mapOf()) // reset the filter
+
+                return true
+            }
+        })
+        val searchView = searchItem?.actionView as SearchView
         searchView.setIconifiedByDefault(false)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                onSearch(query)
+                onFilter(query, filterView.currentFilter)
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                onSearch(newText)
+                onFilter(newText, filterView.currentFilter)
                 return false
             }
         })
+
+        filterItem.setOnMenuItemClickListener {
+            if (filterView.visibility == View.GONE) {
+                filterView.visibility = View.VISIBLE
+                filterView.onFilterChangeListener = {
+                    onFilter(searchView.query.toString(), it)
+                }
+            } else {
+                filterView.visibility = View.GONE
+            }
+            true
+        }
     }
 
-    fun onSearch(query: String?) {
+    fun onFilter(searchQuery: String, filter: Map<String, String>) {
         unregisterObservers()
-        if (query != null && query.isNotEmpty()) {
-            val results = viewModel.searchCourses(query)
+        if (searchQuery.isNotEmpty() || filterView.hasActiveFilter) {
+            val results = viewModel.filterCourses(searchQuery, filter)
             courseList.clear()
-            courseList.add(null, results)
+            if (results.isEmpty()) {
+                courseList.add(getString(R.string.notification_empty_search), results)
+            } else {
+                courseList.add(getString(R.string.title_search_results), results)
+            }
             updateCourseList()
         } else {
             registerObservers()
@@ -259,6 +312,11 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
         showMessage(R.string.notification_no_enrollments, R.string.notification_no_enrollments_summary) {
             activityCallback?.selectDrawerSection(R.id.navigation_all_courses)
         }
+    }
+
+    override fun onRefresh() {
+        activity?.invalidateOptionsMenu() // hide search when the user refreshes
+        super.onRefresh()
     }
 
 }

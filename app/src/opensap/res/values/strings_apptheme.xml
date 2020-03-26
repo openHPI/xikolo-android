@@ -10,4 +10,61 @@
     <string name="login_sso">SAP Single Sign On</string>
     <string name="login_sso_hint">for SAP Employees, Partners and Customers</string>
 
+    <string-array name="course_filter_classifier_keys">// non-translatable custom identifiers
+        <item>@string/course_filter_classifier_channel</item> // course top-level classifier
+        <item>@string/course_filter_classifier_language</item> // course top-level classifier
+        <item>category</item> //classifier from course.classifier
+        <item>topic</item> // classifier from course.classifier
+    </string-array>
+
+    <string-array name="course_filter_classifier_titles">
+        <item>Channel</item>
+        <item>Language</item>
+        <item>Target Audience</item>
+        <item>Topic</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_language_keys">// non-translatable identifiers
+        <item>en</item>
+        <item>de</item>
+        <item>fr</item>
+        <item>bg</item>
+        <item>cn</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_language_titles">// same for all locales
+        <item>English</item>
+        <item>Deutsch</item>
+        <item>Français</item>
+        <item>Българскиn</item>
+        <item>中文</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_category_keys">// same for all locales and same as
+        title
+        <item>Administrator</item>
+        <item>Application Consultant</item>
+        <item>Business Decision Maker</item>
+        <item>Data Scientist</item>
+        <item>Developer</item>
+        <item>Sales Specialist</item>
+        <item>Technology Consultant</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_topic_keys">// same for all locales and same as
+        identifier
+        <item>Analytics</item>
+        <item>Cloud Solutions</item>
+        <item>Continuous Innovation</item>
+        <item>Digital Transformation</item>
+        <item>Enterprise Management</item>
+        <item>Human Resources</item>
+        <item>Industries</item>
+        <item>SAP Cloud Platform</item>
+        <item>SAP HANA</item>
+        <item>SAP S/4HANA</item>
+        <item>Social Responsibility</item>
+        <item>User Experience</item>
+    </string-array>
+
 </resources>

@@ -8,4 +8,61 @@
     <string name="login_sso">WHO Identity (WIMS)</string>
     <string name="login_sso_hint">If you have issues logging in using your WIMS account please create an OpenWHO account.</string>
 
+    <string-array name="course_filter_classifier_keys">// non-translatable custom identifiers
+        <item>@string/course_filter_classifier_channel</item>// course top-level classifier
+        <item>@string/course_filter_classifier_language</item>// course top-level classifier
+        <item>category</item>//classifier from course.classifier
+    </string-array>
+
+    <string-array name="course_filter_classifier_titles">
+        <item>Channel</item>
+        <item>Language</item>
+        <item>Proficiency Level</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_language_keys">// non-translatable identifiers
+        <item>en</item>
+        <item>mk</item>
+        <item>es</item>
+        <item>id</item>
+        <item>hi</item>
+        <item>cn</item>
+        <item>vi</item>
+        <item>sr</item>
+        <item>it</item>
+        <item>pt</item>
+        <item>ru</item>
+        <item>fa</item>
+        <item>tr</item>
+        <item>fr</item>
+        <item>ja</item>
+        <item>ar</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_language_titles">// same for all locales
+        <item>English</item>
+        <item>македонски</item>
+        <item>Español</item>
+        <item>Bahasa Indonesia</item>
+        <item>हिन्दी, हिंदी</item>
+        <item>中文</item>
+        <item>Tiếng Việt</item>
+        <item>српски језик</item>
+        <item>Italiano</item>
+        <item>Português</item>
+        <item>Русский</item>
+        <item>فارسی</item>
+        <item>Türk</item>
+        <item>Français</item>
+        <item>日本語</item>
+        <item>العربية</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_category_keys">// same for all locales and same as
+        title
+        <item>Advanced (Avancé)</item>
+        <item>Basic (Basique)</item>
+        <item>Intermediate (Intermediaire)</item>
+    </string-array>
+
 </resources>

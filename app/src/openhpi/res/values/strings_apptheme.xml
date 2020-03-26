@@ -6,4 +6,34 @@
     <string name="login_sso">HPI Identity</string>
     <string name="login_sso_hint">for HPI students and employees</string>
 
+    <string-array name="course_filter_classifier_keys">// non-translatable custom identifiers
+        <item>@string/course_filter_classifier_language</item> // course top-level classifier
+        <item>category</item> //classifier from course.classifier
+    </string-array>
+
+    <string-array name="course_filter_classifier_titles">
+        <item>Language</item>
+        <item>Track</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_language_keys">// non-translatable identifiers
+        <item>en</item>
+        <item>de</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_language_titles">// same for all locales
+        <item>English</item>
+        <item>Deutsch</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_category_keys">// same for all locales and same as
+        title
+        <item>IT Basic Knowledge</item>
+        <item>IT Security</item>
+        <item>IT Technical Principles</item>
+        <item>Programming</item>
+        <item>Recent developments</item>
+        <item>openHPI Junior</item>
+    </string-array>
+
 </resources>

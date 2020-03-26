@@ -12,6 +12,7 @@ import de.xikolo.models.dao.DateDao
 import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.MetaSectionList
 import de.xikolo.viewmodels.base.BaseViewModel
+import de.xikolo.viewmodels.shared.ChannelListDelegate
 import de.xikolo.viewmodels.shared.CourseListDelegate
 import de.xikolo.viewmodels.shared.DateListDelegate
 import de.xikolo.viewmodels.shared.EnrollmentDelegate
@@ -21,6 +22,7 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
     private val courseListDelegate = CourseListDelegate(realm)
     private val dateListDelegate = DateListDelegate(realm)
     private val enrollmentDelegate = EnrollmentDelegate(realm)
+    private val channelListDelegate = ChannelListDelegate(realm)
 
     val hasEnrollments
         get() = enrollmentDelegate.enrollmentCount > 0
@@ -103,14 +105,15 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
             return courseList
         }
 
-    fun searchCourses(query: String): List<Course> =
-        CourseDao.Unmanaged.search(query, filter == CourseListFilter.MY)
+    fun filterCourses(query: String, filterMap: Map<String, String>): List<Course> =
+        CourseDao.Unmanaged.filter(query, filterMap, filter == CourseListFilter.MY)
 
     fun enroll(courseId: String, networkState: NetworkStateLiveData) {
         enrollmentDelegate.createEnrollment(courseId, networkState, true)
     }
 
     override fun onFirstCreate() {
+        channelListDelegate.requestChannels(NetworkStateLiveData(), false) // request channels to be available for course filtering by channel
         courseListDelegate.requestCourseList(networkState, false)
 
         if (filter == CourseListFilter.MY) {
