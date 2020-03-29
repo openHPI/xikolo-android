@@ -9,7 +9,7 @@
         android:id="@+id/filter_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/apptheme_main_dark"
+        android:background="@color/statusbar"
         android:visibility="gone" />
 
     <de.xikolo.views.AutofitRecyclerView

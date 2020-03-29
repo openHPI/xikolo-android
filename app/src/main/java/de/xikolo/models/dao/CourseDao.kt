@@ -1,6 +1,7 @@
 package de.xikolo.models.dao
 
 import androidx.lifecycle.LiveData
+import com.google.gson.Gson
 import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.extensions.asCopy
@@ -87,9 +88,6 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
                                 App.instance.getString(R.string.course_filter_classifier_language) -> {
                                     realmQuery.equalTo("language", it.value, Case.INSENSITIVE)
                                 }
-                                else                                                               -> {
-                                    realmQuery.like("classifiers.value", "${it.key}:*${it.value},*", Case.INSENSITIVE)
-                                }
                             }
                         }
                     }
@@ -102,6 +100,14 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
                         .sort("startDate", Sort.DESCENDING)
                         .findAll()
                         .asCopy()
+                        .filter { course ->
+                            filterMap.all {
+                                it.value == App.instance.getString(R.string.course_filter_classifier_all)
+                                    || it.key == App.instance.getString(R.string.course_filter_classifier_channel)
+                                    || it.key == App.instance.getString(R.string.course_filter_classifier_language)
+                                    || Gson().fromJson<Map<String, List<String>>>(course.classifiers, Map::class.java)[it.key]?.contains(it.value) == true
+                            }
+                        }
                 }
 
             fun allCurrentAndFuture(): List<Course> =
@@ -222,6 +228,31 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
                         .asCopy()
                 }
 
+            fun languages(): List<String> =
+                Realm.getDefaultInstance().use { realm ->
+                    realm.where<Course>()
+                        .findAll()
+                        .asCopy()
+                    }
+                    .map {
+                        it.language
+                    }
+                    .distinct()
+
+            fun collectClassifier(name: String): List<String> =
+                Realm.getDefaultInstance().use { realm ->
+                        realm.where<Course>()
+                            .findAll()
+                            .asCopy()
+                    }
+                    .map {
+                        val map = Gson().fromJson<Map<String, List<String>>>(it.classifiers, Map::class.java)
+                        map[name] ?: listOf()
+                    }
+                    .fold(mutableListOf<String>(), { acc, list ->
+                        acc.apply { addAll(list) }
+                    })
+                    .distinct()
         }
     }
 

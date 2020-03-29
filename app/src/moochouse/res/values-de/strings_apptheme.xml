@@ -3,9 +3,4 @@
 
     <string name="settings_copyright">&#169; 2012 &#8211; %d Hasso-Plattner-Institut</string>
 
-    <string-array name="course_filter_classifier_titles">
-        <item>Channel</item>
-        <item>Sprache</item>
-    </string-array>
-
 </resources>

@@ -2,12 +2,12 @@ package de.xikolo.models;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.moshi.Json;
 
 import java.text.DateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -23,7 +23,6 @@ import de.xikolo.models.dao.EnrollmentDao;
 import de.xikolo.utils.LanguageUtil;
 import de.xikolo.utils.extensions.DateUtil;
 import de.xikolo.utils.extensions.DisplayUtil;
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import moe.banana.jsonapi2.HasMany;
@@ -54,7 +53,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
     public String status;
 
-    public RealmList<RealmStringWrapper> classifiers;
+    public String classifiers;
 
     public String teachers;
 
@@ -116,13 +115,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         model.certificates = certificates;
         model.teaserStream = teaserStream;
 
-        HashMap<String, List<String>> classifierMap = new HashMap<String, List<String>>();
-        for (RealmStringWrapper c : classifiers) {
-            String key = c.value.split(":")[0];
-            List<String> values = Arrays.asList(c.value.split(":")[1].split(","));
-            classifierMap.put(key, values);
-        }
-        model.classifiers = classifierMap;
+        model.classifiers = new Gson().fromJson(classifiers, new TypeToken<Map<String, List<String>>>() {}.getType());
 
         if (enrollmentId != null) {
             model.enrollment = new HasOne<>(new Enrollment.JsonModel().getType(), enrollmentId);
@@ -260,21 +253,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.teaserStream = teaserStream;
             course.onDemand = onDemand;
 
-            // builds a String for each classifier which looks like <classifier_key>:<entry1>,<entry2>,<entry3>,...
-            // Matching is then done against <match_key>:*<match_entry>,*
-            RealmList<RealmStringWrapper> classifierList = new RealmList<>();
-            for (Map.Entry<String, List<String>> entry : classifiers.entrySet()) {
-                StringBuilder classifierString = new StringBuilder();
-                classifierString.append(entry.getKey());
-                classifierString.append(":");
-                for (String s : entry.getValue()) {
-                    classifierString.append(s).append(",");
-                }
-                RealmStringWrapper wrapper = new RealmStringWrapper();
-                wrapper.value = classifierString.toString();
-                classifierList.add(wrapper);
-            }
-            course.classifiers = classifierList;
+            course.classifiers = new Gson().toJson(classifiers);
 
             if (enrollment != null) {
                 course.enrollmentId = enrollment.get().getId();

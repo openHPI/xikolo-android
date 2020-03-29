@@ -126,19 +126,21 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
                 .observe(viewLifecycleOwner) {
                     courseList = viewModel.sectionedCourseList
                     showCourseList()
+                    activity?.invalidateOptionsMenu()
                 }
 
             viewModel.dates
                 .observe(viewLifecycleOwner) {
                     courseList = viewModel.sectionedCourseList
                     showCourseList()
+                    activity?.invalidateOptionsMenu()
                 }
         }
     }
 
     private fun unregisterObservers() {
-        viewModel.courses.removeObservers(this)
-        viewModel.dates.removeObservers(this)
+        viewModel.courses.removeObservers(viewLifecycleOwner)
+        viewModel.dates.removeObservers(viewLifecycleOwner)
     }
 
     override fun onStart() {
@@ -174,11 +176,16 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
+        if (networkStateHelper.anyProgressVisible) {
+            return
+        }
+
         inflater.inflate(R.menu.search, menu)
 
         val castItem = menu.findItem(R.id.media_route_menu_item)
         val filterItem = menu.findItem(R.id.search_filter)
         val searchItem = menu.findItem(R.id.search)
+        val searchView = searchItem?.actionView as SearchView
 
         searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
@@ -186,9 +193,11 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
                 networkStateHelper.enableSwipeRefresh(false)
 
                 castItem.isVisible = false
-                filterItem.isVisible = true
 
                 filterView.update()
+                filterView.onFilterChangeListener = {
+                    onFilter(searchView.query.toString(), it)
+                }
 
                 return true
             }
@@ -198,7 +207,6 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
                 networkStateHelper.enableSwipeRefresh(true)
 
                 castItem.isVisible = true
-                filterItem.isVisible = false
 
                 filterView.visibility = View.GONE
                 filterView.clear()
@@ -207,7 +215,6 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
                 return true
             }
         })
-        val searchView = searchItem?.actionView as SearchView
         searchView.setIconifiedByDefault(false)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -224,8 +231,9 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
         filterItem.setOnMenuItemClickListener {
             if (filterView.visibility == View.GONE) {
                 filterView.visibility = View.VISIBLE
-                filterView.onFilterChangeListener = {
-                    onFilter(searchView.query.toString(), it)
+                if (!searchItem.isActionViewExpanded) {
+                    searchItem.expandActionView()
+                    searchItem.actionView.clearFocus()
                 }
             } else {
                 filterView.visibility = View.GONE
@@ -312,11 +320,6 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
         showMessage(R.string.notification_no_enrollments, R.string.notification_no_enrollments_summary) {
             activityCallback?.selectDrawerSection(R.id.navigation_all_courses)
         }
-    }
-
-    override fun onRefresh() {
-        activity?.invalidateOptionsMenu() // hide search when the user refreshes
-        super.onRefresh()
     }
 
 }

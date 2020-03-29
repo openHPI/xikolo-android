@@ -151,17 +151,6 @@ public class RealmSchemaMigration implements RealmMigration {
         if (oldVersion == 11) {
             schema.get("Item").addField("timeEffort", int.class);
         }
-
-        if (oldVersion == 12) {
-            schema.create("RealmStringWrapper")
-                .addField("value", String.class);
-
-            schema.get("Course")
-                .removeField("classifiers")
-                .addRealmListField("classifiers", schema.get("RealmStringWrapper"));
-
-            oldVersion++;
-        }
     }
 
 }

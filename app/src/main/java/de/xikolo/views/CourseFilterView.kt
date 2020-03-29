@@ -5,7 +5,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.widget.LinearLayoutCompat
 import de.xikolo.R
+import de.xikolo.config.FeatureConfig
 import de.xikolo.models.dao.ChannelDao
+import de.xikolo.models.dao.CourseDao
+import de.xikolo.utils.LanguageUtil
+import java.util.*
 
 class CourseFilterView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : LinearLayoutCompat(context, attrs, defStyle) {
 
@@ -38,33 +42,69 @@ class CourseFilterView @JvmOverloads constructor(context: Context, attrs: Attrib
 
     fun update() {
         removeAllViews()
-        val classifierKeyList = context.resources.getStringArray(R.array.course_filter_classifier_keys)
-        val classifierTitlesList = context.resources.getStringArray(R.array.course_filter_classifier_titles)
+
+        val classifierKeyList = mutableListOf<String>()
+        val classifierTitleList = mutableListOf<String>()
+
+        var deviceLanguage = Locale.getDefault().language
+        if (deviceLanguage == "zh") { // workaround for wrong chinese API locale
+            deviceLanguage = "cn"
+        }
+        val languages = CourseDao.Unmanaged.languages()
+            .sortedBy {
+                LanguageUtil.toNativeName(it)
+            }
+            .toMutableList()
+        if (languages.contains("en")) {
+            languages.remove("en")
+            languages.add(0, "en")
+        }
+        if (languages.contains(deviceLanguage)) {
+            languages.remove(deviceLanguage)
+            languages.add(0, deviceLanguage)
+        }
+        classifierKeyList.add(context.getString(R.string.course_filter_classifier_language))
+        classifierTitleList.add(context.getString(R.string.course_filter_language))
+
+        val channels = if (FeatureConfig.CHANNELS) {
+            classifierKeyList.add(context.getString(R.string.course_filter_classifier_channel))
+            classifierTitleList.add(context.getString(R.string.course_filter_channel))
+
+            ChannelDao.Unmanaged.all()
+                .sortedBy {
+                    it.position
+                }
+        } else listOf()
+
+        classifierKeyList.addAll(context.resources.getStringArray(R.array.course_filter_classifier_keys))
+        classifierTitleList.addAll(context.resources.getStringArray(R.array.course_filter_classifier_titles))
+
         classifierKeyList.forEachIndexed { index, classifierKey ->
             currentFilter[classifierKey] = defaultOption.first
 
             val options: List<Pair<String, String>> = when (classifierKey) {
-                context.getString(R.string.course_filter_classifier_channel) -> {
-                    ChannelDao.Unmanaged.all()
-                        .map {
-                            Pair<String, String>(it.id, it.title)
-                        }
+                context.getString(R.string.course_filter_classifier_language) -> {
+                    languages.map {
+                        Pair(it, LanguageUtil.toNativeName(it))
+                    }
                 }
-                else                                                         -> {
-                    val keys = getClassifierResourceKeys(classifierKey)
-                    val titles = getClassifierResourceTitles(classifierKey)
-                    mutableListOf<Pair<String, String>>()
-                        .apply {
-                            keys.forEachIndexed { index, _ ->
-                                add(Pair(keys[index], titles[index]))
-                            }
+                context.getString(R.string.course_filter_classifier_channel)  -> {
+                    channels.map {
+                        Pair(it.id, it.title)
+                    }
+                }
+                else                                                          -> {
+                    CourseDao.Unmanaged.collectClassifier(classifierKey)
+                        .sorted()
+                        .map {
+                            Pair(it, it)
                         }
                 }
             }
 
             val classifierView = LayoutInflater.from(context).inflate(R.layout.view_course_filter_classifier, this, false) as CourseFilterClassifierView
             classifierView.setClassifier(
-                classifierTitlesList[index],
+                classifierTitleList[index],
                 listOf(defaultOption) + options
             )
             classifierView.onSelected = { optionKey ->
@@ -72,22 +112,6 @@ class CourseFilterView @JvmOverloads constructor(context: Context, attrs: Attrib
                 onFilterChangeListener?.invoke(currentFilter)
             }
             addView(classifierView)
-        }
-    }
-
-    private fun getClassifierResourceKeys(name: String): Array<String> {
-        return context.resources.getStringArray(
-            context.resources.getIdentifier("course_filter_classifier_${name}_keys", "array", context.packageName)
-        )
-    }
-
-    private fun getClassifierResourceTitles(name: String): Array<String> {
-        return try {
-            context.resources.getStringArray(
-                context.resources.getIdentifier("course_filter_classifier_${name}_titles", "array", context.packageName)
-            )
-        } catch (e: Exception) { // when the titles are the same as the keys
-            getClassifierResourceKeys(name)
         }
     }
 

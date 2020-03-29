@@ -264,7 +264,7 @@
     <string name="notification_deep_link_error">Action not supported or content unavailable</string>
 
     <string name="title_search_results">Search results</string>
-    <string name="notification_empty_search">No search results found</string>
+    <string name="notification_empty_search">No search results</string>
 
     <!-- -->
     <string name="toast_no_courses">No courses received.</string>
@@ -400,5 +400,7 @@
     <string name="course_filter_classifier_language" translatable="false">language</string>
     <string name="course_filter_classifier_all" translatable="false">all</string>
     <string name="course_filter_all">All</string>
+    <string name="course_filter_language">Language</string>
+    <string name="course_filter_channel">Channel</string>
 
 </resources>

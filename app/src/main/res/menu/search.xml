@@ -16,8 +16,7 @@
         android:icon="@drawable/ic_filter"
         android:orderInCategory="11"
         android:title="@string/action_filter"
-        android:visible="false"
         app:iconTint="@color/toolbar_icon"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>
