@@ -10,4 +10,14 @@
     <string name="login_sso">SAP Single Sign On</string>
     <string name="login_sso_hint">for SAP Employees, Partners and Customers</string>
 
+    <string-array name="course_filter_classifier_keys">
+        <item>category</item>
+        <item>topic</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_titles">
+        <item>Target Audience</item>
+        <item>Topic</item>
+    </string-array>
+
 </resources>

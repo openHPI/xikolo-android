@@ -16,6 +16,7 @@ import butterknife.ButterKnife
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.framework.*
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout.LayoutParams.*
 import com.yatatsu.autobundle.AutoBundle
 import de.xikolo.App
 import de.xikolo.R
@@ -198,6 +199,12 @@ abstract class BaseActivity : AppCompatActivity(), CastStateListener {
 
     protected fun setAppBarExpanded(expanded: Boolean) {
         appBar?.setExpanded(expanded, false)
+    }
+
+    fun setScrollingBehavior(hide: Boolean) {
+        toolbar?.layoutParams = (toolbar?.layoutParams as? AppBarLayout.LayoutParams)?.apply {
+            scrollFlags = SCROLL_FLAG_ENTER_ALWAYS or SCROLL_FLAG_SNAP or if (hide) SCROLL_FLAG_SCROLL else 0
+        }
     }
 
     protected fun enableOfflineModeToolbar(enable: Boolean) {

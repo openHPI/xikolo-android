@@ -5,4 +5,8 @@
 
     <string name="login_sso_hint">für HPI-Studierende und Angestellte</string>
 
+    <string-array name="course_filter_classifier_titles">
+        <item>Kategorie</item>
+    </string-array>
+
 </resources>

@@ -8,4 +8,12 @@
     <string name="login_sso">WHO Identity (WIMS)</string>
     <string name="login_sso_hint">If you have issues logging in using your WIMS account please create an OpenWHO account.</string>
 
+    <string-array name="course_filter_classifier_keys">
+        <item>category</item>
+    </string-array>
+
+    <string-array name="course_filter_classifier_titles">
+        <item>Proficiency Level</item>
+    </string-array>
+
 </resources>

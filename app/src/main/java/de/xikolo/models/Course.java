@@ -2,11 +2,15 @@ package de.xikolo.models;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.moshi.Json;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.xikolo.App;
 import de.xikolo.BuildConfig;
@@ -100,7 +104,6 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         model.imageUrl = imageUrl;
         model.language = language;
         model.status = status;
-        model.classifiers = classifiers;
         model.teachers = teachers;
         model.accessible = accessible;
         model.enrollable = enrollable;
@@ -111,6 +114,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         model.onDemand = onDemand;
         model.certificates = certificates;
         model.teaserStream = teaserStream;
+
+        model.classifiers = new Gson().fromJson(classifiers, new TypeToken<Map<String, List<String>>>() {}.getType());
 
         if (enrollmentId != null) {
             model.enrollment = new HasOne<>(new Enrollment.JsonModel().getType(), enrollmentId);
@@ -189,7 +194,7 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
         public String status;
 
-        public transient String classifiers;
+        public Map<String, List<String>> classifiers;
 
         public String teachers;
 
@@ -237,7 +242,6 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.imageUrl = imageUrl;
             course.language = language;
             course.status = status;
-            course.classifiers = classifiers;
             course.teachers = teachers;
             course.accessible = accessible;
             course.enrollable = enrollable;
@@ -248,6 +252,8 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
             course.certificates = certificates;
             course.teaserStream = teaserStream;
             course.onDemand = onDemand;
+
+            course.classifiers = new Gson().toJson(classifiers);
 
             if (enrollment != null) {
                 course.enrollmentId = enrollment.get().getId();

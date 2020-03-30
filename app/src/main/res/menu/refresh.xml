@@ -5,6 +5,7 @@
     <item
         android:id="@+id/action_refresh"
         android:title="@string/action_refresh"
+        android:orderInCategory="20"
         app:showAsAction="never" />
 
 </menu>

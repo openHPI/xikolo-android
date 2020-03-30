@@ -37,6 +37,7 @@
     <string name="action_unenroll">Kursteilnahme beenden</string>
     <string name="action_language">Sprache ändern</string>
     <string name="action_search">Suche</string>
+    <string name="action_filter">Filter</string>
     <string name="action_share">Kurs teilen</string>
     <string name="action_course_dates">Termine</string>
     <string name="action_helpdesk">Hilfe</string>
@@ -255,6 +256,9 @@
 
     <string name="notification_deep_link_error">Aktion nicht unterstützt oder Inhalt nicht verfügbar</string>
 
+    <string name="title_search_results">Suchergebnisse</string>
+    <string name="notification_empty_search">Keine Suchergebnisse</string>
+
     <!-- -->
     <string name="toast_no_courses">Keine Kurse erhalten.</string>
     <string name="toast_no_network">Bitte aktivieren Sie die Netzwerk-Verbindung.</string>
@@ -350,4 +354,8 @@
     <string name="item_duration_hour_minute">%1$d Std. %2$d Min.</string>
     <string name="item_duration_hour">%1$d Std.</string>
     <string name="item_duration_minute">%1$d Min.</string>
+
+    <string name="course_filter_all">Alle</string>
+    <string name="course_filter_language">Sprache</string>
+    <string name="course_filter_channel">Channel</string>
 </resources>

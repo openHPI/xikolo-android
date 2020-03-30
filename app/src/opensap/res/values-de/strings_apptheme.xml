@@ -9,4 +9,11 @@
 
     <string name="title_section_channels">Kursbereiche</string>
 
+    <string-array name="course_filter_classifier_titles">
+        <item>Zielgruppe</item>
+        <item>Thema</item>
+    </string-array>
+
+    <string name="course_filter_channel">Kursbereich</string>
+
 </resources>

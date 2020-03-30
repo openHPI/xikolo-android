@@ -7,12 +7,13 @@ import de.xikolo.models.Channel
 import de.xikolo.models.Course
 import de.xikolo.models.dao.ChannelDao
 import de.xikolo.models.dao.CourseDao
-import de.xikolo.network.jobs.ListChannelsWithCoursesJob
 import de.xikolo.viewmodels.base.BaseViewModel
+import de.xikolo.viewmodels.shared.ChannelListDelegate
 
 class ChannelListViewModel : BaseViewModel() {
 
     private val channelsDao = ChannelDao(realm)
+    private val channelListDelegate = ChannelListDelegate(realm)
 
     val channels: LiveData<List<Channel>> by lazy {
         channelsDao.all()
@@ -43,6 +44,6 @@ class ChannelListViewModel : BaseViewModel() {
     }
 
     private fun requestChannelList(userRequest: Boolean) {
-        ListChannelsWithCoursesJob(networkState, userRequest).run()
+        channelListDelegate.requestChannels(networkState, userRequest)
     }
 }
