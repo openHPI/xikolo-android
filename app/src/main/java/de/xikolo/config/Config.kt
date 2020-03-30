@@ -19,8 +19,6 @@ object Config {
     @JvmField val IMPRINT_URL: String?
     @JvmField val PRIVACY_URL: String?
     @JvmField val TERMS_OF_USE_URL: String?
-    @JvmField val PODCASTS_URL: String?
-    @JvmField val MICROLEARNING_URL: String?
 
     @JvmField val CAST_MEDIA_RECEIVER_APPLICATION_ID: String
 
@@ -32,8 +30,6 @@ object Config {
                 PRIVACY_URL = "https://open.hpi.de/pages/data-protection"
                 TERMS_OF_USE_URL = null
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604"
-                PODCASTS_URL = null
-                MICROLEARNING_URL = null
             }
             BuildFlavor.OPEN_SAP -> {
                 COPYRIGHT_URL = "https://sap.com/corporate/en/legal/copyright.html"
@@ -41,8 +37,6 @@ object Config {
                 PRIVACY_URL = "https://open.sap.com/pages/privacy"
                 TERMS_OF_USE_URL = "https://sap.com/corporate/en/legal/terms-of-use.html"
                 CAST_MEDIA_RECEIVER_APPLICATION_ID = "2C63C05D"
-                PODCASTS_URL = "https://open.sap.com/podcasts"
-                MICROLEARNING_URL = "https://open.sap.com/microlearning"
             }
             BuildFlavor.OPEN_WHO -> {
                 COPYRIGHT_URL = "http://who.int/"
@@ -51,8 +45,6 @@ object Config {
                 TERMS_OF_USE_URL = "https://openwho.org/pages/terms_of_use"
                 CAST_MEDIA_RECEIVER_APPLICATION_ID =
                     CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID
-                PODCASTS_URL = null
-                MICROLEARNING_URL = null
             }
             else -> { // MOOC_HOUSE
                 COPYRIGHT_URL = "https://hpi.de/"
@@ -61,8 +53,6 @@ object Config {
                 TERMS_OF_USE_URL = null
                 CAST_MEDIA_RECEIVER_APPLICATION_ID =
                     CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID
-                PODCASTS_URL = null
-                MICROLEARNING_URL = null
             }
         }
 

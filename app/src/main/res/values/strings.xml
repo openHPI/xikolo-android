@@ -402,4 +402,8 @@
     <string name="course_filter_language">Language</string>
     <string name="course_filter_channel">Channel</string>
 
+    <!-- placeholders -->
+    <string name="url_podcasts">empty</string>
+    <string name="url_microlearning">empty</string>
+
 </resources>

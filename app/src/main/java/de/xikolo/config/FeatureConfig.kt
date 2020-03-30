@@ -37,6 +37,10 @@ object FeatureConfig {
 
     val HELPDESK_COURSE_REACTIVATION = BuildConfig.X_FLAVOR === BuildFlavor.OPEN_SAP
 
-    val LINKS_PODCASTS_MICROLEARNING = BuildConfig.X_FLAVOR === BuildFlavor.OPEN_SAP
+    val PODCASTS =
+        BuildConfig.X_FLAVOR === BuildFlavor.OPEN_SAP ||
+        BuildConfig.X_FLAVOR === BuildFlavor.OPEN_HPI
+
+    val MICROLEARNING = BuildConfig.X_FLAVOR === BuildFlavor.OPEN_SAP
 
 }

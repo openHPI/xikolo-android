@@ -20,4 +20,7 @@
         <item>Topic</item>
     </string-array>
 
+    <string name="url_podcasts">https://open.sap.com/podcasts</string>
+    <string name="url_microlearning">https://open.sap.com/microlearning</string>
+
 </resources>
