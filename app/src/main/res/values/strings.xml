@@ -327,7 +327,7 @@
 
     <string name="settings_title_build">Build version</string>
     <string name="settings_summary_build">Version:</string>
-    
+
     <string name="settings_title_storage">Choose storage</string>
     <string name="settings_title_storage_internal">Internal Storage</string>
     <string name="settings_title_storage_external">SD Card</string>
@@ -402,8 +402,7 @@
     <string name="course_filter_language">Language</string>
     <string name="course_filter_channel">Channel</string>
 
-    <!-- placeholders -->
-    <string name="url_podcasts">empty</string>
-    <string name="url_microlearning">empty</string>
+    <string name="url_podcasts" />
+    <string name="url_microlearning" />
 
 </resources>

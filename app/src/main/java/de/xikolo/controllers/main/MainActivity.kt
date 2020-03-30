@@ -251,29 +251,30 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
 
         navigationView.inflateMenu(R.menu.navigation)
 
-        if (FeatureConfig.PODCASTS) {
+        getString(R.string.url_podcasts).takeIf { it.isNotEmpty() }?.let { url ->
             navigationView.menu.findItem(R.id.navigation_podcasts).apply {
                 setOnMenuItemClickListener {
                     startActivity(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_podcasts)))
+                        Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     )
                     true
                 }
                 isVisible = true
             }
         }
-        if (FeatureConfig.MICROLEARNING) {
+
+        getString(R.string.url_microlearning).takeIf { it.isNotEmpty() }?.let { url ->
             navigationView.menu.findItem(R.id.navigation_microlearning).apply {
                 setOnMenuItemClickListener {
                     startActivity(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_microlearning)))
+                        Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     )
                     true
                 }
                 isVisible = true
             }
         }
-        if (!FeatureConfig.PODCASTS && !FeatureConfig.MICROLEARNING) {
+        if (getString(R.string.url_podcasts).isEmpty() && getString(R.string.url_microlearning).isEmpty()) {
             navigationView.menu.removeGroup(R.id.navigation_group_links)
         }
 
