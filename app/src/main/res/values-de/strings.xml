@@ -40,7 +40,7 @@
     <string name="action_filter">Filter</string>
     <string name="action_share">Kurs teilen</string>
     <string name="action_course_dates">Termine</string>
-    <string name="action_helpdesk">Hilfe</string>
+    <string name="action_helpdesk">Technischer Support</string>
 
     <!-- -->
     <string name="tab_learnings">Lernmaterial</string>
@@ -325,12 +325,12 @@
     <string name="settings_terms_of_use">Nutzungsbedingungen</string>
 
     <!-- -->
-    <string name="hint_issue">Anliegen</string>
-    <string name="helpdesk_info_text_logged_in">Bitte beschreiben Sie Ihr Anliegen. Informationen über Ihr Mobilgerät und Ihre E-Mail-Adresse werden automatisch mit Ihrer Anfrage übermittelt.</string>
-    <string name="helpdesk_info_text_logged_out">Bitte beschreiben Sie Ihr Anliegen. Informationen über Ihr Mobilgerät und Ihre E-Mail-Adresse werden mit Ihrer Anfrage übermittelt.</string>
+    <string name="hint_issue">Technisches Problem</string>
+    <string name="helpdesk_info_text_logged_in">Bitte beschreiben Sie Ihr technisches Problem. Informationen über Ihr Mobilgerät und Ihre E-Mail-Adresse werden automatisch mit Ihrer Anfrage übermittelt. Ihr Problem wird von unserem Helpdesk-Team geprüft.</string>
+    <string name="helpdesk_info_text_logged_out">Bitte beschreiben Sie Ihr technisches Problem. Informationen über Ihr Mobilgerät und Ihre E-Mail-Adresse werden mit Ihrer Anfrage übermittelt. Ihr Problem wird von unserem Helpdesk-Team geprüft.</string>
     <string name="hint_title">Titel</string>
     <string name="hint_topic">Thema</string>
-    <string name="helpdesk_dialog_header">Hilfe</string>
+    <string name="helpdesk_dialog_header">Technischer Support</string>
     <string name="helpdesk_topic_dialog_header">Bitte wählen Sie Ihr Thema</string>
     <string name="helpdesk_topic_list_general">Allgemeine Frage</string>
     <string name="helpdesk_topic_list_technical_question">Technische Frage</string>
@@ -339,10 +339,10 @@
     <string name="dialog_send">Senden</string>
     <string name="helpdesk_default_topic">Bitte wählen Sie ein Thema</string>
     <string name="helpdesk_title_error">Bitte Titel eingeben</string>
-    <string name="helpdesk_message_error">Bitte Anliegen beschreiben</string>
+    <string name="helpdesk_message_error">Bitte Problem beschreiben</string>
     <string name="helpdesk_email_error">Bitte gültige E-Mail Adresse eingeben</string>
     <string name="dialog_discard_positive">Verwerfen</string>
-    <string name="dialog_discard_inputs">Möchten Sie alle Ihre Eingaben verwerfen?</string>
+    <string name="dialog_discard_inputs">Möchten Sie Ihre Eingaben verwerfen?</string>
 
     <!-- -->
     <string name="empty_message_documents_title">Für diesen Kurs sind keine Dokumente verfügbar</string>
