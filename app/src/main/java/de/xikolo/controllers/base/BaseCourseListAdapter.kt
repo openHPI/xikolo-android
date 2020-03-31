@@ -11,9 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import de.xikolo.App
-import de.xikolo.BuildConfig
 import de.xikolo.R
-import de.xikolo.config.BuildFlavor
+import de.xikolo.config.Feature
 import de.xikolo.config.GlideApp
 import de.xikolo.models.Course
 
@@ -38,7 +37,9 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
         holder.textLanguage.text = course.languageAsNativeName
         holder.textTeacher.visibility = if (course.teachers.isNullOrEmpty()) View.GONE else View.VISIBLE
 
-        if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
+        if (Feature.enabled("course_banner")) {
+            holder.textBanner.visibility = View.VISIBLE
+        } else {
             holder.textBanner.visibility = View.GONE
         }
 

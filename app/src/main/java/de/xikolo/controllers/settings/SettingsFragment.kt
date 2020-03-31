@@ -11,8 +11,7 @@ import de.psdev.licensesdialog.LicensesDialog
 import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
-import de.xikolo.config.Config
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.controllers.dialogs.ProgressDialogHorizontal
 import de.xikolo.controllers.dialogs.ProgressDialogHorizontalAutoBundle
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
@@ -145,7 +144,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
 
         val pipSettings = findPreference<Preference>(getString(R.string.preference_video_pip))
-        if (!FeatureConfig.PIP) {
+        if (!Feature.PIP) {
             val video = findPreference<PreferenceCategory>(getString(R.string.preference_category_video_playback_speed))
             video?.removePreference(pipSettings)
         } else {
@@ -163,53 +162,53 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             refreshPipStatus()
         }
 
-        val copyright = findPreference<Preference>(getString(R.string.preference_copyright))
-        copyright?.title = String.format(copyright?.title.toString(), Calendar.getInstance().get(Calendar.YEAR))
-        copyright?.setOnPreferenceClickListener { _ ->
-            openUrl(Config.COPYRIGHT_URL)
-            true
-        }
+        // programmatically build info preferences
 
-        val imprint = findPreference<Preference>(getString(R.string.preference_imprint))
-        if (Config.IMPRINT_URL != null) {
-            imprint?.setOnPreferenceClickListener { _ ->
-                openUrl(Config.IMPRINT_URL)
+        val info = findPreference<PreferenceCategory>(getString(R.string.preference_category_info))!!
+
+        val copyright = Preference(preferenceScreen.context)
+        copyright.title = String.format(getString(R.string.settings_copyright), Calendar.getInstance().get(Calendar.YEAR))
+        if (Feature.enabled("url_copyright")) {
+            copyright.setOnPreferenceClickListener { _ ->
+                openUrl(App.instance.getString("url_copyright"))
                 true
             }
         } else {
-            val info = findPreference<PreferenceCategory>(getString(R.string.preference_category_info))
-            info?.removePreference(imprint)
+            copyright.isEnabled = false
         }
 
-        val privacy = findPreference<Preference>(getString(R.string.preference_privacy))
-        if (Config.PRIVACY_URL != null) {
-            privacy?.setOnPreferenceClickListener { _ ->
-                openUrl(Config.PRIVACY_URL)
+        info.addPreference(copyright)
+
+        if (Feature.enabled("legal_links_urls")) {
+            val titles = App.instance.getStringArray("legal_links_titles")
+
+            App.instance.getStringArray("legal_links_urls").forEachIndexed { i, url ->
+                val pref = Preference(preferenceScreen.context)
+                pref.title = titles[i]
+                pref.setOnPreferenceClickListener { _ ->
+                    openUrl(url)
+                    true
+                }
+
+                info.addPreference(pref)
+            }
+        }
+
+        if (Feature.enabled("url_faq")) {
+            val faq = Preference(preferenceScreen.context)
+            faq.title = getString(R.string.settings_title_faq)
+            faq.setOnPreferenceClickListener { _ ->
+                openUrl(App.instance.getString("url_faq"))
                 true
             }
-        } else {
-            val info = findPreference<PreferenceCategory>(getString(R.string.preference_category_info))
-            info?.removePreference(privacy)
+
+            info.addPreference(faq)
         }
 
-        val termsOfUse = findPreference<Preference>(getString(R.string.preference_terms_of_use))
-        if (Config.TERMS_OF_USE_URL != null) {
-            termsOfUse?.setOnPreferenceClickListener { _ ->
-                openUrl(Config.TERMS_OF_USE_URL)
-                true
-            }
-        } else {
-            val info = findPreference<PreferenceCategory>(getString(R.string.preference_category_info))
-            info?.removePreference(termsOfUse)
-        }
-
-        val buildVersion = findPreference<Preference>(getString(R.string.preference_build_version))
-        buildVersion?.summary = (buildVersion?.summary.toString()
-            + " "
-            + BuildConfig.VERSION_NAME)
-
-        val licenses = findPreference<Preference>(getString(R.string.preference_open_source_licenses))
-        licenses?.setOnPreferenceClickListener { _ ->
+        val licenses = Preference(preferenceScreen.context)
+        licenses.title = getString(R.string.settings_title_licenses)
+        licenses.summary = getString(R.string.settings_summary_licenses)
+        licenses.setOnPreferenceClickListener {
             LicensesDialog.Builder(activity)
                 .setNotices(R.raw.notices)
                 .setTitle(R.string.settings_title_licenses)
@@ -218,12 +217,23 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             true
         }
 
-        loginOut = findPreference(getString(R.string.preference_login_out))
+        info.addPreference(licenses)
+
+        val buildVersion = Preference(preferenceScreen.context)
+        buildVersion.title = getString(R.string.settings_title_build)
+        buildVersion.summary = getString(R.string.settings_summary_build) + " " + BuildConfig.VERSION_NAME
+        buildVersion.isEnabled = false
+
+        info.addPreference(buildVersion)
+
+        loginOut = Preference(preferenceScreen.context)
         if (UserManager.isAuthorized) {
             buildLogoutView(loginOut)
         } else {
             buildLoginView(loginOut)
         }
+
+        info.addPreference(loginOut)
     }
 
     private fun refreshPipStatus() {

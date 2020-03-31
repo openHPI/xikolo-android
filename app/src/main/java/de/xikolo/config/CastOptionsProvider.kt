@@ -1,14 +1,17 @@
 package de.xikolo.config
 
 import android.content.Context
+import com.google.android.gms.cast.CastMediaControlIntent
 
 import com.google.android.gms.cast.framework.CastOptions
 import com.google.android.gms.cast.framework.OptionsProvider
 import com.google.android.gms.cast.framework.SessionProvider
 import com.google.android.gms.cast.framework.media.CastMediaOptions
 import com.google.android.gms.cast.framework.media.NotificationOptions
+import de.xikolo.App
 
 import de.xikolo.controllers.cast.CastActivity
+import de.xikolo.utils.extensions.getString
 
 @Suppress("UNUSED")
 class CastOptionsProvider : OptionsProvider {
@@ -23,8 +26,14 @@ class CastOptionsProvider : OptionsProvider {
             .setExpandedControllerActivityClassName(CastActivity::class.java.name)
             .build()
 
+        val castAppId = if (Feature.enabled("custom_cast_application_id")) {
+            App.instance.getString("custom_cast_application_id")
+        } else {
+            CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID
+        }
+
         return CastOptions.Builder()
-            .setReceiverApplicationId(Config.CAST_MEDIA_RECEIVER_APPLICATION_ID)
+            .setReceiverApplicationId(castAppId)
             .setCastMediaOptions(mediaOptions)
             .build()
     }

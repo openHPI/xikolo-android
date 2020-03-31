@@ -13,9 +13,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.xikolo.App;
-import de.xikolo.BuildConfig;
 import de.xikolo.R;
-import de.xikolo.config.BuildFlavor;
+import de.xikolo.config.Feature;
 import de.xikolo.models.base.JsonAdapter;
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.ChannelDao;
@@ -143,18 +142,18 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
         }
 
         if (DateUtil.isPast(startDate) && endDate == null) {
-            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-                return context.getString(R.string.course_date_self_paced);
-            } else {
+            if (Feature.INSTANCE.enabled("show_dates_for_never_ending_courses")) {
                 return String.format(context.getString(R.string.course_date_since), dateOut.format(startDate));
+            } else {
+                return context.getString(R.string.course_date_self_paced);
             }
         }
 
         if (DateUtil.isFuture(startDate) && endDate == null) {
-            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-                return context.getString(R.string.course_date_coming_soon);
-            } else {
+            if (Feature.INSTANCE.enabled("show_dates_for_never_ending_courses")) {
                 return String.format(context.getString(R.string.course_date_beginning), dateOut.format(startDate));
+            } else {
+                return context.getString(R.string.course_date_coming_soon);
             }
         }
 

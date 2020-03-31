@@ -17,7 +17,7 @@ class MockingInterceptor(private val context: Context) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         return try {
-            val mockedResponse = MockingData.getResponse(context, chain.request(), BuildConfig.X_FLAVOR)!!
+            val mockedResponse = MockingData.getResponse(context, chain.request())!!
             val responseBody = mockedResponse.responseString
                 .toByteArray()
                 .toResponseBody(

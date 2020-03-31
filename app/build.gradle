@@ -33,27 +33,27 @@ android {
     productFlavors {
         openhpi {
             applicationId "de.xikolo.openhpi"
-            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_HPI"
             appName = "openHPI"
             appHost = "open.hpi.de"
+            resConfigs "en", "de"
         }
         opensap {
             applicationId "de.xikolo.opensap"
-            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_SAP"
             appName = "openSAP"
             appHost = "open.sap.com"
+            resConfigs "en", "de"
         }
         moochouse {
             applicationId "de.xikolo.moochouse"
-            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.MOOC_HOUSE"
             appName = "mooc.house"
             appHost = "mooc.house"
+            resConfigs "en", "de"
         }
         openwho {
             applicationId "de.xikolo.openwho"
-            buildConfigField "de.xikolo.config.BuildFlavor", "X_FLAVOR", "de.xikolo.config.BuildFlavor.OPEN_WHO"
             appName = "OpenWHO"
             appHost = "openwho.org"
+            resConfigs "en"
         }
     }
 
@@ -98,7 +98,6 @@ android {
             shrinkResources false
             zipAlignEnabled true
             debuggable false
-            buildConfigField "de.xikolo.config.BuildType", "X_TYPE", "de.xikolo.config.BuildType.RELEASE"
 
             if (signingProperties.RELEASE_STORE_FILE != null) {
                 productFlavors.openhpi.signingConfig signingConfigs.openhpi
@@ -112,7 +111,6 @@ android {
             shrinkResources false
             zipAlignEnabled false
             debuggable true
-            buildConfigField "de.xikolo.config.BuildType", "X_TYPE", "de.xikolo.config.BuildType.DEBUG"
 
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
@@ -130,9 +128,7 @@ android {
     }
     lintOptions {
         abortOnError false
-        disable 'MissingTranslation'
-        disable 'ExtraTranslation'
-        disable 'UnusedAttribute'
+        disable 'InconsistentArrays'
     }
     dexOptions {
         // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.

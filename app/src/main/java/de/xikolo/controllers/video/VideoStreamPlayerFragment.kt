@@ -16,7 +16,7 @@ import com.github.rubensousa.previewseekbar.PreviewView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.controllers.base.BaseFragment
 import de.xikolo.controllers.helper.VideoSettingsHelper
 import de.xikolo.models.VideoStream
@@ -495,7 +495,7 @@ open class VideoStreamPlayerFragment : BaseFragment() {
     protected open fun getVideoAvailability(videoMode: VideoSettingsHelper.VideoMode): Boolean {
         return (videoMode == VideoSettingsHelper.VideoMode.HD && videoStream.hdUrl != null)
             || (videoMode == VideoSettingsHelper.VideoMode.SD && videoStream.sdUrl != null)
-            || (videoMode == VideoSettingsHelper.VideoMode.AUTO && FeatureConfig.HLS_VIDEO && videoStream.hlsUrl != null)
+            || (videoMode == VideoSettingsHelper.VideoMode.AUTO && Feature.HLS_VIDEO && videoStream.hlsUrl != null)
     }
 
     protected open fun getSubtitleList(): List<VideoSubtitles>? {

@@ -19,11 +19,9 @@ import butterknife.BindView
 import com.google.android.material.textfield.TextInputEditText
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.App
-import de.xikolo.BuildConfig
 import de.xikolo.R
-import de.xikolo.config.BuildFlavor
 import de.xikolo.config.Config
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
@@ -32,6 +30,7 @@ import de.xikolo.managers.UserManager
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkState
 import de.xikolo.storages.UserStorage
+import de.xikolo.utils.extensions.getString
 import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.login.LoginViewModel
 
@@ -121,7 +120,7 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
         }
 
 
-        if (FeatureConfig.SSO_LOGIN) {
+        if (Feature.enabled("sso_provider")) {
             containerSSO.visibility = View.VISIBLE
             buttonSSO.setOnClickListener {
                 hideKeyboard(view)
@@ -223,13 +222,7 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
     }
 
     private fun startSSOLogin() {
-        val strategy =
-            when (BuildConfig.X_FLAVOR) {
-                BuildFlavor.OPEN_WHO -> "who"
-                BuildFlavor.OPEN_SAP -> "sap"
-                BuildFlavor.OPEN_HPI -> "hpi"
-                else                 -> null
-            }
+        val strategy = context?.getString("sso_provider")
 
         val intent = SsoLoginActivityAutoBundle.builder(
             Config.HOST_URL + "auth/" + strategy + "?in_app=true&redirect_to=/auth/" + strategy,

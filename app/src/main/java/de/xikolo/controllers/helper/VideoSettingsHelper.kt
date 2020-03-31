@@ -13,7 +13,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.managers.PermissionManager
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.storages.ApplicationPreferences
@@ -115,7 +115,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 buildImmersiveSettingsItem(list)
             )
         }
-        if (FeatureConfig.PIP && PermissionManager.hasPipPermission(context)) {
+        if (Feature.PIP && PermissionManager.hasPipPermission(context)) {
             list.addView(
                 buildSettingsItem(
                     R.string.icon_pip,

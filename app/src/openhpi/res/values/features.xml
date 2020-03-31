@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="recap">true</bool>
+
+    <string name="url_copyright" translatable="false">https://hpi.de/</string>
+    <string name="url_faq" translatable="false">https://open.hpi.de/pages/faq</string>
+    <string name="url_podcasts" translatable="false">https://open.hpi.de/pages/podcast</string>
+
+    <string name="sso_provider" translatable="false">hpi</string>
+
+    <string name="custom_cast_application_id" translatable="false">EE6FB604</string>
+
+    <string-array name="course_filter_classifier_keys" translatable="false">
+        <item>category</item>
+    </string-array>
+    <string-array name="course_filter_classifier_titles">
+        <item>Track</item>
+    </string-array>
+
+    <string-array name="legal_links_urls" translatable="false">
+        <item>https://open.hpi.de/pages/imprint</item>
+        <item>https://open.hpi.de/pages/data-protection</item>
+    </string-array>
+    <string-array name="legal_links_titles">
+        <item>Imprint</item>
+        <item>Data Protection</item>
+    </string-array>
+
+</resources>

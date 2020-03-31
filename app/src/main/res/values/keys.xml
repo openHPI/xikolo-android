@@ -17,14 +17,6 @@
     <string name="preference_video_subtitles_language" translatable="false">video_subtitles_language</string>
     <string name="preference_video_immersive" translatable="false">video_immersive</string>
     <string name="preference_video_pip" translatable="false">video_pip</string>
-    <string name="preference_copyright" translatable="false">copyright</string>
-    <string name="preference_imprint" translatable="false">imprint</string>
-    <string name="preference_privacy" translatable="false">privacy</string>
-    <string name="preference_terms_of_use" translatable="false">terms_of_use</string>
-    <string name="preference_open_source_licenses" translatable="false">open_source_licenses</string>
-    <string name="preference_open_source_contributors" translatable="false">open_source_contributors</string>
-    <string name="preference_build_version" translatable="false">build_version</string>
-    <string name="preference_login_out" translatable="false">login_out</string>
     <string name="preference_confirm_open_external_content_lti" translatable="false">confirm_open_external_content_lti</string>
     <string name="preference_confirm_open_external_content_peer" translatable="false">confirm_open_external_content_peer</string>
 
@@ -59,5 +51,10 @@
 
     <!-- -->
     <string name="filename_cache_lastcourse" translatable="false">lastCourseExtras</string>
+
+    <!-- Default Course Filter -->
+    <string name="course_filter_classifier_channel" translatable="false">channel</string>
+    <string name="course_filter_classifier_language" translatable="false">language</string>
+    <string name="course_filter_classifier_all" translatable="false">all</string>
 
 </resources>

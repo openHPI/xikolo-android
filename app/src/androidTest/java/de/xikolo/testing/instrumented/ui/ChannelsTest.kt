@@ -11,7 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import de.xikolo.R
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.controllers.main.MainActivity
 import de.xikolo.testing.instrumented.mocking.base.BaseMockedTest
 import de.xikolo.testing.instrumented.ui.helper.NavigationHelper
@@ -33,7 +33,7 @@ class ChannelsTest : BaseMockedTest() {
      */
     @Before
     fun navigateToChannelList() {
-        if (!FeatureConfig.CHANNELS) {
+        if (!Feature.enabled("channels")) {
             return
         }
 
@@ -46,7 +46,7 @@ class ChannelsTest : BaseMockedTest() {
      */
     @Test
     fun channelLoading() {
-        if (!FeatureConfig.CHANNELS) {
+        if (!Feature.enabled("channels")) {
             return
         }
 
@@ -79,7 +79,7 @@ class ChannelsTest : BaseMockedTest() {
      */
     @Test
     fun channelDetails() {
-        if (!FeatureConfig.CHANNELS) {
+        if (!Feature.enabled("channels")) {
             return
         }
 

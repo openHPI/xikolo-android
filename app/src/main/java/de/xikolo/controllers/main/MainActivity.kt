@@ -17,7 +17,7 @@ import de.xikolo.App
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.BaseFragment
 import de.xikolo.controllers.base.ViewModelActivity
@@ -33,6 +33,7 @@ import de.xikolo.models.Profile
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.extensions.checkPlayServicesWithDialog
+import de.xikolo.utils.extensions.getString
 import de.xikolo.viewmodels.main.NavigationViewModel
 
 class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.OnNavigationItemSelectedListener, MainActivityCallback {
@@ -70,11 +71,6 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         )
         drawerLayout.addDrawerListener(drawerToggle)
         navigationView.setNavigationItemSelectedListener(this)
-
-        if (Config.DEBUG) {
-            Log.d(TAG, "Build Type: " + BuildConfig.X_TYPE)
-            Log.d(TAG, "Build Flavor: " + BuildConfig.X_FLAVOR)
-        }
 
         // check Play Services, display dialog is update needed
         checkPlayServicesWithDialog()
@@ -251,11 +247,11 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
 
         navigationView.inflateMenu(R.menu.navigation)
 
-        getString(R.string.url_podcasts).takeIf { it.isNotEmpty() }?.let { url ->
+        if (Feature.enabled("url_podcasts")) {
             navigationView.menu.findItem(R.id.navigation_podcasts).apply {
                 setOnMenuItemClickListener {
                     startActivity(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        Intent(Intent.ACTION_VIEW, Uri.parse(getString("url_podcasts")))
                     )
                     true
                 }
@@ -263,22 +259,22 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
             }
         }
 
-        getString(R.string.url_microlearning).takeIf { it.isNotEmpty() }?.let { url ->
+        if (Feature.enabled("url_microlearning")) {
             navigationView.menu.findItem(R.id.navigation_microlearning).apply {
                 setOnMenuItemClickListener {
                     startActivity(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        Intent(Intent.ACTION_VIEW, Uri.parse(getString("url_microlearning")))
                     )
                     true
                 }
                 isVisible = true
             }
         }
-        if (getString(R.string.url_podcasts).isEmpty() && getString(R.string.url_microlearning).isEmpty()) {
+        if (!Feature.enabled("url_podcasts") && !Feature.enabled("url_microlearning")) {
             navigationView.menu.removeGroup(R.id.navigation_group_links)
         }
 
-        if (!FeatureConfig.CHANNELS) {
+        if (!Feature.enabled("channels")) {
             navigationView.menu.findItem(R.id.navigation_channels).isVisible = false
         }
         if (UserManager.isAuthorized) {
