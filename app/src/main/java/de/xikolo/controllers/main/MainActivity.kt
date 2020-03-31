@@ -1,6 +1,7 @@
 package de.xikolo.controllers.main
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -249,6 +250,33 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         }
 
         navigationView.inflateMenu(R.menu.navigation)
+
+        getString(R.string.url_podcasts).takeIf { it.isNotEmpty() }?.let { url ->
+            navigationView.menu.findItem(R.id.navigation_podcasts).apply {
+                setOnMenuItemClickListener {
+                    startActivity(
+                        Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    )
+                    true
+                }
+                isVisible = true
+            }
+        }
+
+        getString(R.string.url_microlearning).takeIf { it.isNotEmpty() }?.let { url ->
+            navigationView.menu.findItem(R.id.navigation_microlearning).apply {
+                setOnMenuItemClickListener {
+                    startActivity(
+                        Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    )
+                    true
+                }
+                isVisible = true
+            }
+        }
+        if (getString(R.string.url_podcasts).isEmpty() && getString(R.string.url_microlearning).isEmpty()) {
+            navigationView.menu.removeGroup(R.id.navigation_group_links)
+        }
 
         if (!FeatureConfig.CHANNELS) {
             navigationView.menu.findItem(R.id.navigation_channels).isVisible = false

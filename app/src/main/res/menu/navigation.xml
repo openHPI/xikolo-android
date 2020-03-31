@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
@@ -39,6 +40,25 @@
             android:id="@+id/navigation_certificates"
             android:icon="@drawable/ic_nav_certificates"
             android:title="@string/title_section_certificates" />
+    </group>
+
+    <group
+        android:id="@+id/navigation_group_links"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/navigation_microlearning"
+            android:icon="@drawable/ic_nav_microlearning"
+            android:title="@string/title_section_microlearning"
+            android:visible="false"
+            app:actionLayout="@layout/view_external_icon"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/navigation_podcasts"
+            android:icon="@drawable/ic_nav_podcasts"
+            android:title="@string/title_section_podcasts"
+            android:visible="false"
+            app:actionLayout="@layout/view_external_icon"
+            app:showAsAction="always" />
     </group>
 
     <group
