@@ -1,7 +1,7 @@
 package de.xikolo.testing.instrumented.unit
 
 import android.net.Uri
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.controllers.helper.CourseArea
 import de.xikolo.testing.instrumented.mocking.base.BaseTest
 import de.xikolo.utils.DeepLinkingUtil
@@ -28,7 +28,7 @@ class DeepLinkingUtilTest : BaseTest() {
             DeepLinkingUtil.getCourseIdentifier(Uri.parse("https://open.hpi.de/courses/123456/items/654321"))
         )
 
-        if (FeatureConfig.RECAP_MODE) {
+        if (Feature.enabled("recap")) {
             assertEquals(
                 "123456",
                 DeepLinkingUtil.getCourseIdentifier(Uri.parse("https://open.hpi.de/learn?course_id=123456"))
@@ -63,7 +63,7 @@ class DeepLinkingUtilTest : BaseTest() {
             DeepLinkingUtil.getTab("/courses/123456/resume")
         )
 
-        if (FeatureConfig.RECAP_MODE) {
+        if (Feature.enabled("recap")) {
             assertEquals(
                 CourseArea.RECAP,
                 DeepLinkingUtil.getTab("/learn?course_id=123456")

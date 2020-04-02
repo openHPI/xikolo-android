@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="url_copyright">https://sap.com/corporate/de/legal/copyright.html</string>
+
+    <string-array name="course_filter_classifier_titles">
+        <item>Zielgruppe</item>
+        <item>Thema</item>
+    </string-array>
+
+    <string-array name="legal_links_urls">
+        <item>http://www.sap.com/corporate-de/legal/impressum.epx</item>
+        <item>https://open.sap.com/pages/privacy</item>
+        <item>http://www.sap.com/corporate-de/about/legal/terms-of-use.html</item>
+    </string-array>
+    <string-array name="legal_links_titles">
+        <item>Impressum</item>
+        <item>Datenschutz</item>
+        <item>Nutzungsbedingungen</item>
+    </string-array>
+
+</resources>

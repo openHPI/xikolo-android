@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="channels">true</bool>
+    <bool name="course_reactivation">true</bool>
+
+    <string name="url_copyright">https://sap.com/corporate/en/legal/copyright.html</string>
+    <string name="url_faq" translatable="false">https://open.sap.com/pages/faq</string>
+    <string name="url_podcasts" translatable="false">https://open.sap.com/podcasts</string>
+    <string name="url_microlearning" translatable="false">https://open.sap.com/microlearning</string>
+
+    <string name="sso_provider" translatable="false">sap</string>
+
+    <string name="custom_cast_application_id" translatable="false">2C63C05D</string>
+
+    <string-array name="course_filter_classifier_keys" translatable="false">
+        <item>category</item>
+        <item>topic</item>
+    </string-array>
+    <string-array name="course_filter_classifier_titles">
+        <item>Target Audience</item>
+        <item>Topic</item>
+    </string-array>
+
+    <string-array name="legal_links_urls">
+        <item>http://www.sap.com/corporate-en/legal/impressum.epx</item>
+        <item>https://open.sap.com/pages/privacy</item>
+        <item>http://www.sap.com/corporate-en/about/legal/terms-of-use.html</item>
+    </string-array>
+    <string-array name="legal_links_titles">
+        <item>Legal Disclosure</item>
+        <item>Privacy</item>
+        <item>Terms of Use</item>
+    </string-array>
+
+</resources>

@@ -1,8 +1,7 @@
 package de.xikolo.viewmodels.main
 
 import androidx.lifecycle.LiveData
-import de.xikolo.BuildConfig
-import de.xikolo.config.BuildFlavor
+import de.xikolo.config.Feature
 import de.xikolo.models.Channel
 import de.xikolo.models.Course
 import de.xikolo.models.dao.ChannelDao
@@ -23,12 +22,12 @@ class ChannelListViewModel : BaseViewModel() {
         val courseLists = mutableListOf<List<Course>>()
         for (channel in channelList) {
             val courseList = mutableListOf<Course>()
-            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-                courseList.addAll(CourseDao.Unmanaged.allFutureForChannel(channel.id))
-                courseList.addAll(CourseDao.Unmanaged.allCurrentAndPastForChannel(channel.id))
-            } else {
+            if (Feature.enabled("merge_current_and_future_courses")) {
                 courseList.addAll(CourseDao.Unmanaged.allCurrentAndFutureForChannel(channel.id))
                 courseList.addAll(CourseDao.Unmanaged.allPastForChannel(channel.id))
+            } else {
+                courseList.addAll(CourseDao.Unmanaged.allFutureForChannel(channel.id))
+                courseList.addAll(CourseDao.Unmanaged.allCurrentAndPastForChannel(channel.id))
             }
             courseLists.add(courseList)
         }

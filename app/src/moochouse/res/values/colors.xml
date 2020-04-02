@@ -20,8 +20,6 @@
 
     <color name="apptheme_second_26">#42abb324</color>
 
-
-
     <!-- Overrides -->
     <color name="apptheme_toolbar">@color/white</color>
     <color name="apptheme_statusbar">#999999</color>

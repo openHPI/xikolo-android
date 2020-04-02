@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="documents">true</bool>
+    <bool name="channels">true</bool>
+
+    <bool name="course_banner">false</bool>
+    <bool name="show_dates_for_never_ending_courses">false</bool>
+    <bool name="merge_current_and_future_courses">false</bool>
+
+    <string name="url_copyright" translatable="false">http://who.int/</string>
+    <string name="url_faq" translatable="false">https://openwho.org/pages/faq</string>
+
+    <string name="sso_provider" translatable="false">who</string>
+
+    <string-array name="course_filter_classifier_keys" translatable="false">
+        <item>category</item>
+    </string-array>
+    <string-array name="course_filter_classifier_titles">
+        <item>Proficiency Level</item>
+    </string-array>
+
+    <string-array name="legal_links_urls" translatable="false">
+        <item>https://openwho.org/pages/terms_of_use</item>
+    </string-array>
+    <string-array name="legal_links_titles">
+        <item>Terms of Use</item>
+    </string-array>
+
+</resources>

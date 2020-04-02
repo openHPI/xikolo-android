@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.controllers.dialogs.base.ViewModelDialogFragment
 import de.xikolo.models.Course
 import de.xikolo.models.TicketTopic
@@ -84,7 +84,7 @@ class HelpdeskTopicDialog : ViewModelDialogFragment<HelpdeskTopicViewModel>() {
 
         generalList.add(technicalTopic)
 
-        if (FeatureConfig.HELPDESK_COURSE_REACTIVATION) {
+        if (Feature.enabled("course_reactivation")) {
             val reactivationTopic = HelpdeskTopic(TicketTopic.REACTIVATION, null)
             generalList.add(reactivationTopic)
         }

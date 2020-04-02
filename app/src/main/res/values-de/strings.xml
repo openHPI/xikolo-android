@@ -49,6 +49,7 @@
     <string name="tab_certificates">Zertifikate</string>
     <string name="tab_documents">Dokumente</string>
     <string name="tab_announcements">Neuigkeiten</string>
+    <string name="tab_recap">Recap</string>
 
     <!-- -->
     <string name="btn_enroll">Einschreiben</string>
@@ -59,6 +60,7 @@
     <string name="btn_channel_courses">Mehr anzeigen</string>
     <string name="btn_channel_slider_more">Mehr Kurse anzeigen</string>
     <string name="btn_starts_soon">Noch nicht gestartet</string>
+    <string name="btn_play_cast">&#xe652;\n Abspielen auf Cast-fähigem Gerät</string>
     <string name="btn_display_issues">Darstellungsprobleme?</string>
 
     <!-- -->
@@ -177,6 +179,9 @@
     <string name="intro_overlay_text">Berühren, um Videos auf den Fernseher zu casten</string>
     <string name="user_name">%1$s %2$s</string>
     <string name="or">oder</string>
+    <string name="login_sso">SSO</string>
+    <string name="login_sso_hint">SSO Login</string>
+    <string name="ok">OK</string>
     <string name="not_available">Nicht verfügbar</string>
 
 
@@ -253,6 +258,9 @@
 
     <string name="notification_multiple_downloads_running">%1$d Dateien werden heruntergeladen</string>
 
+    <string name="notification_channel_downloads">Downloads</string>
+    <string name="notification_downloads_cancel">Abbrechen</string>
+
     <string name="notification_deep_link_error">Aktion nicht unterstützt oder Inhalt nicht verfügbar</string>
 
     <string name="title_search_results">Suchergebnisse</string>
@@ -283,6 +291,9 @@
     <string name="video_settings_subtitles_generated">(automatisch erzeugt)</string>
 
     <!-- -->
+    <string name="media_route_menu_title">Cast</string>
+
+    <!-- -->
     <string name="settings_category_general">Allgemein</string>
 
     <string name="settings_title_ask_delete">Vor Löschen bestätigen</string>
@@ -293,6 +304,7 @@
     <string name="settings_title_storage">Speichermedium auswählen</string>
     <string name="settings_title_storage_internal">Interner Speicher</string>
     <string name="settings_title_storage_external">SD-Karte</string>
+    <string name="settings_summary_storage">%1$s: %2$s frei.</string>
     <string name="settings_storage_addition">(aktuelles Speichermedium)</string>
 
     <string name="settings_category_data_usage">Mobile Datennutzung</string>
@@ -313,15 +325,13 @@
 
     <string name="settings_category_about">Info</string>
 
+    <string name="settings_title_faq">Häufig gestellte Fragen (FAQ)</string>
+
     <string name="settings_title_licenses">Open-Source-Lizenzen</string>
     <string name="settings_summary_licenses">Lizenzdetails für Open-Source-Software</string>
 
     <string name="settings_title_build">Build-Version</string>
     <string name="settings_summary_build">Version:</string>
-
-    <string name="settings_imprint">Impressum</string>
-    <string name="settings_privacy">Hinweise zum Datenschutz</string>
-    <string name="settings_terms_of_use">Nutzungsbedingungen</string>
 
     <!-- -->
     <string name="hint_issue">Technisches Problem</string>

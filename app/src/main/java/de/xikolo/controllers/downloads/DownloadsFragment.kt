@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.xikolo.App
 import de.xikolo.R
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialog
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialogAutoBundle
 import de.xikolo.controllers.helper.NetworkStateHelper
@@ -133,7 +133,7 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
 
                 // documents
 
-                if (FeatureConfig.DOCUMENTS) {
+                if (Feature.enabled("documents")) {
                     list = ArrayList()
 
                     list.add(buildTotalItem(

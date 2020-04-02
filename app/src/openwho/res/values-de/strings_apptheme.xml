@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="settings_terms_of_use">Nutzungsbedingungen</string>
-
-    <string name="login_sso_hint">Wenn Sie Probleme beim Anmelden mit Ihrem WIMS-Konto haben, erstellen Sie bitte ein OpenWHO-Konto.</string>
-
-</resources>

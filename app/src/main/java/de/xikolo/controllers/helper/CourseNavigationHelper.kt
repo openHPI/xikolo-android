@@ -2,7 +2,7 @@ package de.xikolo.controllers.helper
 
 import androidx.annotation.StringRes
 import de.xikolo.R
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 
 enum class CourseListFilter {
     ALL, MY
@@ -39,9 +39,9 @@ enum class CourseArea(@StringRes val titleRes: Int) {
             areas.add(PROGRESS)
             areas.add(COURSE_DETAILS)
             areas.add(CERTIFICATES)
-            if (FeatureConfig.DOCUMENTS) areas.add(DOCUMENTS)
+            if (Feature.enabled("documents")) areas.add(DOCUMENTS)
             areas.add(ANNOUNCEMENTS)
-            if (FeatureConfig.RECAP_MODE) areas.add(RECAP)
+            if (Feature.enabled("recap")) areas.add(RECAP)
         }
     }
 

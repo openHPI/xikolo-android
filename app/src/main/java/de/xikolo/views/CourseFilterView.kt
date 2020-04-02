@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.widget.LinearLayoutCompat
 import de.xikolo.R
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.models.dao.ChannelDao
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.utils.LanguageUtil
@@ -66,7 +66,7 @@ class CourseFilterView @JvmOverloads constructor(context: Context, attrs: Attrib
         classifierKeyList.add(context.getString(R.string.course_filter_classifier_language))
         classifierTitleList.add(context.getString(R.string.course_filter_language))
 
-        val channels = if (FeatureConfig.CHANNELS) {
+        val channels = if (Feature.enabled("channels")) {
             classifierKeyList.add(context.getString(R.string.course_filter_classifier_channel))
             classifierTitleList.add(context.getString(R.string.course_filter_channel))
 

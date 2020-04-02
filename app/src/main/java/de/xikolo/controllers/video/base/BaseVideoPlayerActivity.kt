@@ -19,7 +19,7 @@ import androidx.core.app.NavUtils
 import butterknife.BindView
 import de.xikolo.R
 import de.xikolo.config.Config
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.controllers.base.BaseActivity
 import de.xikolo.controllers.video.VideoStreamPlayerFragment
 import de.xikolo.utils.extensions.aspectRatio
@@ -347,7 +347,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
     }
 
     public override fun onUserLeaveHint() {
-        if (FeatureConfig.PIP && !playerFragment.hasAlmostEnded) {
+        if (Feature.PIP && !playerFragment.hasAlmostEnded) {
             super.onUserLeaveHint()
             enterPip(false)
         }

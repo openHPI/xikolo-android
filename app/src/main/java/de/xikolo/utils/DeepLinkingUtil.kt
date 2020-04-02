@@ -1,7 +1,7 @@
 package de.xikolo.utils
 
 import android.net.Uri
-import de.xikolo.config.FeatureConfig
+import de.xikolo.config.Feature
 import de.xikolo.controllers.helper.CourseArea
 
 object DeepLinkingUtil {
@@ -36,7 +36,7 @@ object DeepLinkingUtil {
                         .replaceAfter(ROUTE_COURSE_ITEMS, "")
                         .replace(ROUTE_COURSE_ITEMS, "")
                         .replace(SLASH, "")
-                } else if (path.matches("$ROUTE_RECAP.*".toRegex()) && FeatureConfig.RECAP_MODE) {
+                } else if (path.matches("$ROUTE_RECAP.*".toRegex()) && Feature.enabled("recap")) {
                     it.getQueryParameter("course_id")
                 } else null
             }
@@ -61,7 +61,7 @@ object DeepLinkingUtil {
                 it.endsWith(ROUTE_COURSE_PINBOARD)                                 -> CourseArea.DISCUSSIONS
                 it.endsWith(ROUTE_COURSE_PROGRESS)                                 -> CourseArea.PROGRESS
                 it.endsWith(ROUTE_COURSE_ANNOUNCEMENTS)                            -> CourseArea.ANNOUNCEMENTS
-                it.matches("$ROUTE_RECAP.*".toRegex()) && FeatureConfig.RECAP_MODE -> CourseArea.RECAP
+                it.matches("$ROUTE_RECAP.*".toRegex()) && Feature.enabled("recap") -> CourseArea.RECAP
                 else                                                               -> CourseArea.COURSE_DETAILS
             }
         } ?: CourseArea.COURSE_DETAILS

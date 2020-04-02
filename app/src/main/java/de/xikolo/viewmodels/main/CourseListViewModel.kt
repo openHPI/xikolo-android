@@ -1,9 +1,8 @@
 package de.xikolo.viewmodels.main
 
 import de.xikolo.App
-import de.xikolo.BuildConfig
 import de.xikolo.R
-import de.xikolo.config.BuildFlavor
+import de.xikolo.config.Feature
 import de.xikolo.controllers.helper.CourseListFilter
 import de.xikolo.models.Course
 import de.xikolo.models.DateOverview
@@ -44,21 +43,7 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
         get() {
             val courseList = MetaSectionList<String, DateOverview, List<Course>>()
             var subList: List<Course>
-            if (BuildConfig.X_FLAVOR == BuildFlavor.OPEN_WHO) {
-                subList = CourseDao.Unmanaged.allFuture()
-                if (subList.isNotEmpty()) {
-                    courseList.add(
-                        App.instance.getString(R.string.header_future_courses),
-                        subList
-                    )
-                }
-                subList = CourseDao.Unmanaged.allCurrentAndPast()
-                if (subList.isNotEmpty()) {
-                    courseList.add(App.instance.getString(R.string.header_self_paced_courses),
-                        subList
-                    )
-                }
-            } else {
+            if (Feature.enabled("merge_current_and_future_courses")) {
                 subList = CourseDao.Unmanaged.allCurrentAndFuture()
                 if (subList.isNotEmpty()) {
                     courseList.add(
@@ -70,6 +55,20 @@ class CourseListViewModel(private val filter: CourseListFilter) : BaseViewModel(
                 if (subList.isNotEmpty()) {
                     courseList.add(
                         App.instance.getString(R.string.header_self_paced_courses),
+                        subList
+                    )
+                }
+            } else {
+                subList = CourseDao.Unmanaged.allFuture()
+                if (subList.isNotEmpty()) {
+                    courseList.add(
+                        App.instance.getString(R.string.header_future_courses),
+                        subList
+                    )
+                }
+                subList = CourseDao.Unmanaged.allCurrentAndPast()
+                if (subList.isNotEmpty()) {
+                    courseList.add(App.instance.getString(R.string.header_self_paced_courses),
                         subList
                     )
                 }

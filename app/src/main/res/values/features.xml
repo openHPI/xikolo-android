@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- flavors can enable these features -->
+    <bool name="recap">false</bool>
+    <bool name="documents">false</bool>
+    <bool name="channels">false</bool>
+    <bool name="course_reactivation">false</bool>
+
+    <!-- flavors can disable these features -->
+    <bool name="course_banner">true</bool>
+    <bool name="show_dates_for_never_ending_courses">true</bool>
+    <bool name="merge_current_and_future_courses">true</bool>
+
+    <!-- flavors can enable these features by providing the required strings -->
+    <string name="url_copyright" translatable="false" />
+    <string name="url_faq" translatable="false" />
+    <string name="url_podcasts" translatable="false" />
+    <string name="url_microlearning" translatable="false" />
+
+    <string name="sso_provider" translatable="false" />
+
+    <string name="custom_cast_application_id" translatable="false" />
+
+    <!-- flavors can enable these features by providing elements for the arrays -->
+    <string-array name="course_filter_classifier_keys" translatable="false" />
+    <string-array name="course_filter_classifier_titles" />
+
+    <string-array name="legal_links_urls" translatable="false" />
+    <string-array name="legal_links_titles" />
+
+</resources>

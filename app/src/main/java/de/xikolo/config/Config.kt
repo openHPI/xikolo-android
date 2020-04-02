@@ -1,9 +1,9 @@
 package de.xikolo.config
 
 import android.os.Build
-import com.google.android.gms.cast.CastMediaControlIntent
 import de.xikolo.App
 import de.xikolo.BuildConfig
+import de.xikolo.R
 import de.xikolo.utils.DeviceUtil
 
 object Config {
@@ -15,48 +15,8 @@ object Config {
     @JvmField val XIKOLO_API_VERSION: Int
     @JvmField val REALM_SCHEMA_VERSION: Int
 
-    @JvmField val COPYRIGHT_URL: String
-    @JvmField val IMPRINT_URL: String?
-    @JvmField val PRIVACY_URL: String?
-    @JvmField val TERMS_OF_USE_URL: String?
-
-    @JvmField val CAST_MEDIA_RECEIVER_APPLICATION_ID: String
-
     init {
-        when (BuildConfig.X_FLAVOR) {
-            BuildFlavor.OPEN_HPI -> {
-                COPYRIGHT_URL = "https://hpi.de/"
-                IMPRINT_URL = "https://open.hpi.de/pages/imprint"
-                PRIVACY_URL = "https://open.hpi.de/pages/data-protection"
-                TERMS_OF_USE_URL = null
-                CAST_MEDIA_RECEIVER_APPLICATION_ID = "EE6FB604"
-            }
-            BuildFlavor.OPEN_SAP -> {
-                COPYRIGHT_URL = "https://sap.com/corporate/en/legal/copyright.html"
-                IMPRINT_URL = "https://sap.com/corporate/en/legal/impressum.html"
-                PRIVACY_URL = "https://open.sap.com/pages/privacy"
-                TERMS_OF_USE_URL = "https://sap.com/corporate/en/legal/terms-of-use.html"
-                CAST_MEDIA_RECEIVER_APPLICATION_ID = "2C63C05D"
-            }
-            BuildFlavor.OPEN_WHO -> {
-                COPYRIGHT_URL = "http://who.int/"
-                IMPRINT_URL = null
-                PRIVACY_URL = null
-                TERMS_OF_USE_URL = "https://openwho.org/pages/terms_of_use"
-                CAST_MEDIA_RECEIVER_APPLICATION_ID =
-                    CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID
-            }
-            else -> { // MOOC_HOUSE
-                COPYRIGHT_URL = "https://hpi.de/"
-                IMPRINT_URL = "https://mooc.house/pages/imprint"
-                PRIVACY_URL = "https://mooc.house/pages/privacy"
-                TERMS_OF_USE_URL = null
-                CAST_MEDIA_RECEIVER_APPLICATION_ID =
-                    CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID
-            }
-        }
-
-        HOST = App.instance.getString(de.xikolo.R.string.app_host)
+        HOST = App.instance.getString(R.string.app_host)
         HOST_URL = "https://$HOST/"
         API_URL = HOST_URL + "api/v2/"
 
@@ -64,7 +24,8 @@ object Config {
         REALM_SCHEMA_VERSION = App.instance.resources.getInteger(de.xikolo.R.integer.realm_schema_version)
     }
 
-    @JvmField val DEBUG = BuildConfig.X_TYPE === BuildType.DEBUG
+    @JvmField val DEBUG = BuildConfig.BUILD_TYPE == "debug"
+    const val RELEASE = BuildConfig.BUILD_TYPE == "release"
 
     const val HEADER_ACCEPT = "Accept"
     const val HEADER_CONTENT_TYPE = "Content-Type"
@@ -100,7 +61,6 @@ object Config {
     const val ITEMS = "items/"
     const val RECAP = "learn?course_id="
 
-    const val PRESENTER_LIFECYCLE_LOGGING = false
     const val WEBVIEW_LOGGING = false
 
 }

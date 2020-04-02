@@ -294,7 +294,7 @@
     <string name="video_pip_action_pause" translatable="false">Pause</string>
 
     <!-- -->
-    <string name="media_route_menu_title">CAST</string>
+    <string name="media_route_menu_title">Cast</string>
 
     <!-- -->
     <string name="settings_category_general">General</string>
@@ -322,6 +322,8 @@
 
     <string name="settings_category_about">About</string>
 
+    <string name="settings_title_faq">Frequently Asked Questions (FAQ)</string>
+
     <string name="settings_title_licenses">Open source licenses</string>
     <string name="settings_summary_licenses">License details for open source software</string>
 
@@ -333,36 +335,6 @@
     <string name="settings_title_storage_external">SD Card</string>
     <string name="settings_summary_storage">%1$s: %2$s free.</string>
     <string name="settings_storage_addition">(currently selected)</string>
-
-    <string name="settings_imprint">Imprint</string>
-    <string name="settings_privacy">Data Protection</string>
-    <string name="settings_terms_of_use">Terms of Use</string>
-
-    <!-- -->
-    <string name="lang_ar">العربية</string>
-    <string name="lang_bg">Български</string>
-    <string name="lang_cn">中文</string>
-    <string name="lang_cs">Čeština</string>
-    <string name="lang_de">Deutsch</string>
-    <string name="lang_el">ελληνικά</string>
-    <string name="lang_en">English</string>
-    <string name="lang_es">Español</string>
-    <string name="lang_fr">Français</string>
-    <string name="lang_fa">فارسی</string>
-    <string name="lang_hi">हिन्दी, हिंदी</string>
-    <string name="lang_hr">Hrvatski</string>
-    <string name="lang_id">Bahasa Indonesia</string>
-    <string name="lang_it">Italiano</string>
-    <string name="lang_ja">日本語</string>
-    <string name="lang_ko">한국의</string>
-    <string name="lang_nl">Nederlands</string>
-    <string name="lang_pl">Polski</string>
-    <string name="lang_pt">Português</string>
-    <string name="lang_ru">Русский</string>
-    <string name="lang_sr">српски језик</string>
-    <string name="lang_tr">Türk</string>
-    <string name="lang_vi">Tiếng Việt</string>
-    <string name="lang_zh">中文</string>
 
     <!-- -->
     <string name="empty_message_documents_title">No documents available for this course</string>
@@ -395,14 +367,8 @@
     <string name="item_duration_hour">%1$d hr</string>
     <string name="item_duration_minute">%1$d min</string>
 
-    <string name="course_filter_classifier_channel" translatable="false">channel</string>
-    <string name="course_filter_classifier_language" translatable="false">language</string>
-    <string name="course_filter_classifier_all" translatable="false">all</string>
     <string name="course_filter_all">All</string>
     <string name="course_filter_language">Language</string>
     <string name="course_filter_channel">Channel</string>
-
-    <string name="url_podcasts" />
-    <string name="url_microlearning" />
 
 </resources>

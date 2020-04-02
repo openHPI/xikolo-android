@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="channels">true</bool>
+
+    <string name="url_copyright" translatable="false">https://hpi.de/</string>
+    <string name="url_faq" translatable="false">https://mooc.house/pages/faq</string>
+
+    <string-array name="legal_links_urls" translatable="false">
+        <item>https://mooc.house/pages/imprint</item>
+        <item>https://mooc.house/pages/privacy</item>
+    </string-array>
+    <string-array name="legal_links_titles">
+        <item>Imprint</item>
+        <item>Data Protection</item>
+    </string-array>
+
+</resources>
