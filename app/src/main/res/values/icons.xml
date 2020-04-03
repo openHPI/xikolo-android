@@ -51,5 +51,6 @@
     <string name="icon_visited" translatable="false">&#xf134;</string> <!-- checkbox-marked-circle-outline -->
     <string name="icon_channels" translatable="false">&#xf43b;</string> <!-- radio-tower -->
     <string name="icon_pip" translatable="false">&#xf612;</string>
+    <string name="icon_information" translatable="false">&#xf2fd;</string>
 
 </resources>

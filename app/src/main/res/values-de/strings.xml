@@ -335,15 +335,18 @@
 
     <!-- -->
     <string name="hint_issue">Technisches Problem</string>
-    <string name="helpdesk_info_text_logged_in">Bitte beschreiben Sie Ihr technisches Problem. Informationen über Ihr Mobilgerät und Ihre E-Mail-Adresse werden automatisch mit Ihrer Anfrage übermittelt. Ihr Problem wird von unserem Helpdesk-Team geprüft.</string>
-    <string name="helpdesk_info_text_logged_out">Bitte beschreiben Sie Ihr technisches Problem. Informationen über Ihr Mobilgerät und Ihre E-Mail-Adresse werden mit Ihrer Anfrage übermittelt. Ihr Problem wird von unserem Helpdesk-Team geprüft.</string>
+    <string name="helpdesk_info_text_logged_in">Bitte beschreiben Sie Ihr technisches Problem mit Hilfe des folgenden Textfeldes. Informationen über Ihr Mobilgerät und Ihre E-Mail-Adresse werden automatisch mit Ihrer Anfrage übermittelt.</string>
+    <string name="helpdesk_info_text_logged_out">Bitte beschreiben Sie Ihr technisches Problem mit Hilfe des folgenden Textfeldes. Informationen über Ihr Mobilgerät und Ihre E-Mail-Adresse werden mit Ihrer Anfrage übermittelt.</string>
+    <string name="helpdesk_info_text_create_ticket">Mit Absenden wird ein Ticket erstellt, das von unserem Helpdesk-Team beantwortet wird.</string>
+    <string name="helpdesk_info_text_faq"><![CDATA[Bevor Sie ein Ticket an den technischen Support schreiben, stellen Sie bitte sicher, dass Sie unsere <a href=\'#\'>FAQ</a> gelesen haben.]]></string>
+    <string name="helpdesk_info_text_forum">Wenn Sie Fragen zu Kursinhalten haben, wenden Sie sich bitte an das Lehrpersonal im Kursforum.</string>
     <string name="hint_title">Titel</string>
     <string name="hint_topic">Thema</string>
     <string name="helpdesk_dialog_header">Technischer Support</string>
     <string name="helpdesk_topic_dialog_header">Bitte wählen Sie Ihr Thema</string>
     <string name="helpdesk_topic_list_general">Allgemeine Frage</string>
     <string name="helpdesk_topic_list_technical_question">Technische Frage</string>
-    <string name="helpdesk_topic_list_reactivation">Kurs reaktivieren</string>
+    <string name="helpdesk_topic_list_reactivation">Kurs Reaktivierung</string>
     <string name="helpdesk_topic_list_course">Kursspezifische Frage</string>
     <string name="dialog_send">Senden</string>
     <string name="helpdesk_default_topic">Bitte wählen Sie ein Thema</string>

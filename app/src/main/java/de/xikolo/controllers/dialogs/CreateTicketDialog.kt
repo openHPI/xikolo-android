@@ -1,24 +1,35 @@
 package de.xikolo.controllers.dialogs
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.text.Html
 import android.text.InputType
 import android.text.TextWatcher
+import android.text.style.URLSpan
 import android.util.Patterns
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
+import de.xikolo.App
 import de.xikolo.R
+import de.xikolo.config.Feature
 import de.xikolo.controllers.dialogs.base.ViewModelDialogFragment
 import de.xikolo.managers.UserManager
 import de.xikolo.models.TicketTopic
 import de.xikolo.models.dao.CourseDao
+import de.xikolo.utils.extensions.getString
 import de.xikolo.utils.extensions.isOnline
 import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.helpdesk.TicketViewModel
@@ -36,6 +47,9 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
     @BindView(R.id.ticketContent)
     lateinit var messageEditText: EditText
 
+    @BindView(R.id.textInputLayoutEmail)
+    lateinit var emailContainer: ViewGroup
+
     @BindView(R.id.ticketEmail)
     lateinit var emailEditText: EditText
 
@@ -48,6 +62,12 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
     @BindView(R.id.ticketInfoText)
     lateinit var ticketInfoText: TextView
 
+    @BindView(R.id.infoCard)
+    lateinit var infoCard: ViewGroup
+
+    @BindView(R.id.infoCardText)
+    lateinit var infoCardText: TextView
+
     private var topic: TicketTopic = TicketTopic.NONE
 
     override val layoutResource = R.layout.dialog_helpdesk_create_ticket
@@ -56,6 +76,7 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
         return TicketViewModel()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onDialogViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onDialogViewCreated(view, savedInstanceState)
 
@@ -75,8 +96,35 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
         }
 
         if (UserManager.isAuthorized) {
-            emailEditText.visibility = View.GONE
+            emailContainer.visibility = View.GONE
             ticketInfoText.text = getString(R.string.helpdesk_info_text_logged_in)
+        }
+
+        if (Feature.enabled("url_faq")) {
+            var text = getString(R.string.helpdesk_info_text_faq) +
+                    " " + getString(R.string.helpdesk_info_text_forum)
+
+            var html = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
+            } else {
+                Html.fromHtml(text)
+            }
+
+            infoCardText.text = html
+
+            infoCard.setOnClickListener {
+                activity?.let {
+                    CustomTabsIntent.Builder()
+                        .setToolbarColor(ContextCompat.getColor(
+                            App.instance,
+                            R.color.apptheme_main
+                        ))
+                        .build()
+                        .launchUrl(it, Uri.parse(it.getString("url_faq")))
+                }
+            }
+        } else {
+            infoCardText.text = getString(R.string.helpdesk_info_text_forum)
         }
 
         //listeners for wrong entries in EditTexts after focusing another view
@@ -95,7 +143,8 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
         }
 
         emailEditText.setOnFocusChangeListener { _, b ->
-            if ((!Patterns.EMAIL_ADDRESS.matcher(emailEditText.text).matches() || emailEditText.text.isEmpty()) && emailEditText.visibility != View.GONE && !b) {
+            if ((!Patterns.EMAIL_ADDRESS.matcher(emailEditText.text).matches() || emailEditText.text.isEmpty()) &&
+                emailContainer.visibility != View.GONE && !b) {
                 emailEditText.error = getString(R.string.helpdesk_email_error)
             }
         }
@@ -207,9 +256,11 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
                 emailEditText.text.isNotEmpty())
 
     private val allFieldsHaveInput: Boolean
-        get() = titleEditText.text.isNotEmpty() && messageEditText.text.isNotEmpty() && ticketTopicEditText.text.isNotEmpty() &&
-            ((emailEditText.text.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(emailEditText.text).matches()) || emailEditText.visibility == View.GONE) &&
-            topic !== TicketTopic.NONE
+        get() = titleEditText.text.isNotEmpty() &&
+                messageEditText.text.isNotEmpty() &&
+                ticketTopicEditText.text.isNotEmpty() &&
+                ((emailEditText.text.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(emailEditText.text).matches()) ||
+                        emailContainer.visibility == View.GONE) && topic !== TicketTopic.NONE
 
     private fun confirmCancel() {
         val dialog = ConfirmCancelDialog()

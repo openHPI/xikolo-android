@@ -344,16 +344,18 @@
     <string name="empty_message_dates">No upcoming dates right now</string>
 
     <string name="hint_issue">Technical issue</string>
-    <string name="helpdesk_info_text_logged_in">Please describe your technical issue. Information about your mobile device and your email address will be automatically submitted along with your issue report. Your issue will be reviewed by our helpdesk team.</string>
-    <string name="helpdesk_info_text_logged_out">Please describe your technical issue. Information about your mobile device and your email address will be submitted along with your issue report. Your issue will be reviewed by our helpdesk team.</string>
-
+    <string name="helpdesk_info_text_logged_in">Please describe your technical issue using the text box below. Information about your mobile device and your email address will be automatically submitted along with your issue report.</string>
+    <string name="helpdesk_info_text_logged_out">Please describe your technical issue using the text box below. Information about your mobile device and your email address will be submitted along with your issue report.</string>
+    <string name="helpdesk_info_text_create_ticket">You will create a ticket that will be answered by the helpdesk team.</string>
+    <string name="helpdesk_info_text_faq"><![CDATA[Before writing a ticket to the technical support, please make sure that you have read our <a href=\'#\'>FAQ</a>.]]></string>
+    <string name="helpdesk_info_text_forum">If you have any questions about course content, please contact the teaching team in the course forum.</string>
     <string name="hint_title">Title</string>
     <string name="hint_topic">Topic</string>
     <string name="helpdesk_dialog_header">Technical Support</string>
     <string name="helpdesk_topic_dialog_header">Please select your topic</string>
     <string name="helpdesk_topic_list_general">General question</string>
     <string name="helpdesk_topic_list_technical_question">Technical question</string>
-    <string name="helpdesk_topic_list_reactivation">Course Reactivation Option</string>
+    <string name="helpdesk_topic_list_reactivation">Course reactivation</string>
     <string name="helpdesk_topic_list_course">Course specific question</string>
     <string name="dialog_send">Send</string>
     <string name="helpdesk_default_topic">Please choose a topic</string>
