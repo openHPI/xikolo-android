@@ -53,10 +53,10 @@ open class ExoPlayerVideoView : PlayerView {
         private set
 
     val duration: Long
-        get() = player.duration
+        get() = exoplayer.duration
 
     val currentPosition: Long
-        get() = player.currentPosition
+        get() = exoplayer.currentPosition
 
     constructor(context: Context) : super(context) {
         setup(context)
@@ -76,17 +76,19 @@ open class ExoPlayerVideoView : PlayerView {
         bandwidthMeter = DefaultBandwidthMeter.Builder(context).build()
         dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
 
-        exoplayer = ExoPlayerFactory.newSimpleInstance(
-            context,
+        exoplayer = SimpleExoPlayer.Builder(
+            context
+        ).setTrackSelector(
             DefaultTrackSelector(
+                context,
                 AdaptiveTrackSelection.Factory()
             )
-        )
+        ).build()
 
         exoplayer.addListener(
             object : Player.EventListener {
                 override fun onLoadingChanged(isLoading: Boolean) {
-                    onBufferUpdateListener?.onBufferingUpdate(player.bufferedPercentage)
+                    onBufferUpdateListener?.onBufferingUpdate(exoplayer.bufferedPercentage)
                 }
 
                 override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -110,17 +112,17 @@ open class ExoPlayerVideoView : PlayerView {
                     }
                 }
 
-                override fun onPlayerError(error: ExoPlaybackException?) {
+                override fun onPlayerError(error: ExoPlaybackException) {
                     onErrorListener?.onError(error)
                 }
 
-                override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
+                override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
                 }
 
                 override fun onSeekProcessed() {
                 }
 
-                override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
+                override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
                 }
 
                 override fun onPositionDiscontinuity(reason: Int) {
@@ -132,7 +134,7 @@ open class ExoPlayerVideoView : PlayerView {
                 override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
                 }
 
-                override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {
+                override fun onTimelineChanged(timeline: Timeline, reason: Int) {
                 }
             }
         )
@@ -149,22 +151,24 @@ open class ExoPlayerVideoView : PlayerView {
     }
 
     fun start() {
-        player.playWhenReady = true
+        exoplayer.playWhenReady = true
     }
 
     fun pause() {
-        player.playWhenReady = false
+        exoplayer.playWhenReady = false
     }
 
     fun seekTo(position: Long) {
-        player.seekTo(position)
+        exoplayer.seekTo(position)
     }
 
     fun setPlaybackSpeed(speed: Float) {
-        player.playbackParameters = PlaybackParameters(
-            speed,
-            player.playbackParameters.pitch,
-            player.playbackParameters.skipSilence
+        exoplayer.setPlaybackParameters(
+            PlaybackParameters(
+                speed,
+                exoplayer.playbackParameters.pitch,
+                exoplayer.playbackParameters.skipSilence
+            )
         )
     }
 
@@ -237,16 +241,18 @@ open class ExoPlayerVideoView : PlayerView {
 
     fun prepare() {
         isPreparing = true
-        exoplayer.prepare(mergedMediaSource)
+        mergedMediaSource?.let {
+            exoplayer.prepare(it)
+        }
     }
 
     fun release() {
-        player.stop()
-        player.release()
+        exoplayer.stop()
+        exoplayer.release()
     }
 
     fun isPlaying(): Boolean {
-        return player.playWhenReady
+        return exoplayer.playWhenReady
     }
 
     interface OnPreparedListener {
