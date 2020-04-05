@@ -209,7 +209,7 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
             var fragment = fragmentManager.findFragmentByTag(name)
             val url = Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ITEMS + item.id
             if (fragment == null) {
-                fragment = if (item.proctored) {
+                fragment = if (course?.enrollment?.proctored == true && item.proctored) {
                     ProctoredItemFragment()
                 } else when (item.contentType) {
                     Item.TYPE_LTI   -> LtiExerciseFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
