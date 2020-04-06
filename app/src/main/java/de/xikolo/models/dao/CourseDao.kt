@@ -240,14 +240,17 @@ class CourseDao(realm: Realm) : BaseDao<Course>(Course::class, realm) {
                     .distinct()
 
             fun collectClassifier(name: String): List<String> =
-                Realm.getDefaultInstance().use { realm ->
+                Realm.getDefaultInstance()
+                    .use { realm ->
                         realm.where<Course>()
                             .findAll()
                             .asCopy()
                     }
                     .map {
-                        val map = Gson().fromJson<Map<String, List<String>>>(it.classifiers, Map::class.java)
-                        map[name] ?: listOf()
+                        val map = Gson().fromJson<Map<String, List<String>>>(
+                            it.classifiers, Map::class.java
+                        )
+                        map?.get(name) ?: listOf()
                     }
                     .fold(mutableListOf<String>(), { acc, list ->
                         acc.apply { addAll(list) }
