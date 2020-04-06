@@ -183,6 +183,7 @@
     <string name="login_sso_hint">SSO Login</string>
     <string name="ok">OK</string>
     <string name="not_available">Not available</string>
+    <string name="item_proctored_summary">This item can\'t be accessed on mobile because you booked a qualified certificate. Please use a computer to access it.</string>
 
     <string name="self_test_points">%1$.1f of %2$.1f self-test points</string>
     <string name="assignments_points">%1$.1f of %2$.1f assignment points</string>

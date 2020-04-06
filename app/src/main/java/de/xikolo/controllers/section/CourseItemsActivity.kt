@@ -209,16 +209,18 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
             var fragment = fragmentManager.findFragmentByTag(name)
             val url = Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ITEMS + item.id
             if (fragment == null) {
-                when (item.contentType) {
-                    Item.TYPE_LTI   -> fragment = LtiExerciseFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    Item.TYPE_PEER  -> fragment = PeerAssessmentFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    Item.TYPE_QUIZ  -> fragment = WebViewFragmentAutoBundle.builder(url)
+                fragment = if (course?.enrollment?.proctored == true && item.proctored) {
+                    ProctoredItemFragment()
+                } else when (item.contentType) {
+                    Item.TYPE_LTI   -> LtiExerciseFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
+                    Item.TYPE_PEER  -> PeerAssessmentFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
+                    Item.TYPE_QUIZ  -> WebViewFragmentAutoBundle.builder(url)
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)
                         .build()
-                    Item.TYPE_TEXT  -> fragment = RichTextFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    Item.TYPE_VIDEO -> fragment = VideoPreviewFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    else            -> fragment = WebViewFragmentAutoBundle.builder(url)
+                    Item.TYPE_TEXT  -> RichTextFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
+                    Item.TYPE_VIDEO -> VideoPreviewFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
+                    else            -> WebViewFragmentAutoBundle.builder(url)
                         .inAppLinksEnabled(false)
                         .externalLinksEnabled(false)
                         .build()

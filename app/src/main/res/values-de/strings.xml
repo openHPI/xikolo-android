@@ -183,6 +183,7 @@
     <string name="login_sso_hint">SSO Login</string>
     <string name="ok">OK</string>
     <string name="not_available">Nicht verfügbar</string>
+    <string name="item_proctored_summary">Dieser Inhalt ist auf Mobilgeräten nicht verfügbar, da ein qualifiziertes Zertifikat gebucht wurde. Bitte nutzen Sie einen Computer, um auf den Inhalt zuzugreifen.</string>
 
 
     <string name="self_test_points">%1$.1f von %2$.1f Selbsttest-Punkten</string>
