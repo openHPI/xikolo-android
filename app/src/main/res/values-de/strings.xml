@@ -177,7 +177,6 @@
     <string name="available_at">Verfügbar ab %1$s</string>
     <string name="download_all_content">Inhalte herunterladen</string>
     <string name="intro_overlay_text">Berühren, um Videos auf den Fernseher zu casten</string>
-    <string name="user_name">%1$s %2$s</string>
     <string name="or">oder</string>
     <string name="login_sso">SSO</string>
     <string name="login_sso_hint">SSO Login</string>

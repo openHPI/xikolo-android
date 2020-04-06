@@ -5,6 +5,7 @@ import com.squareup.moshi.Json;
 import java.util.List;
 
 import de.xikolo.models.base.RealmAdapter;
+import de.xikolo.models.dao.ItemDao;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -15,8 +16,6 @@ public class Video extends RealmObject {
 
     @PrimaryKey
     public String id;
-
-    public String title;
 
     public String summary;
 
@@ -44,6 +43,10 @@ public class Video extends RealmObject {
 
     public RealmList<VideoSubtitles> subtitles = new RealmList<>();
 
+    public Item getItem() {
+        return ItemDao.Unmanaged.findForContent(id);
+    }
+
     // local field
     public int progress = 0;
 
@@ -61,8 +64,6 @@ public class Video extends RealmObject {
 
     @JsonApi(type = "videos")
     public static class JsonModel extends Resource implements RealmAdapter<Video> {
-
-        public String title;
 
         public String summary;
 
@@ -104,7 +105,6 @@ public class Video extends RealmObject {
         public Video convertToRealmObject() {
             Video video = new Video();
             video.id = getId();
-            video.title = title;
             video.summary = summary;
             video.duration = duration;
             video.singleStream = singleStream;

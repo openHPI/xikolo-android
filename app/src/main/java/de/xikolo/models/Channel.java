@@ -3,9 +3,10 @@ package de.xikolo.models;
 import android.graphics.Color;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 import com.squareup.moshi.Json;
 
-import androidx.core.content.ContextCompat;
 import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.config.Config;
@@ -23,8 +24,6 @@ public class Channel extends RealmObject {
     public String id;
 
     public String title;
-
-    public String slug;
 
     public String color;
 
@@ -52,8 +51,6 @@ public class Channel extends RealmObject {
 
         public String title;
 
-        public String slug;
-
         public String color;
 
         public int position;
@@ -71,7 +68,6 @@ public class Channel extends RealmObject {
             Channel model = new Channel();
             model.id = getId();
             model.title = title;
-            model.slug = slug;
             model.color = color;
             model.position = position;
             model.description = description;

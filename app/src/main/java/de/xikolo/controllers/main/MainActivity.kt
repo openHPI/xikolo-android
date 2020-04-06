@@ -3,7 +3,6 @@ package de.xikolo.controllers.main
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -14,9 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import butterknife.BindView
 import com.google.android.material.navigation.NavigationView
 import de.xikolo.App
-import de.xikolo.BuildConfig
 import de.xikolo.R
-import de.xikolo.config.Config
 import de.xikolo.config.Feature
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.BaseFragment
@@ -29,7 +26,6 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.settings.SettingsActivity
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
-import de.xikolo.models.Profile
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.extensions.checkPlayServicesWithDialog
@@ -284,14 +280,9 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
             }
 
             viewModel.user?.let { user ->
-                val profile: Profile? = user.profile
-                headerView.findViewById<TextView>(R.id.textName).text = String.format(
-                    getString(R.string.user_name),
-                    profile?.firstName ?: "",
-                    profile?.lastName ?: ""
-                )
+                headerView.findViewById<TextView>(R.id.textName).text = user.name
 
-                headerView.findViewById<TextView>(R.id.textEmail).text = profile?.email ?: ""
+                headerView.findViewById<TextView>(R.id.textEmail).text = user.profile.email
 
                 GlideApp.with(this)
                     .load(user.avatarUrl)

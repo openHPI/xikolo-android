@@ -21,6 +21,9 @@ class ProfileFragment : MainFragment<ProfileViewModel>() {
         val TAG: String = ProfileFragment::class.java.simpleName
     }
 
+    @BindView(R.id.textFullName)
+    lateinit var textFullName: TextView
+
     @BindView(R.id.textName)
     lateinit var textName: TextView
 
@@ -58,17 +61,17 @@ class ProfileFragment : MainFragment<ProfileViewModel>() {
     }
 
     private fun showUser(user: User) {
-        val userTitle = String.format(
-            getString(R.string.user_name),
-            user.profile.firstName,
-            user.profile.lastName
-        )
+        activityCallback?.onFragmentAttached(R.id.navigation_login, user.name)
 
-        activityCallback?.onFragmentAttached(R.id.navigation_login, userTitle)
+        if (user.name == user.profile.fullName) {
+            textFullName.text = user.name
+            textName.visibility = View.GONE
+        } else {
+            textFullName.text = user.profile.fullName
+            textName.text = user.name
+        }
 
-        textName.text = userTitle
         textEmail.text = user.profile.email
-
 
         val size = activity.displaySize
         val heightHeader: Int
