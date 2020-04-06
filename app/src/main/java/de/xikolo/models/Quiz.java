@@ -19,8 +19,6 @@ public class Quiz extends RealmObject {
 
     public int allowedAttempts;
 
-    public int maxPoints;
-
     public boolean showWelcomePage;
 
     @JsonApi(type = "quizzes")
@@ -47,7 +45,6 @@ public class Quiz extends RealmObject {
             quiz.instructions = instructions;
             quiz.timeLimit = timeLimit;
             quiz.allowedAttempts = allowedAttempts;
-            quiz.maxPoints = maxPoints;
             quiz.showWelcomePage = showWelcomePage;
 
             return quiz;

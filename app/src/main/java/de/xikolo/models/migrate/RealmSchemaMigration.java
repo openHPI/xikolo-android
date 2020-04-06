@@ -151,6 +151,16 @@ public class RealmSchemaMigration implements RealmMigration {
         if (oldVersion == 11) {
             schema.get("Item").addField("timeEffort", int.class);
         }
+
+        if (oldVersion == 12) {
+            schema.get("Video").removeField("title");
+            schema.get("Channel").removeField("slug");
+            schema.get("Quiz").removeField("maxPoints");
+            schema.get("Profile").removeField("firstName");
+            schema.get("Profile").removeField("lastName");
+
+            schema.get("Profile").addField("fullName", String.class);
+        }
     }
 
 }

@@ -111,7 +111,7 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
             .override(imageVideoThumbnail.forcedWidth, imageVideoThumbnail.forcedHeight)
             .into(imageVideoThumbnail)
 
-        textTitle.text = video.title
+        textTitle.text = item.title
 
         linearLayoutDownloads.removeAllViews()
         downloadViewHelpers.clear()

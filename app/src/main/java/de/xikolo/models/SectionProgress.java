@@ -51,7 +51,7 @@ public class SectionProgress extends RealmObject {
         @Json(name = "visits")
         public VisitStatistic visits;
 
-        @Json(name = "course-progress")
+        @Json(name = "course_progress")
         public HasOne<CourseProgress.JsonModel> courseProgress;
 
         @Override

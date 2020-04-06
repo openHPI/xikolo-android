@@ -89,7 +89,7 @@ fun <T : Video> T.cast(activity: Activity, autoPlay: Boolean): PendingResult<Rem
 
         //build cast metadata
         val mediaMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
-        mediaMetadata.putString(MediaMetadata.KEY_TITLE, title)
+        mediaMetadata.putString(MediaMetadata.KEY_TITLE, item.title)
 
         val image = WebImage(Uri.parse(thumbnailUrl))
 

@@ -14,9 +14,7 @@ public class Profile extends RealmObject {
     @PrimaryKey
     public String id;
 
-    public String firstName;
-
-    public String lastName;
+    public String fullName;
 
     public String displayName;
 
@@ -25,11 +23,8 @@ public class Profile extends RealmObject {
     @JsonApi(type = "user-profile")
     public static class JsonModel extends Resource implements RealmAdapter<Profile> {
 
-        @Json(name = "first_name")
-        public String firstName;
-
-        @Json(name = "last_name")
-        public String lastName;
+        @Json(name = "full_name")
+        public String fullName;
 
         @Json(name = "display_name")
         public String displayName;
@@ -40,8 +35,7 @@ public class Profile extends RealmObject {
         public Profile convertToRealmObject() {
             Profile model = new Profile();
             model.id = getId();
-            model.firstName = firstName;
-            model.lastName = lastName;
+            model.fullName = fullName;
             model.displayName = displayName;
             model.email = email;
             return model;

@@ -34,6 +34,15 @@ class ItemDao(realm: Realm) : BaseDao<Item>(Item::class, realm) {
                 }
 
             @JvmStatic
+            fun findForContent(contentId: String?): Item? =
+                Realm.getDefaultInstance().use { realm ->
+                    realm.where<Item>()
+                        .equalTo("contentId", contentId)
+                        .findFirst()
+                        ?.asCopy()
+                }
+
+            @JvmStatic
             fun findContent(id: String?): RealmObject? =
                 Realm.getDefaultInstance().use { realm ->
                     val item = find(id)
