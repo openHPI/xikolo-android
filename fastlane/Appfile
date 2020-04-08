@@ -1,4 +1,4 @@
-brands = [:openhpi, :opensap, :openwho, :moochouse]
+brands = [:openhpi, :opensap, :openwho, :moochouse, :lernencloud]
 
 ENV["XIKOLO_BRANDS"] = brands.join(',')
 
