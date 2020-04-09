@@ -32,9 +32,6 @@ public class Quiz extends RealmObject {
         @Json(name = "allowed_attempts")
         public int allowedAttempts;
 
-        @Json(name = "max_points")
-        public int maxPoints;
-
         @Json(name = "show_welcome_page")
         public boolean showWelcomePage;
 
