@@ -13,8 +13,6 @@
     <string name="title_section_my_courses">My Courses</string>
     <string name="title_section_certificates">Certificates</string>
     <string name="title_section_channels">Channels</string>
-    <string name="title_section_podcasts">Podcasts</string>
-    <string name="title_section_microlearning">Microlearning</string>
 
     <!-- -->
     <string name="header_current_and_upcoming_courses">Current and upcoming courses</string>

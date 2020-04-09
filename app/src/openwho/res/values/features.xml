@@ -8,19 +8,19 @@
     <bool name="show_dates_for_never_ending_courses">false</bool>
     <bool name="merge_current_and_future_courses">false</bool>
 
-    <string name="url_copyright" translatable="false">http://who.int/</string>
-    <string name="url_faq" translatable="false">https://openwho.org/pages/faq</string>
+    <string name="url_copyright">http://who.int/</string>
+    <string name="url_faq">https://openwho.org/pages/faq</string>
 
-    <string name="sso_provider" translatable="false">who</string>
+    <string name="sso_provider">who</string>
 
-    <string-array name="course_filter_classifier_keys" translatable="false">
+    <string-array name="course_filter_classifier_keys">
         <item>category</item>
     </string-array>
     <string-array name="course_filter_classifier_titles">
         <item>Proficiency Level</item>
     </string-array>
 
-    <string-array name="legal_links_urls" translatable="false">
+    <string-array name="legal_links_urls">
         <item>https://openwho.org/pages/terms_of_use</item>
     </string-array>
     <string-array name="legal_links_titles">

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="InconsistentArrays,MissingTranslation,UnusedResources">
 
     <!-- flavors can enable these features -->
     <bool name="recap">false</bool>
@@ -13,20 +14,22 @@
     <bool name="merge_current_and_future_courses">true</bool>
 
     <!-- flavors can enable these features by providing the required strings -->
-    <string name="url_copyright" translatable="false" />
-    <string name="url_faq" translatable="false" />
-    <string name="url_podcasts" translatable="false" />
-    <string name="url_microlearning" translatable="false" />
+    <string name="url_copyright" />
+    <string name="url_faq" />
 
-    <string name="sso_provider" translatable="false" />
+    <string name="sso_provider" />
 
-    <string name="custom_cast_application_id" translatable="false" />
+    <string name="custom_cast_application_id" />
 
     <!-- flavors can enable these features by providing elements for the arrays -->
-    <string-array name="course_filter_classifier_keys" translatable="false" />
+    <string-array name="course_filter_classifier_keys" />
     <string-array name="course_filter_classifier_titles" />
 
-    <string-array name="legal_links_urls" translatable="false" />
+    <string-array name="legal_links_urls" />
     <string-array name="legal_links_titles" />
+
+    <string-array name="nav_external_links_urls" />
+    <string-array name="nav_external_links_titles" />
+    <array name="nav_external_links_icons" />
 
 </resources>
