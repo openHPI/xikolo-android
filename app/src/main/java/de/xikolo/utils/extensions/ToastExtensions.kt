@@ -16,5 +16,5 @@ fun <T : Context> T.showToast(@StringRes stringId: Int) {
 }
 
 fun <T : Fragment> T.showToast(@StringRes stringId: Int) {
-    Toast.makeText(this.activity, this.getString(stringId), Toast.LENGTH_SHORT).show()
+    this.activity?.showToast(stringId)
 }
