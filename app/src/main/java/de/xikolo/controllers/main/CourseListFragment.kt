@@ -139,7 +139,7 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
     }
 
     private fun unregisterObservers() {
-        if(view != null) {
+        if (view != null) {
             viewModel.courses.removeObservers(viewLifecycleOwner)
             viewModel.dates.removeObservers(viewLifecycleOwner)
         }

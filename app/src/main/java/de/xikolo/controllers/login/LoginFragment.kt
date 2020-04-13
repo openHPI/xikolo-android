@@ -111,7 +111,7 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
 
         buttonNew.setOnClickListener {
             hideKeyboard(view)
-            if(activity?.openUrl(Config.HOST_URL + Config.ACCOUNT + Config.NEW) != true){
+            if (activity?.openUrl(Config.HOST_URL + Config.ACCOUNT + Config.NEW) != true) {
                 showToast(R.string.error_plain)
             }
         }
@@ -127,7 +127,7 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
 
         textForgotPassword.setOnClickListener {
             hideKeyboard(view)
-            if(activity?.openUrl(Config.HOST_URL + Config.ACCOUNT + Config.RESET) != true){
+            if (activity?.openUrl(Config.HOST_URL + Config.ACCOUNT + Config.RESET) != true) {
                 showToast(R.string.error_plain)
             }
         }
