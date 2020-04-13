@@ -194,7 +194,7 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
                 (activity as? BaseActivity)?.setScrollingBehavior(false) // lock action bar in place
                 networkStateHelper.enableSwipeRefresh(false)
 
-                castItem.isVisible = false
+                castItem?.isVisible = false
 
                 filterView.update()
                 filterView.onFilterChangeListener = {
@@ -208,7 +208,7 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
                 (activity as? BaseActivity)?.setScrollingBehavior(true) // make action bar auto-hide again
                 networkStateHelper.enableSwipeRefresh(true)
 
-                castItem.isVisible = true
+                castItem?.isVisible = true
 
                 filterView.visibility = View.GONE
                 filterView.clear()
