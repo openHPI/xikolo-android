@@ -139,8 +139,10 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
     }
 
     private fun unregisterObservers() {
-        viewModel.courses.removeObservers(viewLifecycleOwner)
-        viewModel.dates.removeObservers(viewLifecycleOwner)
+        if(view != null) {
+            viewModel.courses.removeObservers(viewLifecycleOwner)
+            viewModel.dates.removeObservers(viewLifecycleOwner)
+        }
     }
 
     override fun onStart() {
