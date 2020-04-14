@@ -282,7 +282,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
             viewModel.user?.let { user ->
                 headerView.findViewById<TextView>(R.id.textName).text = user.name
 
-                headerView.findViewById<TextView>(R.id.textEmail).text = user.profile.email
+                headerView.findViewById<TextView>(R.id.textEmail).text = user.profile?.email
 
                 GlideApp.with(this)
                     .load(user.avatarUrl)

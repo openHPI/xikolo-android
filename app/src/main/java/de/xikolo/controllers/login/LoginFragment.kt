@@ -1,8 +1,6 @@
 package de.xikolo.controllers.login
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -24,13 +22,12 @@ import de.xikolo.config.Config
 import de.xikolo.config.Feature
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.ViewModelFragment
-import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
-import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.managers.UserManager
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkState
 import de.xikolo.storages.UserStorage
 import de.xikolo.utils.extensions.getString
+import de.xikolo.utils.extensions.openUrl
 import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.login.LoginViewModel
 
@@ -73,8 +70,6 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
     @BindView(R.id.ssoContainer)
     lateinit var containerSSO: View
 
-    private var progressDialog: ProgressDialogIndeterminate = ProgressDialogIndeterminateAutoBundle.builder().build()
-
     override val layoutResource = R.layout.fragment_login
 
     override fun createViewModel(): LoginViewModel {
@@ -116,7 +111,9 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
 
         buttonNew.setOnClickListener {
             hideKeyboard(view)
-            startUrlIntent(Config.HOST_URL + Config.ACCOUNT + Config.NEW)
+            if (activity?.openUrl(Config.HOST_URL + Config.ACCOUNT + Config.NEW) != true) {
+                showToast(R.string.error_plain)
+            }
         }
 
 
@@ -130,7 +127,9 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
 
         textForgotPassword.setOnClickListener {
             hideKeyboard(view)
-            startUrlIntent(Config.HOST_URL + Config.ACCOUNT + Config.RESET)
+            if (activity?.openUrl(Config.HOST_URL + Config.ACCOUNT + Config.RESET) != true) {
+                showToast(R.string.error_plain)
+            }
         }
 
         viewModel.loginNetworkState
@@ -159,9 +158,7 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
 
                                 App.instance.state.login.loggedIn()
 
-                                if (this@LoginFragment.view != null) {
-                                    hideProgressDialog()
-                                }
+                                hideAnyProgress()
                                 activity?.finish()
                             }
                             else                -> handleCode(it.code)
@@ -182,7 +179,7 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
         }
 
         token?.let {
-            showProgressDialog()
+            showBlockingProgress()
 
             val userStorage = UserStorage()
             userStorage.accessToken = it
@@ -194,9 +191,9 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
     private fun handleCode(code: NetworkCode) {
         if (code != NetworkCode.STARTED && code != NetworkCode.SUCCESS) {
             UserManager.logout()
-            hideProgressDialog()
+            hideAnyProgress()
             when (code) {
-                NetworkCode.NO_NETWORK -> showNoNetworkToast()
+                NetworkCode.NO_NETWORK -> showNetworkRequired()
                 else                   -> showLoginFailedToast()
             }
         }
@@ -217,7 +214,7 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
             return
         }
 
-        showProgressDialog()
+        showBlockingProgress()
         viewModel.login(email, password)
     }
 
@@ -229,18 +226,6 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
             getString(R.string.login_sso)
         ).build(activity!!)
         startActivity(intent)
-    }
-
-    private fun showProgressDialog() {
-        progressDialog.show(childFragmentManager, ProgressDialogIndeterminate.TAG)
-    }
-
-    private fun hideProgressDialog() {
-        progressDialog.dismiss()
-    }
-
-    private fun showNoNetworkToast() {
-        showToast(R.string.toast_no_network)
     }
 
     private fun showLoginFailedToast() {
@@ -264,12 +249,6 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
 
     private fun isEmailValid(email: CharSequence): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    private fun startUrlIntent(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(url)
-        startActivity(intent)
     }
 
     override fun onRefresh() {

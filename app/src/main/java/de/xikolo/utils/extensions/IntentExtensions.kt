@@ -1,5 +1,6 @@
 package de.xikolo.utils.extensions
 
+import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -49,4 +50,15 @@ fun <T : Intent> T.includeAuthToken(token: String) {
     val headers = Bundle()
     headers.putString(Config.HEADER_AUTH, Config.HEADER_AUTH_VALUE_PREFIX + token)
     putExtra(Browser.EXTRA_HEADERS, headers)
+}
+
+fun <T : Context> T.openUrl(url: String): Boolean {
+    val intent = Intent(ACTION_VIEW)
+    intent.data = Uri.parse(url)
+    return try {
+        startActivity(intent)
+        true
+    } catch (E: ActivityNotFoundException) {
+        false
+    }
 }

@@ -17,11 +17,7 @@ class ChannelDao(realm: Realm) : BaseDao<Channel>(Channel::class, realm) {
 
     override fun find(id: String?): LiveData<Channel> =
         query()
-            .beginGroup()
-                .equalTo("id", id)
-                .or()
-                .equalTo("slug", id)
-            .endGroup()
+            .equalTo("id", id)
             .findFirstAsync()
             .asLiveData()
 
