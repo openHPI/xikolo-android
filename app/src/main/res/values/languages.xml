@@ -4,26 +4,33 @@
     <!-- -->
     <string name="lang_ar" translatable="false">العربية</string>
     <string name="lang_bg" translatable="false">Български</string>
+    <string name="lang_bn" translatable="false">বাংলা</string>
     <string name="lang_cn" translatable="false">中文</string>
-    <string name="lang_cs" translatable="false">Čeština</string>
     <string name="lang_de" translatable="false">Deutsch</string>
-    <string name="lang_el" translatable="false">ελληνικά</string>
     <string name="lang_en" translatable="false">English</string>
     <string name="lang_es" translatable="false">Español</string>
-    <string name="lang_fr" translatable="false">Français</string>
     <string name="lang_fa" translatable="false">فارسی</string>
+    <string name="lang_fr" translatable="false">Français</string>
     <string name="lang_hi" translatable="false">हिन्दी, हिंदी</string>
-    <string name="lang_hr" translatable="false">Hrvatski</string>
+    <string name="lang_hu" translatable="false">Magyar</string>
     <string name="lang_id" translatable="false">Bahasa Indonesia</string>
     <string name="lang_it" translatable="false">Italiano</string>
     <string name="lang_ja" translatable="false">日本語</string>
+    <string name="lang_kaa" translatable="false">Qaraqalpaq</string>
     <string name="lang_ko" translatable="false">한국의</string>
-    <string name="lang_nl" translatable="false">Nederlands</string>
+    <string name="lang_mk" translatable="false">македонски</string>
+    <string name="lang_or" translatable="false">ଓଡ଼ିଆ</string>
     <string name="lang_pl" translatable="false">Polski</string>
+    <string name="lang_ps" translatable="false">پښتو</string>
     <string name="lang_pt" translatable="false">Português</string>
+    <string name="lang_pt_BR" translatable="false">Português brasileiro</string>
     <string name="lang_ru" translatable="false">Русский</string>
+    <string name="lang_sq" translatable="false">Shqip</string>
     <string name="lang_sr" translatable="false">српски језик</string>
+    <string name="lang_sw" translatable="false">Kiswahili</string>
     <string name="lang_tr" translatable="false">Türk</string>
+    <string name="lang_ur" translatable="false">اردو</string>
+    <string name="lang_uz" translatable="false">O\'zbek</string>
     <string name="lang_vi" translatable="false">Tiếng Việt</string>
     <string name="lang_zh" translatable="false">中文</string>
 

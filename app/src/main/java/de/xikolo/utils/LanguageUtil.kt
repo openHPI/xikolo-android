@@ -8,7 +8,7 @@ object LanguageUtil {
         val context = App.Companion.instance
 
         @StringRes val resId = context.resources.getIdentifier(
-            "lang_$code",
+            "lang_${code.replace("-", "_")}",
             "string",
             context.packageName
         )
