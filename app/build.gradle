@@ -128,7 +128,6 @@ android {
         variant.resValue "string", "service_download", name + " Download Service"
     }
     lintOptions {
-        setLintConfig(file("lint.xml"))
         abortOnError false
         xmlReport true
         htmlReport false

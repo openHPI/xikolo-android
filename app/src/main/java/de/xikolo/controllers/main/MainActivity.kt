@@ -29,7 +29,8 @@ import de.xikolo.managers.UserManager
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.extensions.checkPlayServicesWithDialog
-import de.xikolo.utils.extensions.getString
+import de.xikolo.utils.extensions.getStringArray
+import de.xikolo.utils.extensions.getTypedArray
 import de.xikolo.viewmodels.main.NavigationViewModel
 
 class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.OnNavigationItemSelectedListener, MainActivityCallback {
@@ -214,7 +215,6 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
         return true
     }
 
-
     override fun onBackPressed() {
         if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
             if ((UserManager.isAuthorized
@@ -243,30 +243,34 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
 
         navigationView.inflateMenu(R.menu.navigation)
 
-        if (Feature.enabled("url_podcasts")) {
-            navigationView.menu.findItem(R.id.navigation_podcasts).apply {
-                setOnMenuItemClickListener {
-                    startActivity(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(getString("url_podcasts")))
-                    )
-                    true
-                }
-                isVisible = true
-            }
-        }
+        // programmatically build external links menu group
 
-        if (Feature.enabled("url_microlearning")) {
-            navigationView.menu.findItem(R.id.navigation_microlearning).apply {
-                setOnMenuItemClickListener {
-                    startActivity(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(getString("url_microlearning")))
+        if (Feature.enabled("nav_external_links_urls")) {
+            val titles = App.instance.getStringArray("nav_external_links_titles")
+            val icons = App.instance.getTypedArray("nav_external_links_icons")
+
+            App.instance.getStringArray("nav_external_links_urls").forEachIndexed { i, url ->
+                navigationView.menu
+                    .add(
+                        R.id.navigation_group_links,
+                        Menu.NONE,
+                        2,
+                        titles[i]
                     )
-                    true
-                }
-                isVisible = true
+                    .apply {
+                        setOnMenuItemClickListener {
+                            startActivity(
+                                Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            )
+                            true
+                        }
+
+                        icon = icons.getDrawable(i)
+
+                        setActionView(R.layout.view_external_icon)
+                    }
             }
-        }
-        if (!Feature.enabled("url_podcasts") && !Feature.enabled("url_microlearning")) {
+        } else {
             navigationView.menu.removeGroup(R.id.navigation_group_links)
         }
 

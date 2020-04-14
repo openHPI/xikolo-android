@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
@@ -10,6 +9,7 @@
         <item
             android:id="@+id/navigation_login"
             android:icon="@drawable/ic_nav_profile"
+            android:orderInCategory="0"
             android:title="@string/title_section_login" />
     </group>
 
@@ -19,47 +19,38 @@
         <item
             android:id="@+id/navigation_channels"
             android:icon="@drawable/ic_nav_channels"
+            android:orderInCategory="1"
             android:title="@string/title_section_channels" />
         <item
             android:id="@+id/navigation_all_courses"
             android:icon="@drawable/ic_nav_all_courses"
+            android:orderInCategory="1"
             android:title="@string/title_section_all_courses" />
         <item
             android:id="@+id/navigation_my_courses"
             android:icon="@drawable/ic_nav_my_courses"
+            android:orderInCategory="1"
             android:title="@string/title_section_my_courses" />
         <item
             android:id="@+id/navigation_dates"
             android:icon="@drawable/ic_nav_dates"
+            android:orderInCategory="1"
             android:title="@string/title_section_dates" />
         <item
             android:id="@+id/navigation_news"
             android:icon="@drawable/ic_nav_news"
+            android:orderInCategory="1"
             android:title="@string/title_section_news" />
         <item
             android:id="@+id/navigation_certificates"
             android:icon="@drawable/ic_nav_certificates"
+            android:orderInCategory="1"
             android:title="@string/title_section_certificates" />
     </group>
 
     <group
         android:id="@+id/navigation_group_links"
-        android:checkableBehavior="none">
-        <item
-            android:id="@+id/navigation_microlearning"
-            android:icon="@drawable/ic_nav_microlearning"
-            android:title="@string/title_section_microlearning"
-            android:visible="false"
-            app:actionLayout="@layout/view_external_icon"
-            app:showAsAction="always" />
-        <item
-            android:id="@+id/navigation_podcasts"
-            android:icon="@drawable/ic_nav_podcasts"
-            android:title="@string/title_section_podcasts"
-            android:visible="false"
-            app:actionLayout="@layout/view_external_icon"
-            app:showAsAction="always" />
-    </group>
+        android:checkableBehavior="none" />
 
     <group
         android:id="@+id/navigation_group_sub"
@@ -67,15 +58,18 @@
         <item
             android:id="@+id/navigation_downloads"
             android:icon="@drawable/ic_nav_downloads"
+            android:orderInCategory="3"
             android:title="@string/title_section_downloads" />
         <item
             android:id="@+id/navigation_helpdesk"
             android:checkable="false"
             android:icon="@drawable/ic_nav_help"
+            android:orderInCategory="3"
             android:title="@string/action_helpdesk" />
         <item
             android:id="@+id/navigation_settings"
             android:icon="@drawable/ic_nav_settings"
+            android:orderInCategory="3"
             android:title="@string/title_section_settings" />
     </group>
 

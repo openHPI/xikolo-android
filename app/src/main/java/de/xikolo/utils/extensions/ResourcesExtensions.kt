@@ -2,6 +2,7 @@ package de.xikolo.utils.extensions
 
 import android.content.Context
 import android.content.res.Resources
+import android.content.res.TypedArray
 import androidx.annotation.AnyRes
 import androidx.annotation.ArrayRes
 import androidx.annotation.BoolRes
@@ -16,6 +17,10 @@ fun Resources.getBoolean(name: String, defPackage: String): Boolean {
 
 fun Resources.getStringArray(name: String, defPackage: String): Array<out String> {
     return getStringArray(getIdentifier(name, "array", defPackage))
+}
+
+fun Resources.getTypedArray(name: String, defPackage: String): TypedArray {
+    return obtainTypedArray(getIdentifier(name, "array", defPackage))
 }
 
 fun <T : Context> T.getString(name: String): String {
@@ -36,6 +41,14 @@ fun <T : Context> T.getStringArray(@ArrayRes id: Int): Array<out String> {
 
 fun <T : Context> T.getStringArray(name: String): Array<out String> {
     return resources.getStringArray(name, packageName)
+}
+
+fun <T : Context> T.getTypedArray(@ArrayRes id: Int): TypedArray {
+    return resources.obtainTypedArray(id)
+}
+
+fun <T : Context> T.getTypedArray(name: String): TypedArray {
+    return resources.getTypedArray(name, packageName)
 }
 
 @AnyRes

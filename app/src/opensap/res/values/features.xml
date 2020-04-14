@@ -6,8 +6,6 @@
 
     <string name="url_copyright">https://sap.com/corporate/en/legal/copyright.html</string>
     <string name="url_faq" translatable="false">https://open.sap.com/pages/faq</string>
-    <string name="url_podcasts" translatable="false">https://open.sap.com/podcasts</string>
-    <string name="url_microlearning" translatable="false">https://open.sap.com/microlearning</string>
 
     <string name="sso_provider" translatable="false">sap</string>
 
@@ -32,5 +30,18 @@
         <item>Privacy</item>
         <item>Terms of Use</item>
     </string-array>
+
+    <string-array name="nav_external_links_urls" translatable="false">
+        <item>https://open.sap.com/microlearning</item>
+        <item>https://open.sap.com/podcasts</item>
+    </string-array>
+    <string-array name="nav_external_links_titles" translatable="false">
+        <item>Microlearning</item>
+        <item>Podcasts</item>
+    </string-array>
+    <array name="nav_external_links_icons">
+        <item>@drawable/ic_nav_microlearning</item>
+        <item>@drawable/ic_nav_podcasts</item>
+    </array>
 
 </resources>

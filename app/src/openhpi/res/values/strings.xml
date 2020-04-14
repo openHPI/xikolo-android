@@ -6,6 +6,4 @@
     <string name="login_sso">HPI Identity</string>
     <string name="login_sso_hint">for HPI students and employees</string>
 
-    <string name="title_section_podcasts" translatable="false">Podcast</string>
-
 </resources>
