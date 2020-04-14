@@ -9,7 +9,7 @@ dependencies {
     implementation "ru.gildor.coroutines:kotlin-coroutines-retrofit:1.1.0"
 
     // networking
-    def okhttpVersion = "4.4.1"
+    def okhttpVersion = "4.5.0"
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     implementation "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
 
@@ -52,7 +52,7 @@ dependencies {
     kapt           "com.github.yatatsu:autobundle-processor:${autobundleVersion}"
 
     // video
-    implementation "com.google.android.exoplayer:exoplayer:2.11.3"
+    implementation "com.google.android.exoplayer:exoplayer:2.11.4"
 
     // play services
     implementation "com.google.android.gms:play-services-cast-framework:18.1.0"

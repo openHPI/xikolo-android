@@ -56,7 +56,7 @@ ext {
 dependencyUpdates.resolutionStrategy {
     componentSelection { rules ->
         rules.all { ComponentSelection selection ->
-            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview', 'b', 'ea'].any { qualifier ->
+            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'release', 'preview', 'b', 'ea'].any { qualifier ->
                 selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-+]*/
             }
             if (rejected) {
