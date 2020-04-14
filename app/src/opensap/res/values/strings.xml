@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="settings_copyright" translatable="false">&#169; 2013 &#8211; %d Copyright SAP</string>
+    <string name="settings_copyright">&#169; 2013 &#8211; %d Copyright SAP</string>
 
-    <string name="login_sso" translatable="false">SAP Single Sign On</string>
+    <string name="login_sso">SAP Single Sign On</string>
     <string name="login_sso_hint">for SAP Employees, Partners and Customers</string>
 
     <string name="title_section_channels">Channels</string>
