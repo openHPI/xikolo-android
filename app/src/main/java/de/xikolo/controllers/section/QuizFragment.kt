@@ -146,7 +146,11 @@ class QuizFragment : ViewModelFragment<QuizViewModel>() {
 
                     if (quiz.allowedAttempts > 0) {
                         allowedAttempts.text =
-                            getString(R.string.quiz_allowed_attempts, quiz.allowedAttempts)
+                            resources.getQuantityString(
+                                R.plurals.quiz_allowed_attempts,
+                                quiz.allowedAttempts,
+                                quiz.allowedAttempts
+                            )
                         allowedAttempts.visibility = View.VISIBLE
                     } else {
                         allowedAttempts.visibility = View.GONE
@@ -156,7 +160,11 @@ class QuizFragment : ViewModelFragment<QuizViewModel>() {
 
         viewModel.questions
             .observe(viewLifecycleOwner) { questions ->
-                questionCount.text = getString(R.string.quiz_question_count, questions.size)
+                questionCount.text = resources.getQuantityString(
+                    R.plurals.quiz_question_count,
+                    questions.size,
+                    questions.size
+                )
 
                 if (questionViewMap.isEmpty()) {
                     questionViewMap = buildQuestions(questions)
@@ -459,7 +467,8 @@ class QuizFragment : ViewModelFragment<QuizViewModel>() {
                 val questionView = QuestionContainerView(it)
 
                 questionView.numberView.text = getString(R.string.quiz_question_number, n + 1)
-                questionView.pointsView.text = getString(R.string.quiz_question_points, q.maxPoints)
+                questionView.pointsView.text =
+                    getString(R.string.quiz_question_points, q.maxPoints.toString())
                 questionView.questionView.setMarkdownText(q.text)
 
                 when (q.type) {

@@ -21,8 +21,8 @@ import java.util.Locale
 class FreeTextQuestionView(context: Context, attributeSet: AttributeSet? = null) :
     FrameLayout(context, attributeSet), QuestionView {
 
-    @BindView(R.id.edittext)
-    lateinit var edittext: EditText
+    @BindView(R.id.textField)
+    lateinit var textField: EditText
 
     @BindView(R.id.indicator)
     lateinit var indicator: TextView
@@ -39,7 +39,7 @@ class FreeTextQuestionView(context: Context, attributeSet: AttributeSet? = null)
 
         ButterKnife.bind(this)
 
-        edittext.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+        textField.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
             if (v.isEnabled && hasFocus) {
                 changeListener
             }
@@ -57,11 +57,11 @@ class FreeTextQuestionView(context: Context, attributeSet: AttributeSet? = null)
     }
 
     override fun lock() {
-        edittext.isEnabled = false
+        textField.isEnabled = false
     }
 
     override fun unlock() {
-        edittext.isEnabled = true
+        textField.isEnabled = true
     }
 
     override fun showSolution(answer: QuizSubmissionAnswer?) {
@@ -80,10 +80,10 @@ class FreeTextQuestionView(context: Context, attributeSet: AttributeSet? = null)
     }
 
     override fun getAnswer(): QuizSubmissionAnswer {
-        return QuizSubmissionAnswer("", QuizQuestion.TYPE_FREE_TEXT, edittext.text.toString())
+        return QuizSubmissionAnswer("", QuizQuestion.TYPE_FREE_TEXT, textField.text.toString())
     }
 
     override fun insertAnswer(answer: QuizSubmissionAnswer?) {
-        edittext.setText(answer?.value?.data?.first())
+        textField.setText(answer?.value?.data?.first())
     }
 }

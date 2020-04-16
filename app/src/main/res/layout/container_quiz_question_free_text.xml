@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:res="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/answer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,12 +13,13 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/edittext"
+            android:id="@+id/textField"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
-            android:importantForAutofill="no"
-            android:inputType="text" />
+            android:autofillHints=""
+            android:inputType="text"
+            tools:ignore="LabelFor" />
 
         <de.xikolo.views.CustomFontTextView
             android:id="@+id/indicator"
