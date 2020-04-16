@@ -56,6 +56,12 @@ android {
             appHost = "openwho.org"
             resConfigs "en"
         }
+        lernencloud {
+            applicationId "de.xikolo.lernencloud"
+            appName = "Lernen.cloud"
+            appHost = "lernen.cloud"
+            resConfigs "en", "de"
+        }
     }
 
     def signingFile = rootProject.file('signing.properties')
@@ -91,6 +97,12 @@ android {
                 keyAlias signingProperties.RELEASE_KEY_ALIAS_OPENWHO
                 keyPassword signingProperties.RELEASE_KEY_PASSWORD_OPENWHO
             }
+            lernencloud {
+                storeFile keystoreFile
+                storePassword keystorePassword
+                keyAlias signingProperties.RELEASE_KEY_ALIAS_LERNENCLOUD
+                keyPassword signingProperties.RELEASE_KEY_PASSWORD_LERNENCLOUD
+            }
         }
     }
     buildTypes {
@@ -105,6 +117,7 @@ android {
                 productFlavors.opensap.signingConfig signingConfigs.opensap
                 productFlavors.moochouse.signingConfig signingConfigs.moochouse
                 productFlavors.openwho.signingConfig signingConfigs.openwho
+                productFlavors.lernencloud.signingConfig signingConfigs.lernencloud
             }
         }
         debug {

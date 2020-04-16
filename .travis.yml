@@ -24,6 +24,7 @@ env:
   - FLAVOR="opensap"
   - FLAVOR="moochouse"
   - FLAVOR="openwho"
+  - FLAVOR="lernencloud"
 
 script:
   - ./gradlew assemble${FLAVOR}Debug test${FLAVOR}DebugUnitTest
