@@ -43,6 +43,7 @@ import de.xikolo.models.dao.ItemDao
 import de.xikolo.network.jobs.GetItemWithContentJob
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkStateLiveData
+import de.xikolo.storages.RecentCoursesStorage
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.IdUtil
 import de.xikolo.utils.LanalyticsUtil
@@ -176,6 +177,9 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         handleCourseDeepLinkTab(intent)
 
         updateViewPagerTab()
+
+        val recentCoursesStorage = RecentCoursesStorage()
+        recentCoursesStorage.addCourse(course.id, course.title)
     }
 
     override fun onNewIntent(intent: Intent?) {
