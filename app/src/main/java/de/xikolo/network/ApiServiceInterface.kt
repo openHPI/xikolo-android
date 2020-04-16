@@ -1,8 +1,30 @@
 package de.xikolo.network
 
-import de.xikolo.models.*
+import de.xikolo.models.AccessToken
+import de.xikolo.models.Announcement
+import de.xikolo.models.Channel
+import de.xikolo.models.Course
+import de.xikolo.models.CourseDate
+import de.xikolo.models.CourseProgress
+import de.xikolo.models.Document
+import de.xikolo.models.Enrollment
+import de.xikolo.models.Item
+import de.xikolo.models.Quiz
+import de.xikolo.models.QuizSubmission
+import de.xikolo.models.Section
+import de.xikolo.models.Ticket
+import de.xikolo.models.User
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.HEAD
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiServiceInterface {
 
@@ -65,6 +87,22 @@ interface ApiServiceInterface {
 
     @PATCH("course-items/{id}")
     fun updateItem(@Path("id") id: String, @Body item: Item.JsonModel): Call<Item.JsonModel>
+
+    // Quiz
+
+    @GET("quizzes/{id}?include=questions,newest_user_submission")
+    fun getQuizWithQuestionsAndSubmission(@Path("id") id: String): Call<Quiz.JsonModel>
+
+    @POST("quiz-submissions")
+    fun createQuizSubmission(
+        @Body submission: QuizSubmission.JsonModel
+    ): Call<QuizSubmission.JsonModel>
+
+    @PATCH("quiz-submissions/{id}")
+    fun updateQuizSubmission(
+        @Path("id") id: String,
+        @Body submission: QuizSubmission.JsonModel
+    ): Call<QuizSubmission.JsonModel>
 
     // Progress
 

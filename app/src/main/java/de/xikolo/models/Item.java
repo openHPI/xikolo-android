@@ -10,7 +10,6 @@ import de.xikolo.App;
 import de.xikolo.R;
 import de.xikolo.models.base.RealmAdapter;
 import de.xikolo.models.dao.CourseDao;
-import de.xikolo.models.dao.ItemDao;
 import de.xikolo.models.dao.SectionDao;
 import de.xikolo.utils.extensions.DateUtil;
 import io.realm.RealmObject;
@@ -56,10 +55,6 @@ public class Item extends RealmObject {
 
     public Course getCourse() {
         return CourseDao.Unmanaged.find(courseId);
-    }
-
-    public RealmObject getContent() {
-        return ItemDao.Unmanaged.findContent(contentId);
     }
 
     public static final String TYPE_TEXT = "rich_text";

@@ -41,6 +41,9 @@
     <string name="icon_points" translatable="false">&#xe672;</string>
     <string name="icon_solo" translatable="false">&#xe624;</string>
     <string name="icon_team" translatable="false">&#xe622;</string>
+    <string name="icon_explanation" translatable="false">&#xe60c;</string>
+    <string name="icon_checkmark" translatable="false">&#xe642;</string>
+    <string name="icon_cross" translatable="false">&#xe643;</string>
 
     <!-- materialdesign.ttf from https://materialdesignicons.com/ -->
     <string name="icon_step_forward" translatable="false">&#xf467;</string>

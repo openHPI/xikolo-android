@@ -1,8 +1,19 @@
 package de.xikolo.models.dao
 
+import androidx.lifecycle.LiveData
 import de.xikolo.extensions.asCopy
-import de.xikolo.models.*
-import de.xikolo.models.Item.*
+import de.xikolo.extensions.asLiveData
+import de.xikolo.models.Item
+import de.xikolo.models.Item.TYPE_LTI
+import de.xikolo.models.Item.TYPE_PEER
+import de.xikolo.models.Item.TYPE_QUIZ
+import de.xikolo.models.Item.TYPE_TEXT
+import de.xikolo.models.Item.TYPE_VIDEO
+import de.xikolo.models.LtiExercise
+import de.xikolo.models.PeerAssessment
+import de.xikolo.models.Quiz
+import de.xikolo.models.RichText
+import de.xikolo.models.Video
 import de.xikolo.models.dao.base.BaseDao
 import io.realm.Realm
 import io.realm.RealmObject
@@ -20,6 +31,23 @@ class ItemDao(realm: Realm) : BaseDao<Item>(Item::class, realm) {
 
     fun allAccessibleForSection(sectionId: String?) =
         all("sectionId" to sectionId, "accessible" to true)
+
+    fun findContent(id: String?): LiveData<RealmObject>? =
+        Unmanaged.find(id)?.let { item ->
+            return when (item.contentType) {
+                TYPE_TEXT -> realm.where<RichText>().equalTo("id", item.contentId).findFirstAsync()
+                    .asLiveData()
+                TYPE_VIDEO -> realm.where<Video>().equalTo("id", item.contentId).findFirstAsync()
+                    .asLiveData()
+                TYPE_QUIZ -> realm.where<Quiz>().equalTo("id", item.contentId).findFirstAsync()
+                    .asLiveData()
+                TYPE_LTI -> realm.where<LtiExercise>().equalTo("id", item.contentId)
+                    .findFirstAsync().asLiveData()
+                TYPE_PEER -> realm.where<PeerAssessment>().equalTo("id", item.contentId)
+                    .findFirstAsync().asLiveData()
+                else -> null
+            }
+        }
 
     class Unmanaged {
         companion object {

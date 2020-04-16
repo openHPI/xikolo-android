@@ -370,4 +370,23 @@
     <string name="course_filter_all">Alle</string>
     <string name="course_filter_language">Sprache</string>
     <string name="course_filter_channel">Channel</string>
+
+    <string name="quiz_question_number">Frage %1$d</string>
+    <string name="quiz_question_points">%1$.1f Punkte</string>
+    <string name="quiz_question_explanation_show">Erläuterung anzeigen</string>
+    <string name="quiz_question_explanation_hide">Erläuterung ausblenden</string>
+    <string name="quiz_selftest_description">Dieses Quiz ist ein Selbsttest. Sie können es beliebig oft wiederholen.</string>
+    <string name="quiz_question_count">Dieses Quiz hat %1$d Fragen.</string>
+    <string name="quiz_maximum_points">max %1$s Punkte</string>
+    <string name="quiz_submission_points">Sie haben %1$s von %2$s Punkten erreicht</string>
+    <string name="quiz_submission_submitted_at">Abgegeben: %1$s</string>
+    <string name="quiz_time_limit">Zeitbegrenzung: %1$d Sekunden.</string>
+    <string name="quiz_time_limit_none">Es gibt keine Zeitbegrenzung für dieses Quiz.</string>
+    <string name="quiz_allowed_attempts">Es sind %1$d Versuche erlaubt.</string>
+    <string name="quiz_snapshot_saving">Speichern…</string>
+    <string name="quiz_snapshot_saved">Alle Änderungen gespeichert</string>
+    <string name="quiz_snapshot_error">Fehler beim Zwischenspeichern</string>
+    <string name="quiz_snapshot_error_network">Kein Netzwerk</string>
+    <string name="quiz_redo">Wiederholen</string>
+    <string name="quiz_submit">Absenden</string>
 </resources>

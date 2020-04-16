@@ -373,4 +373,23 @@
     <string name="course_filter_language">Language</string>
     <string name="course_filter_channel">Channel</string>
 
+    <string name="quiz_question_number">Question %1$d</string>
+    <string name="quiz_question_points">%1$.1f Pts</string>
+    <string name="quiz_question_explanation_show">Show Explanation</string>
+    <string name="quiz_question_explanation_hide">Hide Explanation</string>
+    <string name="quiz_selftest_description">This quiz is a self-test. You can repeat it as often as you like.</string>
+    <string name="quiz_question_count">Dieses Quiz hat %1$d Fragen.</string>
+    <string name="quiz_maximum_points">max %1$s points</string>
+    <string name="quiz_submission_points">%1$s of %2$s points achieved</string>
+    <string name="quiz_submission_submitted_at">Submitted: %1$s</string>
+    <string name="quiz_time_limit">Time limit: %1$d seconds.</string>
+    <string name="quiz_time_limit_none">No time limit for this quiz, enjoy!</string>
+    <string name="quiz_allowed_attempts">%1$d attempts allowed.</string>
+    <string name="quiz_snapshot_saving">Saving…</string>
+    <string name="quiz_snapshot_saved">All answers saved</string>
+    <string name="quiz_snapshot_error">Error while saving</string>
+    <string name="quiz_snapshot_error_network">No network</string>
+    <string name="quiz_redo">Retake</string>
+    <string name="quiz_submit">Submit</string>
+
 </resources>

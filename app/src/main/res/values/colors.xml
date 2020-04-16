@@ -78,6 +78,11 @@
     <color name="progress_bar_bg">@color/black_10</color>
     <color name="progress_cast">@color/apptheme_second</color>
 
+    <!-- Quiz indicators -->
+    <color name="quiz_correct">#40e643</color>
+    <color name="quiz_wrong">#e84141</color>
+    <color name="quiz_actual">#bbbbbb</color>
+
 
     <!-- Misc -->
     <color name="divider">@color/black_10</color>

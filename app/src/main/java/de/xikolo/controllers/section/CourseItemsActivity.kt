@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import android.widget.TextView
 import androidx.core.app.NavUtils
 import androidx.core.content.ContextCompat
@@ -56,8 +57,13 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
     @BindView(R.id.tabs)
     lateinit var tabLayout: TabLayout
 
+    @BindView(R.id.stub_bottom)
+    lateinit var stubBottom: ViewStub
+
     private var course: Course? = null
     private var section: Section? = null
+
+    var activeFragment: Fragment? = null
 
     override fun createViewModel(): CourseItemsViewModel {
         return CourseItemsViewModel(courseId, sectionId)
@@ -68,6 +74,11 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
 
         setContentView(R.layout.activity_blank_tabs)
         setupActionBar()
+
+        if (stubBottom.parent != null) {
+            stubBottom.layoutResource = R.layout.view_floating_button
+            stubBottom.inflate()
+        }
 
         Crashlytics.setString("course_id", courseId)
         Crashlytics.setString("section_id", sectionId)
@@ -99,6 +110,23 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = 2
 
+        viewPager.clearOnPageChangeListeners()
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageSelected(position: Int) {
+                stubBottom.visibility = View.GONE
+                activeFragment = adapter.getItem(position)
+                (activeFragment as? QuizFragment)?.notifyActive()
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+        })
+
         tabLayout.setupWithViewPager(viewPager)
         tabLayout.addOnTabSelectedListener(adapter)
 
@@ -110,6 +138,15 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
 
         viewPager.currentItem = index
         onItemSelected(index)
+    }
+
+    fun updateActionButton(sender: Fragment, text: String, icon: String, click: (View) -> Unit) {
+        if (sender == activeFragment) {
+            findViewById<TextView>(R.id.actionText).text = text
+            findViewById<TextView>(R.id.actionIcon).text = icon
+            findViewById<View>(R.id.actionButton).setOnClickListener(click)
+            stubBottom.visibility = View.VISIBLE
+        }
     }
 
     private fun onItemSelected(position: Int) {
@@ -143,7 +180,7 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home    -> {
+            android.R.id.home -> {
                 NavUtils.navigateUpFromSameTask(this)
                 true
             }
@@ -156,7 +193,7 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
                 dialog.show(supportFragmentManager, CreateTicketDialog.TAG)
                 true
             }
-            else                 -> super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -170,7 +207,10 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         }
     }
 
-    inner class ItemsPagerAdapter(private val fragmentManager: FragmentManager, private val items: List<Item>) : FragmentPagerAdapter(fragmentManager), TabLayout.OnTabSelectedListener {
+    inner class ItemsPagerAdapter(
+        private val fragmentManager: FragmentManager,
+        private val items: List<Item>
+    ) : FragmentPagerAdapter(fragmentManager), TabLayout.OnTabSelectedListener {
 
         fun getCustomTabView(position: Int, currentPosition: Int, parent: ViewGroup): View =
             layoutInflater.inflate(R.layout.view_tab_section, parent, false).apply {
@@ -211,16 +251,40 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
             if (fragment == null) {
                 fragment = if (course?.enrollment?.proctored == true && item.proctored) {
                     ProctoredItemFragment()
-                } else when (item.contentType) {
-                    Item.TYPE_LTI   -> LtiExerciseFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    Item.TYPE_PEER  -> PeerAssessmentFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    Item.TYPE_QUIZ  -> WebViewFragmentAutoBundle.builder(url)
+                } else when {
+                    item.contentType == Item.TYPE_LTI -> LtiExerciseFragmentAutoBundle.builder(
+                        courseId,
+                        sectionId,
+                        item.id
+                    ).build()
+                    item.contentType == Item.TYPE_PEER -> PeerAssessmentFragmentAutoBundle.builder(
+                        courseId,
+                        sectionId,
+                        item.id
+                    ).build()
+                    item.contentType == Item.TYPE_QUIZ
+                        && item.exerciseType == Item.EXERCISE_TYPE_SELFTEST
+                    -> QuizFragmentAutoBundle.builder(
+                        courseId,
+                        sectionId,
+                        item.id,
+                        item.contentId
+                    ).build()
+                    item.contentType == Item.TYPE_QUIZ -> WebViewFragmentAutoBundle.builder(url)
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)
                         .build()
-                    Item.TYPE_TEXT  -> RichTextFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    Item.TYPE_VIDEO -> VideoPreviewFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    else            -> WebViewFragmentAutoBundle.builder(url)
+                    item.contentType == Item.TYPE_TEXT -> RichTextFragmentAutoBundle.builder(
+                        courseId,
+                        sectionId,
+                        item.id
+                    ).build()
+                    item.contentType == Item.TYPE_VIDEO -> VideoPreviewFragmentAutoBundle.builder(
+                        courseId,
+                        sectionId,
+                        item.id
+                    ).build()
+                    else -> WebViewFragmentAutoBundle.builder(url)
                         .inAppLinksEnabled(false)
                         .externalLinksEnabled(false)
                         .build()
@@ -258,7 +322,5 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         }
 
         override fun onTabReselected(tab: TabLayout.Tab) {}
-
     }
-
 }

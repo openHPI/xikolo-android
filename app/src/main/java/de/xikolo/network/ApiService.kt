@@ -5,7 +5,26 @@ import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.managers.UserManager
-import de.xikolo.models.*
+import de.xikolo.models.Announcement
+import de.xikolo.models.Channel
+import de.xikolo.models.Course
+import de.xikolo.models.CourseDate
+import de.xikolo.models.CourseProgress
+import de.xikolo.models.Document
+import de.xikolo.models.DocumentLocalization
+import de.xikolo.models.Enrollment
+import de.xikolo.models.Item
+import de.xikolo.models.LtiExercise
+import de.xikolo.models.PeerAssessment
+import de.xikolo.models.Profile
+import de.xikolo.models.Quiz
+import de.xikolo.models.QuizQuestion
+import de.xikolo.models.QuizSubmission
+import de.xikolo.models.RichText
+import de.xikolo.models.Section
+import de.xikolo.models.SectionProgress
+import de.xikolo.models.Ticket
+import de.xikolo.models.Video
 import moe.banana.jsonapi2.JsonApiConverterFactory
 import moe.banana.jsonapi2.ResourceAdapterFactory
 import okhttp3.Cache
@@ -14,7 +33,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.util.*
+import java.util.Arrays
+import java.util.Locale
 
 object ApiService {
 
@@ -90,6 +110,8 @@ object ApiService {
             .add(DocumentLocalization.JsonModel::class.java)
             .add(CourseDate.JsonModel::class.java)
             .add(Ticket.JsonModel::class.java)
+            .add(QuizQuestion.JsonModel::class.java)
+            .add(QuizSubmission.JsonModel::class.java)
             .build()
 
         val moshi = Moshi.Builder()
