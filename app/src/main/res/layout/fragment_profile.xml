@@ -3,89 +3,89 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <FrameLayout
-        android:id="@+id/containerProfile"
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top">
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin">
 
-        <de.xikolo.views.CustomSizeImageView
-            android:id="@+id/imageHeader"
-            android:layout_width="fill_parent"
+        <ImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/avatar_bg"
+            android:padding="6dp" />
+
+        <TextView
+            android:id="@+id/textFullName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
+            android:layout_below="@+id/imageProfile"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif-medium"
+            android:paddingBottom="2dp"
+            android:textSize="20sp" />
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin">
+            android:layout_below="@+id/textFullName"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="2dp"
+            android:textSize="16sp" />
 
-            <de.xikolo.views.CustomSizeImageView
-                android:id="@+id/imageProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:elevation="2dp" />
+        <TextView
+            android:id="@+id/textEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textName"
+            android:layout_centerHorizontal="true"
+            android:maxLines="1"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="16dp"
+            android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/textFullName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageProfile"
-                android:layout_centerHorizontal="true"
-                android:fontFamily="sans-serif-medium"
-                android:paddingTop="16dp"
-                android:paddingBottom="2dp"
-                android:textSize="20sp" />
+        <TextView
+            android:id="@+id/textEnrollCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textEmail"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="2dp"
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textFullName"
-                android:layout_centerHorizontal="true"
-                android:paddingBottom="2dp"
-                android:textSize="16sp" />
+        <TextView
+            android:id="@+id/textEnrollments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textEnrollCount"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/enrollments"
+            android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/textEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textName"
-                android:layout_centerHorizontal="true"
-                android:maxLines="1"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="16dp"
-                android:textSize="14sp" />
+        <Button
+            android:id="@+id/buttonEditProfile"
+            style="@style/ButtonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textEnrollments"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/btn_edit_profile" />
 
-            <TextView
-                android:id="@+id/textEnrollCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textEmail"
-                android:layout_centerHorizontal="true"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="2dp"
-                android:textSize="34sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textEnrollCount"
-                android:layout_centerHorizontal="true"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/enrollments"
-                android:textSize="14sp" />
-
-        </RelativeLayout>
-
-    </FrameLayout>
+    </RelativeLayout>
 
 </androidx.core.widget.NestedScrollView>

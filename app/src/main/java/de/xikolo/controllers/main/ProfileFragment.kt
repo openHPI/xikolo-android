@@ -1,19 +1,19 @@
 package de.xikolo.controllers.main
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import android.widget.RelativeLayout
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import butterknife.BindView
 import de.xikolo.App
 import de.xikolo.R
+import de.xikolo.config.Config
 import de.xikolo.config.GlideApp
+import de.xikolo.controllers.webview.WebViewActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.models.User
-import de.xikolo.utils.extensions.displaySize
 import de.xikolo.viewmodels.main.ProfileViewModel
-import de.xikolo.views.CustomSizeImageView
 
 class ProfileFragment : MainFragment<ProfileViewModel>() {
 
@@ -27,17 +27,17 @@ class ProfileFragment : MainFragment<ProfileViewModel>() {
     @BindView(R.id.textName)
     lateinit var textName: TextView
 
-    @BindView(R.id.imageHeader)
-    lateinit var imageHeader: CustomSizeImageView
-
     @BindView(R.id.imageProfile)
-    lateinit var imageProfile: CustomSizeImageView
+    lateinit var imageProfile: ImageView
 
     @BindView(R.id.textEnrollCount)
     lateinit var textEnrollCounts: TextView
 
     @BindView(R.id.textEmail)
     lateinit var textEmail: TextView
+
+    @BindView(R.id.buttonEditProfile)
+    lateinit var buttonEditProfile: Button
 
     override val layoutResource = R.layout.fragment_profile
 
@@ -61,7 +61,10 @@ class ProfileFragment : MainFragment<ProfileViewModel>() {
     }
 
     private fun showUser(user: User) {
-        activityCallback?.onFragmentAttached(R.id.navigation_login, user.name)
+        activityCallback?.onFragmentAttached(
+            R.id.navigation_login,
+            getString(R.string.title_section_profile)
+        )
 
         if (user.name == user.profile.fullName) {
             textFullName.text = user.name
@@ -73,34 +76,25 @@ class ProfileFragment : MainFragment<ProfileViewModel>() {
 
         textEmail.text = user.profile.email
 
-        val size = activity.displaySize
-        val heightHeader: Int
-        val heightProfile: Int
-        if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            heightHeader = (size.y * 0.2).toInt()
-            heightProfile = (size.x * 0.2).toInt()
-        } else {
-            heightHeader = (size.y * 0.35).toInt()
-            heightProfile = (size.y * 0.2).toInt()
+        buttonEditProfile.setOnClickListener {
+            activity?.let {
+                val url = Config.HOST_URL + Config.PROFILE
+
+                val intent = WebViewActivityAutoBundle
+                    .builder(getString(R.string.btn_edit_profile), url)
+                    .inAppLinksEnabled(false)
+                    .externalLinksEnabled(false)
+                    .build(it)
+
+                startActivity(intent)
+            }
         }
-        imageHeader.setDimensions(size.x, heightHeader)
-        imageHeader.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-
-        imageProfile.setDimensions(heightProfile, heightProfile)
-        imageProfile.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-
-        GlideApp.with(this).load(R.drawable.title).into(imageHeader)
 
         GlideApp.with(App.instance)
             .load(user.avatarUrl)
-            .circleCrop()
             .allPlaceholders(R.drawable.avatar)
-            .override(heightProfile)
+            .circleCrop()
             .into(imageProfile)
-
-        val layoutParams = imageProfile.layoutParams as RelativeLayout.LayoutParams
-        layoutParams.setMargins(0, imageHeader.measuredHeight - imageProfile.measuredHeight / 2, 0, 0)
-        imageProfile.layoutParams = layoutParams
     }
 
     private fun updateEnrollmentCount(count: Long) {
@@ -111,8 +105,9 @@ class ProfileFragment : MainFragment<ProfileViewModel>() {
         if (!isLoggedIn) {
             viewModel.user.removeObservers(viewLifecycleOwner)
             viewModel.enrollments.removeObservers(viewLifecycleOwner)
-            fragmentManager?.popBackStack()
+            if (isAdded) {
+                parentFragmentManager.popBackStack()
+            }
         }
     }
-
 }

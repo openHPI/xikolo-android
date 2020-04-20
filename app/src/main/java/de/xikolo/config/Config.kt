@@ -60,6 +60,7 @@ object Config {
     const val DISCUSSIONS = "pinboard/"
     const val ITEMS = "items/"
     const val RECAP = "learn?course_id="
+    const val PROFILE = "dashboard/profile/"
 
     const val WEBVIEW_LOGGING = false
 
