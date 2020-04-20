@@ -16,7 +16,7 @@ class UnenrollDialog : BaseDialogFragment() {
     var listener: Listener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
         builder.setMessage(R.string.dialog_unenroll_message)
             .setTitle(R.string.dialog_unenroll_title)
             .setPositiveButton(R.string.dialog_unenroll_yes) { _, _ -> listener?.onDialogPositiveClick(this) }

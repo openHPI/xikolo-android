@@ -20,10 +20,10 @@
 
 
     <!-- Content backgrounds -->
-    <color name="content">#fafafa</color>
-    <color name="content_video">#000000</color>
-    <color name="content_video_preview">#CC000000</color>
-    <color name="content_splash">@color/apptheme_splash_background</color>
+    <color name="background">#fafafa</color>
+    <color name="background_video">#000000</color>
+    <color name="background_video_preview">#CC000000</color>
+    <color name="background_splash">@color/apptheme_splash_background</color>
 
 
     <!-- Gradients -->
@@ -35,7 +35,7 @@
     <!-- Toolbar + Statusbar -->
     <color name="toolbar">@color/apptheme_toolbar</color>
     <color name="toolbar_offline">@color/apptheme_toolbar_offline</color>
-    <color name="toolbar_collapsing_scrim">@color/apptheme_main</color>
+    <color name="toolbar_collapsing_scrim">@color/apptheme_primary</color>
     <color name="toolbar_icon">@color/apptheme_toolbar_icon</color>
 
     <color name="statusbar">@color/apptheme_statusbar</color>
@@ -43,21 +43,9 @@
 
 
     <!-- Buttons -->
-    <color name="button_text_color">@color/apptheme_main</color>
-    <color name="button_text_color_disabled">#c4c4c4</color>
-    <color name="button_bg">@color/transparent</color>
-    <color name="button_ripple">@color/black_10</color>
-    <color name="button_outlined_border">#c4c4c4</color>
-    <color name="button_contained_text_color">@color/white</color>
-    <color name="button_contained_text_color_disabled">#888888</color>
-    <color name="button_contained_bg">@color/apptheme_main</color>
-    <color name="button_contained_bg_disabled">#e5e5e5</color>
-    <color name="button_contained_ripple">@color/apptheme_main_light</color>
-
     <color name="button_video_controls">#ccffffff</color>
     <color name="button_play_bg">@color/apptheme_button_play_bg</color>
     <color name="button_play_fg">@color/apptheme_button_play_fg</color>
-    <color name="button_play_ripple">@color/apptheme_main_light</color>
 
 
     <!-- Section header -->
@@ -76,48 +64,42 @@
     <!-- Progress -->
     <color name="progress_bar_fg">#80B600</color>
     <color name="progress_bar_bg">@color/black_10</color>
-    <color name="progress_cast">@color/apptheme_second</color>
+    <color name="progress_cast">@color/apptheme_secondary</color>
 
 
     <!-- Misc -->
     <color name="divider">@color/black_10</color>
-    <color name="counter_pill_bg">@color/apptheme_main</color>
-    <color name="circle_indicator">@color/apptheme_main</color>
+    <color name="counter_pill_bg">@color/apptheme_primary</color>
+    <color name="circle_indicator">@color/apptheme_primary</color>
     <color name="underline">@color/text_light</color>
     <color name="tab_text">@color/apptheme_tab_text</color>
     <color name="launcher_icon_bg">@color/apptheme_launcher_icon_bg</color>
 
 
     <!-- Colors that may be overridden by flavor. Only for internal use, use the wrapper above instead. -->
-    <color name="apptheme_toolbar">@color/apptheme_main</color>
-    <color name="apptheme_statusbar">@color/apptheme_main_dark</color>
+    <color name="apptheme_toolbar">@color/apptheme_primary</color>
+    <color name="apptheme_statusbar">@color/apptheme_primary_dark</color>
     <color name="apptheme_toolbar_offline">#424242</color>
     <color name="apptheme_statusbar_offline">#282828</color>
     <color name="apptheme_toolbar_icon">@color/white</color>
 
-    <color name="apptheme_gradient_placeholder_start">@color/apptheme_third_60</color>
-    <color name="apptheme_gradient_placeholder_end">@color/apptheme_second_60</color>
+    <color name="apptheme_gradient_placeholder_start">@color/apptheme_primary</color>
+    <color name="apptheme_gradient_placeholder_end">@color/apptheme_primary_light</color>
 
     <color name="apptheme_tab_text">@color/white</color>
     <color name="apptheme_tab_text_unfocused">@color/white_60</color>
     <color name="apptheme_tab_indicator">@color/white</color>
 
     <color name="apptheme_section_header_text">@color/white</color>
-    <color name="apptheme_section_header_bg">@color/apptheme_main</color>
+    <color name="apptheme_section_header_bg">@color/apptheme_primary</color>
     <color name="apptheme_section_header_bg_locked">@color/text_light</color>
     <color name="apptheme_section_header_text_locked">@color/white</color>
 
-    <color name="apptheme_splash_background">@color/white</color>
+    <color name="apptheme_splash_background">@color/background</color>
 
-    <color name="apptheme_button_play_bg">@color/apptheme_main</color>
+    <color name="apptheme_button_play_bg">@color/apptheme_primary</color>
     <color name="apptheme_button_play_fg">@color/white</color>
 
     <color name="apptheme_launcher_icon_bg">#FFFFFF</color>
-
-
-    <!-- Overrides -->
-    <!-- this is needed as preference_category_material layout is using this color as the text color -->
-    <color name="preference_fallback_accent_color" tools:override="true">@color/apptheme_second
-    </color>
 
 </resources>

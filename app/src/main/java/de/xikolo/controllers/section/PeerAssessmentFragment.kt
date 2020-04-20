@@ -115,7 +115,7 @@ class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
         peerAssessment?.let {
             val url = "${Config.HOST_URL}peer_assessments/${it.id}"
             val customTabsIntent = CustomTabsIntent.Builder()
-                .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_main))
+                .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_primary))
                 .build()
 
             val intent = customTabsIntent.intent.apply {

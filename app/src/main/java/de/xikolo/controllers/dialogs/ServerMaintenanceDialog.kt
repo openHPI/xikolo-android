@@ -17,7 +17,7 @@ class ServerMaintenanceDialog : BaseDialogFragment() {
     var listener: Listener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
             .setTitle(getString(R.string.dialog_server_maintenance_title))
             .setMessage(getString(R.string.dialog_server_maintenance_message))
             .setNegativeButton(getString(R.string.dialog_server_maintenance_no)) { _, _ -> listener?.onDismissed() }

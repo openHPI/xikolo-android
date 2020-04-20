@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Main theme colors -->
-    <color name="apptheme_main">#DD6108</color>
-
-    <!-- 30% white overlay -->
-    <color name="apptheme_main_light">#e79153</color>
-
-    <!-- 40% black overlay -->
-    <color name="apptheme_main_dark">#853a05</color>
-
-    <color name="apptheme_second">#F6A800</color>
-    <color name="apptheme_third">#5A6065</color>
-
-    <color name="apptheme_main_10">#1aDD6108</color>
-
-    <color name="apptheme_second_60">#99F6A800</color>
-    <color name="apptheme_third_60">#995A6065</color>
-
-    <color name="apptheme_second_26">#42F6A800</color>
-
     <!-- Overrides -->
     <color name="apptheme_toolbar">@color/white</color>
     <color name="apptheme_statusbar">#999999</color>
@@ -27,21 +8,18 @@
     <color name="apptheme_statusbar_offline">#7a7a7a</color>
     <color name="apptheme_toolbar_icon">@color/text_main</color>
 
-    <color name="apptheme_gradient_placeholder_start">#99DD6108</color>
-    <color name="apptheme_gradient_placeholder_end">@color/apptheme_second_60</color>
-
     <color name="apptheme_tab_text">@color/text_main</color>
     <color name="apptheme_tab_text_unfocused">@color/text_light</color>
     <color name="apptheme_tab_indicator">@color/text_main</color>
 
-    <color name="apptheme_section_header_text">@color/apptheme_main</color>
+    <color name="apptheme_section_header_text">@color/apptheme_primary</color>
     <color name="apptheme_section_header_bg">@color/transparent</color>
     <color name="apptheme_section_header_bg_locked">@color/transparent</color>
     <color name="apptheme_section_header_text_locked">@color/text_light</color>
 
     <color name="apptheme_button_play_bg">@color/white</color>
-    <color name="apptheme_button_play_fg">@color/apptheme_main</color>
+    <color name="apptheme_button_play_fg">@color/apptheme_primary</color>
 
-    <color name="apptheme_launcher_icon_bg">@color/apptheme_main</color>
+    <color name="apptheme_launcher_icon_bg">@color/apptheme_primary</color>
 
 </resources>

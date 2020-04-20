@@ -13,29 +13,13 @@
         <item name="android:shadowRadius">8</item>
     </style>
 
-    <style name="ButtonText">
-        <item name="android:textColor">@color/button_text</item>
-        <item name="android:stateListAnimator">@null</item>
-        <item name="android:elevation">0dp</item>
-        <item name="android:translationZ">0dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:minWidth">88dp</item>
-        <item name="android:minHeight">36dp</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:background">@drawable/button</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+    <style name="ButtonText" parent="Widget.MaterialComponents.Button.TextButton">
     </style>
 
-    <style name="ButtonContained" parent="ButtonText">
-        <item name="android:textColor">@color/button_contained_text</item>
-        <item name="android:background">@drawable/button_contained</item>
+    <style name="ButtonOutlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
     </style>
 
-    <style name="ButtonOutlined" parent="ButtonText">
-        <item name="android:textColor">@color/button_text</item>
-        <item name="android:background">@drawable/button_outlined</item>
+    <style name="ButtonContained" parent="Widget.MaterialComponents.Button.UnelevatedButton">
     </style>
 
     <style name="TabLayout" parent="Widget.Design.TabLayout">
@@ -52,16 +36,6 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/apptheme_tab_text_unfocused</item>
         <item name="textAllCaps">true</item>
-    </style>
-
-    <style name="LoginTextInput" parent="Widget.Design.TextInputLayout">
-        <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColor">@color/text_main</item>
-        <item name="android:textColorHint">@color/text_main</item>
-        <item name="android:textSize">20sp</item>
-        <item name="colorAccent">@color/apptheme_main</item>
-        <item name="colorControlNormal">@color/text_main</item>
-        <item name="colorControlActivated">@color/apptheme_main</item>
     </style>
 
     <style name="TextAppearanceMedium">

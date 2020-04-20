@@ -1,51 +1,39 @@
 <resources>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/apptheme_main</item>
-        <item name="colorPrimaryDark">@color/apptheme_main_dark</item>
-        <item name="colorAccent">@color/apptheme_second</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/apptheme_primary</item>
+        <item name="colorPrimaryVariant">@color/apptheme_primary_dark</item>
+        <item name="colorSecondary">@color/apptheme_secondary</item>
+        <item name="colorSecondaryVariant">@color/apptheme_secondary_dark</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="android:statusBarColor">@color/statusbar</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
         <item name="android:textViewStyle">@style/TextViewTheme</item>
         <item name="castExpandedControllerToolbarStyle">
-            @style/ThemeOverlay.AppCompat.Dark.ActionBar
+            @style/ThemeOverlay.MaterialComponents.Dark.ActionBar
         </item>
         <item name="castExpandedControllerStyle">@style/CustomCastExpandedController</item>
     </style>
 
-    <style name="AppTheme" parent="AppTheme.Base">
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
-        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
-        <item name="android:windowBackground">@color/content</item>
+    <style name="AppTheme.DarkStatusBar" parent="AppTheme">
+        <item name="android:statusBarColor">@color/black</item>
     </style>
 
-    <style name="AppThemeDarkStatusBar" parent="AppTheme">
-        <item name="colorPrimaryDark">@color/black</item>
-    </style>
-
-    <style name="AppThemeTranslucentStatus" parent="AppTheme.Base">
+    <style name="AppTheme.TranslucentStatus" parent="AppTheme">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="AppThemeTranslucentStatusAndNavigation" parent="AppThemeTranslucentStatus">
+    <style name="AppTheme.TranslucentStatusAndNavigation" parent="AppTheme.TranslucentStatus">
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">@color/apptheme_main</item>
-        <item name="colorPrimaryDark">@color/apptheme_main_dark</item>
-        <item name="colorAccent">@color/apptheme_second</item>
-    </style>
-
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:statusBarColor">@color/black</item>
     </style>
 
     <style name="TextViewTheme" parent="android:Widget.TextView">

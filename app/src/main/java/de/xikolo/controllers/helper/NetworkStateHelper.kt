@@ -66,8 +66,8 @@ class NetworkStateHelper(private val activity: FragmentActivity?, view: View, on
         ButterKnife.bind(this, view)
 
         refreshLayout.setColorSchemeResources(
-            R.color.apptheme_second,
-            R.color.apptheme_main
+            R.color.apptheme_secondary,
+            R.color.apptheme_primary
         )
         refreshLayout.setOnRefreshListener(onRefreshListener)
 

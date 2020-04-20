@@ -28,7 +28,7 @@
             android:lineSpacingExtra="4dp"
             android:paddingTop="4dp"
             android:textColor="@color/text_main"
-            android:textColorLink="@color/apptheme_second"
+            android:textColorLink="@color/apptheme_secondary"
             android:textSize="14sp" />
 
         <Button
@@ -39,6 +39,7 @@
             android:layout_below="@+id/text"
             android:layout_alignParentRight="true"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/btn_continue_course"
             android:visibility="gone" />
 

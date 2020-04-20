@@ -3,7 +3,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/content_video">
+    android:background="@color/background_video">
 
     <include
         android:id="@+id/toolbar"
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0"
-            android:background="@color/content_video" />
+            android:background="@color/background_video" />
 
     </RelativeLayout>
 
@@ -36,7 +36,7 @@
             android:id="@+id/settingsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/content"
+            android:background="@color/background"
             android:elevation="2dp"
             android:orientation="vertical"
             app:behavior_hideable="true"

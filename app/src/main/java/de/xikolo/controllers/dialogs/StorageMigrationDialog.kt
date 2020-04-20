@@ -21,7 +21,7 @@ class StorageMigrationDialog : BaseDialogFragment() {
     var listener: Listener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
             .setTitle(activity!!.getString(R.string.dialog_storage_migration_title))
             .setMessage(activity?.buildMigrationMessage(from))
             .setPositiveButton(R.string.dialog_storage_migration_confirm) { _, _ -> listener?.onDialogPositiveClick() }

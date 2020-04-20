@@ -10,7 +10,6 @@ import android.text.Editable
 import android.text.Html
 import android.text.InputType
 import android.text.TextWatcher
-import android.text.style.URLSpan
 import android.util.Patterns
 import android.view.KeyEvent
 import android.view.View
@@ -117,7 +116,7 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
                     CustomTabsIntent.Builder()
                         .setToolbarColor(ContextCompat.getColor(
                             App.instance,
-                            R.color.apptheme_main
+                            R.color.apptheme_primary
                         ))
                         .build()
                         .launchUrl(it, Uri.parse(it.getString("url_faq")))
@@ -195,7 +194,7 @@ class CreateTicketDialog : ViewModelDialogFragment<TicketViewModel>(), HelpdeskT
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        return AlertDialog.Builder(requireActivity())
             .setNegativeButton(R.string.dialog_negative) { _: DialogInterface, _: Int ->
                 //see onResume
             }

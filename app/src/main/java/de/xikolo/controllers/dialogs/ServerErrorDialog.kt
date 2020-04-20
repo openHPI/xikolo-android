@@ -17,7 +17,7 @@ class ServerErrorDialog : BaseDialogFragment() {
     var listener: Listener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
             .setTitle(getString(R.string.dialog_server_error_title))
             .setMessage(getString(R.string.dialog_server_error_message))
             .setNegativeButton(getString(R.string.dialog_server_error_no)) { _, _ -> listener?.onDismissed() }

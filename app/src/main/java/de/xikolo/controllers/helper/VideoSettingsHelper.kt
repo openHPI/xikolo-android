@@ -287,7 +287,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         titleView.text = title
 
         if (active) {
-            val activeColor = ContextCompat.getColor(context, R.color.apptheme_second)
+            val activeColor = ContextCompat.getColor(context, R.color.apptheme_secondary)
             iconView.setTextColor(activeColor)
             titleView.setTextColor(activeColor)
         }

@@ -40,7 +40,7 @@ class HelpdeskTopicDialog : ViewModelDialogFragment<HelpdeskTopicViewModel>() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return androidx.appcompat.app.AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        return androidx.appcompat.app.AlertDialog.Builder(requireActivity())
             .setNegativeButton(R.string.dialog_negative) { _: DialogInterface, _: Int ->
                 closeDialog()
             }

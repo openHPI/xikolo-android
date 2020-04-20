@@ -98,8 +98,26 @@ android {
             if (variant.buildType.name == "debug") {
                 name = "$name.debug"
             }
+
             variant.resValue("string", "app_name", name)
             variant.resValue("string", "app_host", config.appHost)
+
+            variant.resValue("color", "apptheme_primary", config.primaryColor)
+            variant.resValue("color", "apptheme_secondary", config.secondaryColor)
+
+            variant.resValue(
+                "color", "apptheme_primary_dark", Color.darken(config.primaryColor)
+            )
+            variant.resValue(
+                "color", "apptheme_secondary_dark", Color.darken(config.secondaryColor)
+            )
+            variant.resValue(
+                "color", "apptheme_primary_light", Color.lighten(config.primaryColor)
+            )
+            variant.resValue(
+                "color", "apptheme_secondary_light", Color.lighten(config.secondaryColor)
+            )
+
             variant.resValue("string", "service_download", "$name Download Service")
         }
     })

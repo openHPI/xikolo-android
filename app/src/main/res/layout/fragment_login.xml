@@ -3,7 +3,7 @@
     android:id="@+id/content_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/content"
+    android:background="@color/background"
     android:fitsSystemWindows="true">
 
     <androidx.core.widget.NestedScrollView
@@ -51,13 +51,13 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/input_layout_email"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/text_credentials"
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:theme="@style/LoginTextInput">
+                    android:layout_marginBottom="8dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editEmail"
@@ -72,13 +72,13 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/input_layout_password"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/input_layout_email"
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:theme="@style/LoginTextInput">
+                    android:layout_marginBottom="8dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editPassword"

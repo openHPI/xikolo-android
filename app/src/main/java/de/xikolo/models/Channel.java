@@ -43,7 +43,7 @@ public class Channel extends RealmObject {
                 if (Config.DEBUG) Log.d(TAG, "Channel color '" + color + "' could not be parsed");
             }
 
-        return ContextCompat.getColor(App.getInstance(), R.color.apptheme_main);
+        return ContextCompat.getColor(App.getInstance(), R.color.apptheme_primary);
     }
 
     @JsonApi(type = "channels")
