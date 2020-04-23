@@ -121,6 +121,26 @@ fastlane android unit_test_moochouse
 fastlane android assemble_moochouse
 ```
 
+### android compile_lernencloud
+```
+fastlane android compile_lernencloud
+```
+
+### android lint_lernencloud
+```
+fastlane android lint_lernencloud
+```
+
+### android unit_test_lernencloud
+```
+fastlane android unit_test_lernencloud
+```
+
+### android assemble_lernencloud
+```
+fastlane android assemble_lernencloud
+```
+
 
 ----
 
