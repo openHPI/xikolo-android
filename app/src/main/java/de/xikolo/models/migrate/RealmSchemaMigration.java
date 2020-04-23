@@ -167,6 +167,47 @@ public class RealmSchemaMigration implements RealmMigration {
 
             oldVersion++;
         }
+
+        if (oldVersion == 13) {
+            schema.get("Quiz").addField("newestSubmissionId", String.class);
+
+            schema.create("QuizSubmissionAnswerData")
+                    .addField("type", String.class)
+                    .addRealmListField("data", String.class);
+
+            schema.create("QuizSubmissionAnswer")
+                    .addField("questionId", String.class)
+                    .addRealmObjectField("value", schema.get("QuizSubmissionAnswerData"));
+
+            schema.create("QuizSubmission")
+                    .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+                    .addField("createdAt", Date.class)
+                    .addField("submittedAt", Date.class)
+                    .addField("submitted", boolean.class)
+                    .addField("points", float.class)
+                    .addRealmListField("answers", schema.get("QuizSubmissionAnswer"))
+                    .addField("quizId", String.class);
+
+            schema.create("QuizQuestionOption")
+                    .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+                    .addField("position", int.class)
+                    .addField("text", String.class)
+                    .addField("correct", boolean.class)
+                    .addField("explanation", String.class);
+
+            schema.create("QuizQuestion")
+                    .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+                    .addField("text", String.class)
+                    .addField("explanation", String.class)
+                    .addField("type", String.class)
+                    .addField("position", int.class)
+                    .addField("maxPoints", float.class)
+                    .addField("shuffleOptions", boolean.class)
+                    .addRealmListField("options", schema.get("QuizQuestionOption"))
+                    .addField("quizId", String.class);
+
+            oldVersion++;
+        }
     }
 
 }

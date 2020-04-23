@@ -21,11 +21,11 @@ class GetItemWithContentJob(private val itemId: String, networkState: NetworkSta
         if (response.isSuccessful && response.body() != null) {
             if (Config.DEBUG) Log.i(TAG, "Item received")
 
+            ItemSyncHelper.syncItemContent(response.body()!!)
+
             Sync.Data.with(response.body()!!)
                 .saveOnly()
                 .run()
-
-            ItemSyncHelper.syncItemContent(response.body()!!)
 
             success()
         } else {
