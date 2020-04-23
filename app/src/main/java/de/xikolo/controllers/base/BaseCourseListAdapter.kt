@@ -55,7 +55,14 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
 
             holder.buttonCourseAction.text = App.instance.getString(R.string.btn_external_course)
             holder.buttonCourseAction.setOnClickListener { onCourseButtonClickListener?.onExternalButtonClicked(course) }
+        } else if (!course.enrollable && !course.isEnrolled) {
+            holder.layout.setOnClickListener {
+                onCourseButtonClickListener?.onDetailButtonClicked(
+                    course.id
+                )
+            }
 
+            holder.buttonCourseAction.visibility = View.GONE
         } else if (course.isEnrolled && course.accessible) {
             holder.layout.setOnClickListener { onCourseButtonClickListener?.onContinueButtonClicked(course.id) }
 
@@ -63,14 +70,12 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
             holder.buttonCourseAction.setOnClickListener { onCourseButtonClickListener?.onContinueButtonClicked(course.id) }
 
             holder.buttonCourseDetails.visibility = View.GONE
-
         } else if (course.isEnrolled && !course.accessible) {
             holder.layout.setOnClickListener { onCourseButtonClickListener?.onDetailButtonClicked(course.id) }
 
             holder.buttonCourseAction.text = App.instance.getString(R.string.btn_starts_soon)
             holder.buttonCourseAction.isEnabled = false
             holder.buttonCourseAction.isClickable = false
-
         } else {
             holder.layout.setOnClickListener { onCourseButtonClickListener?.onDetailButtonClicked(course.id) }
 

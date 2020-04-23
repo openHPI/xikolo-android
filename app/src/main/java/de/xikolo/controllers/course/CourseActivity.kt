@@ -147,18 +147,18 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             showCourseExternalBar(course)
 
             enrollButton?.setOnClickListener { enterExternalCourse(course) }
-        } else if (!course.enrollable) {
+        } else if (!course.enrollable && !course.isEnrolled) {
             setAreaState(CourseArea.Locked)
             showCourseNotEnrollableBar()
         } else if (!course.isEnrolled) {
             setAreaState(CourseArea.Locked)
             showEnrollBar()
-        } else if (course.accessible) {
-            setAreaState(CourseArea.All)
-            hideEnrollBar()
-        } else {
+        } else if (!course.accessible) {
             setAreaState(CourseArea.Locked)
             showCourseUnavailableEnrollBar()
+        } else {
+            setAreaState(CourseArea.All)
+            hideEnrollBar()
         }
 
         title = course.title
