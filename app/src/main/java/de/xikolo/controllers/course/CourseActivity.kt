@@ -23,7 +23,12 @@ import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.controllers.base.ViewModelActivity
-import de.xikolo.controllers.dialogs.*
+import de.xikolo.controllers.dialogs.CourseDateListDialogAutoBundle
+import de.xikolo.controllers.dialogs.CreateTicketDialog
+import de.xikolo.controllers.dialogs.CreateTicketDialogAutoBundle
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
+import de.xikolo.controllers.dialogs.UnenrollDialog
 import de.xikolo.controllers.helper.CourseArea
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
@@ -142,6 +147,9 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             showCourseExternalBar(course)
 
             enrollButton?.setOnClickListener { enterExternalCourse(course) }
+        } else if (!course.enrollable) {
+            setAreaState(CourseArea.Locked)
+            showCourseNotEnrollableBar()
         } else if (!course.isEnrolled) {
             setAreaState(CourseArea.Locked)
             showEnrollBar()
@@ -337,6 +345,13 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         enrollButton?.isEnabled = false
         enrollButton?.isClickable = false
         enrollButton?.setText(R.string.btn_starts_soon)
+    }
+
+    private fun showCourseNotEnrollableBar() {
+        enrollBar?.visibility = View.VISIBLE
+        enrollButton?.isEnabled = false
+        enrollButton?.isClickable = false
+        enrollButton?.setText(R.string.btn_not_enrollable)
     }
 
     private fun restartActivity() {
