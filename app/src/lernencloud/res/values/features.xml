@@ -20,7 +20,7 @@
         <item>HPI Schul-Cloud</item>
     </string-array>
     <array name="nav_external_links_icons">
-        <item>@drawable/ic_nav_schulcloud</item>
+        <item>@drawable/ic_schulcloud</item>
     </array>
 
 </resources>

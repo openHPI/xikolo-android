@@ -92,8 +92,8 @@ class ProfileFragment : MainFragment<ProfileViewModel>() {
 
         GlideApp.with(App.instance)
             .load(user.avatarUrl)
-            .allPlaceholders(R.drawable.avatar)
             .circleCrop()
+            .allPlaceholders(R.drawable.avatar_placeholder)
             .into(imageProfile)
     }
 

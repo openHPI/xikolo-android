@@ -40,8 +40,8 @@
         <item>Podcasts</item>
     </string-array>
     <array name="nav_external_links_icons">
-        <item>@drawable/ic_nav_microlearning</item>
-        <item>@drawable/ic_nav_podcasts</item>
+        <item>@drawable/ic_microlearning</item>
+        <item>@drawable/ic_podcasts</item>
     </array>
 
 </resources>

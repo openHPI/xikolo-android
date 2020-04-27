@@ -8,7 +8,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_login"
-            android:icon="@drawable/ic_nav_profile"
+            android:icon="@drawable/ic_profile"
             android:orderInCategory="0"
             android:title="@string/title_section_login" />
     </group>
@@ -18,32 +18,32 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_channels"
-            android:icon="@drawable/ic_nav_channels"
+            android:icon="@drawable/ic_channels"
             android:orderInCategory="1"
             android:title="@string/title_section_channels" />
         <item
             android:id="@+id/navigation_all_courses"
-            android:icon="@drawable/ic_nav_all_courses"
+            android:icon="@drawable/ic_all_courses"
             android:orderInCategory="1"
             android:title="@string/title_section_all_courses" />
         <item
             android:id="@+id/navigation_my_courses"
-            android:icon="@drawable/ic_nav_my_courses"
+            android:icon="@drawable/ic_my_courses"
             android:orderInCategory="1"
             android:title="@string/title_section_my_courses" />
         <item
             android:id="@+id/navigation_dates"
-            android:icon="@drawable/ic_nav_dates"
+            android:icon="@drawable/ic_dates"
             android:orderInCategory="1"
             android:title="@string/title_section_dates" />
         <item
             android:id="@+id/navigation_news"
-            android:icon="@drawable/ic_nav_news"
+            android:icon="@drawable/ic_news"
             android:orderInCategory="1"
             android:title="@string/title_section_news" />
         <item
             android:id="@+id/navigation_certificates"
-            android:icon="@drawable/ic_nav_certificates"
+            android:icon="@drawable/ic_certificates"
             android:orderInCategory="1"
             android:title="@string/title_section_certificates" />
     </group>
@@ -57,18 +57,18 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_downloads"
-            android:icon="@drawable/ic_nav_downloads"
+            android:icon="@drawable/ic_download_folder"
             android:orderInCategory="3"
             android:title="@string/title_section_downloads" />
         <item
             android:id="@+id/navigation_helpdesk"
             android:checkable="false"
-            android:icon="@drawable/ic_nav_help"
+            android:icon="@drawable/ic_help"
             android:orderInCategory="3"
             android:title="@string/action_helpdesk" />
         <item
             android:id="@+id/navigation_settings"
-            android:icon="@drawable/ic_nav_settings"
+            android:icon="@drawable/ic_settings"
             android:orderInCategory="3"
             android:title="@string/title_section_settings" />
     </group>
