@@ -122,6 +122,14 @@ android {
         }
     })
     lintOptions {
+        disable(
+            "ContentDescription",
+            "InflateParams",
+            "Overdraw",
+            "UnusedResources",
+            "VectorPath"
+        )
+
         isAbortOnError = false
         xmlReport = true
         htmlReport = false

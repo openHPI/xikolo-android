@@ -66,7 +66,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
-        drawerToggle.isDrawerSlideAnimationEnabled = false;
+        drawerToggle.isDrawerSlideAnimationEnabled = false
 
         drawerLayout.addDrawerListener(drawerToggle)
         navigationView.setNavigationItemSelectedListener(this)
