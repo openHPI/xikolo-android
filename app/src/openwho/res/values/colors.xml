@@ -3,6 +3,6 @@
 
     <!-- Overrides -->
     <color name="apptheme_splash_background">@color/apptheme_primary</color>
-    <color name="apptheme_launcher_icon_bg">@color/apptheme_primary</color>
+    <color name="apptheme_launcher_background">@color/apptheme_primary</color>
 
 </resources>

@@ -20,6 +20,6 @@
     <color name="apptheme_button_play_bg">@color/white</color>
     <color name="apptheme_button_play_fg">@color/apptheme_primary</color>
 
-    <color name="apptheme_launcher_icon_bg">@color/apptheme_primary</color>
+    <color name="apptheme_launcher_background">@color/apptheme_primary</color>
 
 </resources>
