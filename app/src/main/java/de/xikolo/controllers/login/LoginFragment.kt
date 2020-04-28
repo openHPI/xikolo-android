@@ -90,7 +90,7 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
         textCredentials.text = String.format(getString(R.string.login_with_credentials), Config.HOST)
 
         GlideApp.with(this)
-            .load(R.drawable.login_header_v2)
+            .load(R.drawable.ic_banner_login)
             .dontAnimate()
             .noPlaceholders()
             .fitCenter()

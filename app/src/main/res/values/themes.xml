@@ -32,6 +32,10 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/apptheme_primary</item>
+        <item name="colorPrimaryVariant">@color/apptheme_primary_dark</item>
+        <item name="colorSecondary">@color/apptheme_secondary</item>
+        <item name="colorSecondaryVariant">@color/apptheme_secondary_dark</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:statusBarColor">@color/black</item>
     </style>
