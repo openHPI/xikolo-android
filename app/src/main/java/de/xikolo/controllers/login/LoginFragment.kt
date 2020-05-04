@@ -7,7 +7,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -20,7 +19,6 @@ import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.config.Feature
-import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.managers.UserManager
 import de.xikolo.network.jobs.base.NetworkCode
@@ -48,9 +46,6 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
 
     @BindView(R.id.editPassword)
     lateinit var editTextPassword: TextInputEditText
-
-    @BindView(R.id.top_image)
-    lateinit var topImage: ImageView
 
     @BindView(R.id.text_credentials)
     lateinit var textCredentials: TextView
@@ -88,13 +83,6 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
         }
 
         textCredentials.text = String.format(getString(R.string.login_with_credentials), Config.HOST)
-
-        GlideApp.with(this)
-            .load(R.drawable.ic_banner_login)
-            .dontAnimate()
-            .noPlaceholders()
-            .fitCenter()
-            .into(topImage)
 
         editTextPassword.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {

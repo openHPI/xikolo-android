@@ -127,7 +127,8 @@ android {
             "InflateParams",
             "Overdraw",
             "UnusedResources",
-            "VectorPath"
+            "VectorPath",
+            "VectorRaster"
         )
 
         isAbortOnError = false
