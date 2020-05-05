@@ -116,7 +116,7 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
     private fun openExternalContent() {
         Uri.parse(ltiExercise?.launchUrl)?.let { uri ->
             val customTabsIntent = CustomTabsIntent.Builder()
-                .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_main))
+                .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_primary))
                 .build()
 
             val intent = customTabsIntent.intent.apply {

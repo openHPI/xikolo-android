@@ -17,7 +17,7 @@ class MobileDownloadDialog : BaseDialogFragment() {
     var listener: MobileDownloadGrantedListener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
         builder.setMessage(R.string.dialog_mobile_download_message)
             .setTitle(R.string.dialog_mobile_download_title)
             .setPositiveButton(R.string.dialog_mobile_download_yes) { _, _ ->

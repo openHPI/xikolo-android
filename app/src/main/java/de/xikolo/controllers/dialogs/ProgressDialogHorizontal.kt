@@ -37,13 +37,13 @@ class ProgressDialogHorizontal : BaseDialogFragment() {
         }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater: LayoutInflater = LayoutInflater.from(activity!!)
+        val inflater: LayoutInflater = LayoutInflater.from(requireActivity())
         progressBar = inflater.inflate(R.layout.dialog_progress_horizontal, null) as ProgressBar
         progressBar?.max = max
         progressBar?.progress = progress
 
 
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
             .setView(progressBar)
             .setTitle(title)
             .setMessage(message)

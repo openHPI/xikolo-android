@@ -4,53 +4,40 @@
     <!-- App Icon Font Symbols -->
 
     <!-- xikolo.ttf -->
-    <string name="icon_cal" translatable="false"></string>
-    <string name="icon_lang" translatable="false"></string>
-    <string name="icon_courses" translatable="false"></string>
-    <string name="icon_news" translatable="false"></string>
-    <string name="icon_dates" translatable="false"></string>
-    <string name="icon_certificates" translatable="false"></string>
-    <string name="icon_downloads" translatable="false"></string>
-    <string name="icon_settings" translatable="false"></string>
-    <string name="icon_course" translatable="false"></string>
-    <string name="icon_profile" translatable="false"></string>
-    <string name="icon_text" translatable="false"></string>
-    <string name="icon_video" translatable="false"></string>
-    <string name="icon_selftest" translatable="false"></string>
-    <string name="icon_assignment" translatable="false"></string>
+    <string name="icon_cal" translatable="false">&#xe625;</string>
+    <string name="icon_lang" translatable="false">&#xe612;</string>
+    <string name="icon_settings" translatable="false">&#xe600;</string>
+    <string name="icon_text" translatable="false">&#xe615;</string>
+    <string name="icon_video" translatable="false">&#xe618;</string>
+    <string name="icon_selftest" translatable="false">&#xe61d;</string>
+    <string name="icon_assignment" translatable="false">&#xe61c;</string>
     <string name="icon_lti" translatable="false">&#xe67a;</string>
     <string name="icon_info" translatable="false">&#xe666;</string>
     <string name="icon_play" translatable="false">&#xe652;</string>
     <string name="icon_pause" translatable="false">&#xe651;</string>
     <string name="icon_reload" translatable="false">&#xe65b;</string>
-    <string name="icon_fullscreen" translatable="false">&#xe658;</string>
-    <string name="icon_quiz" translatable="false">&#xe61d;</string>
-    <string name="icon_quality" translatable="false">&#xe601;</string>
-    <string name="icon_speed" translatable="false">&#xe66e;</string>
-    <string name="icon_subtitles" translatable="false">&#xe60a;</string>
-    <string name="icon_download_video" translatable="false">&#xe662;</string>
-    <string name="icon_download_pdf" translatable="false">&#xe660;</string>
     <string name="icon_locked" translatable="false">&#xe62b;</string>
     <string name="icon_restricted" translatable="false">&#xe645;</string>
     <string name="icon_bonus" translatable="false">&#xe671;</string>
     <string name="icon_survey" translatable="false">&#xe678;</string>
-    <string name="icon_pinboard" translatable="false">&#xe604;</string>
-    <string name="icon_show_immersive" translatable="false">&#xe658;</string>
-    <string name="icon_show_fitting" translatable="false">&#xe659;</string>
     <string name="icon_graded" translatable="false">&#xe61c;</string>
     <string name="icon_points" translatable="false">&#xe672;</string>
     <string name="icon_solo" translatable="false">&#xe624;</string>
     <string name="icon_team" translatable="false">&#xe622;</string>
 
     <!-- materialdesign.ttf from https://materialdesignicons.com/ -->
-    <string name="icon_step_forward" translatable="false">&#xf467;</string>
-    <string name="icon_step_backward" translatable="false">&#xf465;</string>
-    <string name="icon_download" translatable="false">&#xf1da;</string>
-    <string name="icon_delete" translatable="false">&#xf1c0;</string>
-    <string name="icon_cancel" translatable="false">&#xf156;</string> <!-- close -->
-    <string name="icon_visited" translatable="false">&#xf134;</string> <!-- checkbox-marked-circle-outline -->
-    <string name="icon_channels" translatable="false">&#xf43b;</string> <!-- radio-tower -->
-    <string name="icon_pip" translatable="false">&#xf612;</string>
-    <string name="icon_information" translatable="false">&#xf2fd;</string>
+    <string name="icon_step_forward" translatable="false">&#xf0d71;</string> <!-- fast-forward-10 -->
+    <string name="icon_step_backward" translatable="false">&#xf0d2a;</string> <!-- rewind-10 -->
+    <string name="icon_download" translatable="false">&#xf01da;</string> <!-- download -->
+    <string name="icon_delete" translatable="false">&#xf01b4;</string> <!-- delete -->
+    <string name="icon_cancel" translatable="false">&#xf0156;</string> <!-- close -->
+    <string name="icon_visited" translatable="false">&#xf0134;</string> <!-- checkbox-marked-circle-outline -->
+    <string name="icon_pip" translatable="false">&#xf0e57;</string> <!-- picture-in-picture-bottom-right -->
+    <string name="icon_information" translatable="false">&#xf02fd;</string> <!-- information-outline -->
+    <string name="icon_subtitles" translatable="false">&#xf015e;</string> <!-- closed-caption -->
+    <string name="icon_speed" translatable="false">&#xf08ff;</string> <!-- play-speed -->
+    <string name="icon_quality" translatable="false">&#xf0567;</string> <!-- video -->
+    <string name="icon_show_immersive" translatable="false">&#xf004c;</string> <!-- arrow-expand-all -->
+    <string name="icon_show_fitting" translatable="false">&#xf0044;</string> <!-- arrow-collapse-all -->
 
 </resources>

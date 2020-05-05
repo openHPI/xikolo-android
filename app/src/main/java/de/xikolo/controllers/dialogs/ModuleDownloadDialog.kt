@@ -31,7 +31,7 @@ class ModuleDownloadDialog : BaseDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val title = String.format(activity!!.getString(R.string.dialog_module_downloads_title), moduleTitle)
 
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
         builder.setTitle(title)
             .setMultiChoiceItems(
                 R.array.dialog_module_downloads_array,

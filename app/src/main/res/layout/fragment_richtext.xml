@@ -32,7 +32,7 @@
             android:paddingRight="16dp"
             android:paddingBottom="16dp"
             android:textColor="@color/text_main"
-            android:textColorLink="@color/apptheme_second"
+            android:textColorLink="@color/apptheme_secondary"
             android:textSize="14sp" />
 
         <Button

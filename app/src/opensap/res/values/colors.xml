@@ -1,29 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Main theme colors -->
-    <color name="apptheme_main">#f0ab00</color>
-
-    <!-- 30% white overlay -->
-    <color name="apptheme_main_light">#f5c44d</color>
-
-    <!-- 40% black overlay -->
-    <color name="apptheme_main_dark">#906700</color>
-
-    <color name="apptheme_second">#226CA9</color>
-    <color name="apptheme_third">#8AB54E</color>
-
-    <color name="apptheme_main_10">#1af0ab00</color>
-
-    <color name="apptheme_second_60">#99226CA9</color>
-    <color name="apptheme_third_60">#998AB54E</color>
-
-    <color name="apptheme_second_26">#42226CA9</color>
-
-
-
     <!-- Overrides -->
     <color name="apptheme_splash_background">#4A4A4A</color>
-    <color name="apptheme_launcher_icon_bg">@color/apptheme_splash_background</color>
+    <color name="apptheme_launcher_background">@color/apptheme_splash_background</color>
 
 </resources>

@@ -86,7 +86,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 context.getString(R.string.video_settings_quality) + "  " + context.getString(R.string.video_settings_separator) + "  " + currentQuality.title +
                     if (videoInfoCallback.isOfflineAvailable(currentQuality)) " " + context.getString(R.string.video_settings_quality_offline) else "",
                 View.OnClickListener { clickListener.onQualityClick() },
-                false
+                false,
+                Config.FONT_MATERIAL
             )
         )
         list.addView(
@@ -94,7 +95,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 R.string.icon_speed,
                 context.getString(R.string.video_settings_speed) + "  " + context.getString(R.string.video_settings_separator) + "  " + currentSpeed.toString(),
                 View.OnClickListener { clickListener.onPlaybackSpeedClick() },
-                false
+                false,
+                Config.FONT_MATERIAL
             )
         )
         if (subtitles?.isNotEmpty() == true) {
@@ -106,7 +108,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                     else
                         "",
                     View.OnClickListener { clickListener.onSubtitleClick() },
-                    false
+                    false,
+                    Config.FONT_MATERIAL
                 )
             )
         }
@@ -287,7 +290,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
         titleView.text = title
 
         if (active) {
-            val activeColor = ContextCompat.getColor(context, R.color.apptheme_second)
+            val activeColor = ContextCompat.getColor(context, R.color.apptheme_secondary)
             iconView.setTextColor(activeColor)
             titleView.setTextColor(activeColor)
         }
@@ -311,7 +314,8 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
                 parent.removeViewAt(index)
                 parent.addView(buildImmersiveSettingsItem(parent), index)
             },
-            false
+            false,
+            Config.FONT_MATERIAL
         )
     }
 

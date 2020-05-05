@@ -41,7 +41,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center_vertical"
                 android:text="@string/title_section_downloads"
-                android:textColor="@color/apptheme_second"
+                android:textColor="@color/apptheme_secondary"
                 android:textSize="14sp" />
 
             <LinearLayout

@@ -17,7 +17,7 @@ class ApiVersionExpiredDialog : BaseDialogFragment() {
     var listener: Listener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
             .setTitle(getString(R.string.dialog_api_expiration_title, getString(R.string.app_name)))
             .setMessage(
                 getString(

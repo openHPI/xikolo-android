@@ -17,7 +17,7 @@ class ConfirmCancelDialog : DialogFragment() {
     var listener: ConfirmCancelListener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        return AlertDialog.Builder(requireActivity())
             .setNegativeButton(R.string.dialog_negative) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
             }

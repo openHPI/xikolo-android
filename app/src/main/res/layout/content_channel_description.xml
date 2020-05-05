@@ -22,7 +22,7 @@
         android:layout_marginBottom="8dp"
         android:lineSpacingExtra="4dp"
         android:textColor="@color/text_main"
-        android:textColorLink="@color/apptheme_second"
+        android:textColorLink="@color/apptheme_secondary"
         android:textSize="14sp" />
 
 </LinearLayout>

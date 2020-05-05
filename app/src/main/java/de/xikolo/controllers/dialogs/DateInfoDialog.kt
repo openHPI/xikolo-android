@@ -25,7 +25,7 @@ class DateInfoDialog(val title: String, private val localDateText: String, priva
         localDate.text = localDateText
         utcDate.text = utcDateText
 
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
             .setTitle(title)
             .setView(view)
             .setNegativeButton(R.string.dialog_date_info_no) { dialog, _ ->

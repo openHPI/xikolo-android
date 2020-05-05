@@ -23,7 +23,7 @@ class ApiVersionDeprecatedDialog : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val df = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
             .setTitle(
                 getString(
                     R.string.dialog_api_deprecation_title,

@@ -32,7 +32,7 @@ class OpenExternalContentDialog : BaseDialogFragment() {
         val yes = if (type == Item.TYPE_LTI) R.string.dialog_external_content_yes_lti else R.string.dialog_external_content_yes_peer
         val yesAlways = if (type == Item.TYPE_LTI) R.string.dialog_external_content_yes_always_lti else R.string.dialog_external_content_yes_always_peer
 
-        val builder = AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        val builder = AlertDialog.Builder(requireActivity())
         builder.setMessage(message)
             .setTitle(R.string.dialog_external_content_title)
             .setPositiveButton(yes) { _, _ ->

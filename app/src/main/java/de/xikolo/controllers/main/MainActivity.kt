@@ -58,7 +58,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
 
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setHomeButtonEnabled(true)
-        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
+
         drawerToggle = ActionBarDrawerToggle(
             this,
             drawerLayout,
@@ -66,6 +66,8 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
+        drawerToggle.isDrawerSlideAnimationEnabled = false
+
         drawerLayout.addDrawerListener(drawerToggle)
         navigationView.setNavigationItemSelectedListener(this)
 
@@ -291,7 +293,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
                 GlideApp.with(this)
                     .load(user.avatarUrl)
                     .circleCrop()
-                    .allPlaceholders(R.drawable.avatar)
+                    .allPlaceholders(R.drawable.avatar_placeholder)
                     .into(headerView.findViewById(R.id.imgProfile))
             }
 

@@ -271,7 +271,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private fun openUrl(url: String) {
         val customTabsIntent = CustomTabsIntent.Builder()
-            .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_main))
+            .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_primary))
             .build()
         customTabsIntent.launchUrl(activity!!, Uri.parse(url))
     }

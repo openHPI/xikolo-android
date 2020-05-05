@@ -54,7 +54,7 @@ class CourseDateListDialog : ViewModelDialogFragment<DateListViewModel>() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(activity!!, R.style.AppTheme_Dialog)
+        return AlertDialog.Builder(requireActivity())
             .setNegativeButton(R.string.dialog_course_dates_no) { dialog: DialogInterface, _: Int ->
                 dialog.cancel()
             }
