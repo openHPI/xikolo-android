@@ -42,7 +42,6 @@ dependencies {
     implementation("moe.banana:moshi-jsonapi-retrofit-converter:$moshijsonapiVersion")
 
     // user interface
-    implementation("com.github.barteksc:android-pdf-viewer:2.8.2")
     implementation("de.psdev.licensesdialog:licensesdialog:2.1.0")
     implementation("com.github.Commit451:bypasses:1.1.0")
     implementation("com.github.rubensousa:previewseekbar:2.0.0")
@@ -75,6 +74,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.1.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
     implementation("androidx.mediarouter:mediarouter:1.1.0")
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("androidx.browser:browser:1.2.0")
