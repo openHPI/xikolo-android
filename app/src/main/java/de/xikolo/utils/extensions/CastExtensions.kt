@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaLoadOptions
 import com.google.android.gms.cast.MediaMetadata
@@ -13,6 +12,7 @@ import com.google.android.gms.cast.framework.CastState
 import com.google.android.gms.cast.framework.media.RemoteMediaClient
 import com.google.android.gms.common.api.PendingResult
 import com.google.android.gms.common.images.WebImage
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import de.xikolo.controllers.cast.CastActivity
 import de.xikolo.models.Video
 
@@ -28,7 +28,7 @@ val <T : Context> T.isCastConnected: Boolean
                 false
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             false
         }
     }
@@ -44,7 +44,7 @@ val <T : Context> T.isCastAvailable: Boolean
                 false
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             false
         }
     }

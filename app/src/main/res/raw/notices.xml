@@ -12,12 +12,6 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>Java-WebSocket</name>
-        <url>http://java-websocket.org/</url>
-        <copyright>Copyright (c) 2010-2018 Nathan Rajlich</copyright>
-        <license>MIT License</license>
-    </notice>
-    <notice>
         <name>Android Http Download Manager</name>
         <url>https://github.com/Coolerfall/Android-HttpDownloadManager/</url>
         <copyright>Copyright (c) 2014-2016 Vincent Cheung</copyright>
@@ -28,12 +22,6 @@
         <url>https://github.com/bumptech/glide/</url>
         <copyright>Copyright (c) 2014 Google, Inc.</copyright>
         <license>BSD 2-Clause License</license>
-    </notice>
-    <notice>
-        <name>Android-Job</name>
-        <url>https://github.com/evernote/android-job/</url>
-        <copyright>Copyright (c) 2007-2017 Evernote Corporation</copyright>
-        <license>Apache Software License 2.0</license>
     </notice>
     <notice>
         <name>Gson</name>
@@ -60,12 +48,6 @@
         <license>MIT License</license>
     </notice>
     <notice>
-        <name>Android PdfViewer</name>
-        <url>https://github.com/barteksc/AndroidPdfViewer/</url>
-        <copyright>Copyright (c) 2017 Bartosz Schiller</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
         <name>LicensesDialog</name>
         <url>https://github.com/PSDev/LicensesDialog/</url>
         <copyright>Copyright (c) 2013-2017 Philip Schiffer</copyright>
@@ -90,21 +72,9 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>ExoMedia</name>
-        <url>https://github.com/brianwernick/ExoMedia/</url>
-        <copyright>Copyright (c) 2015-2017 Brian Wernick</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
         <name>Butter Knife</name>
         <url>https://github.com/JakeWharton/butterknife/</url>
         <copyright>Copyright (c) 2013 Jake Wharton</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
-        <name>AutoBundle</name>
-        <url>https://github.com/yatatsu/AutoBundle/</url>
-        <copyright>Copyright (c) 2015 Kitagawa, Tatsuya</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
