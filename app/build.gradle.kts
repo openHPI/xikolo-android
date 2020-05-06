@@ -9,9 +9,9 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("realm-android")
-    id("io.fabric")
-    id("org.jlleitschuh.gradle.ktlint")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 android {

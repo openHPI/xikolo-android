@@ -13,8 +13,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import butterknife.BindView
-import com.crashlytics.android.Crashlytics
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
@@ -69,8 +69,8 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         setContentView(R.layout.activity_blank_tabs)
         setupActionBar()
 
-        Crashlytics.setString("course_id", courseId)
-        Crashlytics.setString("section_id", sectionId)
+        FirebaseCrashlytics.getInstance().setCustomKey("course_id", courseId)
+        FirebaseCrashlytics.getInstance().setCustomKey("section_id", sectionId)
 
         viewModel.course
             .observe(this) {
@@ -121,7 +121,7 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         }
 
         section?.accessibleItems?.get(index)?.let {
-            Crashlytics.setString("item_id", it.id)
+            FirebaseCrashlytics.getInstance().setCustomKey("item_id", it.id)
 
             viewModel.markItemVisited(it)
 

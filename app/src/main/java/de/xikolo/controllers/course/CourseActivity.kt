@@ -17,8 +17,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import butterknife.BindView
-import com.crashlytics.android.Crashlytics
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
@@ -140,7 +140,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     private fun setupCourse(course: Course) {
-        Crashlytics.setString("course_id", course.id)
+        FirebaseCrashlytics.getInstance().setCustomKey("course_id", course.id)
 
         if (course.external) {
             setAreaState(CourseArea.External)

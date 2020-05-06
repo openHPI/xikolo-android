@@ -65,8 +65,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-gcm:17.0.0")
 
     // firebase
-    implementation("com.google.firebase:firebase-core:17.3.0")
-    implementation("com.crashlytics.sdk.android:crashlytics:2.10.1")
+    implementation("com.google.firebase:firebase-analytics:17.4.0")
+    implementation("com.google.firebase:firebase-crashlytics:17.0.0")
 
     // material design
     implementation("com.google.android.material:material:1.1.0")

@@ -4,8 +4,12 @@ import android.content.Intent
 import android.content.MutableContextWrapper
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
-import com.crashlytics.android.Crashlytics
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewStub
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.App
 import de.xikolo.R
@@ -83,7 +87,7 @@ class WebViewFragment : NetworkStateFragment() {
                 (contentView?.parent as ViewGroup).removeView(contentView)
                 mutableContextWrapper?.baseContext = App.instance
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 contentView = null
                 mutableContextWrapper = null
             }
@@ -122,7 +126,7 @@ class WebViewFragment : NetworkStateFragment() {
     }
 
     fun interceptSSOLogin(token: String) {
-        val intent = LoginActivityAutoBundle.builder().token(token).build(activity!!)
+        val intent = LoginActivityAutoBundle.builder().token(token).build(requireActivity())
         activity?.startActivity(intent)
     }
 

@@ -5,14 +5,13 @@ buildscript {
     repositories {
         jcenter()
         google()
-        maven("https://maven.fabric.io/public")
     }
     dependencies {
         classpath("com.android.tools.build:gradle:3.6.3")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}")
-        classpath("com.google.gms:google-services:4.3.3")
-        classpath("io.fabric.tools:gradle:1.31.2")
         classpath("io.realm:realm-gradle-plugin:6.1.0")
+        classpath("com.google.gms:google-services:4.3.3")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.0.0")
     }
 }
 
