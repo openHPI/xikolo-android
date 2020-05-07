@@ -16,13 +16,11 @@ open class DateListViewModel(private val courseId: String? = null) : BaseViewMod
     private val courseListDelegate = CourseListDelegate(realm)
     private val dateListDelegate = DateListDelegate(realm)
 
-    private val dateDao = DateDao(realm)
-
     val dates: LiveData<List<CourseDate>> by lazy {
         if (courseId != null) {
-            dateDao.allForCourse(courseId)
+            dateListDelegate.datesForCourse(courseId)
         } else {
-            dateDao.all()
+            dateListDelegate.dates
         }
     }
 
@@ -102,5 +100,4 @@ open class DateListViewModel(private val courseId: String? = null) : BaseViewMod
         courseListDelegate.requestCourseList(networkState, true)
         dateListDelegate.requestDateList(networkState, true)
     }
-
 }

@@ -15,8 +15,11 @@ class DateListDelegate(realm: Realm) {
         dateDao.all()
     }
 
+    fun datesForCourse(courseId: String): LiveData<List<CourseDate>> {
+        return dateDao.allForCourse(courseId)
+    }
+
     fun requestDateList(networkState: NetworkStateLiveData, userRequest: Boolean) {
         ListDatesJob(networkState, userRequest).run()
     }
-
 }

@@ -1,5 +1,7 @@
 package de.xikolo.viewmodels.course
 
+import androidx.lifecycle.LiveData
+import de.xikolo.models.CourseDate
 import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.viewmodels.base.BaseViewModel
 import de.xikolo.viewmodels.shared.CourseDelegate
@@ -14,7 +16,9 @@ class CourseViewModel(private val courseId: String) : BaseViewModel() {
 
     val course = courseDelegate.course
 
-    val dates = dateListDelegate.dates
+    val dates: LiveData<List<CourseDate>> by lazy {
+        dateListDelegate.datesForCourse(courseId)
+    }
 
     val dateCount: Int
         get() = dates.value?.size ?: 0
