@@ -68,7 +68,7 @@ interface ApiServiceInterface {
 
     // Progress
 
-    @GET("course-progresses/{id}?include=section-progresses")
+    @GET("course-progresses/{id}?include=section_progresses")
     fun getCourseProgressWithSections(@Path("id") id: String): Call<CourseProgress.JsonModel>
 
     // Dates
