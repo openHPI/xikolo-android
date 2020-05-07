@@ -1,5 +1,7 @@
 package de.xikolo.models;
 
+import androidx.annotation.Nullable;
+
 import com.squareup.moshi.Json;
 
 import java.util.Date;
@@ -24,6 +26,7 @@ public class Announcement extends RealmObject {
 
     public String imageUrl;
 
+    @Nullable
     public Date publishedAt;
 
     public boolean visited;

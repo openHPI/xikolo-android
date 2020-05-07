@@ -2,6 +2,8 @@ package de.xikolo.models;
 
 import android.content.Context;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.moshi.Json;
@@ -38,8 +40,10 @@ public class Course extends RealmObject implements JsonAdapter<Course.JsonModel>
 
     public String slug;
 
+    @Nullable
     public Date startDate;
 
+    @Nullable
     public Date endDate;
 
     public String shortAbstract;

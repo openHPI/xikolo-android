@@ -1,5 +1,6 @@
 package de.xikolo.models;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import com.squareup.moshi.Json;
@@ -28,6 +29,7 @@ public class Item extends RealmObject {
 
     public int position;
 
+    @Nullable
     public Date deadline;
 
     public String contentType;

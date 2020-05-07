@@ -1,5 +1,7 @@
 package de.xikolo.models;
 
+import androidx.annotation.Nullable;
+
 import com.squareup.moshi.Json;
 
 import java.util.Date;
@@ -27,8 +29,10 @@ public class Section extends RealmObject {
 
     public int position;
 
+    @Nullable
     public Date startDate;
 
+    @Nullable
     public Date endDate;
 
     public String courseId;

@@ -19,7 +19,7 @@ import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.announcement.AnnouncementViewModel
 import de.xikolo.views.DateTextView
 import java.text.DateFormat
-import java.util.*
+import java.util.Locale
 
 class AnnouncementFragment : ViewModelFragment<AnnouncementViewModel>() {
 
@@ -35,8 +35,10 @@ class AnnouncementFragment : ViewModelFragment<AnnouncementViewModel>() {
 
     @BindView(R.id.text)
     internal lateinit var text: TextView
+
     @BindView(R.id.date)
     internal lateinit var date: DateTextView
+
     @BindView(R.id.course_button)
     internal lateinit var courseButton: Button
 
@@ -66,7 +68,9 @@ class AnnouncementFragment : ViewModelFragment<AnnouncementViewModel>() {
             if (course?.accessible == true && course.isEnrolled) {
                 courseButton.visibility = View.VISIBLE
                 courseButton.setOnClickListener {
-                    val intent = CourseActivityAutoBundle.builder().courseId(announcement.courseId).build(activity!!)
+                    val intent = CourseActivityAutoBundle.builder()
+                        .courseId(announcement.courseId)
+                        .build(requireActivity())
                     startActivity(intent)
                 }
             }
@@ -77,8 +81,11 @@ class AnnouncementFragment : ViewModelFragment<AnnouncementViewModel>() {
         }
 
         val dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
-        date.text = dateFormat.format(announcement.publishedAt)
-        date.setDate(announcement.publishedAt)
+
+        announcement.publishedAt?.let {
+            date.text = dateFormat.format(it)
+            date.setDate(it)
+        }
 
         text.setMarkdownText(announcement.text)
 
@@ -95,12 +102,11 @@ class AnnouncementFragment : ViewModelFragment<AnnouncementViewModel>() {
                 onRefresh()
                 return true
             }
-            android.R.id.home   -> {
+            android.R.id.home -> {
                 activity?.finish()
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
-
 }

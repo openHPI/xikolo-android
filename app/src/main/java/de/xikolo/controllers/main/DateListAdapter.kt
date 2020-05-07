@@ -15,9 +15,10 @@ import de.xikolo.models.DateOverview
 import de.xikolo.utils.extensions.timeLeftUntilString
 import de.xikolo.views.DateTextView
 import java.text.DateFormat
-import java.util.*
+import java.util.Locale
 
-class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : BaseMetaRecyclerViewAdapter<DateOverview, CourseDate>() {
+class DateListAdapter(private val onDateClickListener: OnDateClickListener?) :
+    BaseMetaRecyclerViewAdapter<DateOverview, CourseDate>() {
 
     companion object {
         val TAG: String = DateListAdapter::class.java.simpleName
@@ -27,24 +28,26 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            ITEM_VIEW_TYPE_META   ->
+            ITEM_VIEW_TYPE_META ->
                 OverviewViewHolder(
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_date_list_overview, parent, false)
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_date_list_overview, parent, false)
                 )
             ITEM_VIEW_TYPE_HEADER ->
                 HeaderViewHolder(
                     LayoutInflater.from(parent.context).inflate(R.layout.item_header, parent, false)
                 )
-            else                  ->
+            else ->
                 CourseDateViewHolder(
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_date_list, parent, false)
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_date_list, parent, false)
                 )
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HeaderViewHolder     -> {
+            is HeaderViewHolder -> {
                 bindHeaderViewHolder(holder, position)
                 holder.header.setPadding(
                     App.instance.resources.getDimensionPixelSize(R.dimen.content_horizontal_margin),
@@ -53,7 +56,7 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
                     holder.header.paddingBottom
                 )
             }
-            is OverviewViewHolder   -> {
+            is OverviewViewHolder -> {
                 val dateOverview = super.contentList.get(position) as DateOverview
                 holder.numberOfDatesToday.text = dateOverview.countToday.toString()
                 holder.numberOfDatesWeek.text = dateOverview.countNextSevenDays.toString()
@@ -74,21 +77,22 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
                     holder.container.isClickable = false
 
                     courseDate.date?.let {
+                        holder.textDate.text = DateFormat.getDateTimeInstance(
+                            DateFormat.YEAR_FIELD or
+                                DateFormat.MONTH_FIELD or
+                                DateFormat.DATE_FIELD,
+                            DateFormat.SHORT,
+                            Locale.getDefault()
+                        ).format(it)
+
                         holder.textDate.setDate(it)
                     }
                 }
-
 
                 if (!showCourse) {
                     holder.textCourse.visibility = View.GONE
                     holder.textBullet.visibility = View.GONE
                 }
-
-                holder.textDate.text = DateFormat.getDateTimeInstance(
-                    DateFormat.YEAR_FIELD or DateFormat.MONTH_FIELD or DateFormat.DATE_FIELD,
-                    DateFormat.SHORT,
-                    Locale.getDefault()
-                ).format(courseDate.date)
 
                 holder.textDateTitle.text = courseDate.title
 
@@ -149,7 +153,5 @@ class DateListAdapter(private val onDateClickListener: OnDateClickListener?) : B
         init {
             ButterKnife.bind(this, view)
         }
-
     }
-
 }

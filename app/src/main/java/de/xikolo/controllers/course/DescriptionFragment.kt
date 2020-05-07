@@ -102,31 +102,36 @@ class DescriptionFragment : ViewModelFragment<DescriptionViewModel>() {
                     }
                 }
             }
-            course.imageUrl != null                                                         -> {
+            course.imageUrl != null -> {
                 videoPreview.visibility = View.GONE
                 courseImage.visibility = View.VISIBLE
             }
-            else                                                                            -> {
+            else -> {
                 courseImage.visibility = View.GONE
                 videoPreview.visibility = View.GONE
             }
         }
 
         when {
-            course.teaserStream != null && course.teaserStream.thumbnailUrl != null -> GlideApp.with(this)
-                .load(course.teaserStream.thumbnailUrl)
-                .override(imageVideoThumbnail.forcedWidth, imageVideoThumbnail.forcedHeight)
-                .into(imageVideoThumbnail)
-            course.imageUrl != null                                                 -> GlideApp.with(this)
-                .load(course.imageUrl)
-                .into(courseImage)
+            course.teaserStream != null && course.teaserStream.thumbnailUrl != null ->
+                GlideApp.with(this)
+                    .load(course.teaserStream.thumbnailUrl)
+                    .override(imageVideoThumbnail.forcedWidth, imageVideoThumbnail.forcedHeight)
+                    .into(imageVideoThumbnail)
+            course.imageUrl != null ->
+                GlideApp.with(this)
+                    .load(course.imageUrl)
+                    .into(courseImage)
         }
 
         textDate.text = course.formattedDate
-        if (course.endDate == null) {
-            textDate.setDate(course.startDate)
-        } else if (course.endDate.isFuture) {
-            textDate.setDateSpan(course.startDate, course.endDate)
+
+        course.startDate?.let { startDate ->
+            if (course.endDate == null) {
+                textDate.setDate(startDate)
+            } else if (course.endDate.isFuture) {
+                textDate.setDateSpan(startDate, course.endDate!!)
+            }
         }
 
         textLanguage.text = course.languageAsNativeName
@@ -139,5 +144,4 @@ class DescriptionFragment : ViewModelFragment<DescriptionViewModel>() {
         }
         showContent()
     }
-
 }
