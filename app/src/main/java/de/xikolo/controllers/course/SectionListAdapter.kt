@@ -21,12 +21,13 @@ import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.DateTextView
 import de.xikolo.views.SpaceItemDecoration
 import java.text.DateFormat
-import java.util.*
+import java.util.Locale
 
-class SectionListAdapter(private val activity: FragmentActivity,
-                         private val sectionClickListener: OnSectionClickListener,
-                         private val itemClickListener: ItemListAdapter.OnItemClickListener)
-    : RecyclerView.Adapter<SectionListAdapter.SectionViewHolder>() {
+class SectionListAdapter(
+    private val activity: FragmentActivity,
+    private val sectionClickListener: OnSectionClickListener,
+    private val itemClickListener: ItemListAdapter.OnItemClickListener
+) : RecyclerView.Adapter<SectionListAdapter.SectionViewHolder>() {
 
     companion object {
         val TAG: String = SectionListAdapter::class.java.simpleName
@@ -93,7 +94,12 @@ class SectionListAdapter(private val activity: FragmentActivity,
     private fun contentAvailable(section: Section, holder: SectionViewHolder) {
         holder.progressBar.visibility = View.GONE
         holder.viewModuleNotification.visibility = View.GONE
-        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.section_header_bg))
+        holder.viewHeader.setBackgroundColor(
+            ContextCompat.getColor(
+                activity,
+                R.color.section_header_bg
+            )
+        )
         holder.textTitle.setTextColor(ContextCompat.getColor(activity, R.color.section_header_text))
 
         val outValue = TypedValue()
@@ -103,7 +109,11 @@ class SectionListAdapter(private val activity: FragmentActivity,
 
         if (section.hasDownloadableContent()) {
             holder.viewDownloadButton.visibility = View.VISIBLE
-            holder.viewDownloadButton.setOnClickListener { sectionClickListener.onSectionDownloadClicked(section.id) }
+            holder.viewDownloadButton.setOnClickListener {
+                sectionClickListener.onSectionDownloadClicked(
+                    section.id
+                )
+            }
         } else {
             holder.viewDownloadButton.visibility = View.GONE
         }
@@ -112,25 +122,46 @@ class SectionListAdapter(private val activity: FragmentActivity,
     private fun contentLocked(section: Section, holder: SectionViewHolder) {
         holder.progressBar.visibility = View.GONE
         holder.viewModuleNotification.visibility = View.VISIBLE
-        holder.viewHeader.setBackgroundColor(ContextCompat.getColor(activity, R.color.section_header_locked_bg))
-        holder.textTitle.setTextColor(ContextCompat.getColor(activity, R.color.section_header_locked_text))
+        holder.viewHeader.setBackgroundColor(
+            ContextCompat.getColor(
+                activity,
+                R.color.section_header_locked_bg
+            )
+        )
+        holder.textTitle.setTextColor(
+            ContextCompat.getColor(
+                activity,
+                R.color.section_header_locked_text
+            )
+        )
 
         holder.layout.isClickable = false
         holder.layout.foreground = null
         holder.viewDownloadButton.visibility = View.GONE
+
         if (section.startDate != null && section.startDate.isFuture) {
-            val dateOut: DateFormat
-            if (activity.is7inchTablet) {
-                dateOut = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault())
+            val dateOut = if (activity.is7inchTablet) {
+                DateFormat.getDateTimeInstance(
+                    DateFormat.LONG,
+                    DateFormat.SHORT,
+                    Locale.getDefault()
+                )
             } else {
-                dateOut = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault())
+                DateFormat.getDateTimeInstance(
+                    DateFormat.MEDIUM,
+                    DateFormat.SHORT,
+                    Locale.getDefault()
+                )
             }
 
-            holder.textModuleNotification.text = String.format(activity.getString(R.string.available_at),
-                dateOut.format(section.startDate))
-            holder.textModuleNotification.setDate(section.startDate)
+            holder.textModuleNotification.text = String.format(
+                activity.getString(R.string.available_at),
+                dateOut.format(section.startDate!!)
+            )
+            holder.textModuleNotification.setDate(section.startDate!!)
         } else {
-            holder.textModuleNotification.text = activity.getString(R.string.module_notification_no_content)
+            holder.textModuleNotification.text =
+                activity.getString(R.string.module_notification_no_content)
         }
     }
 
@@ -170,7 +201,5 @@ class SectionListAdapter(private val activity: FragmentActivity,
         init {
             ButterKnife.bind(this, view)
         }
-
     }
-
 }
