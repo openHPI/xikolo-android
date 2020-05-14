@@ -1,18 +1,18 @@
 package de.xikolo.utils
 
-import androidx.annotation.StringRes
-import de.xikolo.App
+import java.util.Locale
 
 object LanguageUtil {
-    fun toNativeName(code: String): String {
-        val context = App.Companion.instance
+    @OptIn(ExperimentalStdlibApi::class)
+    fun toNativeName(tag: String): String {
+        val languageTag =
+            if (tag == "cn") { // work-around for bug in the backend
+                "zh"
+            } else {
+                tag
+            }
 
-        @StringRes val resId = context.resources.getIdentifier(
-            "lang_${code.replace("-", "_")}",
-            "string",
-            context.packageName
-        )
-
-        return if (resId == 0) code else context.getString(resId)
+        val locale = Locale.forLanguageTag(languageTag)
+        return locale.getDisplayLanguage(locale).capitalize(locale)
     }
 }
