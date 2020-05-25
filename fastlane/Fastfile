@@ -67,6 +67,21 @@ platform :android do
     brands.each {|brand| public_send(:"assemble_#{brand}", type: 'debug') }
   end
 
+  desc 'Assemble packages for release build'
+  lane :assemble_release do
+    brands.each {|brand| public_send(:"assemble_#{brand}", type: 'release') }
+  end
+
+  desc 'Assemble bundles for debug build'
+  lane :bundle_debug do
+    brands.each {|brand| public_send(:"bundle_#{brand}", type: 'debug') }
+  end
+
+  desc 'Assemble bundles for release build'
+  lane :bundle_release do
+    brands.each {|brand| public_send(:"bundle_#{brand}", type: 'release') }
+  end
+
   brands.each do |brand|
     lane :"compile_#{brand}" do |options|
       gradle_exec('compile', brand, options[:type], 'sources')
@@ -83,6 +98,10 @@ platform :android do
 
     lane :"assemble_#{brand}" do |options|
       gradle_exec('assemble', brand, options[:type])
+    end
+
+    lane :"bundle_#{brand}" do |options|
+      gradle_exec('bundle', brand, options[:type])
     end
   end
 end
