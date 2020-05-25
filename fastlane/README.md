@@ -41,6 +41,21 @@ Execute unit tests for debug build
 fastlane android assemble_debug
 ```
 Assemble packages for debug build
+### android assemble_release
+```
+fastlane android assemble_release
+```
+Assemble packages for release build
+### android bundle_debug
+```
+fastlane android bundle_debug
+```
+Assemble bundles for debug build
+### android bundle_release
+```
+fastlane android bundle_release
+```
+Assemble bundles for release build
 ### android compile_openhpi
 ```
 fastlane android compile_openhpi
@@ -59,6 +74,11 @@ fastlane android unit_test_openhpi
 ### android assemble_openhpi
 ```
 fastlane android assemble_openhpi
+```
+
+### android bundle_openhpi
+```
+fastlane android bundle_openhpi
 ```
 
 ### android compile_opensap
@@ -81,6 +101,11 @@ fastlane android unit_test_opensap
 fastlane android assemble_opensap
 ```
 
+### android bundle_opensap
+```
+fastlane android bundle_opensap
+```
+
 ### android compile_openwho
 ```
 fastlane android compile_openwho
@@ -99,6 +124,11 @@ fastlane android unit_test_openwho
 ### android assemble_openwho
 ```
 fastlane android assemble_openwho
+```
+
+### android bundle_openwho
+```
+fastlane android bundle_openwho
 ```
 
 ### android compile_moochouse
@@ -121,6 +151,11 @@ fastlane android unit_test_moochouse
 fastlane android assemble_moochouse
 ```
 
+### android bundle_moochouse
+```
+fastlane android bundle_moochouse
+```
+
 ### android compile_lernencloud
 ```
 fastlane android compile_lernencloud
@@ -139,6 +174,11 @@ fastlane android unit_test_lernencloud
 ### android assemble_lernencloud
 ```
 fastlane android assemble_lernencloud
+```
+
+### android bundle_lernencloud
+```
+fastlane android bundle_lernencloud
 ```
 
 
