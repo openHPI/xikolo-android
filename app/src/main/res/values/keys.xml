@@ -27,8 +27,6 @@
     <string name="preference_first_android_4_deprecation_dialog" translatable="false">first_android_4_deprecation_dialog</string>
     <string name="preference_second_android_4_deprecation_dialog" translatable="false">second_android_4_deprecation_dialog</string>
 
-    <string name="preference_recent_courses" translatable="false">recent_courses</string>
-
     <string name="duration" translatable="false">%1$02d:%2$02d</string>
 
     <string name="percentage" translatable="false">%1$d%%</string>

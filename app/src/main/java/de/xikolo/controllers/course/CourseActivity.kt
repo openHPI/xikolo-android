@@ -22,6 +22,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
+import de.xikolo.config.Feature
 import de.xikolo.controllers.base.ViewModelActivity
 import de.xikolo.controllers.dialogs.CourseDateListDialogAutoBundle
 import de.xikolo.controllers.dialogs.CreateTicketDialog
@@ -30,6 +31,7 @@ import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.controllers.dialogs.UnenrollDialog
 import de.xikolo.controllers.helper.CourseArea
+import de.xikolo.controllers.helper.ShortcutHelper
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
@@ -43,7 +45,6 @@ import de.xikolo.models.dao.ItemDao
 import de.xikolo.network.jobs.GetItemWithContentJob
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkStateLiveData
-import de.xikolo.storages.RecentCoursesStorage
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.IdUtil
 import de.xikolo.utils.LanalyticsUtil
@@ -178,8 +179,9 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
         updateViewPagerTab()
 
-        val recentCoursesStorage = RecentCoursesStorage()
-        recentCoursesStorage.addCourse(course.id, course.title)
+        if (Feature.SHORTCUTS) {
+            ShortcutHelper().addCourse(applicationContext, course.id, course.title)
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
