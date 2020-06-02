@@ -8,7 +8,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.KOTLIN}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.KOTLIN}")
 
-    val kotlinCoroutinesVersion = "1.3.5"
+    val kotlinCoroutinesVersion = "1.3.7"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion")
 
@@ -28,7 +28,7 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
     // type-safe http api
-    val retrofitVersion = "2.8.1"
+    val retrofitVersion = "2.9.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
 
@@ -64,7 +64,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-gcm:17.0.0")
 
     // firebase
-    implementation("com.google.firebase:firebase-analytics:17.4.0")
+    implementation("com.google.firebase:firebase-analytics:17.4.2")
     implementation("com.google.firebase:firebase-crashlytics:17.0.0")
 
     // material design
