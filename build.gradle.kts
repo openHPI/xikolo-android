@@ -7,11 +7,11 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.6.3")
+        classpath("com.android.tools.build:gradle:4.0.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}")
-        classpath("io.realm:realm-gradle-plugin:6.1.0")
+        classpath("io.realm:realm-gradle-plugin:7.0.0")
         classpath("com.google.gms:google-services:4.3.3")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.0.0")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.1.1")
     }
 }
 
@@ -45,7 +45,7 @@ tasks.withType<DependencyUpdatesTask> {
 
     rejectVersionIf {
         listOf(
-            "alpha", "beta", "rc", "cr", "m", "release", "preview", "b", "ea"
+            "alpha", "beta", "rc", "cr", "m", "release", "preview", "b", "ea", "eap"
         ).any { qualifier ->
             val regex = "(?i).*[.-]$qualifier[.\\d-+]*".toRegex()
             regex.matches(candidate.version)

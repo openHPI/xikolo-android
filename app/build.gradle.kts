@@ -1,5 +1,4 @@
 import com.android.build.gradle.api.ApplicationVariant
-import com.android.builder.core.DefaultProductFlavor
 import java.io.FileInputStream
 import java.util.Properties
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
@@ -74,7 +73,7 @@ android {
 
             signingProperties["RELEASE_STORE_FILE"]?.let {
                 FLAVORS.forEach { (flavor, _) ->
-                    productFlavors.getByName<DefaultProductFlavor>(flavor).signingConfig =
+                    productFlavors.getByName(flavor).signingConfig =
                         signingConfigs.getByName(flavor)
                 }
             }
