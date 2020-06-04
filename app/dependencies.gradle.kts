@@ -44,7 +44,7 @@ dependencies {
     // user interface
     implementation("de.psdev.licensesdialog:licensesdialog:2.1.0")
     implementation("com.github.Commit451:bypasses:1.1.0")
-    implementation("com.github.rubensousa:previewseekbar:2.0.0")
+    implementation("com.github.rubensousa:previewseekbar:3.0.0")
 
     // view binding
     val butterknifeVersion = "10.2.1"

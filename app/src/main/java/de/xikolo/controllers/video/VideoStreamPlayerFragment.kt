@@ -1,7 +1,11 @@
 package de.xikolo.controllers.video
 
 import android.net.Uri
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ScaleGestureDetector
@@ -11,8 +15,8 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.BindView
+import com.github.rubensousa.previewseekbar.PreviewBar
 import com.github.rubensousa.previewseekbar.PreviewSeekBar
-import com.github.rubensousa.previewseekbar.PreviewView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import de.xikolo.R
 import de.xikolo.config.Config
@@ -28,7 +32,7 @@ import de.xikolo.utils.extensions.isOnline
 import de.xikolo.views.CustomFontTextView
 import de.xikolo.views.CustomSizeVideoView
 import de.xikolo.views.ExoPlayerVideoView
-import java.util.*
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.max
@@ -338,13 +342,17 @@ open class VideoStreamPlayerFragment : BaseFragment() {
             stepBackward()
         }
 
-        seekBar.attachPreviewFrameLayout(seekBarPreviewLayout)
+        seekBar.attachPreviewView(seekBarPreviewLayout)
         seekBar.setPreviewLoader(object : com.github.rubensousa.previewseekbar.PreviewLoader {
             private var lastPreview: Long = 0
             private var lastPosition: Long = -1
 
             override fun loadPreview(currentPosition: Long, max: Long) {
-                if (System.currentTimeMillis() - lastPreview > SEEKBAR_PREVIEW_INTERVAL && (lastPosition < 0 || abs(currentPosition - lastPosition) > SEEKBAR_PREVIEW_POSITION_DIFFERENCE)) {
+                if (System.currentTimeMillis() - lastPreview > SEEKBAR_PREVIEW_INTERVAL &&
+                    (lastPosition < 0 || abs(
+                        currentPosition - lastPosition
+                    ) > SEEKBAR_PREVIEW_POSITION_DIFFERENCE)
+                ) {
                     seekBarPreviewHandler.removeCallbacksAndMessages(null)
                     seekBarPreviewHandler.postAtFrontOfQueue {
                         val frame = playerView.getFrameAt(currentPosition)
@@ -356,19 +364,19 @@ open class VideoStreamPlayerFragment : BaseFragment() {
                 }
             }
         })
-        seekBar.addOnPreviewChangeListener(object : PreviewView.OnPreviewChangeListener {
-            override fun onStartPreview(previewView: PreviewView, progress: Int) {
+        seekBar.addOnScrubListener(object : PreviewBar.OnScrubListener {
+            override fun onScrubStart(previewBar: PreviewBar?) {
                 userIsSeeking = true
             }
 
-            override fun onStopPreview(previewView: PreviewView, progress: Int) {
+            override fun onScrubStop(previewBar: PreviewBar?) {
                 seekBarPreviewHandler.removeCallbacksAndMessages(null)
 
                 userIsSeeking = false
-                seekTo(progress, true)
+                seekTo(previewBar?.progress ?: 0, true)
             }
 
-            override fun onPreview(previewView: PreviewView, progress: Int, fromUser: Boolean) {
+            override fun onScrubMove(previewBar: PreviewBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     showControls()
                     playbackTimeText.text = getTimeString(progress)
@@ -424,7 +432,7 @@ open class VideoStreamPlayerFragment : BaseFragment() {
 
     private fun setupVideo() {
         this.videoSettingsHelper = VideoSettingsHelper(
-            activity!!,
+            requireActivity(),
             getSubtitleList(),
             object : VideoSettingsHelper.OnSettingsChangeListener {
                 override fun onSubtitleChanged(old: VideoSubtitles?, new: VideoSubtitles?) {
@@ -434,7 +442,10 @@ open class VideoStreamPlayerFragment : BaseFragment() {
                     }
                 }
 
-                override fun onQualityChanged(old: VideoSettingsHelper.VideoMode, new: VideoSettingsHelper.VideoMode) {
+                override fun onQualityChanged(
+                    old: VideoSettingsHelper.VideoMode,
+                    new: VideoSettingsHelper.VideoMode
+                ) {
                     hideSettings()
                     if (old != new) {
                         changeQuality(old, new, true)
