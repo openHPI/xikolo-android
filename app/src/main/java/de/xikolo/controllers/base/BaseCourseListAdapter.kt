@@ -45,7 +45,9 @@ abstract class BaseCourseListAdapter<M>(val fragment: Fragment, private val onCo
 
         GlideApp.with(fragment).load(course.imageUrl).into(holder.image)
 
+        holder.buttonCourseAction.visibility = View.VISIBLE
         holder.buttonCourseAction.isEnabled = true
+        holder.buttonCourseAction.isClickable = true
 
         holder.buttonCourseDetails.visibility = View.VISIBLE
         holder.buttonCourseDetails.setOnClickListener { onCourseButtonClickListener?.onDetailButtonClicked(course.id) }
