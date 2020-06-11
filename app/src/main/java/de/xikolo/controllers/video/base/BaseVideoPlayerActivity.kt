@@ -8,13 +8,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
-import android.view.*
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import androidx.core.app.NavUtils
 import butterknife.BindView
 import de.xikolo.R
@@ -25,7 +31,7 @@ import de.xikolo.controllers.video.VideoStreamPlayerFragment
 import de.xikolo.utils.extensions.aspectRatio
 import de.xikolo.utils.extensions.hasDisplayCutouts
 import de.xikolo.utils.extensions.showToast
-import java.util.*
+import java.util.ArrayList
 
 abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragment.ControllerInterface {
 
@@ -100,10 +106,12 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
             if (!playerFragment.isShowingControls) {
                 actionBar?.hide()
             }
+            playerFragment.updateFullscreenToggle(false)
         } else {
             disableImmersiveMode()
             showSystemBars()
             actionBar?.show()
+            playerFragment.updateFullscreenToggle(true)
         }
     }
 
@@ -151,6 +159,22 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
 
     override fun isImmersiveModeAvailable(): Boolean {
         return hasCutout || aspectRatio - playerFragment.playerView.aspectRatio > 0.01
+    }
+
+    override fun onToggleFullscreen(): Boolean {
+        val isPortrait: Boolean
+        requestedOrientation = if (isInLandscape()) {
+            isPortrait = true
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        } else {
+            isPortrait = false
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        Handler().postDelayed({
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }, 3000) // user has 3 seconds to rotate device, otherwise it will change back
+
+        return isPortrait
     }
 
     @TargetApi(26)

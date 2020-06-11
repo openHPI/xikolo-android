@@ -2,11 +2,17 @@ package de.xikolo.testing.instrumented.ui
 
 
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.view.View
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.swipeDown
+import androidx.test.espresso.action.ViewActions.swipeRight
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import de.xikolo.R
@@ -19,6 +25,7 @@ import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_UI_ANIMATI
 import de.xikolo.testing.instrumented.ui.helper.NavigationHelper.WAIT_UI_LONG
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -291,6 +298,38 @@ class VideoTest : BaseMockedTest() {
         waitForVideo()
 
         activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    @Test
+    fun testFullscreenButton() {
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        waitForVideo()
+        showControls()
+
+        val fullscreenButton = onView(
+            allOf(
+                withId(R.id.fullscreenButton)
+            )
+        )
+
+        fullscreenButton.perform(
+            click()
+        )
+
+        assertEquals(
+            Configuration.ORIENTATION_LANDSCAPE,
+            activity.resources.configuration.orientation
+        )
+
+        fullscreenButton.perform(
+            click()
+        )
+
+        assertEquals(
+            Configuration.ORIENTATION_PORTRAIT,
+            activity.resources.configuration.orientation
+        )
     }
 
     @Test

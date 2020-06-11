@@ -103,6 +103,9 @@ open class VideoStreamPlayerFragment : BaseFragment() {
     @BindView(R.id.settingsButton)
     lateinit var settingsButton: TextView
 
+    @BindView(R.id.fullscreenButton)
+    lateinit var fullscreenButton: TextView
+
     @BindView(R.id.seekBar)
     lateinit var seekBar: PreviewSeekBar
 
@@ -330,6 +333,12 @@ open class VideoStreamPlayerFragment : BaseFragment() {
 
         settingsButton.setOnClickListener {
             showSettings(videoSettingsHelper.buildSettingsView())
+        }
+
+        fullscreenButton.setOnClickListener {
+            updateFullscreenToggle(
+                controllerInterface?.onToggleFullscreen() ?: true
+            )
         }
 
         stepForwardButton.setOnClickListener {
@@ -678,6 +687,14 @@ open class VideoStreamPlayerFragment : BaseFragment() {
         progressBar.visibility = View.GONE
     }
 
+    fun updateFullscreenToggle(isPortrait: Boolean) {
+        if (isPortrait) {
+            fullscreenButton.text = getString(R.string.icon_fullscreen)
+        } else {
+            fullscreenButton.text = getString(R.string.icon_fullscreen_exit)
+        }
+    }
+
     fun showControls(timeout: Int = CONTROLS_FADE_DEFAULT_TIMEOUT) {
         isShowingControls = true
         controlsContainer.visibility = View.VISIBLE
@@ -841,6 +858,8 @@ open class VideoStreamPlayerFragment : BaseFragment() {
         fun isImmersiveModeAvailable(): Boolean {
             return false
         }
+
+        fun onToggleFullscreen(): Boolean
     }
 
     protected class ControlsVisibilityHandler(private val controller: VideoStreamPlayerFragment) : Handler() {
