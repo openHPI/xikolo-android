@@ -12,11 +12,14 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.graphics.drawable.Icon
+import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
+import android.provider.Settings
+import android.provider.Settings.System.ACCELEROMETER_ROTATION
 import android.util.Log
 import android.view.MenuItem
+import android.view.OrientationEventListener
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -60,6 +63,7 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
     private var isBackStackLost = false
     private var hasCutout = false
     private var isInImmersiveMode = false
+    private var desiredOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 
     lateinit var playerFragment: VideoStreamPlayerFragment
 
@@ -67,8 +71,30 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
 
     abstract fun createPlayerFragment(): VideoStreamPlayerFragment
 
+    private var isOrientationListenerRunning = false
+    private lateinit var orientationListener: OrientationEventListener
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        orientationListener =
+            object : OrientationEventListener(this, SensorManager.SENSOR_DELAY_UI) {
+                private var isLandscape = true
+                override fun onOrientationChanged(orientation: Int) {
+                    if (orientation in 260..280 || orientation in 80..100) {
+                        if (!isLandscape) {
+                            onSensorLandscape()
+                        }
+                        isLandscape = true
+                    }
+                    if (orientation >= 350 || orientation in 0..10 || orientation in 170..190) {
+                        if (isLandscape) {
+                            onSensorPortrait()
+                        }
+                        isLandscape = false
+                    }
+                }
+            }
 
         window.requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY)
 
@@ -163,16 +189,18 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
 
     override fun onToggleFullscreen(): Boolean {
         val isPortrait: Boolean
-        requestedOrientation = if (isInLandscape()) {
+        desiredOrientation = if (isInLandscape()) {
             isPortrait = true
-            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            orientationListener.enable()
+            isOrientationListenerRunning = true
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         } else {
             isPortrait = false
-            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            orientationListener.enable()
+            isOrientationListenerRunning = true
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         }
-        Handler().postDelayed({
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        }, 3000) // user has 3 seconds to rotate device, otherwise it will change back
+        requestedOrientation = desiredOrientation
 
         return isPortrait
     }
@@ -377,6 +405,37 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        orientationListener.disable()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isOrientationListenerRunning) {
+            orientationListener.enable()
+        }
+    }
+
+    private fun onSensorLandscape() {
+        if (desiredOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+            if (Settings.System.getInt(contentResolver, ACCELEROMETER_ROTATION, 0) == 1) {
+                // auto-rotate is enabled
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            }
+            orientationListener.disable()
+            isOrientationListenerRunning = false
+        }
+    }
+
+    private fun onSensorPortrait() {
+        if (desiredOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            orientationListener.disable()
+            isOrientationListenerRunning = false
+        }
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         updateVideoView(newConfig.orientation)
@@ -384,5 +443,4 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
 
     protected fun isInLandscape(orientation: Int = resources.configuration.orientation): Boolean =
         orientation == Configuration.ORIENTATION_LANDSCAPE
-
 }
