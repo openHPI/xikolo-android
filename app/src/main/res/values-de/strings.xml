@@ -58,7 +58,7 @@
     <string name="btn_channel_courses">Mehr anzeigen</string>
     <string name="btn_channel_slider_more">Mehr Kurse anzeigen</string>
     <string name="btn_starts_soon">Noch nicht gestartet</string>
-    <string name="btn_not_enrollable">Sie benötigen eine Einladung, um sich für diesen Kurs einzuschreiben</string>
+    <string name="btn_not_enrollable">Sie müssen zu diesem Kurs eingeladen werden</string>
     <string name="btn_play_cast">&#xe652;\n Abspielen auf Cast-fähigem Gerät</string>
     <string name="btn_display_issues">Darstellungsprobleme?</string>
     <string name="btn_edit_profile">Profil bearbeiten</string>
