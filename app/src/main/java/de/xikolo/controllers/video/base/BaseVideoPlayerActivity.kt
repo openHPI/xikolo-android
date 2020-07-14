@@ -35,6 +35,8 @@ import de.xikolo.utils.extensions.aspectRatio
 import de.xikolo.utils.extensions.hasDisplayCutouts
 import de.xikolo.utils.extensions.showToast
 import java.util.ArrayList
+import kotlin.math.abs
+import kotlin.math.min
 
 abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragment.ControllerInterface {
 
@@ -78,21 +80,36 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
         super.onCreate(savedInstanceState)
 
         orientationListener =
-            object : OrientationEventListener(this, SensorManager.SENSOR_DELAY_UI) {
-                private var isLandscape = true
+            object : OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
+                private var initialOrientation = -1
                 override fun onOrientationChanged(orientation: Int) {
-                    if (orientation in 260..280 || orientation in 80..100) {
-                        if (!isLandscape) {
-                            onSensorLandscape()
-                        }
-                        isLandscape = true
+                    if (initialOrientation == -1) {
+                        initialOrientation = orientation
                     }
-                    if (orientation >= 350 || orientation in 0..10 || orientation in 170..190) {
-                        if (isLandscape) {
-                            onSensorPortrait()
-                        }
-                        isLandscape = false
+                    val rotation = min(
+                        abs(initialOrientation - orientation),
+                        abs(360 - initialOrientation + orientation)
+                    )
+                    if (rotation > 75) {
+                        onRotated()
                     }
+                }
+
+                override fun enable() {
+                    initialOrientation = -1
+                    super.enable()
+                }
+
+                private fun onRotated() {
+                    if (Settings.System.getInt(
+                            contentResolver, ACCELEROMETER_ROTATION, 0
+                        ) == 1
+                    ) {
+                        // auto-rotate is enabled
+                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                    }
+                    disable()
+                    isOrientationListenerRunning = false
                 }
             }
 
@@ -414,25 +431,6 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
         super.onResume()
         if (isOrientationListenerRunning) {
             orientationListener.enable()
-        }
-    }
-
-    private fun onSensorLandscape() {
-        if (desiredOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
-            if (Settings.System.getInt(contentResolver, ACCELEROMETER_ROTATION, 0) == 1) {
-                // auto-rotate is enabled
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-            }
-            orientationListener.disable()
-            isOrientationListenerRunning = false
-        }
-    }
-
-    private fun onSensorPortrait() {
-        if (desiredOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-            orientationListener.disable()
-            isOrientationListenerRunning = false
         }
     }
 
