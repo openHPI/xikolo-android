@@ -156,15 +156,30 @@
                     style="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toStartOf="@id/fullscreenButton"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/icon_settings"
+                    android:textColor="@color/text_video_controls"
+                    android:textSize="20sp"
+                    app:customFont="xikolo.ttf" />
+
+                <de.xikolo.views.CustomFontTextView
+                    android:id="@+id/fullscreenButton"
+                    style="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:gravity="center_vertical"
                     android:paddingStart="8dp"
                     android:paddingEnd="16dp"
-                    android:text="@string/icon_settings"
+                    android:text="@string/icon_fullscreen"
                     android:textColor="@color/text_video_controls"
-                    android:textSize="24sp"
-                    app:customFont="xikolo.ttf" />
+                    android:textSize="28sp"
+                    app:customFont="materialdesign.ttf" />
 
             </RelativeLayout>
 

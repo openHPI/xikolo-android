@@ -39,5 +39,7 @@
     <string name="icon_quality" translatable="false">&#xf0567;</string> <!-- video -->
     <string name="icon_show_immersive" translatable="false">&#xf004c;</string> <!-- arrow-expand-all -->
     <string name="icon_show_fitting" translatable="false">&#xf0044;</string> <!-- arrow-collapse-all -->
+    <string name="icon_fullscreen" translatable="false">&#xf0293;</string> <!-- fullscreen -->
+    <string name="icon_fullscreen_exit" translatable="false">&#xf0294;</string> <!-- fullscreen-exit -->
 
 </resources>
