@@ -7,6 +7,7 @@ import de.xikolo.App
 import de.xikolo.R
 import java.io.File
 import java.text.DecimalFormat
+import java.util.ArrayList
 import kotlin.math.log10
 import kotlin.math.pow
 
@@ -45,6 +46,22 @@ val Long.asFormattedFileSize: String
         val units = arrayOf("B", "KB", "MB", "GB", "TB")
         val digitGroups = (log10(this.toDouble()) / log10(1024.0)).toInt()
         return DecimalFormat("#,##0.#").format(this / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
+    }
+
+val <T : File> T.foldersWithFiles: List<String>
+    get() {
+        val folders = ArrayList<String>()
+
+        if (isDirectory) {
+            val files = listFiles() ?: arrayOf<File>()
+            for (file in files) {
+                if (file.isDirectory) {
+                    folders.add(file.absolutePath)
+                }
+            }
+        }
+
+        return folders
     }
 
 val <T : File?> T.fileCount: Int

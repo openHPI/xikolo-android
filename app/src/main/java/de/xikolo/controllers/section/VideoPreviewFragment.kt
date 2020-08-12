@@ -103,6 +103,11 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onRefresh()
+    }
+
     private fun updateView(item: Item, video: Video) {
         viewContainer.visibility = View.VISIBLE
 

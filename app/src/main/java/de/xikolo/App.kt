@@ -6,13 +6,12 @@ import android.webkit.WebView
 import androidx.preference.PreferenceManager
 import de.xikolo.config.Config
 import de.xikolo.config.Feature
+import de.xikolo.download.filedownload.FileDownloadHandler
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.models.migrate.RealmSchemaMigration
 import de.xikolo.states.ConnectivityStateLiveData
-import de.xikolo.states.DownloadStateLiveData
 import de.xikolo.states.LoginStateLiveData
 import de.xikolo.states.PermissionStateLiveData
-import de.xikolo.states.base.LiveDataEvent
 import de.xikolo.utils.ClientUtil
 import de.xikolo.utils.ShortcutUtil
 import io.realm.Realm
@@ -36,14 +35,6 @@ class App : Application() {
 
         val login: LoginStateLiveData by lazy {
             LoginStateLiveData()
-        }
-
-        val downloadCancellation by lazy {
-            LiveDataEvent()
-        }
-
-        val download: DownloadStateLiveData.Companion by lazy {
-            DownloadStateLiveData
         }
 
         val permission: PermissionStateLiveData.Companion by lazy {
@@ -71,6 +62,7 @@ class App : Application() {
         configureRealm()
         configureDefaultSettings()
         configureWebView()
+        configureDownloader()
         if (Feature.SHORTCUTS) {
             ShortcutUtil.configureShortcuts(applicationContext)
         }
@@ -95,6 +87,10 @@ class App : Application() {
         if (Config.DEBUG) {
             WebView.setWebContentsDebuggingEnabled(true)
         }
+    }
+
+    private fun configureDownloader() {
+        FileDownloadHandler
     }
 
     fun syncCookieSyncManager() {
