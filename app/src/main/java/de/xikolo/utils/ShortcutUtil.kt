@@ -1,4 +1,4 @@
-package de.xikolo.controllers.helper
+package de.xikolo.utils
 
 import android.annotation.TargetApi
 import android.content.Context
@@ -11,15 +11,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import de.xikolo.R
 import de.xikolo.controllers.course.CourseActivityAutoBundle
+import de.xikolo.controllers.settings.SettingsActivity
 import de.xikolo.storages.RecentCoursesStorage
 
-const val MAX_SHORTCUTS = 4
+object ShortcutUtil {
 
-class ShortcutHelper {
+    const val MAX_SHORTCUTS = 4
 
     @TargetApi(Build.VERSION_CODES.N_MR1)
     fun addCourse(context: Context, courseId: String, title: String) {
-
         val recentCoursesStorage = RecentCoursesStorage()
         recentCoursesStorage.addCourse(courseId, title)
 
@@ -31,23 +31,35 @@ class ShortcutHelper {
         val shortcutManager =
             getSystemService(context, ShortcutManager::class.java)
         val recentCourses = RecentCoursesStorage().recentCourses
-        val intentList = mutableListOf<ShortcutInfo>()
 
-        for (course in recentCourses) {
+        val intentList = recentCourses.map { course ->
             val courseId = course.first
             val title = course.second
 
-            val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(context)
-            intent.action = Intent.ACTION_VIEW
+            val courseIntent = CourseActivityAutoBundle.builder().courseId(courseId).build(context)
+            courseIntent.action = Intent.ACTION_VIEW
 
-            val shortcut = ShortcutInfo.Builder(context, courseId)
+            // Current solution has the settings in the backstack
+            val courseListIntent = Intent(context, SettingsActivity::class.java)
+            courseListIntent.action = Intent.ACTION_VIEW
+
+            /*val fragmentManager = FragmentActivity().supportFragmentManager
+        val courseListFragment = CourseListFragmentAutoBundle.builder(CourseListFilter.MY).build()
+        val tag = "my_courses"
+
+        val oldFragment = fragmentManager.findFragmentByTag(tag)
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.container, oldFragment ?: courseListFragment, tag)
+        transaction.addToBackStack(tag)
+        transaction.commit()
+*/
+            ShortcutInfo.Builder(context, courseId)
                 .setShortLabel(title)
-                .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_course))
-                .setIntent(intent)
+                .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_my_courses))
+                .setIntents(arrayOf(courseListIntent, courseIntent))
                 .build()
-
-            intentList.add(shortcut)
         }
+
         shortcutManager?.dynamicShortcuts = intentList
     }
 
@@ -55,8 +67,8 @@ class ShortcutHelper {
     fun configureShortcuts(context: Context) {
         val shortcutManager =
             ContextCompat.getSystemService(context, ShortcutManager::class.java)
-        if (shortcutManager?.dynamicShortcuts?.isEmpty()!!) {
-            ShortcutHelper().updateShortcuts(context)
+        if (shortcutManager?.dynamicShortcuts?.isEmpty() == true) {
+            updateShortcuts(context)
         }
     }
 }

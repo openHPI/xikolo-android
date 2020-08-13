@@ -31,7 +31,7 @@ import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.controllers.dialogs.UnenrollDialog
 import de.xikolo.controllers.helper.CourseArea
-import de.xikolo.controllers.helper.ShortcutHelper
+import de.xikolo.utils.ShortcutUtil
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
@@ -179,8 +179,8 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
         updateViewPagerTab()
 
-        if (Feature.SHORTCUTS) {
-            ShortcutHelper().addCourse(applicationContext, course.id, course.title)
+        if (Feature.SHORTCUTS && course.isEnrolled) {
+            ShortcutUtil.addCourse(applicationContext, course.id, course.title)
         }
     }
 

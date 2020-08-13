@@ -4,16 +4,14 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import de.xikolo.storages.base.BaseStorage
+import de.xikolo.utils.ShortcutUtil.MAX_SHORTCUTS
 
 typealias RecentCourse = Pair<String, String>
-
-const val MAX_SHORTCUTS = 4
 
 class RecentCoursesStorage : BaseStorage(PREF_RECENT_COURSES, Context.MODE_PRIVATE) {
 
     companion object {
         private const val PREF_RECENT_COURSES = "preference_recent_courses"
-
         fun addCourseToRecentCourses(
             courseId: String,
             title: String,

@@ -1,12 +1,11 @@
 package de.xikolo
 
 import android.app.Application
-import android.os.Build
 import android.webkit.CookieManager
 import android.webkit.WebView
 import androidx.preference.PreferenceManager
 import de.xikolo.config.Config
-import de.xikolo.controllers.helper.ShortcutHelper
+import de.xikolo.config.Feature
 import de.xikolo.lanalytics.Lanalytics
 import de.xikolo.models.migrate.RealmSchemaMigration
 import de.xikolo.states.ConnectivityStateLiveData
@@ -15,6 +14,7 @@ import de.xikolo.states.LoginStateLiveData
 import de.xikolo.states.PermissionStateLiveData
 import de.xikolo.states.base.LiveDataEvent
 import de.xikolo.utils.ClientUtil
+import de.xikolo.utils.ShortcutUtil
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
@@ -71,8 +71,8 @@ class App : Application() {
         configureRealm()
         configureDefaultSettings()
         configureWebView()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            ShortcutHelper().configureShortcuts(applicationContext)
+        if (Feature.SHORTCUTS) {
+            ShortcutUtil.configureShortcuts(applicationContext)
         }
     }
 
