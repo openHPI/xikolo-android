@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import de.xikolo.R
 import de.xikolo.controllers.course.CourseActivityAutoBundle
-import de.xikolo.controllers.settings.SettingsActivity
+import de.xikolo.controllers.main.MainActivity
 import de.xikolo.storages.RecentCoursesStorage
 
 object ShortcutUtil {
@@ -39,24 +39,13 @@ object ShortcutUtil {
             val courseIntent = CourseActivityAutoBundle.builder().courseId(courseId).build(context)
             courseIntent.action = Intent.ACTION_VIEW
 
-            // Current solution has the settings in the backstack
-            val courseListIntent = Intent(context, SettingsActivity::class.java)
-            courseListIntent.action = Intent.ACTION_VIEW
+            val mainActivityIntent = Intent(context, MainActivity::class.java)
+            mainActivityIntent.action = Intent.ACTION_VIEW
 
-            /*val fragmentManager = FragmentActivity().supportFragmentManager
-        val courseListFragment = CourseListFragmentAutoBundle.builder(CourseListFilter.MY).build()
-        val tag = "my_courses"
-
-        val oldFragment = fragmentManager.findFragmentByTag(tag)
-        val transaction = fragmentManager.beginTransaction()
-        transaction.replace(R.id.container, oldFragment ?: courseListFragment, tag)
-        transaction.addToBackStack(tag)
-        transaction.commit()
-*/
             ShortcutInfo.Builder(context, courseId)
                 .setShortLabel(title)
                 .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_my_courses))
-                .setIntents(arrayOf(courseListIntent, courseIntent))
+                .setIntents(arrayOf(mainActivityIntent, courseIntent))
                 .build()
         }
 

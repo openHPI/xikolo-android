@@ -31,7 +31,6 @@ import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.controllers.dialogs.UnenrollDialog
 import de.xikolo.controllers.helper.CourseArea
-import de.xikolo.utils.ShortcutUtil
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
@@ -48,6 +47,7 @@ import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.IdUtil
 import de.xikolo.utils.LanalyticsUtil
+import de.xikolo.utils.ShortcutUtil
 import de.xikolo.utils.extensions.createChooser
 import de.xikolo.utils.extensions.shareCourseLink
 import de.xikolo.utils.extensions.showToast
