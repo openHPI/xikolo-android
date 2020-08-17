@@ -22,6 +22,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
 import de.xikolo.config.Config
+import de.xikolo.config.Feature
 import de.xikolo.controllers.base.ViewModelActivity
 import de.xikolo.controllers.dialogs.CourseDateListDialogAutoBundle
 import de.xikolo.controllers.dialogs.CreateTicketDialog
@@ -46,6 +47,7 @@ import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.IdUtil
 import de.xikolo.utils.LanalyticsUtil
+import de.xikolo.utils.ShortcutUtil
 import de.xikolo.utils.extensions.createChooser
 import de.xikolo.utils.extensions.shareCourseLink
 import de.xikolo.utils.extensions.showToast
@@ -176,6 +178,10 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         handleCourseDeepLinkTab(intent)
 
         updateViewPagerTab()
+
+        if (Feature.SHORTCUTS && course.isEnrolled) {
+            ShortcutUtil.addCourse(applicationContext, course.id, course.title)
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
