@@ -265,7 +265,14 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home    -> {
-                NavUtils.navigateUpFromSameTask(this)
+                if (supportFragmentManager.backStackEntryCount > 0) {
+                    NavUtils.navigateUpFromSameTask(this)
+                } else {
+                    startActivity(
+                        NavUtils.getParentActivityIntent(this)
+                    )
+                    finish()
+                }
                 return true
             }
             R.id.action_share    -> {
