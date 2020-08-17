@@ -35,7 +35,7 @@ object DeepLinkingUtil {
      * Ignores:
      * Invalid action /courses/{course_id}/something_invalid
      * Invalid action path /courses/{course_id}/resume/something
-     * Item sub paths /courses/{course_id}/items/{item_id]/something
+     * Item sub paths /courses/{course_id}/items/{item_id}/something
      */
     fun getCourseIdentifier(uri: Uri?): String? {
         return uri?.let {
