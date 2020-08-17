@@ -11,6 +11,10 @@ import org.junit.Test
 
 class DeepLinkingUtilTest : BaseTest() {
 
+    /**
+     * Tests the course id extraction from a given url.
+     * Tests also if this works with a trailing slash in the path.
+     */
     @Test
     fun testCourseIdentification() {
         assertEquals(
@@ -102,6 +106,10 @@ class DeepLinkingUtilTest : BaseTest() {
         )
     }
 
+    /**
+     * Tests the item id extraction from a given course url.
+     * Tests also if this works with a trailing slash in the path.
+     */
     @Test
     fun testItemIdentification() {
         assertEquals(
