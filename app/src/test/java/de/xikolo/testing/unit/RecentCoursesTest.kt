@@ -51,6 +51,7 @@ class RecentCoursesTest {
         assertTrue(set.size == MAX_SHORTCUTS)
         assertFalse(set.contains(RecentCourse("id1", "Course1")))
         assertTrue(set == fullTestSet)
+        assertTrue(set.last().second == "Course5")
     }
 
     @Test
@@ -62,6 +63,7 @@ class RecentCoursesTest {
         set = RecentCoursesStorage.addCourseToRecentCourses("id1", "Course1", set)
         testSet.add(RecentCourse("id1", "Course1"))
         assertTrue(set == testSet)
+        assertTrue(set.size == 1)
     }
 
     @Test
@@ -70,7 +72,8 @@ class RecentCoursesTest {
         (1..MAX_SHORTCUTS).forEach { set.add(RecentCourse("id$it", "Course$it")) }
 
         val fullTestSet = LinkedHashSet<RecentCourse>()
-        fullTestSet.addAll(listOf(RecentCourse("id1", "Course1"), RecentCourse("id3", "Course3"), RecentCourse("id4", "Course4"), RecentCourse("id2", "Course2")))
+        fullTestSet.addAll(listOf(RecentCourse("id1", "Course1"), RecentCourse("id3", "Course3"),
+            RecentCourse("id4", "Course4"), RecentCourse("id2", "Course2")))
 
         set = RecentCoursesStorage.addCourseToRecentCourses("id2", "Course2", set)
         assertTrue(set.size == MAX_SHORTCUTS)
