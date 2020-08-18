@@ -54,15 +54,9 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>Bypass</name>
-        <url>https://github.com/Uncodin/bypass/</url>
-        <copyright>Copyright (c) 2015 Uncodin</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
-        <name>Bypasses</name>
-        <url>https://github.com/Commit451/bypasses/</url>
-        <copyright>Copyright (c) 2017 Commit 451</copyright>
+        <name>Markwon</name>
+        <url>https://github.com/noties/Markwon/</url>
+        <copyright>Copyright (c) 2019 Dimitry Ivanov</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>

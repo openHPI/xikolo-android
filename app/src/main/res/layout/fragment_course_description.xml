@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/activity_horizontal_margin">
+        android:paddingBottom="@dimen/content_horizontal_margin">
 
         <LinearLayout
             android:id="@+id/layout_header"

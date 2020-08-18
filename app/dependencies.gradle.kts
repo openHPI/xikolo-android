@@ -43,7 +43,8 @@ dependencies {
 
     // user interface
     implementation("de.psdev.licensesdialog:licensesdialog:2.1.0")
-    implementation("com.github.Commit451:bypasses:1.1.0")
+    implementation("io.noties.markwon:core:4.5.1")
+    implementation("io.noties.markwon:image-glide:4.5.1")
     implementation("com.github.rubensousa:previewseekbar:3.0.0")
 
     // view binding
