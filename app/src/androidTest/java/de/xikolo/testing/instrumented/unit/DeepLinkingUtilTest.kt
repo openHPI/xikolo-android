@@ -11,35 +11,105 @@ import org.junit.Test
 
 class DeepLinkingUtilTest : BaseTest() {
 
+    /**
+     * Tests the course id extraction from a given url.
+     * Tests also if this works with a trailing slash in the path.
+     */
     @Test
     fun testCourseIdentification() {
         assertEquals(
             "123456",
-            DeepLinkingUtil.getCourseIdentifier(Uri.parse("https://open.hpi.de/courses/123456"))
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456")
+            )
         )
 
         assertEquals(
             "123456",
-            DeepLinkingUtil.getCourseIdentifier(Uri.parse("https://open.hpi.de/courses/123456/resume"))
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456/")
+            )
         )
 
         assertEquals(
             "123456",
-            DeepLinkingUtil.getCourseIdentifier(Uri.parse("https://open.hpi.de/courses/123456/items/654321"))
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456/resume")
+            )
+        )
+
+        assertEquals(
+            "123456",
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456/resume/")
+            )
+        )
+
+        assertNull(
+            "123456",
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456/resume/something")
+            )
+        )
+
+        assertEquals(
+            "123456",
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456/items/654321")
+            )
+        )
+
+        assertNull(
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456/items/654321/something")
+            )
+        )
+
+        assertNull(
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456/items/654321/something/")
+            )
+        )
+
+        assertEquals(
+            "123456",
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456/items/654321/")
+            )
         )
 
         if (Feature.enabled("recap")) {
             assertEquals(
                 "123456",
-                DeepLinkingUtil.getCourseIdentifier(Uri.parse("https://open.hpi.de/learn?course_id=123456"))
+                DeepLinkingUtil.getCourseIdentifier(
+                    Uri.parse("https://open.hpi.de/learn?course_id=123456")
+                )
             )
         }
 
         assertNull(
-            DeepLinkingUtil.getCourseIdentifier(Uri.parse("https://open.hpi.de/invalid"))
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/invalid")
+            )
+        )
+
+        assertNull(
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456/something")
+            )
+        )
+
+        assertNull(
+            DeepLinkingUtil.getCourseIdentifier(
+                Uri.parse("https://open.hpi.de/courses/123456/something/more")
+            )
         )
     }
 
+    /**
+     * Tests the item id extraction from a given course url.
+     * Tests also if this works with a trailing slash in the path.
+     */
     @Test
     fun testItemIdentification() {
         assertEquals(
@@ -47,12 +117,33 @@ class DeepLinkingUtilTest : BaseTest() {
             DeepLinkingUtil.getItemIdentifier("/courses/123456/items/654321")
         )
 
+        assertEquals(
+            "654321",
+            DeepLinkingUtil.getItemIdentifier("/courses/123456/items/654321/")
+        )
+
         assertNull(
             DeepLinkingUtil.getItemIdentifier("/courses/123456/items")
         )
 
         assertNull(
+            DeepLinkingUtil.getItemIdentifier("/courses/123456/items/")
+        )
+
+        assertNull(
             DeepLinkingUtil.getItemIdentifier("/courses/items/654321")
+        )
+
+        assertNull(
+            DeepLinkingUtil.getItemIdentifier("/courses/items/654321/")
+        )
+
+        assertNull(
+            DeepLinkingUtil.getItemIdentifier("/courses/123456/items/654321/something")
+        )
+
+        assertNull(
+            DeepLinkingUtil.getItemIdentifier("/courses/123456/items/654321/something/")
         )
     }
 
