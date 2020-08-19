@@ -185,7 +185,7 @@
     <string name="self_test_points">%1$.1f de %2$.1f points d\'autoévaluation</string>
     <string name="assignments_points">%1$.1f de %2$.1f points pour le travail</string>
     <string name="bonus_points">%1$.1f de %2$.1f points bonus</string>
-    <string name="items_visited">%1$.0f de %2$.De visité</string>
+    <string name="items_visited">%1$.0f de %2$.0f visité</string>
 
     <string name="course_date_coming_soon">À venir</string>
     <string name="course_date_since">Depuis %s</string>
@@ -210,8 +210,8 @@
     <string name="course_record_of_achievement">Certificat de réussite</string>
     <string name="course_confirmation_of_participation">Confirmation de participation</string>
     <string name="course_qualified_certificate_desc">Obtenez un certificat qualifié en vous inscrivant et en obtenant un certificat de réussite.</string>
-    <string name="course_record_of_achievement_desc">Obtenez un certificat de réussite en obtenant plus de %1$.|||UNTRANSLATED_CONTENT_START|||0f%% of the maximum number of points from all graded assignments.|||UNTRANSLATED_CONTENT_END|||</string>
-    <string name="course_confirmation_of_participation_desc">Obtenez une confirmation de participation en complétant au moins %1$.|||UNTRANSLATED_CONTENT_START|||0f%% of the course material.|||UNTRANSLATED_CONTENT_END|||</string>
+    <string name="course_record_of_achievement_desc">Obtenez un certificat de réussite en obtenant plus de %1$.0f%% du nombre maximum de points de tous les devoirs notés.</string>
+    <string name="course_confirmation_of_participation_desc">Obtenez une confirmation de participation en complétant au moins %1$.0f%% du matériel de cours.</string>
     <string name="course_certificate_view">Afficher</string>
     <string name="course_certificate_not_achieved">Résultats non encore obtenus</string>
 
