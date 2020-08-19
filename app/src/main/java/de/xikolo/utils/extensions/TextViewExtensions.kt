@@ -41,7 +41,6 @@ fun <T : TextView> T.setMarkdownText(markdown: String?) {
             return url
         }
 
-        val glide = Glide.with(context)
         val formatter = Markwon.builder(context)
             .usePlugin(MarkwonInlineParserPlugin.create())
             .usePlugin(JLatexMathPlugin.create(textSize))
@@ -51,6 +50,8 @@ fun <T : TextView> T.setMarkdownText(markdown: String?) {
             .usePlugin(HtmlPlugin.create())
             .usePlugin(
                 GlideImagesPlugin.create(object : GlideImagesPlugin.GlideStore {
+                    private val glide = Glide.with(context)
+
                     override fun cancel(target: Target<*>) {
                         glide.clear(target)
                     }
