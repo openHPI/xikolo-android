@@ -12,6 +12,7 @@ import de.xikolo.config.Config
 import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
 import io.noties.markwon.core.MarkwonTheme
+import io.noties.markwon.ext.tables.TablePlugin
 import io.noties.markwon.image.AsyncDrawable
 import io.noties.markwon.image.glide.GlideImagesPlugin
 import java.net.MalformedURLException
@@ -35,19 +36,23 @@ fun <T : TextView> T.setMarkdownText(markdown: String?) {
             return url
         }
 
+        val glide = Glide.with(context)
         val formatter = Markwon.builder(context)
             .usePlugin(
                 GlideImagesPlugin.create(object : GlideImagesPlugin.GlideStore {
                     override fun cancel(target: Target<*>) {
-                        Glide.with(context).clear(target)
+                        glide.clear(target)
                     }
 
                     override fun load(drawable: AsyncDrawable): RequestBuilder<Drawable> {
-                        return Glide.with(context).load(
+                        return glide.load(
                             getAbsoluteUrl(drawable.destination)
                         )
                     }
                 })
+            )
+            .usePlugin(
+                TablePlugin.create(context)
             )
             .usePlugin(
                 object : AbstractMarkwonPlugin() {
