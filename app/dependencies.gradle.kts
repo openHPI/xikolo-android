@@ -43,8 +43,17 @@ dependencies {
 
     // user interface
     implementation("de.psdev.licensesdialog:licensesdialog:2.1.0")
-    implementation("com.github.Commit451:bypasses:1.1.0")
     implementation("com.github.rubensousa:previewseekbar:3.0.0")
+
+    // markdown
+    val markwonVersion = "4.5.1"
+    implementation("io.noties.markwon:core:$markwonVersion")
+    implementation("io.noties.markwon:ext-latex:$markwonVersion")
+    implementation("io.noties.markwon:ext-strikethrough:$markwonVersion")
+    implementation("io.noties.markwon:ext-tables:$markwonVersion")
+    implementation("io.noties.markwon:ext-tasklist:$markwonVersion")
+    implementation("io.noties.markwon:html:$markwonVersion")
+    implementation("io.noties.markwon:image-glide:$markwonVersion")
 
     // view binding
     val butterknifeVersion = "10.2.1"
