@@ -9,7 +9,6 @@ import de.xikolo.config.Feature
 import de.xikolo.models.dao.ChannelDao
 import de.xikolo.models.dao.CourseDao
 import de.xikolo.utils.LanguageUtil
-import java.util.*
 
 class CourseFilterView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : LinearLayoutCompat(context, attrs, defStyle) {
 
@@ -46,10 +45,8 @@ class CourseFilterView @JvmOverloads constructor(context: Context, attrs: Attrib
         val classifierKeyList = mutableListOf<String>()
         val classifierTitleList = mutableListOf<String>()
 
-        var deviceLanguage = Locale.getDefault().language
-        if (deviceLanguage == "zh") { // workaround for wrong chinese API locale
-            deviceLanguage = "cn"
-        }
+        val deviceLanguage = LanguageUtil.deviceLanguage
+
         val languages = CourseDao.Unmanaged.languages()
             .sortedBy {
                 LanguageUtil.toNativeName(it)
@@ -85,7 +82,7 @@ class CourseFilterView @JvmOverloads constructor(context: Context, attrs: Attrib
             val options: List<Pair<String, String>> = when (classifierKey) {
                 context.getString(R.string.course_filter_classifier_language) -> {
                     languages.map {
-                        Pair(it, LanguageUtil.toNativeName(it))
+                        Pair(it, LanguageUtil.toNativeName(it) + " (" + LanguageUtil.toLocaleName(context, it) + ")")
                     }
                 }
                 context.getString(R.string.course_filter_classifier_channel)  -> {
