@@ -24,11 +24,6 @@ class CourseItemsViewModel(courseId: String, sectionId: String) : BaseViewModel(
     }
 
     fun markItemVisited(item: Item) {
-        realm.executeTransaction {
-            item.visited = true
-            it.copyToRealmOrUpdate(item)
-        }
-
         UpdateItemVisitedJob.schedule(item.id)
     }
 

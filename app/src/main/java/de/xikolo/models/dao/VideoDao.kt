@@ -3,16 +3,16 @@ package de.xikolo.models.dao
 import de.xikolo.extensions.asCopy
 import de.xikolo.models.Video
 import de.xikolo.models.dao.base.BaseDao
+import de.xikolo.network.sync.Local
 import io.realm.Realm
 import io.realm.kotlin.where
 
 class VideoDao(realm: Realm) : BaseDao<Video>(Video::class, realm) {
 
     fun updateProgress(video: Video, position: Int) {
-        realm.executeTransaction {
-            video.progress = position
-            it.copyToRealmOrUpdate(video)
-        }
+        Local.Update.with<Video>(video.id)
+            .setBeforeCommitCallback { _, model -> model.progress = position }
+            .run()
     }
 
     class Unmanaged {
