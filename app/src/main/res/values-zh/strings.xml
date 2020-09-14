@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- -->
+    <string name="title_section_profile">个人资料</string>
+    <string name="title_section_login">登录</string>
+    <string name="title_section_logout">登出</string>
+    <string name="title_section_all_courses">所有课程</string>
+    <string name="title_section_news">新闻</string>
+    <string name="title_section_dates">我的课程日期</string>
+    <string name="title_section_downloads">下载</string>
+    <string name="title_section_settings">设定</string>
+    <string name="title_section_my_courses">我的课程</string>
+    <string name="title_section_certificates">证书</string>
+    <string name="title_section_channels">频道</string>
+
+    <!-- -->
+    <string name="header_current_and_upcoming_courses">在修及即将开始的课程</string>
+    <string name="header_self_paced_courses">自主课程</string>
+    <string name="header_current_courses">在修课程</string>
+    <string name="header_future_courses">未来课程</string>
+    <string name="header_my_current_courses">我的在修课程</string>
+    <string name="header_my_future_courses">我即将开始的课程</string>
+    <string name="banner_running">运行中</string>
+    <string name="banner_self_paced">自主</string>
+    <string name="banner_external">外部</string>
+
+    <!-- -->
+    <string name="navigation_drawer_open">打开抽屉式导航</string>
+    <string name="navigation_drawer_close">关闭抽屉式导航</string>
+
+    <!-- -->
+    <string name="action_refresh">刷新</string>
+    <string name="action_unenroll">取消注册</string>
+    <string name="action_language">更换语言</string>
+    <string name="action_search">搜索</string>
+    <string name="action_filter">筛选</string>
+    <string name="action_share">分享课程</string>
+    <string name="action_course_dates">课程日期</string>
+    <string name="action_helpdesk">技术支援</string>
+
+    <!-- -->
+    <string name="tab_learnings">学习</string>
+    <string name="tab_discussions">讨论</string>
+    <string name="tab_progress">进度</string>
+    <string name="tab_course_details">课程详情</string>
+    <string name="tab_certificates">证书</string>
+    <string name="tab_announcements">公告</string>
+    <string name="tab_documents">文件</string>
+    <string name="tab_recap">回顾</string>
+
+    <!-- -->
+    <string name="btn_enroll">注册</string>
+    <string name="btn_continue_course">继续</string>
+    <string name="btn_external_course">打开外部的</string>
+    <string name="btn_external_course_target">前往%1$s外部课程</string>
+    <string name="btn_course_details">显示详细资料</string>
+    <string name="btn_channel_courses">显示更多</string>
+    <string name="btn_channel_slider_more">显示更多课程</string>
+    <string name="btn_starts_soon">未开始</string>
+    <string name="btn_not_enrollable">此课程仅限被邀请用户</string>
+    <string name="btn_display_issues">显示问题？</string>
+    <string name="btn_edit_profile">编辑个人资料</string>
+
+    <!-- -->
+    <string name="dialog_unenroll_title">取消这个课程？</string>
+    <string name="dialog_unenroll_message">您\将取消此课程。</string>
+    <string name="dialog_unenroll_yes">取消注册</string>
+
+    <string name="dialog_negative">取消</string>
+    <string name="dialog_no">否</string>
+
+    <string name="dialog_confirm_delete_title">删除此档案？</string>
+    <string name="dialog_confirm_delete_message">下载档案将被删除并无\法于离线时使用。</string>
+    <string name="dialog_confirm_delete_title_multi">删除此档案？</string>
+    <string name="dialog_confirm_delete_message_multi">下载档案将被删除并无\法于离线时使用。</string>
+    <string name="dialog_confirm_delete_yes">删除</string>
+    <string name="dialog_confirm_delete_yes_always">删除并不\再提示</string>
+
+    <string name="dialog_mobile_download_title">允许手机下载？</string>
+    <string name="dialog_mobile_download_message">您想允许手机网络下载吗？注意这会影响您的手机流量。</string>
+    <string name="dialog_mobile_download_yes">允许</string>
+
+    <string name="dialog_progress_title">请稍等</string>
+    <string name="dialog_progress_message">加载中……</string>
+
+    <string name="dialog_module_downloads_title">下载%1$s所有内容？</string>
+
+    <string name="dialog_title_permissions">需要访问外部储存</string>
+    <string name="dialog_permissions">请允许此应用访问您的外部储存空间以使用此功能。</string>
+
+    <string name="dialog_download_slides_title">下载课件？</string>
+    <string name="dialog_download_slides_message">即将下载课件档案。</string>
+    <string name="dialog_download_slides_yes">下载</string>
+
+    <string name="dialog_app_being_prepared">请稍等，正在准备应用程序。</string>
+
+    <string name="dialog_storage_migration">当前有文件存储在%1$s，您是否要将其移动到%2$s？</string>
+    <string name="dialog_storage_migration_confirm">迁移</string>
+    <string name="dialog_storage_migration_title">储存体迁移</string>
+    <string name="dialog_storage_migration_message">迁移进行中。请等待过程结束。请勿移除该储存体媒介。</string>
+    <string name="dialog_storage_migration_successful">迁移成功！</string>
+
+    <string name="dialog_api_deprecation_title">更新%1$s </string>
+    <string name="dialog_api_deprecation_message">除非您更新应用程序，否则%1$s将不\会在%2$s后运行。</string>
+    <string name="dialog_api_deprecation_yes">更新</string>
+    <string name="dialog_api_deprecation_no">略过</string>
+
+    <string name="dialog_api_expiration_title">更新%1$s </string>
+    <string name="dialog_api_expiration_message">除非您更新应用程序，否则%1$s将不\会运行。</string>
+    <string name="dialog_api_expiration_yes">更新</string>
+    <string name="dialog_api_expiration_no">关闭</string>
+
+    <string name="dialog_server_maintenance_title">服务器维护进行中</string>
+    <string name="dialog_server_maintenance_message">当前正在执行服务器维护。请稍后再试。</string>
+    <string name="dialog_server_maintenance_no">关闭</string>
+
+    <string name="dialog_server_error_title">服务器问题</string>
+    <string name="dialog_server_error_message">与服务器联系时出现问题。请稍后再试。</string>
+    <string name="dialog_server_error_no">关闭</string>
+
+    <string name="dialog_course_dates_title">课程日期</string>
+    <string name="dialog_course_dates_no">关闭</string>
+
+    <string name="dialog_date_info_default_title">日期详情</string>
+    <string name="dialog_date_info_local">本地</string>
+    <string name="dialog_date_info_utc">世界时间</string>
+    <string name="dialog_date_info_no">关闭</string>
+
+    <string name="dialog_date_info_title_announcement">出版日期</string>
+    <string name="dialog_date_info_title_course">课程时期</string>
+    <string name="dialog_date_info_title_section">开始日期</string>
+
+    <string name="dialog_external_content_title">外部内容</string>
+    <string name="dialog_external_content_message_lti">此任务是以不属于该%1$s应用程式的外部工具打开的。它可能尚未针对移动设备被优化，因此我们建议您在计算机上完成。\n\n您是否仍要启动？</string>
+    <string name="dialog_external_content_message_peer">同行评估尚未针对移动设备被优化，因此我们建议您在计算机上完成。\n\n您是否仍要打开？</string>
+    <string name="dialog_external_content_yes_lti">启动</string>
+    <string name="dialog_external_content_yes_always_lti">启动并不\再提示</string>
+    <string name="dialog_external_content_yes_peer">打开</string>
+    <string name="dialog_external_content_yes_always_peer">打开并不\再提示</string>
+
+    <!-- -->
+    <string name="title_activity_module">单元</string>
+
+    <!-- -->
+    <string name="error">发生错误，请稍后再试。</string>
+    <string name="error_plain">发生错误。</string>
+    <string name="trying_reconnect">正在尝试重新连接…</string>
+    <string name="error_email">请输入有效电邮网址。</string>
+    <string name="error_password">请输入有效密码。</string>
+    <string name="login">登录</string>
+    <string name="login_with_credentials">以%1$s 证件登入：</string>
+    <string name="logout">登出</string>
+    <string name="input_email">* 电子邮件</string>
+    <string name="hint_email">电子邮件</string>
+    <string name="input_password">* 密码</string>
+    <string name="hint_password">密码</string>
+    <string name="forgot_password">忘记您的密码？</string>
+    <string name="header_new">未有帐户？创建一个</string>
+    <string name="button_new">创建新账户</string>
+    <string name="enrollments">课程注册</string>
+    <string name="total">总计</string>
+    <string name="points">积分</string>
+    <string name="scan_qr">请扫二维码</string>
+    <string name="slides_as_pdf">PDF版课件</string>
+    <string name="transcript_as_pdf">PDF版成绩单</string>
+    <string name="video_hd_as_mp4">MP4视频(高清)</string>
+    <string name="video_sd_as_mp4">MP4视频(标清)</string>
+    <string name="download">下载</string>
+    <string name="open">打开</string>
+    <string name="play">播放</string>
+    <string name="delete">删除</string>
+    <string name="files">档案</string>
+    <string name="overall">总体</string>
+    <string name="courses">课程</string>
+    <string name="available_at">可在%1$s </string>
+    <string name="download_all_content">下载内容</string>
+    <string name="intro_overlay_text">触摸以在电视上投影视频</string>
+    <string name="or">或</string>
+    <string name="login_sso">单点登录</string>
+    <string name="login_sso_hint">单点登录登录</string>
+    <string name="ok">好</string>
+    <string name="not_available">无法使用</string>
+    <string name="item_proctored_summary">您订定了附合的证书，因此无\法在移动设备上访问此项目。请使用计算机访问它。</string>
+
+    <string name="self_test_points">%1$。%2$的1f。1f自检积分</string>
+    <string name="assignments_points">%1$。%2$的1f。1f作业积分</string>
+    <string name="bonus_points">%1$。%2$的1f。1f奖励积分</string>
+    <string name="items_visited">%1$。%2$的0f。0f已造访</string>
+
+    <string name="course_date_coming_soon">即将来临</string>
+    <string name="course_date_since">自从 %s </string>
+    <string name="course_date_self_paced">自主</string>
+    <string name="course_date_beginning">即将开始 %s </string>
+
+    <string name="course_list_my_dates_title">我的课程日期</string>
+    <string name="course_date_list_title">课程日期概览</string>
+    <string name="course_date_next">下一个: %1$s </string>
+    <string name="course_dates_today">今天</string>
+    <string name="course_dates_week">以下7天</string>
+    <string name="course_dates_later">之后</string>
+    <string name="course_dates_all">全部</string>
+    <string name="course_date_type_course_start">课程开始</string>
+    <string name="course_date_type_section_start">段落开始</string>
+    <string name="course_date_type_submission_publishing">提交发布</string>
+    <string name="course_date_type_submission_deadline">提交截止</string>
+    <string name="time_left"> %1$s 余下</string>
+    <string name="time_left_format"> %dd  %dh  %dm</string>
+
+    <string name="course_qualified_certificate">合格证书</string>
+    <string name="course_record_of_achievement">成绩记录</string>
+    <string name="course_confirmation_of_participation">参与确认</string>
+    <string name="course_qualified_certificate_desc">订定并获取成绩记录以获取合格证书。</string>
+    <string name="course_record_of_achievement_desc">以获取成就记录，赚取超过％1$。0f%%在所有已评分作业中的最高分数。</string>
+    <string name="course_confirmation_of_participation_desc">以获取参与确认，完成至少％1$。0f%%的课程材料。</string>
+    <string name="course_certificate_view">检视</string>
+    <string name="course_certificate_not_achieved">尚未达成</string>
+
+    <string name="course_lti_graded">这是一项评分练习</string>
+    <string name="course_lti_ungraded">这是一项非评分练习</string>
+    <string name="course_lti_bonus">这是一项加分练习</string>
+    <string name="course_lti_points">%1$s 积分</string>
+    <string name="course_lti_allowed_attempts">允许尝试： %1$s </string>
+    <string name="course_lti_allowed_attempts_infinite">尝试次数没有限制</string>
+    <string name="course_lti_launch">启动练习工具</string>
+
+    <string name="course_peer_type_solo">同行评估</string>
+    <string name="course_peer_type_team">团队同行评估</string>
+    <string name="course_peer_launch">公开同行评估</string>
+
+    <string name="document_lang">语言： %s </string>
+
+    <!-- -->
+    <string name="notification_no_network">请连接网络</string>
+    <string name="notification_no_network_summary">如果没有网络连接，则无法显示此内容。</string>
+    <string name="notification_no_network_with_offline_mode_summary">请启用网络连接以更新此内容。以后，此内容可以在离线时使用。</string>
+    <string name="notification_no_enrollments">请注册课程</string>
+    <string name="notification_no_certificates">您还没有任何证书。</string>
+    <string name="notification_no_certificates_summary">课程的\「证书\」段落中指定了如何获取证书。</string>
+    <string name="notification_not_enrolled">您并未注册此课程</string>
+    <string name="notification_no_enrollments_summary">您尚未注册任何课程。</string>
+    <string name="notification_please_login">需要登录</string>
+    <string name="notification_please_login_summary">请登录以访问此内容。</string>
+    <string name="notification_url_invalid">网址无效</string>
+    <string name="notification_course_locked">此课程为锁定</string>
+    <string name="notification_submission_deadline_surpassed">提交截止日期已过</string>
+    <string name="notification_submission_deadline_surpassed_summary">您无法输入任何新的提交，因为提交截止日期已过。</string>
+    <string name="notification_storage_locked">请等待当前的下载完成然后重试。</string>
+
+    <string name="video_notification_no_offline_video">没有网络连接或已下载的视频档案可用。</string>
+    <string name="module_notification_no_content">无内容可用</string>
+
+    <!-- -->
+    <string name="notification_download_completed">下载完成</string>
+    <string name="notification_multiple_downloads_completed">%1$d 下载完成</string>
+
+    <string name="notification_multiple_downloads_running">%1$d 文件下载中</string>
+
+    <string name="notification_channel_downloads">下载</string>
+    <string name="notification_downloads_cancel">取消</string>
+
+    <string name="notification_deep_link_error">不支持操作或内容不可用</string>
+
+    <string name="title_search_results">搜索结果</string>
+    <string name="notification_empty_search">没有搜索结果</string>
+
+    <!-- -->
+    <string name="toast_no_courses">没有收到课程。</string>
+    <string name="toast_no_network">请连接网络。</string>
+    <string name="toast_please_log_in">请登录。</string>
+    <string name="toast_log_in_failed">登录失败。请检查您的证件。</string>
+    <string name="toast_successful_logout">登出成功。</string>
+    <string name="toast_file_already_downloaded">档案已下载。</string>
+    <string name="toast_no_external_write_access">没有编写权限 %1$s。</string>
+    <string name="toast_no_file_viewer_found">找不到打开此文件的应用程序。</string>
+    <string name="toast_pip_error">应用程序无法进入画中画模式。</string>
+
+    <!-- -->
+    <string name="offline_mode">离线模式</string>
+    <string name="offline">离线</string>
+    <string name="video_settings_quality">素质</string>
+    <string name="video_settings_quality_offline">（离线）</string>
+    <string name="video_settings_speed">播放速度</string>
+    <string name="video_settings_subtitles">字幕</string>
+    <string name="video_settings_subtitles_none">无</string>
+    <string name="video_settings_subtitles_generated">（自动产生）</string>
+    <string name="video_settings_pip">画中画</string>
+    <string name="video_settings_show_immersive">全屏</string>
+    <string name="video_settings_show_fitting">切合屏幕</string>
+
+    <!-- -->
+    <string name="media_route_menu_title">Cast投影</string>
+
+    <!-- -->
+    <string name="settings_category_general">一般</string>
+
+    <string name="settings_title_ask_delete">删除前先确认</string>
+
+    <string name="settings_title_ask_open_external_content_lti">开启外部练习前先确认</string>
+    <string name="settings_title_ask_open_external_content_peer">开启同行评估前先确认</string>
+
+    <string name="settings_category_data_usage">移动数据使用</string>
+
+    <string name="settings_title_video_quality">限制视频的数据使用量</string>
+    <string name="settings_summary_video_quality">仅用Wi-Fi串流高清视频</string>
+
+    <string name="settings_title_download_network">限制下载的数据使用量</string>
+    <string name="settings_summary_download_network">仅用Wi-Fi下载档案</string>
+
+    <string name="settings_category_video">视频</string>
+
+    <string name="settings_title_video_playback_speed">视频播放速度</string>
+    <string name="settings_summary_video_playback_speed">预设速度： %s </string>
+
+    <string name="settings_title_video_pip">画中画设置</string>
+    <string name="settings_summary_video_pip_unavailable">已停用或不可用</string>
+
+    <string name="settings_category_about">有关</string>
+
+    <string name="settings_title_faq">常见问题</string>
+
+    <string name="settings_title_licenses">开源许可证</string>
+    <string name="settings_summary_licenses">开源软件许可证详细信息</string>
+
+    <string name="settings_title_build">构建版本</string>
+    <string name="settings_summary_build">版本：</string>
+
+    <string name="settings_title_storage">选择存储空间</string>
+    <string name="settings_title_storage_internal">内部存储空间</string>
+    <string name="settings_title_storage_external">SD卡</string>
+    <string name="settings_summary_storage">%1$s: %2$s 可用。</string>
+    <string name="settings_storage_addition">（当前选择）</string>
+
+    <!-- -->
+    <string name="empty_message_documents_title">没有此课程的文件</string>
+    <string name="empty_message_global_announcements_title">没有公告</string>
+    <string name="empty_message_course_announcements_title">此课程没有公告</string>
+    <string name="empty_message_course_certificates">此课程没有证书</string>
+    <string name="empty_message_dates">目前没有即将来临的日期</string>
+
+    <string name="hint_issue">技术问题</string>
+    <string name="helpdesk_info_text_logged_in">请使用以下的文本框描述您的技术问题。有关您的移动设备和电邮网址的信息将与您的问题报告一起自动提交。</string>
+    <string name="helpdesk_info_text_logged_out">请使用以下的文本框描述您的技术问题。有关您的移动设备和电邮网址的信息将与您的问题报告一起提交。</string>
+    <string name="helpdesk_info_text_create_ticket">您将创建一个票单，将由服务台团队予以答复。</string>
+    <string name="helpdesk_info_text_faq"><![CDATA[在填写票单予技术支援部门之前，请确保您已阅读我们的 <a href=\'#\'>常见问题</a>。]]></string>
+    <string name="helpdesk_info_text_forum">如果您对课程内容有任何疑问，请在课程论坛中与教学团队联系。</string>
+    <string name="hint_title">标题</string>
+    <string name="hint_topic">主题</string>
+    <string name="helpdesk_dialog_header">技术支援</string>
+    <string name="helpdesk_topic_dialog_header">请选择您的主题</string>
+    <string name="helpdesk_topic_list_general">一般问题</string>
+    <string name="helpdesk_topic_list_technical_question">技术问题</string>
+    <string name="helpdesk_topic_list_reactivation">课程重启</string>
+    <string name="helpdesk_topic_list_course">个别课程问题</string>
+    <string name="dialog_send">发送</string>
+    <string name="helpdesk_default_topic">请选择主题</string>
+    <string name="helpdesk_title_error">请输入标题</string>
+    <string name="helpdesk_message_error">请描述您的技术问题</string>
+    <string name="helpdesk_email_error">请输入有效电邮网址</string>
+    <string name="dialog_discard_positive">废弃</string>
+    <string name="dialog_discard_inputs">您要废弃您的输入吗？</string>
+
+    <string name="item_duration_hour_minute">%1$d小时，%2$d 分钟</string>
+    <string name="item_duration_hour">%1$d 小时</string>
+    <string name="item_duration_minute">%1$d 分钟</string>
+
+    <string name="course_filter_all">全部</string>
+    <string name="course_filter_language">语言</string>
+    <string name="course_filter_channel">频道</string>
+
+</resources>

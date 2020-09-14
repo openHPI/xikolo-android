@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- -->
+    <string name="title_section_profile">Perfil</string>
+    <string name="title_section_login">Iniciar sesión</string>
+    <string name="title_section_logout">Cerrar sesión</string>
+    <string name="title_section_all_courses">Todos los cursos</string>
+    <string name="title_section_news">Noticias</string>
+    <string name="title_section_dates">Mis fechas de curso</string>
+    <string name="title_section_downloads">Descargas</string>
+    <string name="title_section_settings">Ajustes</string>
+    <string name="title_section_my_courses">Mis cursos</string>
+    <string name="title_section_certificates">Certificados</string>
+    <string name="title_section_channels">Canales</string>
+
+    <!-- -->
+    <string name="header_current_and_upcoming_courses">Cursos actuales y próximos</string>
+    <string name="header_self_paced_courses">Cursos a su ritmo propio</string>
+    <string name="header_current_courses">Cursos actuales</string>
+    <string name="header_future_courses">Próximos cursos</string>
+    <string name="header_my_current_courses">Mis cursos actuales</string>
+    <string name="header_my_future_courses">Mis próximos cursos</string>
+    <string name="banner_running">Funcionando</string>
+    <string name="banner_self_paced">A su ritmo propio</string>
+    <string name="banner_external">Externo</string>
+
+    <!-- -->
+    <string name="navigation_drawer_open">Abrir el cajón de navegación</string>
+    <string name="navigation_drawer_close">Cerrar el cajón de navegación</string>
+
+    <!-- -->
+    <string name="action_refresh">Actualizar</string>
+    <string name="action_unenroll">Darse de baja</string>
+    <string name="action_language">Cambiar idioma</string>
+    <string name="action_search">Buscar</string>
+    <string name="action_filter">Filtrar</string>
+    <string name="action_share">Compartir el curso</string>
+    <string name="action_course_dates">Fechas del curso</string>
+    <string name="action_helpdesk">Soporte técnico</string>
+
+    <!-- -->
+    <string name="tab_learnings">Aprendizaje</string>
+    <string name="tab_discussions">Debates</string>
+    <string name="tab_progress">Progreso</string>
+    <string name="tab_course_details">Detalles del curso</string>
+    <string name="tab_certificates">Certificados</string>
+    <string name="tab_announcements">Anuncios</string>
+    <string name="tab_documents">Documentos</string>
+    <string name="tab_recap">Resumen</string>
+
+    <!-- -->
+    <string name="btn_enroll">Inscribirme en este curso</string>
+    <string name="btn_continue_course">Continuar</string>
+    <string name="btn_external_course">Abrir externo</string>
+    <string name="btn_external_course_target">Ir al curso externo en %1$s</string>
+    <string name="btn_course_details">Ver detalles</string>
+    <string name="btn_channel_courses">Ver más</string>
+    <string name="btn_channel_slider_more">Ver más cursos</string>
+    <string name="btn_starts_soon">Todavía no ha empezado</string>
+    <string name="btn_not_enrollable">Debe ser invitado para inscribirse en este curso</string>
+    <string name="btn_display_issues">¿Hay problemas de visualización?</string>
+    <string name="btn_edit_profile">Editar perfil</string>
+
+    <!-- -->
+    <string name="dialog_unenroll_title">¿Darse de baja de este curso?</string>
+    <string name="dialog_unenroll_message">Se dará de baja de este curso.</string>
+    <string name="dialog_unenroll_yes">Darse de baja</string>
+
+    <string name="dialog_negative">Cancelar</string>
+    <string name="dialog_no">No</string>
+
+    <string name="dialog_confirm_delete_title">¿Eliminar este archivo?</string>
+    <string name="dialog_confirm_delete_message">El archivo descargado será eliminado y ya no podrá usarlo sin conexión.</string>
+    <string name="dialog_confirm_delete_title_multi">¿Eliminar estos archivos?</string>
+    <string name="dialog_confirm_delete_message_multi">Se eliminarán los archivos descargados y ya no podrá usarlos sin conexión.</string>
+    <string name="dialog_confirm_delete_yes">Eliminar</string>
+    <string name="dialog_confirm_delete_yes_always">Eliminar y no volver a preguntarme</string>
+
+    <string name="dialog_mobile_download_title">¿Permitir las descargas para móviles?</string>
+    <string name="dialog_mobile_download_message">¿Desea permitir las descargas en las redes móviles? Tenga en cuenta que esto afecta el volumen de datos de su móvil.</string>
+    <string name="dialog_mobile_download_yes">Permitir</string>
+
+    <string name="dialog_progress_title">Espere, por favor</string>
+    <string name="dialog_progress_message">Cargando...</string>
+
+    <string name="dialog_module_downloads_title">¿Descargar todo el contenido para %1$s?</string>
+
+    <string name="dialog_title_permissions">Se requiere acceder al almacenamiento externo</string>
+    <string name="dialog_permissions">Por favor, permita que esta aplicación acceda al almacenamiento externo para utilizar esta función.</string>
+
+    <string name="dialog_download_slides_title">¿Descargar las diapositivas?</string>
+    <string name="dialog_download_slides_message">Se descargará el archivo de las diapositivas.</string>
+    <string name="dialog_download_slides_yes">Descargar</string>
+
+    <string name="dialog_app_being_prepared">Por favor, espere mientras se prepara la aplicación.</string>
+
+    <string name="dialog_storage_migration">Actualmente hay archivos guardados en %1$s, ¿quiere moverlos a %2$s?</string>
+    <string name="dialog_storage_migration_confirm">Mover</string>
+    <string name="dialog_storage_migration_title">Mover almacenamiento</string>
+    <string name="dialog_storage_migration_message">Moviendo. Por favor, espere hasta que se complete el proceso. No extraiga el medio de almacenamiento.</string>
+    <string name="dialog_storage_migration_successful">¡El proceso se completó con éxito!</string>
+
+    <string name="dialog_api_deprecation_title">Actualizar %1$s</string>
+    <string name="dialog_api_deprecation_message">%1$s ya no funcionará después de %2$s a menos que actualice la aplicación.</string>
+    <string name="dialog_api_deprecation_yes">Actualizar</string>
+    <string name="dialog_api_deprecation_no">Saltar</string>
+
+    <string name="dialog_api_expiration_title">Actualizar %1$s</string>
+    <string name="dialog_api_expiration_message">%1$s no funcionará a menos que actualice la aplicación.</string>
+    <string name="dialog_api_expiration_yes">Actualizar</string>
+    <string name="dialog_api_expiration_no">Cerrar</string>
+
+    <string name="dialog_server_maintenance_title">Mantenimiento de servidor en curso</string>
+    <string name="dialog_server_maintenance_message">Actualmente el servidor se encuentra en mantenimiento. Por favor, inténtelo de nuevo más tarde.</string>
+    <string name="dialog_server_maintenance_no">Cerrar</string>
+
+    <string name="dialog_server_error_title">Problema del servidor</string>
+    <string name="dialog_server_error_message">Hubo un problema al contactar con el servidor. Por favor, inténtelo de nuevo más tarde.</string>
+    <string name="dialog_server_error_no">Cerrar</string>
+
+    <string name="dialog_course_dates_title">Fechas del curso</string>
+    <string name="dialog_course_dates_no">Cerrar</string>
+
+    <string name="dialog_date_info_default_title">Detalles de la fecha</string>
+    <string name="dialog_date_info_local">Local</string>
+    <string name="dialog_date_info_utc">Hora mundial</string>
+    <string name="dialog_date_info_no">Cerrar</string>
+
+    <string name="dialog_date_info_title_announcement">Fecha de publicación</string>
+    <string name="dialog_date_info_title_course">Duración del curso</string>
+    <string name="dialog_date_info_title_section">Fecha de inicio</string>
+
+    <string name="dialog_external_content_title">Contenido externo</string>
+    <string name="dialog_external_content_message_lti">Esta tarea requiere una herramienta externa que no es parte de la aplicación %1$s. Puede que este optimizada para los dispositivos móviles, así que recomendamos que la complete en una computadora.\n\n ¿Quiere iniciarla de todos modos?</string>
+    <string name="dialog_external_content_message_peer">La evaluación entre pares no esta optimizada por el móvil, así que recomendamos que la complete en una computadora.\n\n ¿Quiere iniciarla de todos modos?</string>
+    <string name="dialog_external_content_yes_lti">Iniciar</string>
+    <string name="dialog_external_content_yes_always_lti">Iniciar y no volver a preguntarme</string>
+    <string name="dialog_external_content_yes_peer">Abrir</string>
+    <string name="dialog_external_content_yes_always_peer">Abrir y no volver a preguntarme</string>
+
+    <!-- -->
+    <string name="title_activity_module">Módulo</string>
+
+    <!-- -->
+    <string name="error">Ocurrió un error, por favor inténtelo de nuevo más tarde.</string>
+    <string name="error_plain">Ocurrió un error.</string>
+    <string name="trying_reconnect">Intentando reconectar...</string>
+    <string name="error_email">Por favor, inserte una dirección de correo electrónico válido.</string>
+    <string name="error_password">Por favor, inserte una contraseña válida.</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="login_with_credentials">Iniciar sesión con %1$s credenciales:</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="input_email">* Correo electrónico</string>
+    <string name="hint_email">Correo electrónico</string>
+    <string name="input_password">* Contraseña</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="forgot_password">¿Olvidó su contraseña?</string>
+    <string name="header_new">¿Es nuevo aquí? Crear una cuenta</string>
+    <string name="button_new">Crear una cuenta nueva</string>
+    <string name="enrollments">matrículas</string>
+    <string name="total">Total</string>
+    <string name="points">Puntos</string>
+    <string name="scan_qr">Por favor, escanee el código QR</string>
+    <string name="slides_as_pdf">Las diapositivas de presentación como PDF</string>
+    <string name="transcript_as_pdf">La transcripción como PDF</string>
+    <string name="video_hd_as_mp4">Vídeo (HD) como MP4</string>
+    <string name="video_sd_as_mp4">Vídeo (SD) como MP4</string>
+    <string name="download">Descargar</string>
+    <string name="open">Abrir</string>
+    <string name="play">Reproducir</string>
+    <string name="delete">Eliminar</string>
+    <string name="files">Archivos</string>
+    <string name="overall">General</string>
+    <string name="courses">Cursos</string>
+    <string name="available_at">Disponible en %1$s</string>
+    <string name="download_all_content">Descargar contenido</string>
+    <string name="intro_overlay_text">Tocar para dirigir los vídeos a la televisión</string>
+    <string name="or">o</string>
+    <string name="login_sso">Inicio de Sesión Único (SSO)</string>
+    <string name="login_sso_hint">Inicio de sesión SSO</string>
+    <string name="ok">Bien</string>
+    <string name="not_available">No disponible</string>
+    <string name="item_proctored_summary">No se puede acceder a este artículo en el móvil porque reservó un certificado electrónico. Por favor, utilice una computadora para acceder.</string>
+
+    <string name="self_test_points">%1$.1f de %2$.1f puntos de autoevaluación</string>
+    <string name="assignments_points">%1$.1f de %2$.1f puntos de asignación</string>
+    <string name="bonus_points">%1$.1f de %2$.1f puntos extras</string>
+    <string name="items_visited">%1$.0f de %2$.0f visitado</string>
+
+    <string name="course_date_coming_soon">Próximamente</string>
+    <string name="course_date_since">Desde %s</string>
+    <string name="course_date_self_paced">A su ritmo propio</string>
+    <string name="course_date_beginning">Comienzo %s</string>
+
+    <string name="course_list_my_dates_title">Fechas de mis cursos</string>
+    <string name="course_date_list_title">Resumen de la fecha del curso</string>
+    <string name="course_date_next">A continuación: %1$s</string>
+    <string name="course_dates_today">Hoy</string>
+    <string name="course_dates_week">Los próximos 7 días</string>
+    <string name="course_dates_later">Más tarde</string>
+    <string name="course_dates_all">Todos</string>
+    <string name="course_date_type_course_start">Inicio del curso</string>
+    <string name="course_date_type_section_start">Inicio de la sección</string>
+    <string name="course_date_type_submission_publishing">Publicación de entrega</string>
+    <string name="course_date_type_submission_deadline">Fecha límite de la entrega</string>
+    <string name="time_left"> Queda %1$s</string>
+    <string name="time_left_format">%dd %dh %dm</string>
+
+    <string name="course_qualified_certificate">Certificado electrónico</string>
+    <string name="course_record_of_achievement">Historial de logros</string>
+    <string name="course_confirmation_of_participation">Confirmación de participación</string>
+    <string name="course_qualified_certificate_desc">Obtenga un certificado electrónico al reservarlo y obtener un historial de logros.</string>
+    <string name="course_record_of_achievement_desc">Obtenga un historial de logros al ganar más de %1$.0f%% del número máximo de puntos de todas las asignaciones calificadas.</string>
+    <string name="course_confirmation_of_participation_desc">Obtenga una confirmación de participación al completar al menos %1$.0f%% del material del curso.</string>
+    <string name="course_certificate_view">Vista</string>
+    <string name="course_certificate_not_achieved">No obtenido aún</string>
+
+    <string name="course_lti_graded">Este es un ejercicio calificado</string>
+    <string name="course_lti_ungraded">Este es un ejercicio sin calificar</string>
+    <string name="course_lti_bonus">Este es un ejercicio extra</string>
+    <string name="course_lti_points">%1$s puntos</string>
+    <string name="course_lti_allowed_attempts">Intentos permitidos: %1$s</string>
+    <string name="course_lti_allowed_attempts_infinite">No hay restricciones en los números de intentos</string>
+    <string name="course_lti_launch">Iniciar la herramienta de ejercicio</string>
+
+    <string name="course_peer_type_solo">Evaluación entre pares</string>
+    <string name="course_peer_type_team">Evaluación entre pares en equipo</string>
+    <string name="course_peer_launch">Evaluación abierta entre pares</string>
+
+    <string name="document_lang">Idioma: %s</string>
+
+    <!-- -->
+    <string name="notification_no_network">Por favor, habilite la conexión de red</string>
+    <string name="notification_no_network_summary">Este contenido no puede mostrarse sin conexión de red.</string>
+    <string name="notification_no_network_with_offline_mode_summary">Por favor, actualice este contenido con una conexión de red habilitada. Posteriormente, este contenido se podrá utilizar sin conexión.</string>
+    <string name="notification_no_enrollments">Por favor, inscríbase en los cursos</string>
+    <string name="notification_no_certificates">No tiene ningún certificado.</string>
+    <string name="notification_no_certificates_summary">Se especifica cómo obtener un certificado en la sección \"Certificados\" del curso.</string>
+    <string name="notification_not_enrolled">No está matriculado en este curso</string>
+    <string name="notification_no_enrollments_summary">Aún no está matriculado en ningún curso.</string>
+    <string name="notification_please_login">Se requiere iniciar sesión</string>
+    <string name="notification_please_login_summary">Por favor, inicie sesión para acceder a este contenido.</string>
+    <string name="notification_url_invalid">URL inválido</string>
+    <string name="notification_course_locked">Este curso está cerrado</string>
+    <string name="notification_submission_deadline_surpassed">Ha pasado la fecha de límite de entrega</string>
+    <string name="notification_submission_deadline_surpassed_summary">No puede enviar nuevas entregas porque la fecha de límite de entrega ya ha pasado.</string>
+    <string name="notification_storage_locked">Por favor, espere hasta que la descarga actual se termine y entonces inténtelo de nuevo.</string>
+
+    <string name="video_notification_no_offline_video">No hay conexión de red o archivo de video descargado disponible.</string>
+    <string name="module_notification_no_content">No hay contenido disponible</string>
+
+    <!-- -->
+    <string name="notification_download_completed">Descarga completa</string>
+    <string name="notification_multiple_downloads_completed">%1$d descargas completas</string>
+
+    <string name="notification_multiple_downloads_running">%1$d descargando archivos</string>
+
+    <string name="notification_channel_downloads">Descargas</string>
+    <string name="notification_downloads_cancel">Cancelar</string>
+
+    <string name="notification_deep_link_error">Acción no soportada o no hay contenido disponible</string>
+
+    <string name="title_search_results">Resultados de búsqueda</string>
+    <string name="notification_empty_search">No hay resultados de búsqueda</string>
+
+    <!-- -->
+    <string name="toast_no_courses">No se recibieron cursos.</string>
+    <string name="toast_no_network">Por favor, habilite la conexión de red.</string>
+    <string name="toast_please_log_in">Por favor, inicie sesión.</string>
+    <string name="toast_log_in_failed">Error al iniciar sesión. Por favor, verifique sus credenciales.</string>
+    <string name="toast_successful_logout">La sesión se cerró adecuadamente.</string>
+    <string name="toast_file_already_downloaded">Archivo ya descargado.</string>
+    <string name="toast_no_external_write_access">No hay acceso de escritura para %1$s.</string>
+    <string name="toast_no_file_viewer_found">No se encontró ninguna aplicación para abrir este archivo.</string>
+    <string name="toast_pip_error">La aplicación no pudo entrar en el modo Imagen en imagen.</string>
+
+    <!-- -->
+    <string name="offline_mode">Modo sin conexión</string>
+    <string name="offline">Sin conexión</string>
+    <string name="video_settings_quality">Calidad</string>
+    <string name="video_settings_quality_offline">(sin conexión)</string>
+    <string name="video_settings_speed">Velocidad de reproducción</string>
+    <string name="video_settings_subtitles">Subtítulos</string>
+    <string name="video_settings_subtitles_none">Ninguno</string>
+    <string name="video_settings_subtitles_generated">(creado automáticamente)</string>
+    <string name="video_settings_pip">Imagen en imagen</string>
+    <string name="video_settings_show_immersive">Llenar pantalla</string>
+    <string name="video_settings_show_fitting">Ajustar pantalla</string>
+
+    <!-- -->
+    <string name="media_route_menu_title">Proyectar</string>
+
+    <!-- -->
+    <string name="settings_category_general">General</string>
+
+    <string name="settings_title_ask_delete">Confirmar antes de eliminar</string>
+
+    <string name="settings_title_ask_open_external_content_lti">Confirmar antes de abrir ejercicios externos</string>
+    <string name="settings_title_ask_open_external_content_peer">Confirmar antes de abrir evaluaciones entre pares</string>
+
+    <string name="settings_category_data_usage">Uso de datos de móviles</string>
+
+    <string name="settings_title_video_quality">Limitar el uso de datos para los videos</string>
+    <string name="settings_summary_video_quality">Solo transmitir los videos HD con Wi-Fi</string>
+
+    <string name="settings_title_download_network">Limitar el uso de datos para las descargas</string>
+    <string name="settings_summary_download_network">Solo descargar los archivos con Wi-Fi</string>
+
+    <string name="settings_category_video">Video</string>
+
+    <string name="settings_title_video_playback_speed">Velocidad de reproducción del video</string>
+    <string name="settings_summary_video_playback_speed">Velocidad predefinida: %s</string>
+
+    <string name="settings_title_video_pip">Ajustes para la imagen en imagen</string>
+    <string name="settings_summary_video_pip_unavailable">Desactivado o no disponible</string>
+
+    <string name="settings_category_about">Acerca de</string>
+
+    <string name="settings_title_faq">Preguntas frecuentes (FAQ)</string>
+
+    <string name="settings_title_licenses">Licencias de código abierto</string>
+    <string name="settings_summary_licenses">Detalles de licencia para el software de código abierto</string>
+
+    <string name="settings_title_build">Versión de compilación</string>
+    <string name="settings_summary_build">Versión:</string>
+
+    <string name="settings_title_storage">Elegir almacenamiento</string>
+    <string name="settings_title_storage_internal">Almacenamiento interno</string>
+    <string name="settings_title_storage_external">Tarjeta SD</string>
+    <string name="settings_summary_storage">%1$s: %2$s gratis.</string>
+    <string name="settings_storage_addition">(seleccionado actualmente)</string>
+
+    <!-- -->
+    <string name="empty_message_documents_title">No hay documentos disponibles para este curso</string>
+    <string name="empty_message_global_announcements_title">No hay anuncios disponibles</string>
+    <string name="empty_message_course_announcements_title">No hay anuncios disponibles para este curso</string>
+    <string name="empty_message_course_certificates">No hay certificados disponibles para este curso</string>
+    <string name="empty_message_dates">Ahora mismo no hay próximas fechas</string>
+
+    <string name="hint_issue">Problema técnico</string>
+    <string name="helpdesk_info_text_logged_in">Por favor, describa su problema técnico utilizando el siguiente recuadro. La información sobre su dispositivo móvil y su dirección de correo electrónico se enviará automáticamente junto con su informe de problemas.</string>
+    <string name="helpdesk_info_text_logged_out">Por favor, describa su problema técnico utilizando el siguiente recuadro. La información sobre su dispositivo móvil y su dirección de correo electrónico se enviará junto con su informe de problemas.</string>
+    <string name="helpdesk_info_text_create_ticket">Creará una solicitud que será respondido por el equipo de asistencia.</string>
+    <string name="helpdesk_info_text_faq"><![CDATA[Antes de escribir una solicitud para el soporte técnico, asegúrese de haber leído nuestro <a href=\'#\'>Preguntas frecuentes (FAQ)</a>.]]></string>
+    <string name="helpdesk_info_text_forum">Si tiene algunas preguntas sobre el contenido del curso, por favor contacte al equipo docente en el foro del curso.</string>
+    <string name="hint_title">Título</string>
+    <string name="hint_topic">Tema</string>
+    <string name="helpdesk_dialog_header">Soporte técnico</string>
+    <string name="helpdesk_topic_dialog_header">Por favor, seleccione su tema</string>
+    <string name="helpdesk_topic_list_general">Pregunta general</string>
+    <string name="helpdesk_topic_list_technical_question">Pregunta técnica</string>
+    <string name="helpdesk_topic_list_reactivation">Reactivación del curso</string>
+    <string name="helpdesk_topic_list_course">Pregunta específica sobre el curso</string>
+    <string name="dialog_send">Enviar</string>
+    <string name="helpdesk_default_topic">Por favor, elija un tema</string>
+    <string name="helpdesk_title_error">Por favor, escriba un título</string>
+    <string name="helpdesk_message_error">Por favor, describa su problema técnico</string>
+    <string name="helpdesk_email_error">Por favor, escriba un correo electrónico válido</string>
+    <string name="dialog_discard_positive">Descartar</string>
+    <string name="dialog_discard_inputs">¿Quiere descartar su entrada?</string>
+
+    <string name="item_duration_hour_minute">%1$d hora, %2$d minuto</string>
+    <string name="item_duration_hour">%1$d hora</string>
+    <string name="item_duration_minute">%1$d minuto</string>
+
+    <string name="course_filter_all">Todos</string>
+    <string name="course_filter_language">Idioma</string>
+    <string name="course_filter_channel">Canal</string>
+
+</resources>

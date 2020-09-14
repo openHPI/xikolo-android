@@ -14,7 +14,7 @@ val FLAVORS = mapOf(
         "open.hpi.de",
         "#de6212",
         "#b42946",
-        listOf("en", "de")
+        listOf("en", "de", "es", "zh")
     ),
     "opensap" to FlavorConfig(
         "de.xikolo.opensap",
@@ -30,7 +30,7 @@ val FLAVORS = mapOf(
         "mooc.house",
         "#abb324",
         "#abb324",
-        listOf("en", "de")
+        listOf("en", "de", "fr", "zh")
     ),
     "openwho" to FlavorConfig(
         "de.xikolo.openwho",
@@ -38,7 +38,7 @@ val FLAVORS = mapOf(
         "openwho.org",
         "#0b72b5",
         "#0b72b5",
-        listOf("en", "fr", "pt")
+        listOf("en", "fr", "pt", "es", "zh")
     ),
     "lernencloud" to FlavorConfig(
         "de.xikolo.lernencloud",

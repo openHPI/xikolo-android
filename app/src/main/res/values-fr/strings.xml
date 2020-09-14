@@ -341,7 +341,7 @@
     <string name="helpdesk_info_text_logged_in">Veuillez décrire votre problème technique en utilisant la zone de texte ci-dessous. Les informations concernant votre appareil mobile et votre adresse électronique seront automatiquement transmises avec votre rapport d\'incident.</string>
     <string name="helpdesk_info_text_logged_out">Veuillez décrire votre problème technique en utilisant la zone de texte ci-dessous. Naturellement, vos informations restent confidentielles et ne sont pas divulguées à des tiers.</string>
     <string name="helpdesk_info_text_create_ticket">Un ticket sera crée automatiquement et un membre de l\'équipe du service d\'assistance vous répondra.</string>
-    <string name="helpdesk_info_text_faq"><![CDATA[Avant d&#39;écrire un ticket au support technique, veuillez vous assurer que vous avez bien lu notre <a href="\'#\'">FAQ</a>.]]></string>
+    <string name="helpdesk_info_text_faq"><![CDATA[Avant d&#39;écrire un ticket au support technique, veuillez vous assurer que vous avez bien lu notre <a href=\'#\'>FAQ</a>.]]></string>
     <string name="helpdesk_info_text_forum">Si vous avez des questions sur le contenu du cours, veuillez contacter l\'équipe pédagogique dans le forum du cours.</string>
     <string name="hint_title">Titre</string>
     <string name="hint_topic">Thème</string>
