@@ -142,7 +142,8 @@ open class ExoPlayerVideoView : PlayerView {
                 }
 
                 override fun onTracksChanged(
-                    trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray
+                    trackGroups: TrackGroupArray,
+                    trackSelections: TrackSelectionArray
                 ) {
                 }
 
@@ -163,7 +164,9 @@ open class ExoPlayerVideoView : PlayerView {
         exoplayer.addVideoListener(
             object : VideoListener {
                 override fun onVideoSizeChanged(
-                    width: Int, height: Int, unappliedRotationDegrees: Int,
+                    width: Int,
+                    height: Int,
+                    unappliedRotationDegrees: Int,
                     pixelWidthHeightRatio: Float
                 ) {
                     aspectRatio = (width * pixelWidthHeightRatio) / height
