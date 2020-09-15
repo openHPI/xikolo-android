@@ -6,8 +6,19 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.util.AttributeSet
 import androidx.annotation.IntRange
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.*
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlaybackException
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackParameters
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.Renderer
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.Timeline
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.MergingMediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.SingleSampleMediaSource
+import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -66,7 +77,11 @@ open class ExoPlayerVideoView : PlayerView {
         setup(context)
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         setup(context)
     }
 
@@ -74,7 +89,11 @@ open class ExoPlayerVideoView : PlayerView {
         playerContext = context
 
         bandwidthMeter = DefaultBandwidthMeter.Builder(context).build()
-        dataSourceFactory = DefaultDataSourceFactory(playerContext, Util.getUserAgent(playerContext, playerContext.packageName), bandwidthMeter)
+        dataSourceFactory = DefaultDataSourceFactory(
+            playerContext,
+            Util.getUserAgent(playerContext, playerContext.packageName),
+            bandwidthMeter
+        )
 
         exoplayer = SimpleExoPlayer.Builder(
             context
@@ -122,7 +141,10 @@ open class ExoPlayerVideoView : PlayerView {
                 override fun onSeekProcessed() {
                 }
 
-                override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
+                override fun onTracksChanged(
+                    trackGroups: TrackGroupArray,
+                    trackSelections: TrackSelectionArray
+                ) {
                 }
 
                 override fun onPositionDiscontinuity(reason: Int) {
@@ -141,7 +163,12 @@ open class ExoPlayerVideoView : PlayerView {
 
         exoplayer.addVideoListener(
             object : VideoListener {
-                override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
+                override fun onVideoSizeChanged(
+                    width: Int,
+                    height: Int,
+                    unappliedRotationDegrees: Int,
+                    pixelWidthHeightRatio: Float
+                ) {
                     aspectRatio = (width * pixelWidthHeightRatio) / height
                 }
             }
@@ -166,8 +193,7 @@ open class ExoPlayerVideoView : PlayerView {
         exoplayer.setPlaybackParameters(
             PlaybackParameters(
                 speed,
-                exoplayer.playbackParameters.pitch,
-                exoplayer.playbackParameters.skipSilence
+                exoplayer.playbackParameters.pitch
             )
         )
     }
@@ -176,9 +202,16 @@ open class ExoPlayerVideoView : PlayerView {
         this.uri = uri
         videoMediaSource =
             if (isHls) {
-                HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+                HlsMediaSource.Factory(dataSourceFactory)
+                    .setAllowChunklessPreparation(true)
+                    .createMediaSource(
+                        MediaItem.fromUri(uri)
+                    )
             } else {
-                ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+                ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(
+                        MediaItem.fromUri(uri)
+                    )
             }
         mergedMediaSource = videoMediaSource
     }
@@ -192,7 +225,10 @@ open class ExoPlayerVideoView : PlayerView {
                     true
                 } catch (e1: Exception) {
                     try {
-                        mediaMetadataRetriever?.setDataSource(uri.toString(), HashMap<String, String>())
+                        mediaMetadataRetriever?.setDataSource(
+                            uri.toString(),
+                            HashMap<String, String>()
+                        )
                         true
                     } catch (e2: Exception) {
                         try {
@@ -210,12 +246,18 @@ open class ExoPlayerVideoView : PlayerView {
     fun showSubtitles(uri: String, language: String) {
         val subtitleMediaSource = SingleSampleMediaSource.Factory(dataSourceFactory)
             .createMediaSource(
-                Uri.parse(uri),
-                Format.createTextSampleFormat(null, MimeTypes.TEXT_VTT, C.SELECTION_FLAG_DEFAULT, language),
+                MediaItem.Subtitle(
+                    Uri.parse(uri),
+                    MimeTypes.TEXT_VTT,
+                    language,
+                    C.SELECTION_FLAG_DEFAULT
+                ),
                 C.TIME_UNSET
             )
 
-        mergedMediaSource = MergingMediaSource(videoMediaSource, subtitleMediaSource)
+        mergedMediaSource = videoMediaSource?.let {
+            MergingMediaSource(it, subtitleMediaSource)
+        }
     }
 
     fun removeSubtitles() {
@@ -231,18 +273,19 @@ open class ExoPlayerVideoView : PlayerView {
 
     fun scaleToFill() {
         resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-        exoplayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+        exoplayer.videoScalingMode = Renderer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
     }
 
     fun scaleToFit() {
         resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
-        exoplayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
+        exoplayer.videoScalingMode = Renderer.VIDEO_SCALING_MODE_SCALE_TO_FIT
     }
 
     fun prepare() {
         isPreparing = true
         mergedMediaSource?.let {
-            exoplayer.prepare(it)
+            exoplayer.setMediaSource(it)
+            exoplayer.prepare()
         }
     }
 
@@ -274,5 +317,4 @@ open class ExoPlayerVideoView : PlayerView {
     interface OnErrorListener {
         fun onError(e: Exception?): Boolean
     }
-
 }
