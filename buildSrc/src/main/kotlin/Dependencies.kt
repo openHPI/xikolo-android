@@ -2,11 +2,11 @@ import org.gradle.api.JavaVersion
 
 object Versions {
     // Project
-    const val KOTLIN = "1.3.72"
-    const val BUILD_TOOLS = "29.0.3"
+    const val KOTLIN = "1.4.10"
+    const val BUILD_TOOLS = "30.0.2"
     const val MIN_SDK = 21
-    const val TARGET_SDK = 29
-    const val COMPILE_SDK = 29
+    const val TARGET_SDK = 30
+    const val COMPILE_SDK = 30
 
     const val VERSION_NAME = "3.4"
     const val VERSION_CODE = 58
@@ -18,7 +18,7 @@ object Versions {
     const val KOTLIN_JVM = "1.8"
 
     // Dependencies
-    const val OK_HTTP = "4.7.2"
+    const val OK_HTTP = "4.8.1"
     const val GSON = "2.8.6"
 }
 

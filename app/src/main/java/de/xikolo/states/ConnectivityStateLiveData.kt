@@ -18,12 +18,12 @@ class ConnectivityStateLiveData(private val context: Context) : LiveDataState<Bo
     // callback for API >= 24
     private var networkCallback: ConnectivityManager.NetworkCallback = object : ConnectivityManager.NetworkCallback() {
 
-        override fun onAvailable(network: Network?) {
+        override fun onAvailable(network: Network) {
             super.onAvailable(network)
             online()
         }
 
-        override fun onLost(network: Network?) {
+        override fun onLost(network: Network) {
             super.onLost(network)
             offline()
         }

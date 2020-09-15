@@ -41,7 +41,11 @@ class WebViewHelper(view: View, private val webViewInterface: WebViewFragment) {
     }
 
     private fun loadUrl(url: String, header: Map<String, String>?) {
-        webView.loadUrl(url, header)
+        if (header != null) {
+            webView.loadUrl(url, header)
+        } else {
+            webView.loadUrl(url)
+        }
     }
 
     fun refresh() {

@@ -27,7 +27,7 @@
                 android:background="@color/toolbar"
                 android:elevation="4dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark"
-                app:tabGravity="center"
+                app:tabGravity="start"
                 app:tabMinWidth="48dp"
                 app:tabMode="scrollable" />
 

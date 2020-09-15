@@ -113,10 +113,11 @@ class DownloadService : Service() {
 
             // For each start request, send a message to start a job and deliver the
             // start ID so we know which request we're stopping when we finish the job
-            val msg = serviceHandler?.obtainMessage()
-            msg?.data = intent.extras
-            jobCounter?.incrementAndGet()
-            serviceHandler?.sendMessage(msg)
+            serviceHandler?.obtainMessage()?.let { msg ->
+                msg.data = intent.extras
+                jobCounter?.incrementAndGet()
+                serviceHandler?.sendMessage(msg)
+            }
         }
 
         // If we get killed, after returning from here, restart
