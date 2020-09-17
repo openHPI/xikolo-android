@@ -272,8 +272,8 @@ open class FileDownloadItem(
         return if (storage.isWritable) {
             if (
                 PermissionManager(activity).requestPermission(
-                        PermissionManager.WRITE_EXTERNAL_STORAGE
-                    ) == 1
+                    PermissionManager.WRITE_EXTERNAL_STORAGE
+                ) == 1
             ) {
                 action()
                 true
