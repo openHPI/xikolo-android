@@ -90,6 +90,8 @@ class App : Application() {
     }
 
     private fun configureDownloader() {
+        // The initialization of Fetch takes some time when the object is initialized.
+        // Initializing the object here makes sure the object is already initialized upon use so the UI does not hang.
         FileDownloadHandler
     }
 

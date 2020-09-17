@@ -10,8 +10,6 @@ import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2.FetchListener
 import com.tonyodev.fetch2.Status
 import com.tonyodev.fetch2core.DownloadBlock
-import com.tonyodev.fetch2core.Func
-import com.tonyodev.fetch2core.Func2
 import de.xikolo.App
 import de.xikolo.download.DownloadHandler
 import de.xikolo.download.DownloadStatus
@@ -80,11 +78,7 @@ object FileDownloadHandler : DownloadHandler<FileDownloadIdentifier, FileDownloa
             }
 
             override fun onCompleted(download: Download) {
-                if (download.extras.getString(
-                        REQUEST_EXTRA_SHOW_NOTIFICATION,
-                        true.toString()
-                    ) == true.toString()
-                ) {
+                if (download.extras.getBoolean(REQUEST_EXTRA_SHOW_NOTIFICATION, true)) {
                     NotificationUtil(App.instance).showDownloadCompletedNotification(
                         download.extras.getString(REQUEST_EXTRA_TITLE, download.file)
                     )
@@ -147,11 +141,11 @@ object FileDownloadHandler : DownloadHandler<FileDownloadIdentifier, FileDownloa
     private val listeners: MutableMap<Int, ((DownloadStatus?) -> Unit)?> = mutableMapOf()
 
     override fun isDownloadingAnything(callback: (Boolean) -> Unit) {
-        disabledNotificationsManager.hasActiveDownloads(true, Func { a ->
-            enabledNotificationsManager.hasActiveDownloads(true, Func { b ->
+        disabledNotificationsManager.hasActiveDownloads(true) { a ->
+            enabledNotificationsManager.hasActiveDownloads(true) { b ->
                 callback(a || b)
-            })
-        })
+            }
+        }
     }
 
     override fun download(
@@ -161,20 +155,16 @@ object FileDownloadHandler : DownloadHandler<FileDownloadIdentifier, FileDownloa
     ) {
         val req = request.buildRequest()
 
-        if (req.extras.getString(
-                REQUEST_EXTRA_SHOW_NOTIFICATION,
-                true.toString()
-            ) == true.toString()
-        ) {
+        if (req.extras.getBoolean(REQUEST_EXTRA_SHOW_NOTIFICATION, true)) {
             enabledNotificationsManager
         } else {
             disabledNotificationsManager
         }.enqueue(
             req,
-            Func {
+            {
                 callback?.invoke(FileDownloadIdentifier(it.id))
             },
-            Func {
+            {
                 callback?.invoke(null)
             }
         )
@@ -183,13 +173,13 @@ object FileDownloadHandler : DownloadHandler<FileDownloadIdentifier, FileDownloa
     }
 
     override fun cancel(identifier: FileDownloadIdentifier, callback: ((Boolean) -> Unit)?) {
-        enabledNotificationsManager.getDownload(identifier.id, Func2 { d1 ->
+        enabledNotificationsManager.getDownload(identifier.id) { d1 ->
             if (d1 != null) {
                 enabledNotificationsManager.cancel(d1.id)
                 enabledNotificationsManager.delete(d1.id)
                 callback?.invoke(true)
             } else {
-                disabledNotificationsManager.getDownload(identifier.id, Func2 { d2 ->
+                disabledNotificationsManager.getDownload(identifier.id) { d2 ->
                     if (d2 != null) {
                         disabledNotificationsManager.cancel(d2.id)
                         disabledNotificationsManager.delete(d2.id)
@@ -197,19 +187,19 @@ object FileDownloadHandler : DownloadHandler<FileDownloadIdentifier, FileDownloa
                     } else {
                         callback?.invoke(false)
                     }
-                })
+                }
             }
-        })
+        }
     }
 
     override fun status(identifier: FileDownloadIdentifier, callback: (DownloadStatus?) -> Unit) {
-        disabledNotificationsManager.getDownload(identifier.id, Func2 { a ->
-            enabledNotificationsManager.getDownload(identifier.id, Func2 { b ->
+        disabledNotificationsManager.getDownload(identifier.id) { a ->
+            enabledNotificationsManager.getDownload(identifier.id) { b ->
                 callback(
                     getDownloadStatus(a ?: b)
                 )
-            })
-        })
+            }
+        }
     }
 
     private fun notifyStatus(download: Download) {

@@ -8,17 +8,14 @@ class DownloadStatus(
     enum class State {
         PENDING, RUNNING, SUCCESSFUL, CANCELLED, FAILED;
 
+        // Determines what two states result in together.
         fun and(other: State): State {
-            return if (this == FAILED || other == FAILED) {
-                FAILED
-            } else if (this == CANCELLED || other == CANCELLED) {
-                CANCELLED
-            } else if (this == RUNNING || other == RUNNING) {
-                RUNNING
-            } else if (this == PENDING || other == PENDING) {
-                PENDING
-            } else {
-                SUCCESSFUL
+            return when {
+                this == FAILED || other == FAILED -> FAILED
+                this == CANCELLED || other == CANCELLED -> CANCELLED
+                this == RUNNING || other == RUNNING -> RUNNING
+                this == PENDING || other == PENDING -> PENDING
+                else -> SUCCESSFUL
             }
         }
     }

@@ -145,8 +145,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             )!!
         findPreference<ListPreference>(getString(R.string.preference_storage))?.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { preference, newValue ->
-                FileDownloadHandler.isDownloadingAnything {
-                    if (it) {
+                FileDownloadHandler.isDownloadingAnything { isDownloadingAnything ->
+                    if (isDownloadingAnything) {
                         showToast(R.string.notification_storage_locked)
                     } else {
                         val listener = preference.onPreferenceChangeListener
