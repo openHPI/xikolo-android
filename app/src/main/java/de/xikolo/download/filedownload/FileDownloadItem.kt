@@ -270,7 +270,8 @@ open class FileDownloadItem(
 
     private fun performAction(activity: FragmentActivity, action: () -> Unit): Boolean {
         return if (storage.isWritable) {
-            if (PermissionManager(activity).requestPermission(
+            if (
+                PermissionManager(activity).requestPermission(
                     PermissionManager.WRITE_EXTERNAL_STORAGE
                 ) == 1
             ) {
