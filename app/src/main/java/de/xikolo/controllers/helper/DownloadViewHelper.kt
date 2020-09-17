@@ -182,8 +182,11 @@ class DownloadViewHelper(
                                 progressBarDownload.progress =
                                     (downloadedBytes * 100 / totalBytes).toInt()
                             }
-                            textFileSize.text = (downloadedBytes.asFormattedFileSize + " / " +
-                                totalBytes.asFormattedFileSize)
+                            textFileSize.text = activity.getString(
+                                R.string.download_slash,
+                                downloadedBytes.asFormattedFileSize,
+                                totalBytes.asFormattedFileSize
+                            )
                         }
                     }
 

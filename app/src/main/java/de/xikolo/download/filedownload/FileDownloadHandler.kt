@@ -33,29 +33,31 @@ object FileDownloadHandler : DownloadHandler<FileDownloadIdentifier, FileDownloa
             .setDownloadConcurrentLimit(5)
             .enableFileExistChecks(false)
             .setNamespace("XIKOLO_FETCH")
-            .setNotificationManager(object : DefaultFetchNotificationManager(App.instance) {
-                override fun getFetchInstanceForNamespace(namespace: String): Fetch {
-                    return enabledNotificationsManager
-                }
+            .setNotificationManager(
+                object : DefaultFetchNotificationManager(App.instance) {
+                    override fun getFetchInstanceForNamespace(namespace: String): Fetch {
+                        return enabledNotificationsManager
+                    }
 
-                override fun getDownloadNotificationTitle(download: Download): String {
-                    return download.request.extras.getString(
-                        REQUEST_EXTRA_TITLE,
-                        download.request.url
-                    )
-                }
+                    override fun getDownloadNotificationTitle(download: Download): String {
+                        return download.request.extras.getString(
+                            REQUEST_EXTRA_TITLE,
+                            download.request.url
+                        )
+                    }
 
-                override fun shouldCancelNotification(
-                    downloadNotification: DownloadNotification
-                ): Boolean {
-                    return downloadNotification.isCompleted
-                }
+                    override fun shouldCancelNotification(
+                        downloadNotification: DownloadNotification
+                    ): Boolean {
+                        return downloadNotification.isCompleted
+                    }
 
-                override fun getChannelId(notificationId: Int, context: Context): String {
-                    NotificationUtil(context)
-                    return NotificationUtil.DOWNLOADS_CHANNEL_ID
+                    override fun getChannelId(notificationId: Int, context: Context): String {
+                        NotificationUtil(context)
+                        return NotificationUtil.DOWNLOADS_CHANNEL_ID
+                    }
                 }
-            })
+            )
             .build()
 
     private val enabledNotificationsManager: Fetch = Fetch.getInstance(

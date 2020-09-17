@@ -63,7 +63,8 @@ abstract class DownloadHandlerTest<T : DownloadHandler<I, R>,
     @Test
     fun testDownloadStatusAfterCancel() {
         var called = false
-        downloadHandler.download(successfulTestRequest,
+        downloadHandler.download(
+            successfulTestRequest,
             { status ->
                 if (status?.state == DownloadStatus.State.CANCELLED) {
                     called = true
