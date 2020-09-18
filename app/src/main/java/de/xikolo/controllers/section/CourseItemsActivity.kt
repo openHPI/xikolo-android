@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.app.NavUtils
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import butterknife.BindView
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
@@ -51,7 +50,7 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
     private var lastTrackedIndex: Int = -1
 
     @BindView(R.id.viewpager)
-    lateinit var viewPager: ViewPager
+    lateinit var viewPager: ViewPager2
 
     @BindView(R.id.tabs)
     lateinit var tabLayout: TabLayout
@@ -72,6 +71,12 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         FirebaseCrashlytics.getInstance().setCustomKey("course_id", courseId)
         FirebaseCrashlytics.getInstance().setCustomKey("section_id", sectionId)
 
+        val adapter = ItemsPagerAdapter()
+        viewPager.adapter = adapter
+        viewPager.offscreenPageLimit = 2
+        adapter.setupTabs()
+        tabLayout.addOnTabSelectedListener(adapter)
+
         viewModel.course
             .observe(this) {
                 course = it
@@ -82,34 +87,10 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
                 section = it
                 title = it.title
 
-                updateViewPager(it.accessibleItems)
+                adapter.items = it.accessibleItems
+                viewPager.currentItem = index
+                onItemSelected(index)
             }
-    }
-
-    private fun updateViewPager(itemList: List<Item>) {
-        /** We are creating a new adapter everytime and do not reuse the old one,
-         *  because we use a FragmentPagerAdapter which does not destroy fragments on its own.
-         *  Reusing the adapter would cause old, not deleted fragments appear at wrong positions in the ViewPager.
-         *  A solution would be using a FragmentStatePagerAdapter but then fragments would be destroyed causing a reload on far tab switches.
-         */
-
-        tabLayout.clearOnTabSelectedListeners()
-
-        val adapter = ItemsPagerAdapter(supportFragmentManager, itemList)
-        viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = 2
-
-        tabLayout.setupWithViewPager(viewPager)
-        tabLayout.addOnTabSelectedListener(adapter)
-
-        for (i in 0 until tabLayout.tabCount) {
-            tabLayout.getTabAt(i)?.apply {
-                customView = adapter.getCustomTabView(i, tabLayout.selectedTabPosition, tabLayout)
-            }
-        }
-
-        viewPager.currentItem = index
-        onItemSelected(index)
     }
 
     private fun onItemSelected(position: Int) {
@@ -170,67 +151,83 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         }
     }
 
-    inner class ItemsPagerAdapter(private val fragmentManager: FragmentManager, private val items: List<Item>) : FragmentPagerAdapter(fragmentManager), TabLayout.OnTabSelectedListener {
+    inner class ItemsPagerAdapter : FragmentStateAdapter(this),
+        TabLayout.OnTabSelectedListener {
 
-        fun getCustomTabView(position: Int, currentPosition: Int, parent: ViewGroup): View =
-            layoutInflater.inflate(R.layout.view_tab_section, parent, false).apply {
-                val label = findViewById<TextView>(R.id.tabLabel)
-                val unseenIndicator = findViewById<View>(R.id.unseenIndicator)
+        fun setupTabs() {
+            TabLayoutMediator(tabLayout, viewPager, true, true) { tab, position ->
+                tab.text = getPageTitle(position)
+            }.attach()
+        }
 
-                if (position != currentPosition) {
-                    label.alpha = PAGER_ITEM_TRANSPARENT
-                    unseenIndicator.alpha = PAGER_ITEM_TRANSPARENT
-                }
+        var items: List<Item> = listOf()
+            set(value) {
+                field = value
+                notifyDataSetChanged()
 
-                unseenIndicator.visibility =
-                    if (!items[position].visited) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
+                for (position in 0 until tabLayout.tabCount) {
+                    tabLayout.getTabAt(position)?.apply {
+                        customView =
+                            layoutInflater.inflate(R.layout.view_tab_section, parent, false).apply {
+                                val label = findViewById<TextView>(R.id.tabLabel)
+                                val unseenIndicator = findViewById<View>(R.id.unseenIndicator)
+
+                                if (position != tabLayout.selectedTabPosition) {
+                                    label.alpha = PAGER_ITEM_TRANSPARENT
+                                    unseenIndicator.alpha = PAGER_ITEM_TRANSPARENT
+                                }
+
+                                unseenIndicator.visibility =
+                                    if (!items[position].visited) {
+                                        View.VISIBLE
+                                    } else {
+                                        View.GONE
+                                    }
+
+                                label.text = getPageTitle(position)
+                            }
                     }
-
-                label.text = getPageTitle(position)
+                }
             }
 
-        override fun getPageTitle(position: Int): CharSequence? {
+        private fun getPageTitle(position: Int): CharSequence? {
             return getString(items[position].iconRes)
         }
 
-        override fun getCount(): Int {
+        override fun getItemCount(): Int {
             return items.size
         }
 
-        override fun getItem(position: Int): Fragment {
+        override fun createFragment(position: Int): Fragment {
             val item = items[position]
 
-            // Check if this Fragment already exists.
-            // Fragment Name is saved by FragmentPagerAdapter implementation.
-            val name = makeFragmentName(R.id.viewpager, position)
-            var fragment = fragmentManager.findFragmentByTag(name)
             val url = Config.HOST_URL + Config.COURSES + courseId + "/" + Config.ITEMS + item.id
-            if (fragment == null) {
-                fragment = if (course?.enrollment?.proctored == true && item.proctored) {
-                    ProctoredItemFragment()
-                } else when (item.contentType) {
-                    Item.TYPE_LTI   -> LtiExerciseFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    Item.TYPE_PEER  -> PeerAssessmentFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    Item.TYPE_QUIZ  -> WebViewFragmentAutoBundle.builder(url)
-                        .inAppLinksEnabled(true)
-                        .externalLinksEnabled(false)
-                        .build()
-                    Item.TYPE_TEXT  -> RichTextFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    Item.TYPE_VIDEO -> VideoPreviewFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
-                    else            -> WebViewFragmentAutoBundle.builder(url)
-                        .inAppLinksEnabled(false)
-                        .externalLinksEnabled(false)
-                        .build()
-                }
+            return if (course?.enrollment?.proctored == true && item.proctored) {
+                ProctoredItemFragment()
+            } else when (item.contentType) {
+                Item.TYPE_LTI -> LtiExerciseFragmentAutoBundle.builder(courseId, sectionId, item.id)
+                    .build()
+                Item.TYPE_PEER -> PeerAssessmentFragmentAutoBundle.builder(
+                    courseId,
+                    sectionId,
+                    item.id
+                ).build()
+                Item.TYPE_QUIZ -> WebViewFragmentAutoBundle.builder(url)
+                    .inAppLinksEnabled(true)
+                    .externalLinksEnabled(false)
+                    .build()
+                Item.TYPE_TEXT -> RichTextFragmentAutoBundle.builder(courseId, sectionId, item.id)
+                    .build()
+                Item.TYPE_VIDEO -> VideoPreviewFragmentAutoBundle.builder(
+                    courseId,
+                    sectionId,
+                    item.id
+                ).build()
+                else -> WebViewFragmentAutoBundle.builder(url)
+                    .inAppLinksEnabled(false)
+                    .externalLinksEnabled(false)
+                    .build()
             }
-            return fragment
-        }
-
-        private fun makeFragmentName(viewId: Int, index: Int): String {
-            return "android:switcher:$viewId:$index"
         }
 
         override fun onTabSelected(tab: TabLayout.Tab) {
@@ -258,7 +255,5 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         }
 
         override fun onTabReselected(tab: TabLayout.Tab) {}
-
     }
-
 }
