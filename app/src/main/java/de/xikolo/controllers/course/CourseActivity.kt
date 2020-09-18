@@ -503,8 +503,8 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         }
     }
 
-    inner class CoursePagerAdapter : FragmentStateAdapter(this),
-        TabLayout.OnTabSelectedListener {
+    inner class CoursePagerAdapter :
+        FragmentStateAdapter(this), TabLayout.OnTabSelectedListener {
 
         private fun getPageTitle(position: Int): CharSequence? {
             return getString(areaState.get(position).titleRes)
@@ -512,7 +512,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
         // Warning: implementation-dependent
         fun getFragmentAt(position: Int): Fragment? {
-            return supportFragmentManager.findFragmentByTag("f${position}")
+            return supportFragmentManager.findFragmentByTag("f$position")
         }
 
         fun setupTabs() {
@@ -528,27 +528,33 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         override fun createFragment(position: Int): Fragment {
             val courseIdentifier = course?.id ?: courseId!!
             return when (areaState.get(position)) {
-                CourseArea.LEARNINGS -> LearningsFragmentAutoBundle.builder(courseIdentifier)
-                    .build()
-                CourseArea.DISCUSSIONS -> WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseIdentifier + "/" + Config.DISCUSSIONS)
-                    .inAppLinksEnabled(true)
-                    .externalLinksEnabled(false)
-                    .build()
-                CourseArea.PROGRESS -> ProgressFragmentAutoBundle.builder(courseIdentifier).build()
-                CourseArea.COURSE_DETAILS -> DescriptionFragmentAutoBundle.builder(courseIdentifier)
-                    .build()
-                CourseArea.CERTIFICATES -> CertificatesFragmentAutoBundle.builder(courseIdentifier)
-                    .build()
-                CourseArea.DOCUMENTS -> DocumentListFragmentAutoBundle.builder(courseIdentifier)
-                    .build()
-                CourseArea.ANNOUNCEMENTS -> AnnouncementListFragmentAutoBundle.builder(
-                    courseIdentifier
-                )
-                    .build()
-                CourseArea.RECAP -> WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseIdentifier)
-                    .inAppLinksEnabled(true)
-                    .externalLinksEnabled(false)
-                    .build()
+                CourseArea.LEARNINGS ->
+                    LearningsFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.DISCUSSIONS ->
+                    WebViewFragmentAutoBundle.builder(
+                        Config.HOST_URL + Config.COURSES +
+                            courseIdentifier + "/" + Config.DISCUSSIONS
+                    )
+                        .inAppLinksEnabled(true)
+                        .externalLinksEnabled(false)
+                        .build()
+                CourseArea.PROGRESS ->
+                    ProgressFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.COURSE_DETAILS ->
+                    DescriptionFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.CERTIFICATES ->
+                    CertificatesFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.DOCUMENTS ->
+                    DocumentListFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.ANNOUNCEMENTS ->
+                    AnnouncementListFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.RECAP ->
+                    WebViewFragmentAutoBundle.builder(
+                        Config.HOST_URL + Config.RECAP + courseIdentifier
+                    )
+                        .inAppLinksEnabled(true)
+                        .externalLinksEnabled(false)
+                        .build()
             }
         }
 

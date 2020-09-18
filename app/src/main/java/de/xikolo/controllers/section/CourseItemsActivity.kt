@@ -151,8 +151,8 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         }
     }
 
-    inner class ItemsPagerAdapter : FragmentStateAdapter(this),
-        TabLayout.OnTabSelectedListener {
+    inner class ItemsPagerAdapter :
+        FragmentStateAdapter(this), TabLayout.OnTabSelectedListener {
 
         fun setupTabs() {
             TabLayoutMediator(tabLayout, viewPager, true, true) { tab, position ->
@@ -205,28 +205,32 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
             return if (course?.enrollment?.proctored == true && item.proctored) {
                 ProctoredItemFragment()
             } else when (item.contentType) {
-                Item.TYPE_LTI -> LtiExerciseFragmentAutoBundle.builder(courseId, sectionId, item.id)
-                    .build()
-                Item.TYPE_PEER -> PeerAssessmentFragmentAutoBundle.builder(
-                    courseId,
-                    sectionId,
-                    item.id
-                ).build()
-                Item.TYPE_QUIZ -> WebViewFragmentAutoBundle.builder(url)
-                    .inAppLinksEnabled(true)
-                    .externalLinksEnabled(false)
-                    .build()
-                Item.TYPE_TEXT -> RichTextFragmentAutoBundle.builder(courseId, sectionId, item.id)
-                    .build()
-                Item.TYPE_VIDEO -> VideoPreviewFragmentAutoBundle.builder(
-                    courseId,
-                    sectionId,
-                    item.id
-                ).build()
-                else -> WebViewFragmentAutoBundle.builder(url)
-                    .inAppLinksEnabled(false)
-                    .externalLinksEnabled(false)
-                    .build()
+                Item.TYPE_LTI ->
+                    LtiExerciseFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
+                Item.TYPE_PEER ->
+                    PeerAssessmentFragmentAutoBundle.builder(
+                        courseId,
+                        sectionId,
+                        item.id
+                    ).build()
+                Item.TYPE_QUIZ ->
+                    WebViewFragmentAutoBundle.builder(url)
+                        .inAppLinksEnabled(true)
+                        .externalLinksEnabled(false)
+                        .build()
+                Item.TYPE_TEXT ->
+                    RichTextFragmentAutoBundle.builder(courseId, sectionId, item.id).build()
+                Item.TYPE_VIDEO ->
+                    VideoPreviewFragmentAutoBundle.builder(
+                        courseId,
+                        sectionId,
+                        item.id
+                    ).build()
+                else ->
+                    WebViewFragmentAutoBundle.builder(url)
+                        .inAppLinksEnabled(false)
+                        .externalLinksEnabled(false)
+                        .build()
             }
         }
 
