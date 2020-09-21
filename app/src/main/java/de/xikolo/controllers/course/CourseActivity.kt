@@ -13,11 +13,11 @@ import androidx.core.app.NavUtils
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import butterknife.BindView
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
@@ -63,7 +63,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     var courseId: String? = null
 
     @BindView(R.id.viewpager)
-    lateinit var viewPager: ViewPager
+    lateinit var viewPager: ViewPager2
 
     @BindView(R.id.tabs)
     lateinit var tabLayout: TabLayout
@@ -72,8 +72,6 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     lateinit var stubBottom: ViewStub
 
     private var progressDialog: ProgressDialogIndeterminate? = null
-
-    private var adapter: CoursePagerAdapter? = null
 
     private var enrollBar: View? = null
     private var enrollButton: Button? = null
@@ -122,7 +120,20 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             .observeUnsafeOnce(this) {
                 if (it.isValid) {
                     course = it
+
+                    val adapter = CoursePagerAdapter()
+                    viewPager.adapter = adapter
+                    adapter.setupTabs()
+                    tabLayout.addOnTabSelectedListener(adapter)
+
+                    handleCourseDeepLinkTab(intent)
                     setupCourse(it)
+
+                    viewModel.course
+                        .observe(this) {
+                            course = it
+                            setupCourse(it)
+                        }
                 } else {
                     showDeepLinkErrorMessage()
                     createChooserFromCurrentIntent()
@@ -139,6 +150,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
     private fun updateViewPagerTab() {
         viewPager.currentItem = areaState.indexOf(courseTab)
+        tabLayout.getTabAt(tabLayout.selectedTabPosition)?.select()
     }
 
     private fun setupCourse(course: Course) {
@@ -165,18 +177,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
         title = course.title
 
-        adapter = CoursePagerAdapter(supportFragmentManager, course.id)
-        adapter?.let {
-            viewPager.adapter = it
-
-            tabLayout.clearOnTabSelectedListeners()
-            tabLayout.addOnTabSelectedListener(it)
-            tabLayout.setupWithViewPager(viewPager)
-        }
         setCourseTab(courseTab)
-
-        handleCourseDeepLinkTab(intent)
-
         updateViewPagerTab()
 
         if (Feature.SHORTCUTS && course.isEnrolled) {
@@ -320,13 +321,14 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        adapter?.getItem(viewPager.currentItem)?.onActivityResult(requestCode, resultCode, data)
+        (viewPager.adapter as CoursePagerAdapter).getFragmentAt(viewPager.currentItem)
+            ?.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun setAreaState(state: CourseArea.State) {
         areaState = state
-        adapter?.notifyDataSetChanged()
+        viewPager.adapter?.notifyDataSetChanged()
     }
 
     private fun hideEnrollBar() {
@@ -425,8 +427,8 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         enrollmentCreationNetworkState
             .observeOnce(this) {
                 when (it.code) {
-                    NetworkCode.SUCCESS    -> {
-                        restartActivity()
+                    NetworkCode.SUCCESS -> {
+                        viewModel.onRefresh()
                         hideProgressDialog()
                         true
                     }
@@ -450,7 +452,8 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     private fun unenroll() {
-        EnrollmentDao.Unmanaged.findForCourse(courseId)?.id?.let { enrollmentId ->
+        val courseIdentifier = course?.id ?: courseId // courseId may also be slug when deeplinking
+        EnrollmentDao.Unmanaged.findForCourse(courseIdentifier)?.id?.let { enrollmentId ->
             showProgressDialog()
 
             val enrollmentDeletionNetworkState = NetworkStateLiveData()
@@ -461,7 +464,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                     }
 
                     when (it.code) {
-                        NetworkCode.SUCCESS    -> {
+                        NetworkCode.SUCCESS -> {
                             finish()
                             hideProgressDialog()
                         }
@@ -500,44 +503,59 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         }
     }
 
-    inner class CoursePagerAdapter internal constructor(private val fragmentManager: FragmentManager, private val courseId: String) : FragmentPagerAdapter(fragmentManager), TabLayout.OnTabSelectedListener {
+    inner class CoursePagerAdapter :
+        FragmentStateAdapter(this), TabLayout.OnTabSelectedListener {
 
-        override fun getPageTitle(position: Int): CharSequence? {
+        private fun getPageTitle(position: Int): CharSequence? {
             return getString(areaState.get(position).titleRes)
         }
 
-        override fun getCount(): Int {
+        // Warning: implementation-dependent
+        fun getFragmentAt(position: Int): Fragment? {
+            return supportFragmentManager.findFragmentByTag("f$position")
+        }
+
+        fun setupTabs() {
+            TabLayoutMediator(tabLayout, viewPager, true, true) { tab, position ->
+                tab.text = getPageTitle(position)
+            }.attach()
+        }
+
+        override fun getItemCount(): Int {
             return areaState.size
         }
 
-        override fun getItem(position: Int): Fragment {
-            // Check if this Fragment already exists.
-            // Fragment Name is saved by FragmentPagerAdapter implementation.
-            val name = makeFragmentName(R.id.viewpager, position)
-            var fragment: Fragment? = fragmentManager.findFragmentByTag(name)
-            if (fragment == null) {
-                when (areaState.get(position)) {
-                    CourseArea.LEARNINGS      -> fragment = LearningsFragmentAutoBundle.builder(courseId).build()
-                    CourseArea.DISCUSSIONS    -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.COURSES + courseId + "/" + Config.DISCUSSIONS)
+        override fun createFragment(position: Int): Fragment {
+            val courseIdentifier = course?.id ?: courseId!!
+            return when (areaState.get(position)) {
+                CourseArea.LEARNINGS ->
+                    LearningsFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.DISCUSSIONS ->
+                    WebViewFragmentAutoBundle.builder(
+                        Config.HOST_URL + Config.COURSES +
+                            courseIdentifier + "/" + Config.DISCUSSIONS
+                    )
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)
                         .build()
-                    CourseArea.PROGRESS       -> fragment = ProgressFragmentAutoBundle.builder(courseId).build()
-                    CourseArea.COURSE_DETAILS -> fragment = DescriptionFragmentAutoBundle.builder(courseId).build()
-                    CourseArea.CERTIFICATES   -> fragment = CertificatesFragmentAutoBundle.builder(courseId).build()
-                    CourseArea.DOCUMENTS      -> fragment = DocumentListFragmentAutoBundle.builder(courseId).build()
-                    CourseArea.ANNOUNCEMENTS  -> fragment = AnnouncementListFragmentAutoBundle.builder(courseId).build()
-                    CourseArea.RECAP          -> fragment = WebViewFragmentAutoBundle.builder(Config.HOST_URL + Config.RECAP + courseId)
+                CourseArea.PROGRESS ->
+                    ProgressFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.COURSE_DETAILS ->
+                    DescriptionFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.CERTIFICATES ->
+                    CertificatesFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.DOCUMENTS ->
+                    DocumentListFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.ANNOUNCEMENTS ->
+                    AnnouncementListFragmentAutoBundle.builder(courseIdentifier).build()
+                CourseArea.RECAP ->
+                    WebViewFragmentAutoBundle.builder(
+                        Config.HOST_URL + Config.RECAP + courseIdentifier
+                    )
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)
                         .build()
-                }
             }
-            return fragment
-        }
-
-        private fun makeFragmentName(viewId: Int, index: Int): String {
-            return "android:switcher:$viewId:$index"
         }
 
         override fun onTabSelected(tab: TabLayout.Tab) {
