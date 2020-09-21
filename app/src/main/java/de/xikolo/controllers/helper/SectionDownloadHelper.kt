@@ -4,8 +4,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import de.xikolo.R
-import de.xikolo.controllers.dialogs.*
-import de.xikolo.managers.DownloadManager
+import de.xikolo.controllers.dialogs.MobileDownloadDialog
+import de.xikolo.controllers.dialogs.ModuleDownloadDialog
+import de.xikolo.controllers.dialogs.ModuleDownloadDialogAutoBundle
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
+import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.models.Course
 import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Item
@@ -23,8 +26,6 @@ import de.xikolo.utils.extensions.isOnline
 import de.xikolo.utils.extensions.showToast
 
 class SectionDownloadHelper(private val activity: FragmentActivity) {
-
-    private val downloadManager: DownloadManager = DownloadManager(activity)
 
     fun initSectionDownloads(course: Course, section: Section) {
         val listDialog = ModuleDownloadDialogAutoBundle.builder(section.title).build()
@@ -98,8 +99,10 @@ class SectionDownloadHelper(private val activity: FragmentActivity) {
     }
 
     private fun startDownload(item: DownloadAsset.Course.Item) {
-        if (!downloadManager.downloadExists(item) && !downloadManager.downloadRunning(item)) {
-            downloadManager.startAssetDownload(item)
+        item.isDownloadRunning {
+            if (!item.downloadExists && !it) {
+                item.start(activity)
+            }
         }
     }
 

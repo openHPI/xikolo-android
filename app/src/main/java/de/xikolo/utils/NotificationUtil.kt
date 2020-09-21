@@ -7,19 +7,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Build
-
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import androidx.core.content.ContextCompat
-
 import de.xikolo.BuildConfig
 import de.xikolo.R
 import de.xikolo.controllers.downloads.DownloadsActivity
-import de.xikolo.controllers.main.MainActivity
-import de.xikolo.models.Download
-import de.xikolo.receivers.CancelDownloadsReceiver
 import de.xikolo.receivers.NotificationDeletedReceiver
 import de.xikolo.storages.NotificationStorage
 
@@ -71,39 +65,11 @@ class NotificationUtil(base: Context) : ContextWrapper(base) {
         getManager()?.cancel(id)
     }
 
-    fun getDownloadRunningNotification(notifications: List<String>): NotificationCompat.Builder {
-        val notificationIntent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
-
-        val deleteIntent = Intent(this, CancelDownloadsReceiver::class.java)
-        val pendingIntentCancel = PendingIntent.getBroadcast(this, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val builder = NotificationCompat.Builder(this, DOWNLOADS_CHANNEL_ID)
-            .setColor(ContextCompat.getColor(this, R.color.apptheme_primary))
-            .setSmallIcon(android.R.drawable.stat_sys_download)
-            .setLargeIcon(BitmapFactory.decodeResource(this.resources, android.R.drawable.stat_sys_download))
-            .setContentIntent(pendingIntent)
-            .addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.notification_downloads_cancel), pendingIntentCancel)
-
-        if (notifications.size == 1) {
-            return builder.setContentTitle(notifications[0])
-        } else {
-            val inboxStyle = NotificationCompat.InboxStyle()
-                .setBigContentTitle(getString(R.string.notification_multiple_downloads_running, notifications.size))
-
-            for (notification in notifications) {
-                inboxStyle.addLine(notification)
-            }
-
-            return builder.setStyle(inboxStyle)
-        }
-    }
-
-    fun showDownloadCompletedNotification(download: Download) {
+    fun showDownloadCompletedNotification(title: String) {
         val notificationStorage = NotificationStorage()
 
-        notificationStorage.addDownloadNotification(download.title)
-        notify(download.title.hashCode(), getDownloadCompletedNotification(download).build())
+        notificationStorage.addDownloadNotification(title)
+        notify(title.hashCode(), getDownloadCompletedNotification(title).build())
 
         val downloadList = notificationStorage.downloadNotifications
         if (downloadList!!.size > 1) {
@@ -111,16 +77,27 @@ class NotificationUtil(base: Context) : ContextWrapper(base) {
         }
     }
 
-    private fun getDownloadCompletedNotification(download: Download): NotificationCompat.Builder {
+    private fun getDownloadCompletedNotification(title: String): NotificationCompat.Builder {
         return NotificationCompat.Builder(this, DOWNLOADS_CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_download_completed))
-            .setContentText(download.title)
+            .setContentText(title)
             .setColor(ContextCompat.getColor(this, R.color.apptheme_primary))
             .setSmallIcon(R.drawable.ic_download)
             .setAutoCancel(true)
             .setGroup(DOWNLOAD_COMPLETED_NOTIFICATION_GROUP)
-            .setContentIntent(createDownloadCompletedContentIntent(DownloadsActivity::class.java, NOTIFICATION_DELETED_KEY_DOWNLOAD_TITLE, download.title))
-            .setDeleteIntent(createDownloadCompletedDeleteIntent(NOTIFICATION_DELETED_KEY_DOWNLOAD_TITLE, download.title))
+            .setContentIntent(
+                createDownloadCompletedContentIntent(
+                    DownloadsActivity::class.java,
+                    NOTIFICATION_DELETED_KEY_DOWNLOAD_TITLE,
+                    title
+                )
+            )
+            .setDeleteIntent(
+                createDownloadCompletedDeleteIntent(
+                    NOTIFICATION_DELETED_KEY_DOWNLOAD_TITLE,
+                    title
+                )
+            )
     }
 
     private fun showDownloadSummaryNotification(notifications: List<String>) {

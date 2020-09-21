@@ -16,13 +16,18 @@ import de.xikolo.controllers.dialogs.ConfirmDeleteDialog
 import de.xikolo.controllers.dialogs.ConfirmDeleteDialogAutoBundle
 import de.xikolo.controllers.helper.NetworkStateHelper
 import de.xikolo.extensions.observe
-import de.xikolo.managers.DownloadManager
 import de.xikolo.managers.PermissionManager
 import de.xikolo.models.Storage
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.extensions.*
+import de.xikolo.utils.extensions.createIfNotExists
+import de.xikolo.utils.extensions.deleteAll
+import de.xikolo.utils.extensions.foldersWithFiles
+import de.xikolo.utils.extensions.internalStorage
+import de.xikolo.utils.extensions.preferredStorage
+import de.xikolo.utils.extensions.sdcardStorage
+import de.xikolo.utils.extensions.showToast
 import java.io.File
-import java.util.*
+import java.util.ArrayList
 
 class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, DownloadsAdapter.OnDeleteButtonClickedListener, NetworkStateHelper.NetworkStateOwner {
 
@@ -32,8 +37,6 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
 
     private var adapter: DownloadsAdapter? = null
 
-    private var downloadManager: DownloadManager? = null
-
     private var permissionManager: PermissionManager? = null
 
     override lateinit var networkStateHelper: NetworkStateHelper
@@ -42,7 +45,6 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
         super.onCreate(savedInstanceState)
 
         activity?.let { activity ->
-            downloadManager = DownloadManager(activity)
             permissionManager = PermissionManager(activity)
             adapter = DownloadsAdapter(this)
         }
@@ -172,11 +174,10 @@ class DownloadsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Down
                 // course folders
 
                 fun buildCourseItems(storage: File): List<DownloadsAdapter.FolderItem> {
-                    val folders = downloadManager?.getFoldersWithDownloads(
-                        File(storage.absolutePath + File.separator + "Courses")
-                    )
+                    val folders = File(storage.absolutePath + File.separator + "Courses")
+                        .foldersWithFiles
                     val folderList: MutableList<DownloadsAdapter.FolderItem> = ArrayList()
-                    if (folders?.isNotEmpty() == true) {
+                    if (folders.isNotEmpty()) {
                         for (folder in folders) {
                             val name = try {
                                 folder.substring(

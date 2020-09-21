@@ -1,7 +1,6 @@
 package de.xikolo.models
 
 import android.os.Environment
-import de.xikolo.services.DownloadService
 import de.xikolo.utils.extensions.fileCount
 import java.io.File
 import java.io.IOException
@@ -31,14 +30,12 @@ class Storage(val file: File) {
                 file.delete()
             }
         } else {
-            if ((file.extension.endsWith("tmp")
-                    && (DownloadService.instance == null
-                    || DownloadService.instance?.isDownloadingTempFile(file) == false))
-                || file.name.endsWith("slides.pdf")
-                || file.name.endsWith("transcript.pdf")
-                || file.name.endsWith("video_hd.mp4")
-                || file.name.endsWith("video_sd.mp4")
-                || file.name.endsWith("audio.mp3")
+            if (file.name.endsWith("slides.pdf") ||
+                file.name.endsWith("transcript.pdf") ||
+                file.name.endsWith("video_hd.mp4") ||
+                file.name.endsWith("video_sd.mp4") ||
+                file.name.endsWith("audio.mp3") ||
+                file.name.endsWith(".tmp")
             ) file.delete()
         }
     }
@@ -56,7 +53,11 @@ class Storage(val file: File) {
                 val totalFiles = file.fileCount
                 var copiedFiles = 0
                 for (file in file.listFiles()) {
-                    copiedFiles += move(file, File(to.file.absolutePath + File.separator + file.name), callback)
+                    copiedFiles += move(
+                        file,
+                        File(to.file.absolutePath + File.separator + file.name),
+                        callback
+                    )
                 }
                 callback.onCompleted(copiedFiles == totalFiles)
             } else {
@@ -69,7 +70,11 @@ class Storage(val file: File) {
         var count = 0
         if (sourceFile.isDirectory && sourceFile.listFiles() != null) {
             for (file in sourceFile.listFiles()) {
-                count += move(file, File(destFile.absolutePath + File.separator + file.name), callback)
+                count += move(
+                    file,
+                    File(destFile.absolutePath + File.separator + file.name),
+                    callback
+                )
                 callback.onProgressChanged(count)
             }
         } else {
@@ -92,5 +97,4 @@ class Storage(val file: File) {
 
         fun onCompleted(success: Boolean)
     }
-
 }

@@ -6,7 +6,11 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
-import androidx.preference.*
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import de.psdev.licensesdialog.LicensesDialog
 import de.xikolo.App
 import de.xikolo.BuildConfig
@@ -17,13 +21,20 @@ import de.xikolo.controllers.dialogs.ProgressDialogHorizontalAutoBundle
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
 import de.xikolo.controllers.dialogs.StorageMigrationDialogAutoBundle
 import de.xikolo.controllers.login.LoginActivityAutoBundle
+import de.xikolo.download.filedownload.FileDownloadHandler
 import de.xikolo.extensions.observe
 import de.xikolo.managers.PermissionManager
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Storage
-import de.xikolo.services.DownloadService
-import de.xikolo.utils.extensions.*
-import java.util.*
+import de.xikolo.utils.extensions.asStorageType
+import de.xikolo.utils.extensions.fileCount
+import de.xikolo.utils.extensions.getString
+import de.xikolo.utils.extensions.getStringArray
+import de.xikolo.utils.extensions.internalStorage
+import de.xikolo.utils.extensions.sdcardStorage
+import de.xikolo.utils.extensions.showToast
+import de.xikolo.utils.extensions.storages
+import java.util.Calendar
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -127,14 +138,24 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(activity)
 
-        findPreference<ListPreference>(getString(R.string.preference_storage))?.summary = prefs.getString(getString(R.string.preference_storage), getString(R.string.settings_default_value_storage))!!
+        findPreference<ListPreference>(getString(R.string.preference_storage))?.summary =
+            prefs.getString(
+                getString(R.string.preference_storage),
+                getString(R.string.settings_default_value_storage)
+            )!!
         findPreference<ListPreference>(getString(R.string.preference_storage))?.onPreferenceChangeListener =
-            Preference.OnPreferenceChangeListener { _, _ ->
-                if (DownloadService.instance?.isDownloading == true) {
-                    showToast(R.string.notification_storage_locked)
-                    return@OnPreferenceChangeListener false
+            Preference.OnPreferenceChangeListener { preference, newValue ->
+                FileDownloadHandler.isDownloadingAnything { isDownloadingAnything ->
+                    if (isDownloadingAnything) {
+                        showToast(R.string.notification_storage_locked)
+                    } else {
+                        val listener = preference.onPreferenceChangeListener
+                        preference.onPreferenceChangeListener = null
+                        (preference as ListPreference).value = newValue as String
+                        preference.onPreferenceChangeListener = listener
+                    }
                 }
-                true
+                false
             }
 
         if (App.instance.storages.size < 2) {

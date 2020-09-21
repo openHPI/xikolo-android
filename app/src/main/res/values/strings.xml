@@ -167,6 +167,7 @@
     <string name="transcript_as_pdf">Transcript as PDF</string>
     <string name="video_hd_as_mp4">Video (HD) as MP4</string>
     <string name="video_sd_as_mp4">Video (SD) as MP4</string>
+    <string name="download_slash" translatable="false">%1$s / %2$s</string>
     <string name="download">Download</string>
     <string name="open">Open</string>
     <string name="play">Play</string>

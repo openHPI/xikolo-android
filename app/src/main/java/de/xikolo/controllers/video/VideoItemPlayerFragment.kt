@@ -1,10 +1,8 @@
 package de.xikolo.controllers.video
 
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import de.xikolo.controllers.helper.VideoSettingsHelper
-import de.xikolo.managers.DownloadManager
 import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Item
 import de.xikolo.models.Video
@@ -13,7 +11,7 @@ import de.xikolo.models.dao.ItemDao
 import de.xikolo.models.dao.VideoDao
 import de.xikolo.utils.LanalyticsUtil
 import io.realm.Realm
-import java.util.*
+import java.util.Locale
 import kotlin.math.max
 
 class VideoItemPlayerFragment : VideoStreamPlayerFragment() {
@@ -79,14 +77,7 @@ class VideoItemPlayerFragment : VideoStreamPlayerFragment() {
     private val videoDownloadAssetSD: DownloadAsset.Course.Item.VideoSD
         get() = DownloadAsset.Course.Item.VideoSD(item, video)
 
-    private lateinit var downloadManager: DownloadManager
-
     private val videoDao = VideoDao(Realm.getDefaultInstance())
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        downloadManager = DownloadManager(activity!!)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -179,8 +170,8 @@ class VideoItemPlayerFragment : VideoStreamPlayerFragment() {
 
     override fun getSubtitleUri(currentSubtitles: VideoSubtitles): String {
         val downloadAsset = DownloadAsset.Course.Item.Subtitles(currentSubtitles, item)
-        return if (downloadManager.downloadExists(downloadAsset)) {
-            "file://" + downloadManager.getDownloadFile(downloadAsset)!!.absolutePath
+        return if (downloadAsset.downloadExists) {
+            "file://" + downloadAsset.download!!.absolutePath
         } else {
             super.getSubtitleUri(currentSubtitles)
         }
@@ -194,7 +185,7 @@ class VideoItemPlayerFragment : VideoStreamPlayerFragment() {
         }
 
         return if (videoAssetDownload != null && videoDownloadPresent(videoAssetDownload)) {
-            setLocalVideoUri("file://" + downloadManager.getDownloadFile(videoAssetDownload)!!)
+            setLocalVideoUri("file://" + videoAssetDownload.download!!)
             true
         } else {
             super.setVideoUri(currentQuality)
@@ -232,7 +223,7 @@ class VideoItemPlayerFragment : VideoStreamPlayerFragment() {
     }
 
     private fun videoDownloadPresent(item: DownloadAsset.Course.Item): Boolean {
-        return !downloadManager.downloadRunning(item) && downloadManager.downloadExists(item)
+        return item.downloadExists
     }
 
     private fun getQualityString(videoMode: VideoSettingsHelper.VideoMode): String {

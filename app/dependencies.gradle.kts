@@ -18,8 +18,7 @@ dependencies {
     // networking
     implementation(SharedDependencies.OK_HTTP)
     implementation("com.squareup.okhttp3:logging-interceptor:${Versions.OK_HTTP}")
-
-    implementation("com.coolerfall:android-http-download-manager:1.6.2")
+    implementation("androidx.tonyodev.fetch2:xfetch2:3.1.5")
 
     // images
     val glideVersion = "4.11.0"

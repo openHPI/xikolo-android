@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <application
         android:name=".App"
@@ -27,10 +28,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <receiver
-            android:name=".receivers.CancelDownloadsReceiver"
-            android:label="CancelDownloadsReceiver" />
 
         <receiver
             android:name=".utils.ShareBroadcastReceiver"
@@ -54,11 +51,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
-        <service
-            android:name=".services.DownloadService"
-            android:description="@string/service_download"
-            android:exported="false" />
 
         <activity
             android:name=".controllers.main.SplashActivity"
