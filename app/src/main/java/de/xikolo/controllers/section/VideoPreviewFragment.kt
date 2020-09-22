@@ -2,7 +2,10 @@ package de.xikolo.controllers.section
 
 import android.content.res.Configuration
 import android.graphics.Point
+import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -10,6 +13,7 @@ import android.widget.TextView
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
+import de.xikolo.config.Feature
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
@@ -21,8 +25,10 @@ import de.xikolo.models.Video
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.extensions.cast
 import de.xikolo.utils.extensions.isCastConnected
+import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.utils.extensions.videoThumbnailSize
 import de.xikolo.viewmodels.section.VideoPreviewViewModel
+import de.xikolo.viewmodels.shared.VideoDescriptionDelegate
 import de.xikolo.views.CustomSizeImageView
 import java.util.concurrent.TimeUnit
 
@@ -43,6 +49,18 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
 
     @BindView(R.id.textTitle)
     lateinit var textTitle: TextView
+
+    @BindView(R.id.textSubtitles)
+    lateinit var textSubtitles: TextView
+
+    @BindView(R.id.headerTextPreviewDescription)
+    lateinit var textDescriptionTitle: TextView
+
+    @BindView(R.id.textPreviewDescription)
+    lateinit var textDescription: TextView
+
+    @BindView(R.id.showDescriptionButton)
+    lateinit var showDescriptionButton: TextView
 
     @BindView(R.id.durationText)
     lateinit var textDuration: TextView
@@ -112,6 +130,24 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
             .into(imageVideoThumbnail)
 
         textTitle.text = item.title
+
+        if (VideoDescriptionDelegate.isVideoSummaryAvailable(video.summary)) {
+            textDescription.setTypeface(textDescription.typeface, Typeface.NORMAL)
+            textDescription.setMarkdownText(video.summary)
+            displayCollapsedDescription()
+
+            showDescriptionButton.setOnClickListener {
+                if (showDescriptionButton.text == getString(R.string.show_more)) {
+                    displayFullDescription()
+                } else {
+                    displayCollapsedDescription()
+                }
+            }
+        } else {
+            hideDescription()
+        }
+
+        displayAvailableSubtitles()
 
         linearLayoutDownloads.removeAllViews()
         downloadViewHelpers.clear()
@@ -188,4 +224,52 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
         }
     }
 
+    private fun displayAvailableSubtitles() {
+        if (video!!.subtitles != null && video!!.subtitles.isNotEmpty()) {
+            textSubtitles.text = VideoDescriptionDelegate
+                .getAvailableSubtitlesText(
+                    getString(R.string.video_settings_subtitles),
+                    video!!.subtitles
+                )
+            textSubtitles.visibility = View.VISIBLE
+        } else {
+            textSubtitles.visibility = View.GONE
+        }
+    }
+
+    private fun displayCollapsedDescription() {
+        textDescription.visibility = View.VISIBLE
+        showDescriptionButton.visibility = View.VISIBLE
+        textDescriptionTitle.visibility = View.VISIBLE
+        textDescription.ellipsize = TextUtils.TruncateAt.MARQUEE
+        textDescription.maxLines = 3
+        showDescriptionButton.text = getString(R.string.show_more)
+
+        if (textDescription.text.length < 115) {
+            showDescriptionButton.visibility = View.GONE
+            if (Feature.FOREGROUNDS) {
+                textDescription.foreground = null
+            }
+        } else if (Feature.FOREGROUNDS) {
+            textDescription.foreground = Drawable.createFromXml(
+                resources,
+                resources.getXml(R.drawable.gradient_light_to_transparent_from_bottom)
+            )
+        }
+    }
+
+    private fun displayFullDescription() {
+        textDescription.ellipsize = null
+        textDescription.maxLines = 1000
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            textDescription.foreground = null
+        }
+        showDescriptionButton.text = getString(R.string.show_less)
+    }
+
+    private fun hideDescription() {
+        textDescription.visibility = View.GONE
+        showDescriptionButton.visibility = View.GONE
+        textDescriptionTitle.visibility = View.GONE
+    }
 }

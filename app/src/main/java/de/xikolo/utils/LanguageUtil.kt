@@ -15,7 +15,7 @@ object LanguageUtil {
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    fun toLocaleName(context: Context, tag: String): String {
+    fun toLocaleName(tag: String): String {
         val languageTag = correctLanguageTag(tag)
         val locale = Locale.forLanguageTag(languageTag)
         val deviceLocale = Locale.getDefault()

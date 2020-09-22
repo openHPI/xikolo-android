@@ -11,6 +11,7 @@ import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.extensions.observe
 import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.section.VideoDescriptionViewModel
+import de.xikolo.viewmodels.shared.VideoDescriptionDelegate
 
 class VideoDescriptionFragment : ViewModelFragment<VideoDescriptionViewModel>() {
 
@@ -49,20 +50,17 @@ class VideoDescriptionFragment : ViewModelFragment<VideoDescriptionViewModel>() 
 
         viewModel.video
             .observe(viewLifecycleOwner) { video ->
-                if (video.summary != null
-                    && video.summary.trim { it <= ' ' }.isNotEmpty()
-                    && !video.summary.trim { it <= ' ' }.contentEquals("Enter content")) {
+                if (VideoDescriptionDelegate.isVideoSummaryAvailable(video.summary)) {
                     videoDescriptionText.setTypeface(videoDescriptionText.typeface, Typeface.NORMAL)
                     videoDescriptionText.setMarkdownText(video.summary)
                 }
 
                 if (video.subtitles != null && video.subtitles.isNotEmpty()) {
-                    val text = StringBuilder(getString(R.string.video_settings_subtitles) + ": ")
-                    for (subtitles in video.subtitles) {
-                        text.append(subtitles.languageAsNativeName).append(", ")
-                    }
-                    text.delete(text.length - 2, text.length)
-                    videoSubtitlesText.text = text
+                    videoSubtitlesText.text = VideoDescriptionDelegate
+                        .getAvailableSubtitlesText(
+                            getString(R.string.video_settings_subtitles),
+                            video.subtitles
+                        )
                     videoSubtitlesText.visibility = View.VISIBLE
                 }
 
@@ -76,5 +74,4 @@ class VideoDescriptionFragment : ViewModelFragment<VideoDescriptionViewModel>() 
                 showContent()
             }
     }
-
 }
