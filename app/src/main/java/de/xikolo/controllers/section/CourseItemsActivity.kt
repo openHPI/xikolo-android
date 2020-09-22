@@ -163,7 +163,9 @@ class CourseItemsActivity : ViewModelActivity<CourseItemsViewModel>() {
         var items: List<Item> = listOf()
             set(value) {
                 field = value
+                val oldIndex = index
                 notifyDataSetChanged()
+                onItemSelected(oldIndex)
 
                 for (position in 0 until tabLayout.tabCount) {
                     tabLayout.getTabAt(position)?.apply {

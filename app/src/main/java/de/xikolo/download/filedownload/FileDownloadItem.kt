@@ -216,6 +216,10 @@ open class FileDownloadItem(
     }
 
     override fun isDownloadRunning(callback: (Boolean) -> Unit) {
+        if (!isDownloadable) {
+            callback(false)
+            return
+        }
         status {
             callback(
                 if (it != null) {
