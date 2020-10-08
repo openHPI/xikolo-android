@@ -17,6 +17,8 @@ buildscript {
 
 plugins {
     id("com.github.ben-manes.versions") version "0.33.0"
+
+    // Make sure to update this in `buildSrc/build.gradle.kts` as well
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
 }
 
@@ -33,7 +35,7 @@ allprojects {
 }
 
 ktlint {
-    version.set("0.39.0")
+    version.set("0.39.0") // Make sure to update this in `buildSrc/build.gradle.kts` as well
     android.set(true)
     ignoreFailures.set(true)
     reporters {
