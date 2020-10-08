@@ -33,7 +33,7 @@ dependencies {
 
     // json
     implementation(SharedDependencies.GSON)
-    implementation("com.squareup.moshi:moshi:1.10.0")
+    implementation("com.squareup.moshi:moshi:1.11.0")
 
     // json:api
     val moshijsonapiVersion = "3.5.0"
@@ -45,7 +45,7 @@ dependencies {
     implementation("com.github.rubensousa:previewseekbar:3.0.0")
 
     // markdown
-    val markwonVersion = "4.5.1"
+    val markwonVersion = "4.6.0"
     implementation("io.noties.markwon:core:$markwonVersion")
     implementation("io.noties.markwon:ext-latex:$markwonVersion")
     implementation("io.noties.markwon:ext-strikethrough:$markwonVersion")
@@ -72,8 +72,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-gcm:17.0.0")
 
     // firebase
-    implementation("com.google.firebase:firebase-analytics:17.5.0")
-    implementation("com.google.firebase:firebase-crashlytics:17.2.1")
+    implementation("com.google.firebase:firebase-analytics:17.6.0")
+    implementation("com.google.firebase:firebase-crashlytics:17.2.2")
 
     // material design
     implementation("com.google.android.material:material:1.2.1")
@@ -88,7 +88,7 @@ dependencies {
     implementation("androidx.browser:browser:1.2.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.work:work-runtime-ktx:2.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.2")
 
     // local libraries
     implementation(project(":lanalytics"))

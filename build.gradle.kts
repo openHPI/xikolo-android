@@ -7,17 +7,17 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.0.1")
+        classpath("com.android.tools.build:gradle:4.0.2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}")
-        classpath("io.realm:realm-gradle-plugin:7.0.5")
-        classpath("com.google.gms:google-services:4.3.3")
+        classpath("io.realm:realm-gradle-plugin:7.0.8")
+        classpath("com.google.gms:google-services:4.3.4")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.3.0")
     }
 }
 
 plugins {
     id("com.github.ben-manes.versions") version "0.33.0"
-    id("org.jlleitschuh.gradle.ktlint") version "9.4.0"
+    id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
 }
 
 allprojects {
@@ -33,6 +33,7 @@ allprojects {
 }
 
 ktlint {
+    version.set("0.39.0")
     android.set(true)
     ignoreFailures.set(true)
     reporters {
