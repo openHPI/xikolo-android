@@ -18,7 +18,7 @@ object Versions {
     const val KOTLIN_JVM = "1.8"
 
     // Dependencies
-    const val OK_HTTP = "4.8.1"
+    const val OK_HTTP = "4.9.0"
     const val GSON = "2.8.6"
 }
 
