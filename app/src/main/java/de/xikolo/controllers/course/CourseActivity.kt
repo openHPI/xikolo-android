@@ -265,7 +265,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home    -> {
+            android.R.id.home -> {
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     NavUtils.navigateUpFromSameTask(this)
                 } else {
@@ -276,7 +276,11 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                 }
                 return true
             }
-            R.id.action_share    -> {
+            R.id.action_refresh -> {
+                viewModel.onRefresh()
+                return true
+            }
+            R.id.action_share -> {
                 shareCourseLink(courseId!!)
                 return true
             }
@@ -286,7 +290,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                 dialog.show(supportFragmentManager, UnenrollDialog.TAG)
                 return true
             }
-            R.id.course_dates    -> {
+            R.id.course_dates -> {
                 val dialog = CourseDateListDialogAutoBundle.builder(courseId!!).build()
                 dialog.show(supportFragmentManager, UnenrollDialog.TAG)
                 return true
