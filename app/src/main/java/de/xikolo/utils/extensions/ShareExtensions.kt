@@ -2,17 +2,13 @@ package de.xikolo.utils.extensions
 
 import android.app.Activity
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ShareCompat
 import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.models.dao.CourseDao
+import de.xikolo.receivers.ShareBroadcastReceiver
 import de.xikolo.utils.LanalyticsUtil
 
 fun <T : Activity> T.shareCourseLink(courseId: String) {
@@ -47,39 +43,4 @@ fun <T : Activity> T.shareCourseLink(courseId: String) {
     }
 
     startActivity(chooserIntent)
-}
-
-private class ShareBroadcastReceiver : BroadcastReceiver() {
-
-    override fun onReceive(context: Context?, intent: Intent?) {
-        intent?.extras?.let { bundle ->
-            val packageName = bundle.getParcelable<ComponentName>(
-                "android.intent.extra.CHOSEN_COMPONENT"
-            )?.packageName
-
-            val pm = context?.packageManager
-
-            val ai: ApplicationInfo? = try {
-                if (packageName != null) {
-                    pm?.getApplicationInfo(packageName, 0)
-                } else null
-            } catch (e: PackageManager.NameNotFoundException) {
-                null
-            }
-
-            val applicationName = if (ai != null) {
-                pm?.getApplicationLabel(ai).toString()
-            } else {
-                packageName
-            }
-
-            bundle.getString("course_id")?.let { courseId ->
-                LanalyticsUtil.trackShareCourseLink(
-                    courseId,
-                    applicationName
-                )
-            }
-        }
-    }
-
 }
