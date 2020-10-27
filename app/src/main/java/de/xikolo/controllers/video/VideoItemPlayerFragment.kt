@@ -27,7 +27,7 @@ class VideoItemPlayerFragment : VideoStreamPlayerFragment() {
         private const val BUNDLING_KEY_VIDEO_ID = "video_id"
 
         fun bundle(instance: VideoItemPlayerFragment, courseId: String, sectionId: String, itemId: String, videoId: String, autoPlay: Boolean = true) {
-            bundle(instance, VideoDao.Unmanaged.find(videoId)!!.streamToPlay, autoPlay)
+            bundle(instance, VideoDao.Unmanaged.find(videoId)!!.streamToPlay!!, autoPlay)
 
             val arguments = instance.arguments ?: Bundle()
             arguments.putAll(

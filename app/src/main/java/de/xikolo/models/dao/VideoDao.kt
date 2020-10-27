@@ -10,9 +10,11 @@ import io.realm.kotlin.where
 class VideoDao(realm: Realm) : BaseDao<Video>(Video::class, realm) {
 
     fun updateProgress(video: Video, position: Int) {
-        Local.Update.with<Video>(video.id)
-            .setBeforeCommitCallback { _, model -> model.progress = position }
-            .run()
+        video.id?.let {
+            Local.Update.with<Video>(it)
+                .setBeforeCommitCallback { _, model -> model.progress = position }
+                .run()
+        }
     }
 
     class Unmanaged {

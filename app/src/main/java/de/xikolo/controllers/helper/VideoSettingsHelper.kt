@@ -17,6 +17,7 @@ import de.xikolo.config.Feature
 import de.xikolo.managers.PermissionManager
 import de.xikolo.models.VideoSubtitles
 import de.xikolo.storages.ApplicationPreferences
+import de.xikolo.utils.LanguageUtil
 import de.xikolo.views.CustomFontTextView
 
 class VideoSettingsHelper(private val context: Context, private val subtitles: List<VideoSubtitles>?, private val changeListener: OnSettingsChangeListener, private val clickListener: OnSettingsClickListener, private val videoInfoCallback: VideoInfoCallback) {
@@ -103,10 +104,11 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
             list.addView(
                 buildSettingsItem(
                     R.string.icon_subtitles,
-                    context.getString(R.string.video_settings_subtitles) + if (currentVideoSubtitles != null)
-                        "  " + context.getString(R.string.video_settings_separator) + "  " + currentVideoSubtitles!!.languageAsNativeName
-                    else
-                        "",
+                    context.getString(R.string.video_settings_subtitles) + currentVideoSubtitles?.let {
+                        "  " + context.getString(R.string.video_settings_separator) + "  " + LanguageUtil.toNativeName(
+                            it.language
+                        )
+                    } ?: "",
                     View.OnClickListener { clickListener.onSubtitleClick() },
                     false,
                     Config.FONT_MATERIAL
@@ -232,7 +234,7 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
             list.addView(
                 buildSettingsItem(
                     null,
-                    videoSubtitles.languageAsNativeName +
+                    LanguageUtil.toNativeName(videoSubtitles.language) +
                         if (videoSubtitles.createdByMachine) " " + context.getString(R.string.video_settings_subtitles_generated) else "",
                     View.OnClickListener {
                         val oldVideoSubtitles = currentVideoSubtitles

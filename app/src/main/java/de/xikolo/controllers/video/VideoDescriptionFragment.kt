@@ -11,7 +11,6 @@ import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.extensions.observe
 import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.viewmodels.section.VideoDescriptionViewModel
-import de.xikolo.viewmodels.shared.VideoDescriptionDelegate
 
 class VideoDescriptionFragment : ViewModelFragment<VideoDescriptionViewModel>() {
 
@@ -50,17 +49,14 @@ class VideoDescriptionFragment : ViewModelFragment<VideoDescriptionViewModel>() 
 
         viewModel.video
             .observe(viewLifecycleOwner) { video ->
-                if (VideoDescriptionDelegate.isVideoSummaryAvailable(video.summary)) {
+                if (video.isSummaryAvailable) {
                     videoDescriptionText.setTypeface(videoDescriptionText.typeface, Typeface.NORMAL)
                     videoDescriptionText.setMarkdownText(video.summary)
                 }
 
                 if (video.subtitles != null && video.subtitles.isNotEmpty()) {
-                    videoSubtitlesText.text = VideoDescriptionDelegate
-                        .getAvailableSubtitlesText(
-                            getString(R.string.video_settings_subtitles),
-                            video.subtitles
-                        )
+                    videoSubtitlesText.text =
+                        "${getString(R.string.video_settings_subtitles)}: ${video.getSubtitlesAsString()}"
                     videoSubtitlesText.visibility = View.VISIBLE
                 }
 

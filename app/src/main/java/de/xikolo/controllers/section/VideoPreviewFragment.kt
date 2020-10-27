@@ -2,18 +2,18 @@ package de.xikolo.controllers.section
 
 import android.content.res.Configuration
 import android.graphics.Point
-import android.graphics.Typeface
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import butterknife.BindView
 import com.yatatsu.autobundle.AutoBundleField
 import de.xikolo.R
-import de.xikolo.config.Feature
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.helper.DownloadViewHelper
@@ -23,14 +23,16 @@ import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Item
 import de.xikolo.models.Video
 import de.xikolo.utils.LanalyticsUtil
+import de.xikolo.utils.LanguageUtil
 import de.xikolo.utils.extensions.cast
 import de.xikolo.utils.extensions.isCastConnected
 import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.utils.extensions.videoThumbnailSize
 import de.xikolo.viewmodels.section.VideoPreviewViewModel
-import de.xikolo.viewmodels.shared.VideoDescriptionDelegate
 import de.xikolo.views.CustomSizeImageView
 import java.util.concurrent.TimeUnit
+
+const val MAX_DESCRIPTION_LINES = 4
 
 class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
 
@@ -53,14 +55,14 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
     @BindView(R.id.textSubtitles)
     lateinit var textSubtitles: TextView
 
-    @BindView(R.id.headerTextPreviewDescription)
-    lateinit var textDescriptionTitle: TextView
-
     @BindView(R.id.textPreviewDescription)
     lateinit var textDescription: TextView
 
     @BindView(R.id.showDescriptionButton)
-    lateinit var showDescriptionButton: TextView
+    lateinit var showDescriptionButton: Button
+
+    @BindView(R.id.videoDescriptionContainer)
+    lateinit var videoDescriptionContainer: FrameLayout
 
     @BindView(R.id.durationText)
     lateinit var textDuration: TextView
@@ -131,13 +133,12 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
 
         textTitle.text = item.title
 
-        if (VideoDescriptionDelegate.isVideoSummaryAvailable(video.summary)) {
-            textDescription.setTypeface(textDescription.typeface, Typeface.NORMAL)
-            textDescription.setMarkdownText(video.summary)
+        if (video.isSummaryAvailable) {
+            textDescription.setMarkdownText(video.summary?.trim())
             displayCollapsedDescription()
 
             showDescriptionButton.setOnClickListener {
-                if (showDescriptionButton.text == getString(R.string.show_more)) {
+                if (textDescription.maxLines == MAX_DESCRIPTION_LINES) {
                     displayFullDescription()
                 } else {
                     displayCollapsedDescription()
@@ -197,7 +198,10 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
         }
 
         val minutes = TimeUnit.SECONDS.toMinutes(video.duration.toLong())
-        val seconds = video.duration - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(video.duration.toLong()))
+        val seconds =
+            video.duration - TimeUnit.MINUTES.toSeconds(
+                TimeUnit.SECONDS.toMinutes(video.duration.toLong())
+            )
         textDuration.text = getString(R.string.duration, minutes, seconds)
 
         viewPlay.setOnClickListener { play() }
@@ -206,18 +210,28 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
     private fun play() {
         video?.let { video ->
             if (activity?.isCastConnected == true) {
-                LanalyticsUtil.trackVideoPlay(itemId, courseId, sectionId, video.progress, 1.0f,
-                    Configuration.ORIENTATION_LANDSCAPE, "hd", "cast")
+                LanalyticsUtil.trackVideoPlay(
+                    itemId,
+                    courseId,
+                    sectionId,
+                    video.progress,
+                    1.0f,
+                    Configuration.ORIENTATION_LANDSCAPE,
+                    "hd",
+                    "cast"
+                )
 
                 activity?.let {
                     video.cast(it, true)
                 }
             } else {
                 activity?.let {
-                    val intent = VideoItemPlayerActivityAutoBundle
-                        .builder(courseId, sectionId, itemId, video.id)
-                        .parentIntent(it.intent)
-                        .build(it)
+                    val intent = video.id?.let { videoId ->
+                        VideoItemPlayerActivityAutoBundle
+                            .builder(courseId, sectionId, itemId, videoId)
+                            .parentIntent(it.intent)
+                            .build(it)
+                    }
                     startActivity(intent)
                 }
             }
@@ -225,51 +239,47 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
     }
 
     private fun displayAvailableSubtitles() {
-        if (video!!.subtitles != null && video!!.subtitles.isNotEmpty()) {
-            textSubtitles.text = VideoDescriptionDelegate
-                .getAvailableSubtitlesText(
-                    getString(R.string.video_settings_subtitles),
-                    video!!.subtitles
-                )
-            textSubtitles.visibility = View.VISIBLE
-        } else {
-            textSubtitles.visibility = View.GONE
+        video?.subtitles?.let { subtitles ->
+            if (subtitles.isNotEmpty()) {
+                textSubtitles.text =
+                    subtitles.map {
+                        LanguageUtil.toLocaleName(it.language)
+                    }.joinToString(", ", getString(R.string.video_settings_subtitles) + ": ")
+                textSubtitles.visibility = View.VISIBLE
+            } else {
+                textSubtitles.visibility = View.GONE
+            }
         }
     }
 
     private fun displayCollapsedDescription() {
-        textDescription.visibility = View.VISIBLE
-        showDescriptionButton.visibility = View.VISIBLE
-        textDescriptionTitle.visibility = View.VISIBLE
-        textDescription.ellipsize = TextUtils.TruncateAt.MARQUEE
-        textDescription.maxLines = 3
+        videoDescriptionContainer.visibility = View.VISIBLE
+        videoDescriptionContainer.foreground = null
+        showDescriptionButton.visibility = View.GONE
+        textDescription.ellipsize = TextUtils.TruncateAt.END
+        textDescription.maxLines = MAX_DESCRIPTION_LINES
         showDescriptionButton.text = getString(R.string.show_more)
 
-        if (textDescription.text.length < 115) {
-            showDescriptionButton.visibility = View.GONE
-            if (Feature.FOREGROUNDS) {
-                textDescription.foreground = null
+        textDescription.post {
+            if (textDescription.lineCount > MAX_DESCRIPTION_LINES) {
+                showDescriptionButton.visibility = View.VISIBLE
+                videoDescriptionContainer.foreground = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.gradient_light_to_transparent_from_bottom
+                )
             }
-        } else if (Feature.FOREGROUNDS) {
-            textDescription.foreground = Drawable.createFromXml(
-                resources,
-                resources.getXml(R.drawable.gradient_light_to_transparent_from_bottom)
-            )
         }
     }
 
     private fun displayFullDescription() {
         textDescription.ellipsize = null
-        textDescription.maxLines = 1000
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            textDescription.foreground = null
-        }
+        textDescription.maxLines = Integer.MAX_VALUE
+        videoDescriptionContainer.foreground = null
         showDescriptionButton.text = getString(R.string.show_less)
     }
 
     private fun hideDescription() {
-        textDescription.visibility = View.GONE
+        videoDescriptionContainer.visibility = View.GONE
         showDescriptionButton.visibility = View.GONE
-        textDescriptionTitle.visibility = View.GONE
     }
 }

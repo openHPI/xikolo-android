@@ -94,10 +94,10 @@ object DownloadAsset {
             }
 
             class VideoSD(item: de.xikolo.models.Item, val video: Video) :
-                Item(video.streamToPlay.sdUrl, "video_sd_${item.id}.mp4", item) {
+                Item(video.streamToPlay?.sdUrl, "video_sd_${item.id}.mp4", item) {
                 override val title = "Video (SD): " + item.title
                 override val mimeType = "video/mp4"
-                override val size = video.streamToPlay.sdSize.toLong()
+                override val size = video.streamToPlay?.sdSize?.toLong() ?: 0L
 
                 override val secondaryDownloadItems: Set<FileDownloadItem>
                     get() {
@@ -112,10 +112,10 @@ object DownloadAsset {
             }
 
             class VideoHD(item: de.xikolo.models.Item, val video: Video) :
-                Item(video.streamToPlay.hdUrl, "video_hd_${item.id}.mp4", item) {
+                Item(video.streamToPlay?.hdUrl, "video_hd_${item.id}.mp4", item) {
                 override val title = "Video (HD): " + item.title
                 override val mimeType = "video/mp4"
-                override val size = video.streamToPlay.hdSize.toLong()
+                override val size = video.streamToPlay?.hdSize?.toLong() ?: 0L
 
                 override val secondaryDownloadItems: Set<FileDownloadItem>
                     get() {

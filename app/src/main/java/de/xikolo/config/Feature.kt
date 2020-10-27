@@ -20,7 +20,6 @@ object Feature {
             .hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
 
     val SHORTCUTS = SDK_INT >= 25
-    val FOREGROUNDS = SDK_INT >= 23
 
     fun enabled(name: String): Boolean {
         val context = App.instance

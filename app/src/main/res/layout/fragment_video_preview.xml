@@ -40,41 +40,31 @@
                 android:textSize="14sp"
                 android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/headerTextPreviewDescription"
-                android:layout_width="fill_parent"
-                android:layout_height="48dp"
+            <FrameLayout
+                android:id="@+id/videoDescriptionContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/textSubtitles"
-                android:layout_alignParentStart="true"
-                android:background="@color/transparent"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center_vertical"
-                android:text="@string/title_section_description"
-                android:textColor="@color/apptheme_secondary"
-                android:textSize="14sp" />
+                android:layout_marginTop="8dp"
+                android:foreground="@drawable/gradient_light_to_transparent_from_bottom">
 
-            <TextView
-                android:id="@+id/textPreviewDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/headerTextPreviewDescription"
-                android:layout_alignParentStart="true"
-                android:ellipsize="marquee"
-                android:foreground="@drawable/gradient_light_to_transparent_from_bottom"
-                android:maxLines="3"
-                android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/textPreviewDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:textSize="14sp" />
+            </FrameLayout>
 
-            <TextView
+            <Button
                 android:id="@+id/showDescriptionButton"
+                style="@style/ButtonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textPreviewDescription"
+                android:layout_below="@+id/videoDescriptionContainer"
                 android:layout_alignParentEnd="true"
-                android:paddingTop="8dp"
                 android:text="@string/show_more"
-                android:textAllCaps="true"
-                android:textColor="@color/text_light"
-                android:textSize="14sp" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/textDownloads"
