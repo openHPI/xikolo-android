@@ -1,7 +1,7 @@
 package de.xikolo.config
 
 import android.content.pm.PackageManager
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.AnyRes
 import de.xikolo.App
 import de.xikolo.utils.extensions.getBoolean
@@ -16,10 +16,10 @@ object Feature {
 
     @JvmField
     val PIP =
-        Build.VERSION.SDK_INT >= 26 && App.instance.packageManager
+        SDK_INT >= 26 && App.instance.packageManager
             .hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
 
-    val SHORTCUTS = Build.VERSION.SDK_INT >= 25
+    val SHORTCUTS = SDK_INT >= 25
 
     fun enabled(name: String): Boolean {
         val context = App.instance

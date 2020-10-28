@@ -369,4 +369,6 @@
     <string name="course_filter_all">Alle</string>
     <string name="course_filter_language">Sprache</string>
     <string name="course_filter_channel">Channel</string>
+    <string name="show_more">Mehr anzeigen</string>
+    <string name="show_less">Weniger anzeigen</string>
 </resources>

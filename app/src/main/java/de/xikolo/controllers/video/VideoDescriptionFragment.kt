@@ -49,20 +49,14 @@ class VideoDescriptionFragment : ViewModelFragment<VideoDescriptionViewModel>() 
 
         viewModel.video
             .observe(viewLifecycleOwner) { video ->
-                if (video.summary != null
-                    && video.summary.trim { it <= ' ' }.isNotEmpty()
-                    && !video.summary.trim { it <= ' ' }.contentEquals("Enter content")) {
+                if (video.isSummaryAvailable) {
                     videoDescriptionText.setTypeface(videoDescriptionText.typeface, Typeface.NORMAL)
                     videoDescriptionText.setMarkdownText(video.summary)
                 }
 
                 if (video.subtitles != null && video.subtitles.isNotEmpty()) {
-                    val text = StringBuilder(getString(R.string.video_settings_subtitles) + ": ")
-                    for (subtitles in video.subtitles) {
-                        text.append(subtitles.languageAsNativeName).append(", ")
-                    }
-                    text.delete(text.length - 2, text.length)
-                    videoSubtitlesText.text = text
+                    videoSubtitlesText.text =
+                        "${getString(R.string.video_settings_subtitles)}: ${video.getSubtitlesAsString()}"
                     videoSubtitlesText.visibility = View.VISIBLE
                 }
 
@@ -76,5 +70,4 @@ class VideoDescriptionFragment : ViewModelFragment<VideoDescriptionViewModel>() 
                 showContent()
             }
     }
-
 }

@@ -1,12 +1,10 @@
 package de.xikolo.utils
 
-import android.content.Context
 import java.util.Locale
 
 object LanguageUtil {
     var deviceLanguage: String = Locale.getDefault().language.takeIf { it != "zh" } ?: "cn"
 
-    @OptIn(ExperimentalStdlibApi::class)
     fun toNativeName(tag: String): String {
         val languageTag = correctLanguageTag(tag)
 
@@ -14,8 +12,7 @@ object LanguageUtil {
         return locale.getDisplayLanguage(locale).capitalize(locale)
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
-    fun toLocaleName(context: Context, tag: String): String {
+    fun toLocaleName(tag: String): String {
         val languageTag = correctLanguageTag(tag)
         val locale = Locale.forLanguageTag(languageTag)
         val deviceLocale = Locale.getDefault()

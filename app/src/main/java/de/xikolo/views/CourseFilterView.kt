@@ -82,7 +82,10 @@ class CourseFilterView @JvmOverloads constructor(context: Context, attrs: Attrib
             val options: List<Pair<String, String>> = when (classifierKey) {
                 context.getString(R.string.course_filter_classifier_language) -> {
                     languages.map {
-                        Pair(it, LanguageUtil.toNativeName(it) + " (" + LanguageUtil.toLocaleName(context, it) + ")")
+                        Pair(
+                            it,
+                            LanguageUtil.toNativeName(it) + " (" + LanguageUtil.toLocaleName(it) + ")"
+                        )
                     }
                 }
                 context.getString(R.string.course_filter_classifier_channel)  -> {

@@ -373,5 +373,7 @@
     <string name="course_filter_all">All</string>
     <string name="course_filter_language">Language</string>
     <string name="course_filter_channel">Channel</string>
+    <string name="show_more">Show more</string>
+    <string name="show_less">Show less</string>
 
 </resources>

@@ -89,7 +89,7 @@ fun <T : Video> T.cast(activity: Activity, autoPlay: Boolean): PendingResult<Rem
 
         //build cast metadata
         val mediaMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
-        mediaMetadata.putString(MediaMetadata.KEY_TITLE, item.title)
+        mediaMetadata.putString(MediaMetadata.KEY_TITLE, item?.title)
 
         val image = WebImage(Uri.parse(thumbnailUrl))
 
@@ -99,7 +99,7 @@ fun <T : Video> T.cast(activity: Activity, autoPlay: Boolean): PendingResult<Rem
         // large image, used on the Cast Player page and Lock Screen on KitKat
         mediaMetadata.addImage(image)
 
-        val castMetadata = MediaInfo.Builder(streamToPlay.hdUrl)
+        val castMetadata = MediaInfo.Builder(streamToPlay?.hdUrl)
             .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
             .setContentType("videos/mp4")
             .setMetadata(mediaMetadata)
