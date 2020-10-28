@@ -35,6 +35,9 @@ class WebViewFragment : NetworkStateFragment() {
     @AutoBundleField(required = false)
     var externalLinksEnabled: Boolean = false
 
+    @AutoBundleField(required = false)
+    var allowBack: Boolean = false
+
     private var contentView: View? = null
 
     private lateinit var webViewHelper: WebViewHelper
@@ -91,8 +94,15 @@ class WebViewFragment : NetworkStateFragment() {
                 contentView = null
                 mutableContextWrapper = null
             }
-
         }
+    }
+
+    fun onBack(): Boolean {
+        val canGoBack = allowBack && webViewHelper.webView.canGoBack()
+        if (canGoBack) {
+            webViewHelper.webView.goBack()
+        }
+        return canGoBack
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -33,6 +33,7 @@ import de.xikolo.controllers.dialogs.UnenrollDialog
 import de.xikolo.controllers.helper.CourseArea
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
+import de.xikolo.controllers.webview.WebViewFragment
 import de.xikolo.controllers.webview.WebViewFragmentAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.extensions.observeOnce
@@ -330,6 +331,15 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onBackPressed() {
+        val webViewFragment =
+            (viewPager.adapter as CoursePagerAdapter).getFragmentAt(viewPager.currentItem)
+                as? WebViewFragment
+        if (webViewFragment?.onBack() != true) {
+            super.onBackPressed()
+        }
+    }
+
     private fun setAreaState(state: CourseArea.State) {
         areaState = state
         viewPager.adapter?.notifyDataSetChanged()
@@ -539,6 +549,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
                         Config.HOST_URL + Config.COURSES +
                             courseIdentifier + "/" + Config.DISCUSSIONS
                     )
+                        .allowBack(true)
                         .inAppLinksEnabled(true)
                         .externalLinksEnabled(false)
                         .build()
