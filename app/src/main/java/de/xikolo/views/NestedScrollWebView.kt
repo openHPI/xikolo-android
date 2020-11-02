@@ -24,6 +24,7 @@ import android.webkit.WebView
 import androidx.core.view.NestedScrollingChild
 import androidx.core.view.NestedScrollingChildHelper
 import androidx.core.view.ViewCompat
+import kotlin.math.abs
 
 class NestedScrollWebView : WebView, NestedScrollingChild {
 
@@ -31,6 +32,7 @@ class NestedScrollWebView : WebView, NestedScrollingChild {
         val TAG: String = NestedScrollWebView::class.java.simpleName
     }
 
+    private var lastMotionX: Int = 0
     private var lastMotionY: Int = 0
 
     private val scrollOffset = IntArray(2)
@@ -67,18 +69,26 @@ class NestedScrollWebView : WebView, NestedScrollingChild {
             nestedOffsetY = 0
         }
 
+        val x = event.x.toInt()
         val y = event.y.toInt()
 
         event.offsetLocation(0f, nestedOffsetY.toFloat())
 
         when (action) {
             MotionEvent.ACTION_DOWN -> {
+                lastMotionX = x
                 lastMotionY = y
                 startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL)
                 result = super.onTouchEvent(event)
             }
             MotionEvent.ACTION_MOVE -> {
                 var deltaY = lastMotionY - y
+
+                if (abs(deltaY) > abs(lastMotionX - x) &&
+                    (canScrollVertically(1) || canScrollVertically(-1))
+                ) {
+                    requestDisallowInterceptTouchEvent(true)
+                }
 
                 if (dispatchNestedPreScroll(0, deltaY, scrollConsumed, scrollOffset)) {
                     deltaY -= scrollConsumed[1]
@@ -104,6 +114,7 @@ class NestedScrollWebView : WebView, NestedScrollingChild {
             }
             MotionEvent.ACTION_POINTER_DOWN, MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 stopNestedScroll()
+                requestDisallowInterceptTouchEvent(false)
                 result = super.onTouchEvent(event)
             }
         }
