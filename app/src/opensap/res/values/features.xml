@@ -32,7 +32,7 @@
     </string-array>
 
     <string-array name="nav_external_links_urls" translatable="false">
-        <item>https://open.sap.com/microlearning</item>
+        <item>https://microlearning.opensap.com</item>
         <item>https://open.sap.com/podcasts</item>
     </string-array>
     <string-array name="nav_external_links_titles" translatable="false">
