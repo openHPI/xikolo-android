@@ -139,6 +139,13 @@
     <string name="dialog_external_content_yes_peer">Öffnen</string>
     <string name="dialog_external_content_yes_always_peer">Öffnen und nicht erneut nachfragen</string>
 
+    <string name="dialog_unsupported_intent_title">Öffnen nicht möglich</string>
+    <string name="dialog_unsupported_intent_message">Es konnte keine Anwendung zum Ausführen dieser Aktion gefunden werden.</string>
+    <string name="dialog_unsupported_intent_message_file">\n\nEs wurde versucht folgender Dateityp zu öffnen: %1$s\nBitte installieren Sie eine Anwendung welche das Öffnen dieses Dateityps unterstützt.</string>
+    <string name="dialog_unsupported_intent_message_open_anyway">Trotzdem versuchen zu öffnen</string>
+    <string name="dialog_unsupported_intent_message_open_path">Versuchen im Dateimanager zu öffnen</string>
+    <string name="dialog_unsupported_intent_error_no_file_manager">Kein Dateimanager gefunden</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -273,7 +280,6 @@
     <string name="toast_successful_logout">Erfolgreich abgemeldet.</string>
     <string name="toast_file_already_downloaded">Datei bereits heruntergeladen.</string>
     <string name="toast_no_external_write_access">Kein Schreibzugriff für %1$s.</string>
-    <string name="toast_no_file_viewer_found">Keine Anwendung zum Öffnen dieser Datei gefunden.</string>
     <string name="toast_pip_error">Die Anwendung konnte nicht in den Bild-im-Bild Modus wechseln.</string>
 
     <!-- -->

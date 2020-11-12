@@ -1,6 +1,5 @@
 package de.xikolo.download.filedownload
 
-import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import de.xikolo.App
@@ -11,11 +10,11 @@ import de.xikolo.managers.PermissionManager
 import de.xikolo.models.DownloadAsset
 import de.xikolo.models.Storage
 import de.xikolo.states.PermissionStateLiveData
-import de.xikolo.utils.FileProviderUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.extensions.buildWriteErrorMessage
 import de.xikolo.utils.extensions.createIfNotExists
 import de.xikolo.utils.extensions.internalStorage
+import de.xikolo.utils.extensions.open
 import de.xikolo.utils.extensions.preferredStorage
 import de.xikolo.utils.extensions.sdcardStorage
 import de.xikolo.utils.extensions.showToast
@@ -103,16 +102,9 @@ open class FileDownloadItem(
             return null
         }
 
-    override val openIntent: Intent?
-        get() {
-            return download?.let {
-                val target = Intent(Intent.ACTION_VIEW)
-                target.setDataAndType(FileProviderUtil.getUriForFile(it), mimeType)
-                target.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-                Intent.createChooser(target, null).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
+    override val openAction: ((FragmentActivity) -> Unit)?
+        get() = { activity ->
+            download?.open(activity, mimeType, false)
         }
 
     override var stateListener: StateListener? = null

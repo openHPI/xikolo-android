@@ -1,6 +1,5 @@
 package de.xikolo.download
 
-import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 
 abstract class DownloadItem<out F, out I : DownloadIdentifier> {
@@ -13,7 +12,7 @@ abstract class DownloadItem<out F, out I : DownloadIdentifier> {
 
     abstract val download: F?
 
-    abstract val openIntent: Intent?
+    abstract val openAction: ((FragmentActivity) -> Unit)?
 
     abstract var stateListener: StateListener?
 

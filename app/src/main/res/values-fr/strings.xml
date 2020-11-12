@@ -138,6 +138,13 @@
     <string name="dialog_external_content_yes_peer">Ouvrir</string>
     <string name="dialog_external_content_yes_always_peer">Ouvrir et ne plus poser cette question</string>
 
+    <string name="dialog_unsupported_intent_title">Ne peut être ouvert</string>
+    <string name="dialog_unsupported_intent_message">Aucune demande d\'exécution de cette action n\'a pu être détectée.</string>
+    <string name="dialog_unsupported_intent_message_file">\n\nVous avez essayé d\'ouvrir le format de fichier suivant : %1$s\nVeuillez installer une application qui prend en charge l\'ouverture de ce type de fichier.</string>
+    <string name="dialog_unsupported_intent_message_open_anyway">Essayez quand même d\'ouvrir</string>
+    <string name="dialog_unsupported_intent_message_open_path">Essayez d\'ouvrir avec un gestionnaire de fichiers</string>
+    <string name="dialog_unsupported_intent_error_no_file_manager">Aucun gestionnaire de fichiers trouvé</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -271,7 +278,6 @@
     <string name="toast_successful_logout">Utilisateur déconnecté avec succès.</string>
     <string name="toast_file_already_downloaded">Fichier déjà téléchargé.</string>
     <string name="toast_no_external_write_access">Aucun accès en écriture %1$s.</string>
-    <string name="toast_no_file_viewer_found">Aucune application trouvée pour ouvrir le fichier.</string>
     <string name="toast_pip_error">L\'application n\'a pas pu entrer en mode incrustation d\'image.</string>
 
     <!-- -->
