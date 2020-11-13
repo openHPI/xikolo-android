@@ -139,6 +139,13 @@
     <string name="dialog_external_content_yes_peer">Abrir</string>
     <string name="dialog_external_content_yes_always_peer">Abrir e não perguntar novamente</string>
 
+    <string name="dialog_unsupported_intent_title">Não pode ser aberto</string>
+    <string name="dialog_unsupported_intent_message">Não pôde ser detectado qualquer pedido para a execução desta acção.</string>
+    <string name="dialog_unsupported_intent_message_file">\n\nTentou abrir no seguinte formato de ficheiro: %1$s\nPor favor, instale uma aplicação que suporte a abertura deste tipo de ficheiro.</string>
+    <string name="dialog_unsupported_intent_message_open_anyway">Tente abrir de qualquer forma</string>
+    <string name="dialog_unsupported_intent_message_open_path">Tente abrir com um gestor de ficheiros</string>
+    <string name="dialog_unsupported_intent_error_no_file_manager">Não foi encontrado nenhum gestor de ficheiros</string>
+
     <!-- -->
     <string name="title_activity_module">Módulo</string>
 
@@ -272,7 +279,6 @@
     <string name="toast_successful_logout">Desconectado com sucesso.</string>
     <string name="toast_file_already_downloaded">Arquivo já baixado.</string>
     <string name="toast_no_external_write_access">Não há acesso à gravação para %1$s.</string>
-    <string name="toast_no_file_viewer_found">Nenhum aplicativo para abrir este arquivo encontrado.</string>
     <string name="toast_pip_error">O aplicativo não pôde entrar no modo Picture-in-Picture.</string>
 
     <!-- -->

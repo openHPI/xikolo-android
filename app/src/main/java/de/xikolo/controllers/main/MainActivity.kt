@@ -1,7 +1,6 @@
 package de.xikolo.controllers.main
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -31,6 +30,7 @@ import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.extensions.checkPlayServicesWithDialog
 import de.xikolo.utils.extensions.getStringArray
 import de.xikolo.utils.extensions.getTypedArray
+import de.xikolo.utils.extensions.openUrl
 import de.xikolo.viewmodels.main.NavigationViewModel
 
 class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.OnNavigationItemSelectedListener, MainActivityCallback {
@@ -263,9 +263,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
                     )
                     .apply {
                         setOnMenuItemClickListener {
-                            startActivity(
-                                Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                            )
+                            openUrl(url)
                             true
                         }
 

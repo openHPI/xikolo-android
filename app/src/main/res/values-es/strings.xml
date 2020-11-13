@@ -139,6 +139,13 @@
     <string name="dialog_external_content_yes_peer">Abrir</string>
     <string name="dialog_external_content_yes_always_peer">Abrir y no volver a preguntarme</string>
 
+    <string name="dialog_unsupported_intent_title">No puede abrirse</string>
+    <string name="dialog_unsupported_intent_message">No se pudo detectar ninguna solicitud de ejecución de esta acción.</string>
+    <string name="dialog_unsupported_intent_message_file">\n\nIntentaste abrir el siguiente formato de archivo: %1$s\nPor favor, instale una aplicación que soporte la apertura de este tipo de archivos.</string>
+    <string name="dialog_unsupported_intent_message_open_anyway">Intenta abrir de todas formas</string>
+    <string name="dialog_unsupported_intent_message_open_path">Intenta abrir con un gestor de archivos</string>
+    <string name="dialog_unsupported_intent_error_no_file_manager">No se encontró ningún gestor de archivos</string>
+
     <!-- -->
     <string name="title_activity_module">Módulo</string>
 
@@ -272,7 +279,6 @@
     <string name="toast_successful_logout">La sesión se cerró adecuadamente.</string>
     <string name="toast_file_already_downloaded">Archivo ya descargado.</string>
     <string name="toast_no_external_write_access">No hay acceso de escritura para %1$s.</string>
-    <string name="toast_no_file_viewer_found">No se encontró ninguna aplicación para abrir este archivo.</string>
     <string name="toast_pip_error">La aplicación no pudo entrar en el modo Imagen en imagen.</string>
 
     <!-- -->

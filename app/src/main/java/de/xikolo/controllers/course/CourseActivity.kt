@@ -50,6 +50,7 @@ import de.xikolo.utils.IdUtil
 import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.ShortcutUtil
 import de.xikolo.utils.extensions.createChooser
+import de.xikolo.utils.extensions.openUrl
 import de.xikolo.utils.extensions.shareCourseLink
 import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.course.CourseViewModel
@@ -499,8 +500,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     private fun enterExternalCourse(course: Course) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(course.externalUrl))
-        startActivity(intent)
+        openUrl(course.externalUrl)
     }
 
     override fun onConnectivityChange(isOnline: Boolean) {

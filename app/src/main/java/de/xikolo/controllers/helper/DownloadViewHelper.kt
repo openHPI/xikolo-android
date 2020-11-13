@@ -1,6 +1,5 @@
 package de.xikolo.controllers.helper
 
-import android.content.ActivityNotFoundException
 import android.os.Handler
 import android.os.Looper
 import android.view.View
@@ -155,14 +154,9 @@ class DownloadViewHelper(
             }
         }
 
+        // ToDo will be refactored in the HLS feature to hide the open button if openAction is null
         buttonOpenDownload.setOnClickListener {
-            if (download.openIntent != null) {
-                try {
-                    activity.startActivity(download.openIntent)
-                } catch (e: ActivityNotFoundException) {
-                    activity.showToast(R.string.toast_no_file_viewer_found)
-                }
-            } else {
+            download.openAction?.invoke(activity) ?: run {
                 activity.showToast(R.string.error_plain)
             }
         }

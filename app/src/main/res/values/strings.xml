@@ -140,6 +140,13 @@
     <string name="dialog_external_content_yes_peer">Open</string>
     <string name="dialog_external_content_yes_always_peer">Open and don\'t ask again</string>
 
+    <string name="dialog_unsupported_intent_title">Cannot be opened</string>
+    <string name="dialog_unsupported_intent_message">No application for executing this action could be detected.</string>
+    <string name="dialog_unsupported_intent_message_file">\n\nYou tried to open following file format: %1$s\nPlease install an application that supports opening this file type.</string>
+    <string name="dialog_unsupported_intent_message_open_anyway">Try opening anyway</string>
+    <string name="dialog_unsupported_intent_message_open_path">Try to open with a file manager</string>
+    <string name="dialog_unsupported_intent_error_no_file_manager">No file manager found</string>
+
     <!-- -->
     <string name="title_activity_module">Module</string>
 
@@ -274,7 +281,6 @@
     <string name="toast_successful_logout">Logged out successfully.</string>
     <string name="toast_file_already_downloaded">File already downloaded.</string>
     <string name="toast_no_external_write_access">No write access for %1$s.</string>
-    <string name="toast_no_file_viewer_found">No application to open this file found.</string>
     <string name="toast_pip_error">The application could not enter Picture-in-Picture mode.</string>
 
     <!-- -->

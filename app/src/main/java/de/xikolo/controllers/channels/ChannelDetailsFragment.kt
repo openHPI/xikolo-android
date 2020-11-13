@@ -1,7 +1,5 @@
 package de.xikolo.controllers.channels
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -27,6 +25,7 @@ import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.MetaSectionList
+import de.xikolo.utils.extensions.openUrl
 import de.xikolo.viewmodels.channel.ChannelViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.SpaceItemDecoration
@@ -226,8 +225,7 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
     }
 
     private fun enterExternalCourse(course: Course) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(course.externalUrl))
-        startActivity(intent)
+        activity?.openUrl(course.externalUrl)
     }
 
     private fun openLogin() {

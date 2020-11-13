@@ -139,6 +139,13 @@
     <string name="dialog_external_content_yes_peer">打开</string>
     <string name="dialog_external_content_yes_always_peer">打开并不\再提示</string>
 
+    <string name="dialog_unsupported_intent_title">不能打开</string>
+    <string name="dialog_unsupported_intent_message">没有发现执行该行动的申请。</string>
+    <string name="dialog_unsupported_intent_message_file">\n\n你试图打开以下文件格式。 %1$s\n请安装一个支持打开此文件类型的应用程序。</string>
+    <string name="dialog_unsupported_intent_message_open_anyway">无论如何都要打开</string>
+    <string name="dialog_unsupported_intent_message_open_path">尝试用文件管理器打开</string>
+    <string name="dialog_unsupported_intent_error_no_file_manager">没有找到文件管理器</string>
+
     <!-- -->
     <string name="title_activity_module">单元</string>
 
@@ -272,7 +279,6 @@
     <string name="toast_successful_logout">登出成功。</string>
     <string name="toast_file_already_downloaded">档案已下载。</string>
     <string name="toast_no_external_write_access">没有编写权限 %1$s。</string>
-    <string name="toast_no_file_viewer_found">找不到打开此文件的应用程序。</string>
     <string name="toast_pip_error">应用程序无法进入画中画模式。</string>
 
     <!-- -->

@@ -1,7 +1,5 @@
 package de.xikolo.controllers.main
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -26,6 +24,7 @@ import de.xikolo.models.dao.CourseDao
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkStateLiveData
 import de.xikolo.utils.MetaSectionList
+import de.xikolo.utils.extensions.openUrl
 import de.xikolo.viewmodels.main.CourseListViewModel
 import de.xikolo.views.AutofitRecyclerView
 import de.xikolo.views.CourseFilterView
@@ -101,8 +100,8 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
         }
 
         recyclerView.addItemDecoration(SpaceItemDecoration(
-            activity!!.resources.getDimensionPixelSize(R.dimen.card_horizontal_margin),
-            activity!!.resources.getDimensionPixelSize(R.dimen.card_vertical_margin),
+            requireActivity().resources.getDimensionPixelSize(R.dimen.card_horizontal_margin),
+            requireActivity().resources.getDimensionPixelSize(R.dimen.card_vertical_margin),
             false,
             object : SpaceItemDecoration.RecyclerViewInfo {
                 override fun isHeader(position: Int): Boolean {
@@ -265,19 +264,19 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
             showLoginRequired()
             openLogin()
         } else {
-            val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(activity!!)
+            val intent =
+                CourseActivityAutoBundle.builder().courseId(courseId).build(requireActivity())
             startActivity(intent)
         }
     }
 
     private fun enterCourseDetails(courseId: String) {
-        val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(activity!!)
+        val intent = CourseActivityAutoBundle.builder().courseId(courseId).build(requireActivity())
         startActivity(intent)
     }
 
     private fun enterExternalCourse(course: Course) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(course.externalUrl))
-        startActivity(intent)
+        activity?.openUrl(course.externalUrl)
     }
 
     fun enroll(courseId: String) {
@@ -314,7 +313,7 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
     }
 
     private fun openLogin() {
-        val intent = LoginActivityAutoBundle.builder().build(activity!!)
+        val intent = LoginActivityAutoBundle.builder().build(requireActivity())
         startActivity(intent)
     }
 
