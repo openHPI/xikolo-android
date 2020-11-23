@@ -2,7 +2,7 @@ import org.gradle.api.JavaVersion
 
 object Versions {
     // Project
-    const val KOTLIN = "1.4.10"
+    const val KOTLIN = "1.4.20"
     const val BUILD_TOOLS = "30.0.2"
     const val MIN_SDK = 21
     const val TARGET_SDK = 30
