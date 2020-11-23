@@ -11,12 +11,12 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}")
         classpath("io.realm:realm-gradle-plugin:7.0.8")
         classpath("com.google.gms:google-services:4.3.4")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.3.0")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.4.1")
     }
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.33.0"
+    id("com.github.ben-manes.versions") version "0.36.0"
 
     // Make sure to update this in `buildSrc/build.gradle.kts` as well
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
