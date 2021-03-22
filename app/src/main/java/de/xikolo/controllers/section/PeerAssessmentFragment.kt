@@ -21,7 +21,11 @@ import de.xikolo.managers.UserManager
 import de.xikolo.models.Item
 import de.xikolo.models.PeerAssessment
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.extensions.*
+import de.xikolo.utils.extensions.createChooser
+import de.xikolo.utils.extensions.includeAuthToken
+import de.xikolo.utils.extensions.isPast
+import de.xikolo.utils.extensions.setMarkdownText
+import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.section.PeerAssessmentViewModel
 
 class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
@@ -123,7 +127,7 @@ class PeerAssessmentFragment : ViewModelFragment<PeerAssessmentViewModel>() {
                 includeAuthToken(UserManager.token!!)
             }
             context?.let { context ->
-                intent.createChooser(context, null, arrayOf(context.packageName))?.let { intent ->
+                intent.createChooser(context, null, true)?.let { intent ->
                     startActivity(intent)
                 } ?: run {
                     showToast(R.string.error_plain)

@@ -392,7 +392,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     private fun createChooserFromCurrentIntent() {
         intent?.let {
             Handler().postDelayed({
-                Intent(it.action, it.data).createChooser(this, null, arrayOf(this.packageName))?.let {
+                Intent(it.action, it.data).createChooser(this, null, true)?.let {
                     startActivity(it)
                 } ?: run {
                     showToast(R.string.error_plain)
