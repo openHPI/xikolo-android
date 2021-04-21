@@ -104,11 +104,13 @@ class VideoSettingsHelper(private val context: Context, private val subtitles: L
             list.addView(
                 buildSettingsItem(
                     R.string.icon_subtitles,
-                    context.getString(R.string.video_settings_subtitles) + (currentVideoSubtitles?.let {
-                        "  " + context.getString(R.string.video_settings_separator) + "  " + LanguageUtil.toNativeName(
-                            it.language
-                        )
-                    } ?: ""),
+                    context.getString(R.string.video_settings_subtitles) + (
+                        currentVideoSubtitles?.let {
+                            "  " + context.getString(R.string.video_settings_separator) + "  " + LanguageUtil.toNativeName(
+                                it.language
+                            )
+                        } ?: ""
+                        ),
                     View.OnClickListener { clickListener.onSubtitleClick() },
                     false,
                     Config.FONT_MATERIAL
