@@ -124,7 +124,7 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
                 includeAuthToken(UserManager.token!!)
             }
             context?.let { context ->
-                intent.createChooser(context, null, arrayOf(context.packageName))?.let { intent ->
+                intent.createChooser(context, null, true)?.let { intent ->
                     startActivity(intent)
                 } ?: run {
                     showToast(R.string.error_plain)

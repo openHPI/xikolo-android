@@ -1,5 +1,6 @@
 package de.xikolo.utils.extensions
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -19,37 +20,52 @@ import de.xikolo.controllers.dialogs.UnsupportedIntentDialogAutoBundle
 import de.xikolo.utils.FileProviderUtil
 import java.io.File
 
+@SuppressLint("QueryPermissionsNeeded") // because we only query own components
 fun <T : Intent> T.createChooser(
     context: Context,
     title: String? = null,
-    packagesToHide: Array<String> = emptyArray()
+    hideSelf: Boolean = false
 ): Intent? {
-    val resolveInfos = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        context.packageManager.queryIntentActivities(this, PackageManager.MATCH_ALL)
-    } else {
-        context.packageManager.queryIntentActivities(this, 0)
-    }
-    val intents = resolveInfos
-        .distinctBy {
-            it.activityInfo.packageName
+    return if (hideSelf) {
+        // will include all components from all apps until Q (Android 10)
+        // but only own components and selected public ones from R (Android 11) on
+        val resolveInfos = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            context.packageManager.queryIntentActivities(this, PackageManager.MATCH_ALL)
+        } else {
+            context.packageManager.queryIntentActivities(this, 0)
         }
-        .filter {
-            !packagesToHide.contains(it.activityInfo.packageName)
-        }
-        .map {
-            val intent = Intent(this)
-            intent.component = ComponentName(it.activityInfo.packageName, it.activityInfo.name)
-            intent.setPackage(it.activityInfo.packageName)
-            intent
-        }
-        .toMutableList()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // exclude packages explicitly
+            val componentsToExclude = resolveInfos
+                .filter { it.activityInfo.packageName == context.packageName }
+                .map { ComponentName(it.activityInfo.packageName, it.activityInfo.name) }
+                .toTypedArray()
+            Intent.createChooser(this, title)
+                .putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, componentsToExclude)
+        } else {
+            // include packages explicitly
+            val intentsToInclude = resolveInfos
+                .filter {
+                    it.activityInfo.packageName != context.packageName
+                }
+                .map {
+                    val intent = Intent(this)
+                    intent.component =
+                        ComponentName(it.activityInfo.packageName, it.activityInfo.name)
+                    intent.setPackage(it.activityInfo.packageName)
+                    intent
+                }
+                .toMutableList()
 
-    return try {
-        val chooserIntent = Intent.createChooser(intents.removeAt(0), title)
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toTypedArray())
-        chooserIntent
-    } catch (e: IndexOutOfBoundsException) {
-        null
+            try {
+                Intent.createChooser(intentsToInclude.removeAt(0), title)
+                    .putExtra(Intent.EXTRA_INITIAL_INTENTS, intentsToInclude.toTypedArray())
+            } catch (e: IndexOutOfBoundsException) {
+                null
+            }
+        }
+    } else {
+        return Intent.createChooser(this, title)
     }
 }
 
