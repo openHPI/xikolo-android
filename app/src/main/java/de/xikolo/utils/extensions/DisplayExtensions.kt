@@ -8,6 +8,7 @@ import android.content.res.Configuration
 import android.graphics.Point
 import android.os.Build
 import android.util.DisplayMetrics
+import android.view.WindowManager
 
 val <T : Context> T.is7inchTablet: Boolean
     get() {
@@ -19,11 +20,19 @@ val <T : Context> T.is7inchTablet: Boolean
         return dpHeight >= 600 || dpWidth >= 600
     }
 
-val <T : Activity?> T.displaySize: Point
+val <T : Context> T.displaySize: Point
     get() {
-        val size = Point(0, 0)
-        this?.windowManager?.defaultDisplay?.getSize(size)
-        return size
+        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Point(
+                windowManager.currentWindowMetrics.bounds.width(),
+                windowManager.currentWindowMetrics.bounds.height()
+            )
+        } else {
+            val size = Point(0, 0)
+            windowManager.defaultDisplay.getRealSize(size)
+            size
+        }
     }
 
 val <T : Activity> T.videoThumbnailSize: Point

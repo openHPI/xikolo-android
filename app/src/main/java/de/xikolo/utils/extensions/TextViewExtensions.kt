@@ -50,16 +50,19 @@ fun <T : TextView> T.setMarkdownText(markdown: String?) {
             .usePlugin(HtmlPlugin.create())
             .usePlugin(
                 GlideImagesPlugin.create(object : GlideImagesPlugin.GlideStore {
-                    private val glide = Glide.with(context)
-
                     override fun cancel(target: Target<*>) {
-                        glide.clear(target)
+                        Glide.with(context).clear(target)
                     }
 
                     override fun load(drawable: AsyncDrawable): RequestBuilder<Drawable> {
-                        return glide.load(
-                            getAbsoluteUrl(drawable.destination)
-                        )
+                        return Glide.with(context)
+                            .load(getAbsoluteUrl(drawable.destination))
+                            .override(
+                                context.displaySize.x,
+                                Target.SIZE_ORIGINAL
+                            )
+                            .dontTransform()
+                            .fitCenter()
                     }
                 })
             )
