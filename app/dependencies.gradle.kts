@@ -8,7 +8,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.KOTLIN}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.KOTLIN}")
 
-    val kotlinCoroutinesVersion = "1.4.2"
+    val kotlinCoroutinesVersion = "1.4.3"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion")
 
@@ -72,8 +72,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-gcm:17.0.0")
 
     // firebase
-    implementation("com.google.firebase:firebase-analytics:18.0.3")
-    implementation("com.google.firebase:firebase-crashlytics:17.4.1")
+    implementation("com.google.firebase:firebase-analytics:19.0.0")
+    implementation("com.google.firebase:firebase-crashlytics:18.0.0")
 
     // material design
     implementation("com.google.android.material:material:1.3.0")
@@ -83,7 +83,7 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.2.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("androidx.mediarouter:mediarouter:1.2.2")
+    implementation("androidx.mediarouter:mediarouter:1.2.3")
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("androidx.browser:browser:1.3.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
