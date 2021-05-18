@@ -8,7 +8,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.KOTLIN}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.KOTLIN}")
 
-    val kotlinCoroutinesVersion = "1.4.3"
+    val kotlinCoroutinesVersion = "1.5.0"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion")
 
@@ -41,7 +41,7 @@ dependencies {
     implementation("moe.banana:moshi-jsonapi-retrofit-converter:$moshijsonapiVersion")
 
     // user interface
-    implementation("de.psdev.licensesdialog:licensesdialog:2.1.0")
+    implementation("de.psdev.licensesdialog:licensesdialog:2.2.0")
     implementation("com.github.rubensousa:previewseekbar:3.0.0")
 
     // markdown
