@@ -20,10 +20,22 @@ import de.xikolo.utils.extensions.includeAuthToken
 import de.xikolo.utils.extensions.isOnline
 import de.xikolo.utils.extensions.showToast
 
-class WebViewFragment : NetworkStateFragment() {
+class WebViewFragment() : NetworkStateFragment() {
 
     companion object {
         val TAG = WebViewFragment::class.java.simpleName
+    }
+
+    constructor(
+        url: String,
+        inAppLinksEnabled: Boolean = false,
+        externalLinksEnabled: Boolean = false,
+        allowBack: Boolean = false
+    ) : this() {
+        this.url = url
+        this.inAppLinksEnabled = inAppLinksEnabled
+        this.externalLinksEnabled = externalLinksEnabled
+        this.allowBack = allowBack
     }
 
     @AutoBundleField

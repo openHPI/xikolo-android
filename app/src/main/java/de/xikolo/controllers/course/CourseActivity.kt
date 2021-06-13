@@ -51,6 +51,7 @@ import de.xikolo.utils.LanalyticsUtil
 import de.xikolo.utils.ShortcutUtil
 import de.xikolo.utils.extensions.createChooser
 import de.xikolo.utils.extensions.openUrl
+import de.xikolo.utils.extensions.registerFragment
 import de.xikolo.utils.extensions.shareCourseLink
 import de.xikolo.utils.extensions.showToast
 import de.xikolo.viewmodels.course.CourseViewModel
@@ -544,15 +545,19 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
             return when (areaState.get(position)) {
                 CourseArea.LEARNINGS ->
                     LearningsFragmentAutoBundle.builder(courseIdentifier).build()
-                CourseArea.DISCUSSIONS ->
-                    WebViewFragmentAutoBundle.builder(
-                        Config.HOST_URL + Config.COURSES +
-                            courseIdentifier + "/" + Config.DISCUSSIONS
-                    )
-                        .allowBack(true)
-                        .inAppLinksEnabled(true)
-                        .externalLinksEnabled(false)
-                        .build()
+                CourseArea.DISCUSSIONS -> {
+                    supportFragmentManager.registerFragment(
+                        WebViewFragment::class.java.name + areaState.get(position)
+                    ) {
+                        WebViewFragment(
+                            Config.HOST_URL + Config.COURSES +
+                                courseIdentifier + "/" + Config.DISCUSSIONS,
+                            inAppLinksEnabled = true,
+                            externalLinksEnabled = true,
+                            allowBack = false
+                        )
+                    }.invoke()
+                }
                 CourseArea.PROGRESS ->
                     ProgressFragmentAutoBundle.builder(courseIdentifier).build()
                 CourseArea.COURSE_DETAILS ->
