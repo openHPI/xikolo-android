@@ -261,12 +261,16 @@ class VideoPreviewFragment : ViewModelFragment<VideoPreviewViewModel>() {
         showDescriptionButton.text = getString(R.string.show_more)
 
         textDescription.post {
-            if (textDescription.lineCount > MAX_DESCRIPTION_LINES) {
-                showDescriptionButton.visibility = View.VISIBLE
-                videoDescriptionContainer.foreground = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.gradient_light_to_transparent_from_bottom
-                )
+            try {
+                if (textDescription.lineCount > MAX_DESCRIPTION_LINES) {
+                    showDescriptionButton.visibility = View.VISIBLE
+                    videoDescriptionContainer.foreground = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.gradient_light_to_transparent_from_bottom
+                    )
+                }
+            } catch (e: IllegalStateException) {
+                // Fragment not attached to context anymore
             }
         }
     }
