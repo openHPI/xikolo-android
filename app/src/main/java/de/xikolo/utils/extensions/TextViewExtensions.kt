@@ -50,12 +50,14 @@ fun <T : TextView> T.setMarkdownText(markdown: String?) {
             .usePlugin(HtmlPlugin.create())
             .usePlugin(
                 GlideImagesPlugin.create(object : GlideImagesPlugin.GlideStore {
+                    private var glide = Glide.with(context)
+
                     override fun cancel(target: Target<*>) {
-                        Glide.with(context).clear(target)
+                        glide.clear(target)
                     }
 
                     override fun load(drawable: AsyncDrawable): RequestBuilder<Drawable> {
-                        return Glide.with(context)
+                        return glide
                             .load(getAbsoluteUrl(drawable.destination))
                             .override(
                                 context.displaySize.x,
