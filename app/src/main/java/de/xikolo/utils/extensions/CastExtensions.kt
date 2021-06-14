@@ -7,6 +7,8 @@ import android.net.Uri
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaLoadOptions
 import com.google.android.gms.cast.MediaMetadata
+import com.google.android.gms.cast.MediaTrack
+import com.google.android.gms.cast.TextTrackStyle
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastState
 import com.google.android.gms.cast.framework.media.RemoteMediaClient
@@ -15,6 +17,7 @@ import com.google.android.gms.common.images.WebImage
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import de.xikolo.controllers.cast.CastActivity
 import de.xikolo.models.Video
+import de.xikolo.utils.LanguageUtil
 
 val <T : Context> T.isCastConnected: Boolean
     get() {
@@ -99,10 +102,22 @@ fun <T : Video> T.cast(activity: Activity, autoPlay: Boolean): PendingResult<Rem
         // large image, used on the Cast Player page and Lock Screen on KitKat
         mediaMetadata.addImage(image)
 
+        val subtitleTracks = subtitles.mapIndexed { index, videoSubtitles ->
+            MediaTrack.Builder(index.toLong(), MediaTrack.TYPE_TEXT)
+                .setName(LanguageUtil.toLocaleName(videoSubtitles.language))
+                .setSubtype(MediaTrack.SUBTYPE_SUBTITLES)
+                .setContentId(videoSubtitles.vttUrl)
+                .setContentType("text/vtt")
+                .setLanguage(videoSubtitles.language)
+                .build()
+        }
+
         val castMetadata = MediaInfo.Builder(streamToPlay?.hdUrl)
             .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
             .setContentType("videos/mp4")
             .setMetadata(mediaMetadata)
+            .setMediaTracks(subtitleTracks)
+            .setTextTrackStyle(TextTrackStyle.fromSystemSettings(activity))
             .build()
 
         return remoteMediaClient.load(
@@ -110,7 +125,8 @@ fun <T : Video> T.cast(activity: Activity, autoPlay: Boolean): PendingResult<Rem
             MediaLoadOptions.Builder()
                 .setAutoplay(autoPlay)
                 .setPlayPosition(progress.toLong())
-                .build())
+                .build()
+        )
     } else {
         return null
     }
