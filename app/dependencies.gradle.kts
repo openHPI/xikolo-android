@@ -73,17 +73,17 @@ dependencies {
 
     // firebase
     implementation("com.google.firebase:firebase-analytics:19.0.0")
-    implementation("com.google.firebase:firebase-crashlytics:18.0.0")
+    implementation("com.google.firebase:firebase-crashlytics:18.1.0")
 
     // material design
     implementation("com.google.android.material:material:1.3.0")
 
     // androidx
-    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation("androidx.appcompat:appcompat:1.3.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.recyclerview:recyclerview:1.2.0")
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("androidx.mediarouter:mediarouter:1.2.3")
+    implementation("androidx.mediarouter:mediarouter:1.2.4")
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("androidx.browser:browser:1.3.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
