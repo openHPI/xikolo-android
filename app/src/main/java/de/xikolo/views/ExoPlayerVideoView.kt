@@ -261,6 +261,8 @@ open class ExoPlayerVideoView : PlayerView {
                             false
                         }
                     }
+                } finally {
+                    mediaMetadataRetriever?.release()
                 }
         }
         previewPrepareThread.start()

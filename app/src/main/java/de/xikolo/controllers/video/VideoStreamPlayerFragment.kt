@@ -602,7 +602,9 @@ open class VideoStreamPlayerFragment : BaseFragment() {
                     }
                     VideoSettingsHelper.PlaybackMode.LOW -> {
                         playerView.setHLSVideoUri(Uri.parse(videoStream.hlsUrl))
-                        playerView.setDesiredQuality(VideoSettingsHelper.VideoQuality.LOW.qualityFraction)
+                        playerView.setDesiredQuality(
+                            VideoSettingsHelper.VideoQuality.LOW.qualityFraction
+                        )
                     }
                     VideoSettingsHelper.PlaybackMode.MEDIUM -> {
                         playerView.setHLSVideoUri(Uri.parse(videoStream.hlsUrl))
@@ -612,11 +614,15 @@ open class VideoStreamPlayerFragment : BaseFragment() {
                     }
                     VideoSettingsHelper.PlaybackMode.HIGH -> {
                         playerView.setHLSVideoUri(Uri.parse(videoStream.hlsUrl))
-                        playerView.setDesiredQuality(VideoSettingsHelper.VideoQuality.HIGH.qualityFraction)
+                        playerView.setDesiredQuality(
+                            VideoSettingsHelper.VideoQuality.HIGH.qualityFraction
+                        )
                     }
                     VideoSettingsHelper.PlaybackMode.BEST -> {
                         playerView.setHLSVideoUri(Uri.parse(videoStream.hlsUrl))
-                        playerView.setDesiredQuality(VideoSettingsHelper.VideoQuality.BEST.qualityFraction)
+                        playerView.setDesiredQuality(
+                            VideoSettingsHelper.VideoQuality.BEST.qualityFraction
+                        )
                     }
                     VideoSettingsHelper.PlaybackMode.LEGACY_HD -> {
                         playerView.setProgressiveVideoUri(Uri.parse(videoStream.hdUrl))
@@ -842,12 +848,7 @@ open class VideoStreamPlayerFragment : BaseFragment() {
         if (setVideo(videoSettingsHelper.currentMode)) {
             updateSubtitles()
             updatePlaybackSpeed()
-            if (isOfflineVideo) {
-                // ToDo
-                /*playerView.uri?.let {
-                    playerView.setPreviewUri(it)
-                }*/
-            } else if (context.isOnline) {
+            if (!isOfflineVideo && context.isOnline) {
                 if (videoStream.sdUrl != null) {
                     playerView.setPreviewUri(Uri.parse(videoStream.sdUrl))
                 } else if (videoStream.hdUrl != null) {

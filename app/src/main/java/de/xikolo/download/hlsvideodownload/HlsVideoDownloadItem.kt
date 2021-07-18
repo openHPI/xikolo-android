@@ -50,7 +50,8 @@ open class HlsVideoDownloadItem(
             )
     }
 
-    private fun getMediaSource(storage: Storage): Pair<HlsMediaSource, Map<String, SingleSampleMediaSource>>? {
+    private fun getMediaSource(storage: Storage):
+        Pair<HlsMediaSource, Map<String, SingleSampleMediaSource>>? {
         return getIndexEntry(storage)?.let { indexEntry ->
             HlsMediaSource.Factory(
                 CacheDataSource.Factory()

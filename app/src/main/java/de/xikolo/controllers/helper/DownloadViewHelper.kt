@@ -288,7 +288,7 @@ class DownloadViewHelper(
             DownloadStatus.State.DOWNLOADED -> showEndState()
             DownloadStatus.State.DELETED -> {
                 showStartState()
-                if(status.error != null){
+                if (status.error != null) {
                     activity.showToast(R.string.error)
                 }
             }

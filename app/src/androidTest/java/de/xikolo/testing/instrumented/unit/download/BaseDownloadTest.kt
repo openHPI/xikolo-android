@@ -19,5 +19,4 @@ abstract class BaseDownloadTest : BaseTest() {
     @Rule
     @JvmField
     var permissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
 }

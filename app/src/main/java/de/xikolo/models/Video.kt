@@ -105,13 +105,15 @@ open class Video : RealmObject() {
     val streamToPlay: VideoStream?
         get() {
             return if (singleStream != null && (
-                singleStream?.hlsUrl != null || singleStream?.hdUrl != null ||
+                singleStream?.hlsUrl != null ||
+                    singleStream?.hdUrl != null ||
                     singleStream?.sdUrl != null
                 )
             ) {
                 singleStream
             } else if (lecturerStream != null && (
-                lecturerStream?.hlsUrl != null || lecturerStream?.hdUrl != null ||
+                lecturerStream?.hlsUrl != null ||
+                    lecturerStream?.hdUrl != null ||
                     lecturerStream?.sdUrl != null
                 )
             ) {

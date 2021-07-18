@@ -16,7 +16,8 @@ abstract class AbstractHlsVideoDownloadItemTest : DownloadItemTest<HlsVideoDownl
 
     override val testDownloadItem
         get() = HlsVideoDownloadItem(
-            "https://open.hpi.de/playlists/93a84211-e40a-416a-b224-4d3ecdbb12f9.m3u8?embed_subtitles_for_video=d7e056da-756f-4437-b64a-16970a33d5ef",
+            "https://open.hpi.de/playlists/93a84211-e40a-416a-b224-4d3ecdbb12f9.m3u8?" +
+                "embed_subtitles_for_video=d7e056da-756f-4437-b64a-16970a33d5ef",
             DownloadCategory.Other,
             VideoSettingsHelper.VideoQuality.HIGH.qualityFraction,
             emptyMap(),

@@ -218,9 +218,11 @@ object HlsVideoDownloadHandler :
                     }
                     val closestBitrate = closestFormat?.bitrate
 
-                    val estimatedSize = (closestFormat?.averageBitrate
-                        ?.takeUnless { it == Format.NO_VALUE }
-                        ?: closestBitrate)
+                    val estimatedSize = (
+                        closestFormat?.averageBitrate
+                            ?.takeUnless { it == Format.NO_VALUE }
+                            ?: closestBitrate
+                        )
                         ?.times(manifest.mediaPlaylist.durationUs)
                         ?.div(8000000) // to bytes and seconds
 
@@ -274,7 +276,8 @@ object HlsVideoDownloadHandler :
                             if (request.storage == context.internalStorage) {
                                 Log.i(
                                     TAG,
-                                    "Starting downloading to internal storage: ${request.url} aka $identifier"
+                                    "Starting downloading to internal storage: " +
+                                        "${request.url} aka $identifier"
                                 )
                                 HlsVideoDownloadInternalStorageForegroundService::class.java
                             } else if (request.storage == context.sdcardStorage &&
@@ -282,7 +285,8 @@ object HlsVideoDownloadHandler :
                             ) {
                                 Log.i(
                                     TAG,
-                                    "Starting downloading to sdcard storage: ${request.url} aka $identifier"
+                                    "Starting downloading to sdcard storage: " +
+                                        "${request.url} aka $identifier"
                                 )
                                 HlsVideoDownloadSdcardStorageForegroundService::class.java
                             } else {
@@ -409,7 +413,8 @@ object HlsVideoDownloadHandler :
     private fun getDownloadStatus(download: Download?): DownloadStatus {
         if (download == null) {
             Log.w(
-                TAG, "getDownloadStatus(): Download not found, default status is generated: " +
+                TAG,
+                "getDownloadStatus(): Download not found, default status is generated: " +
                     "${download?.request?.id}"
             )
             return DownloadStatus(null, null, DownloadStatus.State.DELETED, null)
@@ -423,7 +428,9 @@ object HlsVideoDownloadHandler :
                     ?: download.bytesDownloaded * 100 / download.percentDownloaded
             }.toLong()
         val state = when (download.state) {
-            Download.STATE_QUEUED, Download.STATE_RESTARTING, Download.STATE_REMOVING -> DownloadStatus.State.PENDING
+            Download.STATE_QUEUED,
+            Download.STATE_RESTARTING,
+            Download.STATE_REMOVING -> DownloadStatus.State.PENDING
             Download.STATE_DOWNLOADING -> DownloadStatus.State.RUNNING
             Download.STATE_COMPLETED -> DownloadStatus.State.DOWNLOADED
             else -> DownloadStatus.State.DELETED
@@ -434,8 +441,9 @@ object HlsVideoDownloadHandler :
         } else null
 
         Log.d(
-            TAG, "getDownloadStatus(): Generated download status [${state.name}]" +
-                "${downloaded}/${totalSize} B (error: ${error}) for ${download.request.id}"
+            TAG,
+            "getDownloadStatus(): Generated download status [${state.name}]" +
+                "$downloaded/$totalSize B (error: $error) for ${download.request.id}"
         )
         return DownloadStatus(totalSize, downloaded, state, error)
     }

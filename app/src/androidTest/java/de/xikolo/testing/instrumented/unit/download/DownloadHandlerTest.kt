@@ -92,9 +92,10 @@ abstract class DownloadHandlerTest<T : DownloadHandler<I, R>,
 
         // wait for download to start
         waitWhile({
-            status?.state?.equals(DownloadStatus.State.DELETED) != false ||
-                (status?.state?.equals(DownloadStatus.State.PENDING) != true &&
-                    status?.state?.equals(DownloadStatus.State.RUNNING) != true)
+            status?.state?.equals(DownloadStatus.State.DELETED) != false || (
+                status?.state?.equals(DownloadStatus.State.PENDING) != true &&
+                    status?.state?.equals(DownloadStatus.State.RUNNING) != true
+                )
         })
 
         // test status after start
@@ -179,7 +180,7 @@ abstract class DownloadHandlerTest<T : DownloadHandler<I, R>,
 
         var downloaded = false
         downloadHandler.listen(downloadHandler.identify(successfulTestRequest)) {
-            if(it.state == DownloadStatus.State.DOWNLOADED){
+            if (it.state == DownloadStatus.State.DOWNLOADED) {
                 downloaded = true
             }
         }
@@ -195,7 +196,7 @@ abstract class DownloadHandlerTest<T : DownloadHandler<I, R>,
         // wait for result
         waitWhile({ nextCount == null }, 1000)
 
-        assertEquals(count!! + 1, nextCount);
+        assertEquals(count!! + 1, nextCount)
     }
 
     @Test
