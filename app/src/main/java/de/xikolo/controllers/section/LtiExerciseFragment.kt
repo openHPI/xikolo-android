@@ -139,7 +139,7 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
     private fun updateView() {
         title.text = item?.title
 
-        if(ltiExercise?.launchUrl == null){
+        if (ltiExercise?.launchUrl == null) {
             hideAnyProgress()
             showMessage(
                 R.string.not_available,

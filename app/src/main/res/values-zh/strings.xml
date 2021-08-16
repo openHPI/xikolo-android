@@ -189,7 +189,7 @@
     <string name="ok">好</string>
     <string name="not_available">无法使用</string>
     <string name="item_proctored_summary">您订定了附合的证书，因此无\法在移动设备上访问此项目。请使用计算机访问它。</string>
-    <string name="lti_provider_deleted_summary">这个练习已经没有了。</string>
+    <string name="lti_provider_deleted_summary">不能使用这个练习了。</string>
 
     <string name="self_test_points">%1$。%2$的1f。1f自检积分</string>
     <string name="assignments_points">%1$。%2$的1f。1f作业积分</string>
