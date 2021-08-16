@@ -114,7 +114,8 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
     }
 
     private fun openExternalContent() {
-        Uri.parse(ltiExercise?.launchUrl)?.let { uri ->
+        try {
+            val uri = Uri.parse(ltiExercise?.launchUrl)
             val customTabsIntent = CustomTabsIntent.Builder()
                 .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_primary))
                 .build()
@@ -130,13 +131,22 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
                     showToast(R.string.error_plain)
                 }
             }
-        } ?: run {
+        } catch (e: Exception) {
             showToast(R.string.error_plain)
         }
     }
 
     private fun updateView() {
         title.text = item?.title
+
+        if(ltiExercise?.launchUrl == null){
+            hideAnyProgress()
+            showMessage(
+                R.string.not_available,
+                R.string.lti_provider_deleted_summary
+            )
+            return
+        }
 
         instructionsText.setMarkdownText(ltiExercise?.instructions)
 
