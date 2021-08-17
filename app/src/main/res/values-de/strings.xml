@@ -189,7 +189,7 @@
     <string name="ok">OK</string>
     <string name="not_available">Nicht verfügbar</string>
     <string name="item_proctored_summary">Dieser Inhalt ist auf Mobilgeräten nicht verfügbar, da ein qualifiziertes Zertifikat gebucht wurde. Bitte nutzen Sie einen Computer, um auf den Inhalt zuzugreifen.</string>
-
+    <string name="lti_provider_deleted_summary">Diese Aufgabe ist nicht mehr verfügbar.</string>
 
     <string name="self_test_points">%1$.1f von %2$.1f Selbsttest-Punkten</string>
     <string name="assignments_points">%1$.1f von %2$.1f Hausaufgaben-Punkten</string>

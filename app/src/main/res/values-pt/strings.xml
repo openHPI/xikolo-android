@@ -189,6 +189,7 @@
     <string name="ok">OK</string>
     <string name="not_available">Não disponível</string>
     <string name="item_proctored_summary">Este item não pode ser acessado no celular porque você reservou um certificado qualificado. Por favor, utilize um computador para acessá-lo.</string>
+    <string name="lti_provider_deleted_summary">Este exercício não está mais disponível.</string>
 
     <string name="self_test_points">%1$.1f de %2$.1f pontos de autoteste</string>
     <string name="assignments_points">%1$.1f de %2$.1f pontuação da tarefa</string>

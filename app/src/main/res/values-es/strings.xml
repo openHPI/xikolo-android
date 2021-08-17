@@ -189,6 +189,7 @@
     <string name="ok">Bien</string>
     <string name="not_available">No disponible</string>
     <string name="item_proctored_summary">No se puede acceder a este artículo en el móvil porque reservó un certificado electrónico. Por favor, utilice una computadora para acceder.</string>
+    <string name="lti_provider_deleted_summary">Este ejercicio ya no está disponible.</string>
 
     <string name="self_test_points">%1$.1f de %2$.1f puntos de autoevaluación</string>
     <string name="assignments_points">%1$.1f de %2$.1f puntos de asignación</string>

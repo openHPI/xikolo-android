@@ -188,6 +188,7 @@
     <string name="ok">OK</string>
     <string name="not_available">Non disponible</string>
     <string name="item_proctored_summary">Vous ne pouvez pas accéder à cet élément sur un appareil mobile car vous avez choisi un certificat qualifié. Veuillez utiliser un ordinateur pour y avoir accès.</string>
+    <string name="lti_provider_deleted_summary">Cet exercice n\'est plus disponible.</string>
 
     <string name="self_test_points">%1$.1f de %2$.1f points d\'autoévaluation</string>
     <string name="assignments_points">%1$.1f de %2$.1f points pour le travail</string>
