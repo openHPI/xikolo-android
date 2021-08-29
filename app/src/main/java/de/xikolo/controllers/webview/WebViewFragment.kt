@@ -1,11 +1,17 @@
 package de.xikolo.controllers.webview
 
 import android.content.Intent
+import android.content.MutableContextWrapper
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewStub
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.yatatsu.autobundle.AutoBundleField
+import de.xikolo.App
 import de.xikolo.R
 import de.xikolo.controllers.base.NetworkStateFragment
 import de.xikolo.controllers.helper.WebViewHelper
@@ -13,12 +19,11 @@ import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.utils.extensions.includeAuthToken
 import de.xikolo.utils.extensions.isOnline
 import de.xikolo.utils.extensions.showToast
-import de.xikolo.views.NestedScrollWebView
 
 class WebViewFragment : NetworkStateFragment() {
 
     companion object {
-        val TAG: String = WebViewFragment::class.java.simpleName
+        val TAG = WebViewFragment::class.java.simpleName
     }
 
     @AutoBundleField
@@ -33,45 +38,69 @@ class WebViewFragment : NetworkStateFragment() {
     @AutoBundleField(required = false)
     var allowBack: Boolean = false
 
-    private var webViewHelper: WebViewHelper? = null
+    private var contentView: View? = null
+
+    private lateinit var webViewHelper: WebViewHelper
+    private var mutableContextWrapper: MutableContextWrapper? = null
 
     override val layoutResource: Int
         get() = R.layout.fragment_webview
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        webViewHelper?.webView?.saveState(outState)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        retainInstance = true
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if (contentView == null) {
+            mutableContextWrapper = MutableContextWrapper(activity)
+
+            contentView = LayoutInflater.from(mutableContextWrapper).inflate(R.layout.fragment_loading_state, container, false)
+            // inflate content contentView inside
+            val contentView = contentView?.findViewById<ViewStub>(R.id.content_view)
+            contentView?.layoutResource = layoutResource
+            contentView?.inflate()
+
+            webViewHelper = WebViewHelper(this.contentView!!, this)
+        } else {
+            mutableContextWrapper?.baseContext = activity
+        }
+
+        return contentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val contentView = view.findViewById<NestedScrollWebView>(R.id.content_view)
-
-        webViewHelper = WebViewHelper(contentView!!, this)
-
         if (!context.isOnline) {
             showNetworkRequired()
-        } else if (webViewHelper?.requestedUrl() == null) {
-            if (savedInstanceState == null) {
-                webViewHelper?.request(url)
-            } else {
-                webViewHelper?.webView?.restoreState(savedInstanceState)
-            }
+        } else if (webViewHelper.requestedUrl() == null) {
+            webViewHelper.request(url)
         } else {
-            webViewHelper?.showWebView()
+            webViewHelper.showWebView()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        if (retainInstance && contentView?.parent is ViewGroup) {
+            try {
+                (contentView?.parent as ViewGroup).removeView(contentView)
+                mutableContextWrapper?.baseContext = App.instance
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+                contentView = null
+                mutableContextWrapper = null
+            }
         }
     }
 
     fun onBack(): Boolean {
-        val canGoBack = allowBack && webViewHelper?.webView?.canGoBack() == true
+        val canGoBack = allowBack && webViewHelper.webView.canGoBack()
         if (canGoBack) {
-            webViewHelper?.webView?.goBack()
+            webViewHelper.webView.goBack()
         }
         return canGoBack
     }
@@ -79,7 +108,7 @@ class WebViewFragment : NetworkStateFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_refresh -> {
-                webViewHelper?.refresh()
+                webViewHelper.refresh()
                 return true
             }
         }
@@ -112,10 +141,10 @@ class WebViewFragment : NetworkStateFragment() {
     }
 
     override fun onRefresh() {
-        if (webViewHelper?.requestedUrl() != null) {
-            webViewHelper?.refresh()
+        if (webViewHelper.requestedUrl() != null) {
+            webViewHelper.refresh()
         } else {
-            webViewHelper?.request(url)
+            webViewHelper.request(url)
         }
     }
 }
