@@ -191,10 +191,10 @@
     <string name="item_proctored_summary">您订定了附合的证书，因此无\法在移动设备上访问此项目。请使用计算机访问它。</string>
     <string name="lti_provider_deleted_summary">不能使用这个练习了。</string>
 
-    <string name="self_test_points">%1$。%2$的1f。1f自检积分</string>
-    <string name="assignments_points">%1$。%2$的1f。1f作业积分</string>
-    <string name="bonus_points">%1$。%2$的1f。1f奖励积分</string>
-    <string name="items_visited">%1$。%2$的0f。0f已造访</string>
+    <string name="self_test_points">%1$.1f 的 %2$.1f 自检积分</string>
+    <string name="assignments_points">%1$.1f 的 %2$.1f 作业积分</string>
+    <string name="bonus_points">%1$.1f 的 %2$.1f 奖励积分</string>
+    <string name="items_visited">%1$.0f 的 %2$.0f 已造访</string>
 
     <string name="course_date_coming_soon">即将来临</string>
     <string name="course_date_since">自从 %s </string>
