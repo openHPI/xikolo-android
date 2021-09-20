@@ -7,10 +7,10 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.2.1")
+        classpath("com.android.tools.build:gradle:7.0.2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}")
         classpath("io.realm:realm-gradle-plugin:7.0.8")
-        classpath("com.google.gms:google-services:4.3.8")
+        classpath("com.google.gms:google-services:4.3.10")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.7.1")
     }
 }
@@ -19,7 +19,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.39.0"
 
     // Make sure to update this in `buildSrc/build.gradle.kts` as well
-    id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
 allprojects {
@@ -31,7 +31,7 @@ allprojects {
 }
 
 ktlint {
-    version.set("0.41.0") // Make sure to update this in `buildSrc/build.gradle.kts` as well
+    version.set("0.42.1") // Make sure to update this in `buildSrc/build.gradle.kts` as well
     android.set(true)
     ignoreFailures.set(true)
     reporters {
