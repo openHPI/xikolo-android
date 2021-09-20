@@ -10,7 +10,7 @@ repositories {
 }
 
 ktlint {
-    version.set("0.41.0")
+    version.set("0.42.1")
     android.set(true)
     ignoreFailures.set(true)
     reporters {
