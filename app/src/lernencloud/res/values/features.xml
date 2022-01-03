@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <bool name="channels">true</bool>
+
     <string name="url_copyright" translatable="false">https://hpi.de/</string>
     <string name="url_faq" translatable="false">https://lernen.cloud/pages/faq</string>
 
