@@ -42,7 +42,7 @@ val FLAVORS = mapOf(
     ),
     "lernencloud" to FlavorConfig(
         "de.xikolo.lernencloud",
-        "Lernen.cloud",
+        "LERNEN.cloud",
         "lernen.cloud",
         "#dd6108",
         "#f6a800",
