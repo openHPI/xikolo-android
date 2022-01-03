@@ -14,10 +14,10 @@
     </string-array>
 
     <string-array name="nav_external_links_urls" translatable="false">
-        <item>https://schul-cloud.org/</item>
+        <item>https://dbildungscloud.de/</item>
     </string-array>
     <string-array name="nav_external_links_titles" translatable="false">
-        <item>HPI Schul-Cloud</item>
+        <item>dBildungscloud</item>
     </string-array>
     <array name="nav_external_links_icons">
         <item>@drawable/ic_schulcloud</item>
