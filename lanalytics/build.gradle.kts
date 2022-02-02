@@ -4,15 +4,12 @@ plugins {
 }
 
 android {
-    buildToolsVersion(Versions.BUILD_TOOLS)
+    buildToolsVersion = Versions.BUILD_TOOLS
     compileSdkVersion(Versions.COMPILE_SDK)
 
     defaultConfig {
         minSdkVersion(Versions.MIN_SDK)
         targetSdkVersion(Versions.TARGET_SDK)
-    }
-    lintOptions {
-        isAbortOnError = false
     }
     compileOptions {
         sourceCompatibility = Versions.JAVA
@@ -20,6 +17,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = Versions.KOTLIN_JVM
+    }
+    lint {
+        abortOnError = false
     }
 }
 

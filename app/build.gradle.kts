@@ -14,7 +14,7 @@ plugins {
 }
 
 android {
-    buildToolsVersion(Versions.BUILD_TOOLS)
+    buildToolsVersion = Versions.BUILD_TOOLS
     compileSdkVersion(Versions.COMPILE_SDK)
 
     defaultConfig {
@@ -31,8 +31,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
-    flavorDimensions("brand")
+    flavorDimensions += listOf("brand")
 
     productFlavors {
         FLAVORS.forEach { (flavor, config) ->
@@ -120,8 +119,16 @@ android {
             variant.resValue("string", "service_download", "$name Download Service")
         }
     })
-    lintOptions {
-        disable(
+    compileOptions {
+        sourceCompatibility = Versions.JAVA
+        targetCompatibility = Versions.JAVA
+    }
+    kotlinOptions {
+        jvmTarget = Versions.KOTLIN_JVM
+    }
+    lint {
+        abortOnError = false
+        disable += setOf(
             "ContentDescription",
             "InflateParams",
             "Overdraw",
@@ -129,17 +136,8 @@ android {
             "VectorPath",
             "VectorRaster"
         )
-
-        isAbortOnError = false
-        xmlReport = true
         htmlReport = false
-    }
-    compileOptions {
-        sourceCompatibility = Versions.JAVA
-        targetCompatibility = Versions.JAVA
-    }
-    kotlinOptions {
-        jvmTarget = Versions.KOTLIN_JVM
+        xmlReport = true
     }
 }
 
