@@ -63,6 +63,8 @@ class WebViewHelper(view: View, private val webViewInterface: WebViewFragment) {
         webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
         webView.settings.userAgentString = Config.HEADER_USER_AGENT_VALUE
 
+        webView.settings.domStorageEnabled = true
+
         webView.webChromeClient = object : WebChromeClient() {
             override fun onConsoleMessage(cm: ConsoleMessage): Boolean {
                 return !WEBVIEW_LOGGING || super.onConsoleMessage(cm)
