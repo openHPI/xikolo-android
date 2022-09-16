@@ -167,12 +167,22 @@
 
                     </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/labelSSO"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="6dp"
+                        android:text="@string/login_sso_label"
+                        android:textSize="12sp" />
+
                     <Button
                         android:id="@+id/btnSSO"
                         style="@style/ButtonContained"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/line"
+                        android:layout_below="@+id/labelSSO"
                         android:layout_alignParentLeft="true"
                         android:layout_marginBottom="6dp"
                         android:padding="12dp"

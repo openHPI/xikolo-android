@@ -187,7 +187,8 @@
     <string name="intro_overlay_text">Touch to cast videos on TV</string>
     <string name="or">or</string>
     <string name="login_sso">SSO</string>
-    <string name="login_sso_hint">SSO Login</string>
+    <string name="login_sso_label"></string>
+    <string name="login_sso_hint"></string>
     <string name="ok">OK</string>
     <string name="not_available">Not available</string>
     <string name="item_proctored_summary">This item can\'t be accessed on mobile because you booked a qualified certificate. Please use a computer to access it.</string>

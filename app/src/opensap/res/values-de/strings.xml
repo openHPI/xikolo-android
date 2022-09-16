@@ -4,7 +4,7 @@
     <string name="settings_copyright">&#169; 2013 &#8211; %d Copyright SAP</string>
 
     <string name="login_sso">SAP Single Sign On</string>
-    <string name="login_sso_hint">für SAP-Mitarbeiter, Partner und Kunden</string>
+    <string name="login_sso_label">Anmelden oder registrieren mit</string>
 
     <string name="title_section_channels">Kursbereiche</string>
     <string name="course_filter_channel">Kursbereich</string>
