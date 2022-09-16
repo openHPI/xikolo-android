@@ -31,6 +31,7 @@ import de.xikolo.controllers.dialogs.ProgressDialogIndeterminate
 import de.xikolo.controllers.dialogs.ProgressDialogIndeterminateAutoBundle
 import de.xikolo.controllers.dialogs.UnenrollDialog
 import de.xikolo.controllers.helper.CourseArea
+import de.xikolo.controllers.helper.LoginHelper
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.controllers.section.CourseItemsActivityAutoBundle
 import de.xikolo.controllers.webview.WebViewFragment
@@ -431,7 +432,7 @@ class CourseActivity : ViewModelActivity<CourseViewModel>(), UnenrollDialog.List
     }
 
     private fun openLogin() {
-        val intent = LoginActivityAutoBundle.builder().build(this)
+        val intent = LoginHelper.loginIntent(this)
         startActivity(intent)
     }
 

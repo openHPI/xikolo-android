@@ -20,6 +20,7 @@ import de.xikolo.R
 import de.xikolo.config.Config
 import de.xikolo.config.Feature
 import de.xikolo.controllers.base.ViewModelFragment
+import de.xikolo.controllers.helper.LoginHelper
 import de.xikolo.managers.UserManager
 import de.xikolo.network.jobs.base.NetworkCode
 import de.xikolo.network.jobs.base.NetworkState
@@ -207,12 +208,7 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
     }
 
     private fun startSSOLogin() {
-        val strategy = context?.getString("sso_provider")
-
-        val intent = SsoLoginActivityAutoBundle.builder(
-            Config.HOST_URL + "auth/" + strategy + "?in_app=true&redirect_to=/auth/" + strategy,
-            getString(R.string.login_sso)
-        ).build(activity!!)
+        val intent = LoginHelper.ssoLoginIntent(requireActivity())
         startActivity(intent)
     }
 

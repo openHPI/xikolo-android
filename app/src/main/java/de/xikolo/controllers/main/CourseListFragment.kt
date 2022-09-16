@@ -14,6 +14,7 @@ import de.xikolo.controllers.base.BaseActivity
 import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.controllers.course.CourseActivityAutoBundle
 import de.xikolo.controllers.helper.CourseListFilter
+import de.xikolo.controllers.helper.LoginHelper
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.extensions.observeOnce
@@ -313,7 +314,7 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
     }
 
     private fun openLogin() {
-        val intent = LoginActivityAutoBundle.builder().build(requireActivity())
+        val intent = LoginHelper.loginIntent(requireActivity())
         startActivity(intent)
     }
 

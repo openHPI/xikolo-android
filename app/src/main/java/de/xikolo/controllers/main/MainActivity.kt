@@ -13,6 +13,7 @@ import butterknife.BindView
 import com.google.android.material.navigation.NavigationView
 import de.xikolo.App
 import de.xikolo.R
+import de.xikolo.config.Config
 import de.xikolo.config.Feature
 import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.BaseFragment
@@ -21,16 +22,15 @@ import de.xikolo.controllers.dialogs.CreateTicketDialog
 import de.xikolo.controllers.dialogs.CreateTicketDialogAutoBundle
 import de.xikolo.controllers.downloads.DownloadsActivity
 import de.xikolo.controllers.helper.CourseListFilter
+import de.xikolo.controllers.helper.LoginHelper
 import de.xikolo.controllers.login.LoginActivityAutoBundle
+import de.xikolo.controllers.login.SsoLoginActivityAutoBundle
 import de.xikolo.controllers.settings.SettingsActivity
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.utils.DeepLinkingUtil
 import de.xikolo.utils.LanalyticsUtil
-import de.xikolo.utils.extensions.checkPlayServicesWithDialog
-import de.xikolo.utils.extensions.getStringArray
-import de.xikolo.utils.extensions.getTypedArray
-import de.xikolo.utils.extensions.openUrl
+import de.xikolo.utils.extensions.*
 import de.xikolo.viewmodels.main.NavigationViewModel
 
 class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.OnNavigationItemSelectedListener, MainActivityCallback {
@@ -154,7 +154,7 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
 
                     LanalyticsUtil.trackVisitedProfile()
                 } else {
-                    intent = LoginActivityAutoBundle.builder().build(this)
+                    intent = LoginHelper.loginIntent(this)
                 }
             }
             R.id.navigation_channels     -> {

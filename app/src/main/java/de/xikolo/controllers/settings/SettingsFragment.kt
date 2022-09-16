@@ -20,6 +20,7 @@ import de.xikolo.controllers.dialogs.ProgressDialogHorizontal
 import de.xikolo.controllers.dialogs.ProgressDialogHorizontalAutoBundle
 import de.xikolo.controllers.dialogs.StorageMigrationDialog
 import de.xikolo.controllers.dialogs.StorageMigrationDialogAutoBundle
+import de.xikolo.controllers.helper.LoginHelper
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.download.filedownload.FileDownloadHandler
 import de.xikolo.extensions.observe
@@ -272,7 +273,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         if (pref != null) {
             pref.title = getString(R.string.login)
             pref.setOnPreferenceClickListener { _ ->
-                val intent = LoginActivityAutoBundle.builder().build(activity!!)
+                val intent = LoginHelper.loginIntent(requireActivity())
                 startActivity(intent)
                 true
             }

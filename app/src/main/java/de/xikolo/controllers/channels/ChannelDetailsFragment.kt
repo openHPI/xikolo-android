@@ -14,6 +14,7 @@ import de.xikolo.config.GlideApp
 import de.xikolo.controllers.base.BaseCourseListAdapter
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.course.CourseActivityAutoBundle
+import de.xikolo.controllers.helper.LoginHelper
 import de.xikolo.controllers.login.LoginActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.extensions.observeOnce
@@ -229,7 +230,7 @@ class ChannelDetailsFragment : ViewModelFragment<ChannelViewModel>() {
     }
 
     private fun openLogin() {
-        val intent = LoginActivityAutoBundle.builder().build(App.instance)
+        val intent = LoginHelper.loginIntent(App.instance)
         startActivity(intent)
     }
 
