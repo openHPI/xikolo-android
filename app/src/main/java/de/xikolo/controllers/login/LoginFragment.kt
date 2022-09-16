@@ -112,6 +112,10 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
                 hideKeyboard(view)
                 startSSOLogin()
             }
+
+            if (Feature.enabled("disabled_registration")) {
+                buttonNew.visibility = View.GONE
+            }
         }
 
         textForgotPassword.setOnClickListener {
