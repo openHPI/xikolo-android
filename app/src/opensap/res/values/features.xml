@@ -8,6 +8,7 @@
     <string name="url_faq" translatable="false">https://open.sap.com/pages/faq</string>
 
     <string name="sso_provider" translatable="false">sap</string>
+    <bool name="disabled_registration">true</bool>
 
     <string name="custom_cast_application_id" translatable="false">2C63C05D</string>
 
