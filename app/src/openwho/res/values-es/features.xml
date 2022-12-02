@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="nav_external_links_urls">
+        <item>https://openwho.org/pages/serving-countries?locale=es</item>
+    </string-array>
+    <string-array name="nav_external_links_titles">
+        <item>Apoyo a lo países</item>
+    </string-array>
+
+</resources>

@@ -27,4 +27,14 @@
         <item>Terms of Use</item>
     </string-array>
 
+    <string-array name="nav_external_links_urls">
+        <item>https://openwho.org/pages/serving-countries</item>
+    </string-array>
+    <string-array name="nav_external_links_titles">
+        <item>Serving Countries</item>
+    </string-array>
+    <array name="nav_external_links_icons">
+        <item>@drawable/ic_earth_asia</item>
+    </array>
+
 </resources>
