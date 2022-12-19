@@ -231,11 +231,18 @@ abstract class BaseVideoPlayerActivity : BaseActivity(), VideoStreamPlayerFragme
 
     @TargetApi(26)
     private fun getPipParams(playing: Boolean): PictureInPictureParams {
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE
+        } else {
+            0
+        }
+
         val pendingIntent = PendingIntent.getBroadcast(
             this,
             0,
             Intent(ACTION_SWITCH_PLAYBACK_STATE),
-            0)
+            flags
+        )
 
         val actionList = ArrayList<RemoteAction>()
         actionList.add(

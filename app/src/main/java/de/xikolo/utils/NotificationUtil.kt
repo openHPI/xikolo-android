@@ -170,7 +170,14 @@ class NotificationUtil(base: Context) : ContextWrapper(base) {
         val deleteIntent = Intent(this, NotificationDeletedReceiver::class.java)
         deleteIntent.action = NotificationDeletedReceiver.INTENT_ACTION_NOTIFICATION_DELETED
         deleteIntent.putExtra(extraKey, extraValue)
-        return PendingIntent.getBroadcast(this, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
+        return PendingIntent.getBroadcast(this, 0, deleteIntent, flags)
     }
 
 }

@@ -21,11 +21,17 @@ fun <T : Activity> T.shareCourseLink(courseId: String) {
         val receiverIntent = Intent(this, ShareBroadcastReceiver::class.java)
         receiverIntent.putExtra("course_id", courseId)
 
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
         val pendingIntent = PendingIntent.getBroadcast(
             this,
             0,
             receiverIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            flags
         )
 
         Intent.createChooser(
