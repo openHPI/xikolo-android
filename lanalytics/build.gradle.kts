@@ -21,6 +21,7 @@ android {
     lint {
         abortOnError = false
     }
+    namespace = "de.xikolo.lanalytics"
 }
 
 dependencies {
