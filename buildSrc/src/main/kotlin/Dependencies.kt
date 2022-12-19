@@ -3,10 +3,10 @@ import org.gradle.api.JavaVersion
 object Versions {
     // Project
     const val KOTLIN = "1.5.31"
-    const val BUILD_TOOLS = "30.0.3"
+    const val BUILD_TOOLS = "33.0.1"
     const val MIN_SDK = 21
-    const val TARGET_SDK = 30
-    const val COMPILE_SDK = 30
+    const val TARGET_SDK = 31
+    const val COMPILE_SDK = 31
 
     const val VERSION_NAME = "3.9.1"
     const val VERSION_CODE = 67
