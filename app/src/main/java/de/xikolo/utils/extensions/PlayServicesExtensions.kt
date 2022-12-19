@@ -16,7 +16,7 @@ fun <T : Activity> T.checkPlayServicesWithDialog(): Boolean {
 
     when (result) {
         ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED, ConnectionResult.SERVICE_DISABLED                                                                -> {
-            googleAPI.getErrorDialog(this, result, PLAY_SERVICES_RESOLUTION_REQUEST).show()
+            googleAPI.getErrorDialog(this, result, PLAY_SERVICES_RESOLUTION_REQUEST)?.show()
             return false
         }
         ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_MISSING_PERMISSION, ConnectionResult.SERVICE_INVALID, ConnectionResult.SERVICE_UPDATING -> return false

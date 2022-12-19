@@ -273,12 +273,12 @@ open class ExoPlayerVideoView : PlayerView {
 
     fun scaleToFill() {
         resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-        exoplayer.videoScalingMode = Renderer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+        exoplayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
     }
 
     fun scaleToFit() {
         resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
-        exoplayer.videoScalingMode = Renderer.VIDEO_SCALING_MODE_SCALE_TO_FIT
+        exoplayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
     }
 
     fun prepare() {

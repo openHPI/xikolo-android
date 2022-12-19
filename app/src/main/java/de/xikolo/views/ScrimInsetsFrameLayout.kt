@@ -50,7 +50,7 @@ class ScrimInsetsFrameLayout : FrameLayout {
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyle: Int) {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.ScrimInsetsFrameLayout, defStyle, 0) ?: return
+        val a = context.obtainStyledAttributes(attrs, R.styleable.ScrimInsetsFrameLayout, defStyle, 0)
         insetForeground = a.getDrawable(R.styleable.ScrimInsetsFrameLayout_insetFg)
         a.recycle()
 
