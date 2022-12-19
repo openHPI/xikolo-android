@@ -139,6 +139,7 @@ android {
         htmlReport = false
         xmlReport = true
     }
+    namespace = "de.xikolo"
 }
 
 ktlint {
