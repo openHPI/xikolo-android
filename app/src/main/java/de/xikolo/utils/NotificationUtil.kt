@@ -160,9 +160,16 @@ class NotificationUtil(base: Context) : ContextWrapper(base) {
         stackBuilder.addParentStack(parentActivityClass)
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent)
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
         return stackBuilder.getPendingIntent(
             0,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            flags
         )
     }
 
