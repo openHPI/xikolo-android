@@ -1,14 +1,10 @@
 package de.xikolo.download.filedownload
 
+import android.app.PendingIntent
 import android.content.Context
-import com.tonyodev.fetch2.DefaultFetchNotificationManager
-import com.tonyodev.fetch2.Download
-import com.tonyodev.fetch2.DownloadNotification
-import com.tonyodev.fetch2.Error
-import com.tonyodev.fetch2.Fetch
-import com.tonyodev.fetch2.FetchConfiguration
-import com.tonyodev.fetch2.FetchListener
-import com.tonyodev.fetch2.Status
+import android.content.Intent
+import android.os.Build
+import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2core.DownloadBlock
 import de.xikolo.App
 import de.xikolo.download.DownloadHandler
@@ -34,7 +30,9 @@ object FileDownloadHandler : DownloadHandler<FileDownloadIdentifier, FileDownloa
             .enableFileExistChecks(false)
             .setNamespace("XIKOLO_FETCH")
             .setNotificationManager(
-                object : DefaultFetchNotificationManager(App.instance) {
+                // Use custom patched version instead of default notification manager
+                // due to an open issue in the external dependency.
+                object : PatchedFetchNotificationManager(App.instance) {
                     override fun getFetchInstanceForNamespace(namespace: String): Fetch {
                         return enabledNotificationsManager
                     }
