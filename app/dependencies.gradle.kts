@@ -8,7 +8,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.KOTLIN}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.KOTLIN}")
 
-    val kotlinCoroutinesVersion = "1.5.2"
+    val kotlinCoroutinesVersion = "1.6.4"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion")
 
@@ -21,7 +21,7 @@ dependencies {
     implementation("androidx.tonyodev.fetch2:xfetch2:3.1.6")
 
     // images
-    val glideVersion = "4.12.0"
+    val glideVersion = "4.15.0"
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
@@ -33,7 +33,7 @@ dependencies {
 
     // json
     implementation(SharedDependencies.GSON)
-    implementation("com.squareup.moshi:moshi:1.12.0")
+    implementation("com.squareup.moshi:moshi:1.14.0")
 
     // json:api
     val moshijsonapiVersion = "3.5.0"
@@ -42,7 +42,7 @@ dependencies {
 
     // user interface
     implementation("de.psdev.licensesdialog:licensesdialog:2.2.0")
-    implementation("com.github.rubensousa:previewseekbar:3.0.0")
+    implementation("com.github.rubensousa:previewseekbar:3.1.0")
 
     // markdown
     val markwonVersion = "4.6.2"
@@ -68,35 +68,35 @@ dependencies {
     implementation("com.google.android.exoplayer:exoplayer:2.13.3")
 
     // play services
-    implementation("com.google.android.gms:play-services-cast-framework:20.0.0")
+    implementation("com.google.android.gms:play-services-cast-framework:21.2.0")
     implementation("com.google.android.gms:play-services-gcm:17.0.0")
 
     // firebase
-    implementation("com.google.firebase:firebase-analytics:19.0.1")
-    implementation("com.google.firebase:firebase-crashlytics:18.2.1")
+    implementation("com.google.firebase:firebase-analytics:21.2.0")
+    implementation("com.google.firebase:firebase-crashlytics:18.3.5")
 
     // material design
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("com.google.android.material:material:1.8.0")
 
     // androidx
-    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("androidx.mediarouter:mediarouter:1.2.5")
-    implementation("androidx.preference:preference-ktx:1.1.1")
-    implementation("androidx.browser:browser:1.3.0")
+    implementation("androidx.mediarouter:mediarouter:1.3.1")
+    implementation("androidx.preference:preference-ktx:1.2.0")
+    implementation("androidx.browser:browser:1.5.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.work:work-runtime-ktx:2.7.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
+    implementation("androidx.work:work-runtime-ktx:2.8.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // local libraries
     implementation(project(":lanalytics"))
 
     // testing
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.4.0")
-    androidTestImplementation("androidx.test:runner:1.4.0")
-    androidTestImplementation("androidx.test:rules:1.4.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
     testImplementation("junit:junit:4.13.2")
 }

@@ -212,21 +212,21 @@ open class VideoStreamPlayerFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val gestureDetector = ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-            override fun onScaleEnd(detector: ScaleGestureDetector?) {
-                detector?.let {
-                    val immersive = it.scaleFactor > 1
+        context?.let { c ->
+            val gestureDetector = ScaleGestureDetector(c, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                override fun onScaleEnd(detector: ScaleGestureDetector) {
+                    val immersive = detector.scaleFactor > 1
                     videoSettingsHelper.isImmersiveModeEnabled = immersive
                     changeImmersiveMode(videoSettingsHelper.isImmersiveModeEnabled, immersive, true)
                 }
-            }
-        })
+            })
 
-        this.view?.setOnTouchListener { _, event ->
-            if (!settingsOpen && controllerInterface?.isImmersiveModeAvailable() == true) {
-                gestureDetector.onTouchEvent(event)
+            this.view?.setOnTouchListener { _, event ->
+                if (!settingsOpen && controllerInterface?.isImmersiveModeAvailable() == true) {
+                    gestureDetector.onTouchEvent(event)
+                }
+                false
             }
-            false
         }
 
         this.view?.setOnClickListener {

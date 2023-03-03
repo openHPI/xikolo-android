@@ -14,7 +14,7 @@ interface ViewModelCreationInterface<T : BaseViewModel> {
     fun createViewModel(): T
 
     private fun createViewModelFactory(vm: ViewModel): ViewModelProvider.NewInstanceFactory = object : ViewModelProvider.NewInstanceFactory() {
-        override fun <S : ViewModel?> create(modelClass: Class<S>): S {
+        override fun <S : ViewModel> create(modelClass: Class<S>): S {
             @Suppress("unchecked_cast")
             return vm as S
         }

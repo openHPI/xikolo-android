@@ -134,6 +134,7 @@ open class FileDownloadItem(
                                     }
                                     DownloadStatus.State.FAILED ->
                                         stateListener?.onCompleted()
+                                    else -> {}
                                 }
                             },
                             { identifier ->
