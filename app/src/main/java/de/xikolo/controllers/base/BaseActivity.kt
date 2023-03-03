@@ -95,17 +95,19 @@ abstract class BaseActivity : AppCompatActivity(), CastStateListener {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
 
-        try {
-            if (this.hasPlayServices) {
-                castContext = CastContext.getSharedInstance(this)
-                menuInflater.inflate(R.menu.cast, menu)
-                mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
-                    applicationContext,
-                    menu,
-                    R.id.media_route_menu_item)
+        menu?.let {
+            try {
+                if (this.hasPlayServices) {
+                    castContext = CastContext.getSharedInstance(this)
+                    menuInflater.inflate(R.menu.cast, it)
+                    mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
+                        applicationContext,
+                        it,
+                        R.id.media_route_menu_item)
+                }
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
-        } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().recordException(e)
         }
 
         return true
@@ -147,10 +149,10 @@ abstract class BaseActivity : AppCompatActivity(), CastStateListener {
 
     private fun showOverlay() {
         overlay?.remove()
-        if (mediaRouteMenuItem?.isVisible == true) {
+        mediaRouteMenuItem?.let {
             Handler().postDelayed({
-                if (mediaRouteMenuItem != null && mediaRouteMenuItem?.isVisible == true) {
-                    overlay = IntroductoryOverlay.Builder(this@BaseActivity, mediaRouteMenuItem)
+                if (it.isVisible) {
+                    overlay = IntroductoryOverlay.Builder(this@BaseActivity, it)
                         .setTitleText(R.string.intro_overlay_text)
                         .setSingleTime()
                         .setOnOverlayDismissedListener { overlay = null }

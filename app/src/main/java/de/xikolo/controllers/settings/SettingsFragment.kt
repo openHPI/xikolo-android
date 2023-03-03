@@ -59,13 +59,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     override fun onResume() {
-        preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
         refreshPipStatus()
         super.onResume()
     }
 
     override fun onPause() {
-        preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
         super.onPause()
     }
 
@@ -137,7 +137,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     override fun onCreatePreferences(bundle: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.settings)
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(activity)
+        val c = activity ?: return
+        val prefs = PreferenceManager.getDefaultSharedPreferences(c)
 
         findPreference<ListPreference>(getString(R.string.preference_storage))?.summary =
             prefs.getString(
@@ -160,15 +161,20 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             }
 
         if (App.instance.storages.size < 2) {
-            val general = findPreference<PreferenceCategory>(getString(R.string.preference_category_general))
-            val storagePref = findPreference<ListPreference>(getString(R.string.preference_storage))
-            general?.removePreference(storagePref)
+            findPreference<PreferenceCategory>(getString(R.string.preference_category_general))?.let { general ->
+                findPreference<ListPreference>(getString(R.string.preference_storage))?.let { storagePref ->
+                    general.removePreference(storagePref)
+                }
+            }
         }
 
         val pipSettings = findPreference<Preference>(getString(R.string.preference_video_pip))
         if (!Feature.PIP) {
-            val video = findPreference<PreferenceCategory>(getString(R.string.preference_category_video_playback_speed))
-            video?.removePreference(pipSettings)
+            findPreference<PreferenceCategory>(getString(R.string.preference_category_video_playback_speed))?.let { video ->
+                pipSettings?.let {
+                    video.removePreference(it)
+                }
+            }
         } else {
             pipSettings?.setOnPreferenceClickListener {
                 try {
@@ -255,7 +261,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             buildLoginView(loginOut)
         }
 
-        info.addPreference(loginOut)
+        loginOut?.let {
+            info.addPreference(it)
+        }
     }
 
     private fun refreshPipStatus() {

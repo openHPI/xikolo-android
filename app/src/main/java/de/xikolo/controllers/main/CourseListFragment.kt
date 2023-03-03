@@ -190,7 +190,7 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
         val searchView = searchItem?.actionView as SearchView
 
         searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 (activity as? BaseActivity)?.setScrollingBehavior(false) // lock action bar in place
                 networkStateHelper.enableSwipeRefresh(false)
 
@@ -204,7 +204,7 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 (activity as? BaseActivity)?.setScrollingBehavior(true) // make action bar auto-hide again
                 networkStateHelper.enableSwipeRefresh(true)
 
@@ -235,7 +235,7 @@ class CourseListFragment : MainFragment<CourseListViewModel>() {
                 filterView.visibility = View.VISIBLE
                 if (!searchItem.isActionViewExpanded) {
                     searchItem.expandActionView()
-                    searchItem.actionView.clearFocus()
+                    searchItem.actionView?.clearFocus()
                 }
             } else {
                 filterView.visibility = View.GONE
