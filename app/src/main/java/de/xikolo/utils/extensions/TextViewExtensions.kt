@@ -1,14 +1,18 @@
 package de.xikolo.utils.extensions
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
+import android.view.View
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.request.target.Target
 import de.xikolo.config.Config
+import de.xikolo.controllers.webview.WebViewActivityAutoBundle
+import de.xikolo.managers.UserManager
 import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
 import io.noties.markwon.core.MarkwonTheme
@@ -90,6 +94,22 @@ fun <T : TextView> T.setMarkdownText(markdown: String?) {
                     object : URLSpan(it.url) {
                         override fun getURL(): String {
                             return getAbsoluteUrl(super.getURL())
+                        }
+
+                        override fun onClick(widget: View) {
+                            val uri = Uri.parse(url)
+                            val context = widget.context
+
+                            val intent = WebViewActivityAutoBundle.builder("", url)
+                                .inAppLinksEnabled(false)
+                                .externalLinksEnabled(false)
+                                .build(context)
+
+                            if (uri.host == Config.HOST) {
+                                intent.includeAuthToken(UserManager.token!!)
+                            }
+
+                            context.startActivity(intent)
                         }
                     },
                     start,
