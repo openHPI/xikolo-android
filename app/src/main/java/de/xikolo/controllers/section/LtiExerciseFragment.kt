@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import butterknife.BindView
@@ -15,12 +14,12 @@ import de.xikolo.R
 import de.xikolo.controllers.base.ViewModelFragment
 import de.xikolo.controllers.dialogs.OpenExternalContentDialog
 import de.xikolo.controllers.dialogs.OpenExternalContentDialogAutoBundle
+import de.xikolo.controllers.webview.WebViewActivityAutoBundle
 import de.xikolo.extensions.observe
 import de.xikolo.managers.UserManager
 import de.xikolo.models.Item
 import de.xikolo.models.LtiExercise
 import de.xikolo.storages.ApplicationPreferences
-import de.xikolo.utils.extensions.createChooser
 import de.xikolo.utils.extensions.includeAuthToken
 import de.xikolo.utils.extensions.setMarkdownText
 import de.xikolo.utils.extensions.showToast
@@ -114,25 +113,13 @@ class LtiExerciseFragment : ViewModelFragment<LtiExerciseViewModel>() {
     }
 
     private fun openExternalContent() {
-        try {
-            val uri = Uri.parse(ltiExercise?.launchUrl)
-            val customTabsIntent = CustomTabsIntent.Builder()
-                .setToolbarColor(ContextCompat.getColor(App.instance, R.color.apptheme_primary))
-                .build()
-
-            val intent = customTabsIntent.intent.apply {
-                data = uri
-                includeAuthToken(UserManager.token!!)
-            }
-            context?.let { context ->
-                intent.createChooser(context, null, true)?.let { intent ->
-                    startActivity(intent)
-                } ?: run {
-                    showToast(R.string.error_plain)
-                }
-            }
-        } catch (e: Exception) {
-            showToast(R.string.error_plain)
+        val title = item?.title ?: ""
+        activity?.let {
+            val intent = WebViewActivityAutoBundle.builder(title, ltiExercise!!.launchUrl)
+                .externalLinksEnabled(true)
+                .build(it)
+            intent.includeAuthToken(UserManager.token!!)
+            startActivity(intent)
         }
     }
 
