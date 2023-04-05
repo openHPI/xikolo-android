@@ -301,7 +301,8 @@ class MainActivity : ViewModelActivity<NavigationViewModel>(), NavigationView.On
 
             if (viewModel.unreadAnnouncementsCount > 0) {
                 navigationView.menu.findItem(R.id.navigation_news).setActionView(R.layout.view_counter_pill).apply {
-                    actionView?.findViewById<TextView>(R.id.textCounter)?.text = viewModel.unreadAnnouncementsCount.toString()
+                    val counterText = viewModel.unreadAnnouncementsCount.toString()
+                    actionView?.findViewById<TextView>(R.id.textCounter)?.text = counterText
                 }
             }
         }
