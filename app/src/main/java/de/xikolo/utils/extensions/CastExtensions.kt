@@ -80,7 +80,7 @@ fun <T : Video> T.cast(activity: Activity, autoPlay: Boolean): PendingResult<Rem
         override fun onAdBreakStatusUpdated() {}
     })
 
-    //build cast metadata
+    // build cast metadata
     val mediaMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
     val itemTitle = item?.title ?: ""
     mediaMetadata.putString(MediaMetadata.KEY_TITLE, itemTitle)

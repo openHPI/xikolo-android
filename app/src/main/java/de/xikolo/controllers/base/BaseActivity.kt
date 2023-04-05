@@ -103,7 +103,8 @@ abstract class BaseActivity : AppCompatActivity(), CastStateListener {
                     mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
                         applicationContext,
                         it,
-                        R.id.media_route_menu_item)
+                        R.id.media_route_menu_item
+                    )
                 }
             } catch (e: Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
