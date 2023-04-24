@@ -106,7 +106,9 @@ fun <T : TextView> T.setMarkdownText(markdown: String?) {
                                 .build(context)
 
                             if (uri.host == Config.HOST) {
-                                intent.includeAuthToken(UserManager.token!!)
+                                UserManager.token?.let { token ->
+                                    intent.includeAuthToken(token)
+                                }
                             }
 
                             context.startActivity(intent)
