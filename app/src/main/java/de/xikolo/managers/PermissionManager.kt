@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.util.Log
 
@@ -67,6 +68,12 @@ class PermissionManager(private val activity: FragmentActivity) {
 
     fun requestPermission(requestedPermission: String): Int {
         Log.d(TAG, "Request Permission $requestedPermission")
+
+        if (Build.VERSION.SDK_INT >= 29 && getPermissionCode(requestedPermission) == REQUEST_CODE_WRITE_EXTERNAL_STORAGE) {
+            // Permission already granted
+            // See here: https://developer.android.com/about/versions/11/privacy/storage#permissions-target-11
+            return 1
+        }
 
         //Here, this Activity is the current activity
         if (ContextCompat.checkSelfPermission(App.instance, requestedPermission) != PackageManager.PERMISSION_GRANTED) {
