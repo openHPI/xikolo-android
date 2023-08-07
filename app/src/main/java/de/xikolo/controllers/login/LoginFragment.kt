@@ -86,7 +86,10 @@ class LoginFragment : ViewModelFragment<LoginViewModel>() {
         textCredentials.text = String.format(getString(R.string.login_with_credentials), Config.HOST)
 
         editTextPassword.setOnEditorActionListener { v, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if (arrayOf(
+                    EditorInfo.IME_ACTION_DONE,
+                    EditorInfo.IME_ACTION_UNSPECIFIED,
+                ).contains(actionId)) {
                 login(v)
                 true
             } else {
