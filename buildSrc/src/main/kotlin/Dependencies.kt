@@ -8,8 +8,8 @@ object Versions {
     const val TARGET_SDK = 33
     const val COMPILE_SDK = 33
 
-    const val VERSION_NAME = "3.9.5"
-    const val VERSION_CODE = 72
+    const val VERSION_NAME = "3.9.6"
+    const val VERSION_CODE = 74
 
     const val XIKOLO_API = 4
     const val REALM_SCHEMA = 13
