@@ -7,7 +7,7 @@
     <string name="url_copyright" translatable="false">https://hpi.de/</string>
     <string name="url_faq" translatable="false">https://open.hpi.de/pages/faq</string>
 
-    <string name="sso_provider" translatable="false">hpi</string>
+    <string name="sso_provider" translatable="false">hpi_saml</string>
 
     <string name="custom_cast_application_id" translatable="false">EE6FB604</string>
 
