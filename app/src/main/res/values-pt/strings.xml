@@ -101,10 +101,9 @@
     <string name="dialog_storage_migration_message">Migração em andamento. Aguarde até o processo ser concluído. Não remova a meio de armazenamento.</string>
     <string name="dialog_storage_migration_successful">Migração concluída com sucesso!</string>
 
-    <string name="dialog_api_deprecation_title">Atualização %1$s</string>
-    <string name="dialog_api_deprecation_message">%1$s não funcionará depois de %2$s a menos que o aplicativo seja atualizado.</string>
-    <string name="dialog_api_deprecation_yes">Atualização</string>
-    <string name="dialog_api_deprecation_no">Pular</string>
+    <string name="dialog_api_deprecation_title">O aplicativo foi descontinuado</string>
+    <string name="dialog_api_deprecation_message">%1$s foi descontinuado de %2$s. Por favor, use nosso site.</string>
+    <string name="dialog_api_deprecation_no">Certo</string>
 
     <string name="dialog_api_expiration_title">Atualização %1$s</string>
     <string name="dialog_api_expiration_message">%1$s não funcionará a menos que você atualize o aplicativo.</string>

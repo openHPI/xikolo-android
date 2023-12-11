@@ -101,10 +101,9 @@
     <string name="dialog_storage_migration_message">Verschieben der Dateien läuft. Bitte warten Sie bis dies abgeschlossen ist. Entfernen Sie auf keinen Fall das Speichermedium.</string>
     <string name="dialog_storage_migration_successful">Vorgang erfolgreich abgeschlossen!</string>
 
-    <string name="dialog_api_deprecation_title">%1$s aktualisieren</string>
-    <string name="dialog_api_deprecation_message">%1$s wird nach dem %2$s nur ausgeführt, wenn du die App aktualisierst.</string>
-    <string name="dialog_api_deprecation_yes">Aktualisieren</string>
-    <string name="dialog_api_deprecation_no">Überspringen</string>
+    <string name="dialog_api_deprecation_title">App wird eingestellt</string>
+    <string name="dialog_api_deprecation_message">Der Support für die %1$s-App endet am %2$s. Bitte nutzen Sie unsere Webseite.</string>
+    <string name="dialog_api_deprecation_no">Ok</string>
 
     <string name="dialog_api_expiration_title">%1$s aktualisieren</string>
     <string name="dialog_api_expiration_message">%1$s wird nur ausgeführt, wenn du die App aktualisierst.</string>

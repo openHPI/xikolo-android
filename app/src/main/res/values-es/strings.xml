@@ -101,10 +101,9 @@
     <string name="dialog_storage_migration_message">Moviendo. Por favor, espere hasta que se complete el proceso. No extraiga el medio de almacenamiento.</string>
     <string name="dialog_storage_migration_successful">¡El proceso se completó con éxito!</string>
 
-    <string name="dialog_api_deprecation_title">Actualizar %1$s</string>
-    <string name="dialog_api_deprecation_message">%1$s ya no funcionará después de %2$s a menos que actualice la aplicación.</string>
-    <string name="dialog_api_deprecation_yes">Actualizar</string>
-    <string name="dialog_api_deprecation_no">Saltar</string>
+    <string name="dialog_api_deprecation_title">La aplicación está descatalogada</string>
+    <string name="dialog_api_deprecation_message">%1$s será descontinuado el %2$s. Utilice nuestro sitio web.</string>
+    <string name="dialog_api_deprecation_no">Vale</string>
 
     <string name="dialog_api_expiration_title">Actualizar %1$s</string>
     <string name="dialog_api_expiration_message">%1$s no funcionará a menos que actualice la aplicación.</string>

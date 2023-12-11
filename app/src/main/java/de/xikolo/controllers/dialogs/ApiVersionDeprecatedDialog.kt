@@ -26,8 +26,7 @@ class ApiVersionDeprecatedDialog : BaseDialogFragment() {
         val builder = AlertDialog.Builder(requireActivity())
             .setTitle(
                 getString(
-                    R.string.dialog_api_deprecation_title,
-                    getString(R.string.app_name)
+                    R.string.dialog_api_deprecation_title
                 )
             )
             .setMessage(
@@ -37,10 +36,9 @@ class ApiVersionDeprecatedDialog : BaseDialogFragment() {
                     df.format(deprecationDate)
                 )
             )
-            .setPositiveButton(getString(R.string.dialog_api_deprecation_yes)) { _, _ ->
-                listener?.onOpenPlayStoreClicked()
+            .setPositiveButton(getString(R.string.dialog_api_deprecation_no)) { _, _ ->
+                listener?.onDismissed()
             }
-            .setNegativeButton(getString(R.string.dialog_api_deprecation_no)) { _, _ -> listener?.onDismissed() }
             .setCancelable(true)
 
         val dialog = builder.create()

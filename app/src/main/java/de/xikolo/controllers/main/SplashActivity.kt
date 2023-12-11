@@ -55,7 +55,7 @@ class SplashActivity : AppCompatActivity() {
                             val distance = deprecationDate.time - now.time
                             val days = TimeUnit.DAYS.convert(distance, TimeUnit.MILLISECONDS)
 
-                            if (days <= 14) {
+                            if (days <= 30) {
                                 showApiVersionDeprecatedDialog(deprecationDate)
                             } else {
                                 startApp()
@@ -127,9 +127,7 @@ class SplashActivity : AppCompatActivity() {
     private fun showApiVersionDeprecatedDialog(deprecationDate: Date) {
         val dialog = ApiVersionDeprecatedDialogAutoBundle.builder(deprecationDate).build()
         dialog.listener = object : ApiVersionDeprecatedDialog.Listener {
-            override fun onOpenPlayStoreClicked() {
-                openPlayStore()
-            }
+            override fun onOpenPlayStoreClicked() {}
 
             override fun onDismissed() {
                 startApp()

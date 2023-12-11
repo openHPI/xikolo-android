@@ -100,10 +100,9 @@
     <string name="dialog_storage_migration_message">Migration en cours. Veuillez attendre la fin du processus. Ne retirez pas le support de stockage.</string>
     <string name="dialog_storage_migration_successful">Succès ! Migration terminée !</string>
 
-    <string name="dialog_api_deprecation_title">Mettre à jour %1$s</string>
-    <string name="dialog_api_deprecation_message">%1$s ne relancera %2$s plus l\'exécution à moins que vous ne mettiez l\'application à jour.</string>
-    <string name="dialog_api_deprecation_yes">Mettre à jour</string>
-    <string name="dialog_api_deprecation_no">Sauter</string>
+    <string name="dialog_api_deprecation_title">L\'application est abandonnée</string>
+    <string name="dialog_api_deprecation_message">%1$s n\'est plus disponible à partir de %2$s. Veuillez utiliser notre site web.</string>
+    <string name="dialog_api_deprecation_no">D\'accord</string>
 
     <string name="dialog_api_expiration_title">Mettre à jour %1$s</string>
     <string name="dialog_api_expiration_message">%1$s ne sera pas lancé si vous n\'effectuez pas une mise à jour de l\'application.</string>

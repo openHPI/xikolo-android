@@ -101,10 +101,9 @@
     <string name="dialog_storage_migration_message">迁移进行中。请等待过程结束。请勿移除该储存体媒介。</string>
     <string name="dialog_storage_migration_successful">迁移成功！</string>
 
-    <string name="dialog_api_deprecation_title">更新%1$s </string>
-    <string name="dialog_api_deprecation_message">除非您更新应用程序，否则%1$s将不\会在%2$s后运行。</string>
-    <string name="dialog_api_deprecation_yes">更新</string>
-    <string name="dialog_api_deprecation_no">略过</string>
+    <string name="dialog_api_deprecation_title">应用程序已停用</string>
+    <string name="dialog_api_deprecation_message">%1$s 已从 %2$s 停产。请使用我们的网站。</string>
+    <string name="dialog_api_deprecation_no">好的</string>
 
     <string name="dialog_api_expiration_title">更新%1$s </string>
     <string name="dialog_api_expiration_message">除非您更新应用程序，否则%1$s将不\会运行。</string>

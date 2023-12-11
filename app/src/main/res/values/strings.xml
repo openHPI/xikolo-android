@@ -102,10 +102,9 @@
     <string name="dialog_storage_migration_message">Migration in progress. Please wait until the process is finished. Do not remove the storage medium.</string>
     <string name="dialog_storage_migration_successful">Migration completed successfully!</string>
 
-    <string name="dialog_api_deprecation_title">Update %1$s</string>
-    <string name="dialog_api_deprecation_message">%1$s won\'t run after %2$s anymore unless you update the app.</string>
-    <string name="dialog_api_deprecation_yes">Update</string>
-    <string name="dialog_api_deprecation_no">Skip</string>
+    <string name="dialog_api_deprecation_title">App discontinued</string>
+    <string name="dialog_api_deprecation_message">%1$s will be discontinued on %2$s. Please use our website.</string>
+    <string name="dialog_api_deprecation_no">Ok</string>
 
     <string name="dialog_api_expiration_title">Update %1$s</string>
     <string name="dialog_api_expiration_message">%1$s won\'t run unless you update the app.</string>
